@@ -1,0 +1,592 @@
+# vim: set sw=4 sta et :
+Collisions:
+    sampleNumber: -1
+    niceName: Collisions
+    labelForLegend: "Collisions"
+    type: collisions
+    ntuplePath: [data_SingleElectron_2012A_06Aug, data_SingleElectron_2012A_13July, data_SingleElectron_2012B_13Jul, data_SingleElectron_2012C_24Aug, data_SingleElectron_2012C_PR, data_SingleElectron_2012D_PR, data_SingleMu_2012A_06Aug, data_SingleMu_2012A_13July, data_SingleMu_2012B_13July, data_SingleMu_2012C_24Aug, data_SingleMu_2012C_PR, data_SingleMu_2012D_PR]
+    color: 1
+    crossSection: 1
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 560717449
+    NoEreadByNUTter: 75220
+
+TTbar_Hadronic:
+    sampleNumber: 2566
+    niceName: t + tbar H
+    labelForLegend: "t #bar{t} H"
+    type: mcBackground
+    ntuplePath: [TTbar_Hadronic_Summer12]
+    color: 64
+    crossSection: 106.94 
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 31223821
+    NoEreadByNUTter: 272
+
+TTbar_SemiLept:
+    sampleNumber: 2563
+    niceName: t + tbar SL
+    labelForLegend: "t #bar{t} SL"
+    type: mcBackground
+    ntuplePath: [TTbar_SemiLept_Summer12]
+    color: 67
+    crossSection: 102.49
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 25424818
+    NoEreadByNUTter: 382402
+
+TTbar_FullLept:
+    sampleNumber: 2533
+    niceName: t + tbar FL
+    labelForLegend: "t #bar{t} FL"
+    type: mcBackground
+    ntuplePath: [TTbar_FullLept_Summer12]
+    color: 70
+    crossSection: 24.57
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 12119013
+    NoEreadByNUTter: 414800
+
+WplusOneJet:
+    sampleNumber: 2401
+    niceName: W + 1 jet
+    labelForLegend: "W + 1 jet"
+    type: mcBackground
+    ntuplePath: [WplusOneJet_Summer12]
+    color: 93
+    crossSection: 6440.4
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 23141598
+    NoEreadByNUTter: 57
+
+WplusTwoJets:
+    sampleNumber: 2402
+    niceName: W + 2 jets
+    labelForLegend: "W + 2 jets"
+    type: mcBackground
+    ntuplePath: [WplusTwoJets_Summer12]
+    color: 95
+    crossSection: 2087.2
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 34044921
+    NoEreadByNUTter: 2136
+
+WplusThreeJets:
+    sampleNumber: 2403
+    niceName: W + 3 jets
+    labelForLegend: "W + 3 jets"
+    type: mcBackground
+    ntuplePath: [WplusThreeJets_Summer12]
+    color: 97
+    crossSection: 619.0
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 15539503
+    NoEreadByNUTter: 3329
+
+WplusFourJets:
+    sampleNumber: 2404
+    niceName: W + 4 jets
+    labelForLegend: "W + 4 jets"
+    type: mcBackground
+    ntuplePath: [WplusFourJets_Summer12]
+    color: 99
+    crossSection: 255.2
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 13382803
+    NoEreadByNUTter: 8055
+
+WW:
+    sampleNumber: 2700
+    niceName: W + W
+    labelForLegend: "W + W"
+    type: mcBackground
+    ntuplePath: [WW_Summer12]
+    color: 812
+    crossSection: 54.8
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 10000431
+    NoEreadByNUTter: 2228
+
+WZ:
+    sampleNumber: 2701
+    niceName: W + Z
+    labelForLegend: "W + Z"
+    type: mcBackground
+    ntuplePath: [WZ_Summer12]
+    color: 880
+    crossSection: 32.3
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 10000283
+    NoEreadByNUTter: 2613
+
+ZZ:
+    sampleNumber: 2702
+    niceName: Z + Z
+    labelForLegend: "Z + Z"
+    type: mcBackground
+    ntuplePath: [ZZ_Summer12]
+    color: 801
+    crossSection: 7.7
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 9799908
+    NoEreadByNUTter: 3998
+
+ZplusOneJet:
+    sampleNumber: 2301
+    niceName: Z + 1 jet
+    labelForLegend: "Z + 1 jet"
+    type: mcBackground
+    ntuplePath: [ZplusOneJet_Summer12]
+    color: 23
+    crossSection: 666.7
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 24045248
+    NoEreadByNUTter: 2250
+
+ZplusTwoJets:
+    sampleNumber: 2302
+    niceName: Z + 2 jets
+    labelForLegend: "Z + 2 jets"
+    type: mcBackground
+    ntuplePath: [ZplusTwoJets_Summer12]
+    color: 25
+    crossSection: 215.1
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 2352304
+    NoEreadByNUTter: 1018
+
+ZplusThreeJets:
+    sampleNumber: 2303
+    niceName: Z + 3 jets
+    labelForLegend: "Z + 3 jets"
+    type: mcBackground
+    ntuplePath: [ZplusThreeJets_Summer12]
+    color: 27
+    crossSection: 66.07
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 11015445
+    NoEreadByNUTter: 11348
+
+ZplusFourJets:
+    sampleNumber: 2304
+    niceName: Z + 4 jets
+    labelForLegend: "Z + 4 jets"
+    type: mcBackground
+    ntuplePath: [ZplusFourJets_Summer12]
+    color: 28
+    crossSection: 27.38
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 6402827
+    NoEreadByNUTter: 15156
+
+ZplusJets_LowMass:
+    sampleNumber: 2310
+    niceName: Z + jets M10-50
+    labelForLegend: "Z + jets M10-50"
+    type: mcBackground
+    ntuplePath: [ZplusJets_LowMass_Summer12]
+    color: 20
+    crossSection: 860
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 37835275
+    NoEreadByNUTter: 50
+
+singleTopPlusW:
+    sampleNumber: 2604
+    niceName: t + W
+    labelForLegend: "t + W"
+    type: mcBackground
+    ntuplePath: [singleTopPlusW_Summer12]
+    color: 867
+    crossSection: 11.1
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 497658
+    NoEreadByNUTter: 3438
+
+singleTopBarPlusW:
+    sampleNumber: 2605
+    niceName: tbar + W
+    labelForLegend: "#bar{t} + W"
+    type: mcBackground
+    ntuplePath: [singleTopBarPlusW_Summer12]
+    color: 893
+    crossSection: 7.87
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 493460
+    NoEreadByNUTter: 3429
+
+singleTopSch:
+    sampleNumber: 2600
+    niceName: t (s-ch)
+    labelForLegend: "t (s-ch)"
+    type: mcBackground
+    ntuplePath: [singleTopSch_Summer12]
+    color: 864
+    crossSection: 3.79
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 259961
+    NoEreadByNUTter: 243
+
+singleTopBarSch:
+    sampleNumber: 2601
+    niceName: tbar (s-ch)
+    labelForLegend: "#bar{t} (s-ch)"
+    type: mcBackground
+    ntuplePath: [singleTopBarSch_Summer12]
+    color: 804
+    crossSection: 1.76
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 139974
+    NoEreadByNUTter: 136
+
+singleTopTch:
+    sampleNumber: 2602
+    niceName: t (t-ch)
+    labelForLegend: "t (t-ch)"
+    type: mcBackground
+    ntuplePath: [singleTopTch_Summer12]
+    color: 843
+    crossSection: 56.4
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 3758227
+    NoEreadByNUTter: 2763
+
+singleTopBarTch:
+    sampleNumber: 2603
+    niceName: tbar (t-ch)
+    labelForLegend: "#bar{t} (t-ch)"
+    type: mcBackground
+    ntuplePath: [singleTopBarTch_Summer12]
+    color: 819
+    crossSection: 30.7
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 1935072
+    NoEreadByNUTter: 1650
+
+ttPlusW:
+    sampleNumber: 2524
+    niceName: tbarW
+    labelForLegend: "#bar{t} + W"
+    type: mcBackground
+    ntuplePath: [ttPlusW_Summer12]
+    color: 800 #### change this
+    crossSection: 0.249
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 196046
+    NoEreadByNUTter: 4746
+
+ttPlusZ:
+    sampleNumber: 2523
+    niceName: tbarZ
+    labelForLegend: "#bar{t} + Z"
+    type: mcBackground
+    ntuplePath: [ttPlusZ_Summer12]
+    color: 800 #### change this
+    crossSection: 0.208
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 210160
+    NoEreadByNUTter: 4610
+
+TTH_110:
+    sampleNumber: 9110
+    niceName: ttH(110)
+    labelForLegend: "t#bar{t}H(110) "
+    type: signal
+    ntuplePath: [TTH_110]
+    color: 221
+    crossSection: 0.1887
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 977880
+    NoEreadByNUTter: 16791
+
+TTH_115:
+    sampleNumber: 9115
+    niceName: ttH(115)
+    labelForLegend: "t#bar{t}H(115) "
+    type: signal
+    ntuplePath: [TTH_115]
+    color: 221
+    crossSection: 0.1887
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 1000000 
+    NoEreadByNUTter: 17008
+
+TTH_120:
+    sampleNumber: 9120
+    niceName: ttH(120)
+    labelForLegend: "t#bar{t}H(120) "
+    type: signal
+    ntuplePath: [TTH_120]
+    color: 221
+    crossSection: 0.1470
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 999508
+    NoEreadByNUTter: 18293
+
+TTH_125:
+    sampleNumber: 9125
+    niceName: ttH(125)
+    labelForLegend: "t#bar{t}H(125) "
+    type: signal
+    ntuplePath: [TTH_125]
+    color: 221
+    crossSection: 0.1302
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 995697
+    NoEreadByNUTter: 19299
+
+TTH_130:
+    sampleNumber: 9130
+    niceName: ttH(130)
+    labelForLegend: "t#bar{t}H(130) "
+    type: signal
+    ntuplePath: [TTH_130]
+    color: 221
+    crossSection: 0.1157
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 933970
+    NoEreadByNUTter: 19100
+
+TTH_135:
+    sampleNumber: 9135
+    niceName: ttH(135)
+    labelForLegend: "t#bar{t}H(135) "
+    type: signal
+    ntuplePath: [TTH_135]
+    color: 221
+    crossSection: 0.1031
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 996800
+    NoEreadByNUTter: 21887
+
+TTH_140:
+    sampleNumber: 9140
+    niceName: ttH(140)
+    labelForLegend: "t#bar{t}H(140) "
+    type: signal
+    ntuplePath: [TTH_140]
+    color: 221
+    crossSection: 0.09207
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 1000000
+    NoEreadByNUTter: 23310
+
+TTHTauTau_110:
+    sampleNumber: 7110
+    niceName: ttHtautau(110)
+    labelForLegend: "t#bar{t}H(110) #rightarrow #tau_{h} #tau_{h}"
+    type: signal
+    ntuplePath: [TTHTauTau_110]
+    color: 632
+    crossSection: 0.1887
+    branchingRatio: 0.0795
+    otherScaleFactor: 1
+    NOEinDS: 992800
+    NoEreadByNUTter: 88035
+
+TTHTauTau_110_real:
+    sampleNumber: 7110
+    niceName: ttHtautau(110)*
+    labelForLegend: "t#bar{t}H(110)* #rightarrow #tau_{h} #tau_{h}"
+    type: signal
+    checkReality: true
+    ntuplePath: [TTHTauTau_110]
+    color: 414
+    crossSection: 0.1887
+    branchingRatio: 0.0795
+    otherScaleFactor: 1
+    NOEinDS: 992800
+    NoEreadByNUTter: 88035
+
+TTHTauTau_115:
+    sampleNumber: 7115
+    niceName: ttHtautau(115)
+    labelForLegend: "t#bar{t}H(115) #rightarrow #tau_{h} #tau_{h}"
+    type: signal
+    ntuplePath: [TTHTauTau_115]
+    color: 632
+    crossSection: 0.1663
+    branchingRatio: 0.0758
+    otherScaleFactor: 1
+    NOEinDS: 997885
+    NoEreadByNUTter: 91596
+
+TTHTauTau_115_real:
+    sampleNumber: 7115
+    niceName: ttHtautau(115)*
+    labelForLegend: "t#bar{t}H(115)* #rightarrow #tau_{h} #tau_{h}"
+    type: signal
+    checkReality: true
+    ntuplePath: [TTHTauTau_115]
+    color: 414
+    crossSection: 0.1663
+    branchingRatio: 0.0758
+    otherScaleFactor: 1
+    NOEinDS: 997885
+    NoEreadByNUTter: 91596
+
+TTHTauTau_120:
+    sampleNumber: 7120
+    niceName: ttHtautau(120)
+    labelForLegend: "t#bar{t}H(120) #rightarrow #tau_{h} #tau_{h}"
+    type: signal
+    ntuplePath: [TTHTauTau_120]
+    color: 632
+    crossSection: 0.1470
+    branchingRatio: 0.0704
+    otherScaleFactor: 1
+    NOEinDS: 990172
+    NoEreadByNUTter: 93546
+
+TTHTauTau_120_real:
+    sampleNumber: 7120
+    niceName: ttHtautau(120)*
+    labelForLegend: "t#bar{t}H(120)* #rightarrow #tau_{h} #tau_{h}"
+    type: signal
+    checkReality: true
+    ntuplePath: [TTHTauTau_120]
+    color: 414
+    crossSection: 0.1470
+    branchingRatio: 0.0704
+    otherScaleFactor: 1
+    NOEinDS: 990172
+    NoEreadByNUTter: 93546
+
+TTHTauTau_125:
+    sampleNumber: 7125
+    niceName: ttHtautau(125)
+    labelForLegend: "t#bar{t}H(125) #rightarrow #tau_{h} #tau_{h}"
+    type: signal
+    ntuplePath: [TTHTauTau_125]
+    color: 632
+    crossSection: 0.1302
+    branchingRatio: 0.0632
+    otherScaleFactor: 1
+    NOEinDS: 1000000
+    NoEreadByNUTter: 96805
+
+TTHTauTau_125_real:
+    sampleNumber: 7125
+    niceName: ttHtautau(125)*
+    labelForLegend: "t#bar{t}H(125)* #rightarrow #tau_{h} #tau_{h}"
+    type: signal
+    checkReality: true
+    ntuplePath: [TTHTauTau_125]
+    color: 414
+    crossSection: 0.1302
+    branchingRatio: 0.0632
+    otherScaleFactor: 1
+    NOEinDS: 1000000
+    NoEreadByNUTter: 96805
+
+TTHTauTau_130:
+    sampleNumber: 7130
+    niceName: ttHtautau(130)
+    labelForLegend: "t#bar{t}H(130) #rightarrow #tau_{h} #tau_{h}"
+    type: signal
+    ntuplePath: [TTHTauTau_130]
+    color: 632
+    crossSection: 0.1157
+    branchingRatio: 0.0545
+    otherScaleFactor: 1
+    NOEinDS: 812456
+    NoEreadByNUTter: 80747
+
+TTHTauTau_130_real:
+    sampleNumber: 7130
+    niceName: ttHtautau(130)*
+    labelForLegend: "t#bar{t}H(130)* #rightarrow #tau_{h} #tau_{h}"
+    type: signal
+    checkReality: true
+    ntuplePath: [TTHTauTau_130]
+    color: 414
+    crossSection: 0.1157
+    branchingRatio: 0.0545
+    otherScaleFactor: 1
+    NOEinDS: 812456
+    NoEreadByNUTter: 80747
+
+TTHTauTau_135:
+    sampleNumber: 7135
+    niceName: ttHtautau(135)
+    labelForLegend: "t#bar{t}H(135) #rightarrow #tau_{h} #tau_{h}"
+    type: signal
+    ntuplePath: [TTHTauTau_135]
+    color: 632
+    crossSection: 0.1031
+    branchingRatio: 0.0449
+    otherScaleFactor: 1
+    NOEinDS: 997996
+    NoEreadByNUTter: 101565
+
+TTHTauTau_135_real:
+    sampleNumber: 7135
+    niceName: ttHtautau(135)*
+    labelForLegend: "t#bar{t}H(135)* #rightarrow #tau_{h} #tau_{h}"
+    type: signal
+    checkReality: true
+    ntuplePath: [TTHTauTau_135]
+    color: 414
+    crossSection: 0.1031
+    branchingRatio: 0.0449
+    otherScaleFactor: 1
+    NOEinDS: 997996
+    NoEreadByNUTter: 101565
+
+TTHTauTau_140:
+    sampleNumber: 7140
+    niceName: ttHtautau(140)
+    labelForLegend: "t#bar{t}H(140) #rightarrow #tau_{h} #tau_{h}"
+    type: signal
+    ntuplePath: [TTHTauTau_140]
+    color: 632
+    crossSection: 0.09207
+    branchingRatio: 0.0352
+    otherScaleFactor: 1
+    NOEinDS: 982801
+    NoEreadByNUTter: 102664
+
+TTHTauTau_140_real:
+    sampleNumber: 7140
+    niceName: ttHtautau(140)*
+    labelForLegend: "t#bar{t}H(140)* #rightarrow #tau_{h} #tau_{h}"
+    type: signal
+    checkReality: true
+    ntuplePath: [TTHTauTau_140]
+    color: 414
+    crossSection: 0.09207
+    branchingRatio: 0.0352
+    otherScaleFactor: 1
+    NOEinDS: 982801
+    NoEreadByNUTter: 102664

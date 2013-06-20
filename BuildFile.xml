@@ -1,0 +1,10 @@
+<use name="root"/>
+<use name="roottmva"/>
+<use name="boost"/>
+<use name="boost_filesystem"/>
+<Flags ADD_SUBDIR="yes"/>
+<export>
+	<use name="root"/>
+	<use name="boost"/>
+	<lib name="1"/>
+</export>

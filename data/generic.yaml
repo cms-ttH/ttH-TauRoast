@@ -1,0 +1,60 @@
+# vim: set sw=4 sta et :
+
+analysis:
+    process:
+      - TTH_110
+      - TTH_115
+      - TTH_120
+    plot: []
+
+physics:
+    lumi: 19400
+    cuts:
+      # tops
+      - "J_NumCleanCSVM:1:1"
+      - "J_NumCleanNonCSVM:1:1"
+      # lepton
+      - "L_pT:30:"
+      - "NumTightLeptons:1:1"
+      - "NumExLooseLeptons:0:0"
+      # taus
+      # kinematic
+      - "T1_pT:20:"
+      - "T2_pT:20:"
+      - "T1_Eta:-2.1:2.1"
+      - "T2_Eta:-2.1:2.1"
+      - "TT_DeltaR:0.5:"
+      # topological
+      - "TT_ChargeProduct:-1:-1"
+      - "T1L_DeltaR:0.25:"
+      - "T2L_DeltaR:0.25:"
+      # reality
+      - "T1_MatchAbsId:15:15"
+      - "T2_MatchAbsId:15:15"
+      - "T1_ParentAbsId:25:25"
+      - "T2_ParentAbsId:25:25"
+      # optimization
+      - "T1_DecayModeFinding:1:1"
+      - "T1_LTpT:5:"
+      - "T1_AntiElectronIndex:1:"
+      - "T1_AntiMuonIndex:1:"
+      - "T1_NumProngs:1:1"
+      - "T1_IsolationMVA2Raw:0.25:"
+      - "T2_DecayModeFinding:1:1"
+      - "T2_LTpT:5:"
+      - "T2_AntiElectronIndex:1:"
+      - "T2_AntiMuonIndex:1:"
+      - "T2_NumProngs:1:1"
+      - "T2_IsolationMVA2Raw:0:"
+    systematics:
+        e_fake: 1.05
+        jet_fake: 1.2
+        tau_id: 1.14
+
+paths:
+    input: /...
+    output: /...
+    ntuples: /hadoop/users/matze/ttH/v45/2012/
+    tree: makeNtuple/TTbarHTauTau
+
+processes: data/process_v45.yaml

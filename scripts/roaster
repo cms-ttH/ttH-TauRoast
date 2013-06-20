@@ -1,0 +1,60 @@
+#!/usr/bin/env python
+
+import ROOT as r
+import os
+import sys
+
+r.gROOT.SetBatch()
+r.gSystem.Load("libTTHTauTauRoast")
+
+try:
+    from ROOT import roast
+except:
+    sys.stderr.write("Failed to import 'roast'!\n")
+    sys.exit(1)
+
+import yaml
+
+def vectorize(items, cls):
+    res = r.std.vector(cls)()
+    for i in items:
+        res.push_back(i)
+    return res
+
+def analyze(config):
+    processes = r.std.vector('roast::Process*')()
+    for (proc, cfg) in baseconfig['processes'].items():
+        vpaths = r.std.vector('string')()
+        for p in cfg['ntuplePath']:
+            vpaths.push_back(os.path.join(baseconfig['paths']['ntuples'], p))
+
+        processes.push_back(roast.Process(
+            proc,
+            cfg['niceName'],
+            cfg['labelForLegend'],
+            cfg['type'],
+            config['paths']['tree'],
+            vpaths,
+            cfg['color'],
+            cfg['NOEinDS'],
+            cfg['NoEreadByNUTter'],
+            cfg['crossSection'],
+            cfg['branchingRatio'],
+            cfg['checkReality'] if 'checkReality' in cfg else False))
+
+    for p in processes:
+        if p.GetShortName() not in config['analysis']['process']:
+            continue
+        roast.ttl.analyze(p, vectorize(config['physics']['cuts'], 'string'), 10000)
+    return processes
+
+def fill_histos(config, processes):
+    for p in processes:
+        if p.GetShortName() not in config['analysis']['process']:
+            continue
+
+baseconfig = yaml.load(open("data/generic.yaml"))
+processconfig = yaml.load(open(baseconfig['processes']))
+baseconfig['processes'] = processconfig
+
+analyze(baseconfig)
