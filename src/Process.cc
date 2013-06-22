@@ -19,7 +19,10 @@ Process::Process(Process const & iProcess){
 
 	goodEventsForSignal				= iProcess.GetGoodEventsForSignal();
 
-	hContainerForSignal				= HContainer(*iProcess.GetHContainerForSignal());
+    for (auto& pair: hContainerForSignal)
+        delete pair.second;
+
+	hContainerForSignal				= iProcess.GetHContainerForSignal();
 	cutFlow							= CutFlow(*iProcess.GetCutFlow());
 	normalizedCutFlow				= CutFlow(*iProcess.GetNormalizedCutFlow());
 
@@ -79,9 +82,11 @@ Process::Process(const std::string& name, const std::string& alias, const std::s
 {
 }
 
-
-// Default destructor
-Process::~Process(){}
+Process::~Process()
+{
+    for (auto& pair: hContainerForSignal)
+        delete pair.second;
+}
 
 // Update process
 void Process::Update(Process const * iProcess){
@@ -109,7 +114,6 @@ void Process::Update(Process const * iProcess){
 }
 
 
-void Process::SetHContainerForSignal(HContainer const & iHContainer){ hContainerForSignal = HContainer(iHContainer); }
 vector<Process::Event> const Process::GetGoodEventsForSignal() const { return goodEventsForSignal; }
 void Process::SetCutFlow(CutFlow const & iCutFlow){ cutFlow	= CutFlow(iCutFlow); }
 void Process::SetNormalizedCutFlow(CutFlow const & iCutFlow){ normalizedCutFlow	= CutFlow(iCutFlow); }
@@ -128,18 +132,6 @@ string const Process::GetType() const {				return type;			}
 bool const Process::IsMC() const { return ((type.compare("mcBackground")==0) || (type.compare("signal")==0)); }
 bool const Process::Plot() const { return plot; }
 void Process::SetNtuplePaths(vector<string> const iPath){ ntuplePaths = iPath; }
-
-void Process::SetPlot(map<string,string> const & iParams){
-	bool result;
-	if(iParams.find("plot")->second.compare("All")==0){
-		result = true;
-	}else{
-		string enabledProcesses = " " + iParams.find("plot")->second + " ";
-		string thisProcess			 = " " + shortName + " ";
-		result = IsStringThere(thisProcess,enabledProcesses);
-	}
-	plot = result;
-}
 
 bool const Process::IsCollisions() const { return ((type.compare("collisions")==0)); }
 bool const Process::IsMCbackground() const { return ((type.compare("mcBackground")==0)); }
@@ -169,40 +161,22 @@ void Process::SetNiceName(string const iVal){ niceName = iVal; }
 void Process::SetLabelForLegend(string const iVal){ labelForLegend = iVal; }
 void Process::SetAnalyzed(){ analyzed = true; }
 bool const Process::Analyzed() const { return analyzed; }
-HContainer* Process::GetHContainerForSignal(){ 
-return &hContainerForSignal; }
-HContainer const * Process::GetHContainerForSignal() const { return &hContainerForSignal; }
 
-HWrapper const * Process::GetHistoForSignal(string const iName) const { return (hContainerForSignal.Get(iName)); }
-
-bool const Process::IsStringThere(string iNeedle, string iHaystack) const {
-	string haystack = iHaystack;
-	string needle = iNeedle;
-	bool const result = ((haystack.find(needle) < haystack.length()));
-	return result;
+void
+Process::ResetHistograms()
+{
+    for (auto& pair: hContainerForSignal)
+        pair.second->GetHisto()->Reset("M");
 }
 
-
-int const Process::GetNumberOfPlots() const {
-	return hContainerForSignal.size();
-}
-
-HWrapper const * Process::GetAvailableHWrapper() const {
-	if(hContainerForSignal.size()==0){ cerr << "ERROR: trying to obtain a sample HWrapper from process but there are none" << endl; }
-	return &((hContainerForSignal.begin()))->second;
-}
-
-HWrapper const * Process::GetAvailableHWrapper(string const iName) const {
-	if(hContainerForSignal.size()==0){ cerr << "ERROR: trying to obtain a sample HWrapper from process but there are none" << endl; }
-	return ((hContainerForSignal.Get(iName)));
+void
+Process::ScaleHistograms(double factor)
+{
+    for (auto& pair: hContainerForSignal)
+        pair.second->ScaleBy(factor);
 }
 
 // Massive set histogram properties
-void Process::SetMarkerStyle(int const iVal){ hContainerForSignal.SetMarkerStyle(iVal); }
-void Process::SetFillStyle(int const iVal){ hContainerForSignal.SetFillStyle(iVal); }
-void Process::SetFillColor(int const iVal){ hContainerForSignal.SetFillColor(iVal); }
-void Process::SetLineColor(int const iVal){ hContainerForSignal.SetLineColor(iVal); }
-void Process::SetLineWidth(int const iVal){ hContainerForSignal.SetLineWidth(iVal,color); }
 void Process::SetGoodEventsForSignal(const vector<Process::Event>& iVector){ goodEventsForSignal = iVector; }
 
 
@@ -230,25 +204,14 @@ Process::NormalizeToLumi(double const iIntLumi)
 			<< "\tSF............" << lumiNormalization << "\n" 
 			<< "\trelSysSuncertainty....." << relSysUncertainty*100 << "%" << "\n" << endl; //*/
 
-		ScaleBy(lumiNormalization);
+        // FIXME
+                // ScaleBy(lumiNormalization);
 		GetCutFlow()->RegisterCutFromLast("Lumi norm", 2, lumiNormalization);
 
-        hContainerForSignal.AddRelErrorInQuadrature(relSysUncertainty);
+      // FIXME
+        // hContainerForSignal.AddRelErrorInQuadrature(relSysUncertainty);
 	}
 	normalizedHistosForSignal	= true;
-}
-
-void Process::NormalizeToOne(){
-	NormalizeTo(1);
-	normalizedHistosForSignal	= true;
-}
-
-void Process::NormalizeTo(double const iNormalization){
-	hContainerForSignal.NormalizeTo(iNormalization);
-}
-
-void Process::ScaleBy(double const iScale){
-	hContainerForSignal.ScaleBy(iScale);
 }
 
 void Process::BuildNormalizedCutFlow(){ normalizedCutFlow.BuildNormalizedCutFlow(&cutFlow); }
@@ -256,8 +219,8 @@ void Process::BuildNormalizedCutFlow(){ normalizedCutFlow.BuildNormalizedCutFlow
 void Process::Add(Process* iProcess){
     for (const auto& p: iProcess->GetNtuplePaths())
         ntuplePaths.push_back(p);
-	iProcess->GetHContainerForSignal();
-	hContainerForSignal.Add(*(iProcess->GetHContainerForSignal()));
+    // FIXME
+        // hContainerForSignal.Add(*(iProcess->GetHContainerForSignal()));
 	cutFlow.Add(*(iProcess->GetCutFlow()));
 	normalizedCutFlow.Add(*(iProcess->GetNormalizedCutFlow()));
 }

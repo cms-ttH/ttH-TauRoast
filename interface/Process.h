@@ -5,9 +5,10 @@
 #include <vector>
 #include <string>
 
+#include <iostream>
+
 #include "CutFlow.h"
 #include "HWrapper.h"
-#include "HContainer.h"
 
 namespace roast {
     class Process {
@@ -25,7 +26,7 @@ namespace roast {
 
        private:
             std::vector<roast::Process::Event> goodEventsForSignal;
-          HContainer				hContainerForSignal;
+            std::map<std::string, roast::HWrapper*> hContainerForSignal;
           CutFlow					cutFlow;
           CutFlow					normalizedCutFlow;
 
@@ -57,11 +58,6 @@ namespace roast {
           
             double relSysUncertainty;
 
-          void NormalizeTo(double const);
-          void BookHistos(HContainer const *);
-
-
-          bool const IsStringThere(string, string) const;
           bool PlotProcess(string const);
 
        public :
@@ -92,14 +88,11 @@ namespace roast {
             void                SetRelSysUncertainty(double const);
 
           void				NormalizeToLumi(double const);
-          void				NormalizeToOne();
           void				BuildNormalizedCutFlow();
-          void				ScaleBy(double const);
           void				SetAnalyzed();
           bool const			Analyzed() const;
 
             std::vector<Event> const GetGoodEventsForSignal() const;
-          void				SetHContainerForSignal(HContainer const &);
           void				SetCutFlow(CutFlow const &);
           void				SetNormalizedCutFlow(CutFlow const &);
           CutFlow *			GetCutFlow();
@@ -119,7 +112,6 @@ namespace roast {
           bool const			IsSignal() const;
           bool const			IsMC() const;
           bool const			Plot() const;
-          void				SetPlot(std::map<std::string, std::string> const &);
 
           double const		GetCrossSection() const;
           double const		GetBranchingRatio() const;
@@ -131,20 +123,16 @@ namespace roast {
           bool const			NormalizedHistosForSignal() const;
 
 
-          HContainer *	GetHContainerForSignal();
-          HContainer const *	GetHContainerForSignal() const;
+          inline void AddHistogram(const std::string& name, const roast::HWrapper& histo) { hContainerForSignal[name] = new HWrapper(histo); };
+          inline std::map<std::string, roast::HWrapper*> GetHContainerForSignal() {
+              return hContainerForSignal;
+          };
+          inline const std::map<std::string, roast::HWrapper*> GetHContainerForSignal() const {
+              return hContainerForSignal;
+          };
+          void ResetHistograms();
+          void ScaleHistograms(double);
 
-          roast::HWrapper const *	GetAvailableHWrapper() const;
-          roast::HWrapper const *	GetAvailableHWrapper(string const) const;
-          roast::HWrapper const *	GetHistoForSignal(string const) const;
-
-          int const			GetNumberOfPlots() const;
-
-          void				SetMarkerStyle(int const);
-          void				SetFillColor(int const);
-          void				SetFillStyle(int const);
-          void				SetLineColor(int const);
-          void				SetLineWidth(int const);
           void 				SetGoodEventsForSignal(const std::vector<roast::Process::Event>&);
           void				Add(roast::Process*);
 

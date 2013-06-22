@@ -2,13 +2,22 @@
 
 analysis:
     process:
-      - TTH_110
-      - TTH_115
-      - TTH_120
+      #  - TTH_110
+      #  - TTH_115
+      #  - TTH_120
+      - Collisions
+      - TTbar_Hadronic
+      - TTbar_SemiLept
+      - TTbar_FullLept
+      - TTH_125
+      - TTHTauTau_125_real
     plot: []
 
 physics:
     lumi: 19400
+    flags:
+        topPt: "normal"
+        lepton: "normal"
     cuts:
       # tops
       - "J_NumCleanCSVM:1:1"
@@ -52,9 +61,14 @@ physics:
         tau_id: 1.14
 
 paths:
-    input: /...
-    output: /...
+    # for analyzed processes
+    input: /afs/crc.nd.edu/user/m/mwolf3/www/test_roast/roast_processed.root
+    # for processes with filled histograms
+    output: /afs/crc.nd.edu/user/m/mwolf3/www/test_roast/roast_filled.root
+    # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} = name
+    stack format: "/afs/crc.nd.edu/user/m/mwolf3/www/test_roast/{t}/{d}/{n}.{t}"
     ntuples: /hadoop/users/matze/ttH/v45/2012/
     tree: makeNtuple/TTbarHTauTau
 
 processes: data/process_v45.yaml
+histograms: data/histograms.yaml

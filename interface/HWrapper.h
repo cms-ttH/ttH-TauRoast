@@ -44,7 +44,13 @@ namespace roast {
           // Default constructor
           HWrapper();
           HWrapper(const roast::HWrapper&);
-          HWrapper(string, string, string, std::map<std::string, std::string>);
+          HWrapper(string, string, string, const std::map<std::string, std::string>&);
+          HWrapper(std::string name, std::string subdir, std::string type,
+                  std::string xlabel, std::string ylabel, std::string zlabel,
+                  bool logx, bool logy, bool logz,
+                  int xbins, float xmin, float xmax, float xminvis, float xmaxvis,
+                  int ybins, float ymin, float ymax, float yminvis, float ymaxvis,
+                  bool showof, bool showuf, bool centerlabels, bool showtext);
           virtual ~HWrapper();
 
           TH1 const *		GetHisto() const;

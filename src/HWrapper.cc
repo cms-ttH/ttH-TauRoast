@@ -11,7 +11,7 @@ using namespace std;
 using namespace roast;
 
 // Default constructor
-HWrapper::HWrapper() : histo(0) {}
+HWrapper::HWrapper() : histo(0), isTH1F(true), isTH2F(false) {}
 
 // Copy constructor
 HWrapper::HWrapper(HWrapper const & iHWrapper){
@@ -19,7 +19,8 @@ HWrapper::HWrapper(HWrapper const & iHWrapper){
 	isTH1F = iHWrapper.IsTH1F();
 	isTH2F = iHWrapper.IsTH2F();
 	if(isTH1F){ TH1Type = "th1f"; }
-	this->SetHisto(*iHWrapper.GetHisto());
+    if (iHWrapper.GetHisto())
+        this->SetHisto(*iHWrapper.GetHisto());
 
 	name					= iHWrapper.GetName();
 	subdir					= iHWrapper.GetSubDir();
@@ -39,35 +40,77 @@ HWrapper::HWrapper(HWrapper const & iHWrapper){
 	NOEraw					= iHWrapper.GetNOEraw();
 }
 
+HWrapper::HWrapper(string name, string subdir, string type,
+        string xlabel, string ylabel, string zlabel,
+        bool logx, bool logy, bool logz,
+        int xbins, float xmin, float xmax, float xminvis, float xmaxvis,
+        int ybins, float ymin, float ymax, float yminvis, float ymaxvis,
+        bool showof, bool showuf, bool centerlabels, bool showtext) :
+    name(name),
+    subdir(subdir),
+    xMinVis(xminvis),
+    xMaxVis(xmaxvis),
+    yMinVis(yminvis),
+    yMaxVis(ymaxvis),
+    logx(logx),
+    logy(logy),
+    logz(logz),
+    showOverFlow(showof),
+    showUnderFlow(showuf),
+    showText(showtext),
+    centerLabels(centerlabels)
+{
+    try {
+        if (type == "th1f") {
+            isTH1F = true;
+            isTH2F = false;
+            histo1 = TH1F(name.c_str(), name.c_str(), xbins, xmin, xmax);
+            histo = &histo1;
+        } else {
+            isTH1F = false;
+            isTH2F = true;
+            histo2 = TH2F(name.c_str(), name.c_str(), xbins, xmin, xmax, ybins, ymin, ymax);
+            histo = &histo2;
+        }
+    } catch (...) {
+        std::cout << "EXCPETION" << std::endl;
+    }
+}
 
-HWrapper::HWrapper(string iName, string iSubDir, string iType, std::map<std::string, std::string> config)
+HWrapper::HWrapper(string iName, string iSubDir, string iType, const std::map<std::string, std::string>& config)
 {
    using boost::lexical_cast;
 
 	histo = NULL;
 	name = iName;
 	subdir = iSubDir;
-	const int nBinsX = lexical_cast<int>(config["numBinsX"]);
-	const float xMin = lexical_cast<float>(config["xMin"]);
-	const float xMax = lexical_cast<float>(config["xMax"]);
+	const int nBinsX = lexical_cast<int>(config.find("numBinsX")->second);
+	const float xMin = lexical_cast<float>(config.find("xMin")->second);
+	const float xMax = lexical_cast<float>(config.find("xMax")->second);
 
 	if(iType.compare("th1f") == 0){ // Specific parameters for TH1F
 		isTH1F = true; isTH2F = false;
 		histo1 = TH1F(iName.c_str(), iName.c_str(), nBinsX, xMin, xMax);
 		histo = &histo1;
-		showOverFlow	= lexical_cast<bool>(config["showOF"]);
-		showUnderFlow	= lexical_cast<bool>(config["showUF"]);
+        try {
+            showOverFlow	= lexical_cast<bool>(config.find("showOF")->second);
+        } catch (...) {}
+        try {
+            showUnderFlow	= lexical_cast<bool>(config.find("showUF")->second);
+        } catch (...) {}
 	}else if(iType.compare("th2f") == 0){ // Specific paramaters for TH2F
 		isTH1F = false; isTH2F = true;
-		const int nBinsY = lexical_cast<int>(config["numBinsY"]);
-		const float yMin = lexical_cast<float>(config["yMin"]);
-		const float yMax = lexical_cast<float>(config["yMax"]);
+		const int nBinsY = lexical_cast<int>(config.find("numBinsY")->second);
+		const float yMin = lexical_cast<float>(config.find("yMin")->second);
+		const float yMax = lexical_cast<float>(config.find("yMax")->second);
 		histo2 = TH2F(iName.c_str(), iName.c_str(), nBinsX, xMin, xMax, nBinsY, yMin, yMax);
 		histo = &histo2;
 
 		// Visible z axis range
-		histo->GetZaxis()->SetTitle(config["zTitle"].c_str());
-		logz = lexical_cast<bool>(config["logz"]);
+		histo->GetZaxis()->SetTitle(config.find("zTitle")->second.c_str());
+        try {
+            logz = lexical_cast<bool>(config.find("logz")->second);
+        } catch (...) {}
 	}else{
 		cerr << "ERROR: trying to make a HWrapper but TH1 type \"" << iType << "\" invalid" << endl; exit(1);
 	}
@@ -80,26 +123,34 @@ HWrapper::HWrapper(string iName, string iSubDir, string iType, std::map<std::str
 	//histo->Sumw2();
 
 	// Visible x axis range
-	xMinVis = lexical_cast<double>(config["xMinVis"]);
-	xMaxVis = lexical_cast<double>(config["xMaxVis"]);
+	xMinVis = lexical_cast<double>(config.find("xMinVis")->second);
+	xMaxVis = lexical_cast<double>(config.find("xMaxVis")->second);
 	histo->GetXaxis()->SetRangeUser(xMinVis, xMaxVis);
 
 	// Visible y axis range
-	yMinVis = lexical_cast<double>(config["yMinVis"]);
-	yMaxVis = lexical_cast<double>(config["yMaxVis"]);
+	yMinVis = lexical_cast<double>(config.find("yMinVis")->second);
+	yMaxVis = lexical_cast<double>(config.find("yMaxVis")->second);
 	histo->GetYaxis()->SetRangeUser(yMinVis, yMaxVis);
 
 	// x,y axis titles
-	histo->GetXaxis()->SetTitle(config["xTitle"].c_str());
-	histo->GetYaxis()->SetTitle(config["yTitle"].c_str());
+	histo->GetXaxis()->SetTitle(config.find("xTitle")->second.c_str());
+	histo->GetYaxis()->SetTitle(config.find("yTitle")->second.c_str());
 
 	// Do log versions?
-	logx = lexical_cast<bool>(config["logx"]);
-	logy = lexical_cast<bool>(config["logy"]);
+    try {
+        logx = lexical_cast<bool>(config.find("logx")->second);
+    } catch (...) {}
+    try {
+        logy = lexical_cast<bool>(config.find("logy")->second);
+    } catch (...) {}
 	
 	// Other
-	showText		= lexical_cast<bool>(config["showText"]);
-	centerLabels	= lexical_cast<bool>(config["centerLabels"]);
+    try {
+        showText		= lexical_cast<bool>(config.find("showText")->second);
+    } catch (...) {}
+    try {
+        centerLabels	= lexical_cast<bool>(config.find("centerLabels")->second);
+    } catch (...) {}
 	NOEraw			= 0;
 
 }

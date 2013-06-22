@@ -8,6 +8,7 @@
 #include "TChain.h"
 
 #include "CutFlow.h"
+#include "HWrapper.h"
 
 namespace roast {
     class Branches {
@@ -32,6 +33,7 @@ namespace roast {
             Long64_t GetEntries();
             virtual unsigned int GetNCombos() = 0;
             virtual bool IsGoodGenMatch(const int&) const = 0;
+            virtual void FillHistograms(std::map<std::string, roast::HWrapper*>&, int, float, float pu_weight=1.) = 0;
             virtual void RegisterCuts(CutFlow&) = 0;
 
             void				SetBestCombo(int);

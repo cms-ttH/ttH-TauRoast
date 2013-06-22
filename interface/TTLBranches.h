@@ -23,6 +23,7 @@ namespace roast {
 
                 virtual void GetEntry(double);
                 inline virtual unsigned int GetNCombos() { return TTL_NumCombos; };
+                virtual void FillHistograms(std::map<std::string, roast::HWrapper*>&, int, float, float pu_weight=1.);
                 virtual bool IsGoodGenMatch(const int&) const;
                 virtual void RegisterCuts(CutFlow&);
 
