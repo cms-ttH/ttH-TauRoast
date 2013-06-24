@@ -1,6 +1,7 @@
 # vim: set sw=4 sta et :
 
 analysis:
+    max events: 20000
     process:
       #  - TTH_110
       #  - TTH_115

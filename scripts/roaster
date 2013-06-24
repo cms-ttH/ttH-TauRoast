@@ -112,7 +112,7 @@ def analyze(config):
 
     processed = []
     for p in processes:
-        roast.ttl.analyze(p, vectorize(config['physics']['cuts'], 'string'), 5000)
+        roast.ttl.analyze(p, vectorize(config['physics']['cuts'], 'string'), config['analysis']['max events'])
         processed.append(p)
     return processed
 
