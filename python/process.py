@@ -226,7 +226,10 @@ def fill_histos(config, processes):
             weights.jetCSV += w_jet_csv
             weights.total += 1
 
-            w_tot = w_lepton * w_pu * w_tau1_trigger * w_tau2_trigger * w_tau_id * w_q2 * w_top_pt
+            # this should contain all but the total weight from above!
+            w_tot = w_top_pt * w_lepton * w_pu * \
+                w_tau1_trigger * w_tau2_trigger * \
+                w_pu * w_tau_id * w_q2 * w_jet_csv
 
             branches.FillHistograms(p.GetHContainerForSignal(), idx, w_tot, w_pu)
             # print p.GetHContainerForSignal().size()
@@ -267,5 +270,5 @@ def fill_histos(config, processes):
             cutflow.RegisterCut("Q^2 shift", 2, q2_eff * cutflow.GetLastCountForSignal())
         if "eTauFake" in flags or "jetTauFake" in flags or "tauIdEff" in flags:
             cutflow.RegisterCut("tau ID sys", 2, tau_id_eff * cutflow.GetLastCountForSignal())
-        if "JetCSVWeight" in flags:
+        if any(lambda s: s.startswith("CSVeventWeight"), flags.keys()):
             cutflow.RegisterCut("jet CSV wt.", 2, jet_csv_eff * cutflow.GetLastCountForSignal())
