@@ -15,9 +15,7 @@ namespace roast {
        private:
           string  name;
           string	subdir;
-          TH1*	histo;
-          TH1F	histo1;
-          TH2F	histo2;
+          TH1F*	histo;
           bool	isTH2F;
           bool	isTH1F;
           float	xbins[100];
@@ -53,8 +51,8 @@ namespace roast {
                   bool showof, bool showuf, bool centerlabels, bool showtext);
           virtual ~HWrapper();
 
-          TH1 const *		GetHisto() const;
-          TH1 *			GetHisto();
+          inline TH1 const * GetHisto() const { return histo; };
+          inline TH1 * GetHisto() { return histo; };
           string			GetName() const;
           string			GetSubDir() const;
           float const		GetMinXVis() const;
@@ -83,14 +81,14 @@ namespace roast {
           double const	GetMaximumWithError() const;
 
 
-          void	SetHisto(TH1 const &);
-          void	SetHisto(TH1*);
+          void SetHisto(const TH1*);
           void	SetIsTH1F(bool const);
           void	SetIsTH2F(bool const);
           void	SetMaximum(double const);
           void	ResetMaximum(double const iFactor=1.1);
           void	Add(TH1 const &, double const iFactor=1.0);
-          void	Add(HWrapper const &, double const iFactor=1.0);
+          void	Add(HWrapper const &, double const);
+          inline void Add(const HWrapper& w) { Add(w, 1.0); };
           void	NormalizeTo(double const);
           void	ScaleBy(double const);
           void	ScaleErrorBy(double const);

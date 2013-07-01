@@ -12,7 +12,10 @@ analysis:
       - TTbar_FullLept
       - TTH_125
       - TTHTauTau_125_real
-    plot: []
+    plot: [Collisions, TTH_125, TTbar_Hadronic, TTbar_SemiLept, TTbar_FullLept]
+
+display:
+    legend columns: 3
 
 physics:
     lumi: 19400
@@ -66,8 +69,9 @@ paths:
     input: /afs/crc.nd.edu/user/m/mwolf3/www/test_roast/roast_processed.root
     # for processes with filled histograms
     output: /afs/crc.nd.edu/user/m/mwolf3/www/test_roast/roast_filled.root
-    # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} = name
-    stack format: "/afs/crc.nd.edu/user/m/mwolf3/www/test_roast/{t}/{d}/{n}.{t}"
+    # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
+    # name; {m} = mode (log)
+    stack format: "/afs/crc.nd.edu/user/m/mwolf3/www/test_roast/{t}/{d}/{n}{m}.{t}"
     ntuples: /hadoop/users/matze/ttH/v45/2012/
     tree: makeNtuple/TTbarHTauTau
 

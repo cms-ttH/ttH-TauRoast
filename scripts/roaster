@@ -16,8 +16,10 @@ except:
 
 import yaml
 
+from TTHTauTau.Roast.display import stack
 from TTHTauTau.Roast.helper import *
 from TTHTauTau.Roast.process import analyze, fill_histos
+from TTHTauTau.Roast.style import *
 
 def save(items, name, file):
     """Save a list of objects to a `file` with the key `name`."""
@@ -37,94 +39,6 @@ def load(name, file):
     for o in obj:
         items.append(o)
     return items
-
-def normalize_processes(options, processes):
-    lumi = options['physics']['lumi']
-
-    try:
-        coll = get_collisions(processes)
-        if coll.GetNOEanalyzed() != coll.GetNOEinNtuple():
-            lumi *= coll.GetNOEanalyzed() / float(coll.GetNOEinNtuple())
-        coll.GetCutFlow().RegisterCutFromLast("Lumi norm", 2, 1)
-        coll.BuildNormalizedCutFlow()
-    except:
-        pass
-
-    for p in processes:
-        if p.IsCollisions():
-            continue
-
-        est_lumi = lumi * p.GetCrossSection() * p.GetBranchingRatio()
-        raw_events = p.GetNOEinDS() * p.GetNOEanalyzed() / float(p.GetNOEinNtuple())
-
-        p.ScaleHistograms(est_lumi / raw_events)
-        p.GetCutFlow().RegisterCutFromLast("Lumi norm", 2, est_lumi / raw_events)
-        p.BuildNormalizedCutFlow()
-
-
-
-
-
-def get_integrals(histname, processes):
-    vals = []
-    for p in processes:
-        vals.append(p.GetHContainerForSignal()[histname].GetHisto().Integral())
-    return vals
-
-def get_maximum(histname, processes, inc_error=False):
-    vals = []
-    for p in processes:
-        if inc_error:
-            vals.append(p.GetHContainerForSignal()[histname].GetMaximumWithError())
-        else:
-            vals.append(p.GetHContainerForSignal()[histname].GetMaximum())
-    return max(vals)
-
-def plot_stacks(options, processes):
-    procs = filter(lambda p: p.GetShortName() in options['analysis']['plot'], processes)
-
-    plot_ratio = True
-
-    padding = 0.001
-    y_divide = 0.25
-    ratio_plot_max = 2.5
-    bottom_margin = 0.35
-    small_number = 0.0001
-
-    for histname in procs[0].GetHistogramNames():
-        if all(map(lambda v: v <= 0, get_integrals(histname, procs))):
-            # FIXME log this properly
-            print "Empty histogram:", histname
-            continue
-
-        print "Saving", histname
-
-        max_y = 1.3 * get_maximum(histname, procs, True)
-
-        base_histo = roast.HWrapper(procs[0].GetHContainerForSignal()[histname])
-        base_histo.ScaleBy(0)
-
-        if plot_ratio:
-            min_y = 0.002
-            canvas = r.TCanvas(histname, histname, 800, 1000)
-            canvas.Divide(1, 2)
-            canvas.GetPad(1).SetPad(padding, y_divide + padding, 1 - padding, 1 - padding)
-            canvas.GetPad(1).SetTopMargin(0.065)
-            canvas.GetPad(1).SetBottomMargin(0)
-            canvas.GetPad(2).SetPad(padding, padding, 1 - padding, y_divide - padding)
-            canvas.GetPad(2).SetBottomMargin(bottom_margin)
-            canvas.cd(1)
-        else:
-            min_y = 0.001
-            canvas = r.TCanvas(histname, histname, 800, 800)
-            canvas.cd()
-
-        base_histo.GetHisto().GetYaxis().SetRangeUser(min_y, max_y)
-        base_histo.GetHisto().Draw("HIST")
-
-
-
-        canvas.SaveAs("foo.png")
 
 from optparse import OptionParser
 
@@ -173,7 +87,9 @@ normalize_processes(baseconfig, procs)
 # print procs[0].GetCutFlow().GetLastCut()
 
 if opts.plot:
-    plot_stacks(baseconfig, procs)
+    style = create_tdr_style()
+    style.cd()
+    stack(baseconfig, procs)
 
 # print "passed", len(procs[0].GetGoodEventsForSignal())
 # for e in procs[0].GetGoodEventsForSignal():

@@ -14,13 +14,14 @@ using namespace roast;
 HWrapper::HWrapper() : histo(0), isTH1F(true), isTH2F(false) {}
 
 // Copy constructor
-HWrapper::HWrapper(HWrapper const & iHWrapper){
-	histo = NULL;
+HWrapper::HWrapper(HWrapper const & iHWrapper) :
+    histo(0)
+{
 	isTH1F = iHWrapper.IsTH1F();
 	isTH2F = iHWrapper.IsTH2F();
 	if(isTH1F){ TH1Type = "th1f"; }
     if (iHWrapper.GetHisto())
-        this->SetHisto(*iHWrapper.GetHisto());
+        this->SetHisto(iHWrapper.GetHisto());
 
 	name					= iHWrapper.GetName();
 	subdir					= iHWrapper.GetSubDir();
@@ -58,26 +59,32 @@ HWrapper::HWrapper(string name, string subdir, string type,
     showOverFlow(showof),
     showUnderFlow(showuf),
     showText(showtext),
-    centerLabels(centerlabels)
+    centerLabels(centerlabels),
+    histo(0)
 {
     try {
         if (type == "th1f") {
             isTH1F = true;
             isTH2F = false;
-            histo1 = TH1F(name.c_str(), name.c_str(), xbins, xmin, xmax);
-            histo = &histo1;
+            histo = new TH1F(name.c_str(), name.c_str(), xbins, xmin, xmax);
         } else {
             isTH1F = false;
             isTH2F = true;
-            histo2 = TH2F(name.c_str(), name.c_str(), xbins, xmin, xmax, ybins, ymin, ymax);
-            histo = &histo2;
+            histo = 0;
+            // histo = new TH2F(name.c_str(), name.c_str(), xbins, xmin, xmax, ybins, ymin, ymax);
         }
     } catch (...) {
         std::cout << "EXCPETION" << std::endl;
     }
+
+    histo->GetXaxis()->SetTitle(xlabel.c_str());
+    histo->GetYaxis()->SetTitle(ylabel.c_str());
+    // histo->GetXaxis()->SetRangeUser(xminvis, xmaxvis);
+    // histo->GetYaxis()->SetRangeUser(yminvis, ymaxvis);
 }
 
-HWrapper::HWrapper(string iName, string iSubDir, string iType, const std::map<std::string, std::string>& config)
+HWrapper::HWrapper(string iName, string iSubDir, string iType, const std::map<std::string, std::string>& config) :
+    histo(0)
 {
    using boost::lexical_cast;
 
@@ -90,8 +97,7 @@ HWrapper::HWrapper(string iName, string iSubDir, string iType, const std::map<st
 
 	if(iType.compare("th1f") == 0){ // Specific parameters for TH1F
 		isTH1F = true; isTH2F = false;
-		histo1 = TH1F(iName.c_str(), iName.c_str(), nBinsX, xMin, xMax);
-		histo = &histo1;
+		histo = new TH1F(iName.c_str(), iName.c_str(), nBinsX, xMin, xMax);
         try {
             showOverFlow	= lexical_cast<bool>(config.find("showOF")->second);
         } catch (...) {}
@@ -103,11 +109,10 @@ HWrapper::HWrapper(string iName, string iSubDir, string iType, const std::map<st
 		const int nBinsY = lexical_cast<int>(config.find("numBinsY")->second);
 		const float yMin = lexical_cast<float>(config.find("yMin")->second);
 		const float yMax = lexical_cast<float>(config.find("yMax")->second);
-		histo2 = TH2F(iName.c_str(), iName.c_str(), nBinsX, xMin, xMax, nBinsY, yMin, yMax);
-		histo = &histo2;
+                // histo = new TH2F(iName.c_str(), iName.c_str(), nBinsX, xMin, xMax, nBinsY, yMin, yMax);
 
 		// Visible z axis range
-		histo->GetZaxis()->SetTitle(config.find("zTitle")->second.c_str());
+                // histo->GetZaxis()->SetTitle(config.find("zTitle")->second.c_str());
         try {
             logz = lexical_cast<bool>(config.find("logz")->second);
         } catch (...) {}
@@ -156,13 +161,13 @@ HWrapper::HWrapper(string iName, string iSubDir, string iType, const std::map<st
 }
 
 // Default destructor
-HWrapper::~HWrapper(){
-	histo = NULL;
+HWrapper::~HWrapper()
+{
+    if (histo)
+        delete histo;
 }
 
 // Getter methods
-TH1 * 			HWrapper::GetHisto() { return (histo); }
-TH1 const * 	HWrapper::GetHisto() const { return (histo); }
 bool const		HWrapper::IsTH1F() const { return isTH1F; }
 bool const		HWrapper::IsTH2F() const { return isTH2F; }
 string			HWrapper::GetName() const { return name; }
@@ -198,35 +203,18 @@ void HWrapper::SetIsTH2F(bool const iValue){
 	isTH2F = iValue;
 }
 
-void HWrapper::SetHisto(TH1 const & iHisto){
+void
+HWrapper::SetHisto(const TH1* hist)
+{
+    TTimeStamp timestamp;
+    TRandom random;
+    stringstream ssName; ssName.str("");
+    ssName << hist->GetName() << timestamp.GetTimeSpec().tv_sec << timestamp.GetTimeSpec().tv_nsec << random.Gaus();
 
-	if(isTH1F && isTH2F) { cerr << "ERROR: trying to set histo in HWrapper but it's both a TH1F and a TH2F" << endl; exit(1); }
-	else if(isTH1F){ histo = &histo1; }
-	else if(isTH2F){ histo = &histo2; }
-	else { cerr << "ERROR: trying to set histo in HWrapper but it's neither a TH1F nor a TH2F" << endl; exit(1); }
+    if (histo)
+        delete histo;
 
-	TTimeStamp timestamp;
-	TRandom random;
-	stringstream ssName; ssName.str("");
-	ssName << timestamp.GetTimeSpec().tv_sec << timestamp.GetTimeSpec().tv_nsec << random.Gaus();
-
-	histo = (TH1*)iHisto.Clone((ssName.str()).c_str());
-}
-
-void HWrapper::SetHisto(TH1* iHisto){
-
-	if(isTH1F && isTH2F){
-		cerr << "ERROR: trying to set histo in HWrapper but it's both a TH1F and a TH2F" << endl;
-		exit(1);
-	}else if(isTH1F){
-		histo1 = TH1F(*(TH1F*)iHisto);
-		histo = &histo1;
-	}else if(isTH2F){
-		histo2 = TH2F(*(TH2F*)iHisto);
-		histo = &histo2;
-	}else { cerr << "ERROR: trying to set histo in HWrapper but it's neither a TH1F nor a TH2F" << endl; exit(1); }
-
-
+    histo = dynamic_cast<TH1F*>(hist->Clone((ssName.str()).c_str()));
 }
 
 void HWrapper::SetLineWidth(int iVal, int iColor){
@@ -254,7 +242,6 @@ void HWrapper::SetMarkerStyle(int const iValue){ histo->SetMarkerStyle(iValue); 
 // Other methods
 void HWrapper::Add(TH1 const & iHisto, double iFactor){ 
 	if(iFactor != iFactor){ cerr << "ERROR: trying to Add(TH1&, nan)" << endl; exit(1); }
-		cout << &iHisto << endl;
 	histo->Add(&iHisto, iFactor);
 }
 void HWrapper::Add(HWrapper const & iHisto, double const iFactor){ 

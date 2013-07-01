@@ -65,6 +65,8 @@ def analyze(config):
             clone = histo_default.copy()
             clone.update(histcfg)
             try:
+                if clone['type'] != "th1f":
+                    continue
                 w = roast.HWrapper(name, clone['dir'], clone['type'],
                         clone['xTitle'], clone['yTitle'], clone['zTitle'],
                         clone['logx'], clone['logy'], clone['logz'],

@@ -108,7 +108,7 @@ namespace roast {
           string const		GetType() const;
           bool const			CheckReality() const;
           bool const			IsCollisions() const;
-          bool const			IsMCbackground() const;
+          bool const			IsBackground() const;
           bool const			IsSignal() const;
           bool const			IsMC() const;
           bool const			Plot() const;
@@ -132,6 +132,7 @@ namespace roast {
           };
           void ResetHistograms();
           void ScaleHistograms(double);
+          std::vector<std::string> GetHistogramNames() const;
 
           void 				SetGoodEventsForSignal(const std::vector<roast::Process::Event>&);
           void				Add(roast::Process*);

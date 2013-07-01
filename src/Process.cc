@@ -134,7 +134,7 @@ bool const Process::Plot() const { return plot; }
 void Process::SetNtuplePaths(vector<string> const iPath){ ntuplePaths = iPath; }
 
 bool const Process::IsCollisions() const { return ((type.compare("collisions")==0)); }
-bool const Process::IsMCbackground() const { return ((type.compare("mcBackground")==0)); }
+bool const Process::IsBackground() const { return ((type.compare("mcBackground")==0)); }
 bool const Process::IsSignal() const { return ((type.compare("signal")==0)); }
 bool const Process::CheckReality() const { return checkReality; }
 vector<string> const Process::GetNtuplePaths() const { return ntuplePaths; }
@@ -166,14 +166,25 @@ void
 Process::ResetHistograms()
 {
     for (auto& pair: hContainerForSignal)
-        pair.second->GetHisto()->Reset("M");
+        if (pair.second->GetHisto())
+            pair.second->GetHisto()->Reset("M");
 }
 
 void
 Process::ScaleHistograms(double factor)
 {
     for (auto& pair: hContainerForSignal)
-        pair.second->ScaleBy(factor);
+        if (pair.second->GetHisto())
+            pair.second->ScaleBy(factor);
+}
+
+std::vector<std::string>
+Process::GetHistogramNames() const
+{
+    vector<string> res;
+    for (const auto& pair: hContainerForSignal)
+        res.push_back(pair.first);
+    return res;
 }
 
 // Massive set histogram properties
@@ -204,8 +215,7 @@ Process::NormalizeToLumi(double const iIntLumi)
 			<< "\tSF............" << lumiNormalization << "\n" 
 			<< "\trelSysSuncertainty....." << relSysUncertainty*100 << "%" << "\n" << endl; //*/
 
-        // FIXME
-                // ScaleBy(lumiNormalization);
+        ScaleHistograms(lumiNormalization);
 		GetCutFlow()->RegisterCutFromLast("Lumi norm", 2, lumiNormalization);
 
       // FIXME
