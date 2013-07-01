@@ -154,9 +154,11 @@ if opts.analyze:
     procs = analyze(baseconfig)
     save(procs, "Roast", baseconfig['paths']['input'])
 else:
-    procs = load("Roast", baseconfig['paths']['input'])
+    procs = None
 
 if opts.fill:
+    if not procs:
+        procs = load("Roast", baseconfig['paths']['input'])
     fill_histos(baseconfig, procs)
     save(procs, "Roast", baseconfig['paths']['output'])
 
@@ -164,7 +166,7 @@ if not (opts.plot):
     sys.exit(0)
 
 if not procs:
-    load(procs, "Roast", baseconfig['paths']['output'])
+    procs = load("Roast", baseconfig['paths']['output'])
 
 normalize_processes(baseconfig, procs)
 
