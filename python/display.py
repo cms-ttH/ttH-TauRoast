@@ -62,8 +62,7 @@ class Legend:
         self.__box_dy = 0.04 * y_length
         self.__legend_x = margin * x_length + x_offset
         self.__legend_dx = (1. - 2 * margin) / ncols * x_length
-        # self.__legend_y = (1. - margin) * y_length + y_offset
-        self.__legend_y = (1. - margin * x_length / float(y_length)) * y_length + y_offset
+        self.__legend_y = (1. - 0.5 * margin) * y_length + y_offset
         self.__legend_dy = 1.4 * self.__box_dy
         self.__pos_x = self.__legend_x
         self.__pos_y = self.__legend_y
