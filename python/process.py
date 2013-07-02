@@ -272,5 +272,5 @@ def fill_histos(config, processes):
             cutflow.RegisterCut("Q^2 shift", 2, q2_eff * cutflow.GetLastCountForSignal())
         if "eTauFake" in flags or "jetTauFake" in flags or "tauIdEff" in flags:
             cutflow.RegisterCut("tau ID sys", 2, tau_id_eff * cutflow.GetLastCountForSignal())
-        if any(lambda s: s.startswith("CSVeventWeight"), flags.keys()):
+        if any(map(lambda s: s.startswith("CSVeventWeight"), flags.keys())):
             cutflow.RegisterCut("jet CSV wt.", 2, jet_csv_eff * cutflow.GetLastCountForSignal())
