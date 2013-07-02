@@ -63,9 +63,9 @@ namespace roast {
        public :
           // Default constructor
           Process();
-          Process(roast::Process const &);
+          Process(const roast::Process&);
           Process(const std::string&, const std::string&, const std::string&, const std::string&,
-                  const std::string&, const std::vector<std::string>&, int, int, int, 
+                  const std::string&, const std::vector<std::string>&, int, int, int,
                   double, double, bool genmatch=false);
           virtual ~Process();
           void Update(roast::Process const *);

@@ -15,14 +15,16 @@ Process::Process()
    plot				= false;
 }
 
-Process::Process(Process const & iProcess){
+Process::Process(const Process& iProcess){
 
 	goodEventsForSignal				= iProcess.GetGoodEventsForSignal();
 
     for (auto& pair: hContainerForSignal)
         delete pair.second;
 
-	hContainerForSignal				= iProcess.GetHContainerForSignal();
+    for (auto& pair: iProcess.GetHContainerForSignal())
+        hContainerForSignal[pair.first] = new HWrapper(*pair.second);
+
 	cutFlow							= CutFlow(*iProcess.GetCutFlow());
 	normalizedCutFlow				= CutFlow(*iProcess.GetNormalizedCutFlow());
 
@@ -229,8 +231,8 @@ void Process::BuildNormalizedCutFlow(){ normalizedCutFlow.BuildNormalizedCutFlow
 void Process::Add(Process* iProcess){
     for (const auto& p: iProcess->GetNtuplePaths())
         ntuplePaths.push_back(p);
-    // FIXME
-        // hContainerForSignal.Add(*(iProcess->GetHContainerForSignal()));
+    for (auto& pair: hContainerForSignal)
+        pair.second->Add(*iProcess->GetHContainerForSignal()[pair.first]->GetHisto());
 	cutFlow.Add(*(iProcess->GetCutFlow()));
 	normalizedCutFlow.Add(*(iProcess->GetNormalizedCutFlow()));
 }
