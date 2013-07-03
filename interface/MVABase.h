@@ -53,6 +53,8 @@ namespace roast {
             ClassDef(MVABase, 1);
     };
 
+    void register_mva(const std::string&, MVABase*);
+
     template<typename W, typename T>
     void
     MVABase::AddVariableConditionally(W* obj, const string& name, const char& type, T& var)

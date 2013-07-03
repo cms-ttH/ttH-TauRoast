@@ -1,4 +1,58 @@
+import os
 import ROOT as r
+
+r.gROOT.SetBatch()
+r.gSystem.Load("libTTHTauTauRoast")
+
+try:
+    from ROOT import roast
+except:
+    sys.stderr.write("Failed to import 'roast'!\n")
+    sys.exit(1)
+
+def train_mva(config, processes):
+    cfg = config['analysis']['final mva']
+    if not os.path.exists(cfg['dir']):
+        os.makedirs(cfg['dir'])
+
+    mva = roast.ttl.MVABase(cfg['dir'], vectorize(cfg['variables'], 'string'), 1)
+
+    sig = get_process(cfg['signal'], processes)
+    bkg = vectorize(
+            map(lambda p: get_process(p, processes), cfg['background']),
+            'roast::Process*')
+    mva.CreateTrainingSample(sig, bkg)
+
+    m = r.std.map('string,string')()
+    for k, v in cfg['methods'].items():
+        m[k] = v
+
+    mva.TrainMVA(m)
+
+def book_mva(config, processes):
+    cfg = config['analysis']['final mva']
+    if not os.path.exists(cfg['dir']):
+        os.makedirs(cfg['dir'])
+
+    for method, opts in cfg['methods'].items():
+        mva = roast.ttl.MVABase(cfg['dir'], vectorize(cfg['variables']), 1)
+        if mva.BookMVA(method):
+            roast.register_mva(method, mva);
+
+def combine_processes(config, ps):
+    for cfg in config['analysis']['combine']:
+        to_combine = cfg['processes']
+        res = roast.Process(get_process(to_combine[0], ps))
+
+        for other in to_combine[1:]:
+            res.Add(get_process(other, ps))
+
+        res.SetShortName(cfg['alias'])
+        res.SetNiceName(cfg['name'])
+        res.SetLabelForLegend(cfg['legend'])
+        res.SetColor(cfg['color'])
+
+        ps.append(res)
 
 get_signals = lambda ps: filter(lambda p: p.IsSignal(), ps)
 get_backgrounds = lambda ps: filter(lambda p: p.IsBackground(), ps)
@@ -40,9 +94,11 @@ def normalize_processes(config, processes):
         p.GetCutFlow().RegisterCutFromLast("Lumi norm", 2, est_lumi / raw_events)
         p.BuildNormalizedCutFlow()
 
-def vectorize(items, cls):
+def vectorize(items, cls=None):
     """Create a vector of class `cls` and fill it with the object in the
     list `items`."""
+    if cls is None:
+        cls = type(items[0])
     res = r.std.vector(cls)()
     for i in items:
         res.push_back(i)

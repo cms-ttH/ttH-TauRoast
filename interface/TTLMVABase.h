@@ -13,7 +13,7 @@ namespace roast {
             public:
                 MVABase(const std::string&, const std::vector<std::string>&, const int rnk=1);
 
-                virtual void FillVariables(Branches*, const int);
+                virtual void FillVariables(roast::Branches*, const int);
 
             protected:
                 virtual roast::Branches* GetBranches(const Process*);

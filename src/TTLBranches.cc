@@ -276,6 +276,8 @@ ttl::Branches::FillHistograms(std::map<std::string, roast::HWrapper*>& histos, i
         } else {
             std::cout << "Can't find histogram FinalBDTG" << std::endl;
         }
+    } else {
+        std::cout << "Can't find BDTG" << std::endl;
     }
 
     if (auto mva = MVABase::gComboMVA["BDT"]) {

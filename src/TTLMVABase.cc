@@ -71,7 +71,7 @@ namespace roast {
    }
 
    void
-   ttl::MVABase::FillVariables(Branches *branches, const int combo)
+   ttl::MVABase::FillVariables(roast::Branches *branches, const int combo)
    {
       roast::ttl::Branches *event = dynamic_cast<roast::ttl::Branches*>(branches);
 

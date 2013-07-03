@@ -2,6 +2,19 @@
 
 analysis:
     max events: 20000
+    final mva:
+        dir: /afs/crc.nd.edu/user/m/mwolf3/www/test_roast/final mva
+        methods:
+            BDTG: "!H:!V:NTrees=1000:BoostType=Grad:Shrinkage=0.10:UseBaggedGrad:GradBaggingFraction=0.5:nCuts=20:NNodesMax=5"
+        signal: TTHTauTau_125_real
+        background: [TTbar_Hadronic, TTbar_SemiLept, TTbar_FullLept]
+        variables:
+          - Tau1Pt
+          - Tau1Eta
+          - Tau1DecayMode
+          - Tau2DecayMode
+          - Tau1IsolationMVA2Raw
+          - LeadingJetPt
     process:
       #  - TTH_110
       #  - TTH_115
@@ -12,7 +25,13 @@ analysis:
       - TTbar_FullLept
       - TTH_125
       - TTHTauTau_125_real
-    plot: [Collisions, TTH_125, TTbar_Hadronic, TTbar_SemiLept, TTbar_FullLept]
+    combine:
+      - alias: TTbar
+        name: t + tbar
+        legend: "t #bar{t}"
+        color: 633
+        processes: [TTbar_Hadronic, TTbar_SemiLept, TTbar_FullLept]
+    plot: [Collisions, TTH_125, TTbar, TTbar_Hadronic]
 
 display:
     legend columns: 3

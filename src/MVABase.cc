@@ -216,6 +216,12 @@ namespace roast {
         FillVariables(event, combo);
         return reader->EvaluateMVA(method + " method");
     }
+
+    void
+    register_mva(const string& name, MVABase *mva)
+    {
+        MVABase::gMVA[name] = mva;
+    }
 }
 
 ClassImp(roast::MVABase)
