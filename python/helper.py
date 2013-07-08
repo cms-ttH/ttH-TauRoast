@@ -40,14 +40,14 @@ def book_mva(config, processes):
             roast.register_mva(method, mva);
 
 def combine_processes(config, ps):
-    for cfg in config['analysis']['combine']:
+    for (alias, cfg) in config['analysis']['combine'].items():
         to_combine = cfg['processes']
         res = roast.Process(get_process(to_combine[0], ps))
 
         for other in to_combine[1:]:
             res.Add(get_process(other, ps))
 
-        res.SetShortName(cfg['alias'])
+        res.SetShortName(alias)
         res.SetNiceName(cfg['name'])
         res.SetLabelForLegend(cfg['legend'])
         res.SetColor(cfg['color'])

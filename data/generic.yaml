@@ -26,12 +26,36 @@ analysis:
       - TTH_125
       - TTHTauTau_125_real
     combine:
-      - alias: TTbar
-        name: t + tbar
-        legend: "t #bar{t}"
-        color: 633
-        processes: [TTbar_Hadronic, TTbar_SemiLept, TTbar_FullLept]
-    plot: [Collisions, TTH_125, TTbar, TTbar_Hadronic]
+        TTbar:
+            name: t + tbar
+            legend: "t #bar{t}"
+            color: 633
+            processes: [TTbar_Hadronic, TTbar_SemiLept, TTbar_FullLept]
+        Zjets:
+            name: Z + jets
+            legend: Z + jets
+            color: 418
+            processes: [ZplusJets_LowMass, ZplusOneJet, ZplusTwoJets, ZplusThreeJets, ZplusFourJets]
+        DiBoson:
+            name: WW, WZ, ZZ
+            legend: WW, WZ, ZZ
+            color: 432
+            processes: [WW, WZ, ZZ]
+        SingleTop:
+            name: Single t/tbar
+            legend: "single t/#bar{t}"
+            color: 616
+            processes: [singleTopSch, singleTopBarSch, singleTopTch, singleTopBarTch, singleTopPlusW, singleTopBarPlusW]
+        ttWZ:
+            name: ttbar + W/Z
+            legend: "t#bar{t} + W/Z"
+            color: 590
+            processes: [ttPlusW, ttPlusZ]
+        Wjets:
+            name: W + jets
+            legend: W + jets
+            color: 861
+            processes: [WplusOneJet, WplusTwoJets, WplusThreeJets, WplusFourJets]
 
 display:
     legend columns: 3
