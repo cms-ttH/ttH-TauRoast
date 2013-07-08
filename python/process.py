@@ -113,7 +113,7 @@ def fill_histos(config, processes):
             w_jet_csv = 1.
 
             if 'topPt' in flags:
-                if flags['topPt'] == "normal":
+                if flags['topPt'] == "nominal":
                     w_top_pt = branches.Ev_topPtWeight
                 elif flags['topPt'] == "up":
                     w_top_pt = branches.Ev_topPtWeightUp
@@ -121,11 +121,11 @@ def fill_histos(config, processes):
                     w_top_pt = branches.Ev_topPtWeightDown
 
             if 'leptonSF' in flags:
-                if flags['leptonSF'] == "normal":
+                if flags['leptonSF'] == "nominal":
                     w_lepton = branches.TTL_LeptonEventWeight[idx]
 
             if 'PUcorr' in flags:
-                if flags['PUcorr'] == "normal":
+                if flags['PUcorr'] == "nominal":
                     w_pu = branches.Ev_puWeight
                 elif flags['PUcorr'] == "up":
                     w_pu = branches.Ev_puWeightUp
@@ -155,7 +155,7 @@ def fill_histos(config, processes):
                     iQ2SysWeight = branches.Ev_q2WeightDown
 
             if 'CSVeventWeight' in flags:
-                if flags['CSVeventWeight'] == "normal":
+                if flags['CSVeventWeight'] == "nominal":
                     w_jet_csv = branches.TTL_CSVeventWeight[idx]
             if 'CSVeventWeightHF' in flags:
                 if flags['CSVeventWeightHF'] == "down":

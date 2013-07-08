@@ -86,8 +86,10 @@ display:
 physics:
     lumi: 19400
     flags:
-        topPt: "normal"
-        lepton: "normal"
+        CSVeventWeight: nominal
+        lepton: nominal
+        PUcorr: nominal
+        topPt: nominal
     cuts:
       # tops
       - "J_NumCleanCSVM:1:1"
