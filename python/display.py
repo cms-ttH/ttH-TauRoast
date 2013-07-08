@@ -16,7 +16,7 @@ from TTHTauTau.Roast.helper import *
 def get_bkg_stack(histname, processes):
     res = r.THStack(histname + "_stack", histname + "_stack")
 
-    for p in processes:
+    for p in reversed(processes):
         h = p.GetHContainerForSignal()[histname].GetHisto()
         h.SetFillStyle(1001)
         h.SetFillColor(p.GetColor())
@@ -175,7 +175,12 @@ def stack(config, processes):
 
         print "Saving", histname
 
-        max_y = 1.3 * get_maximum(histname, procs, True)
+        bkg_procs = get_backgrounds(procs)
+        bkg_stack = get_bkg_stack(histname, bkg_procs)
+        bkg_stack.Draw("hist")
+
+        max_y = 1.45 * max(get_maximum(histname, procs, True),
+                bkg_stack.GetMaximum())
 
         base_histo = roast.HWrapper(procs[0].GetHContainerForSignal()[histname])
         base_histo.ScaleBy(0)
@@ -198,8 +203,6 @@ def stack(config, processes):
 
         base_histo.GetHisto().GetYaxis().SetRangeUser(min_y, max_y)
 
-        bkg_procs = get_backgrounds(procs)
-        bkg_stack = get_bkg_stack(histname, bkg_procs)
         bkg_stack.Draw("hist")
         bkg_stack.GetXaxis().SetRangeUser(base_histo.GetMinXVis(), base_histo.GetMaxXVis())
         bkg_stack.GetXaxis().SetTitle(base_histo.GetXTitle())
@@ -268,8 +271,12 @@ def stack(config, processes):
 
             canvas.cd(2)
 
-            ratio = coll.GetHContainerForSignal()[histname].GetHisto().Clone()
-            ratio.Divide(bkg_sum.GetHisto())
+            try:
+                ratio = coll.GetHContainerForSignal()[histname].GetHisto().Clone()
+                ratio.Divide(bkg_sum.GetHisto())
+            except:
+                ratio = base_histo.GetHisto().Clone()
+
             ratio.GetXaxis().SetRangeUser(
                     bkg_sum.GetMinXVis(), bkg_sum.GetMaxXVis())
 
@@ -283,7 +290,7 @@ def stack(config, processes):
             ratio.GetYaxis().SetRangeUser(min_y, max_ratio)
             ratio.Draw("axis")
 
-            bkg_err = ratio.Clone()
+            bkg_err = base_histo.GetHisto().Clone()
             for i in range(bkg_err.GetNbinsX()):
                 bkg_err.SetBinContent(i + 1, 1)
 
@@ -295,37 +302,41 @@ def stack(config, processes):
                     bkg_err.SetBinError(i + 1, 0)
             bkg_err.SetMarkerSize(0)
             bkg_err.SetFillColor(r.kGreen)
-            bkg_err.Draw("E2 same")
+            if ratio:
+                bkg_err.Draw("E2 same")
+            else:
+                bkg_err.Draw("E2")
 
-            ratio_err = r.TGraphAsymmErrors(ratio)
-            for i in range(ratio_err.GetN()):
-                x_coord = ratio.GetBinCenter(i + 1)
-                width = ratio.GetBinWidth(i + 1)
-                y_ratio = ratio.GetBinContent(i + 1)
-                y_data = coll.GetHContainerForSignal()[histname].GetHisto().GetBinContent(i + 1)
-                y_data_err = coll.GetHContainerForSignal()[histname].GetHisto().GetBinError(i + 1)
-                y_bkg = bkg_sum.GetHisto().GetBinContent(i + 1)
+            if coll:
+                ratio_err = r.TGraphAsymmErrors(ratio)
+                for i in range(ratio_err.GetN()):
+                    x_coord = ratio.GetBinCenter(i + 1)
+                    width = ratio.GetBinWidth(i + 1)
+                    y_ratio = ratio.GetBinContent(i + 1)
+                    y_data = coll.GetHContainerForSignal()[histname].GetHisto().GetBinContent(i + 1)
+                    y_data_err = coll.GetHContainerForSignal()[histname].GetHisto().GetBinError(i + 1)
+                    y_bkg = bkg_sum.GetHisto().GetBinContent(i + 1)
 
-                if y_ratio > small_number and y_ratio < ratio_plot_max * 0.99:
-                    if y_bkg > small_number:
-                        y_up = (y_data + y_data_err) / y_bkg
-                        y_down = (y_data - y_data_err) / y_bkg
+                    if y_ratio > small_number and y_ratio < ratio_plot_max * 0.99:
+                        if y_bkg > small_number:
+                            y_up = (y_data + y_data_err) / y_bkg
+                            y_down = (y_data - y_data_err) / y_bkg
+                        else:
+                            y_up = 0
+                            y_down = 0
+                        ratio_err.SetPoint(i, x_coord, y_ratio)
+                        ratio_err.SetPointEYhigh(i, y_up - y_ratio)
+                        ratio_err.SetPointEYlow(i, y_ratio - y_down)
+                        ratio_err.SetPointEXhigh(i, width / 2)
+                        ratio_err.SetPointEXlow(i, width / 2)
                     else:
-                        y_up = 0
-                        y_down = 0
-                    ratio_err.SetPoint(i, x_coord, y_ratio)
-                    ratio_err.SetPointEYhigh(i, y_up - y_ratio)
-                    ratio_err.SetPointEYlow(i, y_ratio - y_down)
-                    ratio_err.SetPointEXhigh(i, width / 2)
-                    ratio_err.SetPointEXlow(i, width / 2)
-                else:
-                    ratio_err.SetPoint(i, x_coord, 999)
+                        ratio_err.SetPoint(i, x_coord, 999)
 
-            ratio_err.SetMarkerSize(1.)
-            ratio_err.SetMarkerStyle(8)
-            ratio_err.SetLineWidth(2)
-            ratio_err.Draw("P same")
-            ratio.Draw("axis same")
+                ratio_err.SetMarkerSize(1.)
+                ratio_err.SetMarkerStyle(8)
+                ratio_err.SetLineWidth(2)
+                ratio_err.Draw("P same")
+                ratio.Draw("axis same")
 
             line = r.TLine()
             line.SetLineColor(1)
