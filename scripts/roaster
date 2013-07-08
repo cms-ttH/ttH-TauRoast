@@ -107,8 +107,3 @@ if opts.plot:
     style = create_tdr_style()
     style.cd()
     stack(baseconfig, procs)
-
-# print "passed", len(procs[0].GetGoodEventsForSignal())
-# for e in procs[0].GetGoodEventsForSignal():
-    # print "size", e.combos.size()
-    # print "first", e.combos[0]
