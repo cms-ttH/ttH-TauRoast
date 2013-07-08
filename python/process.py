@@ -39,9 +39,8 @@ def analyze(config):
     analyzed processes."""
 
     processes = r.std.vector('roast::Process*')()
-    for (proc, cfg) in config['processes'].items():
-        if not proc in config['analysis']['process']:
-            continue
+    for proc in config['analysis']['process']:
+        cfg = config['processes'][proc]
 
         vpaths = r.std.vector('string')()
         for p in cfg['ntuplePath']:

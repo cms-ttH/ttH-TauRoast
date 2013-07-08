@@ -68,6 +68,14 @@ histogramconfig = yaml.load(open(baseconfig['histograms']))
 baseconfig['processes'] = processconfig
 baseconfig['histograms'] = histogramconfig
 
+to_process = []
+for p in baseconfig['analysis']['process']:
+    if p in baseconfig['analysis']['combine']:
+        to_process += baseconfig['analysis']['combine'][p]['processes']
+    else:
+        to_process.append(p)
+baseconfig['analysis']['process'] = to_process
+
 if opts.analyze:
     procs = analyze(baseconfig)
     save(procs, "Roast", baseconfig['paths']['input'])
