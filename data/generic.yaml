@@ -138,7 +138,7 @@ paths:
     # for processes with filled histograms
     output: /afs/crc.nd.edu/user/m/mwolf3/www/test_roast/roast_filled.root
     # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
-    # name; {m} = mode (log)
+    # name; {m} = mode (_log)
     stack format: "/afs/crc.nd.edu/user/m/mwolf3/www/test_roast/{t}/{d}/{n}{m}.{t}"
     ntuples: /hadoop/users/matze/ttH/v45/2012/
     tree: makeNtuple/TTbarHTauTau

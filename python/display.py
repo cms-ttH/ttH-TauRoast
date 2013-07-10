@@ -1,3 +1,4 @@
+import math
 import os
 import ROOT as r
 import sys
@@ -55,25 +56,31 @@ def get_maximum(histname, processes, inc_error=False):
             vals.append(p.GetHContainerForSignal()[histname].GetMaximum())
     return max(vals)
 
+def to_ndc(x, y):
+    new_x = r.gPad.GetLeftMargin() + x * (1 - r.gPad.GetLeftMargin() - r.gPad.GetRightMargin())
+    new_y = r.gPad.GetBottomMargin() + y * (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin())
+    return (new_x, new_y)
+
 class Legend:
-    def __init__(self, margin, x_offset, x_length, y_offset, y_length, ncols):
+    def __init__(self, margin, ncols):
         self.__current = 0
-        self.__box_dx = 0.06 * x_length
-        self.__box_dy = 0.04 * y_length
-        self.__legend_x = margin * x_length + x_offset
-        self.__legend_dx = (1. - 2 * margin) / ncols * x_length
-        self.__legend_y = (1. - 0.5 * margin) * y_length + y_offset
+        self.__box_dx = 0.06
+        self.__box_dy = 0.04
+        self.__legend_x = margin
+        self.__legend_dx = (1. - 2 * margin) / ncols
+        self.__legend_y = (1. - 0.5 * margin)
         self.__legend_dy = 1.4 * self.__box_dy
         self.__pos_x = self.__legend_x
         self.__pos_y = self.__legend_y
 
         self.__ncols = ncols
 
-        self.__box = r.TBox()
+        self.__markers = []
+        self.__paves = []
         self.__tex = r.TLatex()
+        self.__tex.SetNDC()
         self.__tex.SetTextSize(0.035)
         self.__line = r.TLine()
-        self.__marker = r.TMarker()
 
     def advance(self):
         self.__current += 1
@@ -90,70 +97,65 @@ class Legend:
         self.__pos_y -= self.__legend_dy
 
     def draw_box(self, pattern, color, label, line=False):
-        if line:
-            self.__box.SetLineWidth(1)
-            self.__box.SetLineColor(color)
-            self.__box.SetLineStyle(1)
-            self.__box.SetFillStyle(0)
-            self.__box.SetFillColor(color)
-            self.__box.DrawBox(
-                    self.__pos_x,
-                    self.__pos_y,
-                    self.__pos_x + self.__box_dx,
-                    self.__pos_y - self.__box_dy)
-        else:
-            self.__box.SetLineWidth(0)
-            self.__box.SetLineStyle(0)
+        (x1, y1) = to_ndc(self.__pos_x, self.__pos_y)
+        (x2, y2) = to_ndc(self.__pos_x + self.__box_dx, self.__pos_y - self.__box_dy)
+        pave = r.TPave(x1, y1, x2, y2, 0, "NDC")
+        pave.SetFillStyle(pattern)
+        pave.SetFillColor(color)
+        pave.SetBorderSize(0 if not line else 1)
+        pave.Draw()
+        self.__paves.append(pave)
 
-        self.__box.SetFillStyle(pattern)
-        self.__box.SetFillColor(color)
-        self.__box.DrawBox(
-                self.__pos_x,
-                self.__pos_y,
-                self.__pos_x + self.__box_dx,
-                self.__pos_y - self.__box_dy)
-        self.__tex.DrawLatex(
-                self.__pos_x + 1.2 * self.__box_dx,
-                self.__pos_y - 0.8 * self.__box_dy,
-                label)
+        (text_x, text_y) = to_ndc(
+                    self.__pos_x + 1.2 * self.__box_dx,
+                    self.__pos_y - 0.8 * self.__box_dy)
+        self.__tex.DrawLatex(text_x, text_y, label)
         self.advance()
 
-    def draw_marker(self, marker, color, label):
+    def draw_marker(self, style, color, label):
         self.__line.SetLineColor(color)
         self.__line.SetLineWidth(1)
-        self.__line.DrawLine(
-                self.__pos_x,
-                self.__pos_y - self.__box_dy / 2,
-                self.__pos_x + self.__box_dx,
-                self.__pos_y - self.__box_dy / 2)
-        self.__line.DrawLine(
-                self.__pos_x + self.__box_dx / 2,
-                self.__pos_y,
-                self.__pos_x + self.__box_dx / 2,
-                self.__pos_y - self.__box_dy)
-        self.__marker.SetMarkerStyle(marker)
-        self.__marker.SetMarkerColor(color)
-        self.__marker.DrawMarker(
-                self.__pos_x + self.__box_dx / 2,
-                self.__pos_y - self.__box_dy / 2)
-        self.__tex.DrawLatex(
-                self.__pos_x + 1.2 * self.__box_dx,
-                self.__pos_y - 0.8 * self.__box_dy,
-                label)
+        self.__line.DrawLineNDC(
+                *(to_ndc(
+                    self.__pos_x,
+                    self.__pos_y - self.__box_dy / 2)
+                + to_ndc(
+                    self.__pos_x + self.__box_dx,
+                    self.__pos_y - self.__box_dy / 2)))
+        self.__line.DrawLineNDC(
+                *(to_ndc(
+                    self.__pos_x + self.__box_dx / 2,
+                    self.__pos_y)
+                + to_ndc(
+                    self.__pos_x + self.__box_dx / 2,
+                    self.__pos_y - self.__box_dy)))
+        (marker_x, marker_y) = to_ndc(self.__pos_x + self.__box_dx / 2, self.__pos_y - self.__box_dy / 2)
+        marker = r.TMarker(marker_x, marker_y, style)
+        marker.SetMarkerStyle(style)
+        marker.SetMarkerColor(color)
+        marker.SetNDC()
+        marker.Draw()
+        self.__markers.append(marker)
+        (text_x, text_y) = to_ndc(
+                    self.__pos_x + 1.2 * self.__box_dx,
+                    self.__pos_y - 0.8 * self.__box_dy)
+        self.__tex.DrawLatex(text_x, text_y, label)
         self.advance()
 
     def draw_line(self, width, color, label):
         self.__line.SetLineColor(color)
         self.__line.SetLineWidth(width)
-        self.__line.DrawLine(
-                self.__pos_x,
-                self.__pos_y - self.__box_dy / 2,
-                self.__pos_x + self.__box_dx,
-                self.__pos_y - self.__box_dy / 2)
-        self.__tex.DrawLatex(
-                self.__pos_x + 1.2 * self.__box_dx,
-                self.__pos_y - 0.8 * self.__box_dy,
-                label)
+        self.__line.DrawLineNDC(
+                *(to_ndc(
+                    self.__pos_x,
+                    self.__pos_y - self.__box_dy / 2)
+                + to_ndc(
+                    self.__pos_x + self.__box_dx,
+                    self.__pos_y - self.__box_dy / 2)))
+        (text_x, text_y) = to_ndc(
+                    self.__pos_x + 1.2 * self.__box_dx,
+                    self.__pos_y - 0.8 * self.__box_dy)
+        self.__tex.DrawLatex(text_x, text_y, label)
         self.advance()
 
 def stack(config, processes):
@@ -166,11 +168,16 @@ def stack(config, processes):
     ratio_plot_max = 2.5
     bottom_margin = 0.35
     small_number = 0.0001
+    scale = 1.45
 
-    for histname in procs[0].GetHistogramNames():
-        if all(map(lambda v: v <= 0, get_integrals(histname, procs))):
-            # FIXME log this properly
-            print "Empty histogram:", histname
+    for histname in config['histograms'].keys():
+        try:
+            if all(map(lambda v: v <= 0, get_integrals(histname, procs))):
+                # FIXME log this properly
+                print "Empty histogram:", histname
+                continue
+        except:
+            print "Empty histogram (unfilled):", histname
             continue
 
         print "Saving", histname
@@ -179,7 +186,7 @@ def stack(config, processes):
         bkg_stack = get_bkg_stack(histname, bkg_procs)
         bkg_stack.Draw("hist")
 
-        max_y = 1.45 * max(get_maximum(histname, procs, True),
+        max_y = scale * max(get_maximum(histname, procs, True),
                 bkg_stack.GetMaximum())
 
         base_histo = roast.HWrapper(procs[0].GetHContainerForSignal()[histname])
@@ -245,12 +252,7 @@ def stack(config, processes):
             # FIXME do something more sensible
             pass
 
-        x0 = base_histo.GetMinXVis()
-        dx = base_histo.GetMaxXVis() - base_histo.GetMinXVis()
-        y0 = min_y
-        dy = max_y - min_y
-
-        l = Legend(0.05, x0, dx, y0, dy, 3)
+        l = Legend(0.05, 3)
 
         for p in bkg_procs:
             l.draw_box(1001, p.GetColor(), p.GetLabelForLegend())
@@ -349,5 +351,17 @@ def stack(config, processes):
         dirname = os.path.dirname(filename)
         if not os.path.exists(dirname):
             os.makedirs(dirname)
+
+        canvas.SaveAs(filename)
+
+        # Reset log-scale maximum y-value
+        new_max_y = 10 ** (((scale - 1) * 2 + 1) * math.log10(max_y / scale))
+        canvas.cd(1)
+        base_histo.GetHisto().GetYaxis().SetRangeUser(0.002, new_max_y)
+        r.gPad.SetLogy()
+        canvas.Update()
+
+        filename = config['paths']['stack format'].format(t="png",
+                d=base_histo.GetSubDir(), n=histname, m="_log")
 
         canvas.SaveAs(filename)
