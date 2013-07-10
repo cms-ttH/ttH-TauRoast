@@ -1,6 +1,6 @@
 #include "TFile.h"
 
-#include "../interface/Branches.h"
+#include "../interface/TTLBranches.h"
 #include "../interface/GenHelper.h"
 #include "../interface/MVABase.h"
 
@@ -23,22 +23,6 @@ ttl::Branches::~Branches()
 {
     Delete();
     Null();
-}
-
-void ttl::Branches::Null(){
-	#include "TTLBranches_null.h"
-}
-
-void ttl::Branches::Delete(){
-	#include "TTLBranches_delete.h"
-}
-
-void ttl::Branches::Clear(){
-	#include "TTLBranches_clear.h"
-}
-
-void ttl::Branches::SetBranchAddresses(){
-	#include "TTLBranches_setBranchAddress.h"
 }
 
 void

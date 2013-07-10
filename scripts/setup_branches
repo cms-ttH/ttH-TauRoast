@@ -1,0 +1,97 @@
+#!/usr/bin/env python
+
+import os
+import ROOT as r
+import sys
+
+r.gROOT.SetBatch()
+
+def gather_type_info(filename):
+    """Returns a list containing prefix, name, class, and bool indicating
+    a pointer."""
+    results = []
+
+    f = r.TFile(filename)
+    tpl = f.Get("makeNtuple/TTbarHTauTau")
+
+    for bn in tpl.GetListOfBranches():
+        name = bn.GetName()
+        cls = bn.GetClassName()
+        ptr = False
+
+        (start, end) = name.split("_", 1)
+
+        if cls.startswith("vector"):
+            cls = "std::" + cls + "*"
+            ptr = True
+        elif cls == "":
+            cls = tpl.GetLeaf(name).GetTypeName()
+
+        results.append((start, end, cls, ptr))
+    return results
+
+def inject_lines(filename, key, lines):
+    with open(filename) as file:
+        old_lines = file.readlines()
+    start = filter(lambda (n, s): "// >>> Begin " + key + " <<<" in s,
+            enumerate(old_lines))[0][0]
+    end = filter(lambda (n, s): "// >>> End " + key + " <<<" in s,
+            enumerate(old_lines))[0][0]
+    head = old_lines[:start + 1]
+    tail = old_lines[end:]
+    with open(filename, 'w') as file:
+        for l in head + lines + tail:
+            file.write(l)
+
+vars = gather_type_info(sys.argv[1])
+
+weight_vars = filter(lambda (x, s, xx, xxx): 'weight' in s.lower(), vars)
+weight_lines = []
+for (k, s, t, p) in weight_vars:
+    line = ' ' * 12 + t + ' '
+    if k == 'Ev' or 'CSV' in s:
+        line += s
+    else:
+        line += "_".join([k, s])
+    line += ';\n'
+    weight_lines.append(line)
+
+plain_branches = os.path.join(os.environ["CMSSW_BASE"], 'src', 'TTHTauTau', 'Roast', 'interface', 'Branches.h')
+inject_lines(plain_branches, "declarations", sorted(set(weight_lines)))
+
+channels = set(["TTL", "TLL"])
+for channel in ["TTL", "TLL"]:
+    if channel == "TLL":
+        continue
+
+    address_lines = []
+    clear_lines = []
+    declare_lines = []
+    delete_lines = []
+    null_lines = []
+
+    for (k, s, t, p) in vars:
+        if k in channels - set([channel]):
+            continue
+
+        if 'weight' in s.lower() and (k == 'Ev' or 'CSV' in s):
+            varname = s
+        else:
+            varname = "_".join([k, s])
+            declare_lines.append(' ' * 16 + t + ' ' + varname + ';\n')
+
+        if p:
+            clear_lines.append("    {0}->clear();\n".format(varname))
+            delete_lines.append("    delete {0};\n".format(varname))
+        else:
+            clear_lines.append("    {0} = 0;\n".format(varname))
+
+        null_lines.append("    {0} = 0;\n".format(varname))
+        address_lines.append("    fChain->SetBranchAddress(\"{0}\", &{1});\n".format("_".join([k, s]), varname))
+    header = os.path.join(os.environ["CMSSW_BASE"], 'src', 'TTHTauTau', 'Roast', 'interface', channel + 'Branches.h')
+    source = os.path.join(os.environ["CMSSW_BASE"], 'src', 'TTHTauTau', 'Roast', 'src', channel + 'Branches_generated.cc')
+    inject_lines(header, "declarations", declare_lines)
+    inject_lines(source, "address", address_lines)
+    inject_lines(source, "clear", clear_lines)
+    inject_lines(source, "delete", delete_lines)
+    inject_lines(source, "null", null_lines)
