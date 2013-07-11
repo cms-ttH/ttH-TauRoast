@@ -97,6 +97,17 @@ def fill_histos(config, processes):
         branches = roast.ttl.Branches(p.GetTreeName(), p.GetNtuplePaths())
         cutflow = p.GetCutFlow()
 
+        if config['physics']['pair selection'] == 'iso':
+            select = lambda xs: sorted(
+                    xs,
+                    key=lambda x: branches.TTL_Tau1HPSbyIsolationMVA2raw[x]**2 + branches.TTL_Tau2HPSbyIsolationMVA2raw[x]**2,
+                    reverse=True)[0]
+        elif config['physics']['pair selection'] == 'pt':
+            select = lambda xs: x[0]
+        else:
+            # FIXME handle properly
+            raise
+
         weights = []
         for (flag, val) in flags.items():
             try:
@@ -115,7 +126,7 @@ def fill_histos(config, processes):
         for e in p.GetGoodEventsForSignal():
             branches.GetEntry(e.entry)
 
-            idx = e.combos[0]
+            idx = select(e.combos)
 
             w_tot = 1.
             if p.IsMC():

@@ -127,6 +127,7 @@ physics:
       - "T2_AntiMuonIndex:1:"
       - "T2_NumProngs:1:1"
       - "T2_IsolationMVA2Raw:0:"
+    pair selection: iso
     systematics:
         e_fake: 1.05
         jet_fake: 1.2
