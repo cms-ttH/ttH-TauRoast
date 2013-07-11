@@ -1,5 +1,6 @@
 import os
 import ROOT as r
+import sys
 
 r.gROOT.SetBatch()
 r.gSystem.Load("libTTHTauTauRoast")
@@ -93,6 +94,23 @@ def normalize_processes(config, processes):
         p.ScaleHistograms(est_lumi / raw_events)
         p.GetCutFlow().RegisterCutFromLast("Lumi norm", 2, est_lumi / raw_events)
         p.BuildNormalizedCutFlow()
+
+def print_cutflow(config, processes):
+    procs = map(lambda n: get_process(n, processes), config['analysis']['plot'])
+    cuts = map(lambda p: p.GetCutFlow().GetCuts(), procs)
+
+    out = sys.stdout
+
+    out.write(" " * 20)
+    for p in procs:
+        out.write("{0:^15}".format(p.GetShortName()))
+    out.write("\n")
+
+    for i in range(len(cuts[0])):
+        out.write("{0:20}".format(cuts[0][i].name))
+        for c in cuts:
+            out.write("{0:15}".format(c[i].passedSignalEvents))
+        out.write("\n")
 
 def vectorize(items, cls=None):
     """Create a vector of class `cls` and fill it with the object in the
