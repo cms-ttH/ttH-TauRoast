@@ -28,6 +28,7 @@
 #pragma link C++ class std::map<std::string, roast::HWrapper*>+;
 #pragma link C++ class roast::CutFlow+;
 #pragma link C++ class roast::CutFlow::Cut+;
+#pragma link C++ class std::vector<roast::CutFlow::Cut>+;
 #pragma link C++ class roast::Process+;
 #pragma link C++ class roast::Process::Event+;
 #pragma link C++ class std::vector<roast::Process::Event>+;
