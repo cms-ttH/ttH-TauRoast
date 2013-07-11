@@ -25,8 +25,8 @@ namespace roast {
             };
 
        private:
-            std::vector<roast::Process::Event> goodEventsForSignal;
-            std::map<std::string, roast::HWrapper*> hContainerForSignal;
+            std::vector<roast::Process::Event> goodEvents;
+            std::map<std::string, roast::HWrapper*> hContainer;
           CutFlow					cutFlow;
           CutFlow					normalizedCutFlow;
 
@@ -50,11 +50,11 @@ namespace roast {
           double NoEreadByNUTter;
           double NOEinNtuple;
           double NOEanalyzed;
-          double NOEexpectedForSignal;
+          double NOEexpected;
 
-          bool obtainedGoodEventsForSignal;
-          bool filledHistosForSignal;
-          bool normalizedHistosForSignal;
+          bool obtainedGoodEvents;
+          bool filledHistos;
+          bool normalizedHistos;
           
             double relSysUncertainty;
 
@@ -92,7 +92,7 @@ namespace roast {
           void				SetAnalyzed();
           bool const			Analyzed() const;
 
-            std::vector<Event> const GetGoodEventsForSignal() const;
+            std::vector<Event> const GetGoodEvents() const;
           void				SetCutFlow(CutFlow const &);
           void				SetNormalizedCutFlow(CutFlow const &);
           CutFlow *			GetCutFlow();
@@ -116,25 +116,25 @@ namespace roast {
           double const		GetCrossSection() const;
           double const		GetBranchingRatio() const;
           double const		GetOtherScaleFactor() const;
-          double const		GetNOEexpectedForSignal() const;
+          double const		GetNOEexpected() const;
             double const        GetRelSysUncertainty() const;
-          bool const			ObtainedGoodEventsForSignal() const;
-          bool const			FilledHistosForSignal() const;
-          bool const			NormalizedHistosForSignal() const;
+          bool const			ObtainedGoodEvents() const;
+          bool const			FilledHistos() const;
+          bool const			NormalizedHistos() const;
 
 
-          inline void AddHistogram(const std::string& name, const roast::HWrapper& histo) { hContainerForSignal[name] = new HWrapper(histo); };
-          inline std::map<std::string, roast::HWrapper*> GetHContainerForSignal() {
-              return hContainerForSignal;
+          inline void AddHistogram(const std::string& name, const roast::HWrapper& histo) { hContainer[name] = new HWrapper(histo); };
+          inline std::map<std::string, roast::HWrapper*> GetHContainer() {
+              return hContainer;
           };
-          inline const std::map<std::string, roast::HWrapper*> GetHContainerForSignal() const {
-              return hContainerForSignal;
+          inline const std::map<std::string, roast::HWrapper*> GetHContainer() const {
+              return hContainer;
           };
           void ResetHistograms();
           void ScaleHistograms(double);
           std::vector<std::string> GetHistogramNames() const;
 
-          void 				SetGoodEventsForSignal(const std::vector<roast::Process::Event>&);
+          void 				SetGoodEvents(const std::vector<roast::Process::Event>&);
           void				Add(roast::Process*);
 
           ClassDef(Process, 1);

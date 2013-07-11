@@ -123,7 +123,7 @@ def fill_histos(config, processes):
                 print e
                 raise
 
-        for e in p.GetGoodEventsForSignal():
+        for e in p.GetGoodEvents():
             branches.GetEntry(e.entry)
 
             idx = select(e.combos)
@@ -133,7 +133,7 @@ def fill_histos(config, processes):
                 for weight in weights:
                     w_tot *= weight(branches, idx)
 
-            branches.FillHistograms(p.GetHContainerForSignal(), idx, w_tot)
+            branches.FillHistograms(p.GetHContainer(), idx, w_tot)
 
         for weight in weights:
             weight.RegisterCut(cutflow)

@@ -17,10 +17,10 @@ namespace roast {
             std::string cutsToApply;
             std::map< std::string, std::pair<float, float> > cuts_to_consider;
 
-          bool eventForSignalPassed;
-          bool comboIsForSignal;
+          bool eventPassed;
+          bool comboIs;
           bool signalComboLocked;
-          int bestComboForSignal;
+          int bestCombo;
 
           bool OutOfRange(float, float, float);
 
@@ -69,13 +69,13 @@ namespace roast {
 
           int const					GetCutRank(std::string const) const;
           int const					GetCutPosition(std::string const) const;
-          float const					GetPassedEventsForSignal(std::string const) const;
-          float const					GetRelEffForSignal(std::string const) const;
-          float const					GetCumEffForSignal(std::string const) const;
+          float const					GetPassedEvents(std::string const) const;
+          float const					GetRelEff(std::string const) const;
+          float const					GetCumEff(std::string const) const;
             std::string const			GetCutsToApply() const;
             inline std::map< std::string, std::pair<float, float> > GetCutsToConsider() const { return cuts_to_consider; };
             std::string const			GetLastCut() const;
-          double const				GetLastCountForSignal() const;
+          double const				GetLastCount() const;
           void						Add(roast::CutFlow const &, float const iFactor=1.0);
           void						BuildNormalizedCutFlow(roast::CutFlow const *);
             void Zero();

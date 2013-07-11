@@ -104,7 +104,7 @@ namespace roast {
 
         cout << endl;
 
-        proc.SetGoodEventsForSignal(good_events);
+        proc.SetGoodEvents(good_events);
         proc.SetNOEinNtuple(nentries);
         proc.SetNOEanalyzed(NOEanalyzed);
         proc.SetCutFlow(cflow);

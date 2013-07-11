@@ -74,10 +74,10 @@ CutFlow::CutFlow(CutFlow const & iCutFlow){
 	cutsToApply	= iCutFlow.GetCutsToApply();
     cuts_to_consider = iCutFlow.GetCutsToConsider();
 
-	eventForSignalPassed	= false;
-	comboIsForSignal		= false;
+	eventPassed	= false;
+	comboIs		= false;
 
-	bestComboForSignal	= -1;
+	bestCombo	= -1;
 }
 
 
@@ -85,10 +85,10 @@ CutFlow::CutFlow(CutFlow const & iCutFlow){
 CutFlow::~CutFlow(){}
 
 void CutFlow::Reset(){
-	eventForSignalPassed = false;
-	comboIsForSignal     = false;
+	eventPassed = false;
+	comboIs     = false;
 
-	bestComboForSignal = -1;
+	bestCombo = -1;
 
     cuts.clear();
     name2idx.clear();
@@ -100,21 +100,21 @@ void CutFlow::Zero() {
         c.passedSignalCombos = 0;
     }
 
-    eventForSignalPassed = false;
-    comboIsForSignal     = false;
+    eventPassed = false;
+    comboIs     = false;
 
-    bestComboForSignal = -1;
+    bestCombo = -1;
 }
 
 int const CutFlow::size() const { return cuts.size(); }
 
-void CutFlow::RegisterCut(string const name, int const rank,  double const iEventsForSignal){
+void CutFlow::RegisterCut(string const name, int const rank,  double const iEvents){
     if (!(rank == 0 || 2 == rank)) {
         cerr << "ERROR: Cut named \"" << name << "\" is trying to be registered with rank " << rank << " but rank can only be 0 or 2." << endl;
         exit(1);
     }
     Cut new_cut(name, [](Branches *b, const int& idx) -> float { return 0.; },
-            rank, 0, 0, iEventsForSignal);
+            rank, 0, 0, iEvents);
     cuts.push_back(new_cut);
     name2idx[name] = cuts.size() - 1;
 }
@@ -135,15 +135,15 @@ CutFlow::RegisterCut(const string name, const int rank, CutFlow::Cut::val_f f, b
 }
 
 void
-CutFlow::RegisterCutFromLast(string const iName, int const iRank, double const iFactorForSignal)
+CutFlow::RegisterCutFromLast(string const iName, int const iRank, double const iFactor)
 {
-    RegisterCut(iName, iRank, iFactorForSignal*GetLastCountForSignal());
+    RegisterCut(iName, iRank, iFactor*GetLastCount());
 }
 
 void
-CutFlow::SetCutCounts(string const iName, double const iEventsForSignal)
+CutFlow::SetCutCounts(string const iName, double const iEvents)
 {
-    cuts[name2idx[iName]].passedSignalEvents = iEventsForSignal;
+    cuts[name2idx[iName]].passedSignalEvents = iEvents;
 }
 
 bool
@@ -159,8 +159,8 @@ CutFlow::CheckCuts(Branches *b, const int& idx, const bool bypass)
 void
 CutFlow::StartOfEvent()
 {
-    bestComboForSignal	= -1;
-    eventForSignalPassed	= false;	
+    bestCombo	= -1;
+    eventPassed	= false;	
 
     for (auto& c: cuts) {
         c.passedSignalCombos = 0;
@@ -183,7 +183,7 @@ void CutFlow::EndOfEvent(){
 
         // Wait for the last registered cut to determine the outcome of the event
         if (c.name == cuts.back().name)
-            eventForSignalPassed = (c.passedSignalCombos > 0);
+            eventPassed = (c.passedSignalCombos > 0);
 
         // Reset combo counter
         c.passedSignalCombos = 0;
@@ -201,11 +201,11 @@ int const CutFlow::GetCutPosition(string const iCut) const {
 string const				CutFlow::GetCutsToApply() const { return cutsToApply; }
 
 
-float const CutFlow::GetPassedEventsForSignal(string const iCut) const {
+float const CutFlow::GetPassedEvents(string const iCut) const {
     return cuts[name2idx.find(iCut)->second].passedSignalEvents;
 }
 
-float const CutFlow::GetRelEffForSignal(string const iCut) const {
+float const CutFlow::GetRelEff(string const iCut) const {
     const int idx = name2idx.find(iCut)->second;
     if (idx == 0)
         return 1.;
@@ -214,7 +214,7 @@ float const CutFlow::GetRelEffForSignal(string const iCut) const {
     return cuts[idx].passedSignalEvents / cuts[idx - 1].passedSignalEvents;
 }
 
-float const CutFlow::GetCumEffForSignal(string const iCut) const {
+float const CutFlow::GetCumEff(string const iCut) const {
     const int idx = name2idx.find(iCut)->second;
     return cuts[idx].passedSignalEvents / cuts.front().passedSignalEvents;
 }
@@ -228,7 +228,7 @@ string const CutFlow::GetLastCut() const{
     return cuts.back().name;
 }
 
-double const CutFlow::GetLastCountForSignal() const { return  GetPassedEventsForSignal(GetLastCut()); }
+double const CutFlow::GetLastCount() const { return  GetPassedEvents(GetLastCut()); }
 
 void CutFlow::Add(CutFlow const & iCutFlow, float const iFactor){
     // Check the current cuts	
@@ -269,19 +269,19 @@ void CutFlow::BuildNormalizedCutFlow(CutFlow const * iCutFlow){
     cuts_to_consider = iCutFlow->cuts_to_consider;
 
     vector<Cut> other_cuts = iCutFlow->GetCuts();
-    double scaleFactorForSignal = 1.0;
+    double scaleFactor = 1.0;
 
     for (auto& c: other_cuts) {
         if (c.rank != 2)
             continue;
-        scaleFactorForSignal *= iCutFlow->GetRelEffForSignal(c.name);
+        scaleFactor *= iCutFlow->GetRelEff(c.name);
     }
 
     for (auto& c: other_cuts) {
         if (c.rank == 2)
             continue;
         RegisterCut(c.name, c.rank, c.GetVal, c.skip,
-                scaleFactorForSignal * c.passedSignalEvents);
+                scaleFactor * c.passedSignalEvents);
     }
 }
 
