@@ -7,7 +7,7 @@
 #include "../interface/Process.h"
 #include "../interface/TTLBranches.h"
 #include "../interface/TTLMVABase.h"
-#include "../interface/Weights.h"
+#include "../interface/Weight.h"
 
 #ifdef __CINT__
 
@@ -34,7 +34,7 @@
 #pragma link C++ class roast::MVABase+;
 #pragma link C++ class roast::ttl::MVABase+;
 #pragma link C++ class std::vector<roast::Process*>+;
-#pragma link C++ class roast::Weights+;
+#pragma link C++ class roast::Weight+;
 #pragma link C++ function roast::register_mva;
 #pragma link C++ function roast::Helper::SplitString;
 #pragma link C++ function roast::ttl::analyze(roast::Process&, const std::vector<std::string>&, const int&);

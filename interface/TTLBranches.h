@@ -23,7 +23,7 @@ namespace roast {
 
                 virtual void GetEntry(double);
                 inline virtual unsigned int GetNCombos() { return TTL_NumCombos; };
-                virtual void FillHistograms(std::map<std::string, roast::HWrapper*>&, int, float, float pu_weight=1.);
+                virtual void FillHistograms(std::map<std::string, roast::HWrapper*>&, int, float);
                 virtual bool IsGoodGenMatch(const int&) const;
                 virtual void RegisterCuts(CutFlow&);
 
@@ -458,7 +458,6 @@ namespace roast {
                 std::vector<unsigned int>* TTL_NumCleanNonCSVMbtagJets;
                 std::vector<unsigned int>* TTL_NumCleanNonCSVTbtagJets;
                 std::vector<unsigned int>* TTL_CleanJetIndices;
-                std::vector<float>* TTL_LeptonEventWeight;
                 // >>> End declarations <<<
 
                 ClassDef(Branches, 1);

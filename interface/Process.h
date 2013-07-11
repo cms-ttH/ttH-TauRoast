@@ -96,7 +96,7 @@ namespace roast {
           void				SetCutFlow(CutFlow const &);
           void				SetNormalizedCutFlow(CutFlow const &);
           CutFlow *			GetCutFlow();
-          CutFlow const *		GetCutFlow() const;
+          CutFlow const *		GetConstCutFlow() const;
           CutFlow *			GetNormalizedCutFlow();
           CutFlow const *		GetNormalizedCutFlow() const;
 

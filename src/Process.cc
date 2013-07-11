@@ -25,7 +25,7 @@ Process::Process(const Process& iProcess){
     for (auto& pair: iProcess.GetHContainerForSignal())
         hContainerForSignal[pair.first] = new HWrapper(*pair.second);
 
-	cutFlow							= CutFlow(*iProcess.GetCutFlow());
+	cutFlow							= CutFlow(*iProcess.GetConstCutFlow());
 	normalizedCutFlow				= CutFlow(*iProcess.GetNormalizedCutFlow());
 
 	shortName						= iProcess.GetShortName();
@@ -124,7 +124,7 @@ void Process::SetNOEinNtuple(double const iEvents){ NOEinNtuple = iEvents; }
 void Process::SetRelSysUncertainty(double const iError){ relSysUncertainty = iError; }
 void Process::SetColor(int const iColor){ color = iColor; }
 CutFlow* Process::GetCutFlow() { return &cutFlow; }
-CutFlow const * Process::GetCutFlow() const { return &cutFlow; }
+CutFlow const * Process::GetConstCutFlow() const { return &cutFlow; }
 CutFlow* Process::GetNormalizedCutFlow() { return &normalizedCutFlow; }
 CutFlow const * Process::GetNormalizedCutFlow() const { return &normalizedCutFlow; }
 string const Process::GetShortName() const {	return shortName;		}

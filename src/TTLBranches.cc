@@ -215,7 +215,7 @@ ttl::Branches::GetJetIndex(const int idx, const unsigned int num)
 }
 
 void
-ttl::Branches::FillHistograms(std::map<std::string, roast::HWrapper*>& histos, int idx, float weight, float pu_weight)
+ttl::Branches::FillHistograms(std::map<std::string, roast::HWrapper*>& histos, int idx, float weight)
 {
     // float weight	= iLeptonWeight*iPuWeight*iTau1TriggerWeight*iTau2TriggerWeight*iTauIdSysWeight*iQ2SysWeight*iTopPtWeight;
 
@@ -279,27 +279,27 @@ ttl::Branches::FillHistograms(std::map<std::string, roast::HWrapper*>& histos, i
     }
 
     if ((h = histos.find("NumberPV_noPURW")) != histos.end()) {
-        h->second->Fill(V_NumVertices, weight/pu_weight);
+        h->second->Fill(V_NumVertices, weight/puWeight);
     } else {
         std::cout << "Can't find histogram NumberPV_noPURW" << std::endl;
     }
     if ((h = histos.find("NumberBXm1_noPURW")) != histos.end()) {
-        h->second->Fill(V_NumInteractionsBXm1, weight/pu_weight);
+        h->second->Fill(V_NumInteractionsBXm1, weight/puWeight);
     } else {
         std::cout << "Can't find histogram NumberBXm1_noPURW" << std::endl;
     }
     if ((h = histos.find("NumberBX0_noPURW")) != histos.end()) {
-        h->second->Fill(V_NumInteractionsBX0, weight/pu_weight);
+        h->second->Fill(V_NumInteractionsBX0, weight/puWeight);
     } else {
         std::cout << "Can't find histogram NumberBX0_noPURW" << std::endl;
     }
     if ((h = histos.find("NumberBXp1_noPURW")) != histos.end()) {
-        h->second->Fill(V_NumInteractionsBXp1, weight/pu_weight);
+        h->second->Fill(V_NumInteractionsBXp1, weight/puWeight);
     } else {
         std::cout << "Can't find histogram NumberBXp1_noPURW" << std::endl;
     }
     if ((h = histos.find("PUweights_noPURW")) != histos.end()) {
-        h->second->Fill(pu_weight, weight/pu_weight);
+        h->second->Fill(puWeight, weight/puWeight);
     } else {
         std::cout << "Can't find histogram PUweights_noPURW" << std::endl;
     }
@@ -324,7 +324,7 @@ ttl::Branches::FillHistograms(std::map<std::string, roast::HWrapper*>& histos, i
         std::cout << "Can't find histogram NumberBXp1_afterPURW" << std::endl;
     }
     if ((h = histos.find("PUweights_afterPURW")) != histos.end()) {
-        h->second->Fill(pu_weight, weight);
+        h->second->Fill(puWeight, weight);
     } else {
         std::cout << "Can't find histogram PUweights_afterPURW" << std::endl;
     }

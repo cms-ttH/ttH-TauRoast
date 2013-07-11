@@ -74,8 +74,11 @@ for channel in ["TTL", "TLL"]:
         if k in channels - set([channel]):
             continue
 
-        if 'weight' in s.lower() and (k == 'Ev' or 'CSV' in s):
-            varname = s
+        if 'weight' in s.lower():
+            if k == 'Ev' or 'CSV' in s:
+                varname = s
+            else:
+                varname = "_".join([k, s])
         else:
             varname = "_".join([k, s])
             declare_lines.append(' ' * 16 + t + ' ' + varname + ';\n')
