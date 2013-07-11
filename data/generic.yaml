@@ -90,6 +90,7 @@ physics:
         lepton: nominal
         PUcorr: nominal
         topPt: nominal
+        brSF: nominal
     cuts:
       # tops
       - "J_NumCleanCSVM:1:1"
@@ -129,9 +130,9 @@ physics:
       - "T2_IsolationMVA2Raw:0:"
     pair selection: iso
     systematics:
-        e_fake: 1.05
-        jet_fake: 1.2
-        tau_id: 1.14
+        eTauFake: 1.05
+        jetTauFake: 1.2
+        tauIdEff: 1.06
 
 paths:
     # for analyzed processes

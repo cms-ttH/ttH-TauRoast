@@ -10,7 +10,7 @@ namespace roast {
     Weight::operator()(Branches* b, const int& idx)
     {
         float w = GetVal(b, idx);
-        if (strength != 1.)
+        if (strength > 0)
             w = pow(strength, w);
 
         n += 1.;
@@ -153,6 +153,75 @@ namespace roast {
                     break;
                 case kDown:
                     fct = [](roast::Branches *b, const int& idx) -> float { return (*b->CSVeventWeightCErr2down)[idx]; };
+                    break;
+            }
+        } else if (name == "brSF") {
+            label = "BR correction";
+            switch (kind) {
+                case kNominal:
+                    fct = [](roast::Branches *b, const int& idx) -> float {
+                        unsigned int matches = 0;
+                        for (const auto& id: *dynamic_cast<roast::ttl::Branches*>(b)->GT_ParentId)
+                            matches += (abs(id) == 25);
+                        return (matches == 2) ? 0.0632 / 0.0722 : (1 - 0.0632) / (1 - 0.0722);
+                    };
+                    break;
+                case kUp:
+                case kDown:
+                    break;
+            }
+        } else if (name == "eTauFake") {
+            label = "Tau ID sys";
+            switch (kind) {
+                case kNominal:
+                    break;
+                case kUp:
+                case kDown:
+                    fct = [](roast::Branches *b, const int& idx) -> float {
+                        auto e = dynamic_cast<roast::ttl::Branches*>(b);
+                        unsigned int matches = 0;
+                        if (e->GetTau1MatchIndex(idx) == 4)
+                            ++matches;
+                        if (e->GetTau2MatchIndex(idx) == 4)
+                            ++matches;
+                        return matches;
+                    };
+                    break;
+            }
+        } else if (name == "jetTauFake") {
+            label = "Tau ID sys";
+            switch (kind) {
+                case kNominal:
+                    break;
+                case kUp:
+                case kDown:
+                    fct = [](roast::Branches *b, const int& idx) -> float {
+                        auto e = dynamic_cast<roast::ttl::Branches*>(b);
+                        unsigned int matches = 0;
+                        if (e->GetTau1MatchIndex(idx) == 1)
+                            ++matches;
+                        if (e->GetTau2MatchIndex(idx) == 1)
+                            ++matches;
+                        return matches;
+                    };
+                    break;
+            }
+        } else if (name == "tauIdEff") {
+            label = "Tau ID sys";
+            switch (kind) {
+                case kNominal:
+                    break;
+                case kUp:
+                case kDown:
+                    fct = [](roast::Branches *b, const int& idx) -> float {
+                        auto e = dynamic_cast<roast::ttl::Branches*>(b);
+                        unsigned int matches = 0;
+                        if (e->GetTau1MatchIndex(idx) == 2)
+                            ++matches;
+                        if (e->GetTau2MatchIndex(idx) == 2)
+                            ++matches;
+                        return matches;
+                    };
                     break;
             }
         }

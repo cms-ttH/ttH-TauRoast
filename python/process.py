@@ -111,12 +111,26 @@ def fill_histos(config, processes):
         weights = []
         for (flag, val) in flags.items():
             try:
+                strength = -1.
+                if flag in config['physics']['systematics']:
+                    if val == "nominal":
+                        # FIXME do this properly
+                        raise
+                    elif val == "up":
+                        strength = config['physics']['systematics'][flag]
+                    elif val == "down":
+                        strength = 2 - config['physics']['systematics'][flag]
+
+                if flag == 'brSF':
+                    if not p.GetShortName().startswith("TTH_"):
+                        strength = 1.
+
                 if val == "nominal":
-                    weights.append(roast.Weight.Create(flag, roast.Weight.kNominal))
+                    weights.append(roast.Weight.Create(flag, roast.Weight.kNominal, strength))
                 elif val == "up":
-                    weights.append(roast.Weight.Create(flag, roast.Weight.kUp))
+                    weights.append(roast.Weight.Create(flag, roast.Weight.kUp, strength))
                 elif val == "down":
-                    weights.append(roast.Weight.Create(flag, roast.Weight.kDown))
+                    weights.append(roast.Weight.Create(flag, roast.Weight.kDown, strength))
             except Exception, e:
                 # FIXME log this properly
                 print flag, val
