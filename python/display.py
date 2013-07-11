@@ -209,6 +209,7 @@ def stack(config, processes):
             canvas.cd()
 
         base_histo.GetHisto().GetYaxis().SetRangeUser(min_y, max_y)
+        base_histo.GetHisto().GetXaxis().SetRangeUser(base_histo.GetMinXVis(), base_histo.GetMaxXVis())
 
         bkg_stack.Draw("hist")
         bkg_stack.GetXaxis().SetRangeUser(base_histo.GetMinXVis(), base_histo.GetMaxXVis())
