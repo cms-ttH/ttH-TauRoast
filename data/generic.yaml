@@ -139,6 +139,7 @@ paths:
     input: /afs/crc.nd.edu/user/m/mwolf3/www/test_roast/roast_processed.root
     # for processes with filled histograms
     output: /afs/crc.nd.edu/user/m/mwolf3/www/test_roast/roast_filled.root
+    mva output: "/afs/crc.nd.edu/user/m/mwolf3/www/test_roast/{m}"
     # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
     # name; {m} = mode (_log)
     stack format: "/afs/crc.nd.edu/user/m/mwolf3/www/test_roast/{t}/{d}/{n}{m}.{t}"

@@ -13,10 +13,13 @@ except:
 
 def train_mva(config, processes):
     cfg = config['analysis']['final mva']
-    if not os.path.exists(cfg['dir']):
-        os.makedirs(cfg['dir'])
 
-    mva = roast.ttl.MVABase(cfg['dir'], vectorize(cfg['variables'], 'string'), 1)
+    mvadir = config['paths']['mva output'].format(m='final mva')
+
+    if not os.path.exists(mvadir):
+        os.makedirs(mvadir)
+
+    mva = roast.ttl.MVABase(mvadir, vectorize(cfg['variables'], 'string'), 1)
 
     sig = get_process(cfg['signal'], processes)
     bkg = vectorize(
@@ -32,11 +35,10 @@ def train_mva(config, processes):
 
 def book_mva(config, processes):
     cfg = config['analysis']['final mva']
-    if not os.path.exists(cfg['dir']):
-        os.makedirs(cfg['dir'])
+    mvadir = config['paths']['mva output'].format(m='final mva')
 
     for method, opts in cfg['methods'].items():
-        mva = roast.ttl.MVABase(cfg['dir'], vectorize(cfg['variables']), 1)
+        mva = roast.ttl.MVABase(mvadir, vectorize(cfg['variables']), 1)
         if mva.BookMVA(method):
             roast.register_mva(method, mva);
 
