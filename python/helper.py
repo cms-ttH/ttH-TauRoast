@@ -124,3 +124,25 @@ def vectorize(items, cls=None):
         res.push_back(i)
     return res
 
+def save(items, name, file):
+    """Save a list of objects to a `file` with the key `name`."""
+    if not os.path.isdir(os.path.dirname(file)):
+        os.makedirs(os.path.dirname(file))
+    f = r.TFile(file, "RECREATE")
+    f.WriteObject(vectorize(items, "roast::Process*"), name)
+    f.Close()
+
+def load(name, file):
+    """Load an object with key `name` from `file`, which can either be a
+    filename or ROOT file object."""
+    if isinstance(file, r.TFile):
+        f = file
+    else:
+        f = r.TFile(file)
+    obj = r.std.vector("roast::Process*")()
+    f.GetObject(name, obj)
+    f.Close()
+    items = []
+    for o in obj:
+        items.append(o)
+    return items

@@ -21,25 +21,6 @@ from TTHTauTau.Roast.helper import *
 from TTHTauTau.Roast.process import analyze, fill_histos
 from TTHTauTau.Roast.style import *
 
-def save(items, name, file):
-    """Save a list of objects to a `file` with the key `name`."""
-    if not os.path.isdir(os.path.dirname(file)):
-        os.makedirs(os.path.dirname(file))
-    f = r.TFile(file, "RECREATE")
-    f.WriteObject(vectorize(items, "roast::Process*"), name)
-    f.Close()
-
-def load(name, file):
-    """Load an object with key `name` from `file`."""
-    f = r.TFile(file)
-    obj = r.std.vector("roast::Process*")()
-    f.GetObject(name, obj)
-    f.Close()
-    items = []
-    for o in obj:
-        items.append(o)
-    return items
-
 from optparse import OptionParser
 
 parser = OptionParser()
