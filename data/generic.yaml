@@ -4,7 +4,6 @@ analysis:
     max events: -1
 
     final mva:
-        dir: /afs/crc.nd.edu/user/m/mwolf3/www/test_roast/final mva
         methods:
             BDTG: "!H:!V:NTrees=1000:BoostType=Grad:Shrinkage=0.10:UseBaggedGrad:GradBaggingFraction=0.5:nCuts=20:NNodesMax=5"
         signal: TTHTauTau_125_real
