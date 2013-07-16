@@ -113,13 +113,13 @@ def fill_histos(config, processes):
             try:
                 strength = -1.
                 if flag in config['physics']['systematics']:
-                    if val == "nominal":
-                        # FIXME do this properly
-                        raise
-                    elif val == "up":
+                    if val == "up":
                         strength = config['physics']['systematics'][flag]
                     elif val == "down":
                         strength = 2 - config['physics']['systematics'][flag]
+                    else:
+                        # FIXME do this properly
+                        raise
 
                 if flag == 'brSF':
                     if not p.GetShortName().startswith("TTH_"):
