@@ -65,9 +65,16 @@ parser.add_option("-t", "--train",
         help="train MVAs")
 opts, args = parser.parse_args()
 
-baseconfig = yaml.load(open("data/generic.yaml"))
-processconfig = yaml.load(open(baseconfig['processes']))
-histogramconfig = yaml.load(open(baseconfig['histograms']))
+if len(args) != 1:
+    parser.error('configuration file required')
+
+configfile = args[0]
+
+basedir = os.path.join(os.environ['CMSSW_BASE'], 'src/TTHTauTau/Roast/data')
+
+baseconfig = yaml.load(open(configfile))
+processconfig = yaml.load(open(os.path.join(basedir, baseconfig['processes'])))
+histogramconfig = yaml.load(open(os.path.join(basedir, baseconfig['histograms'])))
 
 baseconfig['processes'] = processconfig
 baseconfig['histograms'] = histogramconfig

@@ -146,5 +146,5 @@ paths:
     ntuples: /hadoop/users/matze/ttH/v45/2012/
     tree: makeNtuple/TTbarHTauTau
 
-processes: data/process_v45.yaml
-histograms: data/histograms.yaml
+processes: process_v47.yaml
+histograms: histograms.yaml
