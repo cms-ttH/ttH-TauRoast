@@ -81,6 +81,7 @@ analysis:
             processes: [WplusOneJet, WplusTwoJets, WplusThreeJets, WplusFourJets]
 
 display:
+    legend: False
     legend columns: 3
 
 physics:

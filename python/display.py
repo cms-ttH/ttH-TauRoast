@@ -168,7 +168,11 @@ def stack(config, processes):
     ratio_plot_max = 2.5
     bottom_margin = 0.35
     small_number = 0.0001
-    scale = 1.45
+
+    if config['display']['legend']:
+        scale = 1.45
+    else:
+        scale = 1.15
 
     for histname in config['histograms'].keys():
         try:
@@ -253,19 +257,16 @@ def stack(config, processes):
             # FIXME do something more sensible
             pass
 
-        l = Legend(0.05, 3)
-
-        for p in bkg_procs:
-            l.draw_box(1001, p.GetColor(), p.GetLabelForLegend())
-
-        l.draw_box(3654, r.kBlack, "Bkg. err.", True)
-
-        if coll:
-            l.draw_marker(20, r.kBlack, coll.GetLabelForLegend())
-
-        l.new_row()
-        for p in sig_procs:
-            l.draw_line(2, p.GetColor(), p.GetLabelForLegend())
+        if config['display']['legend']:
+            l = Legend(0.05, 3)
+            for p in bkg_procs:
+                l.draw_box(1001, p.GetColor(), p.GetLabelForLegend())
+            l.draw_box(3654, r.kBlack, "Bkg. err.", True)
+            if coll:
+                l.draw_marker(20, r.kBlack, coll.GetLabelForLegend())
+            l.new_row()
+            for p in sig_procs:
+                l.draw_line(2, p.GetColor(), p.GetLabelForLegend())
 
         base_histo.GetHisto().Draw("axis same")
 
