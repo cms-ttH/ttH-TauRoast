@@ -23,9 +23,7 @@ analysis:
     process:
       - Collisions
       - TTbar
-      - Wjets
-      - DiBoson
-      - Zjets
+      - EWK
       - SingleTop
       - ttWZ
       - TTHTauTau_125_real
@@ -40,9 +38,7 @@ analysis:
     plot:
       - Collisions
       - TTbar
-      - Wjets
-      - DiBoson
-      - Zjets
+      - EWK
       - SingleTop
       - ttWZ
       - TTH_125
@@ -58,6 +54,11 @@ analysis:
             legend: Z + jets
             color: 418
             processes: [ZplusJets_LowMass, ZplusOneJet, ZplusTwoJets, ZplusThreeJets, ZplusFourJets]
+        EWK:
+            name: EWK
+            legend: EWK
+            color: 862
+            processes: [ZplusJets_LowMass, ZplusOneJet, ZplusTwoJets, ZplusThreeJets, ZplusFourJets, WplusOneJet, WplusTwoJets, WplusThreeJets, WplusFourJets, WW, WZ, ZZ]
         DiBoson:
             name: WW, WZ, ZZ
             legend: WW, WZ, ZZ
