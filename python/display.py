@@ -21,6 +21,7 @@ def get_bkg_stack(histname, processes):
         h = p.GetHContainer()[histname].GetHisto()
         h.SetFillStyle(1001)
         h.SetFillColor(p.GetColor())
+        h.SetLineColor(p.GetColor())
         h.SetLineWidth(0)
         res.Add(h)
 
@@ -193,10 +194,6 @@ def stack(config, processes):
         max_y = scale * max(get_maximum(histname, procs, True),
                 bkg_stack.GetMaximum())
 
-        base_histo = roast.HWrapper(procs[0].GetHContainer()[histname])
-        base_histo.ScaleBy(0)
-        base_histo.GetHisto().SetTitle("")
-
         if plot_ratio:
             min_y = 0.002
             canvas = r.TCanvas(histname, histname, 800, 1000)
@@ -212,20 +209,19 @@ def stack(config, processes):
             canvas = r.TCanvas(histname, histname, 800, 800)
             canvas.cd()
 
-        base_histo.GetHisto().GetYaxis().SetRangeUser(min_y, max_y)
-        base_histo.GetHisto().GetXaxis().SetRangeUser(base_histo.GetMinXVis(), base_histo.GetMaxXVis())
-
         bkg_stack.Draw("hist")
-        bkg_stack.GetXaxis().SetRangeUser(base_histo.GetMinXVis(), base_histo.GetMaxXVis())
-        bkg_stack.GetXaxis().SetTitle(base_histo.GetXTitle())
-        bkg_stack.GetYaxis().SetTitle(base_histo.GetYTitle())
         bkg_stack.SetMinimum(min_y)
         bkg_stack.SetMaximum(max_y)
         bkg_stack.GetYaxis().SetRangeUser(min_y, max_y)
 
+        base_histo = roast.HWrapper(procs[0].GetHContainer()[histname])
+        base_histo.ScaleBy(0)
+        base_histo.GetHisto().SetTitle("")
+        base_histo.GetHisto().GetYaxis().SetRangeUser(min_y, max_y)
+        base_histo.GetHisto().GetXaxis().SetRangeUser(base_histo.GetMinXVis(), base_histo.GetMaxXVis())
         base_histo.GetHisto().Draw("hist")
 
-        bkg_stack.Draw("same")
+        bkg_stack.Draw("hist same")
 
         bkg_sum = get_bkg_sum(histname, procs)
         bkg_sum.SetFillStyle(3654)
