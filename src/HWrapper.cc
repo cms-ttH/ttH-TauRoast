@@ -207,7 +207,7 @@ void
 HWrapper::SetHisto(const TH1* hist)
 {
     TTimeStamp timestamp;
-    TRandom random;
+    TRandom random(timestamp.GetTimeSpec().tv_nsec);
     stringstream ssName; ssName.str("");
     ssName << hist->GetName() << timestamp.GetTimeSpec().tv_sec << timestamp.GetTimeSpec().tv_nsec << random.Gaus();
 
