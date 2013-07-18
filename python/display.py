@@ -315,6 +315,7 @@ def stack(config, processes):
         sig_procs = get_signals(procs)
         for p in sig_procs:
             h = p.GetHContainer()[histname].GetHisto()
+            h.Scale(config['display']['signal scale factor'])
             h.SetFillStyle(0)
             h.SetLineWidth(3)
             h.SetLineColor(p.GetColor())
@@ -345,7 +346,9 @@ def stack(config, processes):
                 l.draw_marker(20, r.kBlack, coll.GetLabelForLegend())
             l.new_row()
             for p in sig_procs:
-                l.draw_line(2, p.GetColor(), p.GetLabelForLegend())
+                sig_scale = config['display']['signal scale factor']
+                suffix = "" if sig_scale == 1 else " (#times {0})".format(sig_scale)
+                l.draw_line(2, p.GetColor(), p.GetLabelForLegend() + suffix)
 
         base_histo.GetHisto().Draw("axis same")
 

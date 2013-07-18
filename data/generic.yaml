@@ -83,6 +83,7 @@ analysis:
 display:
     legend: False
     legend columns: 3
+    signal scale factor: 100
 
 physics:
     lumi: 19400
