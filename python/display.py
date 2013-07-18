@@ -1,5 +1,7 @@
+from glob import glob
 import math
 import os
+import re
 import ROOT as r
 import sys
 
@@ -55,6 +57,79 @@ def get_maximum(histname, processes, inc_error=False):
         else:
             vals.append(p.GetHContainer()[histname].GetMaximum())
     return max(vals)
+
+class SysErrors:
+    def __init__(self, config):
+        upfilenames = glob(config['paths']['systematics input'].format(s="*Up"))
+        downfilenames = glob(config['paths']['systematics input'].format(s="*Down"))
+
+        candidates = filter(lambda s: s != "Collisions", config['analysis']['plot'])
+
+        self.__up = []
+        for fn in upfilenames:
+            # FIXME do properly
+            print fn
+            procs = load("Roast", fn)
+            normalize_processes(config, procs)
+            combine_processes(config, procs)
+            procs = map(lambda n: get_process(n, procs), candidates)
+            self.__up.append((fn, procs))
+
+        self.__down = []
+        for fn in downfilenames:
+            # FIXME do properly
+            print fn
+            procs = load("Roast", fn)
+            normalize_processes(config, procs)
+            combine_processes(config, procs)
+            procs = get_backgrounds(map(lambda n: get_process(n, procs), candidates))
+            self.__down.append((fn, procs))
+
+    def get_squared_bkg_shifts(self, procs, histname, histo):
+        res = [0] * histo.GetHisto().GetNbinsX()
+        for (fn, ps) in procs:
+            bkg_sum = get_bkg_sum(histname, ps)
+
+            for i in range(histo.GetHisto().GetNbinsX()):
+                res[i] += (bkg_sum.GetHisto().GetBinContent(i + 1) -
+                    histo.GetHisto().GetBinContent(i + 1))**2
+        return res
+
+    def get_errors(self, histname, histo):
+        abs_err = r.TGraphAsymmErrors(histo.GetHisto())
+        rel_err = r.TGraphAsymmErrors(histo.GetHisto())
+
+        err_up = self.get_squared_bkg_shifts(self.__up, histname, histo)
+        err_down = self.get_squared_bkg_shifts(self.__down, histname, histo)
+
+        for i in range(histo.GetHisto().GetNbinsX()):
+            bin_center = histo.GetHisto().GetBinCenter(i + 1)
+            bin_content = histo.GetHisto().GetBinContent(i + 1)
+            bin_error = histo.GetHisto().GetBinError(i + 1)
+            bin_width = histo.GetHisto().GetBinWidth(i + 1)
+
+            if bin_content > 0.001:
+                rel_up = math.sqrt(err_up[i] + bin_error**2) / bin_content
+                rel_down = math.sqrt(err_down[i] + bin_error**2) / bin_content
+                # rel_up = math.sqrt(err_up[i]) / bin_content
+                # rel_down = math.sqrt(err_down[i]) / bin_content
+            else:
+                rel_up = 0
+                rel_down = 0
+
+            abs_err.SetPoint(i, bin_center, bin_content)
+            rel_err.SetPoint(i, bin_center, 1)
+
+            abs_err.SetPointEXlow(i, bin_width / 2)
+            abs_err.SetPointEXhigh(i, bin_width / 2)
+            abs_err.SetPointEYlow(i, math.sqrt(err_down[i]))
+            abs_err.SetPointEYhigh(i, math.sqrt(err_up[i]))
+
+            rel_err.SetPointEXlow(i, bin_width / 2)
+            rel_err.SetPointEXhigh(i, bin_width / 2)
+            rel_err.SetPointEYlow(i, rel_down)
+            rel_err.SetPointEYhigh(i, rel_up)
+        return (abs_err, rel_err)
 
 def to_ndc(x, y):
     new_x = r.gPad.GetLeftMargin() + x * (1 - r.gPad.GetLeftMargin() - r.gPad.GetRightMargin())
@@ -161,6 +236,8 @@ class Legend:
 def stack(config, processes):
     procs = map(lambda n: get_process(n, processes), config['analysis']['plot'])
 
+    err = SysErrors(config)
+
     plot_ratio = True
 
     padding = 0.001
@@ -231,7 +308,13 @@ def stack(config, processes):
         bkg_sum.SetFillStyle(3654)
         bkg_sum.SetFillColor(r.kBlack)
         bkg_sum.SetMarkerStyle(0)
-        bkg_sum.GetHisto().Draw("E2 same")
+        # bkg_sum.GetHisto().Draw("E2 same")
+
+        (abs_err, rel_err) = err.get_errors(histname, bkg_sum)
+        abs_err.SetFillStyle(3654)
+        abs_err.SetFillColor(r.kBlack)
+        abs_err.SetMarkerStyle(0)
+        abs_err.Draw("2 same")
 
         sig_procs = get_signals(procs)
         for p in sig_procs:
@@ -306,10 +389,15 @@ def stack(config, processes):
                     bkg_err.SetBinError(i + 1, 0)
             bkg_err.SetMarkerSize(0)
             bkg_err.SetFillColor(r.kGreen)
+            rel_err.SetMarkerSize(0)
+            rel_err.SetFillColor(r.kGreen)
+            rel_err.SetFillStyle(1001)
             if ratio:
-                bkg_err.Draw("E2 same")
+                # bkg_err.Draw("E2 same")
+                rel_err.Draw("2 same")
             else:
-                bkg_err.Draw("E2")
+                # bkg_err.Draw("E2")
+                rel_err.Draw("2")
 
             if coll:
                 ratio_err = r.TGraphAsymmErrors(ratio)

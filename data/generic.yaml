@@ -138,6 +138,8 @@ physics:
 paths:
     # for analyzed processes
     input: /afs/crc.nd.edu/user/m/mwolf3/www/test_roast/roast_processed.root
+    # {s} is replaced with systematic shifts
+    systematics input: "/afs/crc.nd.edu/user/m/mwolf3/www/test_roast_{s}/roast_filled.root"
     # for processes with filled histograms
     output: /afs/crc.nd.edu/user/m/mwolf3/www/test_roast/roast_filled.root
     mva output: "/afs/crc.nd.edu/user/m/mwolf3/www/test_roast/{m}"
