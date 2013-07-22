@@ -38,6 +38,8 @@ def analyze(config):
     specified in the process/analysis section of the configuration.  Return
     analyzed processes."""
 
+    r.TH1.SetDefaultSumw2()
+
     processes = r.std.vector('roast::Process*')()
     for proc in config['analysis']['process']:
         cfg = config['processes'][proc]
