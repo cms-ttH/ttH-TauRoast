@@ -1,29 +1,12 @@
 #!/usr/bin/env python
 
+import logging
 import math
 import os
-import ROOT as r
-import sys
-
-r.gROOT.SetBatch()
-r.gSystem.Load("libTTHTauTauRoast")
-
-try:
-    from ROOT import roast
-except:
-    sys.stderr.write("Failed to import 'roast'!\n")
-    sys.exit(1)
-
-import yaml
-
-from TTHTauTau.Roast.display import stack
-from TTHTauTau.Roast.helper import *
-from TTHTauTau.Roast.process import analyze, fill_histos
-from TTHTauTau.Roast.style import *
 
 from optparse import OptionParser
 
-parser = OptionParser()
+parser = OptionParser(usage="%prog [options] configuration")
 parser.add_option("-a", "--analyze",
         action="store_true",
         dest="analyze",
@@ -47,9 +30,28 @@ parser.add_option("-t", "--train",
 opts, args = parser.parse_args()
 
 if len(args) != 1:
-    parser.error('configuration file required')
+    parser.error('wrong number of arguments')
 
-configfile = args[0]
+import ROOT as r
+import sys
+
+r.gROOT.SetBatch()
+r.gSystem.Load("libTTHTauTauRoast")
+
+try:
+    from ROOT import roast
+except:
+    sys.stderr.write("Failed to import 'roast'!\n")
+    sys.exit(1)
+
+import yaml
+
+from TTHTauTau.Roast.display import stack
+from TTHTauTau.Roast.helper import *
+from TTHTauTau.Roast.process import analyze, fill_histos
+from TTHTauTau.Roast.style import *
+
+(configfile,) = args
 
 basedir = os.path.join(os.environ['CMSSW_BASE'], 'src/TTHTauTau/Roast/data')
 
