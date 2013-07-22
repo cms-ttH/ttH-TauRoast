@@ -1,4 +1,5 @@
 from glob import glob
+import logging
 import math
 import os
 import re
@@ -68,8 +69,7 @@ class SysErrors:
 
         self.__up = []
         for fn in upfilenames:
-            # FIXME do properly
-            print fn
+            logging.info("loading systematic shifts from %s", fn)
             procs = load("Roast", fn)
             normalize_processes(config, procs)
             combine_processes(config, procs)
@@ -78,8 +78,7 @@ class SysErrors:
 
         self.__down = []
         for fn in downfilenames:
-            # FIXME do properly
-            print fn
+            logging.info("loading systematic shifts from %s", fn)
             procs = load("Roast", fn)
             normalize_processes(config, procs)
             combine_processes(config, procs)
@@ -255,14 +254,13 @@ def stack(config, processes):
     for histname in config['histograms'].keys():
         try:
             if all(map(lambda v: v <= 0, get_integrals(histname, procs))):
-                # FIXME log this properly
-                print "Empty histogram:", histname
+                logging.warn("empty histogram: %s", histname)
                 continue
         except:
-            print "Empty histogram (unfilled):", histname
+            logging.warn("unfilled histogram: %s", histname)
             continue
 
-        print "Saving", histname
+        logging.info("plotting %s", histname)
 
         bkg_procs = get_backgrounds(procs)
         bkg_stack = get_bkg_stack(histname, bkg_procs)

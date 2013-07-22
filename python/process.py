@@ -1,3 +1,4 @@
+import logging
 import math
 import os
 import ROOT as r
@@ -76,7 +77,7 @@ def analyze(config):
                         clone['showOF'], clone['showUF'], clone['centerLabels'], clone['showText'])
                 p.AddHistogram(name, w)
             except:
-                print "Can't create", name, ", please check config"
+                logging.error("unable to create histogram %s", name)
 
         processes.push_back(p)
 
@@ -107,8 +108,8 @@ def fill_histos(config, processes):
         elif config['physics']['pair selection'] == 'pt':
             select = lambda xs: x[0]
         else:
-            # FIXME handle properly
-            raise
+            logging.critical("invalid selection mechanism: %s", config['physics']['pair selection'])
+            sys.exit(1)
 
         weights = []
         for (flag, val) in flags.items():
@@ -120,8 +121,8 @@ def fill_histos(config, processes):
                     elif val == "down":
                         strength = 2 - config['physics']['systematics'][flag]
                     else:
-                        # FIXME do this properly
-                        raise
+                        logging.critcal("invalid direction for flag %s: %s", flag, val)
+                        sys.exit(1)
 
                 if flag == 'brSF':
                     if not p.GetShortName().startswith("TTH_"):
@@ -134,10 +135,8 @@ def fill_histos(config, processes):
                 elif val == "down":
                     weights.append(roast.Weight.Create(flag, roast.Weight.kDown, strength))
             except Exception, e:
-                # FIXME log this properly
-                print flag, val
-                print e
-                raise
+                logging.critical("could not create flag %s with value %s", flag, val)
+                sys.exit(1)
 
         for e in p.GetGoodEvents():
             branches.GetEntry(e.entry)

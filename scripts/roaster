@@ -4,6 +4,11 @@ import logging
 import math
 import os
 
+# Logging setup
+logging.basicConfig(
+        datefmt="%Y-%m-%d %H:%M",
+        format="%(asctime)s [%(levelname)s] - %(filename)s %(lineno)d: %(message)s")
+
 from optparse import OptionParser
 
 parser = OptionParser(usage="%prog [options] configuration")
@@ -27,7 +32,19 @@ parser.add_option("-t", "--train",
         action="store_true",
         dest="train",
         help="train MVAs")
+parser.add_option("-v", "--verbose",
+        action="count",
+        dest="verbosity",
+        default=0,
+        help="make output more verbose (allowed multiple times)")
+parser.add_option("-q", "--quiet",
+        action="count",
+        dest="quietness",
+        default=3,
+        help="make output less verbose (allowed multiple times)")
 opts, args = parser.parse_args()
+
+logging.__dict__['root'].level = (opts.quietness - opts.verbosity) * 10
 
 if len(args) != 1:
     parser.error('wrong number of arguments')
@@ -52,6 +69,8 @@ from TTHTauTau.Roast.process import analyze, fill_histos
 from TTHTauTau.Roast.style import *
 
 (configfile,) = args
+
+logging.info("reading configuration from %s", configfile)
 
 basedir = os.path.join(os.environ['CMSSW_BASE'], 'src/TTHTauTau/Roast/data')
 
