@@ -1,3 +1,4 @@
+// vim: ts=4:sw=4:et:sta
 /*
     Author:			Nil Valls <nil.valls@cern.ch>
     Date:			11 Jun 2011

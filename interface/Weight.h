@@ -1,3 +1,4 @@
+// vim: ts=4:sw=4:et:sta
 #ifndef __Weights_h
 #define __Weights_h
 

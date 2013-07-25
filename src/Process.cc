@@ -1,3 +1,4 @@
+// vim: ts=4:sw=4:et:sta
 #include <iomanip>
 
 #include "boost/lexical_cast.hpp"

@@ -1,3 +1,4 @@
+// vim: ts=4:sw=4:et:sta
 #ifndef _HELPER_h
 #define _HELPER_h
 

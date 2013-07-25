@@ -1,3 +1,4 @@
+// vim: ts=4:sw=4:et:sta
 #ifndef Branches_h
 #define Branches_h
 

@@ -1,3 +1,4 @@
+# vim: ts=4:sw=4:et:sta
 import os
 import ROOT as r
 import sys

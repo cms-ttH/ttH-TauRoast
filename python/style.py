@@ -1,3 +1,4 @@
+# vim: ts=4:sw=4:et:sta
 import ROOT as r
 
 def create_tdr_style():
