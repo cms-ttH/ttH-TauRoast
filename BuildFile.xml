@@ -2,6 +2,7 @@
 <use name="roottmva"/>
 <use name="boost"/>
 <use name="boost_filesystem"/>
+<use name="boost_python"/>
 <Flags ADD_SUBDIR="yes"/>
 <export>
 	<use name="root"/>

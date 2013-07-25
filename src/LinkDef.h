@@ -38,6 +38,6 @@
 #pragma link C++ class roast::Weight+;
 #pragma link C++ function roast::register_mva;
 #pragma link C++ function roast::Helper::SplitString;
-#pragma link C++ function roast::ttl::analyze(roast::Process&, const std::vector<std::string>&, const int&);
+#pragma link C++ function roast::ttl::analyze(roast::Process&, const std::vector<std::string>&, const int&, void *);
 
 #endif

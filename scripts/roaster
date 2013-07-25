@@ -6,7 +6,7 @@ import os
 
 # Logging setup
 logging.basicConfig(
-        datefmt="%Y-%m-%d %H:%M",
+        datefmt="%Y-%m-%d %H:%M:%S",
         format="%(asctime)s [%(levelname)s] - %(filename)s %(lineno)d: %(message)s")
 
 from optparse import OptionParser
@@ -52,6 +52,7 @@ if len(args) != 1:
 import ROOT as r
 import sys
 
+r.gErrorIgnoreLevel = 1001
 r.gROOT.SetBatch()
 r.gSystem.Load("libTTHTauTauRoast")
 

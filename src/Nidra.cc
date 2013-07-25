@@ -1,12 +1,12 @@
 #include "../interface/Nidra.h"
 #include "../interface/TTLBranches.h"
 
-using namespace std;
+#include "boost/python.hpp"
 
 namespace roast {
     template<typename T>
-    void
-    analyze(roast::Process& proc, const std::vector<std::string>& cuts, const int& limit)
+    long
+    analyze(roast::Process& proc, const std::vector<std::string>& cuts, const int& limit, PyObject *log)
     {
         CutFlow cflow(cuts);
         cflow.Reset();
@@ -41,37 +41,17 @@ namespace roast {
                 << nentries << " events found, " << n_to_read << " expected."  << endl;
         }
 
-        cout << "\tAnalyzing " << proc.GetShortName() << endl;
-        cout << "\t>>> Starting loop... " << " " << nentries << " entries available: ";
         cflow.SetCutCounts("nTuple making", nentries);
 
-        if (limit <= 0 || limit >= nentries) {
-            cout << "Processing all of them..." << string(14,'.') << " ";
-        } else {
-            cout << "Stopping at " << limit << " as per-user request" << string(14,'.') << " ";
-        }
-        cout.flush();
-
-        //ofstream fout("events.txt");
-
-
-        // Actual loop
         double NOEanalyzed = 0;
         double NOEwithAtLeastOneCombo = 0;
-        for (Long64_t jentry=0; jentry<nentries; jentry++) {
-            // Keep user informed of the number of events processed and if there is a termination due to reaching of the limit
-            if ( limit > 0 && jentry >= (unsigned int)(limit)){ cout << "\n\t>>> INFO: Reached user-imposed event number limit (" << limit << "), skipping the rest." << endl; break; }
-
-            if (jentry > 0 && (jentry + 1) % 1000 == 0) { 
-                if (isatty(fileno(stdout))) {
-                    ostringstream o;
-                    o << (jentry - 999);
-                    cout << string(o.str().length(), '\b') << (jentry + 1);
-                } else if ((jentry + 1) % 10000 == 0) {
-                    cout << " " << jentry + 1;
-                }
-                cout.flush();
+        for (Long64_t jentry=0; jentry < nentries && jentry < limit; jentry++) {
+            if (log) {
+                PyGILState_STATE state = PyGILState_Ensure();
+                boost::python::call<void>(log, jentry);
+                PyGILState_Release(state);
             }
+
             event->GetEntry(jentry);
 
             if (event->TTL_NumCombos > 0)
@@ -82,9 +62,6 @@ namespace roast {
 
             vector<int> combos;
             for (unsigned int i = 0; i < event->TTL_NumCombos; ++i) {
-                float comboMass = (*event->TTL_DitauVisibleMass)[i];
-                if( comboMass <= 0 ){ cout << "WARNING: ditauMass < 0!" << endl;  continue; }
-
                 if (cflow.CheckCuts(event, i, !checkReality))
                     combos.push_back(i);
             }
@@ -102,24 +79,23 @@ namespace roast {
 
         cflow.SetCutCounts("TTL_AtLeastOneCombo", NOEwithAtLeastOneCombo);
 
-        cout << endl;
-
         proc.SetGoodEvents(good_events);
         proc.SetNOEinNtuple(nentries);
         proc.SetNOEanalyzed(NOEanalyzed);
         proc.SetCutFlow(cflow);
 
         delete event;
+
+        return long(NOEanalyzed);
     }
 
     namespace ttl {
-        void
-        analyze(roast::Process& p, const std::vector<std::string>& cuts, const int& limit)
+        long
+        analyze(roast::Process& p, const std::vector<std::string>& cuts, const int& limit, PyObject *log)
         {
-            roast::analyze<roast::ttl::Branches>(p, cuts, limit);
+            return roast::analyze<roast::ttl::Branches>(p, cuts, limit, log);
         }
     }
 }
 
 NamespaceImp(roast)
-// NamespaceImp(roast::ttl)
