@@ -226,552 +226,140 @@ ttl::Branches::FillHistograms(std::map<std::string, roast::HWrapper*>& histos, i
 
     // General =========================================================================================================================
     auto h = histos.end();
-    if ((h = histos.find("Events")) != histos.end()) {
-        h->second->Fill(0, weight);
-    } else {
-        std::cout << "Can't find histogram Events" << std::endl;
-    }
-    if ((h = histos.find("MomentumRank")) != histos.end()) {
-        h->second->Fill((*TTL_MomentumRank)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram MomentumRank" << std::endl;
-    }
-    if ((h = histos.find("MET")) != histos.end()) {
-        h->second->Fill(Ev_MET, weight);
-    } else {
-        std::cout << "Can't find histogram MET" << std::endl;
-    }
-    if ((h = histos.find("HT")) != histos.end()) {
-        h->second->Fill((*TTL_HT)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram HT" << std::endl;
-    }
+    histos["Events"]->Fill(0, weight);
+    histos["MomentumRank"]->Fill((*TTL_MomentumRank)[idx], weight);
+    histos["MET"]->Fill(Ev_MET, weight);
+    histos["HT"]->Fill((*TTL_HT)[idx], weight);
 
     if (auto mva = MVABase::gMVA["CFMlpANN"]) {
-        if ((h = histos.find("FinalCFMlpANN")) != histos.end()) {
-            h->second->Fill(mva->Evaluate(this, idx), weight);
-        } else {
-            std::cout << "Can't find histogram FinalCFMlpANN" << std::endl;
-        }
+        histos["FinalCFMlpANN"]->Fill(mva->Evaluate(this, idx), weight);
     }
 
     if (auto mva = MVABase::gMVA["BDTG"]) {
-        if ((h = histos.find("FinalBDTG")) != histos.end()) {
-            h->second->Fill(mva->Evaluate(this, idx), weight);
-        } else {
-            std::cout << "Can't find histogram FinalBDTG" << std::endl;
-        }
+        histos["FinalBDTG"]->Fill(mva->Evaluate(this, idx), weight);
     } else {
         std::cout << "Can't find BDTG" << std::endl;
     }
 
     if (auto mva = MVABase::gComboMVA["BDT"]) {
-        if ((h = histos.find("ComboBDT")) != histos.end()) {
-            h->second->Fill(mva->Evaluate(this, idx), weight);
-        } else {
-            std::cout << "Can't find histogram ComboBDT" << std::endl;
-        }
+        histos["ComboBDT"]->Fill(mva->Evaluate(this, idx), weight);
     }
 
-    if ((h = histos.find("SelectedComboRank")) != histos.end()) {
-        h->second->Fill(idx, weight);
-    } else {
-        std::cout << "Can't find histogram SelectedComboRank" << std::endl;
-    }
+    histos["SelectedComboRank"]->Fill(idx, weight);
 
-    if ((h = histos.find("NumberPV_noPURW")) != histos.end()) {
-        h->second->Fill(V_NumVertices, weight/puWeight);
-    } else {
-        std::cout << "Can't find histogram NumberPV_noPURW" << std::endl;
-    }
-    if ((h = histos.find("NumberBXm1_noPURW")) != histos.end()) {
-        h->second->Fill(V_NumInteractionsBXm1, weight/puWeight);
-    } else {
-        std::cout << "Can't find histogram NumberBXm1_noPURW" << std::endl;
-    }
-    if ((h = histos.find("NumberBX0_noPURW")) != histos.end()) {
-        h->second->Fill(V_NumInteractionsBX0, weight/puWeight);
-    } else {
-        std::cout << "Can't find histogram NumberBX0_noPURW" << std::endl;
-    }
-    if ((h = histos.find("NumberBXp1_noPURW")) != histos.end()) {
-        h->second->Fill(V_NumInteractionsBXp1, weight/puWeight);
-    } else {
-        std::cout << "Can't find histogram NumberBXp1_noPURW" << std::endl;
-    }
-    if ((h = histos.find("PUweights_noPURW")) != histos.end()) {
-        h->second->Fill(puWeight, weight/puWeight);
-    } else {
-        std::cout << "Can't find histogram PUweights_noPURW" << std::endl;
-    }
-    if ((h = histos.find("NumberPV_afterPURW")) != histos.end()) {
-        h->second->Fill(V_NumVertices, weight);
-    } else {
-        std::cout << "Can't find histogram NumberPV_afterPURW" << std::endl;
-    }
-    if ((h = histos.find("NumberBXm1_afterPURW")) != histos.end()) {
-        h->second->Fill(V_NumInteractionsBXm1, weight);
-    } else {
-        std::cout << "Can't find histogram NumberBXm1_afterPURW" << std::endl;
-    }
-    if ((h = histos.find("NumberBX0_afterPURW")) != histos.end()) {
-        h->second->Fill(V_NumInteractionsBX0, weight);
-    } else {
-        std::cout << "Can't find histogram NumberBX0_afterPURW" << std::endl;
-    }
-    if ((h = histos.find("NumberBXp1_afterPURW")) != histos.end()) {
-        h->second->Fill(V_NumInteractionsBXp1, weight);
-    } else {
-        std::cout << "Can't find histogram NumberBXp1_afterPURW" << std::endl;
-    }
-    if ((h = histos.find("PUweights_afterPURW")) != histos.end()) {
-        h->second->Fill(puWeight, weight);
-    } else {
-        std::cout << "Can't find histogram PUweights_afterPURW" << std::endl;
-    }
+    histos["NumberPV_noPURW"]->Fill(V_NumVertices, weight/puWeight);
+    histos["NumberBXm1_noPURW"]->Fill(V_NumInteractionsBXm1, weight/puWeight);
+    histos["NumberBX0_noPURW"]->Fill(V_NumInteractionsBX0, weight/puWeight);
+    histos["NumberBXp1_noPURW"]->Fill(V_NumInteractionsBXp1, weight/puWeight);
+    histos["PUweights_noPURW"]->Fill(puWeight, weight/puWeight);
+    histos["NumberPV_afterPURW"]->Fill(V_NumVertices, weight);
+    histos["NumberBXm1_afterPURW"]->Fill(V_NumInteractionsBXm1, weight);
+    histos["NumberBX0_afterPURW"]->Fill(V_NumInteractionsBX0, weight);
+    histos["NumberBXp1_afterPURW"]->Fill(V_NumInteractionsBXp1, weight);
+    histos["PUweights_afterPURW"]->Fill(puWeight, weight);
     
     for( vector<float>::const_iterator vertexIt = V_Zcoord->begin(); vertexIt != V_Zcoord->end(); ++vertexIt ) {
-        if ((h = histos.find("VertexZcoord_afterPURW")) != histos.end()) {
-            h->second->Fill(*vertexIt,weight);
-        } else {
-            std::cout << "Can't find histogram VertexZcoord_afterPURW" << std::endl;
-        }
+        histos["VertexZcoord_afterPURW"]->Fill(*vertexIt,weight);
     }
-    if ((h = histos.find("ChargeProduct_TT")) != histos.end()) {
-        h->second->Fill(((*TTL_Tau1Charge)[idx] * (*TTL_Tau2Charge)[idx]), weight);
-    } else {
-        std::cout << "Can't find histogram ChargeProduct_TT" << std::endl;
-    }
+    // histos["ChargeProduct_TT"]->Fill(((*TTL_Tau1Charge)[idx] * (*TTL_Tau2Charge)[idx]), weight);
 
     // Taus ============================================================================================================================
-    if ((h = histos.find("NumTaus")) != histos.end()) {
-        h->second->Fill(TTL_NumTaus, weight);
-    } else {
-        std::cout << "Can't find histogram NumTaus" << std::endl;
-    }
-    if ((h = histos.find("VisibleMass_TT")) != histos.end()) {
-        h->second->Fill((*TTL_DitauVisibleMass)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram VisibleMass_TT" << std::endl;
-    }
-    if ((h = histos.find("DeltaR_TT")) != histos.end()) {
-        h->second->Fill((*TTL_DitauDeltaR)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram DeltaR_TT" << std::endl;
-    }
-    if ((h = histos.find("Pt_T1")) != histos.end()) {
-        h->second->Fill((*TTL_Tau1Pt)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram Pt_T1" << std::endl;
-    }
-    if ((h = histos.find("Pt_T2")) != histos.end()) {
-        h->second->Fill((*TTL_Tau2Pt)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram Pt_T2" << std::endl;
-    }
-    if ((h = histos.find("Eta_T1")) != histos.end()) {
-        h->second->Fill((*TTL_Tau1Eta)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram Eta_T1" << std::endl;
-    }
-    if ((h = histos.find("Eta_T2")) != histos.end()) {
-        h->second->Fill((*TTL_Tau2Eta)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram Eta_T2" << std::endl;
-    }
-    if ((h = histos.find("Phi_T1")) != histos.end()) {
-        h->second->Fill((*TTL_Tau1Phi)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram Phi_T1" << std::endl;
-    }
-    if ((h = histos.find("Phi_T2")) != histos.end()) {
-        h->second->Fill((*TTL_Tau2Phi)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram Phi_T2" << std::endl;
-    }
-    if ((h = histos.find("DecayMode_T1")) != histos.end()) {
-        h->second->Fill((*TTL_Tau1DecayMode)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram DecayMode_T1" << std::endl;
-    }
-    if ((h = histos.find("DecayMode_T2")) != histos.end()) {
-        h->second->Fill((*TTL_Tau2DecayMode)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram DecayMode_T2" << std::endl;
-    }
-    if ((h = histos.find("LTPt_T1")) != histos.end()) {
-        h->second->Fill((*TTL_Tau1LTPt)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram LTPt_T1" << std::endl;
-    }
-    if ((h = histos.find("LTPt_T2")) != histos.end()) {
-        h->second->Fill((*TTL_Tau2LTPt)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram LTPt_T2" << std::endl;
-    }
-    if ((h = histos.find("NProngs_T1")) != histos.end()) {
-        h->second->Fill((*TTL_Tau1NProngs)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NProngs_T1" << std::endl;
-    }
-    if ((h = histos.find("NProngs_T2")) != histos.end()) {
-        h->second->Fill((*TTL_Tau2NProngs)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NProngs_T2" << std::endl;
-    }
-    if ((h = histos.find("IsolationIndex_T1")) != histos.end()) {
-        h->second->Fill(GetTau1IsolationIndex(idx), weight);
-    } else {
-        std::cout << "Can't find histogram IsolationIndex_T1" << std::endl;
-    }
-    if ((h = histos.find("IsolationIndex_T2")) != histos.end()) {
-        h->second->Fill(GetTau2IsolationIndex(idx), weight);
-    } else {
-        std::cout << "Can't find histogram IsolationIndex_T2" << std::endl;
-    }
-    if ((h = histos.find("IsolationIndexMVA_T1")) != histos.end()) {
-        h->second->Fill(GetTau1IsolationIndexMVA(idx), weight);
-    } else {
-        std::cout << "Can't find histogram IsolationIndexMVA_T1" << std::endl;
-    }
-    if ((h = histos.find("IsolationIndexMVA_T2")) != histos.end()) {
-        h->second->Fill(GetTau2IsolationIndexMVA(idx), weight);
-    } else {
-        std::cout << "Can't find histogram IsolationIndexMVA_T2" << std::endl;
-    }
-    if ((h = histos.find("IsolationIndexMVA2_T1")) != histos.end()) {
-        h->second->Fill(GetTau1IsolationIndexMVA2(idx), weight);
-    } else {
-        std::cout << "Can't find histogram IsolationIndexMVA2_T1" << std::endl;
-    }
-    if ((h = histos.find("IsolationIndexMVA2_T2")) != histos.end()) {
-        h->second->Fill(GetTau2IsolationIndexMVA2(idx), weight);
-    } else {
-        std::cout << "Can't find histogram IsolationIndexMVA2_T2" << std::endl;
-    }
-    if ((h = histos.find("IsolationIndex3Hits_T1")) != histos.end()) {
-        h->second->Fill(GetTau1IsolationIndex3Hits(idx), weight);
-    } else {
-        std::cout << "Can't find histogram IsolationIndex3Hits_T1" << std::endl;
-    }
-    if ((h = histos.find("IsolationIndex3Hits_T2")) != histos.end()) {
-        h->second->Fill(GetTau2IsolationIndex3Hits(idx), weight);
-    } else {
-        std::cout << "Can't find histogram IsolationIndex3Hits_T2" << std::endl;
-    }
-    if ((h = histos.find("CombIsoDBcorrRaw_T1")) != histos.end()) {
-        h->second->Fill((*TTL_Tau1HPSbyCombinedIsolationDeltaBetaCorrRaw)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram CombIsoDBcorrRaw_T1" << std::endl;
-    }
-    if ((h = histos.find("CombIsoDBcorrRaw_T2")) != histos.end()) {
-        h->second->Fill((*TTL_Tau2HPSbyCombinedIsolationDeltaBetaCorrRaw)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram CombIsoDBcorrRaw_T2" << std::endl;
-    }
-    if ((h = histos.find("CombIsoDBcorrRaw3Hits_T1")) != histos.end()) {
-        h->second->Fill((*TTL_Tau1HPSbyCombinedIsolationDeltaBetaCorrRaw3Hits)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram CombIsoDBcorrRaw3Hits_T1" << std::endl;
-    }
-    if ((h = histos.find("CombIsoDBcorrRaw3Hits_T2")) != histos.end()) {
-        h->second->Fill((*TTL_Tau2HPSbyCombinedIsolationDeltaBetaCorrRaw3Hits)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram CombIsoDBcorrRaw3Hits_T2" << std::endl;
-    }
-    if ((h = histos.find("IsolationMVAraw_T1")) != histos.end()) {
-        h->second->Fill((*TTL_Tau1HPSbyIsolationMVAraw)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram IsolationMVAraw_T1" << std::endl;
-    }
-    if ((h = histos.find("IsolationMVAraw_T2")) != histos.end()) {
-        h->second->Fill((*TTL_Tau2HPSbyIsolationMVAraw)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram IsolationMVAraw_T2" << std::endl;
-    }
-    if ((h = histos.find("IsolationMVA2raw_T1")) != histos.end()) {
-        h->second->Fill((*TTL_Tau1HPSbyIsolationMVA2raw)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram IsolationMVA2raw_T1" << std::endl;
-    }
-    if ((h = histos.find("IsolationMVA2raw_T2")) != histos.end()) {
-        h->second->Fill((*TTL_Tau2HPSbyIsolationMVA2raw)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram IsolationMVA2raw_T2" << std::endl;
-    }
-    if ((h = histos.find("AntiElectronIndex_T1")) != histos.end()) {
-        h->second->Fill(GetTau1AntiElectronIndex(idx), weight);
-    } else {
-        std::cout << "Can't find histogram AntiElectronIndex_T1" << std::endl;
-    }
-    if ((h = histos.find("AntiElectronIndex_T2")) != histos.end()) {
-        h->second->Fill(GetTau2AntiElectronIndex(idx), weight);
-    } else {
-        std::cout << "Can't find histogram AntiElectronIndex_T2" << std::endl;
-    }
-    if ((h = histos.find("AntiElectronIndexMVA2_T1")) != histos.end()) {
-        h->second->Fill(GetTau1AntiElectronIndexMVA2(idx), weight);
-    } else {
-        std::cout << "Can't find histogram AntiElectronIndexMVA2_T1" << std::endl;
-    }
-    if ((h = histos.find("AntiElectronIndexMVA2_T2")) != histos.end()) {
-        h->second->Fill(GetTau2AntiElectronIndexMVA2(idx), weight);
-    } else {
-        std::cout << "Can't find histogram AntiElectronIndexMVA2_T2" << std::endl;
-    }
-    if ((h = histos.find("AntiElectronIndexMVA3_T1")) != histos.end()) {
-        h->second->Fill(GetTau1AntiElectronIndexMVA3(idx), weight);
-    } else {
-        std::cout << "Can't find histogram AntiElectronIndexMVA3_T1" << std::endl;
-    }
-    if ((h = histos.find("AntiElectronIndexMVA3_T2")) != histos.end()) {
-        h->second->Fill(GetTau2AntiElectronIndexMVA3(idx), weight);
-    } else {
-        std::cout << "Can't find histogram AntiElectronIndexMVA3_T2" << std::endl;
-    }
-    if ((h = histos.find("AgainstElectronMVA_T1")) != histos.end()) {
-        h->second->Fill((*TTL_Tau1HPSagainstElectronMVA)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram AgainstElectronMVA_T1" << std::endl;
-    }
-    if ((h = histos.find("AgainstElectronMVA_T2")) != histos.end()) {
-        h->second->Fill((*TTL_Tau2HPSagainstElectronMVA)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram AgainstElectronMVA_T2" << std::endl;
-    }
-    if ((h = histos.find("AgainstElectronMVA2raw_T1")) != histos.end()) {
-        h->second->Fill((*TTL_Tau1HPSagainstElectronMVA2raw)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram AgainstElectronMVA2raw_T1" << std::endl;
-    }
-    if ((h = histos.find("AgainstElectronMVA2raw_T2")) != histos.end()) {
-        h->second->Fill((*TTL_Tau2HPSagainstElectronMVA2raw)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram AgainstElectronMVA2raw_T2" << std::endl;
-    }
-    if ((h = histos.find("AgainstElectronMVA3raw_T1")) != histos.end()) {
-        h->second->Fill((*TTL_Tau1HPSagainstElectronMVA3raw)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram AgainstElectronMVA3raw_T1" << std::endl;
-    }
-    if ((h = histos.find("AgainstElectronMVA3raw_T2")) != histos.end()) {
-        h->second->Fill((*TTL_Tau2HPSagainstElectronMVA3raw)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram AgainstElectronMVA3raw_T2" << std::endl;
-    }
-    if ((h = histos.find("AgainstElectronMVA2category_T1")) != histos.end()) {
-        h->second->Fill((*TTL_Tau1HPSagainstElectronMVA2category)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram AgainstElectronMVA2category_T1" << std::endl;
-    }
-    if ((h = histos.find("AgainstElectronMVA2category_T2")) != histos.end()) {
-        h->second->Fill((*TTL_Tau2HPSagainstElectronMVA2category)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram AgainstElectronMVA2category_T2" << std::endl;
-    }
-    if ((h = histos.find("AgainstElectronMVA3category_T1")) != histos.end()) {
-        h->second->Fill((*TTL_Tau1HPSagainstElectronMVA3category)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram AgainstElectronMVA3category_T1" << std::endl;
-    }
-    if ((h = histos.find("AgainstElectronMVA3category_T2")) != histos.end()) {
-        h->second->Fill((*TTL_Tau2HPSagainstElectronMVA3category)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram AgainstElectronMVA3category_T2" << std::endl;
-    }
-    if ((h = histos.find("AgainstElectronDeadECAL_T1")) != histos.end()) {
-        h->second->Fill((*TTL_Tau1HPSagainstElectronDeadECAL)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram AgainstElectronDeadECAL_T1" << std::endl;
-    }
-    if ((h = histos.find("AgainstElectronDeadECAL_T2")) != histos.end()) {
-        h->second->Fill((*TTL_Tau2HPSagainstElectronDeadECAL)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram AgainstElectronDeadECAL_T2" << std::endl;
-    }
-    if ((h = histos.find("AntiMuonIndex_T1")) != histos.end()) {
-        h->second->Fill(GetTau1AntiMuonIndex(idx), weight);
-    } else {
-        std::cout << "Can't find histogram AntiMuonIndex_T1" << std::endl;
-    }
-    if ((h = histos.find("AntiMuonIndex_T2")) != histos.end()) {
-        h->second->Fill(GetTau2AntiMuonIndex(idx), weight);
-    } else {
-        std::cout << "Can't find histogram AntiMuonIndex_T2" << std::endl;
-    }
-    if ((h = histos.find("AntiMuonIndex2_T1")) != histos.end()) {
-        h->second->Fill(GetTau1AntiMuonIndex2(idx), weight);
-    } else {
-        std::cout << "Can't find histogram AntiMuonIndex2_T1" << std::endl;
-    }
-    if ((h = histos.find("AntiMuonIndex2_T2")) != histos.end()) {
-        h->second->Fill(GetTau2AntiMuonIndex2(idx), weight);
-    } else {
-        std::cout << "Can't find histogram AntiMuonIndex2_T2" << std::endl;
-    }
-    if ((h = histos.find("Match_T1")) != histos.end()) {
-        h->second->Fill(GetTau1MatchIndex(idx), weight);
-    } else {
-        std::cout << "Can't find histogram Match_T1" << std::endl;
-    }
-    if ((h = histos.find("Match_T2")) != histos.end()) {
-        h->second->Fill(GetTau2MatchIndex(idx), weight);
-    } else {
-        std::cout << "Can't find histogram Match_T2" << std::endl;
-    }
+    histos["NumTaus"]->Fill(TTL_NumTaus, weight);
+    histos["VisibleMass_TT"]->Fill((*TTL_DitauVisibleMass)[idx], weight);
+    histos["DeltaR_TT"]->Fill((*TTL_DitauDeltaR)[idx], weight);
+    histos["Pt_T1"]->Fill((*TTL_Tau1Pt)[idx], weight);
+    histos["Pt_T2"]->Fill((*TTL_Tau2Pt)[idx], weight);
+    histos["Eta_T1"]->Fill((*TTL_Tau1Eta)[idx], weight);
+    histos["Eta_T2"]->Fill((*TTL_Tau2Eta)[idx], weight);
+    histos["Phi_T1"]->Fill((*TTL_Tau1Phi)[idx], weight);
+    histos["Phi_T2"]->Fill((*TTL_Tau2Phi)[idx], weight);
+    histos["DecayMode_T1"]->Fill((*TTL_Tau1DecayMode)[idx], weight);
+    histos["DecayMode_T2"]->Fill((*TTL_Tau2DecayMode)[idx], weight);
+    histos["LTPt_T1"]->Fill((*TTL_Tau1LTPt)[idx], weight);
+    histos["LTPt_T2"]->Fill((*TTL_Tau2LTPt)[idx], weight);
+    histos["NProngs_T1"]->Fill((*TTL_Tau1NProngs)[idx], weight);
+    histos["NProngs_T2"]->Fill((*TTL_Tau2NProngs)[idx], weight);
+    histos["IsolationIndex_T1"]->Fill(GetTau1IsolationIndex(idx), weight);
+    histos["IsolationIndex_T2"]->Fill(GetTau2IsolationIndex(idx), weight);
+    histos["IsolationIndexMVA_T1"]->Fill(GetTau1IsolationIndexMVA(idx), weight);
+    histos["IsolationIndexMVA_T2"]->Fill(GetTau2IsolationIndexMVA(idx), weight);
+    histos["IsolationIndexMVA2_T1"]->Fill(GetTau1IsolationIndexMVA2(idx), weight);
+    histos["IsolationIndexMVA2_T2"]->Fill(GetTau2IsolationIndexMVA2(idx), weight);
+    histos["IsolationIndex3Hits_T1"]->Fill(GetTau1IsolationIndex3Hits(idx), weight);
+    histos["IsolationIndex3Hits_T2"]->Fill(GetTau2IsolationIndex3Hits(idx), weight);
+    histos["CombIsoDBcorrRaw_T1"]->Fill((*TTL_Tau1HPSbyCombinedIsolationDeltaBetaCorrRaw)[idx], weight);
+    histos["CombIsoDBcorrRaw_T2"]->Fill((*TTL_Tau2HPSbyCombinedIsolationDeltaBetaCorrRaw)[idx], weight);
+    histos["CombIsoDBcorrRaw3Hits_T1"]->Fill((*TTL_Tau1HPSbyCombinedIsolationDeltaBetaCorrRaw3Hits)[idx], weight);
+    histos["CombIsoDBcorrRaw3Hits_T2"]->Fill((*TTL_Tau2HPSbyCombinedIsolationDeltaBetaCorrRaw3Hits)[idx], weight);
+    histos["IsolationMVAraw_T1"]->Fill((*TTL_Tau1HPSbyIsolationMVAraw)[idx], weight);
+    histos["IsolationMVAraw_T2"]->Fill((*TTL_Tau2HPSbyIsolationMVAraw)[idx], weight);
+    histos["IsolationMVA2raw_T1"]->Fill((*TTL_Tau1HPSbyIsolationMVA2raw)[idx], weight);
+    histos["IsolationMVA2raw_T2"]->Fill((*TTL_Tau2HPSbyIsolationMVA2raw)[idx], weight);
+    histos["AntiElectronIndex_T1"]->Fill(GetTau1AntiElectronIndex(idx), weight);
+    histos["AntiElectronIndex_T2"]->Fill(GetTau2AntiElectronIndex(idx), weight);
+    histos["AntiElectronIndexMVA2_T1"]->Fill(GetTau1AntiElectronIndexMVA2(idx), weight);
+    histos["AntiElectronIndexMVA2_T2"]->Fill(GetTau2AntiElectronIndexMVA2(idx), weight);
+    histos["AntiElectronIndexMVA3_T1"]->Fill(GetTau1AntiElectronIndexMVA3(idx), weight);
+    histos["AntiElectronIndexMVA3_T2"]->Fill(GetTau2AntiElectronIndexMVA3(idx), weight);
+    histos["AgainstElectronMVA_T1"]->Fill((*TTL_Tau1HPSagainstElectronMVA)[idx], weight);
+    histos["AgainstElectronMVA_T2"]->Fill((*TTL_Tau2HPSagainstElectronMVA)[idx], weight);
+    histos["AgainstElectronMVA2raw_T1"]->Fill((*TTL_Tau1HPSagainstElectronMVA2raw)[idx], weight);
+    histos["AgainstElectronMVA2raw_T2"]->Fill((*TTL_Tau2HPSagainstElectronMVA2raw)[idx], weight);
+    histos["AgainstElectronMVA3raw_T1"]->Fill((*TTL_Tau1HPSagainstElectronMVA3raw)[idx], weight);
+    histos["AgainstElectronMVA3raw_T2"]->Fill((*TTL_Tau2HPSagainstElectronMVA3raw)[idx], weight);
+    // histos["AgainstElectronMVA2category_T1"]->Fill((*TTL_Tau1HPSagainstElectronMVA2category)[idx], weight);
+    // histos["AgainstElectronMVA2category_T2"]->Fill((*TTL_Tau2HPSagainstElectronMVA2category)[idx], weight);
+    // histos["AgainstElectronMVA3category_T1"]->Fill((*TTL_Tau1HPSagainstElectronMVA3category)[idx], weight);
+    // histos["AgainstElectronMVA3category_T2"]->Fill((*TTL_Tau2HPSagainstElectronMVA3category)[idx], weight);
+    histos["AgainstElectronDeadECAL_T1"]->Fill((*TTL_Tau1HPSagainstElectronDeadECAL)[idx], weight);
+    histos["AgainstElectronDeadECAL_T2"]->Fill((*TTL_Tau2HPSagainstElectronDeadECAL)[idx], weight);
+    histos["AntiMuonIndex_T1"]->Fill(GetTau1AntiMuonIndex(idx), weight);
+    histos["AntiMuonIndex_T2"]->Fill(GetTau2AntiMuonIndex(idx), weight);
+    histos["AntiMuonIndex2_T1"]->Fill(GetTau1AntiMuonIndex2(idx), weight);
+    histos["AntiMuonIndex2_T2"]->Fill(GetTau2AntiMuonIndex2(idx), weight);
+    histos["Match_T1"]->Fill(GetTau1MatchIndex(idx), weight);
+    histos["Match_T2"]->Fill(GetTau2MatchIndex(idx), weight);
 
     // Lepton ============================================================================================================================
-    if ((h = histos.find("Pt_L")) != histos.end()) {
-        h->second->Fill((*TTL_LeptonPt)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram Pt_L" << std::endl;
-    }
-    if ((h = histos.find("Eta_L")) != histos.end()) {
-        h->second->Fill((*TTL_LeptonEta)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram Eta_L" << std::endl;
-    }
-    if ((h = histos.find("Phi_L")) != histos.end()) {
-        h->second->Fill((*TTL_LeptonPhi)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram Phi_L" << std::endl;
-    }
-    if ((h = histos.find("NumTightMuons")) != histos.end()) {
-        h->second->Fill((*TTL_NumTightMuons)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NumTightMuons" << std::endl;
-    }
-    if ((h = histos.find("NumLooseMuons")) != histos.end()) {
-        h->second->Fill((*TTL_NumLooseMuons)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NumLooseMuons" << std::endl;
-    }
-    if ((h = histos.find("NumExLooseMuons")) != histos.end()) {
-        h->second->Fill((*TTL_NumExLooseMuons)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NumExLooseMuons" << std::endl;
-    }
-    if ((h = histos.find("NumTightElectrons")) != histos.end()) {
-        h->second->Fill((*TTL_NumTightElectrons)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NumTightElectrons" << std::endl;
-    }
-    if ((h = histos.find("NumLooseElectrons")) != histos.end()) {
-        h->second->Fill((*TTL_NumLooseElectrons)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NumLooseElectrons" << std::endl;
-    }
-    if ((h = histos.find("NumExLooseElectrons")) != histos.end()) {
-        h->second->Fill((*TTL_NumExLooseElectrons)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NumExLooseElectrons" << std::endl;
-    }
-    if ((h = histos.find("NumTightLeptons")) != histos.end()) {
-        h->second->Fill((*TTL_NumTightMuons)[idx] + (*TTL_NumTightElectrons)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NumTightLeptons" << std::endl;
-    }
-    if ((h = histos.find("NumLooseLeptons")) != histos.end()) {
-        h->second->Fill((*TTL_NumLooseMuons)[idx] + (*TTL_NumLooseElectrons)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NumLooseLeptons" << std::endl;
-    }
-    if ((h = histos.find("NumExLooseLeptons")) != histos.end()) {
-        h->second->Fill((*TTL_NumExLooseMuons)[idx] + (*TTL_NumExLooseElectrons)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NumExLooseLeptons" << std::endl;
-    }
-    if ((h = histos.find("DeltaR_LT1")) != histos.end()) {
-        h->second->Fill(DeltaR((*TTL_LeptonEta)[idx], (*TTL_LeptonPhi)[idx], (*TTL_Tau1Eta)[idx], (*TTL_Tau1Phi)[idx]), weight);
-    } else {
-        std::cout << "Can't find histogram DeltaR_LT1" << std::endl;
-    }
-    if ((h = histos.find("DeltaR_LT2")) != histos.end()) {
-        h->second->Fill(DeltaR((*TTL_LeptonEta)[idx], (*TTL_LeptonPhi)[idx], (*TTL_Tau2Eta)[idx], (*TTL_Tau2Phi)[idx]), weight);
-    } else {
-        std::cout << "Can't find histogram DeltaR_LT2" << std::endl;
-    }
+    histos["Pt_L"]->Fill((*TTL_LeptonPt)[idx], weight);
+    histos["Eta_L"]->Fill((*TTL_LeptonEta)[idx], weight);
+    histos["Phi_L"]->Fill((*TTL_LeptonPhi)[idx], weight);
+    // histos["NumTightMuons"]->Fill((*TTL_NumTightMuons)[idx], weight);
+    // histos["NumLooseMuons"]->Fill((*TTL_NumLooseMuons)[idx], weight);
+    // histos["NumExLooseMuons"]->Fill((*TTL_NumExLooseMuons)[idx], weight);
+    // histos["NumTightElectrons"]->Fill((*TTL_NumTightElectrons)[idx], weight);
+    // histos["NumLooseElectrons"]->Fill((*TTL_NumLooseElectrons)[idx], weight);
+    // histos["NumExLooseElectrons"]->Fill((*TTL_NumExLooseElectrons)[idx], weight);
+    // histos["NumTightLeptons"]->Fill((*TTL_NumTightMuons)[idx] + (*TTL_NumTightElectrons)[idx], weight);
+    // histos["NumLooseLeptons"]->Fill((*TTL_NumLooseMuons)[idx] + (*TTL_NumLooseElectrons)[idx], weight);
+    // histos["NumExLooseLeptons"]->Fill((*TTL_NumExLooseMuons)[idx] + (*TTL_NumExLooseElectrons)[idx], weight);
+    histos["DeltaR_LT1"]->Fill(DeltaR((*TTL_LeptonEta)[idx], (*TTL_LeptonPhi)[idx], (*TTL_Tau1Eta)[idx], (*TTL_Tau1Phi)[idx]), weight);
+    histos["DeltaR_LT2"]->Fill(DeltaR((*TTL_LeptonEta)[idx], (*TTL_LeptonPhi)[idx], (*TTL_Tau2Eta)[idx], (*TTL_Tau2Phi)[idx]), weight);
 
     // Jets ============================================================================================================================
     // tau/jet matching con size
     try {
         unsigned int ljet = GetJetIndex(idx, 0);
-        if ((h = histos.find("LeadingJet_Pt")) != histos.end()) {
-            h->second->Fill(J_Pt->at(ljet), weight);
-        } else {
-            std::cout << "Can't find histogram LeadingJet_Pt" << std::endl;
-        }
-        if ((h = histos.find("LeadingJet_Eta")) != histos.end()) {
-            h->second->Fill(J_Eta->at(ljet), weight);
-        } else {
-            std::cout << "Can't find histogram LeadingJet_Eta" << std::endl;
-        }
-        if ((h = histos.find("DeltaR_LJ1")) != histos.end()) {
-            h->second->Fill(DeltaR((*TTL_LeptonEta)[idx], (*TTL_LeptonPhi)[idx], J_Eta->at(ljet), J_Phi->at(ljet)), weight);
-        } else {
-            std::cout << "Can't find histogram DeltaR_LJ1" << std::endl;
-        }
-        if ((h = histos.find("DeltaR_T1J1")) != histos.end()) {
-            h->second->Fill(DeltaR((*TTL_Tau1Eta)[idx], (*TTL_Tau1Phi)[idx], J_Eta->at(ljet), J_Phi->at(ljet)), weight);
-        } else {
-            std::cout << "Can't find histogram DeltaR_T1J1" << std::endl;
-        }
-        if ((h = histos.find("DeltaR_T2J1")) != histos.end()) {
-            h->second->Fill(DeltaR((*TTL_Tau2Eta)[idx], (*TTL_Tau2Phi)[idx], J_Eta->at(ljet), J_Phi->at(ljet)), weight);
-        } else {
-            std::cout << "Can't find histogram DeltaR_T2J1" << std::endl;
-        }
+        histos["LeadingJet_Pt"]->Fill(J_Pt->at(ljet), weight);
+        histos["LeadingJet_Eta"]->Fill(J_Eta->at(ljet), weight);
+        histos["DeltaR_LJ1"]->Fill(DeltaR((*TTL_LeptonEta)[idx], (*TTL_LeptonPhi)[idx], J_Eta->at(ljet), J_Phi->at(ljet)), weight);
+        histos["DeltaR_T1J1"]->Fill(DeltaR((*TTL_Tau1Eta)[idx], (*TTL_Tau1Phi)[idx], J_Eta->at(ljet), J_Phi->at(ljet)), weight);
+        histos["DeltaR_T2J1"]->Fill(DeltaR((*TTL_Tau2Eta)[idx], (*TTL_Tau2Phi)[idx], J_Eta->at(ljet), J_Phi->at(ljet)), weight);
 
         unsigned int sljet = GetJetIndex(idx, 1);
-        if ((h = histos.find("SubLeadingJet_Pt")) != histos.end()) {
-            h->second->Fill(J_Pt->at(sljet), weight);
-        } else {
-            std::cout << "Can't find histogram SubLeadingJet_Pt" << std::endl;
-        }
-        if ((h = histos.find("SubLeadingJet_Eta")) != histos.end()) {
-            h->second->Fill(J_Eta->at(sljet), weight);
-        } else {
-            std::cout << "Can't find histogram SubLeadingJet_Eta" << std::endl;
-        }
-        if ((h = histos.find("DeltaR_LJ2")) != histos.end()) {
-            h->second->Fill(DeltaR((*TTL_LeptonEta)[idx], (*TTL_LeptonPhi)[idx], J_Eta->at(sljet), J_Phi->at(sljet)), weight);
-        } else {
-            std::cout << "Can't find histogram DeltaR_LJ2" << std::endl;
-        }
-        if ((h = histos.find("DeltaR_T1J2")) != histos.end()) {
-            h->second->Fill(DeltaR((*TTL_Tau1Eta)[idx], (*TTL_Tau1Phi)[idx], J_Eta->at(sljet), J_Phi->at(sljet)), weight);
-        } else {
-            std::cout << "Can't find histogram DeltaR_T1J2" << std::endl;
-        }
-        if ((h = histos.find("DeltaR_T2J2")) != histos.end()) {
-            h->second->Fill(DeltaR((*TTL_Tau2Eta)[idx], (*TTL_Tau2Phi)[idx], J_Eta->at(sljet), J_Phi->at(sljet)), weight);
-        } else {
-            std::cout << "Can't find histogram DeltaR_T2J2" << std::endl;
-        }
+        histos["SubLeadingJet_Pt"]->Fill(J_Pt->at(sljet), weight);
+        histos["SubLeadingJet_Eta"]->Fill(J_Eta->at(sljet), weight);
+        histos["DeltaR_LJ2"]->Fill(DeltaR((*TTL_LeptonEta)[idx], (*TTL_LeptonPhi)[idx], J_Eta->at(sljet), J_Phi->at(sljet)), weight);
+        histos["DeltaR_T1J2"]->Fill(DeltaR((*TTL_Tau1Eta)[idx], (*TTL_Tau1Phi)[idx], J_Eta->at(sljet), J_Phi->at(sljet)), weight);
+        histos["DeltaR_T2J2"]->Fill(DeltaR((*TTL_Tau2Eta)[idx], (*TTL_Tau2Phi)[idx], J_Eta->at(sljet), J_Phi->at(sljet)), weight);
 
         unsigned int ssljet = GetJetIndex(idx, 2);
-        if ((h = histos.find("SubSubLeadingJet_Pt")) != histos.end()) {
-            h->second->Fill(J_Pt->at(ssljet), weight);
-        } else {
-            std::cout << "Can't find histogram SubSubLeadingJet_Pt" << std::endl;
-        }
-        if ((h = histos.find("SubSubLeadingJet_Eta")) != histos.end()) {
-            h->second->Fill(J_Eta->at(ssljet), weight);
-        } else {
-            std::cout << "Can't find histogram SubSubLeadingJet_Eta" << std::endl;
-        }
+        histos["SubSubLeadingJet_Pt"]->Fill(J_Pt->at(ssljet), weight);
+        histos["SubSubLeadingJet_Eta"]->Fill(J_Eta->at(ssljet), weight);
 
         unsigned int sssljet = GetJetIndex(idx, 3);
-        if ((h = histos.find("SubSubLeadingJet_Pt")) != histos.end()) {
-            h->second->Fill(J_Pt->at(sssljet), weight);
-        } else {
-            std::cout << "Can't find histogram SubSubLeadingJet_Pt" << std::endl;
-        }
-        if ((h = histos.find("SubSubLeadingJet_Eta")) != histos.end()) {
-            h->second->Fill(J_Eta->at(sssljet), weight);
-        } else {
-            std::cout << "Can't find histogram SubSubLeadingJet_Eta" << std::endl;
-        }
+        histos["SubSubLeadingJet_Pt"]->Fill(J_Pt->at(sssljet), weight);
+        histos["SubSubLeadingJet_Eta"]->Fill(J_Eta->at(sssljet), weight);
     } catch (...) {}
 
     float conesize = .25;
@@ -780,108 +368,32 @@ ttl::Branches::FillHistograms(std::map<std::string, roast::HWrapper*>& histos, i
                 (DeltaR((*J_Eta)[i], (*J_Phi)[i], (*TTL_Tau2Eta)[idx], (*TTL_Tau2Phi)[idx]) > conesize) &&
                 (DeltaR((*J_Eta)[i], (*J_Phi)[i], (*TTL_LeptonEta)[idx], (*TTL_LeptonPhi)[idx]) > conesize)) {
             if ((*J_combSecVtxMediumBTag)[i]) {
-               if ((h = histos.find("BTagJet_Pt")) != histos.end()) {
-                   h->second->Fill((*J_Pt)[i], weight);
-               } else {
-                   std::cout << "Can't find histogram BTagJet_Pt" << std::endl;
-               }
-               if ((h = histos.find("BTagJet_Eta")) != histos.end()) {
-                   h->second->Fill((*J_Eta)[i], weight);
-               } else {
-                   std::cout << "Can't find histogram BTagJet_Eta" << std::endl;
-               }
+               histos["BTagJet_Pt"]->Fill((*J_Pt)[i], weight);
+               histos["BTagJet_Eta"]->Fill((*J_Eta)[i], weight);
             } else {
-               if ((h = histos.find("NonBTagJet_Pt")) != histos.end()) {
-                   h->second->Fill((*J_Pt)[i], weight);
-               } else {
-                   std::cout << "Can't find histogram NonBTagJet_Pt" << std::endl;
-               }
-               if ((h = histos.find("NonBTagJet_Eta")) != histos.end()) {
-                   h->second->Fill((*J_Eta)[i], weight);
-               } else {
-                   std::cout << "Can't find histogram NonBTagJet_Eta" << std::endl;
-               }
+               histos["NonBTagJet_Pt"]->Fill((*J_Pt)[i], weight);
+               histos["NonBTagJet_Eta"]->Fill((*J_Eta)[i], weight);
             }
 
             ++c;
         }
     }
 
-    if ((h = histos.find("NumCSVLbtags")) != histos.end()) {
-        h->second->Fill((*TTL_NumCSVLbtagJets)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NumCSVLbtags" << std::endl;
-    }
-    if ((h = histos.find("NumCSVMbtags")) != histos.end()) {
-        h->second->Fill((*TTL_NumCSVMbtagJets)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NumCSVMbtags" << std::endl;
-    }
-    if ((h = histos.find("NumCSVTbtags")) != histos.end()) {
-        h->second->Fill((*TTL_NumCSVTbtagJets)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NumCSVTbtags" << std::endl;
-    }
-    if ((h = histos.find("NumCSVLnonBtags")) != histos.end()) {
-        h->second->Fill((*TTL_NumNonCSVLbtagJets)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NumCSVLnonBtags" << std::endl;
-    }
-    if ((h = histos.find("NumCSVMnonBtags")) != histos.end()) {
-        h->second->Fill((*TTL_NumNonCSVMbtagJets)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NumCSVMnonBtags" << std::endl;
-    }
-    if ((h = histos.find("NumCSVTnonBtags")) != histos.end()) {
-        h->second->Fill((*TTL_NumNonCSVTbtagJets)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NumCSVTnonBtags" << std::endl;
-    }
-    if ((h = histos.find("NumCSVnonHTauJets")) != histos.end()) {
-        h->second->Fill(((*TTL_NumNonCSVMbtagJets)[idx] + (*TTL_NumCSVMbtagJets)[idx]), weight);
-    } else {
-        std::cout << "Can't find histogram NumCSVnonHTauJets" << std::endl;
-    }
-    if ((h = histos.find("NumCleanCSVLbtags")) != histos.end()) {
-        h->second->Fill((*TTL_NumCleanCSVLbtagJets)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NumCleanCSVLbtags" << std::endl;
-    }
-    if ((h = histos.find("NumCleanCSVMbtags")) != histos.end()) {
-        h->second->Fill((*TTL_NumCleanCSVMbtagJets)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NumCleanCSVMbtags" << std::endl;
-    }
-    if ((h = histos.find("NumCleanCSVTbtags")) != histos.end()) {
-        h->second->Fill((*TTL_NumCleanCSVTbtagJets)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NumCleanCSVTbtags" << std::endl;
-    }
-    if ((h = histos.find("NumCleanCSVLnonBtags")) != histos.end()) {
-        h->second->Fill((*TTL_NumCleanNonCSVLbtagJets)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NumCleanCSVLnonBtags" << std::endl;
-    }
-    if ((h = histos.find("NumCleanCSVMnonBtags")) != histos.end()) {
-        h->second->Fill((*TTL_NumCleanNonCSVMbtagJets)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NumCleanCSVMnonBtags" << std::endl;
-    }
-    if ((h = histos.find("NumCleanCSVTnonBtags")) != histos.end()) {
-        h->second->Fill((*TTL_NumCleanNonCSVTbtagJets)[idx], weight);
-    } else {
-        std::cout << "Can't find histogram NumCleanCSVTnonBtags" << std::endl;
-    }
-    if ((h = histos.find("NumCleanCSVnonHTauJets")) != histos.end()) {
-        h->second->Fill(((*TTL_NumCleanNonCSVMbtagJets)[idx] + (*TTL_NumCleanCSVMbtagJets)[idx]), weight);
-    } else {
-        std::cout << "Can't find histogram NumCleanCSVnonHTauJets" << std::endl;
-    }
-    if ((h = histos.find("NumInclusiveJets")) != histos.end()) {
-        h->second->Fill(((*TTL_NumCleanNonCSVMbtagJets)[idx] + (*TTL_NumCleanCSVMbtagJets)[idx]) + 2, weight);
-    } else {
-        std::cout << "Can't find histogram NumInclusiveJets" << std::endl;
-    }
+    histos["NumCSVLbtags"]->Fill((*TTL_NumCSVLbtagJets)[idx], weight);
+    histos["NumCSVMbtags"]->Fill((*TTL_NumCSVMbtagJets)[idx], weight);
+    histos["NumCSVTbtags"]->Fill((*TTL_NumCSVTbtagJets)[idx], weight);
+    histos["NumCSVLnonBtags"]->Fill((*TTL_NumNonCSVLbtagJets)[idx], weight);
+    histos["NumCSVMnonBtags"]->Fill((*TTL_NumNonCSVMbtagJets)[idx], weight);
+    histos["NumCSVTnonBtags"]->Fill((*TTL_NumNonCSVTbtagJets)[idx], weight);
+    histos["NumCSVnonHTauJets"]->Fill(((*TTL_NumNonCSVMbtagJets)[idx] + (*TTL_NumCSVMbtagJets)[idx]), weight);
+    histos["NumCleanCSVLbtags"]->Fill((*TTL_NumCleanCSVLbtagJets)[idx], weight);
+    histos["NumCleanCSVMbtags"]->Fill((*TTL_NumCleanCSVMbtagJets)[idx], weight);
+    histos["NumCleanCSVTbtags"]->Fill((*TTL_NumCleanCSVTbtagJets)[idx], weight);
+    histos["NumCleanCSVLnonBtags"]->Fill((*TTL_NumCleanNonCSVLbtagJets)[idx], weight);
+    histos["NumCleanCSVMnonBtags"]->Fill((*TTL_NumCleanNonCSVMbtagJets)[idx], weight);
+    histos["NumCleanCSVTnonBtags"]->Fill((*TTL_NumCleanNonCSVTbtagJets)[idx], weight);
+    histos["NumCleanCSVnonHTauJets"]->Fill(((*TTL_NumCleanNonCSVMbtagJets)[idx] + (*TTL_NumCleanCSVMbtagJets)[idx]), weight);
+    histos["NumInclusiveJets"]->Fill(((*TTL_NumCleanNonCSVMbtagJets)[idx] + (*TTL_NumCleanCSVMbtagJets)[idx]) + 2, weight);
 }
 
 ClassImp(roast::ttl::Branches)
