@@ -158,7 +158,7 @@ Events:
     numBinsX: 1
     xMin: 0
     xMax: 1
-    xTitle: 
+    xTitle: ""
     yTitle: Events
     xMinVis: 0
     xMaxVis: 1
