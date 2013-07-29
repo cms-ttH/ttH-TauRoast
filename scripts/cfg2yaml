@@ -1,0 +1,29 @@
+#!/usr/bin/env perl
+#
+# Convert old cfg style configurations into yaml
+#
+# Usage: head <somepath>/histocfg/* | cfg2yaml
+#        cat <somepath>/cfg/<somecfg> | cfg2yaml
+
+use strict;
+use warnings;
+
+my $dir = "";
+
+while (<>) {
+    if (/==> .*\/(.*)\.cfg <==/) {
+        $dir = $1;
+        next;
+    }
+
+    next if /^\s*$/;
+
+    s/^\s*\]\s*$//; # remove section closing
+    s/^\s+/    /;   # indentation is 4 spaces
+    s/^(th.f)_(.*)$/\n$2\n    type: $1\n    dir: $dir/ if s/\s*=\s*\[\s*$/:\n/; # histogram type/dir
+    s/(?<=: ).*/"$&"/ if (s/\s*=\s*/: / and /#/); # include pound sign in labels
+    s/(?<=ntuplePath: ).*$/"[" . join(", ", split(" ", $&)) . "]"/e; # convert paths to array
+    chomp;
+    print;
+    print "\n";
+}
