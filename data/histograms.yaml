@@ -1,11 +1,10 @@
-
 Pt_E:
     type: th1f
     dir: electron
     numBinsX: 100
     xMin: 0
     xMax: 100
-    xTitle: "#electron p_{T} (GeV)"
+    xTitle: "#electron p_{T}"
     yTitle: Events
     xMinVis: 0
     xMaxVis: 100
@@ -159,7 +158,7 @@ Events:
     numBinsX: 1
     xMin: 0
     xMax: 1
-    xTitle: ""
+    xTitle: 
     yTitle: Events
     xMinVis: 0
     xMaxVis: 1
@@ -201,7 +200,7 @@ MET:
     numBinsX: 100
     xMin: 0
     xMax: 300
-    xTitle: MET (GeV)
+    xTitle: MET
     yTitle: Events
     xMinVis: 0
     xMaxVis: 99.99
@@ -215,7 +214,7 @@ HT:
     numBinsX: 50
     xMin: 0
     xMax: 1500
-    xTitle: H_{T} (GeV)
+    xTitle: H_{T}
     yTitle: Events
     xMinVis: 200
     xMaxVis: 1000
@@ -229,7 +228,7 @@ FinalBDTG:
     numBinsX: 10
     xMin: -1
     xMax: 1
-    xTitle: BDTG response
+    xTitle: BDT output
     yTitle: Events
     xMinVis: -1
     xMaxVis: 1
@@ -736,7 +735,7 @@ LeadingJet_Pt:
     numBinsX: 30
     xMin: 30
     xMax: 250
-    xTitle: Leading jet p_{T} (GeV)
+    xTitle: Leading jet p_{T}
     yTitle: Events
     xMinVis: 30
     xMaxVis: 250
@@ -750,7 +749,7 @@ SubLeadingJet_Pt:
     numBinsX: 30
     xMin: 30
     xMax: 250
-    xTitle: Sub-leading jet p_{T} (GeV)
+    xTitle: Sub-leading jet p_{T}
     yTitle: Events
     xMinVis: 30
     xMaxVis: 250
@@ -764,7 +763,7 @@ SubSubLeadingJet_Pt:
     numBinsX: 30
     xMin: 30
     xMax: 250
-    xTitle: Jet 3 p_{T} (GeV)
+    xTitle: Jet 3 p_{T}
     yTitle: Events
     xMinVis: 30
     xMaxVis: 250
@@ -778,7 +777,7 @@ SubSubSubLeadingJet_Pt:
     numBinsX: 30
     xMin: 30
     xMax: 250
-    xTitle: Jet 4 p_{T} (GeV)
+    xTitle: Jet 4 p_{T}
     yTitle: Events
     xMinVis: 30
     xMaxVis: 250
@@ -848,7 +847,7 @@ BTagJet_Pt:
     numBinsX: 30
     xMin: 30
     xMax: 250
-    xTitle: Tagged jet p_{T} (GeV)
+    xTitle: Tagged jet p_{T}
     yTitle: Events
     xMinVis: 30
     xMaxVis: 250
@@ -876,7 +875,7 @@ NonBTagJet_Pt:
     numBinsX: 30
     xMin: 30
     xMax: 250
-    xTitle: Untagged jet p_{T} (GeV)
+    xTitle: Untagged jet p_{T}
     yTitle: Events
     xMinVis: 30
     xMaxVis: 250
@@ -904,7 +903,7 @@ Pt_L:
     numBinsX: 30
     xMin: 0
     xMax: 100
-    xTitle: lepton p_{T} (GeV)
+    xTitle: lepton p_{T}
     yTitle: Events
     xMinVis: 30
     xMaxVis: 100
@@ -929,7 +928,7 @@ Eta_L:
 Phi_L:
     type: th1f
     dir: lepton
-    numBinsX: 40
+    numBinsX: 30
     xMin: -3.2
     xMax: 3.2
     xTitle: "l #phi"
@@ -1069,7 +1068,7 @@ NumOtherExLooseLeptons:
 DeltaR_LT1:
     type: th1f
     dir: lepton
-    numBinsX: 50
+    numBinsX: 30
     xMin: 0
     xMax: 10
     xTitle: "#Delta R(l, #tau_{1})"
@@ -1083,7 +1082,7 @@ DeltaR_LT1:
 DeltaR_LT2:
     type: th1f
     dir: lepton
-    numBinsX: 50
+    numBinsX: 30
     xMin: 0
     xMax: 10
     xTitle: "#Delta R(l, #tau_{2})"
@@ -1097,7 +1096,7 @@ DeltaR_LT2:
 DeltaR_LJ1:
     type: th1f
     dir: lepton
-    numBinsX: 50
+    numBinsX: 30
     xMin: 0
     xMax: 10
     xTitle: "#Delta R(l, #tau_{1})"
@@ -1111,7 +1110,7 @@ DeltaR_LJ1:
 DeltaR_LJ2:
     type: th1f
     dir: lepton
-    numBinsX: 50
+    numBinsX: 30
     xMin: 0
     xMax: 10
     xTitle: "#Delta R(l, #tau_{2})"
@@ -1128,7 +1127,7 @@ Pt_M:
     numBinsX: 50
     xMin: 0
     xMax: 100
-    xTitle: "#mu p_{T} (GeV)"
+    xTitle: "#mu p_{T}"
     yTitle: Events
     xMinVis: 0
     xMaxVis: 100
@@ -1422,7 +1421,7 @@ SVFitMass:
     numBinsX: 50
     xMin: 0
     xMax: 300
-    xTitle: SVFit Mass (GeV/c^{2})
+    xTitle: SVFit Mass
     yTitle: Events
     xMinVis: 50
     xMaxVis: 300
@@ -1436,7 +1435,7 @@ SVFitMET:
     numBinsX: 100
     xMin: 0
     xMax: 100
-    xTitle: SVFit MET (GeV)
+    xTitle: SVFit MET
     yTitle: Events
     xMinVis: 0
     xMaxVis: 100
@@ -1450,7 +1449,7 @@ SVFitSystemPt:
     numBinsX: 100
     xMin: 0
     xMax: 100
-    xTitle: SVFit system p_{T} (GeV/c)
+    xTitle: SVFit system p_{T}
     yTitle: Events
     xMinVis: 0
     xMaxVis: 100
@@ -1464,7 +1463,7 @@ SVFitSystemMag:
     numBinsX: 50
     xMin: 0
     xMax: 200
-    xTitle: SVFit system p (GeV/c)
+    xTitle: SVFit system p
     yTitle: Events
     xMinVis: 0
     xMaxVis: 200
@@ -1832,10 +1831,24 @@ NumTaus:
 VisibleMass_TT:
     type: th1f
     dir: taus
-    numBinsX: 40
+    numBinsX: 30
     xMin: 0
     xMax: 200
-    xTitle: "Visible Mass #tau_{1, 2} (GeV/c^{2})"
+    xTitle: "Visible Mass #tau_{1, 2}"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 200
+    showOF: true
+    logy: 1
+
+
+DitauVisibleMass_TT:
+    type: th1f
+    dir: taus
+    numBinsX: 30
+    xMin: 0
+    xMax: 200
+    xTitle: "Visible Mass #tau_{1, 2}"
     yTitle: Events
     xMinVis: 0
     xMaxVis: 200
@@ -1916,10 +1929,10 @@ DeltaR_T2J2:
 Pt_T1:
     type: th1f
     dir: taus
-    numBinsX: 50
+    numBinsX: 30
     xMin: 0
     xMax: 150
-    xTitle: "#tau_{1} p_{T} (GeV/c)"
+    xTitle: "#tau_{1} p_{T}"
     yTitle: Events
     xMinVis: 20
     xMaxVis: 100
@@ -1930,10 +1943,10 @@ Pt_T1:
 Pt_T2:
     type: th1f
     dir: taus
-    numBinsX: 50
+    numBinsX: 30
     xMin: 0
     xMax: 100
-    xTitle: "#tau_{2} p_{T} (GeV/c)"
+    xTitle: "#tau_{2} p_{T}"
     yTitle: Events
     xMinVis: 20
     xMaxVis: 60
@@ -1944,7 +1957,7 @@ Pt_T2:
 Eta_T1:
     type: th1f
     dir: taus
-    numBinsX: 40
+    numBinsX: 30
     xMin: -3
     xMax: 3
     xTitle: "#tau_{1} #eta"
@@ -1958,7 +1971,7 @@ Eta_T1:
 Eta_T2:
     type: th1f
     dir: taus
-    numBinsX: 40
+    numBinsX: 30
     xMin: -3
     xMax: 3
     xTitle: "#tau_{2} #eta"
@@ -2000,10 +2013,10 @@ Phi_T2:
 LTPt_T1:
     type: th1f
     dir: taus
-    numBinsX: 50
+    numBinsX: 30
     xMin: 0
     xMax: 150
-    xTitle: "#tau_{1} LT p_{T} (GeV)"
+    xTitle: "#tau_{1} LT p_{T}"
     yTitle: Events
     xMinVis: 0
     xMaxVis: 100
@@ -2014,10 +2027,10 @@ LTPt_T1:
 LTPt_T2:
     type: th1f
     dir: taus
-    numBinsX: 50
+    numBinsX: 30
     xMin: 0
     xMax: 100
-    xTitle: "#tau_{2} LT p_{T} (GeV)"
+    xTitle: "#tau_{2} LT p_{T}"
     yTitle: Events
     xMinVis: 0
     xMaxVis: 50
@@ -2364,7 +2377,7 @@ CombIsoDBcorrRaw3Hits_T2:
 IsolationMVAraw_T1:
     type: th1f
     dir: taus
-    numBinsX: 50
+    numBinsX: 40
     xMin: -1
     xMax: 1
     xTitle: "#tau_{1} Isolation MVA"
@@ -2378,7 +2391,7 @@ IsolationMVAraw_T1:
 IsolationMVAraw_T2:
     type: th1f
     dir: taus
-    numBinsX: 50
+    numBinsX: 40
     xMin: -1
     xMax: 1
     xTitle: "#tau_{2} Isolation MVA"
@@ -2397,7 +2410,7 @@ IsolationMVA2raw_T1:
     xMax: 1
     xTitle: "#tau_{1} Isolation MVA(2)"
     yTitle: Events
-    xMinVis: -1
+    xMinVis: 0
     xMaxVis: 1
     showOF: false
     logy: 1
@@ -2411,7 +2424,7 @@ IsolationMVA2raw_T2:
     xMax: 1
     xTitle: "#tau_{2} Isolation MVA(2)"
     yTitle: Events
-    xMinVis: -1
+    xMinVis: 0
     xMaxVis: 1
     showOF: false
     logy: 1
@@ -2606,6 +2619,790 @@ AgainstElectronDeadECAL_T2:
     xMin: 0
     xMax: 1
     xTitle: "#tau_{2} anti-elec (dead crystals)"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 1
+    showOF: false
+    logy: 1
+
+
+ZcoordDiff_TT:
+    type: th1f
+    dir: taus
+    numBinsX: 50
+    xMin: 0
+    xMax: 2
+    xTitle: "#DeltaVZ #tau_{1, 2}"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 2
+    showOF: false
+    logy: 1
+
+
+ZcoordDiff_TTall:
+    type: th1f
+    dir: taus
+    numBinsX: 50
+    xMin: 0
+    xMax: 1
+    xTitle: "#DeltaVZ #tau_{1, 2} (inclusive)"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 1
+    showOF: false
+    logy: 1
+
+
+Pt_L1:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 30
+    xMin: 0
+    xMax: 100
+    xTitle: lepton_{1} p_{T} (GeV)
+    yTitle: Events
+    xMinVis: 30
+    xMaxVis: 100
+    showOF: true
+    logy: 1
+
+
+Eta_L1:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 30
+    xMin: -3
+    xMax: 3
+    xTitle: "lepton_{1} #eta"
+    yTitle: Events
+    xMinVis: -2.1
+    xMaxVis: 2.1
+    showOF: false
+    logy: 1
+
+
+Phi_L1:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 40
+    xMin: -3.2
+    xMax: 3.2
+    xTitle: "l #phi"
+    yTitle: Events
+    xMinVis: -3.2
+    xMaxVis: 3.2
+    showOF: false
+    logy: 1
+
+
+NumOtherTightMuons:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: Num other tight muons
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 10
+    showOF: false
+    logy: 1
+
+
+NumOtherLooseMuons:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: Num other (in)loose muons
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 10
+    showOF: false
+    logy: 1
+
+
+NumOtherExLooseMuons:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: Num other (ex)loose muons
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 10
+    showOF: false
+    logy: 1
+
+
+NumOtherTightElectrons:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: Num other tight electrons
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 10
+    showOF: false
+    logy: 1
+
+
+NumOtherLooseElectrons:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: Num other (in)loose electrons
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 10
+    showOF: false
+    logy: 1
+
+
+NumOtherExLooseElectrons:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: Num other (ex)loose electrons
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 10
+    showOF: false
+    logy: 1
+
+
+NumOtherTightLeptons:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: Num other tight leptons
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 10
+    showOF: false
+    logy: 1
+
+
+NumOtherLooseLeptons:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: Num other (in)loose leptons
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 10
+    showOF: false
+    logy: 1
+
+
+NumOtherExLooseLeptons:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: Num other (ex)loose leptons
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 10
+    showOF: false
+    logy: 1
+
+
+DeltaR_L1T:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 50
+    xMin: 0
+    xMax: 10
+    xTitle: "#Delta R(l_{1}, #tau)"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 6
+    showOF: true
+    logy: 1
+
+
+Pt_L2:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 30
+    xMin: 0
+    xMax: 100
+    xTitle: lepton_{2} p_{T} (GeV)
+    yTitle: Events
+    xMinVis: 30
+    xMaxVis: 100
+    showOF: true
+    logy: 1
+
+
+Eta_L2:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 30
+    xMin: -3
+    xMax: 3
+    xTitle: "lepton_{2} #eta"
+    yTitle: Events
+    xMinVis: -2.1
+    xMaxVis: 2.1
+    showOF: false
+    logy: 1
+
+
+Phi_L2:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 40
+    xMin: -3.2
+    xMax: 3.2
+    xTitle: "l #phi"
+    yTitle: Events
+    xMinVis: -3.2
+    xMaxVis: 3.2
+    showOF: false
+    logy: 1
+
+
+NumOtherTightMuons:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: Num other tight muons
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 10
+    showOF: false
+    logy: 1
+
+
+NumOtherLooseMuons:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: Num other (in)loose muons
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 10
+    showOF: false
+    logy: 1
+
+
+NumOtherExLooseMuons:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: Num other (ex)loose muons
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 10
+    showOF: false
+    logy: 1
+
+
+NumOtherTightElectrons:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: Num other tight electrons
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 10
+    showOF: false
+    logy: 1
+
+
+NumOtherLooseElectrons:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: Num other (in)loose electrons
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 10
+    showOF: false
+    logy: 1
+
+
+NumOtherExLooseElectrons:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: Num other (ex)loose electrons
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 10
+    showOF: false
+    logy: 1
+
+
+NumOtherTightLeptons:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: Num other tight leptons
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 10
+    showOF: false
+    logy: 1
+
+
+NumOtherLooseLeptons:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: Num other (in)loose leptons
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 10
+    showOF: false
+    logy: 1
+
+
+NumOtherExLooseLeptons:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: Num other (ex)loose leptons
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 10
+    showOF: false
+    logy: 1
+
+
+DeltaR_L2T:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 50
+    xMin: 0
+    xMax: 10
+    xTitle: "#Delta R(l_{2}, #tau)"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 6
+    showOF: true
+    logy: 1
+
+
+DeltaR_LJ1:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 50
+    xMin: 0
+    xMax: 10
+    xTitle: "#Delta R(l, #tau_{1})"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 6
+    showOF: true
+    logy: 1
+
+
+DeltaR_LJ2:
+    type: th1f
+    dir: tll_leptons
+    numBinsX: 50
+    xMin: 0
+    xMax: 10
+    xTitle: "#Delta R(l, #tau_{2})"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 6
+    showOF: true
+    logy: 1
+
+
+NumTaus:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 20
+    xMin: 0
+    xMax: 20
+    xTitle: Number of taus
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 19.99
+    showOF: true
+    logy: 1
+
+
+Pt_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 50
+    xMin: 0
+    xMax: 150
+    xTitle: "#tau p_{T} (GeV/c)"
+    yTitle: Events
+    xMinVis: 20
+    xMaxVis: 100
+    showOF: true
+    logy: 1
+
+
+Eta_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 40
+    xMin: -3
+    xMax: 3
+    xTitle: "#tau #eta"
+    yTitle: Events
+    xMinVis: -3
+    xMaxVis: 3
+    showOF: false
+    logy: 1
+
+
+Phi_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 30
+    xMin: -3.2
+    xMax: 3.2
+    xTitle: "#tau #phi"
+    yTitle: Events
+    xMinVis: -3.2
+    xMaxVis: 3.2
+    showOF: false
+    logy: 1
+
+
+LTPt_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 50
+    xMin: 0
+    xMax: 150
+    xTitle: "#tau LT p_{T} (GeV)"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 100
+    showOF: true
+    logy: 1
+
+
+DecayMode_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 20
+    xMin: 0
+    xMax: 20
+    xTitle: "#tau Decay Mode"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 6
+    showOF: false
+    logy: 1
+
+
+NProngs_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: "#tau Num Prongs"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 5.99
+    showOF: false
+    logy: 1
+
+
+IsolationIndex_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: "#tau isolation index"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 5.99
+    showOF: false
+    logy: 1
+
+
+AntiElectronIndex_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: "#tau anti-e index"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 5.99
+    showOF: false
+    logy: 1
+
+
+AntiElectronIndexMVA2_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: "#tau anti-e index (MVA2)"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 5.99
+    showOF: false
+    logy: 1
+
+
+AntiElectronIndexMVA3_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: "#tau anti-e index (MVA3)"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 5.99
+    showOF: false
+    logy: 1
+
+
+AntiMuonIndex_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: "#tau anti-#mu index"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 5.99
+    showOF: false
+    logy: 1
+
+
+AntiMuonIndex2_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: "#tau anti-#mu index (2)"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 5.99
+    showOF: false
+    logy: 1
+
+
+Match_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: "#tau match"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 10
+    showOF: false
+    logy: 1
+
+
+Parent_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: "#tau Parent"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 10
+    showOF: false
+    logy: 1
+
+
+CombIsoDBcorrRaw_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 50
+    xMin: 0
+    xMax: 300
+    xTitle: "#tau Raw Isolation "
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 200
+    showOF: false
+    logy: 1
+
+
+CombIsoDBcorrRaw3Hits_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 50
+    xMin: 0
+    xMax: 300
+    xTitle: "#tau Raw Isolation (3 hits)"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 200
+    showOF: false
+    logy: 1
+
+
+IsolationMVAraw_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 50
+    xMin: -1
+    xMax: 1
+    xTitle: "#tau Isolation MVA"
+    yTitle: Events
+    xMinVis: -1
+    xMaxVis: 1
+    showOF: false
+    logy: 1
+
+
+IsolationMVA2raw_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 50
+    xMin: -1
+    xMax: 1
+    xTitle: "#tau Isolation MVA(2)"
+    yTitle: Events
+    xMinVis: -1
+    xMaxVis: 1
+    showOF: false
+    logy: 1
+
+
+IsolationIndex3Hits_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: "#tau isolation index (3 hits)"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 5.99
+    showOF: false
+    logy: 1
+
+
+IsolationIndexMVA_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: "#tau isolation index (MVA)"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 5.99
+    showOF: false
+    logy: 1
+
+
+IsolationIndexMVA2_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 10
+    xMin: 0
+    xMax: 10
+    xTitle: "#tau isolation index (MVA2)"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 5.99
+    showOF: false
+    logy: 1
+
+
+AgainstElectronMVA_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 2
+    xMin: 0
+    xMax: 1
+    xTitle: "#tau anti-elec MVA"
+    yTitle: Events
+    xMinVis: 0
+    xMaxVis: 1
+    showOF: false
+    logy: 1
+
+
+AgainstElectronMVA2raw_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 50
+    xMin: -1
+    xMax: 1
+    xTitle: "#tau anti-elec MVA(2)"
+    yTitle: Events
+    xMinVis: -1
+    xMaxVis: 1
+    showOF: false
+    logy: 1
+
+
+AgainstElectronMVA3raw_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 50
+    xMin: -1
+    xMax: 1
+    xTitle: "#tau anti-elec MVA(3)"
+    yTitle: Events
+    xMinVis: -1
+    xMaxVis: 1
+    showOF: false
+    logy: 1
+
+
+AgainstElectronDeadECAL_T:
+    type: th1f
+    dir: tll_tau
+    numBinsX: 2
+    xMin: 0
+    xMax: 1
+    xTitle: "#tau anti-elec (dead crystals)"
     yTitle: Events
     xMinVis: 0
     xMaxVis: 1
