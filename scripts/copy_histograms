@@ -1,0 +1,115 @@
+#!/usr/bin/env python
+"""Copy histograms for datacard making
+
+Usage: copy_histograms configuration...
+
+Takes every configuration file passed, and writes MVA histograms therein to
+`ditau.root`.
+"""
+
+from glob import glob
+import os
+import ROOT as r
+import sys
+
+r.gROOT.SetBatch()
+r.gSystem.Load("libTTHTauTauRoast")
+
+try:
+    from ROOT import roast
+except:
+    sys.stderr.write("Failed to import 'roast'!\n")
+    sys.exit(1)
+
+import yaml
+
+from TTHTauTau.Roast.helper import *
+
+samples = {
+        'data_obs': ['Collisions'],
+        'ttH110': ['TTH_110'],
+        'ttH115': ['TTH_115'],
+        'ttH120': ['TTH_120'],
+        'ttH125': ['TTH_125'],
+        'ttH130': ['TTH_130'],
+        'ttH135': ['TTH_135'],
+        'ttH140': ['TTH_140'],
+        #'ttH110': ['TTHTauTau_110_real'],
+        #'ttH115': ['TTHTauTau_115_real'],
+        #'ttH120': ['TTHTauTau_120_real'],
+        #'ttH125': ['TTHTauTau_125_real'],
+        #'ttH130': ['TTHTauTau_130_real'],
+        #'ttH135': ['TTHTauTau_135_real'],
+        #'ttH140': ['TTHTauTau_140_real'],
+        #'ttV' : ['ttPlusZ','ttPlusW'],
+        'ttbarW': ['ttPlusW'],
+        'ttbarZ': ['ttPlusZ'],
+        'diboson': ['WW','WZ','ZZ'],
+        'singlet': ['singleTopSch', 'singleTopBarSch', 'singleTopTch', 'singleTopBarTch', 'singleTopPlusW', 'singleTopBarPlusW'],
+        'ttbar': ['TTbar_Hadronic', 'TTbar_SemiLept', 'TTbar_FullLept'],
+        'wjets': ['WplusOneJet', 'WplusTwoJets', 'WplusThreeJets', 'WplusFourJets'],
+        'zjets': ['ZplusOneJet', 'ZplusTwoJets', 'ZplusThreeJets', 'ZplusFourJets'],
+        #'sT' : ['sT-sCh','sT-tCh'],
+        #'sTbar' : ['sTbar-sCh','sTbar-tCh'],
+        #'sTplusW' : ['sTW','sTbarW']
+}
+
+sys_rename = {
+        'JES': 'CMS_scale_j',
+        'topPt': 'CMS_ttH_topPtcorr',
+        'PUcorr': 'CMS_ttH_pu',
+        'qSquared': 'Q2scale_ttH_ttbar',
+        'CSVeventWeight': 'CMS_ttH_CSV'
+}
+
+def copy_histos(outfile, config, infile, histname, outvar, mod_string):
+    print "Processing", infile
+    procs = load("Roast", infile)
+    normalize_processes(config, procs)
+    combine_processes(config, procs)
+
+    for (outsample, ss) in samples.items():
+        try:
+            base_histo = get_process(ss[0], procs).GetHContainer()[histname].GetHisto()
+
+            for s in ss[1:]:
+                try:
+                    plus_histo = get_process(s, procs).GetHContainer()[histname].GetHisto()
+                    base_histo.Add(plus_histo)
+                except:
+                    print "Could not find " + s
+                    pass
+
+            new_name = outsample + '_' + outvar + '_' + mod_string
+            base_histo.SetName(new_name)
+            outfile.WriteObject(base_histo, new_name)
+            # print "Saved", new_name, "with", base_histo.Integral(), "events"
+
+        except Exception, e:
+            print "Could not find " + ss[0]
+            print e
+            pass
+
+from optparse import OptionParser
+
+parser = OptionParser()
+opts, args = parser.parse_args()
+
+histname = "FinalBDTG"
+outfile = r.TFile("ditau.root", "recreate")
+outvar = "MVA"
+
+for fn in args:
+    with open(fn) as f:
+        config = yaml.load(f)
+
+        category = "TTL_" + os.path.basename(os.path.dirname(config['paths']['output']))
+        copy_histos(outfile, config, config['paths']['output'], histname, outvar, category)
+        print category
+
+        for infile in glob(config['paths']['systematics input'].format(s="*")):
+            category = "TTL_" + os.path.basename(os.path.dirname(infile))
+            for (orig, repl) in sys_rename.items():
+                category = category.replace(orig, repl)
+            copy_histos(outfile, config, infile, histname, outvar, category)
+            print category
