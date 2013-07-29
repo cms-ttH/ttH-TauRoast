@@ -1,0 +1,135 @@
+#!/usr/bin/env python
+
+import os
+import yaml
+
+def tag_convention(min, max):
+    res = min
+    if max == "":
+        res += "+"
+    elif max != min:
+        res += "-" + max
+    return res
+
+basepath = "/afs/crc.nd.edu/user/m/mwolf3/www/test_roast_serial"
+
+# b-tag min & max, clean jet min & max, train mva
+categories = [
+        ["1", "1", "1", "1", False],
+        # ["1", "1", "1", "", False],
+        # ["1", "1", "1", "2", False],
+        ["1", "1", "2", "2", False],
+        # ["1", "1", "2", "", False],
+        ["1", "1", "3", "", False],
+        ["2", "2", "0", "0", False],
+        # ["2", "2", "0", "", False],
+        # ["2", "2", "0", "1", False],
+        ["2", "2", "1", "1", False],
+        # ["2", "2", "1", "", False],
+        ["2", "2", "2", "", False],
+        ["1", "2", "1", "", True],
+        # ["1", "2", "0", "", True],
+        ]
+
+systematics = [
+        ("", False),
+        ("JES", True),
+        ("TES", True),
+        ("PUcorr", False),
+        ("topPt", False),
+        ("eTauFake", False),
+        ("jetTauFake", False),
+        ("tauIdEff", False),
+        ("qSquared", False),
+        ("CSVeventWeightHF", False),
+        ("CSVeventWeightLF", False),
+        ("CSVeventWeightHFStats1", False),
+        ("CSVeventWeightLFStats1", False),
+        ("CSVeventWeightHFStats2", False),
+        ("CSVeventWeightLFStats2", False),
+        ("CSVeventWeightCErr1", False),
+        ("CSVeventWeightCErr2", False),
+        ]
+
+mva_categories = filter(lambda xs: xs[4], categories)
+
+analyze = open(os.path.join(os.environ["CMSSW_BASE"], "src/TTHTauTau/Roast/test/stage1_analyze.par"), 'w')
+fill = open(os.path.join(os.environ["CMSSW_BASE"], "src/TTHTauTau/Roast/test/stage2_fill.par"), 'w')
+plot = open(os.path.join(os.environ["CMSSW_BASE"], "src/TTHTauTau/Roast/test/stage3_plot.par"), 'w')
+analyze.write("cfg,flags\n")
+fill.write("cfg\n")
+plot.write("cfg\n")
+
+for (bmin, bmax, jmin, jmax, active_mva) in categories:
+    for (unc, shape) in systematics:
+        for shift in ("Up", "Down"):
+            with open(os.path.join(os.environ["CMSSW_BASE"], "src/TTHTauTau/Roast/data/generic.yaml")) as f:
+                data = yaml.load(f)
+                postfix = ""
+
+                for i in range(len(data['physics']['cuts'])):
+                    if data['physics']['cuts'][i].startswith('J_NumCleanCSVM'):
+                        data['physics']['cuts'][i] = 'J_NumCleanCSVM:{0}:{1}'.format(bmin, bmax)
+                    elif data['physics']['cuts'][i].startswith('J_NumCleanNonCSVM'):
+                        data['physics']['cuts'][i] = 'J_NumCleanNonCSVM:{0}:{1}'.format(jmin, jmax)
+
+                basedir = os.path.join(basepath, "{0}b_{1}nb".format(
+                    tag_convention(bmin, bmax),
+                    tag_convention(jmin, jmax)))
+
+                if active_mva:
+                    mvadir = basedir
+                else:
+                    mva_btags = mva_categories[0][0:2]
+                    mva_jets = mva_categories[0][2:4]
+                    mvadir = os.path.join(basepath, "{0}b_{1}nb".format(
+                        tag_convention(*mva_btags),
+                        tag_convention(*mva_jets)))
+
+                if unc != "":
+                    postfix = "_" + "".join([unc, shift])
+
+                    dir = os.path.join(basepath, "{0}b_{1}nb{2}".format(
+                        tag_convention(bmin, bmax),
+                        tag_convention(jmin, jmax),
+                        postfix
+                        ))
+
+                    if shape:
+                        data['paths']['tree'] = "makeNtuple{0}/TTbarHTauTau{0}".format(postfix.replace("Up", "up").replace("Down", "down"))
+                        basedir = dir
+
+                        analyze.write(os.path.join(dir, "roast_configuration.yaml") + ",\n")
+                        fill.write(os.path.join(dir, "roast_configuration.yaml") + "\n")
+                    else:
+                        if unc.startswith("CSVeventWeight"):
+                            del data['physics']['flags']['CSVeventWeight']
+                        data['physics']['flags'][unc] = shift.lower()
+
+                        fill.write(os.path.join(dir, "roast_configuration.yaml") + "\n")
+
+                    if 'Collisions' in data['analysis']['process']:
+                        data['analysis']['process'].remove('Collisions')
+                else:
+                    # only need to do this once, not twice
+                    if shift == "Down":
+                        continue
+
+                    dir = basedir
+                    flag = ",-t" if active_mva else ","
+                    analyze.write(os.path.join(dir, "roast_configuration.yaml") + flag + "\n")
+                    fill.write(os.path.join(dir, "roast_configuration.yaml") + "\n")
+                    plot.write(os.path.join(dir, "roast_configuration.yaml") + "\n")
+
+                data['paths']['input'] = os.path.join(basedir, "roast_processed.root")
+                data['paths']['systematics input'] = os.path.join(basedir + "_{s}", "roast_filled.root")
+                data['paths']['output'] = os.path.join(dir, "roast_filled.root")
+                data['paths']['mva output'] = os.path.join(mvadir, "{m}")
+                data['paths']['stack format'] = os.path.join(dir, "{t}/{d}/{n}{m}.{t}")
+
+                if not os.path.exists(dir):
+                    os.makedirs(dir)
+                print "Writing", os.path.join(dir, "roast_configuration.yaml")
+                outfile = open(os.path.join(dir, "roast_configuration.yaml"), "w")
+                outfile.write(yaml.dump(data))
+                outfile.close()
