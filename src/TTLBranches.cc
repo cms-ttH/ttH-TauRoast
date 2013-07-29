@@ -16,8 +16,8 @@ ttl::Branches::Branches() : roast::Branches(), conesize(.25), jetIndexCacheCombo
 ttl::Branches::Branches(const std::string& tree_name, const vector<string>& paths) :
         roast::Branches(tree_name, paths), conesize(.25), jetIndexCacheCombo(-1)
 {
-	Null();
-	SetBranchAddresses();
+    Null();
+    SetBranchAddresses();
 }
 
 ttl::Branches::~Branches()
@@ -247,16 +247,16 @@ ttl::Branches::FillHistograms(std::map<std::string, roast::HWrapper*>& histos, i
 
     histos["SelectedComboRank"]->Fill(idx, weight);
 
-    histos["NumberPV_noPURW"]->Fill(V_NumVertices, weight/puWeight);
-    histos["NumberBXm1_noPURW"]->Fill(V_NumInteractionsBXm1, weight/puWeight);
-    histos["NumberBX0_noPURW"]->Fill(V_NumInteractionsBX0, weight/puWeight);
-    histos["NumberBXp1_noPURW"]->Fill(V_NumInteractionsBXp1, weight/puWeight);
-    histos["PUweights_noPURW"]->Fill(puWeight, weight/puWeight);
+    histos["NumberPV_noPURW"]->Fill(V_NumVertices, weight/Ev_puWeight);
+    histos["NumberBXm1_noPURW"]->Fill(V_NumInteractionsBXm1, weight/Ev_puWeight);
+    histos["NumberBX0_noPURW"]->Fill(V_NumInteractionsBX0, weight/Ev_puWeight);
+    histos["NumberBXp1_noPURW"]->Fill(V_NumInteractionsBXp1, weight/Ev_puWeight);
+    histos["PUweights_noPURW"]->Fill(Ev_puWeight, weight/Ev_puWeight);
     histos["NumberPV_afterPURW"]->Fill(V_NumVertices, weight);
     histos["NumberBXm1_afterPURW"]->Fill(V_NumInteractionsBXm1, weight);
     histos["NumberBX0_afterPURW"]->Fill(V_NumInteractionsBX0, weight);
     histos["NumberBXp1_afterPURW"]->Fill(V_NumInteractionsBXp1, weight);
-    histos["PUweights_afterPURW"]->Fill(puWeight, weight);
+    histos["PUweights_afterPURW"]->Fill(Ev_puWeight, weight);
     
     for( vector<float>::const_iterator vertexIt = V_Zcoord->begin(); vertexIt != V_Zcoord->end(); ++vertexIt ) {
         histos["VertexZcoord_afterPURW"]->Fill(*vertexIt,weight);

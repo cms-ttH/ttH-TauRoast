@@ -15,7 +15,11 @@ using namespace std;
 using namespace roast;
 
 // Default constructor
-Branches::Branches() : fChain(0), bestCombo(-1) {}
+Branches::Branches() : fChain(0), bestCombo(-1)
+{
+    Null();
+    SetBranchAddresses();
+}
 
 Branches::Branches(const string& tree_name, vector<string> const & iPath) :
     bestCombo(-1)
@@ -30,6 +34,9 @@ Branches::Branches(const string& tree_name, vector<string> const & iPath) :
     if (!fChain){ cerr << "ERROR: Trying to initialize NULL TChain" << endl; exit(1); }
     fChain->SetMakeClass(1);
     Init();
+
+    Null();
+    SetBranchAddresses();
 }
 
 // Default destructor

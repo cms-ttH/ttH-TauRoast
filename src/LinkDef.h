@@ -5,6 +5,7 @@
 #include "../interface/MVABase.h"
 #include "../interface/Nidra.h"
 #include "../interface/Process.h"
+#include "../interface/TLLBranches.h"
 #include "../interface/TTLBranches.h"
 #include "../interface/TTLMVABase.h"
 #include "../interface/Weight.h"
@@ -17,11 +18,13 @@
 #pragma link off all functions;
 
 #pragma link C++ namespace roast;
+#pragma link C++ namespace roast::tll;
 #pragma link C++ namespace roast::ttl;
 #pragma link C++ namespace roast::Helper;
 #pragma link C++ nestedclasses;
 
 #pragma link C++ class roast::Branches+;
+#pragma link C++ class roast::tll::Branches+;
 #pragma link C++ class roast::ttl::Branches+;
 #pragma link C++ class roast::HWrapper+;
 #pragma link C++ class std::pair<std::string, roast::HWrapper*>+;

@@ -30,43 +30,46 @@ namespace roast {
             label = "Top Pt SF";
             switch (kind) {
                 case kNominal:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return b->topPtWeight; };
+                    fct = [](roast::Branches *b, const int& idx) -> float { return b->Ev_topPtWeight; };
                     break;
                 case kUp:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return b->topPtWeightUp; };
+                    fct = [](roast::Branches *b, const int& idx) -> float { return b->Ev_topPtWeightUp; };
                     break;
                 case kDown:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return b->topPtWeightDown; };
+                    fct = [](roast::Branches *b, const int& idx) -> float { return b->Ev_topPtWeightDown; };
                     break;
             }
         } else if (name == "lepton") {
             label = "Lepton SF";
             switch (kind) {
                 case kNominal:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return (*b->TTL_LeptonEventWeight)[idx]; };
+                    fct = [](roast::Branches *b, const int& idx) -> float {
+                        ttl::Branches *e = dynamic_cast<ttl::Branches*>(b);
+                        return (*e->TTL_LeptonEventWeight)[idx];
+                    };
                     break;
             }
         } else if (name == "PUcorr") {
             label = "PU reweighing";
             switch (kind) {
                 case kNominal:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return b->puWeight; };
+                    fct = [](roast::Branches *b, const int& idx) -> float { return b->Ev_puWeight; };
                     break;
                 case kUp:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return b->puWeightUp; };
+                    fct = [](roast::Branches *b, const int& idx) -> float { return b->Ev_puWeightUp; };
                     break;
                 case kDown:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return b->puWeightDown; };
+                    fct = [](roast::Branches *b, const int& idx) -> float { return b->Ev_puWeightDown; };
                     break;
             }
         } else if (name == "qSquared") {
             label = "Q^2 shift";
             switch (kind) {
                 case kUp:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return b->q2WeightUp; };
+                    fct = [](roast::Branches *b, const int& idx) -> float { return b->Ev_q2WeightUp; };
                     break;
                 case kDown:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return b->q2WeightDown; };
+                    fct = [](roast::Branches *b, const int& idx) -> float { return b->Ev_q2WeightDown; };
                     break;
             }
         } else if (name == "CSVeventWeight") {

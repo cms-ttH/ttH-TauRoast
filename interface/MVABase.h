@@ -2,6 +2,8 @@
 #ifndef __MVABase_h
 #define __MVABase_h
 
+#include <algorithm>
+
 #include "TMVA/Factory.h"
 #include "TMVA/Reader.h"
 

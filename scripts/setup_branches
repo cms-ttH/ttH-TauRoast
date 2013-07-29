@@ -31,6 +31,8 @@ def gather_type_info(filename):
     return results
 
 def inject_lines(filename, key, lines):
+    """Replaces the lines between '// >>> Begin <key> <<<' and
+    '// >>> End <key> <<<' with the lines supplied."""
     with open(filename) as file:
         old_lines = file.readlines()
     start = filter(lambda (n, s): "// >>> Begin " + key + " <<<" in s,
@@ -43,27 +45,9 @@ def inject_lines(filename, key, lines):
         for l in head + lines + tail:
             file.write(l)
 
-vars = gather_type_info(sys.argv[1])
-
-weight_vars = filter(lambda (x, s, xx, xxx): 'weight' in s.lower(), vars)
-weight_lines = []
-for (k, s, t, p) in weight_vars:
-    line = ' ' * 12 + t + ' '
-    if k == 'Ev' or 'CSV' in s:
-        line += s
-    else:
-        line += "_".join([k, s])
-    line += ';\n'
-    weight_lines.append(line)
-
-plain_branches = os.path.join(os.environ["CMSSW_BASE"], 'src', 'TTHTauTau', 'Roast', 'interface', 'Branches.h')
-inject_lines(plain_branches, "declarations", sorted(set(weight_lines)))
-
-channels = set(["TTL", "TLL"])
-for channel in ["TTL", "TLL"]:
-    if channel == "TLL":
-        continue
-
+def generate_type_info(channel, vars, indent=16):
+    """Generates definition, address setting, clearing, and deleting info for
+    variables for a given channel, and updates corresponding files."""
     address_lines = []
     clear_lines = []
     declare_lines = []
@@ -71,17 +55,14 @@ for channel in ["TTL", "TLL"]:
     null_lines = []
 
     for (k, s, t, p) in vars:
-        if k in channels - set([channel]):
-            continue
-
-        if 'weight' in s.lower():
-            if k == 'Ev' or 'CSV' in s:
-                varname = s
-            else:
-                varname = "_".join([k, s])
+        if ("CSV" in s) and ("Weight" in s):
+            varname = s
+            if channel == "":
+                declare_lines.append(' ' * indent + t + ' ' + varname + ';\n')
+                continue
         else:
             varname = "_".join([k, s])
-            declare_lines.append(' ' * 16 + t + ' ' + varname + ';\n')
+            declare_lines.append(' ' * indent + t + ' ' + varname + ';\n')
 
         if p:
             clear_lines.append("    {0}->clear();\n".format(varname))
@@ -98,3 +79,16 @@ for channel in ["TTL", "TLL"]:
     inject_lines(source, "clear", clear_lines)
     inject_lines(source, "delete", delete_lines)
     inject_lines(source, "null", null_lines)
+
+vars = sorted(gather_type_info(sys.argv[1]), key=lambda tpl: "_".join(tpl[:2]))
+
+channels = set(["TTL", "TLL"])
+
+shared_vars = filter(lambda (k, s, t, p): k not in channels or (("CSV" in s) and ("Weight" in s)), vars)
+generate_type_info("", shared_vars, 12)
+
+for channel in channels:
+    channel_vars = filter(lambda (k, s, t, p): k == channel, vars)
+    print "{0} variables for {1}".format(len(channel_vars), channel)
+    if len(channel_vars) > 0:
+        generate_type_info(channel, channel_vars)

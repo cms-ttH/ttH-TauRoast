@@ -139,7 +139,7 @@ namespace roast {
         for (unsigned int i = 0; i < goodEvents.size(); i++) {
             event->GetEntry(goodEvents.at(i).entry);
 
-            for (unsigned int i = 0; i < event->GetNCombos(); ++i) {
+            for (unsigned int i = 0; i < event->GetNumCombos(); ++i) {
                 FillVariables(event, i);
 
                 if (event->IsGoodGenMatch(i))
