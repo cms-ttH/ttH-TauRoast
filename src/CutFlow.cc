@@ -24,21 +24,13 @@ bool
 CutFlow::Cut::Check(Branches *b, const int idx, const bool bypass)
 {
     float val = GetVal(b, idx);
-    // if (rank == 1)
-        // if (skip && bypass)
-            // cout << "Skipping" << endl;
-        // cout << name << "\t" << min << "\t" << val << "\t" << max << "\t";
     if ((rank != 1) || (skip && bypass) || (min <= val && val <= max)) {
         if (!currentSignalResult) {
             ++passedSignalEvents;
             currentSignalResult = true;
         }
-        // if (rank == 1)
-            // cout << "passed\n";
         return true;
     } else {
-        // if (rank == 1)
-            // cout << "failed\n";
         return false;
     }
 }
@@ -134,10 +126,8 @@ CutFlow::RegisterCut(const string name, const int rank, CutFlow::Cut::val_f f, b
 {
     auto res = cuts_to_consider.find(name);
     if (res == cuts_to_consider.end()) {
-        // cout << "DISABLE " << name << endl;
         return;
     }
-    // cout << "ENABLE " << name << ", " << rank << endl;
 
     Cut new_cut(name, f, rank, res->second.first, res->second.second, sig, bypass);
     cuts.push_back(new_cut);
