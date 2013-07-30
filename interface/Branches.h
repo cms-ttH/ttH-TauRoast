@@ -36,7 +36,6 @@ namespace roast {
             virtual unsigned int GetNumCombos() = 0;
             virtual bool IsGoodGenMatch(const int&) const = 0;
             virtual void FillHistograms(std::map<std::string, roast::HWrapper*>&, int, float) = 0;
-            virtual void RegisterCuts(CutFlow&) = 0;
 
             void				SetBestCombo(int);
             unsigned int const	GetBestCombo() const;

@@ -11,10 +11,14 @@ typedef _object PyObject;
 
 namespace roast {
     template<typename T>
-    long analyze(roast::Process&, const std::vector<std::string>&, const int&, PyObject*);
+    long analyze(roast::Process&, const std::vector<roast::CutFlow::Cut>&, const int&, PyObject*);
+
+    namespace tll {
+        long analyze(roast::Process&, const std::vector<roast::CutFlow::Cut>&, const int&, PyObject*);
+    }
 
     namespace ttl {
-        long analyze(roast::Process&, const std::vector<std::string>&, const int&, PyObject*);
+        long analyze(roast::Process&, const std::vector<roast::CutFlow::Cut>&, const int&, PyObject*);
     }
 }
 

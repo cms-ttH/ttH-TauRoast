@@ -1,5 +1,6 @@
 // vim: ts=4:sw=4:et:sta
 #include "../interface/Nidra.h"
+#include "../interface/TLLBranches.h"
 #include "../interface/TTLBranches.h"
 
 #include "boost/python.hpp"
@@ -7,9 +8,9 @@
 namespace roast {
     template<typename T>
     long
-    analyze(roast::Process& proc, const std::vector<std::string>& cuts, const int& limit, PyObject *log)
+    analyze(roast::Process& proc, const std::vector<roast::CutFlow::Cut>& cuts, const int& limit, PyObject *log)
     {
-        CutFlow cflow(cuts);
+        CutFlow cflow;
         cflow.Reset();
         cflow.Zero();
 
@@ -24,29 +25,21 @@ namespace roast {
         cflow.RegisterCut("nTuple making", 0);
         if (limit >= 0)
             cflow.RegisterCut("User event limit", 0);
-        cflow.RegisterCut("TTL_AtLeastOneCombo", 0);
+        cflow.RegisterCut("AtLeastOneCombo", 0);
 
         cflow.SetCutCounts("Read from DS", proc.GetNOEinDS());
-        cflow.SetCutCounts("skimming + PAT", proc.GetNoEreadByNUTter());
-
-        int n_to_read = proc.GetNoEreadByNUTter();
-
-        event->RegisterCuts(cflow);
+        // This is not very meaningful at the moment:
+        // customarily set to nentries in the topology specification
+        // cflow.SetCutCounts("skimming + PAT", proc.GetNoEreadByNUTter());
+        for (const auto& cut: cuts)
+            cflow.RegisterCut(cut);
 
         Long64_t nentries = event->GetEntries();
-        if (nentries == 0) {
-            cerr << "ERROR: process " << proc.GetShortName() << " has zero events to read" << endl;
-            exit(1);
-        } else if (nentries != n_to_read) {
-            cerr << "WARNING: tree size does not match topology specification! "
-                << nentries << " events found, " << n_to_read << " expected."  << endl;
-        }
-
         cflow.SetCutCounts("nTuple making", nentries);
 
         double NOEanalyzed = 0;
         double NOEwithAtLeastOneCombo = 0;
-        for (Long64_t jentry=0; jentry < nentries && jentry < limit; jentry++) {
+        for (Long64_t jentry=0; jentry < nentries && (jentry < limit || limit <= 0); jentry++) {
             if (log) {
                 PyGILState_STATE state = PyGILState_Ensure();
                 boost::python::call<void>(log, jentry);
@@ -55,14 +48,14 @@ namespace roast {
 
             event->GetEntry(jentry);
 
-            if (event->TTL_NumCombos > 0)
+            if (event->GetNumCombos() > 0)
                 NOEwithAtLeastOneCombo++;
 
             // Inform cflow that a new event is starting
             cflow.StartOfEvent();
 
             vector<int> combos;
-            for (unsigned int i = 0; i < event->TTL_NumCombos; ++i) {
+            for (unsigned int i = 0; i < event->GetNumCombos(); ++i) {
                 if (cflow.CheckCuts(event, i, !checkReality))
                     combos.push_back(i);
             }
@@ -78,7 +71,7 @@ namespace roast {
         if (limit >= 0)
             cflow.SetCutCounts("User event limit", NOEanalyzed);
 
-        cflow.SetCutCounts("TTL_AtLeastOneCombo", NOEwithAtLeastOneCombo);
+        cflow.SetCutCounts("AtLeastOneCombo", NOEwithAtLeastOneCombo);
 
         proc.SetGoodEvents(good_events);
         proc.SetNOEinNtuple(nentries);
@@ -90,9 +83,17 @@ namespace roast {
         return long(NOEanalyzed);
     }
 
+    namespace tll {
+        long
+        analyze(roast::Process& p, const std::vector<roast::CutFlow::Cut>& cuts, const int& limit, PyObject *log)
+        {
+            return roast::analyze<roast::tll::Branches>(p, cuts, limit, log);
+        }
+    }
+
     namespace ttl {
         long
-        analyze(roast::Process& p, const std::vector<std::string>& cuts, const int& limit, PyObject *log)
+        analyze(roast::Process& p, const std::vector<roast::CutFlow::Cut>& cuts, const int& limit, PyObject *log)
         {
             return roast::analyze<roast::ttl::Branches>(p, cuts, limit, log);
         }

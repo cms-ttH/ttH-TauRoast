@@ -44,6 +44,7 @@ namespace roast {
 
                 Cut(const std::string n="", val_f=0, const int r=0, const float mn=0., const float mx=0.,
                         const double sig=0., bool bypass=false);
+                Cut(const std::string&, const float, const float);
 
                 ClassDef(roast::CutFlow::Cut, 1);
             };
@@ -59,6 +60,7 @@ namespace roast {
           void Reset();
           int const size() const;
 
+            void RegisterCut(const roast::CutFlow::Cut&);
             void RegisterCut(std::string const, int const, double const sig=0.);
             void RegisterCut(const std::string, const int, Cut::val_f, bool bypass=false, const double sig=0.);
           void RegisterCutFromLast(std::string const, int const, double const);

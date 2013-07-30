@@ -26,7 +26,6 @@ namespace roast {
                 inline virtual unsigned int GetNumCombos() { return TLL_NumCombos; };
                 virtual void FillHistograms(std::map<std::string, roast::HWrapper*>&, int, float);
                 virtual bool IsGoodGenMatch(const int&) const;
-                virtual void RegisterCuts(CutFlow&);
 
                 // Get index (excluding taus) of jet in J_ branches (which include taus)
                 unsigned int GetJetIndex(const int, const unsigned int);

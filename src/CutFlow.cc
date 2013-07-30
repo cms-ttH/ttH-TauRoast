@@ -4,11 +4,15 @@
 #include "boost/lexical_cast.hpp"
 
 #include "../interface/Helper.h"
+#include "../interface/MVABase.h"
+#include "../interface/TLLBranches.h"
+#include "../interface/TTLBranches.h"
 #include "../interface/CutFlow.h"
 
 using namespace std;
 using namespace roast;
 
+// Second constructor at the end of file!
 CutFlow::Cut::Cut(const string n, CutFlow::Cut::val_f f, const int r, const float mn, const float mx, const double sig, bool bypass):
     name(n), GetVal(f), rank(r), min(mn), max(mx),
     passedSignalEvents(sig), currentSignalResult(false),
@@ -108,6 +112,11 @@ void CutFlow::Zero() {
 }
 
 int const CutFlow::size() const { return cuts.size(); }
+
+void CutFlow::RegisterCut(const CutFlow::Cut& cut)
+{
+    cuts.push_back(cut);
+}
 
 void CutFlow::RegisterCut(string const name, int const rank,  double const iEvents){
     if (!(rank == 0 || 2 == rank)) {
@@ -283,6 +292,654 @@ void CutFlow::BuildNormalizedCutFlow(CutFlow const * iCutFlow){
             continue;
         RegisterCut(c.name, c.rank, c.GetVal, c.skip,
                 scaleFactor * c.passedSignalEvents);
+    }
+}
+
+CutFlow::Cut::Cut(const std::string& n, const float mn, const float mx) :
+    name(n), GetVal(0), min(mn), max(mx), passedSignalEvents(0), currentSignalResult(false), skip(false)
+{
+    if (n == "T_MatchAbsId") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return abs((*e->TLL_TauGenMatchId)[idx]);
+        };
+        skip = true;
+    } else if (n == "T_ParentAbsId") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return abs((*e->TLL_TauGenMatchMother0Id)[idx]);
+        };
+        skip = true;
+    } else if (n == "T1_MatchAbsId") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return abs((*e->TTL_Tau1GenMatchId)[idx]);
+        };
+        skip = true;
+    } else if (n == "T2_MatchAbsId") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return abs((*e->TTL_Tau2GenMatchId)[idx]);
+        };
+        skip = true;
+    } else if (n == "T1_ParentAbsId") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return abs((*e->TTL_Tau1GenMatchMother0Id)[idx]);
+        };
+        skip = true;
+    } else if (n == "T2_ParentAbsId") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return abs((*e->TTL_Tau2GenMatchMother0Id)[idx]);
+        };
+        skip = true;
+    } else if (n == "J_NumCSVL") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumCSVLbtagJets)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumCSVLbtagJets)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "J_NumCSVM") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumCSVMbtagJets)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumCSVMbtagJets)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "J_NumCSVT") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumCSVTbtagJets)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumCSVTbtagJets)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "J_NumNonCSVL") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumNonCSVLbtagJets)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumNonCSVLbtagJets)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "J_NumNonCSVM") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumNonCSVMbtagJets)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumNonCSVMbtagJets)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "J_NumNonCSVT") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumNonCSVTbtagJets)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumNonCSVTbtagJets)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "J_NumInclusive") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumCSVMbtagJets)[idx] + (*e->TLL_NumNonCSVMbtagJets)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumCSVMbtagJets)[idx] + (*e->TTL_NumNonCSVMbtagJets)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "J_NumCleanCSVL") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumCleanCSVLbtagJets)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumCleanCSVLbtagJets)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "J_NumCleanCSVM") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumCleanCSVMbtagJets)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumCleanCSVMbtagJets)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "J_NumCleanCSVT") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumCleanCSVTbtagJets)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumCleanCSVTbtagJets)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "J_NumCleanNonCSVL") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumCleanNonCSVLbtagJets)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumCleanNonCSVLbtagJets)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "J_NumCleanNonCSVM") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumCleanNonCSVMbtagJets)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumCleanNonCSVMbtagJets)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "J_NumCleanNonCSVT") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumCleanNonCSVTbtagJets)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumCleanNonCSVTbtagJets)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "J_NumCleanInclusive") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumCleanCSVMbtagJets)[idx] + (*e->TLL_NumCleanNonCSVMbtagJets)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumCleanCSVMbtagJets)[idx] + (*e->TTL_NumCleanNonCSVMbtagJets)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "NumTightLeptons") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumTightMuons)[idx] + (*e->TLL_NumTightElectrons)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumTightMuons)[idx] + (*e->TTL_NumTightElectrons)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "NumTightMuons") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumTightMuons)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumTightMuons)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "NumTightElectrons") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumTightElectrons)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumTightElectrons)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "NumLooseLeptons") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumLooseMuons)[idx] + (*e->TLL_NumLooseElectrons)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumLooseMuons)[idx] + (*e->TTL_NumLooseElectrons)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "NumLooseMuons") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumLooseMuons)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumLooseMuons)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "NumLooseElectrons") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumLooseElectrons)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumLooseElectrons)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "NumExLooseLeptons") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumExLooseMuons)[idx] + (*e->TLL_NumExLooseElectrons)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumExLooseMuons)[idx] + (*e->TTL_NumExLooseElectrons)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "NumExLooseMuons") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumExLooseMuons)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumExLooseMuons)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "NumExLooseElectrons") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_NumExLooseElectrons)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_NumExLooseElectrons)[idx];
+            } else {
+                throw;
+            }
+        };
+    } else if (n == "L_pT") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_LeptonPt)[idx];
+        };
+    } else if (n == "L_Eta") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_LeptonEta)[idx];
+        };
+    } else if (n == "L_IsLoose") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_LeptonIsLoose)[idx];
+        };
+    } else if (n == "L_IsTight") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_LeptonIsTight)[idx];
+        };
+    } else if (n == "L_RelIso") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_LeptonRelIso)[idx];
+        };
+    } else if (n == "L1_pT") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton1Pt)[idx];
+        };
+    } else if (n == "L1_Eta") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton1Eta)[idx];
+        };
+    } else if (n == "L1_IsLoose") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton1IsLoose)[idx];
+        };
+    } else if (n == "L1_IsTight") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton1IsTight)[idx];
+        };
+    } else if (n == "L1_RelIso") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton1RelIso)[idx];
+        };
+
+    } else if (n == "L2_pT") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton2Pt)[idx];
+        };
+    } else if (n == "L2_Eta") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton2Eta)[idx];
+        };
+    } else if (n == "L2_IsLoose") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton2IsLoose)[idx];
+        };
+    } else if (n == "L2_IsTight") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton2IsTight)[idx];
+        };
+    } else if (n == "L2_RelIso") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton2RelIso)[idx];
+        };
+
+    } else if (n == "T_pT") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_TauPt)[idx];
+        };
+    } else if (n == "T_Eta") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_TauEta)[idx];
+        };
+    } else if (n == "T_InCracks") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_TauIsInTheCracks)[idx];
+        };
+    } else if (n == "LL_DeltaR") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return DeltaR((*e->TLL_Lepton1Eta)[idx], (*e->TLL_Lepton1Phi)[idx],
+                (*e->TLL_Lepton2Eta)[idx], (*e->TLL_Lepton2Phi)[idx]);
+        };
+    } else if (n == "TL1_DeltaR") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return DeltaR((*e->TLL_TauEta)[idx], (*e->TLL_TauPhi)[idx],
+                (*e->TLL_Lepton1Eta)[idx], (*e->TLL_Lepton1Phi)[idx]);
+        };
+    } else if (n == "TL2_DeltaR") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return DeltaR((*e->TLL_TauEta)[idx], (*e->TLL_TauPhi)[idx],
+                (*e->TLL_Lepton2Eta)[idx], (*e->TLL_Lepton2Phi)[idx]);
+        };
+    } else if (n == "T_DecayModeFinding") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_TauHPSdecayModeFinding)[idx];
+        };
+    } else if (n == "T_LTvalid") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_TauLTvalid)[idx];
+        };
+    } else if (n == "T_LTpT") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_TauLTPt)[idx];
+        };
+    } else if (n == "T_NumProngs") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_TauNProngs)[idx];
+        };
+
+    } else if (n == "T_AntiElectronMVA") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_TauHPSagainstElectronMVA)[idx];
+        };
+    } else if (n == "T_AntiElectronIndex") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return e->GetTauAntiElectronIndex(idx);
+        };
+    } else if (n == "T_AntiMuonIndex") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return e->GetTauAntiMuonIndex(idx);
+        };
+
+    } else if (n == "T_IsolationIndex") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return e->GetTauIsolationIndex(idx);
+        };
+    } else if (n == "T_IsolationIndex3Hits") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return e->GetTauIsolationIndex3Hits(idx);
+        };
+    } else if (n == "T_IsolationIndexMVA") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return e->GetTauIsolationIndexMVA(idx);
+        };
+    } else if (n == "T_IsolationIndexMVA2") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return e->GetTauIsolationIndexMVA2(idx);
+        };
+    } else if (n == "T_IsolationMVA2Raw") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_TauHPSbyIsolationMVA2raw)[idx];
+        };
+    } else if (n == "T1_pT") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_Tau1Pt)[idx];
+        };
+    } else if (n == "T2_pT") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_Tau2Pt)[idx];
+        };
+    } else if (n == "T1_Eta") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_Tau1Eta)[idx];
+        };
+    } else if (n == "T2_Eta") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_Tau2Eta)[idx];
+        };
+    } else if (n == "T1_InCracks") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_Tau1IsInTheCracks)[idx];
+        };
+    } else if (n == "T2_InCracks") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_Tau2IsInTheCracks)[idx];
+        };
+
+    } else if (n == "TT_DeltaR") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_DitauDeltaR)[idx];
+        };
+    } else if (n == "T1L_DeltaR") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return DeltaR((*e->TTL_Tau1Eta)[idx], (*e->TTL_Tau1Phi)[idx],
+                    (*e->TTL_LeptonEta)[idx], (*e->TTL_LeptonPhi)[idx]);
+        };
+    } else if (n == "T2L_DeltaR") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return DeltaR((*e->TTL_Tau2Eta)[idx], (*e->TTL_Tau2Phi)[idx],
+                    (*e->TTL_LeptonEta)[idx], (*e->TTL_LeptonPhi)[idx]);
+        };
+
+    } else if (n == "T1_DecayModeFinding") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_Tau1HPSdecayModeFinding)[idx];
+        };
+    } else if (n == "T2_DecayModeFinding") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_Tau2HPSdecayModeFinding)[idx];
+        };
+    } else if (n == "T1_LTvalid") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_Tau1LTvalid)[idx];
+        };
+    } else if (n == "T2_LTvalid") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_Tau2LTvalid)[idx];
+        };
+    } else if (n == "T1_LTpT") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_Tau1LTPt)[idx];
+        };
+    } else if (n == "T2_LTpT") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_Tau2LTPt)[idx];
+        };
+    } else if (n == "T1_NumProngs") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_Tau1NProngs)[idx];
+        };
+    } else if (n == "T2_NumProngs") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_Tau2NProngs)[idx];
+        };
+
+    } else if (n == "T1_AntiElectronMVA") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_Tau1HPSagainstElectronMVA)[idx];
+        };
+    } else if (n == "T2_AntiElectronMVA") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_Tau2HPSagainstElectronMVA)[idx];
+        };
+    } else if (n == "T1_AntiElectronIndex") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau1AntiElectronIndex(idx);
+        };
+    } else if (n == "T2_AntiElectronIndex") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau2AntiElectronIndex(idx);
+        };
+    } else if (n == "T1_AntiMuonIndex") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau1AntiMuonIndex(idx);
+        };
+    } else if (n == "T2_AntiMuonIndex") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau2AntiMuonIndex(idx);
+        };
+
+    } else if (n == "T1_IsolationIndex") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau1IsolationIndex(idx);
+        };
+    } else if (n == "T2_IsolationIndex") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau2IsolationIndex(idx);
+        };
+    } else if (n == "T1_IsolationIndex3Hits") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau1IsolationIndex3Hits(idx);
+        };
+    } else if (n == "T2_IsolationIndex3Hits") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau2IsolationIndex3Hits(idx);
+        };
+    } else if (n == "T1_IsolationIndexMVA") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau1IsolationIndexMVA(idx);
+        };
+    } else if (n == "T2_IsolationIndexMVA") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau2IsolationIndexMVA(idx);
+        };
+    } else if (n == "T1_IsolationIndexMVA2") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau1IsolationIndexMVA2(idx);
+        };
+    } else if (n == "T2_IsolationIndexMVA2") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau2IsolationIndexMVA2(idx);
+        };
+    } else if (n == "T1_IsolationMVA2Raw") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_Tau1HPSbyIsolationMVA2raw)[idx];
+        };
+    } else if (n == "T2_IsolationMVA2Raw") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_Tau2HPSbyIsolationMVA2raw)[idx];
+        };
+
+    } else if (n == "TT_ChargeProduct") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_Tau1Charge)[idx] * (*e->TTL_Tau2Charge)[idx];
+        };
+
+    } else if (n == "TT_VisMass") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_DitauVisibleMass)[idx];
+        };
+    } else if (n == "TT_DeltaEta") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_Tau1Eta)[idx] - (*e->TTL_Tau2Eta)[idx];
+        };
+    } else if (n == "TT_CosDeltaPhi") {
+        GetVal = [](roast::Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_DitauCosDeltaPhi)[idx];
+        };
+    } else if (n == "MET") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            return b->Ev_MET;
+        };
+    } else if (n == "MVA") {
+        GetVal = [](Branches *b, const int& idx) -> float {
+            return MVABase::gMVA["CFMlpANN"] ? MVABase::gMVA["CFMlpANN"]->Evaluate(b, idx) : 0.;
+        };
+    } else {
+        // FIXME add proper exception
+        throw;
     }
 }
 

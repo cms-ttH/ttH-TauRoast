@@ -6,6 +6,7 @@
 #include "../interface/Nidra.h"
 #include "../interface/Process.h"
 #include "../interface/TLLBranches.h"
+#include "../interface/TLLMVABase.h"
 #include "../interface/TTLBranches.h"
 #include "../interface/TTLMVABase.h"
 #include "../interface/Weight.h"
@@ -36,11 +37,13 @@
 #pragma link C++ class roast::Process::Event+;
 #pragma link C++ class std::vector<roast::Process::Event>+;
 #pragma link C++ class roast::MVABase+;
+#pragma link C++ class roast::tll::MVABase+;
 #pragma link C++ class roast::ttl::MVABase+;
 #pragma link C++ class std::vector<roast::Process*>+;
 #pragma link C++ class roast::Weight+;
 #pragma link C++ function roast::register_mva;
 #pragma link C++ function roast::Helper::SplitString;
+#pragma link C++ function roast::tll::analyze(roast::Process&, const std::vector<std::string>&, const int&, void *);
 #pragma link C++ function roast::ttl::analyze(roast::Process&, const std::vector<std::string>&, const int&, void *);
 
 #endif

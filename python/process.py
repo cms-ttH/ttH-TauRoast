@@ -82,9 +82,15 @@ def analyze(config):
 
         processes.push_back(p)
 
+    cuts = []
+    for cutcfg in config['physics']['cuts']:
+        min = cutcfg['min'] if 'min' in cutcfg else -float('inf')
+        max = cutcfg['max'] if 'max' in cutcfg else float('inf')
+        cuts.append(roast.CutFlow.Cut(cutcfg['name'], min, max))
+
     processed = []
     for p in processes:
-        n = roast.ttl.analyze(p, vectorize(config['physics']['cuts'], 'string'), config['analysis']['max events'],
+        n = roast.ttl.analyze(p, vectorize(cuts), config['analysis']['max events'],
                 lambda i: logging.info("analyzing %s, event %i", p.GetShortName(), i) if i % 1000 == 0 else None)
         logging.info("analyzed %i events of %s", n, p.GetShortName())
         processed.append(p)

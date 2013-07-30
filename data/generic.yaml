@@ -95,41 +95,87 @@ physics:
         brSF: nominal
     cuts:
       # tops
-      - "J_NumCleanCSVM:1:1"
-      - "J_NumCleanNonCSVM:1:1"
+      - name: J_NumCleanCSVM
+        min: 1
+        max: 1
+      - name: J_NumCleanNonCSVM
+        min: 1
+        max: 1
+      #  - name: J_NumInclusive
+      #         min: 2
       # lepton
-      - "L_pT:30:"
-      - "NumTightLeptons:1:1"
-      - "NumExLooseLeptons:0:0"
+      - name: L_pT
+        min: 30
+      - name: NumTightLeptons
+        min: 1
+        max: 1
+      - name: NumExLooseLeptons
+        min: 0
+        max: 0
       # taus
       # kinematic
-      - "T1_pT:20:"
-      - "T2_pT:20:"
-      - "T1_Eta:-2.1:2.1"
-      - "T2_Eta:-2.1:2.1"
-      - "TT_DeltaR:0.5:"
+      - name: T1_pT
+        min: 20
+      - name: T2_pT
+        min: 20
+      - name: T1_Eta
+        min: -2.1
+        max: 2.1
+      - name: T2_Eta
+        min: -2.1
+        max: 2.1
+      - name: TT_DeltaR
+        min: 0.5
       # topological
-      - "TT_ChargeProduct:-1:-1"
-      - "T1L_DeltaR:0.25:"
-      - "T2L_DeltaR:0.25:"
+      - name: TT_ChargeProduct
+        min: -1
+        max: -1
+      - name: T1L_DeltaR
+        min: 0.25
+      - name: T2L_DeltaR
+        min: 0.25
       # reality
-      - "T1_MatchAbsId:15:15"
-      - "T2_MatchAbsId:15:15"
-      - "T1_ParentAbsId:25:25"
-      - "T2_ParentAbsId:25:25"
+      - name: T1_MatchAbsId
+        min: 15
+        max: 15
+      - name: T2_MatchAbsId
+        min: 15
+        max: 15
+      - name: T1_ParentAbsId
+        min: 25
+        max: 25
+      - name: T2_ParentAbsId
+        min: 25
+        max: 25
       # optimization
-      - "T1_DecayModeFinding:1:1"
-      - "T1_LTpT:5:"
-      - "T1_AntiElectronIndex:1:"
-      - "T1_AntiMuonIndex:1:"
-      - "T1_NumProngs:1:1"
-      - "T1_IsolationMVA2Raw:0.25:"
-      - "T2_DecayModeFinding:1:1"
-      - "T2_LTpT:5:"
-      - "T2_AntiElectronIndex:1:"
-      - "T2_AntiMuonIndex:1:"
-      - "T2_NumProngs:1:1"
-      - "T2_IsolationMVA2Raw:0:"
+      - name: T1_DecayModeFinding
+        min: 1
+        max: 1
+      - name: T1_LTpT
+        min: 5
+      - name: T1_AntiElectronIndex
+        min: 1
+      - name: T1_AntiMuonIndex
+        min: 1
+      - name: T1_NumProngs
+        min: 1
+        max: 1
+      - name: T1_IsolationMVA2Raw
+        min: 0.25
+      - name: T2_DecayModeFinding
+        min: 1
+        max: 1
+      - name: T2_LTpT
+        min: 5
+      - name: T2_AntiElectronIndex
+        min: 1
+      - name: T2_AntiMuonIndex
+        min: 1
+      - name: T2_NumProngs
+        min: 1
+        max: 1
+      - name: T2_IsolationMVA2Raw
+        min: 0
     pair selection: iso
     systematics:
         eTauFake: 1.05
