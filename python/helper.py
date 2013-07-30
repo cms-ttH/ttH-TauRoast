@@ -12,7 +12,7 @@ except:
     sys.stderr.write("Failed to import 'roast'!\n")
     sys.exit(1)
 
-def train_mva(config, processes):
+def train_mva(config, processes, module):
     cfg = config['analysis']['final mva']
 
     mvadir = config['paths']['mva output'].format(m='final mva')
@@ -20,7 +20,7 @@ def train_mva(config, processes):
     if not os.path.exists(mvadir):
         os.makedirs(mvadir)
 
-    mva = roast.ttl.MVABase(mvadir, vectorize(cfg['variables'], 'string'), 1)
+    mva = module.MVABase(mvadir, vectorize(cfg['variables'], 'string'), 1)
 
     sig = get_process(cfg['signal'], processes)
     bkg = vectorize(
@@ -34,12 +34,12 @@ def train_mva(config, processes):
 
     mva.TrainMVA(m)
 
-def book_mva(config, processes):
+def book_mva(config, processes, module):
     cfg = config['analysis']['final mva']
     mvadir = config['paths']['mva output'].format(m='final mva')
 
     for method, opts in cfg['methods'].items():
-        mva = roast.ttl.MVABase(mvadir, vectorize(cfg['variables']), 1)
+        mva = module.MVABase(mvadir, vectorize(cfg['variables']), 1)
         if mva.BookMVA(method):
             roast.register_mva(method, mva);
 

@@ -83,6 +83,15 @@ histogramconfig = yaml.load(open(os.path.join(basedir, baseconfig['histograms'])
 baseconfig['processes'] = processconfig
 baseconfig['histograms'] = histogramconfig
 
+channel = baseconfig['analysis']['channel']
+if channel == 'tll':
+    module = roast.tll
+elif channel == 'ttl':
+    module = roast.ttl
+else:
+    logging.critical('invalid channel "{0}"'.format(channel))
+    sys.exit(1)
+
 to_process = []
 for p in baseconfig['analysis']['process']:
     if p in baseconfig['analysis']['combine']:
@@ -92,7 +101,7 @@ for p in baseconfig['analysis']['process']:
 baseconfig['analysis']['process'] = to_process
 
 if opts.analyze:
-    procs = analyze(baseconfig)
+    procs = analyze(baseconfig, module)
     save(procs, "Roast", baseconfig['paths']['input'])
 else:
     procs = None
@@ -100,13 +109,13 @@ else:
 if opts.train:
     if not procs:
         procs = load("Roast", baseconfig['paths']['input'])
-    train_mva(baseconfig, procs)
+    train_mva(baseconfig, procs, module)
 
 if opts.fill:
     if not procs:
         procs = load("Roast", baseconfig['paths']['input'])
-    book_mva(baseconfig, procs)
-    fill_histos(baseconfig, procs)
+    book_mva(baseconfig, procs, module)
+    fill_histos(baseconfig, procs, module)
     save(procs, "Roast", baseconfig['paths']['output'])
 
 if not any([opts.plot, opts.nums]):

@@ -35,7 +35,7 @@ histo_default = {
         'centerLabels': False
         }
 
-def analyze(config):
+def analyze(config, module):
     """Create a list of processes, as defined in `process_vXX.yaml`, and
     specified in the process/analysis section of the configuration.  Return
     analyzed processes."""
@@ -90,13 +90,13 @@ def analyze(config):
 
     processed = []
     for p in processes:
-        n = roast.ttl.analyze(p, vectorize(cuts), config['analysis']['max events'],
+        n = module.analyze(p, vectorize(cuts), config['analysis']['max events'],
                 lambda i: logging.info("analyzing %s, event %i", p.GetShortName(), i) if i % 1000 == 0 else None)
         logging.info("analyzed %i events of %s", n, p.GetShortName())
         processed.append(p)
     return processed
 
-def fill_histos(config, processes):
+def fill_histos(config, processes, module):
     flags = config['physics']['flags']
 
     processed = []
@@ -106,7 +106,7 @@ def fill_histos(config, processes):
 
         p.ResetHistograms()
 
-        branches = roast.ttl.Branches(p.GetTreeName(), p.GetNtuplePaths())
+        branches = module.Branches(p.GetTreeName(), p.GetNtuplePaths())
         cutflow = p.GetCutFlow()
 
         if config['physics']['pair selection'] == 'iso':
