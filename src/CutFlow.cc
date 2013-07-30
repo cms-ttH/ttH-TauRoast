@@ -296,7 +296,7 @@ void CutFlow::BuildNormalizedCutFlow(CutFlow const * iCutFlow){
 }
 
 CutFlow::Cut::Cut(const std::string& n, const float mn, const float mx) :
-    name(n), GetVal(0), min(mn), max(mx), passedSignalEvents(0), currentSignalResult(false), skip(false)
+    name(n), GetVal(0), rank(1), min(mn), max(mx), passedSignalEvents(0), currentSignalResult(false), skip(false)
 {
     if (n == "T_MatchAbsId") {
         GetVal = [](Branches *b, const int& idx) -> float {
