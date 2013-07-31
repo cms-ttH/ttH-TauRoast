@@ -68,10 +68,18 @@ for (bmin, bmax, jmin, jmax, active_mva) in categories:
                 postfix = ""
 
                 for i in range(len(data['physics']['cuts'])):
-                    if data['physics']['cuts'][i].startswith('J_NumCleanCSVM'):
-                        data['physics']['cuts'][i] = 'J_NumCleanCSVM:{0}:{1}'.format(bmin, bmax)
-                    elif data['physics']['cuts'][i].startswith('J_NumCleanNonCSVM'):
-                        data['physics']['cuts'][i] = 'J_NumCleanNonCSVM:{0}:{1}'.format(jmin, jmax)
+                    if data['physics']['cuts'][i]['name'] == 'J_NumCleanCSVM':
+                        data['physics']['cuts'][i]['min'] = int(bmin)
+                        if bmax != "":
+                            data['physics']['cuts'][i]['max'] = int(bmax)
+                        elif 'max' in data['physics']['cuts'][i]:
+                            del data['physics']['cuts'][i]['max']
+                    elif data['physics']['cuts'][i]['name'] == 'J_NumCleanNonCSVM':
+                        data['physics']['cuts'][i]['min'] = int(jmin)
+                        if jmax != "":
+                            data['physics']['cuts'][i]['max'] = int(jmax)
+                        elif 'max' in data['physics']['cuts'][i]:
+                            del data['physics']['cuts'][i]['max']
 
                 basedir = os.path.join(basepath, "{0}b_{1}nb".format(
                     tag_convention(bmin, bmax),
