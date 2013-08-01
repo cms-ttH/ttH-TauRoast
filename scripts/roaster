@@ -140,8 +140,8 @@ normalize_processes(baseconfig, procs)
 combine_processes(baseconfig, procs)
 
 if opts.plot:
-    style = create_tdr_style()
-    style.cd()
+    # style = create_tdr_style()
+    # style.cd()
     stack(baseconfig, procs)
 
 if opts.nums:

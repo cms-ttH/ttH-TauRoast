@@ -69,8 +69,11 @@ class SysErrors:
         candidates = filter(lambda s: s != "Collisions", config['analysis']['plot'])
 
         self.__up = []
+        cnt = 1
+        max = len(upfilenames)
         for fn in upfilenames:
-            logging.info("loading systematic shifts from %s", fn)
+            logging.info("loading systematic shift {0}/{1} from {2}".format(cnt, max, fn))
+            cnt += 1
             procs = load("Roast", fn)
             normalize_processes(config, procs)
             combine_processes(config, procs)
@@ -78,8 +81,11 @@ class SysErrors:
             self.__up.append((fn, procs))
 
         self.__down = []
+        cnt = 1
+        max = len(downfilenames)
         for fn in downfilenames:
-            logging.info("loading systematic shifts from %s", fn)
+            logging.info("loading systematic shift {0}/{1} from {2}".format(cnt, max, fn))
+            cnt += 1
             procs = load("Roast", fn)
             normalize_processes(config, procs)
             combine_processes(config, procs)
@@ -241,11 +247,9 @@ def stack(config, processes):
 
     plot_ratio = True
 
-    padding = 0.001
-    y_divide = 0.25
-    ratio_plot_max = 2.5
-    bottom_margin = 0.35
-    small_number = 0.0001
+    y_divide = 0.3
+    ratio_plot_max = 2.3
+    small_number = 1e-5
 
     if config['display']['legend']:
         scale = 1.45
@@ -272,17 +276,25 @@ def stack(config, processes):
 
         if plot_ratio:
             min_y = 0.002
-            canvas = r.TCanvas(histname, histname, 800, 1000)
+            canvas = r.TCanvas(histname, histname, 600, 700)
             canvas.Divide(1, 2)
-            canvas.GetPad(1).SetPad(padding, y_divide + padding, 1 - padding, 1 - padding)
-            canvas.GetPad(1).SetTopMargin(0.065)
-            canvas.GetPad(1).SetBottomMargin(0)
-            canvas.GetPad(2).SetPad(padding, padding, 1 - padding, y_divide - padding)
-            canvas.GetPad(2).SetBottomMargin(bottom_margin)
+            canvas.GetPad(1).SetPad(small_number, y_divide + small_number, 1 - small_number, 1 - small_number)
+            canvas.GetPad(1).SetTopMargin(0.1)
+            canvas.GetPad(1).SetBottomMargin(small_number)
+            canvas.GetPad(1).SetLeftMargin(0.11)
+            canvas.GetPad(1).SetRightMargin(0.05)
+            canvas.GetPad(1).SetTicks(0, 0)
+
+            canvas.GetPad(2).SetPad(small_number, small_number, 1 - small_number, y_divide - small_number)
+            canvas.GetPad(2).SetBottomMargin(0.3)
+            canvas.GetPad(2).SetLeftMargin(0.11)
+            canvas.GetPad(2).SetRightMargin(0.05)
+            canvas.GetPad(2).SetTopMargin(small_number)
+            canvas.GetPad(2).SetTicks(1, 0)
             canvas.cd(1)
         else:
             min_y = 0.001
-            canvas = r.TCanvas(histname, histname, 800, 800)
+            canvas = r.TCanvas(histname, histname, 600, 600)
             canvas.cd()
 
         bkg_stack.Draw("hist")
@@ -293,6 +305,9 @@ def stack(config, processes):
         base_histo = roast.HWrapper(procs[0].GetHContainer()[histname])
         base_histo.ScaleBy(0)
         base_histo.GetHisto().SetTitle("")
+        base_histo.GetHisto().GetYaxis().SetTitleSize(.05)
+        base_histo.GetHisto().GetYaxis().SetTitleOffset(1.1)
+        base_histo.GetHisto().GetYaxis().SetLabelSize(.04)
         base_histo.GetHisto().GetYaxis().SetRangeUser(min_y, max_y)
         base_histo.GetHisto().GetXaxis().SetRangeUser(base_histo.GetMinXVis(), base_histo.GetMaxXVis())
         base_histo.GetHisto().Draw("hist")
@@ -316,7 +331,7 @@ def stack(config, processes):
             h = p.GetHContainer()[histname].GetHisto()
             h.Scale(config['display']['signal scale factor'])
             h.SetFillStyle(0)
-            h.SetLineWidth(3)
+            h.SetLineWidth(4)
             h.SetLineColor(p.GetColor())
             h.GetYaxis().SetRangeUser(min_y, max_y)
 
@@ -328,8 +343,9 @@ def stack(config, processes):
             coll = get_collisions(procs)
             h = coll.GetHContainer()[histname].GetHisto()
             h.SetMarkerStyle(20)
+            h.SetMarkerSize(1)
             h.GetYaxis().SetRangeUser(min_y, max_y)
-            h.SetLineWidth(2)
+            h.SetLineWidth(4)
             h.Draw("E1 P same")
         except:
             coll = None
@@ -351,9 +367,36 @@ def stack(config, processes):
 
         base_histo.GetHisto().Draw("axis same")
 
-        if plot_ratio:
-            max_ratio = 2.5
+        def extract_info(cut, label):
+            cfg = filter(lambda c: c['name'] == cut, config['physics']['cuts'])[0]
+            text = ""
+            if 'max' not in cfg:
+                text += "#ge"
+            text += str(cfg['min'])
+            if 'max' in cfg and cfg['max'] != cfg['min']:
+                text += '-' + str(cfg['max']) + ' ' + label + 's'
+            elif cfg['min'] != 1:
+                text += ' ' + label + 's'
+            else:
+                text += ' ' + label
+            return text
 
+        tex = r.TLatex()
+        tex.SetNDC()
+        tex.SetTextFont(42)
+        tex.SetTextSize(0.05)
+        tex.SetTextAlign(31)
+        tex.DrawLatex(.99 - r.gPad.GetRightMargin(), .84,
+                "Lep + #tau_{h}#tau_{h} + "
+                + extract_info('J_NumCleanNonCSVM', 'jet') + ' + '
+                + extract_info('J_NumCleanCSVM', 'b-tag'))
+        tex.SetTextSize(0.055)
+        tex.SetTextAlign(11)
+        tex.DrawLatex(0.14, 0.91, "CMS Preliminary")
+        tex.SetTextAlign(31)
+        tex.DrawLatex(1 - r.gPad.GetRightMargin(), 0.91, "#sqrt{s} = 8 TeV, L = 19.5 fb^{-1}")
+
+        if plot_ratio:
             canvas.cd(2)
 
             try:
@@ -365,14 +408,18 @@ def stack(config, processes):
             ratio.GetXaxis().SetRangeUser(
                     bkg_sum.GetMinXVis(), bkg_sum.GetMaxXVis())
 
-            ratio.GetXaxis().SetTitleSize(0.15)
-            ratio.GetXaxis().SetLabelSize(0.1)
+            ratio.GetXaxis().SetTitleSize(0.14)
+            ratio.GetXaxis().SetTitleOffset(0.9)
+            ratio.GetXaxis().SetLabelSize(0.12)
+            ratio.GetXaxis().SetLabelOffset(0.02)
+
             ratio.GetYaxis().SetTitle("Data/MC")
             ratio.GetYaxis().CenterTitle()
-            ratio.GetYaxis().SetTitleSize(0.15)
-            ratio.GetYaxis().SetTitleOffset(0.4)
-            ratio.GetYaxis().SetLabelSize(0.08)
-            ratio.GetYaxis().SetRangeUser(min_y, max_ratio)
+            ratio.GetYaxis().SetTitleSize(0.1)
+            ratio.GetYaxis().SetTitleOffset(0.45)
+            ratio.GetYaxis().SetLabelSize(0.1)
+            ratio.GetYaxis().SetRangeUser(0, ratio_plot_max)
+            ratio.GetYaxis().SetNdivisions(505)
             ratio.Draw("axis")
 
             bkg_err = base_histo.GetHisto().Clone()
@@ -423,24 +470,29 @@ def stack(config, processes):
                         ratio_err.SetPoint(i, x_coord, 999)
 
                 ratio_err.SetMarkerSize(1.)
-                ratio_err.SetMarkerStyle(8)
-                ratio_err.SetLineWidth(2)
+                ratio_err.SetMarkerStyle(0)
+                ratio_err.SetLineWidth(4)
                 ratio_err.Draw("P same")
                 ratio.Draw("axis same")
 
             line = r.TLine()
             line.SetLineColor(1)
-            line.SetLineWidth(2)
-            line.DrawLine(bkg_sum.GetMinXVis(), 1, bkg_sum.GetMaxXVis(), 1)
+            line.SetLineWidth(1)
+            line.DrawLineNDC(
+                    r.gPad.GetLeftMargin(),
+                    r.gPad.GetBottomMargin() + (1 / ratio_plot_max) * (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin()),
+                    1 - r.gPad.GetRightMargin(),
+                    r.gPad.GetBottomMargin() + (1 / ratio_plot_max) * (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin()))
 
-        filename = config['paths']['stack format'].format(t="png",
-                d=base_histo.GetSubDir(), n=histname, m="")
+        for t in ("png", "pdf"):
+            filename = config['paths']['stack format'].format(t=t,
+                    d=base_histo.GetSubDir(), n=histname, m="")
 
-        dirname = os.path.dirname(filename)
-        if not os.path.exists(dirname):
-            os.makedirs(dirname)
+            dirname = os.path.dirname(filename)
+            if not os.path.exists(dirname):
+                os.makedirs(dirname)
 
-        canvas.SaveAs(filename)
+            canvas.SaveAs(filename)
 
         # Reset log-scale maximum y-value
         new_max_y = 10 ** (((scale - 1) * 2 + 1) * math.log10(max_y / scale))
@@ -449,7 +501,8 @@ def stack(config, processes):
         r.gPad.SetLogy()
         canvas.Update()
 
-        filename = config['paths']['stack format'].format(t="png",
-                d=base_histo.GetSubDir(), n=histname, m="_log")
+        for t in ("png", "pdf"):
+            filename = config['paths']['stack format'].format(t=t,
+                    d=base_histo.GetSubDir(), n=histname, m="_log")
 
-        canvas.SaveAs(filename)
+            canvas.SaveAs(filename)
