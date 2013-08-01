@@ -96,88 +96,44 @@ physics:
         topPt: nominal
         brSF: nominal
     cuts:
+      # reality
+      - {name: T1_MatchAbsId, min: 15, max: 15}
+      - {name: T2_MatchAbsId, min: 15, max: 15}
+      - {name: T1_ParentAbsId, min: 25, max: 25}
+      - {name: T2_ParentAbsId, min: 25, max: 25}
       # tops
-      - name: J_NumCleanCSVM
-        min: 1
-        max: 1
-      - name: J_NumCleanNonCSVM
-        min: 1
-        max: 1
-      #  - name: J_NumInclusive
-      #         min: 2
+      - {name: J_NumCleanCSVM, min: 1, max: 1}
+      - {name: J_NumCleanNonCSVM, min: 1, max: 1}
+      #  - {name: J_NumInclusive, min: 2}
       # lepton
-      - name: L_pT
-        min: 30
-      - name: NumTightLeptons
-        min: 1
-        max: 1
-      - name: NumExLooseLeptons
-        min: 0
-        max: 0
+      - {name: NumTightLeptons, min: 1, max: 1}
+      - {name: NumExLooseLeptons, min: 0, max: 0}
+      - {name: L_pT, min: 30}
       # taus
       # kinematic
-      - name: T1_pT
-        min: 20
-      - name: T2_pT
-        min: 20
-      - name: T1_Eta
-        min: -2.1
-        max: 2.1
-      - name: T2_Eta
-        min: -2.1
-        max: 2.1
-      - name: TT_DeltaR
-        min: 0.5
+      - {name: T1_pT, min: 20}
+      - {name: T2_pT, min: 20}
+      - {name: T1_Eta, min: -2.1, max: 2.1}
+      - {name: T2_Eta, min: -2.1, max: 2.1}
+      - {name: TT_DeltaR, min: 0.5}
       # topological
-      - name: TT_ChargeProduct
-        min: -1
-        max: -1
-      - name: T1L_DeltaR
-        min: 0.25
-      - name: T2L_DeltaR
-        min: 0.25
-      # reality
-      - name: T1_MatchAbsId
-        min: 15
-        max: 15
-      - name: T2_MatchAbsId
-        min: 15
-        max: 15
-      - name: T1_ParentAbsId
-        min: 25
-        max: 25
-      - name: T2_ParentAbsId
-        min: 25
-        max: 25
+      - {name: T1L_DeltaR, min: 0.25}
+      - {name: T2L_DeltaR, min: 0.25}
       # optimization
-      - name: T1_DecayModeFinding
-        min: 1
-        max: 1
-      - name: T1_LTpT
-        min: 5
-      - name: T1_AntiElectronIndex
-        min: 1
-      - name: T1_AntiMuonIndex
-        min: 1
-      - name: T1_NumProngs
-        min: 1
-        max: 1
-      - name: T1_IsolationMVA2Raw
-        min: 0.25
-      - name: T2_DecayModeFinding
-        min: 1
-        max: 1
-      - name: T2_LTpT
-        min: 5
-      - name: T2_AntiElectronIndex
-        min: 1
-      - name: T2_AntiMuonIndex
-        min: 1
-      - name: T2_NumProngs
-        min: 1
-        max: 1
-      - name: T2_IsolationMVA2Raw
-        min: 0
+      - {name: T1_DecayModeFinding, min: 1, max: 1}
+      - {name: T2_DecayModeFinding, min: 1, max: 1}
+      - {name: T1_LTpT, min: 5}
+      - {name: T2_LTpT, min: 5}
+      - {name: T1_NumProngs, min: 1, max: 1}
+      - {name: T2_NumProngs, min: 1, max: 1}
+      - {name: T1_AntiElectronIndex, min: 1}
+      - {name: T2_AntiElectronIndex, min: 1}
+      - {name: T1_AntiMuonIndex, min: 1}
+      - {name: T2_AntiMuonIndex, min: 1}
+      - {name: T1_IsolationMVA2Raw, min: 0.25}
+      - {name: T2_IsolationMVA2Raw, min: 0}
+      # topological
+      - {name: TT_ChargeProduct, min: -1, max: -1}
     pair selection: iso
     systematics:
         eTauFake: 1.05
