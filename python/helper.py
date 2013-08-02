@@ -1,4 +1,5 @@
 # vim: ts=4:sw=4:et:sta
+import logging
 import os
 import ROOT as r
 import sys
@@ -11,6 +12,9 @@ try:
 except:
     sys.stderr.write("Failed to import 'roast'!\n")
     sys.exit(1)
+
+class IncorrectProcessCountError(Exception):
+    pass
 
 def train_mva(config, processes, module):
     cfg = config['analysis']['final mva']
@@ -64,15 +68,21 @@ get_backgrounds = lambda ps: filter(lambda p: p.IsBackground(), ps)
 def get_collisions(ps):
     res = filter(lambda p: p.IsCollisions(), ps)
     if len(res) != 1:
-        # FIXME turn into real exception
-        raise "Not one collision process found!"
+        if len(res) > 1:
+            logging.critical("more than one collision process found")
+        else:
+            logging.critical("no collisions present")
+        raise IncorrectProcessCountError()
     return res[0]
 
 def get_process(name, processes):
     res = filter(lambda p: p.GetShortName() == name, processes)
     if len(res) != 1:
-        # FIXME turn into real exception
-        raise "More than one process with name " + name
+        if len(res) > 1:
+            logging.critical("more than one process with name %s", name)
+        else:
+            logging.critical("no process with name %s found", name)
+        raise IncorrectProcessCountError()
     return res[0]
 
 def normalize_processes(config, processes):
