@@ -111,7 +111,8 @@ def fill_histos(config, processes, module):
         if config['physics']['pair selection'] == 'iso':
             select = lambda xs: sorted(
                     xs,
-                    key=lambda x: branches.TTL_Tau1HPSbyIsolationMVA2raw[x]**2 + branches.TTL_Tau2HPSbyIsolationMVA2raw[x]**2,
+                    key=lambda x: (branches.TTL_Tau1HPSbyIsolationMVA2raw[x] + 1)**2 + \
+                            (branches.TTL_Tau2HPSbyIsolationMVA2raw[x] + 1)**2,
                     reverse=True)[0]
         elif config['physics']['pair selection'] == 'pt':
             select = lambda xs: x[0]
