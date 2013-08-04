@@ -47,6 +47,40 @@ def book_mva(config, processes, module):
         if mva.BookMVA(method):
             roast.register_mva(method, mva);
 
+class TTHSplitter:
+    def __init__(self, val):
+        self.__val = val
+
+    def __call__(self, branches):
+        return branches.Ev_higgsDecayMode == self.__val
+
+def split_processes(config, ps):
+    split_fct = {}
+
+    # split signal by decay modes
+    for p in get_signals(ps):
+        cfg = config['processes'][p.GetShortName()]
+
+        if 'split' not in cfg:
+            continue
+
+        for (mode, val) in cfg['split'].items():
+            newname = p.GetShortName() + "_" + mode
+            logging.info("creating new split process %s", newname)
+            split_fct[newname] = TTHSplitter(val)
+
+            splitp = roast.Process(p)
+            splitp.SetShortName(newname)
+            splitp.SetNiceName(p.GetNiceName() + " (" + mode + ")")
+            ps.append(splitp)
+
+            if p.GetShortName() in config['analysis']['process']:
+                config['analysis']['process'].append(newname)
+            # if p.GetShortName() in config['analysis']['plot']:
+                # config['analysis']['plot'].append(newname)
+
+    config['analysis']['split'] = split_fct
+
 def combine_processes(config, ps):
     for (alias, cfg) in config['analysis']['combine'].items():
         to_combine = cfg['processes']
@@ -122,6 +156,7 @@ def print_cutflow(config, processes):
     for i in range(len(cuts[0])):
         out.write("{0:20}".format(cuts[0][i].name))
         for c in cuts:
+            logging.debug("%s", c[i].name)
             out.write("{0:15}".format(c[i].passedSignalEvents))
         out.write("\n")
 

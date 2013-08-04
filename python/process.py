@@ -98,12 +98,11 @@ def analyze(config, module):
 
 def fill_histos(config, processes, module):
     flags = config['physics']['flags']
+    split = config['analysis']['split']
 
-    processed = []
-    for p in processes:
-        if p.GetShortName() not in config['analysis']['process']:
-            continue
+    procs = filter(lambda p: p.GetShortName() in config['analysis']['process'], processes)
 
+    for p in procs:
         p.ResetHistograms()
 
         branches = module.Branches(p.GetTreeName(), p.GetNtuplePaths())
@@ -147,9 +146,21 @@ def fill_histos(config, processes, module):
                 logging.critical("could not create flag %s with value %s", flag, val)
                 sys.exit(1)
 
+        split_count = 0
+        total_count = 0
+        name = p.GetShortName()
         for e in p.GetGoodEvents():
             branches.GetEntry(e.entry)
 
+            total_count += 1
+
+            if name in split and not split[name](branches):
+                continue
+
+            if split_count % 10 == 0:
+                logging.info("filling %s, event %i", name, split_count)
+
+            split_count += 1
             idx = select(e.combos)
 
             w_tot = 1.
@@ -161,3 +172,11 @@ def fill_histos(config, processes, module):
 
         for weight in weights:
             weight.RegisterCut(cutflow)
+
+        if total_count > 0:
+            ratio = split_count / float(total_count)
+        else:
+            ratio = 0
+        cutflow.RegisterCutFromLast("Sample splitting", 2, ratio)
+        logging.info("filled %i events of %s", split_count, name)
+

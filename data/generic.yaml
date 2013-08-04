@@ -151,8 +151,8 @@ paths:
     # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
     # name; {m} = mode (_log)
     stack format: "/afs/crc.nd.edu/user/m/mwolf3/www/test_roast/{t}/{d}/{n}{m}.{t}"
-    ntuples: /store/user/matze/data/ntuples/v48/2012/
+    ntuples: /store/user/matze/ttH/v48/ttl/2012
     tree: makeNtuple/TTbarHTauTau
 
-processes: process_v47.yaml
+processes: processes.yaml
 histograms: histograms.yaml

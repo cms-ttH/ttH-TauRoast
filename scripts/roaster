@@ -127,6 +127,7 @@ if opts.fill:
     if not procs:
         procs = load("Roast", baseconfig['paths']['input'])
     book_mva(baseconfig, procs, module)
+    split_processes(baseconfig, procs)
     fill_histos(baseconfig, procs, module)
     save(procs, "Roast", baseconfig['paths']['output'])
 
