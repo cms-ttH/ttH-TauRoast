@@ -109,18 +109,14 @@ def fill_histos(config, processes, module):
         cutflow = p.GetCutFlow()
 
         if config['physics']['pair selection'] == 'iso':
-            select = lambda xs: sorted(
-                    xs,
-                    key=lambda x: (branches.TTL_Tau1HPSbyIsolationMVA2raw[x] + 1)**2 + \
-                            (branches.TTL_Tau2HPSbyIsolationMVA2raw[x] + 1)**2,
-                    reverse=True)[0]
+            select = module.IsoPicker()
         elif config['physics']['pair selection'] == 'pt':
-            select = lambda xs: x[0]
+            select = roast.PtPicker()
         else:
             logging.critical("invalid selection mechanism: %s", config['physics']['pair selection'])
             sys.exit(1)
 
-        weights = []
+        weights = r.std.vector('roast::Weight')()
         for (flag, val) in flags.items():
             try:
                 strength = -1.
@@ -138,38 +134,25 @@ def fill_histos(config, processes, module):
                         strength = 1.
 
                 if val == "nominal":
-                    weights.append(roast.Weight.Create(flag, roast.Weight.kNominal, strength))
+                    weights.push_back(roast.Weight.Create(flag, roast.Weight.kNominal, strength))
                 elif val == "up":
-                    weights.append(roast.Weight.Create(flag, roast.Weight.kUp, strength))
+                    weights.push_back(roast.Weight.Create(flag, roast.Weight.kUp, strength))
                 elif val == "down":
-                    weights.append(roast.Weight.Create(flag, roast.Weight.kDown, strength))
+                    weights.push_back(roast.Weight.Create(flag, roast.Weight.kDown, strength))
             except Exception, e:
                 logging.critical("could not create flag %s with value %s", flag, val)
                 sys.exit(1)
 
-        split_count = 0
-        total_count = 0
         name = p.GetShortName()
-        for e in p.GetGoodEvents():
-            branches.GetEntry(e.entry)
 
-            total_count += 1
+        log = lambda i: logging.info("filling %s, event %i", name, i) if i % 25 == 0 else None
+        splitter = split[name] if name in split else 0
 
-            if name in split and not split[name](branches):
-                continue
+        logging.debug("selecting best particle combination with %s", repr(select))
+        logging.debug("splitting sample with %s", repr(splitter))
 
-            if split_count % 10 == 0:
-                logging.info("filling %s, event %i", name, split_count)
-
-            split_count += 1
-            idx = select(e.combos)
-
-            w_tot = 1.
-            if p.IsMC():
-                for weight in weights:
-                    w_tot *= weight(branches, idx)
-
-            branches.FillHistograms(p.GetHContainer(), idx, w_tot)
+        split_count = module.fill(p, weights, log, splitter, select)
+        total_count = p.GetGoodEvents().size()
 
         for weight in weights:
             weight.RegisterCut(cutflow)
@@ -178,6 +161,6 @@ def fill_histos(config, processes, module):
             ratio = split_count / float(total_count)
         else:
             ratio = 0
+
         cutflow.RegisterCutFromLast("Sample splitting", 2, ratio)
         logging.info("filled %i events of %s", split_count, name)
-

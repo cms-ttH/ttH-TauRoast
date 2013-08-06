@@ -47,13 +47,6 @@ def book_mva(config, processes, module):
         if mva.BookMVA(method):
             roast.register_mva(method, mva);
 
-class TTHSplitter:
-    def __init__(self, val):
-        self.__val = val
-
-    def __call__(self, branches):
-        return branches.Ev_higgsDecayMode == self.__val
-
 def split_processes(config, ps):
     split_fct = {}
 
@@ -67,7 +60,7 @@ def split_processes(config, ps):
         for (mode, val) in cfg['split'].items():
             newname = p.GetShortName() + "_" + mode
             logging.info("creating new split process %s", newname)
-            split_fct[newname] = TTHSplitter(val)
+            split_fct[newname] = roast.InclusiveSignalSplitter(val)
 
             splitp = roast.Process(p)
             splitp.SetShortName(newname)

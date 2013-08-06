@@ -4,7 +4,9 @@
 #include "../interface/Helper.h"
 #include "../interface/MVABase.h"
 #include "../interface/Nidra.h"
+#include "../interface/Picker.h"
 #include "../interface/Process.h"
+#include "../interface/Splitter.h"
 #include "../interface/TLLBranches.h"
 #include "../interface/TLLMVABase.h"
 #include "../interface/TTLBranches.h"
@@ -33,6 +35,9 @@
 #pragma link C++ class roast::CutFlow+;
 #pragma link C++ class roast::CutFlow::Cut+;
 #pragma link C++ class std::vector<roast::CutFlow::Cut>+;
+#pragma link C++ class roast::Picker+;
+#pragma link C++ class roast::PtPicker+;
+#pragma link C++ class roast::ttl::IsoPicker+;
 #pragma link C++ class roast::Process+;
 #pragma link C++ class roast::Process::Event+;
 #pragma link C++ class std::vector<roast::Process::Event>+;
@@ -40,10 +45,15 @@
 #pragma link C++ class roast::tll::MVABase+;
 #pragma link C++ class roast::ttl::MVABase+;
 #pragma link C++ class std::vector<roast::Process*>+;
+#pragma link C++ class roast::Splitter+;
+#pragma link C++ class roast::InclusiveSignalSplitter+;
 #pragma link C++ class roast::Weight+;
+#pragma link C++ class std::vector<roast::Weight>+;
 #pragma link C++ function roast::register_mva;
 #pragma link C++ function roast::Helper::SplitString;
 #pragma link C++ function roast::tll::analyze(roast::Process&, const std::vector<std::string>&, const int&, void *);
+#pragma link C++ function roast::tll::fill(roast::Process&,  const std::vector<roast::Weight>&, void *, roast::Splitter*, roast::Picker*);
 #pragma link C++ function roast::ttl::analyze(roast::Process&, const std::vector<std::string>&, const int&, void *);
+#pragma link C++ function roast::ttl::fill(roast::Process&, const std::vector<roast::Weight>&, void *, roast::Splitter*, roast::Picker*);
 
 #endif

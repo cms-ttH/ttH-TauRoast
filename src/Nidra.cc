@@ -83,11 +83,55 @@ namespace roast {
         return long(NOEanalyzed);
     }
 
+    template<typename T>
+    long
+    fill(roast::Process& proc, std::vector<roast::Weight>& weights, PyObject* log, roast::Splitter *s, roast::Picker *p)
+    {
+        T* branches = new T(proc.GetTreeName(), proc.GetNtuplePaths());
+
+        long count = 0;
+        for (const auto& e: proc.GetGoodEvents()) {
+            branches->GetEntry(e.entry);
+
+            int idx = p->Pick(branches, e.combos);
+
+            if (s && !s->Use(branches, idx))
+                continue;
+
+            if (log) {
+                PyGILState_STATE state = PyGILState_Ensure();
+                boost::python::call<void>(log, count);
+                PyGILState_Release(state);
+            }
+
+            float weight = 1.;
+            if (proc.IsMC()) {
+                for (auto& w: weights) {
+                    weight *= w(branches, idx);
+                }
+            }
+
+            branches->FillHistograms(proc.GetHContainer(), idx, weight);
+
+            ++count;
+        }
+
+        delete branches;
+
+        return count;
+    }
+
     namespace tll {
         long
         analyze(roast::Process& p, const std::vector<roast::CutFlow::Cut>& cuts, const int& limit, PyObject *log)
         {
             return roast::analyze<roast::tll::Branches>(p, cuts, limit, log);
+        }
+
+        long
+        fill(roast::Process& proc, std::vector<roast::Weight>& weights, PyObject* log, roast::Splitter *s, roast::Picker *p)
+        {
+            return roast::fill<roast::tll::Branches>(proc, weights, log, s, p);
         }
     }
 
@@ -96,6 +140,12 @@ namespace roast {
         analyze(roast::Process& p, const std::vector<roast::CutFlow::Cut>& cuts, const int& limit, PyObject *log)
         {
             return roast::analyze<roast::ttl::Branches>(p, cuts, limit, log);
+        }
+
+        long
+        fill(roast::Process& proc, std::vector<roast::Weight>& weights, PyObject* log, roast::Splitter *s, roast::Picker *p)
+        {
+            return roast::fill<roast::ttl::Branches>(proc, weights, log, s, p);
         }
     }
 }

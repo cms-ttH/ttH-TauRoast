@@ -125,7 +125,7 @@ namespace roast {
 
 
           inline void AddHistogram(const std::string& name, const roast::HWrapper& histo) { hContainer[name] = new HWrapper(histo); };
-          inline std::map<std::string, roast::HWrapper*> GetHContainer() {
+          inline std::map<std::string, roast::HWrapper*>& GetHContainer() {
               return hContainer;
           };
           inline const std::map<std::string, roast::HWrapper*> GetHContainer() const {
