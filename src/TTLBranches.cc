@@ -1,9 +1,9 @@
 // vim: ts=4:sw=4:et:sta
 #include "TFile.h"
 
-#include "../interface/TTLBranches.h"
 #include "../interface/GenHelper.h"
 #include "../interface/MVABase.h"
+#include "../interface/TTLBranches.h"
 
 using namespace std;
 using namespace roast;
@@ -218,14 +218,6 @@ ttl::Branches::GetJetIndex(const int idx, const unsigned int num)
 void
 ttl::Branches::FillHistograms(std::map<std::string, roast::HWrapper*>& histos, int idx, float weight)
 {
-    // float weight	= iLeptonWeight*iPuWeight*iTau1TriggerWeight*iTau2TriggerWeight*iTauIdSysWeight*iQ2SysWeight*iTopPtWeight;
-
-    // GenMatching =========================================================================================================================
-    //histos["MatchedTo_T1"]->Fill(Tau1MatchedTo(idx) , weight);
-    //histos["MatchedTo_T2"]->Fill(Tau2MatchedTo(idx) , weight);
-
-    // General =========================================================================================================================
-    auto h = histos.end();
     histos["Events"]->Fill(0, weight);
     histos["MomentumRank"]->Fill((*TTL_MomentumRank)[idx], weight);
     histos["MET"]->Fill(Ev_MET, weight);
