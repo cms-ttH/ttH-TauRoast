@@ -90,11 +90,11 @@ display:
 physics:
     lumi: 19400
     flags:
-        CSVeventWeight: nominal
-        lepton: nominal
-        PUcorr: nominal
-        topPt: nominal
-        brSF: nominal
+      - [topPt, nominal]
+      - [lepton, nominal]
+      - [PUcorr, nominal]
+      - [CSVeventWeight, nominal]
+      - [brSF, nominal]
     cuts:
       # reality
       - {name: T1_MatchAbsId, min: 15, max: 15}

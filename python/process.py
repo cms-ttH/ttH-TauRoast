@@ -117,7 +117,7 @@ def fill_histos(config, processes, module):
             sys.exit(1)
 
         weights = r.std.vector('roast::Weight')()
-        for (flag, val) in flags.items():
+        for (flag, val) in flags:
             try:
                 strength = -1.
                 if flag in config['physics']['systematics']:
