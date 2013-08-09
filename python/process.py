@@ -46,6 +46,10 @@ def analyze(config, module):
     for proc in config['analysis']['process']:
         cfg = config['processes'][proc]
 
+        # deal with non-physical processes later (combine them)
+        if not 'ntuplePath' in cfg:
+            continue
+
         vpaths = r.std.vector('string')()
         for p in cfg['ntuplePath']:
             vpaths.push_back(os.path.join(config['paths']['ntuples'], p))

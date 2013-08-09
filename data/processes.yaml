@@ -597,3 +597,45 @@ TTHTauTau_140_real:
     otherScaleFactor: 1
     NOEinDS: 982801
     NoEreadByNUTter: 102664
+
+TTbar:
+    niceName: t + tbar
+    labelForLegend: "t #bar{t}"
+    color: 625
+    combine: [TTbar_Hadronic, TTbar_SemiLept, TTbar_FullLept]
+
+Zjets:
+    niceName: Z + jets
+    labelForLegend: Z + jets
+    color: 418
+    combine: [ZplusJets_LowMass, ZplusOneJet, ZplusTwoJets, ZplusThreeJets, ZplusFourJets]
+
+EWK:
+    niceName: EWK
+    labelForLegend: EWK
+    color: 862
+    combine: [ZplusJets_LowMass, ZplusOneJet, ZplusTwoJets, ZplusThreeJets, ZplusFourJets, WplusOneJet, WplusTwoJets, WplusThreeJets, WplusFourJets, WW, WZ, ZZ]
+
+DiBoson:
+    niceName: WW, WZ, ZZ
+    labelForLegend: WW, WZ, ZZ
+    color: 432
+    combine: [WW, WZ, ZZ]
+
+SingleTop:
+    niceName: Single t/tbar
+    labelForLegend: "single t/#bar{t}"
+    color: 616
+    combine: [singleTopSch, singleTopBarSch, singleTopTch, singleTopBarTch, singleTopPlusW, singleTopBarPlusW]
+
+ttWZ:
+    niceName: ttbar + W/Z
+    labelForLegend: "t#bar{t} + W/Z"
+    color: 590
+    combine: [ttPlusW, ttPlusZ]
+
+Wjets:
+    niceName: W + jets
+    labelForLegend: W + jets
+    color: 861
+    combine: [WplusOneJet, WplusTwoJets, WplusThreeJets, WplusFourJets]

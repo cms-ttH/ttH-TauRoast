@@ -104,10 +104,13 @@ else:
     logging.critical('invalid channel "{0}"'.format(channel))
     sys.exit(1)
 
+to_combine = dict(filter(
+    lambda (k, v): 'combine' in v,
+    baseconfig['processes'].items()))
 to_process = []
 for p in baseconfig['analysis']['process']:
-    if p in baseconfig['analysis']['combine']:
-        to_process += baseconfig['analysis']['combine'][p]['processes']
+    if p in to_combine:
+        to_process += to_combine[p]['combine']
     else:
         to_process.append(p)
 baseconfig['analysis']['process'] = to_process

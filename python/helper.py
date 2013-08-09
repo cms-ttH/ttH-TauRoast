@@ -75,16 +75,17 @@ def split_processes(config, ps):
     config['analysis']['split'] = split_fct
 
 def combine_processes(config, ps):
-    for (alias, cfg) in config['analysis']['combine'].items():
-        to_combine = cfg['processes']
+    cfgs = filter(lambda (k, v): 'combine' in v, config['processes'].items())
+    for (alias, cfg) in cfgs:
+        to_combine = cfg['combine']
         res = roast.Process(get_process(to_combine[0], ps))
 
         for other in to_combine[1:]:
             res.Add(get_process(other, ps))
 
         res.SetShortName(alias)
-        res.SetNiceName(cfg['name'])
-        res.SetLabelForLegend(cfg['legend'])
+        res.SetNiceName(cfg['niceName'])
+        res.SetLabelForLegend(cfg['labelForLegend'])
         res.SetColor(cfg['color'])
 
         ps.append(res)
