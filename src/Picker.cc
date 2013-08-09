@@ -19,7 +19,7 @@ roast::ttl::IsoPicker::Pick(roast::Branches *b, const std::vector<int>& idxs)
 {
     roast::ttl::Branches *br = dynamic_cast<roast::ttl::Branches*>(b);
     auto idx = std::max_element(idxs.begin(), idxs.end(),
-            [&](int a, int b) -> bool { return ditau_iso(br, a) > ditau_iso(br, b); });
+            [&](int a, int b) -> bool { return ditau_iso(br, a) < ditau_iso(br, b); });
     return *idx;
 }
 
