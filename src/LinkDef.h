@@ -1,3 +1,4 @@
+#include "../interface/Accessor.h"
 #include "../interface/Branches.h"
 #include "../interface/CutFlow.h"
 #include "../interface/HWrapper.h"
@@ -50,6 +51,7 @@
 #pragma link C++ class roast::Weight+;
 #pragma link C++ class std::vector<roast::Weight>+;
 #pragma link C++ function roast::register_mva;
+#pragma link C++ function roast::setup_accessors;
 #pragma link C++ function roast::Helper::SplitString;
 #pragma link C++ function roast::tll::analyze(roast::Process&, const std::vector<std::string>&, const int&, void *);
 #pragma link C++ function roast::tll::fill(roast::Process&,  const std::vector<roast::Weight>&, void *, roast::Splitter*, roast::Picker*);
