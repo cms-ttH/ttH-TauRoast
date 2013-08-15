@@ -3,6 +3,16 @@
 import os
 import yaml
 
+from optparse import OptionParser
+
+parser = OptionParser(usage="%prog [options] datadir")
+opts, args = parser.parse_args()
+
+if len(args) != 1:
+    parser.error("no data directory specified")
+
+(basepath,) = args
+
 def tag_convention(min, max):
     res = min
     if max == "":
@@ -10,8 +20,6 @@ def tag_convention(min, max):
     elif max != min:
         res += "-" + max
     return res
-
-basepath = "/afs/crc.nd.edu/user/m/mwolf3/www/roast_2013-08-14"
 
 # b-tag min & max, clean jet min & max, train mva
 categories = [
@@ -27,7 +35,7 @@ categories = [
         ["2", "2", "1", "1", False],
         # ["2", "2", "1", "", False],
         ["2", "2", "2", "", False],
-        ["1", "2", "1", "", True],
+        # ["1", "2", "1", "", True],
         # ["1", "2", "0", "", True],
         ]
 
@@ -51,6 +59,7 @@ systematics = [
         ("CSVeventWeightCErr2", False),
         ]
 
+mva_default_dir = "/afs/crc.nd.edu/user/m/mwolf3/www/pas_weights/"
 mva_categories = filter(lambda xs: xs[4], categories)
 
 analyze = open(os.path.join(os.environ["CMSSW_BASE"], "src/TTHTauTau/Roast/test/stage1_analyze.par"), 'w')
@@ -87,12 +96,14 @@ for (bmin, bmax, jmin, jmax, active_mva) in categories:
 
                 if active_mva:
                     mvadir = basedir
-                else:
+                elif len(mva_categories) > 0:
                     mva_btags = mva_categories[0][0:2]
                     mva_jets = mva_categories[0][2:4]
                     mvadir = os.path.join(basepath, "{0}b_{1}nb".format(
                         tag_convention(*mva_btags),
                         tag_convention(*mva_jets)))
+                else:
+                    mvadir = mva_default_dir
 
                 if unc != "":
                     postfix = "_" + "".join([unc, shift])
