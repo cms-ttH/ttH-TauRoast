@@ -11,7 +11,7 @@ def tag_convention(min, max):
         res += "-" + max
     return res
 
-basepath = "/afs/crc.nd.edu/user/m/mwolf3/www/test_roast_serial"
+basepath = "/afs/crc.nd.edu/user/m/mwolf3/www/roast_2013-08-14"
 
 # b-tag min & max, clean jet min & max, train mva
 categories = [
@@ -111,8 +111,14 @@ for (bmin, bmax, jmin, jmax, active_mva) in categories:
                         fill.write(os.path.join(dir, "roast_configuration.yaml") + "\n")
                     else:
                         if unc.startswith("CSVeventWeight"):
-                            del data['physics']['flags']['CSVeventWeight']
-                        data['physics']['flags'][unc] = shift.lower()
+                            idx = data['physics']['flags'].index(['CSVeventWeight', 'nominal'])
+                            data['physics']['flags'][idx] = [unc, shift.lower()]
+                        else:
+                            try:
+                                idx = data['physics']['flags'].index([unc, 'nominal'])
+                                data['physics']['flags'][idx] = [unc, shift.lower()]
+                            except:
+                                data['physics']['flags'].append([unc, shift.lower()])
 
                         fill.write(os.path.join(dir, "roast_configuration.yaml") + "\n")
 
