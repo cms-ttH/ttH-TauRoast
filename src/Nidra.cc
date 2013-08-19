@@ -98,7 +98,7 @@ namespace roast {
             if (s && !s->Use(branches, idx))
                 continue;
 
-            if (log) {
+            if (log && count % 100 == 0) {
                 PyGILState_STATE state = PyGILState_Ensure();
                 boost::python::call<void>(log, count);
                 PyGILState_Release(state);
