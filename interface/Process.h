@@ -125,15 +125,12 @@ namespace roast {
 
 
           inline void AddHistogram(const std::string& name, const roast::HWrapper& histo) { hContainer[name] = new HWrapper(histo); };
-          inline std::map<std::string, roast::HWrapper*>& GetHContainer() {
-              return hContainer;
-          };
-          inline const std::map<std::string, roast::HWrapper*> GetHContainer() const {
-              return hContainer;
-          };
+          inline std::map<std::string, roast::HWrapper*>& GetHContainer() { return hContainer; };
+          inline const std::map<std::string, roast::HWrapper*> GetHContainer() const { return hContainer; };
+          inline HWrapper * GetHistogram(const std::string& name) { return hContainer[name]; };
+          std::vector<std::string> GetHistogramNames() const;
           void ResetHistograms();
           void ScaleHistograms(double);
-          std::vector<std::string> GetHistogramNames() const;
 
           void 				SetGoodEvents(const std::vector<roast::Process::Event>&);
           void				Add(roast::Process*);

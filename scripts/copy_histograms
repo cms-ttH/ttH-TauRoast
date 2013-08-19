@@ -93,16 +93,11 @@ def copy_histos(outfile, config, infile, invar, outvar, mod_string):
 
     for (outsample, ss) in samples.items():
         try:
-            histos = get_process(ss[0], procs).GetHContainer()
-            base_histo = histos[invar].GetHisto().Clone()
-            del histos
+            base_histo = get_process(ss[0], procs).GetHistogram(invar).GetHisto().Clone()
 
             for s in ss[1:]:
                 try:
-                    histos = get_process(s, procs).GetHContainer()
-                    plus_histo = histos[invar].GetHisto().Clone()
-                    del histos
-
+                    plus_histo = get_process(s, procs).GetHistogram(invar).GetHisto().Clone()
                     base_histo.Add(plus_histo)
                 except:
                     print "Could not find " + s
@@ -117,6 +112,8 @@ def copy_histos(outfile, config, infile, invar, outvar, mod_string):
             print "Could not find " + ss[0]
             print e
             pass
+    for p in procs:
+        del p
 
 outfile = r.TFile(opts.file, "recreate")
 
