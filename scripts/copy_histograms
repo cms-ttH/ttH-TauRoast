@@ -50,13 +50,13 @@ from TTHTauTau.Roast.helper import *
 
 samples = {
         'data_obs': ['Collisions'],
-        'ttH110': ['TTH_110'],
-        'ttH115': ['TTH_115'],
-        'ttH120': ['TTH_120'],
-        'ttH125': ['TTH_125'],
-        'ttH130': ['TTH_130'],
-        'ttH135': ['TTH_135'],
-        'ttH140': ['TTH_140'],
+        # 'ttH110': ['TTH_110'],
+        # 'ttH115': ['TTH_115'],
+        # 'ttH120': ['TTH_120'],
+        # 'ttH125': ['TTH_125'],
+        # 'ttH130': ['TTH_130'],
+        # 'ttH135': ['TTH_135'],
+        # 'ttH140': ['TTH_140'],
         #'ttH110': ['TTHTauTau_110_real'],
         #'ttH115': ['TTHTauTau_115_real'],
         #'ttH120': ['TTHTauTau_120_real'],
@@ -76,6 +76,11 @@ samples = {
         #'sTbar' : ['sTbar-sCh','sTbar-tCh'],
         #'sTplusW' : ['sTW','sTbarW']
 }
+
+for mass in range(110, 141, 5):
+    samples['ttH' + str(mass)] = ['_'.join(['TTH', str(mass)])]
+    for decay in "hbb hcc hww hzz htt hgg hgluglu hzg".split():
+        samples['ttH' + str(mass) + "_" + decay] = ['_'.join(['TTH', str(mass), decay])]
 
 sys_rename = {
         'JES': 'CMS_scale_j',
