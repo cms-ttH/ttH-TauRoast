@@ -39,29 +39,6 @@ CutFlow::Cut::Check(Branches *b, const int idx, const bool bypass)
 // Default constructor
 CutFlow::CutFlow(){}
 
-CutFlow::CutFlow(const vector<string>& cuts)
-{
-    using boost::lexical_cast;
-
-    for (const auto& s: cuts) {
-        auto first_colon = s.find(":");
-        auto last_colon = s.rfind(":");
-
-        string name = s.substr(0, first_colon);
-
-        float max = numeric_limits<float>::infinity();
-        float min = -numeric_limits<float>::infinity();
-        try {
-            max = lexical_cast<float>(s.substr(last_colon + 1));
-        } catch (...) {}
-        try {
-            min = lexical_cast<float>(s.substr(first_colon + 1, last_colon - first_colon - 1));
-        } catch (...) {}
-
-        cuts_to_consider[name] = make_pair(min, max);
-    }
-}
-
 CutFlow::CutFlow(CutFlow const & iCutFlow){
     cuts = iCutFlow.GetCuts();
     name2idx.clear();
@@ -69,18 +46,11 @@ CutFlow::CutFlow(CutFlow const & iCutFlow){
     for (const auto& c: cuts)
         name2idx[c.name] = idx++;
 
-	cutsToApply	= iCutFlow.GetCutsToApply();
-    cuts_to_consider = iCutFlow.GetCutsToConsider();
-
 	eventPassed	= false;
 	comboIs		= false;
 
 	bestCombo	= -1;
 }
-
-
-// Default destructor
-CutFlow::~CutFlow(){}
 
 void CutFlow::Reset(){
 	eventPassed = false;
@@ -118,19 +88,6 @@ void CutFlow::RegisterCut(string const name, int const rank,  double const iEven
     }
     Cut new_cut(name, [](Branches *b, const int& idx) -> float { return 0.; },
             rank, 0, 0, iEvents);
-    cuts.push_back(new_cut);
-    name2idx[name] = cuts.size() - 1;
-}
-
-void
-CutFlow::RegisterCut(const string name, const int rank, CutFlow::Cut::val_f f, bool bypass, const double sig)
-{
-    auto res = cuts_to_consider.find(name);
-    if (res == cuts_to_consider.end()) {
-        return;
-    }
-
-    Cut new_cut(name, f, rank, res->second.first, res->second.second, sig, bypass);
     cuts.push_back(new_cut);
     name2idx[name] = cuts.size() - 1;
 }
@@ -194,13 +151,6 @@ void CutFlow::EndOfEvent(){
 int const CutFlow::GetCutRank(string const iCut) const { 
     return cuts[name2idx.find(iCut)->second].rank;
 }
-
-int const CutFlow::GetCutPosition(string const iCut) const { 
-    return name2idx.find(iCut)->second;
-}
-
-string const				CutFlow::GetCutsToApply() const { return cutsToApply; }
-
 
 float const CutFlow::GetPassedEvents(string const iCut) const {
     return cuts[name2idx.find(iCut)->second].passedSignalEvents;
@@ -266,23 +216,21 @@ void CutFlow::Add(CutFlow const & iCutFlow, float const iFactor){
 void CutFlow::BuildNormalizedCutFlow(CutFlow const * iCutFlow){
     Reset();
 
-    cutsToApply = iCutFlow->GetCutsToApply();
-    cuts_to_consider = iCutFlow->cuts_to_consider;
-
     vector<Cut> other_cuts = iCutFlow->GetCuts();
     double scaleFactor = 1.0;
 
-    for (auto& c: other_cuts) {
-        if (c.rank != 2)
+    for (auto& oc: other_cuts) {
+        if (oc.rank != 2)
             continue;
-        scaleFactor *= iCutFlow->GetRelEff(c.name);
+        scaleFactor *= iCutFlow->GetRelEff(oc.name);
     }
 
-    for (auto& c: other_cuts) {
-        if (c.rank == 2)
+    for (auto& oc: other_cuts) {
+        if (oc.rank == 2)
             continue;
-        RegisterCut(c.name, c.rank, c.GetVal, c.skip,
-                scaleFactor * c.passedSignalEvents);
+        auto c = Cut(oc);
+        c.passedSignalEvents *= scaleFactor;
+        RegisterCut(c);
     }
 }
 
