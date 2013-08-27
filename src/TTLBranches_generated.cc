@@ -24,7 +24,7 @@ ttl::Branches::Clear()
     CSVeventWeightLFStats2up->clear();
     CSVeventWeightLFdown->clear();
     CSVeventWeightLFup->clear();
-    TTL_CleanJetIndices->clear();
+    CleanJetIndices->clear();
     TTL_DitauCosDeltaPhi->clear();
     TTL_DitauDeltaR->clear();
     TTL_DitauMETMass->clear();
@@ -272,7 +272,7 @@ ttl::Branches::Delete()
     delete CSVeventWeightLFStats2up;
     delete CSVeventWeightLFdown;
     delete CSVeventWeightLFup;
-    // delete TTL_CleanJetIndices;
+    delete CleanJetIndices;
     delete TTL_DitauCosDeltaPhi;
     delete TTL_DitauDeltaR;
     delete TTL_DitauMETMass;
@@ -515,7 +515,7 @@ ttl::Branches::Null()
     CSVeventWeightLFStats2up = 0;
     CSVeventWeightLFdown = 0;
     CSVeventWeightLFup = 0;
-    TTL_CleanJetIndices = 0;
+    CleanJetIndices = 0;
     TTL_DitauCosDeltaPhi = 0;
     TTL_DitauDeltaR = 0;
     TTL_DitauMETMass = 0;
@@ -763,7 +763,7 @@ ttl::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TTL_CSVeventWeightLFStats2up", &CSVeventWeightLFStats2up);
     fChain->SetBranchAddress("TTL_CSVeventWeightLFdown", &CSVeventWeightLFdown);
     fChain->SetBranchAddress("TTL_CSVeventWeightLFup", &CSVeventWeightLFup);
-    fChain->SetBranchAddress("TTL_CleanJetIndices", &TTL_CleanJetIndices);
+    fChain->SetBranchAddress("TTL_CleanJetIndices", &CleanJetIndices);
     fChain->SetBranchAddress("TTL_DitauCosDeltaPhi", &TTL_DitauCosDeltaPhi);
     fChain->SetBranchAddress("TTL_DitauDeltaR", &TTL_DitauDeltaR);
     fChain->SetBranchAddress("TTL_DitauMETMass", &TTL_DitauMETMass);

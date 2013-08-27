@@ -8,6 +8,7 @@ namespace roast {
     typedef float (*GetValue_t)(Branches*, const int&);
 
     GetValue_t get_accessor(const std::string&);
+    std::vector<std::string> get_accessor_names();
     void setup_accessors();
 }
 

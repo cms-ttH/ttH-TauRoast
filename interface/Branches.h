@@ -157,6 +157,7 @@ namespace roast {
             std::vector<float>* CSVeventWeightLFStats2up;
             std::vector<float>* CSVeventWeightLFdown;
             std::vector<float>* CSVeventWeightLFup;
+            std::vector<vector<unsigned int> >* CleanJetIndices;
             std::vector<float>* T_Charge;
             std::vector<unsigned int>* T_DecayMode;
             std::vector<float>* T_EmFraction;

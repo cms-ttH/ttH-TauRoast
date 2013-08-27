@@ -24,7 +24,7 @@ tll::Branches::Clear()
     CSVeventWeightLFStats2up->clear();
     CSVeventWeightLFdown->clear();
     CSVeventWeightLFup->clear();
-    TLL_CleanJetIndices->clear();
+    CleanJetIndices->clear();
     TLL_HT->clear();
     TLL_Lepton1Eta->clear();
     TLL_Lepton1EventWeight->clear();
@@ -217,7 +217,7 @@ tll::Branches::Delete()
     delete CSVeventWeightLFStats2up;
     delete CSVeventWeightLFdown;
     delete CSVeventWeightLFup;
-    delete TLL_CleanJetIndices;
+    delete CleanJetIndices;
     delete TLL_HT;
     delete TLL_Lepton1Eta;
     delete TLL_Lepton1EventWeight;
@@ -408,7 +408,7 @@ tll::Branches::Null()
     CSVeventWeightLFStats2up = 0;
     CSVeventWeightLFdown = 0;
     CSVeventWeightLFup = 0;
-    TLL_CleanJetIndices = 0;
+    CleanJetIndices = 0;
     TLL_HT = 0;
     TLL_Lepton1Eta = 0;
     TLL_Lepton1EventWeight = 0;
@@ -601,7 +601,7 @@ tll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TLL_CSVeventWeightLFStats2up", &CSVeventWeightLFStats2up);
     fChain->SetBranchAddress("TLL_CSVeventWeightLFdown", &CSVeventWeightLFdown);
     fChain->SetBranchAddress("TLL_CSVeventWeightLFup", &CSVeventWeightLFup);
-    fChain->SetBranchAddress("TLL_CleanJetIndices", &TLL_CleanJetIndices);
+    fChain->SetBranchAddress("TLL_CleanJetIndices", &CleanJetIndices);
     fChain->SetBranchAddress("TLL_HT", &TLL_HT);
     fChain->SetBranchAddress("TLL_Lepton1Eta", &TLL_Lepton1Eta);
     fChain->SetBranchAddress("TLL_Lepton1EventWeight", &TLL_Lepton1EventWeight);

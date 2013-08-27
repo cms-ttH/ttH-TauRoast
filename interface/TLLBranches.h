@@ -41,7 +41,6 @@ namespace roast {
                 unsigned int GetTauMatchIndex(const unsigned int) const;
 
                 // >>> Begin declarations <<<
-                std::vector<vector<unsigned int> >* TLL_CleanJetIndices;
                 std::vector<float>* TLL_HT;
                 std::vector<float>* TLL_Lepton1Eta;
                 std::vector<float>* TLL_Lepton1EventWeight;
