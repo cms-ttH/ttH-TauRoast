@@ -53,8 +53,17 @@ def book_mva(config, processes, module):
     cfg = config['analysis']['final mva']
     mvadir = config['paths']['mva output'].format(m='final mva')
 
+    vars = []
+    err = False
+    for (name, type) in cfg['variables']:
+        try:
+            vars.append(roast.MVABase.Var(name, type))
+        except:
+            logging.error("undefined variable %s", name)
+            err = True
+
     for method, opts in cfg['methods'].items():
-        mva = module.MVABase(mvadir, vectorize(cfg['variables']), 1)
+        mva = roast.MVABase(mvadir, vectorize(vars), module.Get(), 1)
         if mva.BookMVA(method):
             roast.register_mva(method, mva);
 
