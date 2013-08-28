@@ -150,10 +150,14 @@ def normalize_processes(config, processes):
             continue
 
         est_lumi = lumi * p.GetCrossSection() * p.GetBranchingRatio()
-        raw_events = p.GetNOEinDS() * p.GetNOEanalyzed() / float(p.GetNOEinNtuple())
+        if p.GetNOEinNtuple() == 0:
+            scale = 0
+        else:
+            raw_events = p.GetNOEinDS() * p.GetNOEanalyzed() / float(p.GetNOEinNtuple())
+            scale = est_lumi / raw_events
 
-        p.ScaleHistograms(est_lumi / raw_events)
-        p.GetCutFlow().RegisterCutFromLast("Lumi norm", 2, est_lumi / raw_events)
+        p.ScaleHistograms(scale)
+        p.GetCutFlow().RegisterCutFromLast("Lumi norm", 2, scale)
         p.BuildNormalizedCutFlow()
 
 def print_cutflow(config, processes):

@@ -1,0 +1,104 @@
+# vim: set sw=4 sta et :
+
+analysis:
+    channel: tll
+
+    max events: -1
+
+    final mva:
+        methods:
+            BDTG: "!H:!V:NTrees=1000:BoostType=Grad:Shrinkage=0.10:UseBaggedGrad:GradBaggingFraction=0.5:nCuts=20:NNodesMax=5"
+        signal: TTHTauTau_125_real
+        background: [TTbar_Hadronic, TTbar_SemiLept, TTbar_FullLept]
+        variables:
+          - [T_Pt, F]
+          - [T_Eta, F]
+          - [T_DecayMode, I]
+          - [T_IsolationMVA2Raw, F]
+          - [LJ_Pt, F]
+
+    process:
+      - Collisions
+      - TTbar
+      - EWK
+      - SingleTop
+      - ttWZ
+      #  - TTHTauTau_125_real
+      #  - TTH_110
+      #  - TTH_115
+      #  - TTH_120
+      - TTH_125
+      #  - TTH_130
+      #  - TTH_135
+      #  - TTH_140
+
+    plot:
+      - Collisions
+      - TTbar
+      - EWK
+      - SingleTop
+      - ttWZ
+      - TTH_125
+
+display:
+    legend: False
+    legend columns: 3
+    signal scale factor: 100
+
+physics:
+    lumi: 19400
+    flags:
+      - [topPt, nominal]
+      - [lepton, nominal]
+      - [PUcorr, nominal]
+      - [CSVeventWeight, nominal]
+      - [brSF, nominal]
+    cuts:
+      # reality
+      - {name: T_MatchAbsId, min: 15, max: 15}
+      - {name: T_ParentAbsId, min: 25, max: 25}
+      # tops
+      - {name: J_NumCleanCSVM, min: 1, max: 2}
+      - {name: J_NumInclusive, min: 2}
+      # lepton
+      - {name: NumTightLeptons, min: 2, max: 2}
+      - {name: NumExLooseLeptons, min: 0, max: 0}
+      #  - {name: L_pT, min: 30}
+      # taus
+      # kinematic
+      - {name: T_Pt, min: 20}
+      - {name: T_Eta, min: -2.1, max: 2.1}
+      # topological
+      #  - {name: T1L_DeltaR, min: 0.25}
+      #  - {name: T2L_DeltaR, min: 0.25}
+      # optimization
+      - {name: T_DecayModeFinding, min: 1, max: 1}
+      - {name: T_LTpT, min: 5}
+      - {name: T_NumProngs, min: 1, max: 1}
+      - {name: T_AntiElectronIndex, min: 1}
+      - {name: T_AntiMuonIndex, min: 1}
+      - {name: T_IsolationMVA2Raw, min: 0.25}
+      # topological
+      #  - {name: TT_ChargeProduct, min: -1, max: -1}
+    pair selection: iso
+    systematics:
+        eTauFake: 1.05
+        jetTauFake: 1.2
+        tauIdEff: 1.06
+
+paths:
+    # for analyzed processes
+    input: test/tmp_tll/roast_processed.root
+    # {s} is replaced with systematic shifts
+    systematics input: "test/tmp_{s}/roast_filled.root"
+    # for processes with filled histograms
+    output: test/tmp_tll/roast_filled.root
+    mva output: "test/tmp_tll/{m}"
+    # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
+    # name; {m} = mode (_log)
+    stack format: "test/tmp_tll/{t}/{d}/{n}{m}.{t}"
+    ntuples: /store/user/matze/ttH/v48/tll/2012
+    tree: makeNtuple/TTbarHTauTau
+
+processes: processes.yaml
+histograms: histograms.yaml
