@@ -24,141 +24,54 @@ namespace roast {
     Weight::Create(const std::string& name, direction kind, float strength)
     {
         std::string label;
-        Weight::val_f fct = 0;
+        GetValue_t fct = 0;
 
-        if (name == "topPt") {
-            label = "Top Pt SF";
+        if (name == "qSquared" || name == "PUcorr" || name == "lepton" || name == "topPt") {
+            auto varname = name;
+            if (name == "qSquared") {
+                label = "Q^2 shift";
+                varname = "Q2";
+            } else if (name == "PUcorr") {
+                label = "PU reweighing";
+                varname = "Pu";
+            } else if (name == "lepton") {
+                label = "Lepton SF";
+                varname = "L_Event";
+            } else if (name == "topPt") {
+                label = "Top Pt SF";
+                varname = "TopPt";
+            }
+
+            varname += "Weight";
+
             switch (kind) {
+                case kUp:
+                    varname += "Up";
+                    break;
+                case kDown:
+                    varname += "Down";
+                    break;
                 case kNominal:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return b->Ev_topPtWeight; };
-                    break;
-                case kUp:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return b->Ev_topPtWeightUp; };
-                    break;
-                case kDown:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return b->Ev_topPtWeightDown; };
                     break;
             }
-        } else if (name == "lepton") {
-            label = "Lepton SF";
+
+            fct = get_accessor(varname);
+        } else if (name.find("CSV") != std::string::npos) {
+            label = "Jet CSV weight";
+            auto varname = name;
+
             switch (kind) {
+                case kUp:
+                    varname += "up";
+                    break;
+                case kDown:
+                    varname += "down";
+                    break;
                 case kNominal:
-                    fct = [](roast::Branches *b, const int& idx) -> float {
-                        ttl::Branches *e = dynamic_cast<ttl::Branches*>(b);
-                        return (*e->TTL_LeptonEventWeight)[idx];
-                    };
                     break;
             }
-        } else if (name == "PUcorr") {
-            label = "PU reweighing";
-            switch (kind) {
-                case kNominal:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return b->Ev_puWeight; };
-                    break;
-                case kUp:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return b->Ev_puWeightUp; };
-                    break;
-                case kDown:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return b->Ev_puWeightDown; };
-                    break;
-            }
-        } else if (name == "qSquared") {
-            label = "Q^2 shift";
-            switch (kind) {
-                case kUp:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return b->Ev_q2WeightUp; };
-                    break;
-                case kDown:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return b->Ev_q2WeightDown; };
-                    break;
-            }
-        } else if (name == "CSVeventWeight") {
-            label = "Jet CSV weight";
-            switch (kind) {
-                case kNominal:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return (*b->CSVeventWeight)[idx]; };
-                    break;
-            }
-        } else if (name == "CSVeventWeightHF") {
-            label = "Jet CSV weight";
-            switch (kind) {
-                case kUp:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return (*b->CSVeventWeightHFup)[idx]; };
-                    break;
-                case kDown:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return (*b->CSVeventWeightHFdown)[idx]; };
-                    break;
-            }
-        } else if (name == "CSVeventWeightLF") {
-            label = "Jet CSV weight";
-            switch (kind) {
-                case kUp:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return (*b->CSVeventWeightLFup)[idx]; };
-                    break;
-                case kDown:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return (*b->CSVeventWeightLFdown)[idx]; };
-                    break;
-            }
-        } else if (name == "CSVeventWeightHFStats1") {
-            label = "Jet CSV weight";
-            switch (kind) {
-                case kUp:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return (*b->CSVeventWeightHFStats1up)[idx]; };
-                    break;
-                case kDown:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return (*b->CSVeventWeightHFStats1down)[idx]; };
-                    break;
-            }
-        } else if (name == "CSVeventWeightHFStats2") {
-            label = "Jet CSV weight";
-            switch (kind) {
-                case kUp:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return (*b->CSVeventWeightHFStats2up)[idx]; };
-                    break;
-                case kDown:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return (*b->CSVeventWeightHFStats2down)[idx]; };
-                    break;
-            }
-        } else if (name == "CSVeventWeightLFStats1") {
-            label = "Jet CSV weight";
-            switch (kind) {
-                case kUp:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return (*b->CSVeventWeightLFStats1up)[idx]; };
-                    break;
-                case kDown:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return (*b->CSVeventWeightLFStats1down)[idx]; };
-                    break;
-            }
-        } else if (name == "CSVeventWeightLFStats2") {
-            label = "Jet CSV weight";
-            switch (kind) {
-                case kUp:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return (*b->CSVeventWeightLFStats2up)[idx]; };
-                    break;
-                case kDown:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return (*b->CSVeventWeightLFStats2down)[idx]; };
-                    break;
-            }
-        } else if (name == "CSVeventWeightCErr1") {
-            label = "Jet CSV weight";
-            switch (kind) {
-                case kUp:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return (*b->CSVeventWeightCErr1up)[idx]; };
-                    break;
-                case kDown:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return (*b->CSVeventWeightCErr1down)[idx]; };
-                    break;
-            }
-        } else if (name == "CSVeventWeightCErr2") {
-            label = "Jet CSV weight";
-            switch (kind) {
-                case kUp:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return (*b->CSVeventWeightCErr2up)[idx]; };
-                    break;
-                case kDown:
-                    fct = [](roast::Branches *b, const int& idx) -> float { return (*b->CSVeventWeightCErr2down)[idx]; };
-                    break;
-            }
+
+            fct = get_accessor(varname);
         } else if (name == "brSF") {
             label = "BR correction";
             switch (kind) {
