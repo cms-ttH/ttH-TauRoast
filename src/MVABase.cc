@@ -26,16 +26,28 @@ namespace roast {
     map<string, MVABase*> MVABase::gMVA;
     map<string, MVABase*> MVABase::gComboMVA;
 
+    MVABase::Var::Var(const std::string& n, char t) : name(n), type(t), value(0)
+    {
+        GetVal = get_accessor(name);
+    }
+
+    void
+    MVABase::Var::Update(roast::Branches* b, int i)
+    {
+        value = GetVal(b, i);
+    }
+
     MVABase::~MVABase()
     {
         delete reader;
     }
 
     MVABase::MVABase(const std::string& dir,
-            const std::vector<std::string>& vars, const int rnk) :
+            const std::vector<roast::MVABase::Var>& vs, roast::MVABase::Get* fct, const int rnk) :
+        get(fct),
         basedir(dir),
         method(),
-        variables(vars),
+        vars(vs),
         rank(rnk)
     {
         reader = new TMVA::Reader("!Color:Silent:!V");
@@ -115,7 +127,7 @@ namespace roast {
     {
         SetupVariables(tree);
 
-        Branches *event = GetBranches(process);
+        Branches *event = get->Branches(process);
 
         auto goodEvents = process->GetGoodEvents();
         for (unsigned int i = 0; i < goodEvents.size(); i++) {
@@ -133,7 +145,7 @@ namespace roast {
         SetupVariables(sig);
         SetupVariables(bkg);
 
-        Branches *event = GetBranches(process);
+        Branches *event = get->Branches(process);
 
         auto goodEvents = process->GetGoodEvents();
         for (unsigned int i = 0; i < goodEvents.size(); i++) {
@@ -151,6 +163,13 @@ namespace roast {
 
         backgrounds.clear();
         backgrounds["TreeB"] = 1.0;
+    }
+
+    void
+    MVABase::FillVariables(roast::Branches *b, const int i)
+    {
+        for (auto& v: vars)
+            v.Update(b, i);
     }
 
     void

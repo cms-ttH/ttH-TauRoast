@@ -7,16 +7,34 @@
 #include "TMVA/Factory.h"
 #include "TMVA/Reader.h"
 
+#include "Accessor.h"
 #include "Branches.h"
 #include "Process.h"
+#include "TLLBranches.h"
+#include "TTLBranches.h"
 
 namespace roast {
     class MVABase {
         public:
+            struct Var {
+                Var() : GetVal(0), name(""), type('F'), value(0.) {};
+                Var(const std::string&, char);
+                void Update(roast::Branches*, int);
+
+                GetValue_t GetVal;
+                std::string name;
+                char type;
+                float value;
+            };
+
             static std::map<std::string, MVABase*> gMVA;
             static std::map<std::string, MVABase*> gComboMVA;
 
-            MVABase(const std::string&, const std::vector<std::string>&, const int rnk=1);
+            struct Get {
+                virtual roast::Branches* Branches(const roast::Process*) = 0;
+            };
+
+            MVABase(const std::string&, const std::vector<roast::MVABase::Var>&, Get*, const int rnk=1);
             ~MVABase();
 
             void CreateTrainingSample(roast::Process*, const std::vector<roast::Process*>&);
@@ -24,26 +42,25 @@ namespace roast {
             float Evaluate(Branches*, int);
             void FillTree(TTree*, const roast::Process*);
             void FillTree(TTree*, TTree*, const roast::Process*);
-            virtual void FillVariables(Branches*, const int) = 0;
+            void FillVariables(Branches*, const int);
             bool BookMVA(const string&);
             void TrainMVA(const map<string, string>&);
 
         protected:
-            virtual Branches* GetBranches(const roast::Process*) = 0;
-            virtual void SetupVariables(TMVA::Factory*) = 0;
-            virtual void SetupVariables(TMVA::Reader*) = 0;
-            virtual void SetupVariables(TTree*) = 0;
+            template<typename T> void SetupVariables(T obj);
 
-            template<typename W, typename T> void AddVariableConditionally(W*, const string&, const char&, T&);
-            template<typename T> void AddVariable(TMVA::Factory*, const string&, const char&, T&);
-            template<typename T> void AddVariable(TMVA::Reader*, const string&, const char&, T&);
-            template<typename T> void AddVariable(TTree*, const string&, const char&, T&);
+            inline void AddVariable(TMVA::Factory *f, roast::MVABase::Var& v) { f->AddVariable(v.name, v.type); };
+            inline void AddVariable(TMVA::Reader *r, roast::MVABase::Var& v) { r->AddVariable(v.name, &v.value); };
+            inline void AddVariable(TTree *t, roast::MVABase::Var& v) { t->Branch(v.name.c_str(), &v.value); };
 
             TMVA::Reader* reader;
+
+            Get* get;
 
             std::string basedir;
             std::string method;
             std::vector<std::string> variables;
+            std::vector<roast::MVABase::Var> vars;
 
             int rank;
 
@@ -58,35 +75,30 @@ namespace roast {
 
     void register_mva(const std::string&, MVABase*);
 
-    template<typename W, typename T>
-    void
-    MVABase::AddVariableConditionally(W* obj, const string& name, const char& type, T& var)
-    {
-        // FIXME should actually be the other way around:  go through variables
-        // and add them
-        if (find(variables.begin(), variables.end(), name) != variables.end())
-            AddVariable(obj, name, type, var);
+    namespace tll {
+        struct Get : roast::MVABase::Get {
+            virtual roast::Branches* Branches(const roast::Process *proc)
+            {
+                return new roast::tll::Branches(proc->GetTreeName(), proc->GetNtuplePaths());
+            };
+        };
+    }
+
+    namespace ttl {
+        struct Get : roast::MVABase::Get {
+            virtual roast::Branches* Branches(const roast::Process *proc)
+            {
+                return new roast::ttl::Branches(proc->GetTreeName(), proc->GetNtuplePaths());
+            };
+        };
     }
 
     template<typename T>
     void
-    MVABase::AddVariable(TMVA::Factory *factory, const string& name, const char& type, T& var)
+    MVABase::SetupVariables(T obj)
     {
-        factory->AddVariable(name, type);
-    }
-
-    template<typename T>
-    void
-    MVABase::AddVariable(TMVA::Reader *reader, const string& name, const char& type, T& var)
-    {
-        reader->AddVariable(name, &var);
-    }
-
-    template<typename T>
-    void
-    MVABase::AddVariable(TTree *tree, const string& name, const char& type, T& var)
-    {
-        tree->Branch(name.c_str(), &var);
+        for (auto& v: vars)
+            AddVariable(obj, v);
     }
 }
 

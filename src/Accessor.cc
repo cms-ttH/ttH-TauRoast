@@ -17,12 +17,22 @@ namespace roast {
     {
         if (!setup)
             setup_accessors();
-        return accessors[s];
+
+        auto res = accessors.find(s);
+
+        if (res == accessors.end())
+            // FIXME use proper excpetion
+            throw "";
+
+        return res->second;
     }
 
     std::vector<std::string>
     get_accessor_names()
     {
+        if (!setup)
+            setup_accessors();
+
         std::vector<std::string> res;
         for (const auto& p: accessors)
             res.push_back(p.first);

@@ -11,16 +11,16 @@ analysis:
         signal: TTHTauTau_125_real
         background: [TTbar_Hadronic, TTbar_SemiLept, TTbar_FullLept]
         variables:
-          - Tau1Pt
-          - Tau1Eta
-          - Tau2Pt
-          - Tau1DecayMode
-          - Tau2DecayMode
-          - Tau1IsolationMVA2Raw
-          - Tau2IsolationMVA2Raw
-          - LeadingJetPt
-          - DitauVisibleMass
-          - DeltaRTau1Lepton
+          - [T1_Pt, F]
+          - [T1_Eta, F]
+          - [T2_Pt, F]
+          - [T1_DecayMode, I]
+          - [T2_DecayMode, I]
+          - [T1_IsolationMVA2Raw, F]
+          - [T2_IsolationMVA2Raw, F]
+          - [LJ_Pt, F]
+          - [DitauVisibleMass, F]
+          - [T1_LeptonDeltaR, F]
 
     process:
       - Collisions

@@ -4,11 +4,11 @@
     <Info name="TMVA Release" value="4.1.2 [262402]"/>
     <Info name="ROOT Release" value="5.32/00 [335872]"/>
     <Info name="Creator" value="mwolf3"/>
-    <Info name="Date" value="Tue Aug 27 22:43:02 2013"/>
+    <Info name="Date" value="Wed Aug 28 11:41:48 2013"/>
     <Info name="Host" value="Linux lxbuild167.cern.ch 2.6.18-308.1.1.el5 #1 SMP Wed Mar 7 19:25:07 CET 2012 x86_64 x86_64 x86_64 GNU/Linux"/>
     <Info name="Dir" value="/afs/crc.nd.edu/user/m/mwolf3/work/ttH/CMSSW_5_3_2_patch5/src/TTHTauTau/Roast"/>
     <Info name="Training events" value="116"/>
-    <Info name="TrainingTime" value="1.36955976e-01"/>
+    <Info name="TrainingTime" value="1.30993843e-01"/>
     <Info name="AnalysisType" value="Classification"/>
   </GeneralInfo>
   <Options>
@@ -49,16 +49,16 @@
     <Option name="NegWeightTreatment" modified="No">ignorenegweights</Option>
   </Options>
   <Variables NVar="10">
-    <Variable VarIndex="0" Expression="Tau1Pt" Label="Tau1Pt" Title="Tau1Pt" Unit="" Internal="Tau1Pt" Type="F" Min="2.15940533e+01" Max="1.85296265e+02"/>
-    <Variable VarIndex="1" Expression="Tau1Eta" Label="Tau1Eta" Title="Tau1Eta" Unit="" Internal="Tau1Eta" Type="F" Min="6.10240689e-03" Max="2.08499813e+00"/>
-    <Variable VarIndex="2" Expression="Tau2Pt" Label="Tau2Pt" Title="Tau2Pt" Unit="" Internal="Tau2Pt" Type="F" Min="2.00659142e+01" Max="1.49438339e+02"/>
-    <Variable VarIndex="3" Expression="Tau1DecayMode" Label="Tau1DecayMode" Title="Tau1DecayMode" Unit="" Internal="Tau1DecayMode" Type="I" Min="0.00000000e+00" Max="1.00000000e+00"/>
-    <Variable VarIndex="4" Expression="Tau2DecayMode" Label="Tau2DecayMode" Title="Tau2DecayMode" Unit="" Internal="Tau2DecayMode" Type="I" Min="0.00000000e+00" Max="1.00000000e+00"/>
-    <Variable VarIndex="5" Expression="Tau1IsolationMVA2Raw" Label="Tau1IsolationMVA2Raw" Title="Tau1IsolationMVA2Raw" Unit="" Internal="Tau1IsolationMVA2Raw" Type="F" Min="2.61864305e-01" Max="9.98897493e-01"/>
-    <Variable VarIndex="6" Expression="Tau2IsolationMVA2Raw" Label="Tau2IsolationMVA2Raw" Title="Tau2IsolationMVA2Raw" Unit="" Internal="Tau2IsolationMVA2Raw" Type="F" Min="6.51857033e-02" Max="9.99204516e-01"/>
-    <Variable VarIndex="7" Expression="DeltaRTau1Lepton" Label="DeltaRTau1Lepton" Title="DeltaRTau1Lepton" Unit="" Internal="DeltaRTau1Lepton" Type="F" Min="5.87165117e-01" Max="3.95721459e+00"/>
-    <Variable VarIndex="8" Expression="LeadingJetPt" Label="LeadingJetPt" Title="LeadingJetPt" Unit="" Internal="LeadingJetPt" Type="F" Min="4.08002892e+01" Max="2.67894409e+02"/>
-    <Variable VarIndex="9" Expression="DitauVisibleMass" Label="DitauVisibleMass" Title="DitauVisibleMass" Unit="" Internal="DitauVisibleMass" Type="F" Min="1.89118519e+01" Max="2.69529816e+02"/>
+    <Variable VarIndex="0" Expression="T1_Pt" Label="T1_Pt" Title="T1_Pt" Unit="" Internal="T1_Pt" Type="F" Min="2.15940533e+01" Max="1.85296265e+02"/>
+    <Variable VarIndex="1" Expression="T1_Eta" Label="T1_Eta" Title="T1_Eta" Unit="" Internal="T1_Eta" Type="F" Min="-2.08499813e+00" Max="2.06062555e+00"/>
+    <Variable VarIndex="2" Expression="T2_Pt" Label="T2_Pt" Title="T2_Pt" Unit="" Internal="T2_Pt" Type="F" Min="2.00659142e+01" Max="1.49438339e+02"/>
+    <Variable VarIndex="3" Expression="T1_DecayMode" Label="T1_DecayMode" Title="T1_DecayMode" Unit="" Internal="T1_DecayMode" Type="I" Min="0.00000000e+00" Max="1.00000000e+00"/>
+    <Variable VarIndex="4" Expression="T2_DecayMode" Label="T2_DecayMode" Title="T2_DecayMode" Unit="" Internal="T2_DecayMode" Type="I" Min="0.00000000e+00" Max="1.00000000e+00"/>
+    <Variable VarIndex="5" Expression="T1_IsolationMVA2Raw" Label="T1_IsolationMVA2Raw" Title="T1_IsolationMVA2Raw" Unit="" Internal="T1_IsolationMVA2Raw" Type="F" Min="2.61864305e-01" Max="9.98897493e-01"/>
+    <Variable VarIndex="6" Expression="T2_IsolationMVA2Raw" Label="T2_IsolationMVA2Raw" Title="T2_IsolationMVA2Raw" Unit="" Internal="T2_IsolationMVA2Raw" Type="F" Min="6.51857033e-02" Max="9.99204516e-01"/>
+    <Variable VarIndex="7" Expression="LJ_Pt" Label="LJ_Pt" Title="LJ_Pt" Unit="" Internal="LJ_Pt" Type="F" Min="4.08002892e+01" Max="2.67894409e+02"/>
+    <Variable VarIndex="8" Expression="DitauVisibleMass" Label="DitauVisibleMass" Title="DitauVisibleMass" Unit="" Internal="DitauVisibleMass" Type="F" Min="1.89118519e+01" Max="2.69529816e+02"/>
+    <Variable VarIndex="9" Expression="T1_LeptonDeltaR" Label="T1_LeptonDeltaR" Title="T1_LeptonDeltaR" Unit="" Internal="T1_LeptonDeltaR" Type="F" Min="5.87165117e-01" Max="3.95721459e+00"/>
   </Variables>
   <Spectators NSpec="0"/>
   <Classes NClass="2">
