@@ -105,15 +105,15 @@ physics:
 
 paths:
     # for analyzed processes
-    input: /afs/crc.nd.edu/user/m/mwolf3/www/test_roast/roast_processed.root
+    input: test/tmp/roast_processed.root
     # {s} is replaced with systematic shifts
-    systematics input: "/afs/crc.nd.edu/user/m/mwolf3/www/test_roast_{s}/roast_filled.root"
+    systematics input: "test/tmp_{s}/roast_filled.root"
     # for processes with filled histograms
-    output: /afs/crc.nd.edu/user/m/mwolf3/www/test_roast/roast_filled.root
-    mva output: "/afs/crc.nd.edu/user/m/mwolf3/www/test_roast/{m}"
+    output: test/tmp/roast_filled.root
+    mva output: "test/tmp/{m}"
     # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
     # name; {m} = mode (_log)
-    stack format: "/afs/crc.nd.edu/user/m/mwolf3/www/test_roast/{t}/{d}/{n}{m}.{t}"
+    stack format: "test/tmp/{t}/{d}/{n}{m}.{t}"
     ntuples: /store/user/matze/ttH/v48/ttl/2012
     tree: makeNtuple/TTbarHTauTau
 
