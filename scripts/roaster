@@ -21,6 +21,10 @@ parser.add_option("-f", "--fill",
         action="store_true",
         dest="fill",
         help="fill histograms for analyzed processes")
+parser.add_option("--list-vars",
+        action="store_true",
+        dest="list_vars",
+        help="list variables for cuts, MVA, etc.")
 parser.add_option("-n",
         action="store",
         dest="max",
@@ -54,14 +58,14 @@ opts, args = parser.parse_args()
 
 logging.__dict__['root'].level = (opts.quietness - opts.verbosity) * 10
 
-if len(args) != 1:
+if len(args) != 1 and not opts.list_vars:
     parser.error('wrong number of arguments')
 
 import ROOT as r
 import sys
 
-r.gErrorIgnoreLevel = 1001
 r.gROOT.SetBatch()
+r.gErrorIgnoreLevel = 1001
 r.gSystem.Load("libTTHTauTauRoast")
 
 try:
@@ -76,6 +80,11 @@ from TTHTauTau.Roast.display import stack
 from TTHTauTau.Roast.helper import *
 from TTHTauTau.Roast.process import analyze, fill_histos
 from TTHTauTau.Roast.style import *
+
+if opts.list_vars:
+    for v in roast.get_accessor_names():
+        print v
+    sys.exit(0)
 
 (configfile,) = args
 
