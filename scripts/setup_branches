@@ -137,12 +137,15 @@ for (k, s, t, p) in vars:
 
     # lepton1 => L1, tau1 => t1, etc...
     if k in channels:
-        m = re.match('(Lepton|Tau)(\d)?', name)
+        m = re.match('(?:(?:Lepton|Tau)\d?)+', name)
 
         if m:
-            pre = m.group(1)[0]
-            if m.group(2):
-                pre += m.group(2)
+            full_pre = m.group(0)
+            pre = ""
+            for (particle, num) in re.findall('(Lepton|Tau)(\d)?', full_pre):
+                pre += particle[0]
+                if num:
+                    pre += num
 
             name = name.replace(m.group(0), pre + '_')
 
@@ -168,6 +171,23 @@ indent = ' ' * 4
 lines = []
 for k in sorted(attrs.keys()):
     (var, type, ptr, prefixes) = attrs[k]
+
+    # manipulate variable names to get "historic" naming scheme
+    # FIXME rename branches in ntuplizer
+
+    # no mention of HPS anywhere
+    rm = re.search(r'HPS(?:by)?(.)', k)
+    if rm:
+        k = k.replace(rm.group(0), rm.group(1).upper())
+        k = k.replace("Against", "Anti")
+
+    # N -> Num where appropriate
+    num = re.search(r'_N([A-Z][a-z])', k)
+    if num:
+        k = k.replace(num.group(0), '_Num' + num.group(1))
+
+    # camel case correctly
+    k = k.replace("raw", "Raw")
 
     try:
         tmp_lines = []
