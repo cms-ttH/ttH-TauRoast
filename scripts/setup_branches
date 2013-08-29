@@ -1,12 +1,27 @@
 #!/usr/bin/env python
 
 from collections import namedtuple
+import glob
 import os
 import re
 import ROOT as r
 import sys
 
 r.gROOT.SetBatch()
+
+# class used to store accessor information
+Attr = namedtuple('Attr', ['name', 'type', 'pointer', 'prefixes'])
+
+def gather_function_info(filename):
+    """Returns a list of function names starting with `Get` from a header
+    file."""
+    names = []
+    with open(filename) as f:
+        for l in f.readlines():
+            m = re.match(r'\s*(?:\w+\s+)*(Get\w*)\(.*', l)
+            if m:
+                names.append(m.group(1))
+    return names
 
 def gather_type_info(filename):
     """Returns a list containing prefix, name, class, and bool indicating
@@ -32,20 +47,42 @@ def gather_type_info(filename):
         results.append((start, end, cls, ptr))
     return results
 
-def inject_lines(filename, key, lines):
-    """Replaces the lines between '// >>> Begin <key> <<<' and
-    '// >>> End <key> <<<' with the lines supplied."""
-    with open(filename) as file:
-        old_lines = file.readlines()
-    start = filter(lambda (n, s): "// >>> Begin " + key + " <<<" in s,
-            enumerate(old_lines))[0][0]
-    end = filter(lambda (n, s): "// >>> End " + key + " <<<" in s,
-            enumerate(old_lines))[0][0]
-    head = old_lines[:start + 1]
-    tail = old_lines[end:]
-    with open(filename, 'w') as file:
-        for l in head + lines + tail:
-            file.write(l)
+def generate_accessor_info(vars):
+    attrs = {}
+    for (k, s, t, p) in vars:
+        # capitalize first letter
+        name = s if s[0].upper() == s[0] else s[0].upper() + s[1:]
+
+        # skip single tau info for now
+        # FIXME including this yields a conflict with TLL
+        if k == 'T':
+            continue
+
+        # TTL, TLL, and event variables are not prefixed
+        if k not in channels and k != 'Ev':
+            name = k + '_' + name
+
+        # lepton1 => L1, tau1 => t1, etc...
+        if k in channels:
+            m = re.match('(?:(?:Lepton|Tau)\d?)+', name)
+
+            if m:
+                full_pre = m.group(0)
+                pre = ""
+                for (particle, num) in re.findall('(Lepton|Tau)(\d)?', full_pre):
+                    pre += particle[0]
+                    if num:
+                        pre += num
+
+                name = name.replace(m.group(0), pre + '_')
+
+        if name in attrs:
+            if k in attrs[name].prefixes:
+                continue
+            attrs[name].prefixes.append(k)
+        else:
+            attrs[name] = Attr(s, t, p, [k])
+    return attrs
 
 def generate_type_info(channel, vars, indent=16):
     """Generates definition, address setting, clearing, and deleting info for
@@ -81,6 +118,25 @@ def generate_type_info(channel, vars, indent=16):
     inject_lines(source, "clear", clear_lines)
     inject_lines(source, "delete", delete_lines)
     inject_lines(source, "null", null_lines)
+
+def inject_lines(filename, key, lines):
+    """Replaces the lines between '// >>> Begin <key> <<<' and
+    '// >>> End <key> <<<' with the lines supplied."""
+    with open(filename) as file:
+        old_lines = file.readlines()
+    start = filter(lambda (n, s): "// >>> Begin " + key + " <<<" in s,
+            enumerate(old_lines))[0][0]
+    end = filter(lambda (n, s): "// >>> End " + key + " <<<" in s,
+            enumerate(old_lines))[0][0]
+    head = old_lines[:start + 1]
+    tail = old_lines[end:]
+    with open(filename, 'w') as file:
+        for l in head + lines + tail:
+            file.write(l)
+
+#------------------\
+# main script part  >--------------------------------------------------
+#------------------/
 
 # extract type information from ROOT files passed as arguments
 type_info = []
@@ -119,47 +175,57 @@ for channel in channels:
     if len(channel_vars) > 0:
         generate_type_info(channel, channel_vars)
 
-# construct a hash of names and type information for accessors
-attr = namedtuple('attr', ['name', 'type', 'pointer', 'prefixes'])
-attrs = {}
-for (k, s, t, p) in vars:
-    # capitalize first letter
-    name = s if s[0].upper() == s[0] else s[0].upper() + s[1:]
+#----------------\
+# accessor setup  >----------------------------------------------------
+#----------------/
 
-    # skip single tau info for now
-    # FIXME including this yields a conflict with TLL
-    if k == 'T':
-        continue
-
-    # TTL, TLL, and event variables are not prefixed
-    if k not in channels and k != 'Ev':
-        name = k + '_' + name
-
-    # lepton1 => L1, tau1 => t1, etc...
-    if k in channels:
-        m = re.match('(?:(?:Lepton|Tau)\d?)+', name)
-
-        if m:
-            full_pre = m.group(0)
-            pre = ""
-            for (particle, num) in re.findall('(Lepton|Tau)(\d)?', full_pre):
-                pre += particle[0]
-                if num:
-                    pre += num
-
-            name = name.replace(m.group(0), pre + '_')
-
-    if name in attrs:
-        if k in attrs[name].prefixes:
-            continue
-        attrs[name].prefixes.append(k)
-    else:
-        attrs[name] = attr(s, t, p, [k])
+indent = ' ' * 4
+lines = []
 
 cast = '{0}::Branches* e = dynamic_cast<{0}::Branches*>(b)'
 declare = 'accessors["{0}"] = [](Branches *b, const int& idx) -> float {{\n'
 reindex = 'int i = (*b->CleanJetIndices)[idx][{0}];\n'
 returns = {0: 'return {0}->{1};', 1: 'return (*{0}->{1})[{2}];'}
+
+fct_names = {}
+for channel in list(channels) + [""]:
+    for fn in gather_function_info(os.path.join(os.environ["CMSSW_BASE"],
+            'src', 'TTHTauTau', 'Roast','interface', channel + 'Branches.h')):
+        if fn not in fct_names:
+            fct_names[fn] = []
+        fct_names[fn].append(channel)
+
+for ignore in "GetBestCombo GetEntries GetEntry GetNumCombos".split():
+    if ignore in fct_names:
+        del fct_names[ignore]
+
+for fn in sorted(fct_names.keys()):
+    name = fn.replace("Get", "")
+    m = re.match('(?:(?:Lepton|Tau)\d?)+', name)
+
+    if m:
+        full_pre = m.group(0)
+        pre = ""
+        for (particle, num) in re.findall('(Lepton|Tau)(\d)?', full_pre):
+            pre += particle[0]
+            if num:
+                pre += num
+
+        name = name.replace(m.group(0), pre + '_')
+    lines.append(indent * 2 + declare.format(name))
+    if len(fct_names[fn]) == 1:
+        channel = fct_names[fn][0]
+        var = 'b'
+        if channel != "":
+            var = 'e'
+            lines.append(indent * 3 + cast.format(channel.lower()) + ';\n')
+        lines.append(indent * 3 + 'return {0}->{1}(idx);\n'.format(var, fn))
+        lines.append(indent * 2 + '};\n')
+    else:
+        # FIXME not yet implemented
+        raise
+
+attrs = generate_accessor_info(vars)
 
 def generate_return_line(obj, varname, type, idx='idx'):
     cnt = type.count('vector')
@@ -167,8 +233,6 @@ def generate_return_line(obj, varname, type, idx='idx'):
 
 jets = 'LJ SubLJ SubSubLJ SubSubSubLJ'.split()
 
-indent = ' ' * 4
-lines = []
 for k in sorted(attrs.keys()):
     (var, type, ptr, prefixes) = attrs[k]
 

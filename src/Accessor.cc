@@ -42,6 +42,9 @@ namespace roast {
     void
     setup_accessors()
     {
+        accessors["Events"] = [](Branches *b, const int& idx) -> float {
+            return 0;
+        };
         accessors["T_MatchAbsId"] = [](Branches *b, const int& idx) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return abs((*e->TLL_TauGenMatchId)[idx]);
@@ -226,92 +229,16 @@ namespace roast {
                     (*e->TLL_Lepton2Eta)[idx], (*e->TLL_Lepton2Phi)[idx]);
         };
 
-        accessors["T_AntiElectronIndex"] = [](Branches *b, const int& idx) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return e->GetTauAntiElectronIndex(idx);
-        };
-        accessors["T_AntiMuonIndex"] = [](Branches *b, const int& idx) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return e->GetTauAntiMuonIndex(idx);
-        };
-
-        accessors["T_IsolationIndex"] = [](Branches *b, const int& idx) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return e->GetTauIsolationIndex(idx);
-        };
-        accessors["T_IsolationIndex3Hits"] = [](Branches *b, const int& idx) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return e->GetTauIsolationIndex3Hits(idx);
-        };
-        accessors["T_IsolationIndexMVA"] = [](Branches *b, const int& idx) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return e->GetTauIsolationIndexMVA(idx);
-        };
-        accessors["T_IsolationIndexMVA2"] = [](Branches *b, const int& idx) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return e->GetTauIsolationIndexMVA2(idx);
-        };
-
         accessors["TT_DeltaR"] = [](roast::Branches *b, const int& idx) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return (*e->TTL_DitauDeltaR)[idx];
         };
 
-        accessors["T1_AntiElectronIndex"] = [](roast::Branches *b, const int& idx) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return e->GetTau1AntiElectronIndex(idx);
-        };
-        accessors["T2_AntiElectronIndex"] = [](roast::Branches *b, const int& idx) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return e->GetTau2AntiElectronIndex(idx);
-        };
-        accessors["T1_AntiMuonIndex"] = [](roast::Branches *b, const int& idx) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return e->GetTau1AntiMuonIndex(idx);
-        };
-        accessors["T2_AntiMuonIndex"] = [](roast::Branches *b, const int& idx) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return e->GetTau2AntiMuonIndex(idx);
-        };
-
-        accessors["T1_IsolationIndex"] = [](roast::Branches *b, const int& idx) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return e->GetTau1IsolationIndex(idx);
-        };
-        accessors["T2_IsolationIndex"] = [](roast::Branches *b, const int& idx) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return e->GetTau2IsolationIndex(idx);
-        };
-        accessors["T1_IsolationIndex3Hits"] = [](roast::Branches *b, const int& idx) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return e->GetTau1IsolationIndex3Hits(idx);
-        };
-        accessors["T2_IsolationIndex3Hits"] = [](roast::Branches *b, const int& idx) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return e->GetTau2IsolationIndex3Hits(idx);
-        };
-        accessors["T1_IsolationIndexMVA"] = [](roast::Branches *b, const int& idx) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return e->GetTau1IsolationIndexMVA(idx);
-        };
-        accessors["T2_IsolationIndexMVA"] = [](roast::Branches *b, const int& idx) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return e->GetTau2IsolationIndexMVA(idx);
-        };
-        accessors["T1_IsolationIndexMVA2"] = [](roast::Branches *b, const int& idx) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return e->GetTau1IsolationIndexMVA2(idx);
-        };
-        accessors["T2_IsolationIndexMVA2"] = [](roast::Branches *b, const int& idx) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return e->GetTau2IsolationIndexMVA2(idx);
-        };
 
         accessors["TT_ChargeProduct"] = [](roast::Branches *b, const int& idx) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return (*e->TTL_Tau1Charge)[idx] * (*e->TTL_Tau2Charge)[idx];
         };
-
         accessors["TT_VisMass"] = [](roast::Branches *b, const int& idx) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return (*e->TTL_DitauVisibleMass)[idx];
@@ -329,6 +256,126 @@ namespace roast {
         };
 
         // >>> Begin attr <<<
+        accessors["T1_AntiElectronIndex"] = [](Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau1AntiElectronIndex(idx);
+        };
+        accessors["T1_AntiElectronIndexMVA2"] = [](Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau1AntiElectronIndexMVA2(idx);
+        };
+        accessors["T1_AntiElectronIndexMVA3"] = [](Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau1AntiElectronIndexMVA3(idx);
+        };
+        accessors["T1_AntiMuonIndex"] = [](Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau1AntiMuonIndex(idx);
+        };
+        accessors["T1_AntiMuonIndex2"] = [](Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau1AntiMuonIndex2(idx);
+        };
+        accessors["T1_IsolationIndex"] = [](Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau1IsolationIndex(idx);
+        };
+        accessors["T1_IsolationIndex3Hits"] = [](Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau1IsolationIndex3Hits(idx);
+        };
+        accessors["T1_IsolationIndexMVA"] = [](Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau1IsolationIndexMVA(idx);
+        };
+        accessors["T1_IsolationIndexMVA2"] = [](Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau1IsolationIndexMVA2(idx);
+        };
+        accessors["T1_MatchIndex"] = [](Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau1MatchIndex(idx);
+        };
+        accessors["T2_AntiElectronIndex"] = [](Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau2AntiElectronIndex(idx);
+        };
+        accessors["T2_AntiElectronIndexMVA2"] = [](Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau2AntiElectronIndexMVA2(idx);
+        };
+        accessors["T2_AntiElectronIndexMVA3"] = [](Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau2AntiElectronIndexMVA3(idx);
+        };
+        accessors["T2_AntiMuonIndex"] = [](Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau2AntiMuonIndex(idx);
+        };
+        accessors["T2_AntiMuonIndex2"] = [](Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau2AntiMuonIndex2(idx);
+        };
+        accessors["T2_IsolationIndex"] = [](Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau2IsolationIndex(idx);
+        };
+        accessors["T2_IsolationIndex3Hits"] = [](Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau2IsolationIndex3Hits(idx);
+        };
+        accessors["T2_IsolationIndexMVA"] = [](Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau2IsolationIndexMVA(idx);
+        };
+        accessors["T2_IsolationIndexMVA2"] = [](Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau2IsolationIndexMVA2(idx);
+        };
+        accessors["T2_MatchIndex"] = [](Branches *b, const int& idx) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return e->GetTau2MatchIndex(idx);
+        };
+        accessors["T_AntiElectronIndex"] = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return e->GetTauAntiElectronIndex(idx);
+        };
+        accessors["T_AntiElectronIndexMVA2"] = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return e->GetTauAntiElectronIndexMVA2(idx);
+        };
+        accessors["T_AntiElectronIndexMVA3"] = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return e->GetTauAntiElectronIndexMVA3(idx);
+        };
+        accessors["T_AntiMuonIndex"] = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return e->GetTauAntiMuonIndex(idx);
+        };
+        accessors["T_AntiMuonIndex2"] = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return e->GetTauAntiMuonIndex2(idx);
+        };
+        accessors["T_IsolationIndex"] = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return e->GetTauIsolationIndex(idx);
+        };
+        accessors["T_IsolationIndex3Hits"] = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return e->GetTauIsolationIndex3Hits(idx);
+        };
+        accessors["T_IsolationIndexMVA"] = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return e->GetTauIsolationIndexMVA(idx);
+        };
+        accessors["T_IsolationIndexMVA2"] = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return e->GetTauIsolationIndexMVA2(idx);
+        };
+        accessors["T_MatchIndex"] = [](Branches *b, const int& idx) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return e->GetTauMatchIndex(idx);
+        };
         accessors["BQuarkCount"] = [](Branches *b, const int& idx) -> float {
             return b->Ev_bQuarkCount;
         };

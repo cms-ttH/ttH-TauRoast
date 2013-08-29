@@ -205,24 +205,6 @@ DeltaR_recoGen_S:
     showOF: true
     logy: 1
 
-T1_MatchedTo:
-    type: th1f
-    dir: gentaus
-    binning: [6, 0, 6]
-    axis labels: [Leading reco tau match, Events]
-    visible: [0, 6]
-    showOF: false
-    logy: 1
-
-T2_MatchedTo:
-    type: th1f
-    dir: gentaus
-    binning: [6, 0, 6]
-    axis labels: [Subleading reco tau match, Events]
-    visible: [0, 6]
-    showOF: false
-    logy: 1
-
 NumCSVnonHTauJets:
     type: th1f
     dir: jets
@@ -493,7 +475,7 @@ L_Phi:
     showOF: false
     logy: 1
 
-DeltaR_LT1:
+T1L_DeltaR:
     type: th1f
     dir: lepton
     binning: [30, 0, 10]
@@ -502,7 +484,7 @@ DeltaR_LT1:
     showOF: true
     logy: 1
 
-DeltaR_LT2:
+T2L_DeltaR:
     type: th1f
     dir: lepton
     binning: [30, 0, 10]
@@ -852,7 +834,7 @@ NumTaus:
     showOF: true
     logy: 1
 
-VisibleMass_TT:
+DitauVisibleMass:
     type: th1f
     dir: taus
     binning: [30, 0, 200]
@@ -861,16 +843,7 @@ VisibleMass_TT:
     showOF: true
     logy: 1
 
-DitauVisibleMass_TT:
-    type: th1f
-    dir: taus
-    binning: [30, 0, 200]
-    axis labels: ["Visible Mass #tau_{1, 2}", Events]
-    visible: [0, 200]
-    showOF: true
-    logy: 1
-
-DeltaR_TT:
+TT_DeltaR:
     type: th1f
     dir: taus
     binning: [30, 0, 6.28]
@@ -1131,7 +1104,7 @@ T2_AntiMuonIndex2:
     showOF: false
     logy: 1
 
-T1_Match:
+T1_MatchIndex:
     type: th1f
     dir: taus
     binning: [10, 0, 10]
@@ -1140,7 +1113,7 @@ T1_Match:
     showOF: false
     logy: 1
 
-T2_Match:
+T2_MatchIndex:
     type: th1f
     dir: taus
     binning: [10, 0, 10]
@@ -1167,7 +1140,7 @@ T2_Parent:
     showOF: false
     logy: 1
 
-T1_CombIsoDBcorrRaw:
+T1_CombinedIsolationDeltaBetaCorrRaw:
     type: th1f
     dir: taus
     binning: [50, 0, 300]
@@ -1176,7 +1149,7 @@ T1_CombIsoDBcorrRaw:
     showOF: false
     logy: 1
 
-T2_CombIsoDBcorrRaw:
+T2_CombinedIsolationDeltaBetaCorrRaw:
     type: th1f
     dir: taus
     binning: [50, 0, 300]
@@ -1185,7 +1158,7 @@ T2_CombIsoDBcorrRaw:
     showOF: false
     logy: 1
 
-T1_CombIsoDBcorrRaw3Hits:
+T1_CombinedIsolationDeltaBetaCorrRaw3Hits:
     type: th1f
     dir: taus
     binning: [50, 0, 300]
@@ -1194,7 +1167,7 @@ T1_CombIsoDBcorrRaw3Hits:
     showOF: false
     logy: 1
 
-T2_CombIsoDBcorrRaw3Hits:
+T2_CombinedIsolationDeltaBetaCorrRaw3Hits:
     type: th1f
     dir: taus
     binning: [50, 0, 300]
@@ -1410,7 +1383,7 @@ L1_Phi:
     showOF: false
     logy: 1
 
-DeltaR_L1T:
+TL1_DeltaR:
     type: th1f
     dir: tll_leptons
     binning: [50, 0, 10]
@@ -1446,7 +1419,7 @@ L2_Phi:
     showOF: false
     logy: 1
 
-DeltaR_L2T:
+L2T_DeltaR:
     type: th1f
     dir: tll_leptons
     binning: [50, 0, 10]
@@ -1590,7 +1563,7 @@ T_AntiMuonIndex2:
     showOF: false
     logy: 1
 
-T_Match:
+T_MatchIndex:
     type: th1f
     dir: tll_tau
     binning: [10, 0, 10]
@@ -1608,7 +1581,7 @@ T_Parent:
     showOF: false
     logy: 1
 
-T_CombIsoDBcorrRaw:
+T_CombinedIsolationDeltaBetaCorrRaw:
     type: th1f
     dir: tll_tau
     binning: [50, 0, 300]
@@ -1617,7 +1590,7 @@ T_CombIsoDBcorrRaw:
     showOF: false
     logy: 1
 
-T_CombIsoDBcorrRaw3Hits:
+T_CombinedIsolationDeltaBetaCorrRaw3Hits:
     type: th1f
     dir: tll_tau
     binning: [50, 0, 300]
