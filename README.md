@@ -32,9 +32,10 @@ See the full list of options with `roaster -h`.
 
 To add new variables, several places need to be changed:
 
-* The `Branches` class.  Do this by running `setup_branches` on a ROOT file
-  containing the desired variable branches.
-* Add new cuts to `TTHTauTau/Roast/src/CutFlow.cc`. (at the bottom of the
-  file)
-* Add new MVA variables to one of the `MVABase.{h,cc}` files in the package's
-  header/source directories.
+* The `Branches` class:  Do this by running `setup_branches` on a ROOT file
+  containing the desired variable branches.  (optional)
+* Add new access functions to `TTHTauTau/Roast/src/Accessor.cc` - before
+  automatically generated ones.
+
+For new weights, additional modifications to `Weights.cc` will be in order.
+These variables can be used in cuts and MVA definitions.

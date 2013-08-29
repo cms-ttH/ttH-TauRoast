@@ -15,9 +15,6 @@ namespace roast {
 
     class CutFlow {
        private:
-            std::string cutsToApply;
-            std::map< std::string, std::pair<float, float> > cuts_to_consider;
-
           bool eventPassed;
           bool comboIs;
           bool signalComboLocked;
@@ -54,15 +51,12 @@ namespace roast {
           // Default constructor
           CutFlow();
           CutFlow(roast::CutFlow const &);
-          CutFlow(const std::vector<std::string> &);
-          virtual ~CutFlow();
 
           void Reset();
           int const size() const;
 
             void RegisterCut(const roast::CutFlow::Cut&);
             void RegisterCut(std::string const, int const, double const sig=0.);
-            void RegisterCut(const std::string, const int, Cut::val_f, bool bypass=false, const double sig=0.);
           void RegisterCutFromLast(std::string const, int const, double const);
           void SetCutCounts(std::string const, double const);
 
@@ -71,12 +65,9 @@ namespace roast {
           void EndOfEvent();
 
           int const					GetCutRank(std::string const) const;
-          int const					GetCutPosition(std::string const) const;
           float const					GetPassedEvents(std::string const) const;
           float const					GetRelEff(std::string const) const;
           float const					GetCumEff(std::string const) const;
-            std::string const			GetCutsToApply() const;
-            inline std::map< std::string, std::pair<float, float> > GetCutsToConsider() const { return cuts_to_consider; };
             std::string const			GetLastCut() const;
           double const				GetLastCount() const;
           void						Add(roast::CutFlow const &, float const iFactor=1.0);

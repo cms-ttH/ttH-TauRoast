@@ -86,11 +86,18 @@ def analyze(config, module):
 
         processes.push_back(p)
 
+    err = False
     cuts = []
     for cutcfg in config['physics']['cuts']:
         min = cutcfg['min'] if 'min' in cutcfg else -float('inf')
         max = cutcfg['max'] if 'max' in cutcfg else float('inf')
-        cuts.append(roast.CutFlow.Cut(cutcfg['name'], min, max))
+        try:
+            cuts.append(roast.CutFlow.Cut(cutcfg['name'], min, max))
+        except:
+            logging.error("undefined variable %s", cutcfg['name'])
+            err = True
+    if err:
+        sys.exit(1)
 
     processed = []
     for p in processes:

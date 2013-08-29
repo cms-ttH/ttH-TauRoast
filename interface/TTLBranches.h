@@ -52,7 +52,6 @@ namespace roast {
                 // float GetMVAResponse(const unsigned int) const;
 
                 // >>> Begin declarations <<<
-                std::vector<vector<unsigned int> >* TTL_CleanJetIndices;
                 std::vector<float>* TTL_DitauCosDeltaPhi;
                 std::vector<float>* TTL_DitauDeltaR;
                 std::vector<float>* TTL_DitauMETMass;

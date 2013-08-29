@@ -24,7 +24,18 @@ def train_mva(config, processes, module):
     if not os.path.exists(mvadir):
         os.makedirs(mvadir)
 
-    mva = module.MVABase(mvadir, vectorize(cfg['variables'], 'string'), 1)
+    vars = []
+    err = False
+    for (name, type) in cfg['variables']:
+        try:
+            vars.append(roast.MVABase.Var(name, type))
+        except:
+            logging.error("undefined variable %s", name)
+            err = True
+    if err:
+        sys.exit(1)
+
+    mva = roast.MVABase(mvadir, vectorize(vars), module.Get(), 1)
 
     sig = get_process(cfg['signal'], processes)
     bkg = vectorize(
@@ -42,8 +53,17 @@ def book_mva(config, processes, module):
     cfg = config['analysis']['final mva']
     mvadir = config['paths']['mva output'].format(m='final mva')
 
+    vars = []
+    err = False
+    for (name, type) in cfg['variables']:
+        try:
+            vars.append(roast.MVABase.Var(name, type))
+        except:
+            logging.error("undefined variable %s", name)
+            err = True
+
     for method, opts in cfg['methods'].items():
-        mva = module.MVABase(mvadir, vectorize(cfg['variables']), 1)
+        mva = roast.MVABase(mvadir, vectorize(vars), module.Get(), 1)
         if mva.BookMVA(method):
             roast.register_mva(method, mva);
 
@@ -130,10 +150,14 @@ def normalize_processes(config, processes):
             continue
 
         est_lumi = lumi * p.GetCrossSection() * p.GetBranchingRatio()
-        raw_events = p.GetNOEinDS() * p.GetNOEanalyzed() / float(p.GetNOEinNtuple())
+        if p.GetNOEinNtuple() == 0:
+            scale = 0
+        else:
+            raw_events = p.GetNOEinDS() * p.GetNOEanalyzed() / float(p.GetNOEinNtuple())
+            scale = est_lumi / raw_events
 
-        p.ScaleHistograms(est_lumi / raw_events)
-        p.GetCutFlow().RegisterCutFromLast("Lumi norm", 2, est_lumi / raw_events)
+        p.ScaleHistograms(scale)
+        p.GetCutFlow().RegisterCutFromLast("Lumi norm", 2, scale)
         p.BuildNormalizedCutFlow()
 
 def print_cutflow(config, processes):
