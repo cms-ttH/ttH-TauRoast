@@ -198,23 +198,6 @@ unsigned int ttl::Branches::GetTau2MatchIndex(const unsigned int iCombo) const {
 	return 1; // hadronic
 }
 
-unsigned int
-ttl::Branches::GetJetIndex(const int idx, const unsigned int num)
-{
-    if (idx != jetIndexCacheCombo) {
-        jetIndexCache.clear();
-        for (unsigned int i = 0; i < J_Pt->size(); i++) {
-            if ((DeltaR((*J_Eta)[i], (*J_Phi)[i], (*TTL_Tau1Eta)[idx], (*TTL_Tau1Phi)[idx]) > conesize) &&
-                    (DeltaR((*J_Eta)[i], (*J_Phi)[i], (*TTL_Tau2Eta)[idx], (*TTL_Tau2Phi)[idx]) > conesize) &&
-                    (DeltaR((*J_Eta)[i], (*J_Phi)[i], (*TTL_LeptonEta)[idx], (*TTL_LeptonPhi)[idx]) > conesize)) {
-                jetIndexCache.push_back(i);
-            }
-        }
-        jetIndexCacheCombo = idx;
-    }
-    return jetIndexCache.at(num);
-}
-
 void
 ttl::Branches::FillHistograms(std::map<std::string, roast::HWrapper*>& histos, int idx, float weight)
 {

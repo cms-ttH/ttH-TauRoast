@@ -27,8 +27,6 @@ namespace roast {
                 virtual void FillHistograms(std::map<std::string, roast::HWrapper*>&, int, float);
                 virtual bool IsGoodGenMatch(const int&) const;
 
-                // Get index (excluding taus) of jet in J_ branches (which include taus)
-                unsigned int GetJetIndex(const int, const unsigned int);
                 unsigned int	GetTau1IsolationIndex(const unsigned int) const;
                 unsigned int	GetTau2IsolationIndex(const unsigned int) const;
                 unsigned int	GetTau1IsolationIndexMVA(const unsigned int) const;

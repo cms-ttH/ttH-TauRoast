@@ -117,12 +117,6 @@ unsigned int tll::Branches::GetTauMatchIndex(const unsigned int iCombo) const {
     return 1; // hadronic
 }
 
-unsigned int
-tll::Branches::GetJetIndex(const int idx, const unsigned int num)
-{
-    return 99;
-}
-
 void
 tll::Branches::FillHistograms(std::map<std::string, roast::HWrapper*>& histos, int idx, float weight)
 {
