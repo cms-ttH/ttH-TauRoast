@@ -133,6 +133,7 @@ namespace roast {
           };
           void ResetHistograms();
           void ScaleHistograms(double);
+          inline HWrapper* GetHistogram(const std::string& n) { return hContainer[n]; };
           std::vector<std::string> GetHistogramNames() const;
 
           void 				SetGoodEvents(const std::vector<roast::Process::Event>&);

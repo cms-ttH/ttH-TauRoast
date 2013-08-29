@@ -126,6 +126,7 @@ tll::Branches::GetJetIndex(const int idx, const unsigned int num)
 void
 tll::Branches::FillHistograms(std::map<std::string, roast::HWrapper*>& histos, int idx, float weight)
 {
+#ifdef notdefined
     histos["Events"]->Fill(0, weight);
     histos["MomentumRank"]->Fill((*TLL_MomentumRank)[idx], weight);
     histos["MET"]->Fill(Ev_MET, weight);
@@ -212,6 +213,7 @@ tll::Branches::FillHistograms(std::map<std::string, roast::HWrapper*>& histos, i
     histos["NumLooseLeptons"]->Fill((*TLL_NumLooseMuons)[idx] + (*TLL_NumLooseElectrons)[idx] , weight);
     histos["NumExLooseLeptons"]->Fill((*TLL_NumExLooseMuons)[idx] + (*TLL_NumExLooseElectrons)[idx] , weight);
     histos["DeltaR_L2T"]->Fill(DeltaR((*TLL_Lepton2Eta)[idx], (*TLL_Lepton2Phi)[idx], (*TLL_TauEta)[idx], (*TLL_TauPhi)[idx]), weight);
+#endif
 }
 
 ClassImp(roast::tll::Branches)

@@ -111,7 +111,8 @@ namespace roast {
                 }
             }
 
-            branches->FillHistograms(proc.GetHContainer(), idx, weight);
+            for (auto& h: proc.GetHContainer())
+                h.second->Fill(branches, idx, weight);
 
             ++count;
         }

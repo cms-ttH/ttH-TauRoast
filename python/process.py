@@ -2,6 +2,7 @@
 import logging
 import math
 import os
+import random
 import ROOT as r
 
 try:
@@ -11,29 +12,6 @@ except:
     sys.exit(1)
 
 from TTHTauTau.Roast.helper import *
-
-histo_default = {
-        'numBinsX': 0,
-        'xMin': 0,
-        'xMax': 0,
-        'showOF': False,
-        'showUF': False,
-        'numBinsY': 0,
-        'yMin': 0,
-        'yMax': 0,
-        'logx': False,
-        'logy': False,
-        'logz': False,
-        'xTitle': '',
-        'yTitle': '',
-        'zTitle': '',
-        'xMinVis': 0,
-        'xMaxVis': 0,
-        'yMinVis': 0,
-        'yMaxVis': 0,
-        'showText': True,
-        'centerLabels': False
-        }
 
 def analyze(config, module):
     """Create a list of processes, as defined in `process_vXX.yaml`, and
@@ -68,20 +46,18 @@ def analyze(config, module):
             cfg['branchingRatio'],
             cfg['checkReality'] if 'checkReality' in cfg else False)
 
+        logging.info("registering histograms for %s", p.GetShortName())
         for name, histcfg in config['histograms'].items():
-            clone = histo_default.copy()
-            clone.update(histcfg)
             try:
-                if clone['type'] != "th1f":
-                    continue
-                w = roast.HWrapper(name, clone['dir'], clone['type'],
-                        clone['xTitle'], clone['yTitle'], clone['zTitle'],
-                        clone['logx'], clone['logy'], clone['logz'],
-                        clone['numBinsX'], clone['xMin'], clone['xMax'], clone['xMinVis'], clone['xMaxVis'],
-                        clone['numBinsY'], clone['yMin'], clone['yMax'], clone['yMinVis'], clone['yMaxVis'],
-                        clone['showOF'], clone['showUF'], clone['centerLabels'], clone['showText'])
+                h = r.TH1F(
+                        name + str(random.randint(0, 1000000000)),
+                        ';'.join([name] + histcfg['axis labels']),
+                        *histcfg['binning'])
+                if 'visible' in histcfg:
+                    h.GetXaxis().SetRangeUser(*histcfg['visible'])
+                w = roast.HWrapper(histcfg['dir'], h, name)
                 p.AddHistogram(name, w)
-            except:
+            except Exception as e:
                 logging.error("unable to create histogram %s", name)
 
         processes.push_back(p)

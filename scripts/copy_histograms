@@ -70,11 +70,11 @@ def copy_histos(outfile, config, infile, histname, outvar, mod_string):
 
     for (outsample, ss) in samples.items():
         try:
-            base_histo = get_process(ss[0], procs).GetHContainer()[histname].GetHisto()
+            base_histo = get_process(ss[0], procs).GetHistogram(histname).GetHisto()
 
             for s in ss[1:]:
                 try:
-                    plus_histo = get_process(s, procs).GetHContainer()[histname].GetHisto()
+                    plus_histo = get_process(s, procs).GetHistogram(histname).GetHisto()
                     base_histo.Add(plus_histo)
                 except:
                     print "Could not find " + s

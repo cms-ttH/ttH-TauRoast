@@ -22,7 +22,7 @@ def get_bkg_stack(histname, processes):
     res = r.THStack(histname + "_stack", histname + "_stack")
 
     for p in reversed(processes):
-        h = p.GetHContainer()[histname].GetHisto()
+        h = p.GetHistogram(histname).GetHisto()
         h.SetFillStyle(1001)
         h.SetFillColor(p.GetColor())
         h.SetLineColor(p.GetColor())
@@ -39,26 +39,26 @@ def get_bkg_sum(histname, processes):
             continue
 
         if not res:
-            res = roast.HWrapper(p.GetHContainer()[histname])
+            res = roast.HWrapper(p.GetHistogram(histname))
         else:
-            res.Add(p.GetHContainer()[histname])
+            res.Add(p.GetHistogram(histname))
 
     return res
 
 def get_integrals(histname, processes):
     vals = []
     for p in processes:
-        if p.GetHContainer()[histname].GetHisto():
-            vals.append(p.GetHContainer()[histname].GetHisto().Integral())
+        if p.GetHistogram(histname).GetHisto():
+            vals.append(p.GetHistogram(histname).GetHisto().Integral())
     return vals
 
 def get_maximum(histname, processes, inc_error=False):
     vals = []
     for p in processes:
         if inc_error:
-            vals.append(p.GetHContainer()[histname].GetMaximumWithError())
+            vals.append(p.GetHistogram(histname).GetMaximumWithError())
         else:
-            vals.append(p.GetHContainer()[histname].GetMaximum())
+            vals.append(p.GetHistogram(histname).GetMaximum())
     return max(vals)
 
 class SysErrors:
@@ -302,15 +302,15 @@ def stack(config, processes):
         bkg_stack.SetMaximum(max_y)
         bkg_stack.GetYaxis().SetRangeUser(min_y, max_y)
 
-        base_histo = roast.HWrapper(procs[0].GetHContainer()[histname])
+        base_histo = roast.HWrapper(procs[0].GetHistogram(histname))
         base_histo.ScaleBy(0)
-        base_histo.GetHisto().SetTitle("")
-        base_histo.GetHisto().GetYaxis().SetTitleSize(.05)
-        base_histo.GetHisto().GetYaxis().SetTitleOffset(1.1)
-        base_histo.GetHisto().GetYaxis().SetLabelSize(.04)
-        base_histo.GetHisto().GetYaxis().SetRangeUser(min_y, max_y)
-        base_histo.GetHisto().GetXaxis().SetRangeUser(base_histo.GetMinXVis(), base_histo.GetMaxXVis())
-        base_histo.GetHisto().Draw("hist")
+        base_histo.SetTitle("")
+        base_histo.GetYaxis().SetTitleSize(.05)
+        base_histo.GetYaxis().SetTitleOffset(1.1)
+        base_histo.GetYaxis().SetLabelSize(.04)
+        base_histo.GetYaxis().SetRangeUser(min_y, max_y)
+        # base_histo.GetXaxis().SetRangeUser(base_histo.GetMinXVis(), base_histo.GetMaxXVis())
+        base_histo.Draw("hist")
 
         bkg_stack.Draw("hist same")
 
@@ -328,7 +328,7 @@ def stack(config, processes):
 
         sig_procs = get_signals(procs)
         for p in sig_procs:
-            h = p.GetHContainer()[histname].GetHisto()
+            h = p.GetHistogram(histname).GetHisto()
             h.Scale(config['display']['signal scale factor'])
             h.SetFillStyle(0)
             h.SetLineWidth(4)
@@ -341,7 +341,7 @@ def stack(config, processes):
 
         try:
             coll = get_collisions(procs)
-            h = coll.GetHContainer()[histname].GetHisto()
+            h = coll.GetHistogram(histname).GetHisto()
             h.SetMarkerStyle(20)
             h.SetMarkerSize(1)
             h.GetYaxis().SetRangeUser(min_y, max_y)
@@ -400,13 +400,13 @@ def stack(config, processes):
             canvas.cd(2)
 
             try:
-                ratio = coll.GetHContainer()[histname].GetHisto().Clone()
+                ratio = coll.GetHistogram(histname).GetHisto().Clone()
                 ratio.Divide(bkg_sum.GetHisto())
             except:
                 ratio = base_histo.GetHisto().Clone()
 
-            ratio.GetXaxis().SetRangeUser(
-                    bkg_sum.GetMinXVis(), bkg_sum.GetMaxXVis())
+            # ratio.GetXaxis().SetRangeUser(
+                    # bkg_sum.GetMinXVis(), bkg_sum.GetMaxXVis())
 
             ratio.GetXaxis().SetTitleSize(0.14)
             ratio.GetXaxis().SetTitleOffset(0.9)
@@ -450,8 +450,8 @@ def stack(config, processes):
                     x_coord = ratio.GetBinCenter(i + 1)
                     width = ratio.GetBinWidth(i + 1)
                     y_ratio = ratio.GetBinContent(i + 1)
-                    y_data = coll.GetHContainer()[histname].GetHisto().GetBinContent(i + 1)
-                    y_data_err = coll.GetHContainer()[histname].GetHisto().GetBinError(i + 1)
+                    y_data = coll.GetHistogram(histname).GetHisto().GetBinContent(i + 1)
+                    y_data_err = coll.GetHistogram(histname).GetHisto().GetBinError(i + 1)
                     y_bkg = bkg_sum.GetHisto().GetBinContent(i + 1)
 
                     if y_ratio > small_number and y_ratio < ratio_plot_max * 0.99:
