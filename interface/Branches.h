@@ -33,7 +33,7 @@ namespace roast {
             void	Init();
             virtual void	GetEntry(double);
             Long64_t GetEntries();
-            virtual unsigned int GetNumCombos() = 0;
+            unsigned int GetNumCombos() { return NumCombos; };
             virtual bool IsGoodGenMatch(const int&) const = 0;
             virtual void FillHistograms(std::map<std::string, roast::HWrapper*>&, int, float) = 0;
 
@@ -158,6 +158,28 @@ namespace roast {
             std::vector<float>* CSVeventWeightLFdown;
             std::vector<float>* CSVeventWeightLFup;
             std::vector<vector<unsigned int> >* CleanJetIndices;
+            std::vector<float>* HT;
+            std::vector<int>* MomentumRank;
+            std::vector<unsigned int>* NumCSVLbtagJets;
+            std::vector<unsigned int>* NumCSVMbtagJets;
+            std::vector<unsigned int>* NumCSVTbtagJets;
+            std::vector<unsigned int>* NumCleanCSVLbtagJets;
+            std::vector<unsigned int>* NumCleanCSVMbtagJets;
+            std::vector<unsigned int>* NumCleanCSVTbtagJets;
+            std::vector<unsigned int>* NumCleanNonCSVLbtagJets;
+            std::vector<unsigned int>* NumCleanNonCSVMbtagJets;
+            std::vector<unsigned int>* NumCleanNonCSVTbtagJets;
+            UInt_t NumCombos;
+            std::vector<unsigned int>* NumExLooseElectrons;
+            std::vector<unsigned int>* NumExLooseMuons;
+            std::vector<unsigned int>* NumLooseElectrons;
+            std::vector<unsigned int>* NumLooseMuons;
+            std::vector<unsigned int>* NumNonCSVLbtagJets;
+            std::vector<unsigned int>* NumNonCSVMbtagJets;
+            std::vector<unsigned int>* NumNonCSVTbtagJets;
+            UInt_t NumTaus;
+            std::vector<unsigned int>* NumTightElectrons;
+            std::vector<unsigned int>* NumTightMuons;
             std::vector<float>* T_Charge;
             std::vector<unsigned int>* T_DecayMode;
             std::vector<float>* T_EmFraction;

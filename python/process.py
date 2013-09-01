@@ -46,20 +46,6 @@ def analyze(config, module):
             cfg['branchingRatio'],
             cfg['checkReality'] if 'checkReality' in cfg else False)
 
-        logging.info("registering histograms for %s", p.GetShortName())
-        for name, histcfg in config['histograms'].items():
-            try:
-                h = r.TH1F(
-                        name + str(random.randint(0, 1000000000)),
-                        ';'.join([name] + histcfg['axis labels']),
-                        *histcfg['binning'])
-                if 'visible' in histcfg:
-                    h.GetXaxis().SetRangeUser(*histcfg['visible'])
-                w = roast.HWrapper(histcfg['dir'], h, name)
-                p.AddHistogram(name, w)
-            except Exception as e:
-                logging.error("unable to create histogram %s", name)
-
         processes.push_back(p)
 
     err = False
@@ -91,6 +77,20 @@ def fill_histos(config, processes, module):
 
     for p in procs:
         p.ResetHistograms()
+
+        logging.info("registering histograms for %s", p.GetShortName())
+        for name, histcfg in config['histograms'].items():
+            try:
+                h = r.TH1F(
+                        name + str(random.randint(0, 1000000000)),
+                        ';'.join([name] + histcfg['axis labels']),
+                        *histcfg['binning'])
+                if 'visible' in histcfg:
+                    h.GetXaxis().SetRangeUser(*histcfg['visible'])
+                w = roast.HWrapper(histcfg['dir'], h, name)
+                p.AddHistogram(name, w)
+            except Exception as e:
+                logging.error("unable to create histogram %s", name)
 
         branches = module.Branches(p.GetTreeName(), p.GetNtuplePaths())
         cutflow = p.GetCutFlow()

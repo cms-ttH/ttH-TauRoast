@@ -168,9 +168,9 @@ bool const Process::Analyzed() const { return analyzed; }
 void
 Process::ResetHistograms()
 {
-    for (auto& pair: hContainer)
-        if (pair.second->GetHisto())
-            pair.second->GetHisto()->Reset("M");
+    for (auto& p: hContainer)
+        delete p.second;
+    hContainer.clear();
 }
 
 void

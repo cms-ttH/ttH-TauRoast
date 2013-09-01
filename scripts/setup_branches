@@ -9,6 +9,15 @@ import sys
 
 r.gROOT.SetBatch()
 
+class ChannelError(Exception):
+    pass
+
+class ImplementationError(Exception):
+    pass
+
+class NestingError(Exception):
+    pass
+
 # class used to store accessor information
 Attr = namedtuple('Attr', ['name', 'type', 'pointer', 'prefixes'])
 
@@ -49,21 +58,21 @@ def gather_type_info(filename):
 
 def generate_accessor_info(vars):
     attrs = {}
-    for (k, s, t, p) in vars:
+    for (c, n, t, p) in vars:
         # capitalize first letter
-        name = s if s[0].upper() == s[0] else s[0].upper() + s[1:]
+        name = n[0].upper() + n[1:]
 
         # skip single tau info for now
         # FIXME including this yields a conflict with TLL
-        if k == 'T':
+        if c == 'T':
             continue
 
         # TTL, TLL, and event variables are not prefixed
-        if k not in channels and k != 'Ev':
-            name = k + '_' + name
+        if c not in channels and c != 'Ev':
+            name = c + '_' + name
 
         # lepton1 => L1, tau1 => t1, etc...
-        if k in channels:
+        if c in channels:
             m = re.match('(?:(?:Lepton|Tau)\d?)+', name)
 
             if m:
@@ -77,14 +86,14 @@ def generate_accessor_info(vars):
                 name = name.replace(m.group(0), pre + '_')
 
         if name in attrs:
-            if k in attrs[name].prefixes:
+            if c in attrs[name].prefixes:
                 continue
-            attrs[name].prefixes.append(k)
+            attrs[name].prefixes.append(c)
         else:
-            attrs[name] = Attr(s, t, p, [k])
+            attrs[name] = Attr(n, t, p, [c])
     return attrs
 
-def generate_type_info(channel, vars, indent=16):
+def generate_type_info(channel, vars, common_vars, indent=16):
     """Generates definition, address setting, clearing, and deleting info for
     variables for a given channel, and updates corresponding files."""
     address_lines = []
@@ -93,15 +102,20 @@ def generate_type_info(channel, vars, indent=16):
     delete_lines = []
     null_lines = []
 
-    for (k, s, t, p) in vars:
-        if ("CSV" in s) and ("Weight" in s) or s == 'CleanJetIndices':
-            varname = s
-            if channel == "":
-                declare_lines.append(' ' * indent + t + ' ' + varname + ';\n')
-                continue
-        else:
-            varname = "_".join([k, s])
+    for (c, n, t, p) in vars:
+        if not channel and c in channels and n in common_vars:
+            varname = n
             declare_lines.append(' ' * indent + t + ' ' + varname + ';\n')
+        elif not (channel and n in common_vars):
+            varname = "_".join([c, n])
+            declare_lines.append(' ' * indent + t + ' ' + varname + ';\n')
+        else:
+            varname = n
+
+        if not (not channel and c in channels and n in common_vars):
+            address_lines.append("    fChain->SetBranchAddress(\"{0}\", &{1});\n".format("_".join([c, n]), varname))
+        if channel and c in channels and n in common_vars:
+            continue
 
         if p:
             clear_lines.append("    {0}->clear();\n".format(varname))
@@ -110,7 +124,8 @@ def generate_type_info(channel, vars, indent=16):
             clear_lines.append("    {0} = 0;\n".format(varname))
 
         null_lines.append("    {0} = 0;\n".format(varname))
-        address_lines.append("    fChain->SetBranchAddress(\"{0}\", &{1});\n".format("_".join([k, s]), varname))
+    if not channel:
+        channel = ""
     header = os.path.join(os.environ["CMSSW_BASE"], 'src', 'TTHTauTau', 'Roast', 'interface', channel + 'Branches.h')
     source = os.path.join(os.environ["CMSSW_BASE"], 'src', 'TTHTauTau', 'Roast', 'src', channel + 'Branches_generated.cc')
     inject_lines(header, "declarations", declare_lines)
@@ -138,7 +153,10 @@ def inject_lines(filename, key, lines):
 # main script part  >--------------------------------------------------
 #------------------/
 
-# extract type information from ROOT files passed as arguments
+channels = set(["TTL", "TLL"])
+
+# extract type information from ROOT files passed as arguments, only
+# process each unique branch name once
 type_info = []
 var_names = set()
 for fn in sys.argv[1:]:
@@ -151,13 +169,15 @@ for fn in sys.argv[1:]:
 
 vars = sorted(type_info, key=lambda tpl: "_".join(tpl[:2]))
 
-channels = set(["TTL", "TLL"])
+# variables with different branch names in the channels, but same
+channel_vars = [set([tpl[1] for tpl in vars if tpl[0] == c]) for c in channels]
+common_vars = reduce(lambda a, b: a & b, channel_vars[1:], channel_vars[0])
 
 shared_var_names = set()
 shared_vars = []
-raw_shared_vars = filter(lambda (k, s, t, p): k not in channels or (("CSV" in s) and ("Weight" in s) or s == 'CleanJetIndices'), vars)
-for tpl in raw_shared_vars:
-    if 'CSV' in tpl[1] or 'CleanJetIndices' == tpl[1]:
+tmp_vars = filter(lambda (c, n, t, p): c not in channels or n in common_vars, vars)
+for tpl in tmp_vars:
+    if tpl[0] in channels and tpl[1] in common_vars:
         varname = tpl[1]
     else:
         varname = tpl[0] + '_' + tpl[1]
@@ -167,13 +187,13 @@ for tpl in raw_shared_vars:
     shared_var_names.add(varname)
     shared_vars.append(tpl)
 
-generate_type_info("", shared_vars, 12)
+generate_type_info(None, shared_vars, common_vars, 12)
 
 for channel in channels:
     channel_vars = filter(lambda (k, s, t, p): k == channel, vars)
     print "{0} variables for {1}".format(len(channel_vars), channel)
     if len(channel_vars) > 0:
-        generate_type_info(channel, channel_vars)
+        generate_type_info(channel, channel_vars, common_vars)
 
 #----------------\
 # accessor setup  >----------------------------------------------------
@@ -223,13 +243,18 @@ for fn in sorted(fct_names.keys()):
         lines.append(indent * 2 + '};\n')
     else:
         # FIXME not yet implemented
-        raise
+        raise ImplementationError()
 
 attrs = generate_accessor_info(vars)
 
-def generate_return_line(obj, varname, type, idx='idx'):
+def generate_return_line(obj, varname, type, idx='idx', safe=False):
     cnt = type.count('vector')
-    return returns[cnt].format(obj, varname, idx)
+    if cnt not in returns:
+        raise NestingError()
+    if safe:
+        return returns[cnt].replace("[{2}]", ".at({2})").format(obj, varname, idx)
+    else:
+        return returns[cnt].format(obj, varname, idx)
 
 jets = 'LJ SubLJ SubSubLJ SubSubSubLJ'.split()
 
@@ -250,6 +275,10 @@ for k in sorted(attrs.keys()):
     if num:
         k = k.replace(num.group(0), '_Num' + num.group(1))
 
+    # remove btagJets at end of varname
+    if k.endswith('btagJets'):
+        k = 'J_' + k[:-8]
+
     # camel case correctly
     k = k.replace("raw", "Raw")
 
@@ -257,9 +286,13 @@ for k in sorted(attrs.keys()):
         tmp_lines = []
         tmp_lines.append(indent * 2 + declare.format(k))
 
-        if len(prefixes) == 1:
-            prefix = prefixes[0]
-            varname = prefix + '_' + var
+        if len(prefixes) == 1 or var in common_vars:
+            if prefixes[0] in channels and var in common_vars:
+                prefix = ""
+                varname = var
+            else:
+                prefix = prefixes[0]
+                varname = prefix + '_' + var
             obj = 'b'
 
             if prefix in channels:
@@ -273,11 +306,11 @@ for k in sorted(attrs.keys()):
                     new_key = k.replace('J', j)
                     tmp_lines.append(indent * 2 + declare.format(new_key))
                     tmp_lines.append(indent * 3 + reindex.format(n))
-                    tmp_lines.append(indent * 3 + generate_return_line(obj, varname, type, 'i') + '\n')
+                    tmp_lines.append(indent * 3 + generate_return_line(obj, varname, type, 'i', safe=True) + '\n')
                     tmp_lines.append(indent * 2 + '};\n')
                 lines += tmp_lines
                 continue
-            elif ptr:
+            elif ptr and prefix != '':
                 continue
             tmp_lines.append(indent * 3 + generate_return_line(obj, varname, type) + '\n')
         else:
@@ -286,8 +319,7 @@ for k in sorted(attrs.keys()):
 
             for p in prefixes:
                 if p not in channels:
-                    # FIXME use good exception
-                    raise
+                    raise ChannelError(p)
 
                 chan = p.lower()
                 if var not in shared_var_names:
@@ -306,8 +338,10 @@ for k in sorted(attrs.keys()):
         tmp_lines.append(indent * 2 + '};\n')
 
         lines += tmp_lines
-    except Exception as e:
-        print e
+    except ChannelError as e:
+        print '{0} not defined as a channel'.format(e)
+    except NestingError as e:
+        print '{0} has too many nested containers'.format(k)
 
 source = os.path.join(os.environ["CMSSW_BASE"], 'src', 'TTHTauTau', 'Roast', 'src', 'Accessor.cc')
 inject_lines(source, "attr", lines)

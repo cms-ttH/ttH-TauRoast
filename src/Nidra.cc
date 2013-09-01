@@ -111,8 +111,11 @@ namespace roast {
                 }
             }
 
-            for (auto& h: proc.GetHContainer())
-                h.second->Fill(branches, idx, weight);
+            for (auto& h: proc.GetHContainer()) {
+                try {
+                    h.second->Fill(branches, idx, weight);
+                } catch (std::out_of_range e) {}
+            }
 
             ++count;
         }

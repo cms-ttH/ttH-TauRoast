@@ -23,7 +23,6 @@ namespace roast {
                 ~Branches();
 
                 virtual void GetEntry(double);
-                inline virtual unsigned int GetNumCombos() { return TLL_NumCombos; };
                 virtual void FillHistograms(std::map<std::string, roast::HWrapper*>&, int, float);
                 virtual bool IsGoodGenMatch(const int&) const;
 
@@ -39,7 +38,6 @@ namespace roast {
                 unsigned int GetTauMatchIndex(const unsigned int) const;
 
                 // >>> Begin declarations <<<
-                std::vector<float>* TLL_HT;
                 std::vector<float>* TLL_Lepton1Eta;
                 std::vector<float>* TLL_Lepton1EventWeight;
                 std::vector<int>* TLL_Lepton1GenMatchDaughter0Id;
@@ -97,27 +95,6 @@ namespace roast {
                 std::vector<float>* TLL_Lepton2Phi;
                 std::vector<float>* TLL_Lepton2Pt;
                 std::vector<float>* TLL_Lepton2RelIso;
-                std::vector<int>* TLL_MomentumRank;
-                std::vector<unsigned int>* TLL_NumCSVLbtagJets;
-                std::vector<unsigned int>* TLL_NumCSVMbtagJets;
-                std::vector<unsigned int>* TLL_NumCSVTbtagJets;
-                std::vector<unsigned int>* TLL_NumCleanCSVLbtagJets;
-                std::vector<unsigned int>* TLL_NumCleanCSVMbtagJets;
-                std::vector<unsigned int>* TLL_NumCleanCSVTbtagJets;
-                std::vector<unsigned int>* TLL_NumCleanNonCSVLbtagJets;
-                std::vector<unsigned int>* TLL_NumCleanNonCSVMbtagJets;
-                std::vector<unsigned int>* TLL_NumCleanNonCSVTbtagJets;
-                UInt_t TLL_NumCombos;
-                std::vector<unsigned int>* TLL_NumExLooseElectrons;
-                std::vector<unsigned int>* TLL_NumExLooseMuons;
-                std::vector<unsigned int>* TLL_NumLooseElectrons;
-                std::vector<unsigned int>* TLL_NumLooseMuons;
-                std::vector<unsigned int>* TLL_NumNonCSVLbtagJets;
-                std::vector<unsigned int>* TLL_NumNonCSVMbtagJets;
-                std::vector<unsigned int>* TLL_NumNonCSVTbtagJets;
-                UInt_t TLL_NumTaus;
-                std::vector<unsigned int>* TLL_NumTightElectrons;
-                std::vector<unsigned int>* TLL_NumTightMuons;
                 std::vector<float>* TLL_TauCharge;
                 std::vector<unsigned int>* TLL_TauDecayMode;
                 std::vector<float>* TLL_TauEmFraction;
