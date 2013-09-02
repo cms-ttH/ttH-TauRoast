@@ -35,10 +35,6 @@ namespace roast {
             Long64_t GetEntries();
             unsigned int GetNumCombos() { return NumCombos; };
             virtual bool IsGoodGenMatch(const int&) const = 0;
-            virtual void FillHistograms(std::map<std::string, roast::HWrapper*>&, int, float) = 0;
-
-            void				SetBestCombo(int);
-            unsigned int const	GetBestCombo() const;
 
             // >>> Begin declarations <<<
             std::vector<int>* E_ElectronGenMatchDaughter0Id;
@@ -276,9 +272,6 @@ namespace roast {
             std::vector<float>* V_Zcoord;
             std::vector<float>* V_ZcoordErr;
             // >>> End declarations <<<
-
-        private:
-            int bestCombo;
 
         ClassDef(Branches, 1);
     };

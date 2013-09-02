@@ -23,7 +23,6 @@ namespace roast {
                 ~Branches();
 
                 virtual void GetEntry(double);
-                virtual void FillHistograms(std::map<std::string, roast::HWrapper*>&, int, float);
                 virtual bool IsGoodGenMatch(const int&) const;
 
                 unsigned int	GetTau1IsolationIndex(const unsigned int) const;

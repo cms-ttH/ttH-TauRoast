@@ -15,20 +15,17 @@ using namespace std;
 using namespace roast;
 
 // Default constructor
-Branches::Branches() : fChain(0), bestCombo(-1)
+Branches::Branches() : fChain(0)
 {
     Null();
     SetBranchAddresses();
 }
 
-Branches::Branches(const string& tree_name, vector<string> const & iPath) :
-    bestCombo(-1)
+Branches::Branches(const string& tree_name, vector<string> const & iPath)
 {
     fChain = new TChain(tree_name.c_str());
     for (const auto& p: iPath)
         fChain->Add((p + "/*.root").c_str());
-
-    bestCombo = -1;
 
     // Set branch addresses and branch pointers
     if (!fChain){ cerr << "ERROR: Trying to initialize NULL TChain" << endl; exit(1); }
@@ -47,12 +44,6 @@ Branches::~Branches()
         delete fChain->GetCurrentFile();
     }
     delete fChain;
-}
-
-void Branches::SetBestCombo(int const iValue){ bestCombo = iValue; }
-unsigned int const Branches::GetBestCombo() const { 
-	if (bestCombo < 0){ cerr << "ERROR: 'bestCombo' is " << bestCombo << "." << endl; exit(1); }
-	return bestCombo; 
 }
 
 void Branches::SetChain(TChain* iChain){ fChain = iChain; } 
