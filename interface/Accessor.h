@@ -2,10 +2,13 @@
 #ifndef __acessor_h
 #define __acessor_h
 
-#include "Branches.h"
+#include <string>
+#include <vector>
 
 namespace roast {
-    typedef float (*GetValue_t)(Branches*, const int&);
+    class Branches;
+
+    typedef float (*GetValue_t)(Branches*, int, int);
 
     GetValue_t get_accessor(const std::string&);
     std::vector<std::string> get_accessor_names();

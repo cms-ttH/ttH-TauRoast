@@ -25,7 +25,7 @@ namespace roast {
 
         static std::map<std::string, roast::Weight> weights;
 
-        float operator()(Branches*, const int&);
+        float operator()(Branches*, int);
         inline void RegisterCut(CutFlow* cflow) const { cflow->RegisterCutFromLast(name, 2, n > 0 ? sum / n : (n == 0 && sum == 0 ? 1 : 0)); };
         static Weight Create(const std::string&, direction, float=-1.);
 

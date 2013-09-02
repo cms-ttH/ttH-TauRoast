@@ -36,7 +36,7 @@ inline unsigned int GetNumberOfGenHadTausFromHWithinDeltaR(roast::ttl::Branches*
 	for(unsigned int g = 0; g < iEvent->GT_ParentId->size(); g++){
 		if(iEvent->GT_ToHadrons->at(g) && iEvent->GT_ParentId->at(g) == 25){
 			std::cout << "checking" << std::endl;
-			for(unsigned int r = 0; r < iEvent->TTL_NumCombos; r++){
+			for(unsigned int r = 0; r < iEvent->NumCombos; r++){
 				std::cout << "DeltaR1: " << roast::DeltaR(iEvent->TTL_Tau1Eta->at(0), iEvent->TTL_Tau1Phi->at(0), iEvent->GT_Eta->at(g), iEvent->GT_Phi->at(g) ); 
 				std::cout << "\tDeltaR2: " << roast::DeltaR(iEvent->TTL_Tau2Eta->at(r), iEvent->TTL_Tau2Phi->at(r), iEvent->GT_Eta->at(g), iEvent->GT_Phi->at(g) ) << std::endl;
 			if(r==0&&roast::DeltaR(iEvent->TTL_Tau1Eta->at(0), iEvent->TTL_Tau1Phi->at(0), iEvent->GT_Eta->at(g), iEvent->GT_Phi->at(g) )<iDeltaR){ result++; break; }

@@ -14,7 +14,7 @@ using namespace std;
 using namespace roast;
 
 // Second constructor at the end of file!
-CutFlow::Cut::Cut(const string n, CutFlow::Cut::val_f f, const int r, const float mn, const float mx, const double sig, bool bypass):
+CutFlow::Cut::Cut(const string n, GetValue_t f, const int r, const float mn, const float mx, const double sig, bool bypass):
     name(n), GetVal(f), rank(r), min(mn), max(mx),
     passedSignalEvents(sig), currentSignalResult(false),
     skip(bypass)
@@ -24,7 +24,7 @@ CutFlow::Cut::Cut(const string n, CutFlow::Cut::val_f f, const int r, const floa
 bool
 CutFlow::Cut::Check(Branches *b, const int idx, const bool bypass)
 {
-    float val = GetVal(b, idx);
+    float val = GetVal(b, idx, -1);
     if ((rank != 1) || (skip && bypass) || (min <= val && val <= max)) {
         if (!currentSignalResult) {
             ++passedSignalEvents;
@@ -86,7 +86,7 @@ void CutFlow::RegisterCut(string const name, int const rank,  double const iEven
         cerr << "ERROR: Cut named \"" << name << "\" is trying to be registered with rank " << rank << " but rank can only be 0 or 2." << endl;
         exit(1);
     }
-    Cut new_cut(name, [](Branches *b, const int& idx) -> float { return 0.; },
+    Cut new_cut(name, [](Branches *b, int idx, int n) -> float { return 0.; },
             rank, 0, 0, iEvents);
     cuts.push_back(new_cut);
     name2idx[name] = cuts.size() - 1;

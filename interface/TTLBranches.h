@@ -8,10 +8,6 @@ namespace roast {
     namespace ttl {
         class Branches : public roast::Branches {
             private:
-                float conesize;
-                std::vector<int> jetIndexCache;
-                int jetIndexCacheCombo;
-
                 void	Null();
                 void	Delete();
                 void	Clear();
@@ -22,13 +18,8 @@ namespace roast {
                 Branches(const std::string&, const std::vector<std::string>&);
                 ~Branches();
 
-                virtual void GetEntry(double);
-                inline virtual unsigned int GetNumCombos() { return TTL_NumCombos; };
-                virtual void FillHistograms(std::map<std::string, roast::HWrapper*>&, int, float);
                 virtual bool IsGoodGenMatch(const int&) const;
 
-                // Get index (excluding taus) of jet in J_ branches (which include taus)
-                unsigned int GetJetIndex(const int, const unsigned int);
                 unsigned int	GetTau1IsolationIndex(const unsigned int) const;
                 unsigned int	GetTau2IsolationIndex(const unsigned int) const;
                 unsigned int	GetTau1IsolationIndexMVA(const unsigned int) const;
@@ -57,7 +48,6 @@ namespace roast {
                 std::vector<float>* TTL_DitauMETMass;
                 std::vector<float>* TTL_DitauVisibleMass;
                 std::vector<int>* TTL_ElectronMomentumRank;
-                std::vector<float>* TTL_HT;
                 std::vector<float>* TTL_LeptonEta;
                 std::vector<float>* TTL_LeptonEventWeight;
                 std::vector<int>* TTL_LeptonGenMatchDaughter0Id;
@@ -86,31 +76,10 @@ namespace roast {
                 std::vector<float>* TTL_LeptonPhi;
                 std::vector<float>* TTL_LeptonPt;
                 std::vector<float>* TTL_LeptonRelIso;
-                std::vector<int>* TTL_MomentumRank;
                 std::vector<int>* TTL_MuonMomentumRank;
-                std::vector<unsigned int>* TTL_NumCSVLbtagJets;
-                std::vector<unsigned int>* TTL_NumCSVMbtagJets;
-                std::vector<unsigned int>* TTL_NumCSVTbtagJets;
-                std::vector<unsigned int>* TTL_NumCleanCSVLbtagJets;
-                std::vector<unsigned int>* TTL_NumCleanCSVMbtagJets;
-                std::vector<unsigned int>* TTL_NumCleanCSVTbtagJets;
-                std::vector<unsigned int>* TTL_NumCleanNonCSVLbtagJets;
-                std::vector<unsigned int>* TTL_NumCleanNonCSVMbtagJets;
-                std::vector<unsigned int>* TTL_NumCleanNonCSVTbtagJets;
-                UInt_t TTL_NumCombos;
                 UInt_t TTL_NumElectrons;
-                std::vector<unsigned int>* TTL_NumExLooseElectrons;
-                std::vector<unsigned int>* TTL_NumExLooseMuons;
                 UInt_t TTL_NumLeptons;
-                std::vector<unsigned int>* TTL_NumLooseElectrons;
-                std::vector<unsigned int>* TTL_NumLooseMuons;
                 UInt_t TTL_NumMuons;
-                std::vector<unsigned int>* TTL_NumNonCSVLbtagJets;
-                std::vector<unsigned int>* TTL_NumNonCSVMbtagJets;
-                std::vector<unsigned int>* TTL_NumNonCSVTbtagJets;
-                UInt_t TTL_NumTaus;
-                std::vector<unsigned int>* TTL_NumTightElectrons;
-                std::vector<unsigned int>* TTL_NumTightMuons;
                 std::vector<float>* TTL_Tau1Charge;
                 std::vector<unsigned int>* TTL_Tau1DecayMode;
                 std::vector<float>* TTL_Tau1EmFraction;

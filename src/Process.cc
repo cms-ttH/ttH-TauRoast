@@ -168,9 +168,9 @@ bool const Process::Analyzed() const { return analyzed; }
 void
 Process::ResetHistograms()
 {
-    for (auto& pair: hContainer)
-        if (pair.second->GetHisto())
-            pair.second->GetHisto()->Reset("M");
+    for (auto& p: hContainer)
+        delete p.second;
+    hContainer.clear();
 }
 
 void
@@ -233,7 +233,7 @@ void Process::Add(Process* iProcess){
     for (const auto& p: iProcess->GetNtuplePaths())
         ntuplePaths.push_back(p);
     for (auto& pair: hContainer)
-        pair.second->Add(*iProcess->GetHContainer()[pair.first]->GetHisto());
+        pair.second->Add(*iProcess->GetHistogram(pair.first)->GetHisto());
 	cutFlow.Add(*(iProcess->GetCutFlow()));
 	normalizedCutFlow.Add(*(iProcess->GetNormalizedCutFlow()));
 }

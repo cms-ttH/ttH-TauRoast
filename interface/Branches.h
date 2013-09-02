@@ -15,6 +15,7 @@ namespace roast {
     class Branches {
         protected:
 
+            void RegenerateCaches();
             void SetUp(std::map<std::string,std::string> const &, std::vector<std::string> const &);
             virtual void Null();
             virtual void Delete();
@@ -25,20 +26,25 @@ namespace roast {
             std::map<std::string,std::string>		params;
             TChain* fChain;
 
+            bool caches_dirty;
+            std::vector<std::vector<int> > clean_btag_cache;
+            std::vector<std::vector<int> > clean_nonbtag_cache;
+
         public:
             Branches();
             Branches(const std::string&, const std::vector<std::string>&);
             ~Branches();
 
-            void	Init();
-            virtual void	GetEntry(double);
+            void Init();
+            void GetEntry(double);
             Long64_t GetEntries();
-            virtual unsigned int GetNumCombos() = 0;
+            unsigned int GetNumCombos() { return NumCombos; };
             virtual bool IsGoodGenMatch(const int&) const = 0;
-            virtual void FillHistograms(std::map<std::string, roast::HWrapper*>&, int, float) = 0;
 
-            void				SetBestCombo(int);
-            unsigned int const	GetBestCombo() const;
+            float GetCleanJetBTagEta(unsigned int, unsigned int);
+            float GetCleanJetBTagPt(unsigned int, unsigned int);
+            float GetCleanJetNonBTagEta(unsigned int, unsigned int);
+            float GetCleanJetNonBTagPt(unsigned int, unsigned int);
 
             // >>> Begin declarations <<<
             std::vector<int>* E_ElectronGenMatchDaughter0Id;
@@ -158,6 +164,28 @@ namespace roast {
             std::vector<float>* CSVeventWeightLFdown;
             std::vector<float>* CSVeventWeightLFup;
             std::vector<vector<unsigned int> >* CleanJetIndices;
+            std::vector<float>* HT;
+            std::vector<int>* MomentumRank;
+            std::vector<unsigned int>* NumCSVLbtagJets;
+            std::vector<unsigned int>* NumCSVMbtagJets;
+            std::vector<unsigned int>* NumCSVTbtagJets;
+            std::vector<unsigned int>* NumCleanCSVLbtagJets;
+            std::vector<unsigned int>* NumCleanCSVMbtagJets;
+            std::vector<unsigned int>* NumCleanCSVTbtagJets;
+            std::vector<unsigned int>* NumCleanNonCSVLbtagJets;
+            std::vector<unsigned int>* NumCleanNonCSVMbtagJets;
+            std::vector<unsigned int>* NumCleanNonCSVTbtagJets;
+            UInt_t NumCombos;
+            std::vector<unsigned int>* NumExLooseElectrons;
+            std::vector<unsigned int>* NumExLooseMuons;
+            std::vector<unsigned int>* NumLooseElectrons;
+            std::vector<unsigned int>* NumLooseMuons;
+            std::vector<unsigned int>* NumNonCSVLbtagJets;
+            std::vector<unsigned int>* NumNonCSVMbtagJets;
+            std::vector<unsigned int>* NumNonCSVTbtagJets;
+            UInt_t NumTaus;
+            std::vector<unsigned int>* NumTightElectrons;
+            std::vector<unsigned int>* NumTightMuons;
             std::vector<float>* T_Charge;
             std::vector<unsigned int>* T_DecayMode;
             std::vector<float>* T_EmFraction;
@@ -254,9 +282,6 @@ namespace roast {
             std::vector<float>* V_Zcoord;
             std::vector<float>* V_ZcoordErr;
             // >>> End declarations <<<
-
-        private:
-            int bestCombo;
 
         ClassDef(Branches, 1);
     };

@@ -1,3566 +1,1437 @@
-Pt_E:
-    type: th1f
-    dir: electron
-    numBinsX: 100
-    xMin: 0
-    xMax: 100
-    xTitle: "#electron p_{T}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 100
-    showOF: true
-    logy: 1
-
-
-Eta_E:
-    type: th1f
-    dir: electron
-    numBinsX: 50
-    xMin: -3
-    xMax: 3
-    xTitle: "#electron #eta"
-    yTitle: Events
-    xMinVis: -3
-    xMaxVis: 3
-    showOF: false
-    logy: 1
-
-
-Phi_E:
-    type: th1f
-    dir: electron
-    numBinsX: 50
-    xMin: -3.2
-    xMax: 3.2
-    xTitle: "#electron #phi"
-    yTitle: Events
-    xMinVis: -3.2
-    xMaxVis: 3.2
-    showOF: false
-    logy: 1
-
-
-NumOtherTightElectrons:
-    type: th1f
-    dir: electron
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other tight electrons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherLooseElectrons:
-    type: th1f
-    dir: electron
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (in)loose electrons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherExLooseElectrons:
-    type: th1f
-    dir: electron
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (ex)loose electrons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherTightElectrons:
-    type: th1f
-    dir: electron
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other tight electrons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherLooseElectrons:
-    type: th1f
-    dir: electron
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (in)loose electrons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherExLooseElectrons:
-    type: th1f
-    dir: electron
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (ex)loose electrons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-DeltaR_ET1:
-    type: th1f
-    dir: electron
-    numBinsX: 100
-    xMin: 0
-    xMax: 10
-    xTitle: "#Delta R(e, #tau_{1})"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6
-    showOF: true
-    logy: 1
-
-
-DeltaR_ET2:
-    type: th1f
-    dir: electron
-    numBinsX: 100
-    xMin: 0
-    xMax: 10
-    xTitle: "#Delta R(e, #tau_{2})"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6
-    showOF: true
-    logy: 1
-
-
 Events:
     type: th1f
     dir: general
-    numBinsX: 1
-    xMin: 0
-    xMax: 1
-    xTitle: ""
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 1
+    binning: [1, 0, 1]
+    axis labels: ["", Events]
+    visible: [0, 1]
     showOF: false
     logy: 1
-
 
 Combos:
     type: th1f
     dir: general
-    numBinsX: 20
-    xMin: 1
-    xMax: 21
-    xTitle: Combos
-    yTitle: Events
-    xMinVis: 1
-    xMaxVis: 21
+    binning: [20, 1, 21]
+    axis labels: [Combos, Events]
+    visible: [1, 21]
     showOF: false
     logy: 1
-
 
 MomentumRank:
     type: th1f
     dir: general
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Momentum Rank
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    binning: [10, 0, 10]
+    axis labels: [Momentum Rank, Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
-
 
 MET:
     type: th1f
     dir: general
-    numBinsX: 100
-    xMin: 0
-    xMax: 300
-    xTitle: MET
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 99.99
+    binning: [100, 0, 300]
+    axis labels: [MET, Events]
+    visible: [0, 99.99]
     showOF: true
     logy: 1
-
 
 HT:
     type: th1f
     dir: general
-    numBinsX: 50
-    xMin: 0
-    xMax: 1500
-    xTitle: H_{T}
-    yTitle: Events
-    xMinVis: 200
-    xMaxVis: 1000
+    binning: [50, 0, 1500]
+    axis labels: ['H_{T}', Events]
+    visible: [200, 1000]
     showOF: true
     logy: 1
-
 
 FinalBDTG:
     type: th1f
     dir: general
-    numBinsX: 10
-    xMin: -1
-    xMax: 1
-    xTitle: BDT output
-    yTitle: Events
-    xMinVis: -1
-    xMaxVis: 1
+    binning: [10, -1, 1]
+    axis labels: [BDT output, Events]
+    visible: [-1, 1]
     showOF: false
     logy: 1
-
 
 FinalCFMlpANN:
     type: th1f
     dir: general
-    numBinsX: 30
-    xMin: -1
-    xMax: 1
-    xTitle: CFMlpANN response
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 1
+    binning: [30, -1, 1]
+    axis labels: [CFMlpANN response, Events]
+    visible: [0, 1]
     showOF: false
     logy: 1
-
 
 ComboBDT:
     type: th1f
     dir: general
-    numBinsX: 30
-    xMin: -1
-    xMax: 1
-    xTitle: Combo selector response
-    yTitle: Events
-    xMinVis: -1
-    xMaxVis: 1
+    binning: [30, -1, 1]
+    axis labels: [Combo selector response, Events]
+    visible: [-1, 1]
     showOF: false
     logy: 1
-
 
 SelectedComboRank:
     type: th1f
     dir: general
-    numBinsX: 20
-    xMin: 0
-    xMax: 20
-    xTitle: Selected combo rank
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 20
+    binning: [20, 0, 20]
+    axis labels: [Selected combo rank, Events]
+    visible: [0, 20]
     showOF: false
     logy: 1
 
-
-GenTau1Pt:
+J_NumInclusive:
     type: th1f
-    dir: generator
-    numBinsX: 100
-    xMin: 0
-    xMax: 300
-    xTitle: "Gen #tau_{1} p_{T}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 300
+    dir: jets
+    binning: [30, 0, 30]
+    axis labels: [Number of non H-tau jets, Events]
+    visible: [0, 10]
+    logy: 1
+    centerLabels: true
+
+J_NumCSVL:
+    type: th1f
+    dir: jets
+    binning: [30, 0, 30]
+    axis labels: [Number of b-tags (CSVL), Events]
+    visible: [0, 8]
+    logy: 1
+    centerLabels: true
+
+J_NumCSVM:
+    type: th1f
+    dir: jets
+    binning: [30, 0, 30]
+    axis labels: [Number of b-tags (CSVM), Events]
+    visible: [0, 5]
+    logy: 1
+    centerLabels: true
+
+J_NumCSVT:
+    type: th1f
+    dir: jets
+    binning: [30, 0, 30]
+    axis labels: [Number of b-tags (CSVT), Events]
+    visible: [0, 5]
+    logy: 1
+    centerLabels: true
+
+J_NumNonCSVL:
+    type: th1f
+    dir: jets
+    binning: [30, 0, 30]
+    axis labels: [Number of non-b-tags (CSVM), Events]
+    visible: [0, 10]
+    logy: 1
+    centerLabels: true
+
+J_NumNonCSVM:
+    type: th1f
+    dir: jets
+    binning: [30, 0, 30]
+    axis labels: [Number of non-b-tags (CSVM), Events]
+    visible: [0, 10]
+    logy: 1
+    centerLabels: true
+
+J_NumNonCSVT:
+    type: th1f
+    dir: jets
+    binning: [30, 0, 30]
+    axis labels: [Number of non-b-tags (CSVT), Events]
+    visible: [0, 10]
+    logy: 1
+    centerLabels: true
+
+J_NumCleanInclusive:
+    type: th1f
+    dir: jets
+    binning: [30, 0, 30]
+    axis labels: [Number of non H-tau jets, Events]
+    visible: [0, 10]
+    logy: 1
+    centerLabels: true
+
+J_NumCleanCSVL:
+    type: th1f
+    dir: jets
+    binning: [30, 0, 30]
+    axis labels: [Number of b-tags (CSVL), Events]
+    visible: [0, 5]
+    logy: 1
+    centerLabels: true
+
+J_NumCleanCSVM:
+    type: th1f
+    dir: jets
+    binning: [30, 0, 30]
+    axis labels: [Number of b-tags (CSVM), Events]
+    visible: [1, 3]
+    logy: 1
+    centerLabels: true
+
+J_NumCleanCSVT:
+    type: th1f
+    dir: jets
+    binning: [30, 0, 30]
+    axis labels: [Number of b-tags (CSVT), Events]
+    visible: [1, 3]
+    logy: 1
+    centerLabels: true
+
+J_NumInclusive:
+    type: th1f
+    dir: jets
+    binning: [30, 0, 30]
+    axis labels: [Number of jets, Events]
+    visible: [4, 10]
+    logy: 1
+    centerLabels: true
+
+J_NumCleanNonCSVL:
+    type: th1f
+    dir: jets
+    binning: [30, 0, 30]
+    axis labels: [Number of non-b-tags (CSVM), Events]
+    visible: [0, 10]
+    logy: 1
+    centerLabels: true
+
+J_NumCleanNonCSVM:
+    type: th1f
+    dir: jets
+    binning: [30, 0, 30]
+    axis labels: [Number of non-b-tags (CSVM), Events]
+    visible: [0, 10]
+    logy: 1
+    centerLabels: true
+
+J_NumCleanNonCSVT:
+    type: th1f
+    dir: jets
+    binning: [30, 0, 30]
+    axis labels: [Number of non-b-tags (CSVT), Events]
+    visible: [0, 10]
+    logy: 1
+    centerLabels: true
+
+CleanJ_Pt:
+    type: th1f
+    dir: jets
+    max: J_NumCleanInclusive
+    binning: [30, 30, 250]
+    axis labels: ['Jet p_{T}', Events]
+    visible: [30, 250]
     showOF: true
     logy: 1
 
-
-GenTau2Pt:
+LJ_Pt:
     type: th1f
-    dir: generator
-    numBinsX: 100
-    xMin: 0
-    xMax: 300
-    xTitle: "Gen #tau_{2} p_{T}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 300
+    dir: jets
+    binning: [30, 30, 250]
+    axis labels: ['Leading jet p_{T}', Events]
+    visible: [30, 250]
     showOF: true
     logy: 1
 
-
-GenTau1PtVsTau2Pt:
-    type: th2f
-    dir: generator
-    numBinsX: 50
-    xMin: 30
-    xMax: 180
-    numBinsY: 50
-    yMin: 30
-    yMax: 180
-    yTitle: "Gen #tau_{1} p_{T}"
-    xTitle: "Gen #tau_{2} p_{T}"
-    xMinVis: 30
-    xMaxVis: 120
-    yMinVis: 30
-    yMaxVis: 120
-
-
-BoostedGenTau1Pt:
+SubLJ_Pt:
     type: th1f
-    dir: generator
-    numBinsX: 100
-    xMin: 0
-    xMax: 300
-    xTitle: "Gen #tau^{b}_{1} p_{T}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 300
+    dir: jets
+    binning: [30, 30, 250]
+    axis labels: ['Sub-leading jet p_{T}', Events]
+    visible: [30, 250]
     showOF: true
     logy: 1
 
-
-BoostedGenTau2Pt:
+SubSubLJ_Pt:
     type: th1f
-    dir: generator
-    numBinsX: 100
-    xMin: 0
-    xMax: 300
-    xTitle: "Gen #tau^{b}_{2} p_{T}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 300
+    dir: jets
+    binning: [30, 30, 250]
+    axis labels: ['Jet 3 p_{T}', Events]
+    visible: [30, 250]
     showOF: true
     logy: 1
 
-
-BoostedGenTau1Phi:
+SubSubSubLJ_Pt:
     type: th1f
-    dir: generator
-    numBinsX: 100
-    xMin: -3.5
-    xMax: 3.5
-    xTitle: "Gen #tau^{b}_{1} #phi"
-    yTitle: Events
-    xMinVis: -3.5
-    xMaxVis: 3.5
-    showOF: false
-    logy: 1
-
-
-BoostedGenTau2Phi:
-    type: th1f
-    dir: generator
-    numBinsX: 100
-    xMin: -3.5
-    xMax: 3.5
-    xTitle: "Gen #tau^{b}_{2} #phi"
-    yTitle: Events
-    xMinVis: -3.5
-    xMaxVis: 3.5
-    showOF: false
-    logy: 1
-
-
-BoostedGenTau1Theta:
-    type: th1f
-    dir: generator
-    numBinsX: 50
-    xMin: 0
-    xMax: 3.5
-    xTitle: "Gen #tau^{b}_{1} #theta"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 3.5
-    showOF: false
-    logy: 1
-
-
-BoostedGenTau1Theta:
-    type: th1f
-    dir: generator
-    numBinsX: 50
-    xMin: 0
-    xMax: 3.5
-    xTitle: "Gen #tau^{b}_{1} #theta"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 3.5
-    showOF: false
-    logy: 1
-
-
-BoostedGenTausOmega:
-    type: th1f
-    dir: generator
-    numBinsX: 100
-    xMin: -3.5
-    xMax: 3.5
-    xTitle: "Gen #tau^{b}_{1,2} #omega"
-    yTitle: Events
-    xMinVis: -3.5
-    xMaxVis: 3.5
-    showOF: false
-    logy: 1
-
-
-BoostedGenTausDeltaPhi:
-    type: th1f
-    dir: generator
-    numBinsX: 100
-    xMin: -3.5
-    xMax: 3.5
-    xTitle: "Gen #tau^{b}_{1,2} #Delta#phi"
-    yTitle: Events
-    xMinVis: -3.5
-    xMaxVis: 3.5
-    showOF: false
-    logy: 1
-
-
-BoostedGenTausDeltaTheta:
-    type: th1f
-    dir: generator
-    numBinsX: 100
-    xMin: -3.5
-    xMax: 3.5
-    xTitle: "Gen #tau^{b}_{1,2} #Delta#theta"
-    yTitle: Events
-    xMinVis: -3.5
-    xMaxVis: 3.5
-    showOF: false
-    logy: 1
-
-
-BoostedGenTausDeltaPt:
-    type: th1f
-    dir: generator
-    numBinsX: 100
-    xMin: -10
-    xMax: 10
-    xTitle: "Gen #tau^{b}_{1,2} #Delta p_{T}"
-    yTitle: Events
-    xMinVis: -10
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-DeltaR_recoGen_L:
-    type: th1f
-    dir: generator
-    numBinsX: 100
-    xMin: 0
-    xMax: 0.1
-    xTitle: "#DeltaR (reco, gen) #tau_{1}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 0.04
+    dir: jets
+    binning: [30, 30, 250]
+    axis labels: ['Jet 4 p_{T}', Events]
+    visible: [30, 250]
     showOF: true
     logy: 1
 
-
-DeltaR_recoGen_S:
+LJ_Eta:
     type: th1f
-    dir: generator
-    numBinsX: 100
-    xMin: 0
-    xMax: 0.1
-    xTitle: "#DeltaR (reco, gen) #tau_{2}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 0.04
+    dir: jets
+    binning: [40, -3, 3]
+    axis labels: ["Leading jet #eta", Events]
+    visible: [-3, 3]
+    showOF: false
+    logy: 1
+
+SubLJ_Eta:
+    type: th1f
+    dir: jets
+    binning: [40, -3, 3]
+    axis labels: ["Sub-leading jet #eta", Events]
+    visible: [-3, 3]
+    showOF: false
+    logy: 1
+
+SubSubLJ_Eta:
+    type: th1f
+    dir: jets
+    binning: [40, -3, 3]
+    axis labels: ["Jet 3 #eta", Events]
+    visible: [-3, 3]
+    showOF: false
+    logy: 1
+
+SubSubSubLJ_Eta:
+    type: th1f
+    dir: jets
+    binning: [40, -3, 3]
+    axis labels: ["Jet 4 #eta", Events]
+    visible: [-3, 3]
+    showOF: false
+    logy: 1
+
+CleanJ_BTagPt:
+    type: th1f
+    dir: jets
+    max: J_NumCleanCSVM
+    binning: [30, 30, 250]
+    axis labels: ['Tagged jet p_{T}', Events]
+    visible: [30, 250]
     showOF: true
     logy: 1
 
-
-MatchedTo_T1:
+CleanJ_BTagEta:
     type: th1f
-    dir: gentaus
-    numBinsX: 6
-    xMin: 0
-    xMax: 6
-    xTitle: Leading reco tau match
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6
+    dir: jets
+    max: J_NumCleanCSVM
+    binning: [40, -3, 3]
+    axis labels: ["Tagged jet #eta", Events]
+    visible: [-3, 3]
     showOF: false
     logy: 1
 
-
-MatchedTo_T2:
-    type: th1f
-    dir: gentaus
-    numBinsX: 6
-    xMin: 0
-    xMax: 6
-    xTitle: Subleading reco tau match
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6
-    showOF: false
-    logy: 1
-
-
-NumCSVnonHTauJets:
+CleanJ_NonBTagPt:
     type: th1f
     dir: jets
-    numBinsX: 30
-    xMin: 0
-    xMax: 30
-    xTitle: Number of non H-tau jets
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    logy: 1
-    centerLabels: true
-
-
-NumCSVLbtags:
-    type: th1f
-    dir: jets
-    numBinsX: 30
-    xMin: 0
-    xMax: 30
-    xTitle: Number of b-tags (CSVL)
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 8
-    logy: 1
-    centerLabels: true
-
-
-NumCSVMbtags:
-    type: th1f
-    dir: jets
-    numBinsX: 30
-    xMin: 0
-    xMax: 30
-    xTitle: Number of b-tags (CSVM)
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5
-    logy: 1
-    centerLabels: true
-
-
-NumCSVTbtags:
-    type: th1f
-    dir: jets
-    numBinsX: 30
-    xMin: 0
-    xMax: 30
-    xTitle: Number of b-tags (CSVT)
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5
-    logy: 1
-    centerLabels: true
-
-
-NumCSVLnonBtags:
-    type: th1f
-    dir: jets
-    numBinsX: 30
-    xMin: 0
-    xMax: 30
-    xTitle: Number of non-b-tags (CSVM)
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    logy: 1
-    centerLabels: true
-
-
-NumCSVMnonBtags:
-    type: th1f
-    dir: jets
-    numBinsX: 30
-    xMin: 0
-    xMax: 30
-    xTitle: Number of non-b-tags (CSVM)
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    logy: 1
-    centerLabels: true
-
-
-NumCSVTnonBtags:
-    type: th1f
-    dir: jets
-    numBinsX: 30
-    xMin: 0
-    xMax: 30
-    xTitle: Number of non-b-tags (CSVT)
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    logy: 1
-    centerLabels: true
-
-
-NumCleanCSVnonHTauJets:
-    type: th1f
-    dir: jets
-    numBinsX: 30
-    xMin: 0
-    xMax: 30
-    xTitle: Number of non H-tau jets
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    logy: 1
-    centerLabels: true
-
-
-NumCleanCSVLbtags:
-    type: th1f
-    dir: jets
-    numBinsX: 30
-    xMin: 0
-    xMax: 30
-    xTitle: Number of b-tags (CSVL)
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5
-    logy: 1
-    centerLabels: true
-
-
-NumCleanCSVMbtags:
-    type: th1f
-    dir: jets
-    numBinsX: 30
-    xMin: 0
-    xMax: 30
-    xTitle: Number of b-tags (CSVM)
-    yTitle: Events
-    xMinVis: 1
-    xMaxVis: 3
-    logy: 1
-    centerLabels: true
-
-
-NumCleanCSVTbtags:
-    type: th1f
-    dir: jets
-    numBinsX: 30
-    xMin: 0
-    xMax: 30
-    xTitle: Number of b-tags (CSVT)
-    yTitle: Events
-    xMinVis: 1
-    xMaxVis: 3
-    logy: 1
-    centerLabels: true
-
-
-NumInclusiveJets:
-    type: th1f
-    dir: jets
-    numBinsX: 30
-    xMin: 0
-    xMax: 30
-    xTitle: Number of jets
-    yTitle: Events
-    xMinVis: 4
-    xMaxVis: 10
-    logy: 1
-    centerLabels: true
-
-
-NumCleanCSVLnonBtags:
-    type: th1f
-    dir: jets
-    numBinsX: 30
-    xMin: 0
-    xMax: 30
-    xTitle: Number of non-b-tags (CSVM)
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    logy: 1
-    centerLabels: true
-
-
-NumCleanCSVMnonBtags:
-    type: th1f
-    dir: jets
-    numBinsX: 30
-    xMin: 0
-    xMax: 30
-    xTitle: Number of non-b-tags (CSVM)
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    logy: 1
-    centerLabels: true
-
-
-NumCleanCSVTnonBtags:
-    type: th1f
-    dir: jets
-    numBinsX: 30
-    xMin: 0
-    xMax: 30
-    xTitle: Number of non-b-tags (CSVT)
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    logy: 1
-    centerLabels: true
-
-
-LeadingJet_Pt:
-    type: th1f
-    dir: jets
-    numBinsX: 30
-    xMin: 30
-    xMax: 250
-    xTitle: Leading jet p_{T}
-    yTitle: Events
-    xMinVis: 30
-    xMaxVis: 250
+    max: J_NumCleanNonCSVM
+    binning: [30, 30, 250]
+    axis labels: ['Untagged jet p_{T}', Events]
+    visible: [30, 250]
     showOF: true
     logy: 1
 
-
-SubLeadingJet_Pt:
+CleanJ_NonBTagEta:
     type: th1f
     dir: jets
-    numBinsX: 30
-    xMin: 30
-    xMax: 250
-    xTitle: Sub-leading jet p_{T}
-    yTitle: Events
-    xMinVis: 30
-    xMaxVis: 250
-    showOF: true
-    logy: 1
-
-
-SubSubLeadingJet_Pt:
-    type: th1f
-    dir: jets
-    numBinsX: 30
-    xMin: 30
-    xMax: 250
-    xTitle: Jet 3 p_{T}
-    yTitle: Events
-    xMinVis: 30
-    xMaxVis: 250
-    showOF: true
-    logy: 1
-
-
-SubSubSubLeadingJet_Pt:
-    type: th1f
-    dir: jets
-    numBinsX: 30
-    xMin: 30
-    xMax: 250
-    xTitle: Jet 4 p_{T}
-    yTitle: Events
-    xMinVis: 30
-    xMaxVis: 250
-    showOF: true
-    logy: 1
-
-
-LeadingJet_Eta:
-    type: th1f
-    dir: jets
-    numBinsX: 40
-    xMin: -3
-    xMax: 3
-    xTitle: "Leading jet #eta"
-    yTitle: Events
-    xMinVis: -3
-    xMaxVis: 3
+    max: J_NumCleanNonCSVM
+    binning: [40, -3, 3]
+    axis labels: ["Untagged jet #eta", Events]
+    visible: [-3, 3]
     showOF: false
     logy: 1
 
-
-SubLeadingJet_Eta:
-    type: th1f
-    dir: jets
-    numBinsX: 40
-    xMin: -3
-    xMax: 3
-    xTitle: "Sub-leading jet #eta"
-    yTitle: Events
-    xMinVis: -3
-    xMaxVis: 3
-    showOF: false
-    logy: 1
-
-
-SubSubLeadingJet_Eta:
-    type: th1f
-    dir: jets
-    numBinsX: 40
-    xMin: -3
-    xMax: 3
-    xTitle: "Jet 3 #eta"
-    yTitle: Events
-    xMinVis: -3
-    xMaxVis: 3
-    showOF: false
-    logy: 1
-
-
-SubSubSubLeadingJet_Eta:
-    type: th1f
-    dir: jets
-    numBinsX: 40
-    xMin: -3
-    xMax: 3
-    xTitle: "Jet 4 #eta"
-    yTitle: Events
-    xMinVis: -3
-    xMaxVis: 3
-    showOF: false
-    logy: 1
-
-
-BTagJet_Pt:
-    type: th1f
-    dir: jets
-    numBinsX: 30
-    xMin: 30
-    xMax: 250
-    xTitle: Tagged jet p_{T}
-    yTitle: Events
-    xMinVis: 30
-    xMaxVis: 250
-    showOF: true
-    logy: 1
-
-
-BTagJet_Eta:
-    type: th1f
-    dir: jets
-    numBinsX: 40
-    xMin: -3
-    xMax: 3
-    xTitle: "Tagged jet #eta"
-    yTitle: Events
-    xMinVis: -3
-    xMaxVis: 3
-    showOF: false
-    logy: 1
-
-
-NonBTagJet_Pt:
-    type: th1f
-    dir: jets
-    numBinsX: 30
-    xMin: 30
-    xMax: 250
-    xTitle: Untagged jet p_{T}
-    yTitle: Events
-    xMinVis: 30
-    xMaxVis: 250
-    showOF: true
-    logy: 1
-
-
-NonBTagJet_Eta:
-    type: th1f
-    dir: jets
-    numBinsX: 40
-    xMin: -3
-    xMax: 3
-    xTitle: "Untagged jet #eta"
-    yTitle: Events
-    xMinVis: -3
-    xMaxVis: 3
-    showOF: false
-    logy: 1
-
-
-Pt_L:
+L_Pt:
     type: th1f
     dir: lepton
-    numBinsX: 30
-    xMin: 0
-    xMax: 100
-    xTitle: lepton p_{T}
-    yTitle: Events
-    xMinVis: 30
-    xMaxVis: 100
+    channels: [ttl]
+    binning: [30, 0, 100]
+    axis labels: ['lepton p_{T}', Events]
+    visible: [30, 100]
     showOF: true
     logy: 1
 
-
-Eta_L:
+L_Eta:
     type: th1f
     dir: lepton
-    numBinsX: 30
-    xMin: -3
-    xMax: 3
-    xTitle: "lepton #eta"
-    yTitle: Events
-    xMinVis: -2.1
-    xMaxVis: 2.1
+    channels: [ttl]
+    binning: [30, -3, 3]
+    axis labels: ["lepton #eta", Events]
+    visible: [-2.1, 2.1]
     showOF: false
     logy: 1
 
-
-Phi_L:
+L_Phi:
     type: th1f
     dir: lepton
-    numBinsX: 30
-    xMin: -3.2
-    xMax: 3.2
-    xTitle: "l #phi"
-    yTitle: Events
-    xMinVis: -3.2
-    xMaxVis: 3.2
+    channels: [ttl]
+    binning: [30, -3.2, 3.2]
+    axis labels: ["l #phi", Events]
+    visible: [-3.2, 3.2]
     showOF: false
     logy: 1
 
-
-NumOtherTightMuons:
+T1L_DeltaR:
     type: th1f
     dir: lepton
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other tight muons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherLooseMuons:
-    type: th1f
-    dir: lepton
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (in)loose muons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherExLooseMuons:
-    type: th1f
-    dir: lepton
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (ex)loose muons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherTightElectrons:
-    type: th1f
-    dir: lepton
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other tight electrons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherLooseElectrons:
-    type: th1f
-    dir: lepton
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (in)loose electrons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherExLooseElectrons:
-    type: th1f
-    dir: lepton
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (ex)loose electrons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherTightLeptons:
-    type: th1f
-    dir: lepton
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other tight leptons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherLooseLeptons:
-    type: th1f
-    dir: lepton
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (in)loose leptons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherExLooseLeptons:
-    type: th1f
-    dir: lepton
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (ex)loose leptons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-DeltaR_LT1:
-    type: th1f
-    dir: lepton
-    numBinsX: 30
-    xMin: 0
-    xMax: 10
-    xTitle: "#Delta R(l, #tau_{1})"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6
+    channels: [ttl]
+    binning: [30, 0, 10]
+    axis labels: ["#Delta R(l, #tau_{1})", Events]
+    visible: [0, 6]
     showOF: true
     logy: 1
 
-
-DeltaR_LT2:
+T2L_DeltaR:
     type: th1f
     dir: lepton
-    numBinsX: 30
-    xMin: 0
-    xMax: 10
-    xTitle: "#Delta R(l, #tau_{2})"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6
+    channels: [ttl]
+    binning: [30, 0, 10]
+    axis labels: ["#Delta R(l, #tau_{2})", Events]
+    visible: [0, 6]
     showOF: true
     logy: 1
-
 
 DeltaR_LJ1:
     type: th1f
     dir: lepton
-    numBinsX: 30
-    xMin: 0
-    xMax: 10
-    xTitle: "#Delta R(l, #tau_{1})"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6
+    binning: [30, 0, 10]
+    axis labels: ["#Delta R(l, #tau_{1})", Events]
+    visible: [0, 6]
     showOF: true
     logy: 1
-
 
 DeltaR_LJ2:
     type: th1f
     dir: lepton
-    numBinsX: 30
-    xMin: 0
-    xMax: 10
-    xTitle: "#Delta R(l, #tau_{2})"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6
+    binning: [30, 0, 10]
+    axis labels: ["#Delta R(l, #tau_{2})", Events]
+    visible: [0, 6]
     showOF: true
     logy: 1
-
-
-Pt_M:
-    type: th1f
-    dir: muon
-    numBinsX: 50
-    xMin: 0
-    xMax: 100
-    xTitle: "#mu p_{T}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 100
-    showOF: true
-    logy: 1
-
-
-Eta_M:
-    type: th1f
-    dir: muon
-    numBinsX: 50
-    xMin: -3
-    xMax: 3
-    xTitle: "#mu #eta"
-    yTitle: Events
-    xMinVis: -3
-    xMaxVis: 3
-    showOF: false
-    logy: 1
-
-
-Phi_M:
-    type: th1f
-    dir: muon
-    numBinsX: 50
-    xMin: -3.2
-    xMax: 3.2
-    xTitle: "#mu #phi"
-    yTitle: Events
-    xMinVis: -3.2
-    xMaxVis: 3.2
-    showOF: false
-    logy: 1
-
-
-NumOtherTightMuons:
-    type: th1f
-    dir: muon
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other tight muons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherLooseMuons:
-    type: th1f
-    dir: muon
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (in)loose muons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherExLooseMuons:
-    type: th1f
-    dir: muon
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (ex)loose muons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-DeltaR_MT1:
-    type: th1f
-    dir: muon
-    numBinsX: 30
-    xMin: 0
-    xMax: 6.28
-    xTitle: "#Delta R(#mu, #tau_{1})"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6.28
-    showOF: true
-    logy: 1
-
-
-DeltaR_MT2:
-    type: th1f
-    dir: muon
-    numBinsX: 30
-    xMin: 0
-    xMax: 6.28
-    xTitle: "#Delta R(#mu, #tau_{2})"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6
-    showOF: true
-    logy: 1
-
-
-DeltaR_MJ1:
-    type: th1f
-    dir: muon
-    numBinsX: 30
-    xMin: 0
-    xMax: 6.28
-    xTitle: "#Delta R(#mu, jet_{1})"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6.28
-    showOF: true
-    logy: 1
-
-
-DeltaR_MJ2:
-    type: th1f
-    dir: muon
-    numBinsX: 30
-    xMin: 0
-    xMax: 6.28
-    xTitle: "#Delta R(#mu, jet_{2})"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6.28
-    showOF: true
-    logy: 1
-
 
 NumberPV_noPURW:
     type: th1f
     dir: pileup
-    numBinsX: 40
-    xMin: 0
-    xMax: 40
-    xTitle: Number PV, no PURW
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 40
+    binning: [40, 0, 40]
+    axis labels: [Number PV, no PURW, Events]
+    visible: [0, 40]
     showOF: true
     logy: 1
 
-
-NumberBX0_noPURW:
+V_NumInteractionsBX0_noPURW:
     type: th1f
     dir: pileup
-    numBinsX: 40
-    xMin: 0
-    xMax: 40
-    xTitle: Number BX0, no PURW
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 40
+    binning: [40, 0, 40]
+    axis labels: [Number BX0, no PURW, Events]
+    visible: [0, 40]
     showOF: true
     logy: 1
 
-
-NumberBXm1_noPURW:
+V_NumInteractionsBXm1_noPURW:
     type: th1f
     dir: pileup
-    numBinsX: 40
-    xMin: 0
-    xMax: 40
-    xTitle: Number BXm1, no PURW
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 40
+    binning: [40, 0, 40]
+    axis labels: [Number BXm1, no PURW, Events]
+    visible: [0, 40]
     showOF: true
     logy: 1
 
-
-NumberBXp1_noPURW:
+V_NumInteractionsBXp1_noPURW:
     type: th1f
     dir: pileup
-    numBinsX: 40
-    xMin: 0
-    xMax: 40
-    xTitle: Number BXp1, no PURW
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 40
+    binning: [40, 0, 40]
+    axis labels: [Number BXp1, no PURW, Events]
+    visible: [0, 40]
     showOF: true
     logy: 1
 
-
-NumberPV_afterPURW:
+V_NumVertices:
     type: th1f
     dir: pileup
-    numBinsX: 40
-    xMin: 0
-    xMax: 40
-    xTitle: Number PV, after PURW
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 40
+    binning: [40, 0, 40]
+    axis labels: [Number PV, after PURW, Events]
+    visible: [0, 40]
     showOF: true
     logy: 1
 
-
-NumberBX0_afterPURW:
+V_NumInteractionsBX0:
     type: th1f
     dir: pileup
-    numBinsX: 40
-    xMin: 0
-    xMax: 40
-    xTitle: Number BX0, after PURW
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 40
+    binning: [40, 0, 40]
+    axis labels: [Number BX0, after PURW, Events]
+    visible: [0, 40]
     showOF: true
     logy: 1
 
-
-NumberBXm1_afterPURW:
+V_NumInteractionsBXm1:
     type: th1f
     dir: pileup
-    numBinsX: 40
-    xMin: 0
-    xMax: 40
-    xTitle: Number BXm1, after PURW
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 40
+    binning: [40, 0, 40]
+    axis labels: [Number BXm1, after PURW, Events]
+    visible: [0, 40]
     showOF: true
     logy: 1
 
-
-NumberBXp1_afterPURW:
+V_NumInteractionsBXp1:
     type: th1f
     dir: pileup
-    numBinsX: 40
-    xMin: 0
-    xMax: 40
-    xTitle: Number BXp1, after PURW
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 40
+    binning: [40, 0, 40]
+    axis labels: [Number BXp1, after PURW, Events]
+    visible: [0, 40]
     showOF: true
     logy: 1
-
 
 PUweights_noPURW:
     type: th1f
     dir: pileup
-    numBinsX: 40
-    xMin: 0
-    xMax: 4
-    xTitle: PUweights, no PURW
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 4
+    binning: [40, 0, 4]
+    axis labels: [PUweights, no PURW, Events]
+    visible: [0, 4]
     showOF: true
     logy: 1
 
-
-PUweights_afterPURW:
+PUweights:
     type: th1f
     dir: pileup
-    numBinsX: 40
-    xMin: 0
-    xMax: 4
-    xTitle: PUweights, after PURW
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 4
+    binning: [40, 0, 4]
+    axis labels: [PUweights, after PURW, Events]
+    visible: [0, 4]
     showOF: true
     logy: 1
 
-
-VertexZcoord_afterPURW:
+VertexZcoord:
     type: th1f
     dir: pileup
-    numBinsX: 40
-    xMin: -20
-    xMax: 20
-    xTitle: Vertex Z coordinate, after PURW
-    yTitle: Events
-    xMinVis: -20
-    xMaxVis: 20
+    binning: [40, -20, 20]
+    axis labels: [Vertex Z coordinate, after PURW, Events]
+    visible: [-20, 20]
     showOF: true
     logy: 1
-
-
-SVFitMass:
-    type: th1f
-    dir: svfit
-    numBinsX: 50
-    xMin: 0
-    xMax: 300
-    xTitle: SVFit Mass
-    yTitle: Events
-    xMinVis: 50
-    xMaxVis: 300
-    showOF: true
-    logy: 1
-
-
-SVFitMET:
-    type: th1f
-    dir: svfit
-    numBinsX: 100
-    xMin: 0
-    xMax: 100
-    xTitle: SVFit MET
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 100
-    showOF: true
-    logy: 1
-
-
-SVFitSystemPt:
-    type: th1f
-    dir: svfit
-    numBinsX: 100
-    xMin: 0
-    xMax: 100
-    xTitle: SVFit system p_{T}
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 100
-    showOF: true
-    logy: 1
-
-
-SVFitSystemMag:
-    type: th1f
-    dir: svfit
-    numBinsX: 50
-    xMin: 0
-    xMax: 200
-    xTitle: SVFit system p
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 200
-    showOF: true
-    logy: 1
-
-
-SVFitSystemPhi:
-    type: th1f
-    dir: svfit
-    numBinsX: 100
-    xMin: 0
-    xMax: 3.5
-    xTitle: "SVFit System #phi"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 3.5
-    showOF: true
-    logy: 1
-
-
-SVFitSystemAbsEta:
-    type: th1f
-    dir: svfit
-    numBinsX: 50
-    xMin: 0
-    xMax: 3.5
-    xTitle: "SVFit system |#eta|"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 3.5
-    showOF: true
-    logy: 1
-
-
-SVFitSystemPtVsEta:
-    type: th2f
-    dir: svfit
-    numBinsX: 20
-    xMin: 0
-    xMax: 3.5
-    numBinsY: 20
-    yMin: 0
-    yMax: 150
-    xTitle: "SVFit system #eta"
-    yTitle: SVFit system p_{T}
-    xMinVis: 0
-    xMaxVis: 3.5
-    yMinVis: 0
-    yMaxVis: 150
-
-
-SVFitSystemPhiVsEta:
-    type: th2f
-    dir: svfit
-    numBinsX: 20
-    xMin: -3.5
-    xMax: 3.5
-    numBinsY: 20
-    yMin: -3.5
-    yMax: 3.5
-    xTitle: "SVFit system #eta"
-    yTitle: "SVFit system #phi"
-    xMinVis: -3.5
-    xMaxVis: 3.5
-    yMinVis: -3.5
-    yMaxVis: 3.5
-
-
-SVFitTau1Pt:
-    type: th1f
-    dir: svfit
-    numBinsX: 100
-    xMin: 0
-    xMax: 300
-    xTitle: "SVFit #tau_{1} p_{T}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 300
-    showOF: true
-    logy: 1
-
-
-SVFitTau2Pt:
-    type: th1f
-    dir: svfit
-    numBinsX: 100
-    xMin: 0
-    xMax: 300
-    xTitle: "SVFit #tau_{2} p_{T}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 300
-    showOF: true
-    logy: 1
-
-
-SVFitTau1PtVsTau2Pt:
-    type: th2f
-    dir: svfit
-    numBinsX: 50
-    xMin: 30
-    xMax: 180
-    numBinsY: 50
-    yMin: 30
-    yMax: 180
-    xTitle: "SVFit #tau_{2} p_{T}"
-    yTitle: "SVFit #tau_{1} p_{T}"
-    xMinVis: 30
-    xMaxVis: 180
-    yMinVis: 30
-    yMaxVis: 180
-
-
-BoostedSVFitTau1PhiVsTheta:
-    type: th2f
-    dir: svfit
-    numBinsX: 20
-    xMin: 0
-    xMax: 3.5
-    numBinsY: 20
-    yMin: -3.5
-    yMax: 3.5
-    xTitle: "SVFit #tau^{b} #theta"
-    yTitle: "SVFit #tau^{b} #phi"
-    xMinVis: 0
-    xMaxVis: 3.5
-    yMinVis: -3.5
-    yMaxVis: 3.5
-
-
-BoostedSVFitTau1Pt:
-    type: th1f
-    dir: svfit
-    numBinsX: 100
-    xMin: 0
-    xMax: 300
-    xTitle: "SVFit #tau^{b}_{1} p_{T}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 300
-    showOF: true
-    logy: 1
-
-
-BoostedSVFitTau2Pt:
-    type: th1f
-    dir: svfit
-    numBinsX: 100
-    xMin: 0
-    xMax: 300
-    xTitle: "SVFit #tau^{b}_{2} p_{T}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 300
-    showOF: true
-    logy: 1
-
-
-BoostedSVFitTau1Phi:
-    type: th1f
-    dir: svfit
-    numBinsX: 100
-    xMin: -3.5
-    xMax: 3.5
-    xTitle: "SVFit #tau^{b}_{1} #phi"
-    yTitle: Events
-    xMinVis: -3.5
-    xMaxVis: 3.5
-    showOF: false
-    logy: 1
-
-
-BoostedSVFitTau2Phi:
-    type: th1f
-    dir: svfit
-    numBinsX: 100
-    xMin: -3.5
-    xMax: 3.5
-    xTitle: "SVFit #tau^{b}_{2} #phi"
-    yTitle: Events
-    xMinVis: -3.5
-    xMaxVis: 3.5
-    showOF: false
-    logy: 1
-
-
-BoostedSVFitTau1Theta:
-    type: th1f
-    dir: svfit
-    numBinsX: 50
-    xMin: 0
-    xMax: 3.5
-    xTitle: "SVFit #tau^{b}_{1} #theta"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 3.5
-    showOF: false
-    logy: 1
-
-
-BoostedSVFitTau1Theta:
-    type: th1f
-    dir: svfit
-    numBinsX: 50
-    xMin: 0
-    xMax: 3.5
-    xTitle: "SVFit #tau^{b}_{1} #theta"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 3.5
-    showOF: false
-    logy: 1
-
-
-BoostedSVFitTausOmega:
-    type: th1f
-    dir: svfit
-    numBinsX: 100
-    xMin: -3.5
-    xMax: 3.5
-    xTitle: "SVFit #tau^{b}_{1,2} #omega"
-    yTitle: Events
-    xMinVis: -3.5
-    xMaxVis: 3.5
-    showOF: false
-    logy: 1
-
-
-BoostedSVFitTausDeltaPhi:
-    type: th1f
-    dir: svfit
-    numBinsX: 100
-    xMin: -3.5
-    xMax: 3.5
-    xTitle: "SVFit #tau^{b}_{1,2} #Delta#phi"
-    yTitle: Events
-    xMinVis: -3.5
-    xMaxVis: 3.5
-    showOF: false
-    logy: 1
-
-
-BoostedSVFitTausDeltaTheta:
-    type: th1f
-    dir: svfit
-    numBinsX: 100
-    xMin: -3.5
-    xMax: 3.5
-    xTitle: "SVFit #tau^{b}_{1,2} #Delta#theta"
-    yTitle: Events
-    xMinVis: -3.5
-    xMaxVis: 3.5
-    showOF: false
-    logy: 1
-
-
-BoostedSVFitTausDeltaPt:
-    type: th1f
-    dir: svfit
-    numBinsX: 100
-    xMin: -10
-    xMax: 10
-    xTitle: "SVFit #tau^{b}_{1,2} #Delta p_{T}"
-    yTitle: Events
-    xMinVis: -10
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-DeltaR_recoSVFit_L:
-    type: th1f
-    dir: svfit
-    numBinsX: 100
-    xMin: 0
-    xMax: 0.1
-    xTitle: "#DeltaR (reco, SVFit) #tau_{1}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 0.04
-    showOF: true
-    logy: 1
-
-
-DeltaR_recoSVFit_S:
-    type: th1f
-    dir: svfit
-    numBinsX: 100
-    xMin: 0
-    xMax: 0.1
-    xTitle: "#DeltaR (reco, SVFit) #tau_{2}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 0.04
-    showOF: true
-    logy: 1
-
-
-DeltaR_recoSVFit_L:
-    type: th1f
-    dir: svfit
-    numBinsX: 100
-    xMin: 0
-    xMax: 0.1
-    xTitle: "#DeltaR (reco, SVFit) #tau_{1}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 0.1
-
-
-DeltaR_recoSVFit_S:
-    type: th1f
-    dir: svfit
-    numBinsX: 100
-    xMin: 0
-    xMax: 0.1
-    xTitle: "#DeltaR (reco, SVFit) #tau_{2}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 0.1
-
-
-SVFitStatus:
-    type: th1f
-    dir: svfit
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: SVFit Status
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    logy: 1
-
-
-BoostedSVFitTau1Pt:
-    type: th1f
-    dir: svfit2
-    numBinsX: 100
-    xMin: 0
-    xMax: 300
-    xTitle: "SVFit #tau^{b}_{1} p_{T}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 300
-    showOF: true
-    logy: 1
-
 
 NumTaus:
     type: th1f
-    dir: taus
-    numBinsX: 20
-    xMin: 0
-    xMax: 20
-    xTitle: Number of taus
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 19.99
+    dir: tau
+    binning: [20, 0, 20]
+    axis labels: [Number of taus, Events]
+    visible: [0, 19.99]
     showOF: true
     logy: 1
 
-
-VisibleMass_TT:
+DitauVisibleMass:
     type: th1f
-    dir: taus
-    numBinsX: 30
-    xMin: 0
-    xMax: 200
-    xTitle: "Visible Mass #tau_{1, 2}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 200
+    dir: tau
+    channels: [ttl]
+    binning: [30, 0, 200]
+    axis labels: ["Visible Mass #tau_{1, 2}", Events]
+    visible: [0, 200]
     showOF: true
     logy: 1
 
-
-DitauVisibleMass_TT:
+TT_DeltaR:
     type: th1f
-    dir: taus
-    numBinsX: 30
-    xMin: 0
-    xMax: 200
-    xTitle: "Visible Mass #tau_{1, 2}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 200
+    dir: tau
+    channels: [ttl]
+    binning: [30, 0, 6.28]
+    axis labels: ["#DeltaR #tau_{1, 2}", Events]
+    visible: [0, 6.28]
     showOF: true
     logy: 1
-
-
-DeltaR_TT:
-    type: th1f
-    dir: taus
-    numBinsX: 30
-    xMin: 0
-    xMax: 6.28
-    xTitle: "#DeltaR #tau_{1, 2}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6.28
-    showOF: true
-    logy: 1
-
 
 DeltaR_T1J1:
     type: th1f
-    dir: taus
-    numBinsX: 30
-    xMin: 0
-    xMax: 6.28
-    xTitle: "#DeltaR (#tau_{1}, jet_{1})"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6.28
+    dir: tau
+    binning: [30, 0, 6.28]
+    axis labels: ["#DeltaR (#tau_{1}, jet_{1})", Events]
+    visible: [0, 6.28]
     showOF: true
     logy: 1
-
 
 DeltaR_T2J1:
     type: th1f
-    dir: taus
-    numBinsX: 30
-    xMin: 0
-    xMax: 6.28
-    xTitle: "#DeltaR (#tau_{2}, jet_{1})"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6.28
+    dir: tau
+    binning: [30, 0, 6.28]
+    axis labels: ["#DeltaR (#tau_{2}, jet_{1})", Events]
+    visible: [0, 6.28]
     showOF: true
     logy: 1
-
 
 DeltaR_T1J2:
     type: th1f
-    dir: taus
-    numBinsX: 30
-    xMin: 0
-    xMax: 6.28
-    xTitle: "#DeltaR (#tau_{1}, jet_{2})"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6.28
+    dir: tau
+    binning: [30, 0, 6.28]
+    axis labels: ["#DeltaR (#tau_{1}, jet_{2})", Events]
+    visible: [0, 6.28]
     showOF: true
     logy: 1
-
 
 DeltaR_T2J2:
     type: th1f
-    dir: taus
-    numBinsX: 30
-    xMin: 0
-    xMax: 6.28
-    xTitle: "#DeltaR (#tau_{2}, jet_{2})"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6.28
+    dir: tau
+    binning: [30, 0, 6.28]
+    axis labels: ["#DeltaR (#tau_{2}, jet_{2})", Events]
+    visible: [0, 6.28]
     showOF: true
     logy: 1
 
-
-Pt_T1:
+T1_Pt:
     type: th1f
-    dir: taus
-    numBinsX: 30
-    xMin: 0
-    xMax: 150
-    xTitle: "#tau_{1} p_{T}"
-    yTitle: Events
-    xMinVis: 20
-    xMaxVis: 100
+    dir: tau
+    channels: [ttl]
+    binning: [30, 0, 150]
+    axis labels: ["#tau_{1} p_{T}", Events]
+    visible: [20, 100]
     showOF: true
     logy: 1
 
-
-Pt_T2:
+T2_Pt:
     type: th1f
-    dir: taus
-    numBinsX: 30
-    xMin: 0
-    xMax: 100
-    xTitle: "#tau_{2} p_{T}"
-    yTitle: Events
-    xMinVis: 20
-    xMaxVis: 60
+    dir: tau
+    channels: [ttl]
+    binning: [30, 0, 100]
+    axis labels: ["#tau_{2} p_{T}", Events]
+    visible: [20, 60]
     showOF: true
     logy: 1
 
-
-Eta_T1:
+T1_Eta:
     type: th1f
-    dir: taus
-    numBinsX: 30
-    xMin: -3
-    xMax: 3
-    xTitle: "#tau_{1} #eta"
-    yTitle: Events
-    xMinVis: -3
-    xMaxVis: 3
+    dir: tau
+    channels: [ttl]
+    binning: [30, -3, 3]
+    axis labels: ["#tau_{1} #eta", Events]
+    visible: [-3, 3]
     showOF: false
     logy: 1
 
-
-Eta_T2:
+T2_Eta:
     type: th1f
-    dir: taus
-    numBinsX: 30
-    xMin: -3
-    xMax: 3
-    xTitle: "#tau_{2} #eta"
-    yTitle: Events
-    xMinVis: -3
-    xMaxVis: 3
+    dir: tau
+    channels: [ttl]
+    binning: [30, -3, 3]
+    axis labels: ["#tau_{2} #eta", Events]
+    visible: [-3, 3]
     showOF: false
     logy: 1
 
-
-Phi_T1:
+T1_Phi:
     type: th1f
-    dir: taus
-    numBinsX: 30
-    xMin: -3.2
-    xMax: 3.2
-    xTitle: "#tau_{1} #phi"
-    yTitle: Events
-    xMinVis: -3.2
-    xMaxVis: 3.2
+    dir: tau
+    channels: [ttl]
+    binning: [30, -3.2, 3.2]
+    axis labels: ["#tau_{1} #phi", Events]
+    visible: [-3.2, 3.2]
     showOF: false
     logy: 1
 
-
-Phi_T2:
+T2_Phi:
     type: th1f
-    dir: taus
-    numBinsX: 30
-    xMin: -3.2
-    xMax: 3.2
-    xTitle: "#tau_{2} #phi"
-    yTitle: Events
-    xMinVis: -3.2
-    xMaxVis: 3.2
+    dir: tau
+    channels: [ttl]
+    binning: [30, -3.2, 3.2]
+    axis labels: ["#tau_{2} #phi", Events]
+    visible: [-3.2, 3.2]
     showOF: false
     logy: 1
 
-
-LTPt_T1:
+T1_LTPt:
     type: th1f
-    dir: taus
-    numBinsX: 30
-    xMin: 0
-    xMax: 150
-    xTitle: "#tau_{1} LT p_{T}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 100
+    dir: tau
+    channels: [ttl]
+    binning: [30, 0, 150]
+    axis labels: ["#tau_{1} LT p_{T}", Events]
+    visible: [0, 100]
     showOF: true
     logy: 1
 
-
-LTPt_T2:
+T2_LTPt:
     type: th1f
-    dir: taus
-    numBinsX: 30
-    xMin: 0
-    xMax: 100
-    xTitle: "#tau_{2} LT p_{T}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 50
+    dir: tau
+    channels: [ttl]
+    binning: [30, 0, 100]
+    axis labels: ["#tau_{2} LT p_{T}", Events]
+    visible: [0, 50]
     showOF: true
     logy: 1
 
-
-DecayMode_T1:
+T1_DecayMode:
     type: th1f
-    dir: taus
-    numBinsX: 20
-    xMin: 0
-    xMax: 20
-    xTitle: "#tau_{1} Decay Mode"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6
+    dir: tau
+    channels: [ttl]
+    binning: [20, 0, 20]
+    axis labels: ["#tau_{1} Decay Mode", Events]
+    visible: [0, 6]
     showOF: false
     logy: 1
 
-
-DecayMode_T2:
+T2_DecayMode:
     type: th1f
-    dir: taus
-    numBinsX: 20
-    xMin: 0
-    xMax: 20
-    xTitle: "#tau_{2} Decay Mode"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6
+    dir: tau
+    channels: [ttl]
+    binning: [20, 0, 20]
+    axis labels: ["#tau_{2} Decay Mode", Events]
+    visible: [0, 6]
     showOF: false
     logy: 1
 
-
-NProngs_T1:
+T1_NumProngs:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{1} Num Prongs"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} Num Prongs", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-NProngs_T2:
+T2_NumProngs:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{2} Num Prongs"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} Num Prongs", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-IsolationIndex_T1:
+T1_IsolationIndex:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{1} isolation index"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} isolation index", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-IsolationIndex_T2:
+T2_IsolationIndex:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{2} isolation index"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} isolation index", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-AntiElectronIndex_T1:
+T1_AntiElectronIndex:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{1} anti-e index"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} anti-e index", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-AntiElectronIndex_T2:
+T2_AntiElectronIndex:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{2} anti-e index"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} anti-e index", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-AntiElectronIndexMVA2_T1:
+T1_AntiElectronIndexMVA2:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{1} anti-e index (MVA2)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} anti-e index (MVA2)", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-AntiElectronIndexMVA2_T2:
+T2_AntiElectronIndexMVA2:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{2} anti-e index (MVA2)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} anti-e index (MVA2)", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-AntiElectronIndexMVA3_T1:
+T1_AntiElectronIndexMVA3:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{1} anti-e index (MVA3)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} anti-e index (MVA3)", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-AntiElectronIndexMVA3_T2:
+T2_AntiElectronIndexMVA3:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{2} anti-e index (MVA3)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} anti-e index (MVA3)", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-AntiMuonIndex_T1:
+T1_AntiMuonIndex:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{1} anti-#mu index"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} anti-#mu index", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-AntiMuonIndex_T2:
+T2_AntiMuonIndex:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{2} anti-#mu index"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} anti-#mu index", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-AntiMuonIndex2_T1:
+T1_AntiMuonIndex2:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{1} anti-#mu index (2)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} anti-#mu index (2)", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-AntiMuonIndex2_T2:
+T2_AntiMuonIndex2:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{2} anti-#mu index (2)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} anti-#mu index (2)", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-Match_T1:
+T1_MatchIndex:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{1} match"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} match", Events]
+    visible: [0, 10]
     showOF: false
     logy: 1
 
-
-Match_T2:
+T2_MatchIndex:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{2} match"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} match", Events]
+    visible: [0, 10]
     showOF: false
     logy: 1
 
-
-Parent_T1:
+T1_Parent:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{1} Parent"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} Parent", Events]
+    visible: [0, 10]
     showOF: false
     logy: 1
 
-
-Parent_T2:
+T2_Parent:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{2} Parent"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} Parent", Events]
+    visible: [0, 10]
     showOF: false
     logy: 1
 
-
-CombIsoDBcorrRaw_T1:
+T1_CombinedIsolationDeltaBetaCorrRaw:
     type: th1f
-    dir: taus
-    numBinsX: 50
-    xMin: 0
-    xMax: 300
-    xTitle: "#tau_{1} Raw Isolation "
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 200
+    dir: tau
+    channels: [ttl]
+    binning: [50, 0, 300]
+    axis labels: ["#tau_{1} Raw Isolation ", Events]
+    visible: [0, 200]
     showOF: false
     logy: 1
 
-
-CombIsoDBcorrRaw_T2:
+T2_CombinedIsolationDeltaBetaCorrRaw:
     type: th1f
-    dir: taus
-    numBinsX: 50
-    xMin: 0
-    xMax: 300
-    xTitle: "#tau_{2} Raw Isolation "
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 200
+    dir: tau
+    channels: [ttl]
+    binning: [50, 0, 300]
+    axis labels: ["#tau_{2} Raw Isolation ", Events]
+    visible: [0, 200]
     showOF: false
     logy: 1
 
-
-CombIsoDBcorrRaw3Hits_T1:
+T1_CombinedIsolationDeltaBetaCorrRaw3Hits:
     type: th1f
-    dir: taus
-    numBinsX: 50
-    xMin: 0
-    xMax: 300
-    xTitle: "#tau_{1} Raw Isolation (3 hits)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 200
+    dir: tau
+    channels: [ttl]
+    binning: [50, 0, 300]
+    axis labels: ["#tau_{1} Raw Isolation (3 hits)", Events]
+    visible: [0, 200]
     showOF: false
     logy: 1
 
-
-CombIsoDBcorrRaw3Hits_T2:
+T2_CombinedIsolationDeltaBetaCorrRaw3Hits:
     type: th1f
-    dir: taus
-    numBinsX: 50
-    xMin: 0
-    xMax: 300
-    xTitle: "#tau_{2} Raw Isolation (3 hits)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 200
+    dir: tau
+    channels: [ttl]
+    binning: [50, 0, 300]
+    axis labels: ["#tau_{2} Raw Isolation (3 hits)", Events]
+    visible: [0, 200]
     showOF: false
     logy: 1
 
-
-IsolationMVAraw_T1:
+T1_IsolationMVARaw:
     type: th1f
-    dir: taus
-    numBinsX: 40
-    xMin: -1
-    xMax: 1
-    xTitle: "#tau_{1} Isolation MVA"
-    yTitle: Events
-    xMinVis: -1
-    xMaxVis: 1
+    dir: tau
+    channels: [ttl]
+    binning: [40, -1, 1]
+    axis labels: ["#tau_{1} Isolation MVA", Events]
+    visible: [-1, 1]
     showOF: false
     logy: 1
 
-
-IsolationMVAraw_T2:
+T2_IsolationMVARaw:
     type: th1f
-    dir: taus
-    numBinsX: 40
-    xMin: -1
-    xMax: 1
-    xTitle: "#tau_{2} Isolation MVA"
-    yTitle: Events
-    xMinVis: -1
-    xMaxVis: 1
+    dir: tau
+    channels: [ttl]
+    binning: [40, -1, 1]
+    axis labels: ["#tau_{2} Isolation MVA", Events]
+    visible: [-1, 1]
     showOF: false
     logy: 1
 
-
-IsolationMVA2raw_T1:
+T1_IsolationMVA2Raw:
     type: th1f
-    dir: taus
-    numBinsX: 50
-    xMin: -1
-    xMax: 1
-    xTitle: "#tau_{1} Isolation MVA(2)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 1
+    dir: tau
+    channels: [ttl]
+    binning: [50, -1, 1]
+    axis labels: ["#tau_{1} Isolation MVA(2)", Events]
+    visible: [0, 1]
     showOF: false
     logy: 1
 
-
-IsolationMVA2raw_T2:
+T2_IsolationMVA2Raw:
     type: th1f
-    dir: taus
-    numBinsX: 50
-    xMin: -1
-    xMax: 1
-    xTitle: "#tau_{2} Isolation MVA(2)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 1
+    dir: tau
+    channels: [ttl]
+    binning: [50, -1, 1]
+    axis labels: ["#tau_{2} Isolation MVA(2)", Events]
+    visible: [0, 1]
     showOF: false
     logy: 1
 
-
-IsolationIndex3Hits_T1:
+T1_IsolationIndex3Hits:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{1} isolation index (3 hits)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} isolation index (3 hits)", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-IsolationIndex3Hits_T2:
+T2_IsolationIndex3Hits:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{2} isolation index (3 hits)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} isolation index (3 hits)", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-IsolationIndexMVA_T1:
+T1_IsolationIndexMVA:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{1} isolation index (MVA)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} isolation index (MVA)", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-IsolationIndexMVA_T2:
+T2_IsolationIndexMVA:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{2} isolation index (MVA)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} isolation index (MVA)", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-IsolationIndexMVA2_T1:
+T1_IsolationIndexMVA2:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{1} isolation index (MVA2)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} isolation index (MVA2)", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-IsolationIndexMVA2_T2:
+T2_IsolationIndexMVA2:
     type: th1f
-    dir: taus
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau_{2} isolation index (MVA2)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} isolation index (MVA2)", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-AgainstElectronMVA_T1:
+T1_AntiElectronMVA:
     type: th1f
-    dir: taus
-    numBinsX: 2
-    xMin: 0
-    xMax: 1
-    xTitle: "#tau_{1} anti-elec MVA"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 1
+    dir: tau
+    channels: [ttl]
+    binning: [2, 0, 1]
+    axis labels: ["#tau_{1} anti-elec MVA", Events]
+    visible: [0, 1]
     showOF: false
     logy: 1
 
-
-AgainstElectronMVA_T2:
+T2_AntiElectronMVA:
     type: th1f
-    dir: taus
-    numBinsX: 2
-    xMin: 0
-    xMax: 1
-    xTitle: "#tau_{2} anti-elec MVA"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 1
+    dir: tau
+    channels: [ttl]
+    binning: [2, 0, 1]
+    axis labels: ["#tau_{2} anti-elec MVA", Events]
+    visible: [0, 1]
     showOF: false
     logy: 1
 
-
-AgainstElectronMVA2raw_T1:
+T1_AntiElectronMVA2Raw:
     type: th1f
-    dir: taus
-    numBinsX: 50
-    xMin: -1
-    xMax: 1
-    xTitle: "#tau_{1} anti-elec MVA(2)"
-    yTitle: Events
-    xMinVis: -1
-    xMaxVis: 1
+    dir: tau
+    channels: [ttl]
+    binning: [50, -1, 1]
+    axis labels: ["#tau_{1} anti-elec MVA(2)", Events]
+    visible: [-1, 1]
     showOF: false
     logy: 1
 
-
-AgainstElectronMVA2raw_T2:
+T2_AntiElectronMVA2Raw:
     type: th1f
-    dir: taus
-    numBinsX: 50
-    xMin: -1
-    xMax: 1
-    xTitle: "#tau_{2} anti-elec MVA(2)"
-    yTitle: Events
-    xMinVis: -1
-    xMaxVis: 1
+    dir: tau
+    channels: [ttl]
+    binning: [50, -1, 1]
+    axis labels: ["#tau_{2} anti-elec MVA(2)", Events]
+    visible: [-1, 1]
     showOF: false
     logy: 1
 
-
-AgainstElectronMVA3raw_T1:
+T1_AntiElectronMVA3Raw:
     type: th1f
-    dir: taus
-    numBinsX: 50
-    xMin: -1
-    xMax: 1
-    xTitle: "#tau_{1} anti-elec MVA(3)"
-    yTitle: Events
-    xMinVis: -1
-    xMaxVis: 1
+    dir: tau
+    channels: [ttl]
+    binning: [50, -1, 1]
+    axis labels: ["#tau_{1} anti-elec MVA(3)", Events]
+    visible: [-1, 1]
     showOF: false
     logy: 1
 
-
-AgainstElectronMVA3raw_T2:
+T2_AntiElectronMVA3Raw:
     type: th1f
-    dir: taus
-    numBinsX: 50
-    xMin: -1
-    xMax: 1
-    xTitle: "#tau_{2} anti-elec MVA(3)"
-    yTitle: Events
-    xMinVis: -1
-    xMaxVis: 1
+    dir: tau
+    channels: [ttl]
+    binning: [50, -1, 1]
+    axis labels: ["#tau_{2} anti-elec MVA(3)", Events]
+    visible: [-1, 1]
     showOF: false
     logy: 1
 
-
-AgainstElectronDeadECAL_T1:
+T1_AntiElectronDeadECAL:
     type: th1f
-    dir: taus
-    numBinsX: 2
-    xMin: 0
-    xMax: 1
-    xTitle: "#tau_{1} anti-elec (dead crystals)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 1
+    dir: tau
+    channels: [ttl]
+    binning: [2, 0, 1]
+    axis labels: ["#tau_{1} anti-elec (dead crystals)", Events]
+    visible: [0, 1]
     showOF: false
     logy: 1
 
-
-AgainstElectronDeadECAL_T2:
+T2_AntiElectronDeadECAL:
     type: th1f
-    dir: taus
-    numBinsX: 2
-    xMin: 0
-    xMax: 1
-    xTitle: "#tau_{2} anti-elec (dead crystals)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 1
+    dir: tau
+    channels: [ttl]
+    binning: [2, 0, 1]
+    axis labels: ["#tau_{2} anti-elec (dead crystals)", Events]
+    visible: [0, 1]
     showOF: false
     logy: 1
-
 
 ZcoordDiff_TT:
     type: th1f
-    dir: taus
-    numBinsX: 50
-    xMin: 0
-    xMax: 2
-    xTitle: "#DeltaVZ #tau_{1, 2}"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 2
+    dir: tau
+    binning: [50, 0, 2]
+    axis labels: ["#DeltaVZ #tau_{1, 2}", Events]
+    visible: [0, 2]
     showOF: false
     logy: 1
 
-
-ZcoordDiff_TTall:
+L1_Pt:
     type: th1f
-    dir: taus
-    numBinsX: 50
-    xMin: 0
-    xMax: 1
-    xTitle: "#DeltaVZ #tau_{1, 2} (inclusive)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 1
-    showOF: false
-    logy: 1
-
-
-Pt_L1:
-    type: th1f
-    dir: tll_leptons
-    numBinsX: 30
-    xMin: 0
-    xMax: 100
-    xTitle: lepton_{1} p_{T} (GeV)
-    yTitle: Events
-    xMinVis: 30
-    xMaxVis: 100
+    dir: leptons
+    channels: [tll]
+    binning: [30, 0, 100]
+    axis labels: ['lepton_{1} p_{T}', Events]
+    visible: [30, 100]
     showOF: true
     logy: 1
 
-
-Eta_L1:
+L1_Eta:
     type: th1f
-    dir: tll_leptons
-    numBinsX: 30
-    xMin: -3
-    xMax: 3
-    xTitle: "lepton_{1} #eta"
-    yTitle: Events
-    xMinVis: -2.1
-    xMaxVis: 2.1
+    dir: leptons
+    channels: [tll]
+    binning: [30, -3, 3]
+    axis labels: ["lepton_{1} #eta", Events]
+    visible: [-2.1, 2.1]
     showOF: false
     logy: 1
 
-
-Phi_L1:
+L1_Phi:
     type: th1f
-    dir: tll_leptons
-    numBinsX: 40
-    xMin: -3.2
-    xMax: 3.2
-    xTitle: "l #phi"
-    yTitle: Events
-    xMinVis: -3.2
-    xMaxVis: 3.2
+    dir: leptons
+    channels: [tll]
+    binning: [40, -3.2, 3.2]
+    axis labels: ["l #phi", Events]
+    visible: [-3.2, 3.2]
     showOF: false
     logy: 1
 
-
-NumOtherTightMuons:
+TL1_DeltaR:
     type: th1f
-    dir: tll_leptons
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other tight muons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherLooseMuons:
-    type: th1f
-    dir: tll_leptons
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (in)loose muons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherExLooseMuons:
-    type: th1f
-    dir: tll_leptons
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (ex)loose muons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherTightElectrons:
-    type: th1f
-    dir: tll_leptons
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other tight electrons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherLooseElectrons:
-    type: th1f
-    dir: tll_leptons
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (in)loose electrons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherExLooseElectrons:
-    type: th1f
-    dir: tll_leptons
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (ex)loose electrons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherTightLeptons:
-    type: th1f
-    dir: tll_leptons
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other tight leptons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherLooseLeptons:
-    type: th1f
-    dir: tll_leptons
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (in)loose leptons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherExLooseLeptons:
-    type: th1f
-    dir: tll_leptons
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (ex)loose leptons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-DeltaR_L1T:
-    type: th1f
-    dir: tll_leptons
-    numBinsX: 50
-    xMin: 0
-    xMax: 10
-    xTitle: "#Delta R(l_{1}, #tau)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6
+    dir: leptons
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{1}, #tau)", Events]
+    visible: [0, 6]
     showOF: true
     logy: 1
 
-
-Pt_L2:
+L2_Pt:
     type: th1f
-    dir: tll_leptons
-    numBinsX: 30
-    xMin: 0
-    xMax: 100
-    xTitle: lepton_{2} p_{T} (GeV)
-    yTitle: Events
-    xMinVis: 30
-    xMaxVis: 100
+    dir: leptons
+    channels: [tll]
+    binning: [30, 0, 100]
+    axis labels: ['lepton_{2} p_{T}', Events]
+    visible: [30, 100]
     showOF: true
     logy: 1
 
-
-Eta_L2:
+L2_Eta:
     type: th1f
-    dir: tll_leptons
-    numBinsX: 30
-    xMin: -3
-    xMax: 3
-    xTitle: "lepton_{2} #eta"
-    yTitle: Events
-    xMinVis: -2.1
-    xMaxVis: 2.1
+    dir: leptons
+    channels: [tll]
+    binning: [30, -3, 3]
+    axis labels: ["lepton_{2} #eta", Events]
+    visible: [-2.1, 2.1]
     showOF: false
     logy: 1
 
-
-Phi_L2:
+L2_Phi:
     type: th1f
-    dir: tll_leptons
-    numBinsX: 40
-    xMin: -3.2
-    xMax: 3.2
-    xTitle: "l #phi"
-    yTitle: Events
-    xMinVis: -3.2
-    xMaxVis: 3.2
+    dir: leptons
+    channels: [tll]
+    binning: [40, -3.2, 3.2]
+    axis labels: ["l #phi", Events]
+    visible: [-3.2, 3.2]
     showOF: false
     logy: 1
 
-
-NumOtherTightMuons:
+L2T_DeltaR:
     type: th1f
-    dir: tll_leptons
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other tight muons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherLooseMuons:
-    type: th1f
-    dir: tll_leptons
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (in)loose muons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherExLooseMuons:
-    type: th1f
-    dir: tll_leptons
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (ex)loose muons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherTightElectrons:
-    type: th1f
-    dir: tll_leptons
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other tight electrons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherLooseElectrons:
-    type: th1f
-    dir: tll_leptons
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (in)loose electrons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherExLooseElectrons:
-    type: th1f
-    dir: tll_leptons
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (ex)loose electrons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherTightLeptons:
-    type: th1f
-    dir: tll_leptons
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other tight leptons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherLooseLeptons:
-    type: th1f
-    dir: tll_leptons
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (in)loose leptons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-NumOtherExLooseLeptons:
-    type: th1f
-    dir: tll_leptons
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: Num other (ex)loose leptons
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
-    showOF: false
-    logy: 1
-
-
-DeltaR_L2T:
-    type: th1f
-    dir: tll_leptons
-    numBinsX: 50
-    xMin: 0
-    xMax: 10
-    xTitle: "#Delta R(l_{2}, #tau)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6
+    dir: leptons
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{2}, #tau)", Events]
+    visible: [0, 6]
     showOF: true
     logy: 1
-
 
 DeltaR_LJ1:
     type: th1f
-    dir: tll_leptons
-    numBinsX: 50
-    xMin: 0
-    xMax: 10
-    xTitle: "#Delta R(l, #tau_{1})"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6
+    dir: leptons
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l, #tau_{1})", Events]
+    visible: [0, 6]
     showOF: true
     logy: 1
-
 
 DeltaR_LJ2:
     type: th1f
-    dir: tll_leptons
-    numBinsX: 50
-    xMin: 0
-    xMax: 10
-    xTitle: "#Delta R(l, #tau_{2})"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6
+    dir: leptons
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l, #tau_{2})", Events]
+    visible: [0, 6]
     showOF: true
     logy: 1
 
-
-NumTaus:
+T_Pt:
     type: th1f
-    dir: tll_tau
-    numBinsX: 20
-    xMin: 0
-    xMax: 20
-    xTitle: Number of taus
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 19.99
+    dir: tau
+    channels: [tll]
+    binning: [50, 0, 150]
+    axis labels: ["#tau p_{T} (GeV/c)", Events]
+    visible: [20, 100]
     showOF: true
     logy: 1
 
-
-Pt_T:
+T_Eta:
     type: th1f
-    dir: tll_tau
-    numBinsX: 50
-    xMin: 0
-    xMax: 150
-    xTitle: "#tau p_{T} (GeV/c)"
-    yTitle: Events
-    xMinVis: 20
-    xMaxVis: 100
+    dir: tau
+    channels: [tll]
+    binning: [40, -3, 3]
+    axis labels: ["#tau #eta", Events]
+    visible: [-3, 3]
+    showOF: false
+    logy: 1
+
+T_Phi:
+    type: th1f
+    dir: tau
+    channels: [tll]
+    binning: [30, -3.2, 3.2]
+    axis labels: ["#tau #phi", Events]
+    visible: [-3.2, 3.2]
+    showOF: false
+    logy: 1
+
+T_LTPt:
+    type: th1f
+    dir: tau
+    channels: [tll]
+    binning: [50, 0, 150]
+    axis labels: ["#tau LT p_{T} (GeV)", Events]
+    visible: [0, 100]
     showOF: true
     logy: 1
 
-
-Eta_T:
+T_DecayMode:
     type: th1f
-    dir: tll_tau
-    numBinsX: 40
-    xMin: -3
-    xMax: 3
-    xTitle: "#tau #eta"
-    yTitle: Events
-    xMinVis: -3
-    xMaxVis: 3
+    dir: tau
+    channels: [tll]
+    binning: [20, 0, 20]
+    axis labels: ["#tau Decay Mode", Events]
+    visible: [0, 6]
     showOF: false
     logy: 1
 
-
-Phi_T:
+T_NumProngs:
     type: th1f
-    dir: tll_tau
-    numBinsX: 30
-    xMin: -3.2
-    xMax: 3.2
-    xTitle: "#tau #phi"
-    yTitle: Events
-    xMinVis: -3.2
-    xMaxVis: 3.2
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau Num Prongs", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-LTPt_T:
+T_IsolationIndex:
     type: th1f
-    dir: tll_tau
-    numBinsX: 50
-    xMin: 0
-    xMax: 150
-    xTitle: "#tau LT p_{T} (GeV)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 100
-    showOF: true
-    logy: 1
-
-
-DecayMode_T:
-    type: th1f
-    dir: tll_tau
-    numBinsX: 20
-    xMin: 0
-    xMax: 20
-    xTitle: "#tau Decay Mode"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau isolation index", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-NProngs_T:
+T_AntiElectronIndex:
     type: th1f
-    dir: tll_tau
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau Num Prongs"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau anti-e index", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-IsolationIndex_T:
+T_AntiElectronIndexMVA2:
     type: th1f
-    dir: tll_tau
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau isolation index"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau anti-e index (MVA2)", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-AntiElectronIndex_T:
+T_AntiElectronIndexMVA3:
     type: th1f
-    dir: tll_tau
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau anti-e index"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau anti-e index (MVA3)", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-AntiElectronIndexMVA2_T:
+T_AntiMuonIndex:
     type: th1f
-    dir: tll_tau
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau anti-e index (MVA2)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau anti-#mu index", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-AntiElectronIndexMVA3_T:
+T_AntiMuonIndex2:
     type: th1f
-    dir: tll_tau
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau anti-e index (MVA3)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau anti-#mu index (2)", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-AntiMuonIndex_T:
+T_MatchIndex:
     type: th1f
-    dir: tll_tau
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau anti-#mu index"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau match", Events]
+    visible: [0, 10]
     showOF: false
     logy: 1
 
-
-AntiMuonIndex2_T:
+T_Parent:
     type: th1f
-    dir: tll_tau
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau anti-#mu index (2)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau Parent", Events]
+    visible: [0, 10]
     showOF: false
     logy: 1
 
-
-Match_T:
+T_CombinedIsolationDeltaBetaCorrRaw:
     type: th1f
-    dir: tll_tau
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau match"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
+    dir: tau
+    channels: [tll]
+    binning: [50, 0, 300]
+    axis labels: ["#tau Raw Isolation ", Events]
+    visible: [0, 200]
     showOF: false
     logy: 1
 
-
-Parent_T:
+T_CombinedIsolationDeltaBetaCorrRaw3Hits:
     type: th1f
-    dir: tll_tau
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau Parent"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 10
+    dir: tau
+    channels: [tll]
+    binning: [50, 0, 300]
+    axis labels: ["#tau Raw Isolation (3 hits)", Events]
+    visible: [0, 200]
     showOF: false
     logy: 1
 
-
-CombIsoDBcorrRaw_T:
+T_IsolationMVARaw:
     type: th1f
-    dir: tll_tau
-    numBinsX: 50
-    xMin: 0
-    xMax: 300
-    xTitle: "#tau Raw Isolation "
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 200
+    dir: tau
+    channels: [tll]
+    binning: [50, -1, 1]
+    axis labels: ["#tau Isolation MVA", Events]
+    visible: [-1, 1]
     showOF: false
     logy: 1
 
-
-CombIsoDBcorrRaw3Hits_T:
+T_IsolationMVA2Raw:
     type: th1f
-    dir: tll_tau
-    numBinsX: 50
-    xMin: 0
-    xMax: 300
-    xTitle: "#tau Raw Isolation (3 hits)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 200
+    dir: tau
+    channels: [tll]
+    binning: [50, -1, 1]
+    axis labels: ["#tau Isolation MVA(2)", Events]
+    visible: [-1, 1]
     showOF: false
     logy: 1
 
-
-IsolationMVAraw_T:
+T_IsolationIndex3Hits:
     type: th1f
-    dir: tll_tau
-    numBinsX: 50
-    xMin: -1
-    xMax: 1
-    xTitle: "#tau Isolation MVA"
-    yTitle: Events
-    xMinVis: -1
-    xMaxVis: 1
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau isolation index (3 hits)", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-IsolationMVA2raw_T:
+T_IsolationIndexMVA:
     type: th1f
-    dir: tll_tau
-    numBinsX: 50
-    xMin: -1
-    xMax: 1
-    xTitle: "#tau Isolation MVA(2)"
-    yTitle: Events
-    xMinVis: -1
-    xMaxVis: 1
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau isolation index (MVA)", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-IsolationIndex3Hits_T:
+T_IsolationIndexMVA2:
     type: th1f
-    dir: tll_tau
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau isolation index (3 hits)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau isolation index (MVA2)", Events]
+    visible: [0, 5.99]
     showOF: false
     logy: 1
 
-
-IsolationIndexMVA_T:
+T_AntiElectronMVA:
     type: th1f
-    dir: tll_tau
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau isolation index (MVA)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [tll]
+    binning: [2, 0, 1]
+    axis labels: ["#tau anti-elec MVA", Events]
+    visible: [0, 1]
     showOF: false
     logy: 1
 
-
-IsolationIndexMVA2_T:
+T_AntiElectronMVA2Raw:
     type: th1f
-    dir: tll_tau
-    numBinsX: 10
-    xMin: 0
-    xMax: 10
-    xTitle: "#tau isolation index (MVA2)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 5.99
+    dir: tau
+    channels: [tll]
+    binning: [50, -1, 1]
+    axis labels: ["#tau anti-elec MVA(2)", Events]
+    visible: [-1, 1]
     showOF: false
     logy: 1
 
-
-AgainstElectronMVA_T:
+T_AntiElectronMVA3Raw:
     type: th1f
-    dir: tll_tau
-    numBinsX: 2
-    xMin: 0
-    xMax: 1
-    xTitle: "#tau anti-elec MVA"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 1
+    dir: tau
+    channels: [tll]
+    binning: [50, -1, 1]
+    axis labels: ["#tau anti-elec MVA(3)", Events]
+    visible: [-1, 1]
     showOF: false
     logy: 1
 
-
-AgainstElectronMVA2raw_T:
+T_AntiElectronDeadECAL:
     type: th1f
-    dir: tll_tau
-    numBinsX: 50
-    xMin: -1
-    xMax: 1
-    xTitle: "#tau anti-elec MVA(2)"
-    yTitle: Events
-    xMinVis: -1
-    xMaxVis: 1
+    dir: tau
+    channels: [tll]
+    binning: [2, 0, 1]
+    axis labels: ["#tau anti-elec (dead crystals)", Events]
+    visible: [0, 1]
     showOF: false
     logy: 1
-
-
-AgainstElectronMVA3raw_T:
-    type: th1f
-    dir: tll_tau
-    numBinsX: 50
-    xMin: -1
-    xMax: 1
-    xTitle: "#tau anti-elec MVA(3)"
-    yTitle: Events
-    xMinVis: -1
-    xMaxVis: 1
-    showOF: false
-    logy: 1
-
-
-AgainstElectronDeadECAL_T:
-    type: th1f
-    dir: tll_tau
-    numBinsX: 2
-    xMin: 0
-    xMax: 1
-    xTitle: "#tau anti-elec (dead crystals)"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 1
-    showOF: false
-    logy: 1
-
-# Author:	Nil Valls <nil.valls@cern.ch>
-# Date:		14Jun2011
-#
-# Config file for Z'->tautau analysis plots
-# For more info on the config file parser see http://www.codeproject.com/KB/files/config-file-parser.aspx
 
 Btags:
     type: th1f
     dir: vertex
-    numBinsX: 30
-    xMin: 0
-    xMax: 30
-    xTitle: Number of b-tags
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 6
+    binning: [30, 0, 30]
+    axis labels: [Number of b-tags, Events]
+    visible: [0, 6]
     logy: 1
     centerLabels: true
-
-####
-
-LTdxy_L:
-    type: th1f
-    dir: vertex
-    numBinsX: 100
-    xMin: -0.01
-    xMax: 0.01
-    xTitle: LL LT dxy
-    yTitle: Events
-    xMinVis: -0.01
-    xMaxVis: 0.01
-
-
-LTdxy_S:
-    type: th1f
-    dir: vertex
-    numBinsX: 100
-    xMin: -0.01
-    xMax: 0.01
-    xTitle: SL LT dxy
-    yTitle: Events
-    xMinVis: -0.01
-    xMaxVis: 0.01
-
-
-LTdz_L:
-    type: th1f
-    dir: vertex
-    numBinsX: 100
-    xMin: -0.02
-    xMax: 0.02
-    xTitle: LL LT dz
-    yTitle: Events
-    xMinVis: -0.02
-    xMaxVis: 0.02
-
-
-LTdz_S:
-    type: th1f
-    dir: vertex
-    numBinsX: 100
-    xMin: -0.02
-    xMax: 0.02
-    xTitle: SL LT dz
-    yTitle: Events
-    xMinVis: -0.02
-    xMaxVis: 0.02
-
-##
-
-SigLTdxy_L:
-    type: th1f
-    dir: vertex
-    numBinsX: 100
-    xMin: -10
-    xMax: 10
-    xTitle: Sig LL LT dxy
-    yTitle: Events
-    xMinVis: -10
-    xMaxVis: 10
-
-
-SigLTdxy_S:
-    type: th1f
-    dir: vertex
-    numBinsX: 100
-    xMin: -10
-    xMax: 10
-    xTitle: Sig SL LT dxy
-    yTitle: Events
-    xMinVis: -10
-    xMaxVis: 10
-
-
-SigLTdz_L:
-    type: th1f
-    dir: vertex
-    numBinsX: 100
-    xMin: -10
-    xMax: 10
-    xTitle: Sig LL LT dz
-    yTitle: Events
-    xMinVis: -10
-    xMaxVis: 10
-
-
-SigLTdz_S:
-    type: th1f
-    dir: vertex
-    numBinsX: 100
-    xMin: -10
-    xMax: 10
-    xTitle: Sig SL LT dz
-    yTitle: Events
-    xMinVis: -10
-    xMaxVis: 10
-
-##
-
-AbsDeltaLTvxy_LS:
-    type: th1f
-    dir: vertex
-    numBinsX: 100
-    xMin: 0
-    xMax: 0.1
-    xTitle: "|#Delta LT vxy(#tau_{1}, #tau_{2})|"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 0.05
-
-
-AbsDeltaLTvxyz_LS:
-    type: th1f
-    dir: vertex
-    numBinsX: 100
-    xMin: 0
-    xMax: 0.1
-    xTitle: "|#Delta LT vxy(#tau_{1}, #tau_{2})|"
-    yTitle: Events
-    xMinVis: 0
-    xMaxVis: 0.05
-
-####
-
-DeltaEta_LS:
-    type: th1f
-    dir: vertex
-    numBinsX: 240
-    xMin: -10
-    xMax: 10
-    xTitle: "#Delta#eta(#tau_{1}, #tau_{2})"
-    yTitle: Events
-    xMinVis: -5
-    xMaxVis: 5
-

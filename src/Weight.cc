@@ -8,9 +8,9 @@ namespace roast {
     std::map<std::string, roast::Weight> Weight::weights;
 
     float
-    Weight::operator()(Branches* b, const int& idx)
+    Weight::operator()(Branches* b, int idx)
     {
-        float w = GetVal(b, idx);
+        float w = GetVal(b, idx, -1);
         if (strength > 0)
             w = pow(strength, w);
 
@@ -82,7 +82,7 @@ namespace roast {
             label = "BR correction";
             switch (kind) {
                 case kNominal:
-                    fct = [](roast::Branches *b, const int& idx) -> float {
+                    fct = [](roast::Branches *b, int idx, int n) -> float {
                         unsigned int matches = 0;
                         for (const auto& id: *b->GT_ParentId)
                             matches += (abs(id) == 25);
@@ -100,7 +100,7 @@ namespace roast {
                     break;
                 case kUp:
                 case kDown:
-                    fct = [](roast::Branches *b, const int& idx) -> float {
+                    fct = [](roast::Branches *b, int idx, int n) -> float {
                         auto e = dynamic_cast<roast::ttl::Branches*>(b);
                         unsigned int matches = 0;
                         if (e->GetTau1MatchIndex(idx) == 4)
@@ -118,7 +118,7 @@ namespace roast {
                     break;
                 case kUp:
                 case kDown:
-                    fct = [](roast::Branches *b, const int& idx) -> float {
+                    fct = [](roast::Branches *b, int idx, int n) -> float {
                         auto e = dynamic_cast<roast::ttl::Branches*>(b);
                         unsigned int matches = 0;
                         if (e->GetTau1MatchIndex(idx) == 1)
@@ -136,7 +136,7 @@ namespace roast {
                     break;
                 case kUp:
                 case kDown:
-                    fct = [](roast::Branches *b, const int& idx) -> float {
+                    fct = [](roast::Branches *b, int idx, int n) -> float {
                         auto e = dynamic_cast<roast::ttl::Branches*>(b);
                         unsigned int matches = 0;
                         if (e->GetTau1MatchIndex(idx) == 2)

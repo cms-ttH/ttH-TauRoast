@@ -10,6 +10,8 @@
 
 #include <TObject.h>
 
+#include "Accessor.h"
+
 namespace roast {
     class Branches;
 
@@ -25,10 +27,8 @@ namespace roast {
     //*/
        public :
             struct Cut {
-                typedef float (*val_f)(Branches*, const int&);
-
                 std::string name;
-                val_f GetVal;
+                GetValue_t GetVal;
                 int rank;
                 float min;
                 float max;
@@ -39,7 +39,7 @@ namespace roast {
 
                 bool Check(Branches*, const int, const bool bypass=false);
 
-                Cut(const std::string n="", val_f=0, const int r=0, const float mn=0., const float mx=0.,
+                Cut(const std::string n="", GetValue_t=0, const int r=0, const float mn=0., const float mx=0.,
                         const double sig=0., bool bypass=false);
                 Cut(const std::string&, const float, const float);
 

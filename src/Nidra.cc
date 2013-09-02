@@ -111,7 +111,11 @@ namespace roast {
                 }
             }
 
-            branches->FillHistograms(proc.GetHContainer(), idx, weight);
+            for (auto& h: proc.GetHContainer()) {
+                try {
+                    h.second->Fill(branches, idx, weight);
+                } catch (std::out_of_range e) {}
+            }
 
             ++count;
         }

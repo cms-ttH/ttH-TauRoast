@@ -6,26 +6,9 @@ using namespace roast;
 void
 tll::Branches::Clear()
 {
+    roast::Branches::Clear();
+
     // >>> Begin clear <<<
-    CSVeventWeight->clear();
-    CSVeventWeightCErr1down->clear();
-    CSVeventWeightCErr1up->clear();
-    CSVeventWeightCErr2down->clear();
-    CSVeventWeightCErr2up->clear();
-    CSVeventWeightHFStats1down->clear();
-    CSVeventWeightHFStats1up->clear();
-    CSVeventWeightHFStats2down->clear();
-    CSVeventWeightHFStats2up->clear();
-    CSVeventWeightHFdown->clear();
-    CSVeventWeightHFup->clear();
-    CSVeventWeightLFStats1down->clear();
-    CSVeventWeightLFStats1up->clear();
-    CSVeventWeightLFStats2down->clear();
-    CSVeventWeightLFStats2up->clear();
-    CSVeventWeightLFdown->clear();
-    CSVeventWeightLFup->clear();
-    CleanJetIndices->clear();
-    TLL_HT->clear();
     TLL_Lepton1Eta->clear();
     TLL_Lepton1EventWeight->clear();
     TLL_Lepton1GenMatchDaughter0Id->clear();
@@ -83,27 +66,6 @@ tll::Branches::Clear()
     TLL_Lepton2Phi->clear();
     TLL_Lepton2Pt->clear();
     TLL_Lepton2RelIso->clear();
-    TLL_MomentumRank->clear();
-    TLL_NumCSVLbtagJets->clear();
-    TLL_NumCSVMbtagJets->clear();
-    TLL_NumCSVTbtagJets->clear();
-    TLL_NumCleanCSVLbtagJets->clear();
-    TLL_NumCleanCSVMbtagJets->clear();
-    TLL_NumCleanCSVTbtagJets->clear();
-    TLL_NumCleanNonCSVLbtagJets->clear();
-    TLL_NumCleanNonCSVMbtagJets->clear();
-    TLL_NumCleanNonCSVTbtagJets->clear();
-    TLL_NumCombos = 0;
-    TLL_NumExLooseElectrons->clear();
-    TLL_NumExLooseMuons->clear();
-    TLL_NumLooseElectrons->clear();
-    TLL_NumLooseMuons->clear();
-    TLL_NumNonCSVLbtagJets->clear();
-    TLL_NumNonCSVMbtagJets->clear();
-    TLL_NumNonCSVTbtagJets->clear();
-    TLL_NumTaus = 0;
-    TLL_NumTightElectrons->clear();
-    TLL_NumTightMuons->clear();
     TLL_TauCharge->clear();
     TLL_TauDecayMode->clear();
     TLL_TauEmFraction->clear();
@@ -199,26 +161,9 @@ tll::Branches::Clear()
 void
 tll::Branches::Delete()
 {
+    roast::Branches::Delete();
+
     // >>> Begin delete <<<
-    delete CSVeventWeight;
-    delete CSVeventWeightCErr1down;
-    delete CSVeventWeightCErr1up;
-    delete CSVeventWeightCErr2down;
-    delete CSVeventWeightCErr2up;
-    delete CSVeventWeightHFStats1down;
-    delete CSVeventWeightHFStats1up;
-    delete CSVeventWeightHFStats2down;
-    delete CSVeventWeightHFStats2up;
-    delete CSVeventWeightHFdown;
-    delete CSVeventWeightHFup;
-    delete CSVeventWeightLFStats1down;
-    delete CSVeventWeightLFStats1up;
-    delete CSVeventWeightLFStats2down;
-    delete CSVeventWeightLFStats2up;
-    delete CSVeventWeightLFdown;
-    delete CSVeventWeightLFup;
-    delete CleanJetIndices;
-    delete TLL_HT;
     delete TLL_Lepton1Eta;
     delete TLL_Lepton1EventWeight;
     delete TLL_Lepton1GenMatchDaughter0Id;
@@ -276,25 +221,6 @@ tll::Branches::Delete()
     delete TLL_Lepton2Phi;
     delete TLL_Lepton2Pt;
     delete TLL_Lepton2RelIso;
-    delete TLL_MomentumRank;
-    delete TLL_NumCSVLbtagJets;
-    delete TLL_NumCSVMbtagJets;
-    delete TLL_NumCSVTbtagJets;
-    delete TLL_NumCleanCSVLbtagJets;
-    delete TLL_NumCleanCSVMbtagJets;
-    delete TLL_NumCleanCSVTbtagJets;
-    delete TLL_NumCleanNonCSVLbtagJets;
-    delete TLL_NumCleanNonCSVMbtagJets;
-    delete TLL_NumCleanNonCSVTbtagJets;
-    delete TLL_NumExLooseElectrons;
-    delete TLL_NumExLooseMuons;
-    delete TLL_NumLooseElectrons;
-    delete TLL_NumLooseMuons;
-    delete TLL_NumNonCSVLbtagJets;
-    delete TLL_NumNonCSVMbtagJets;
-    delete TLL_NumNonCSVTbtagJets;
-    delete TLL_NumTightElectrons;
-    delete TLL_NumTightMuons;
     delete TLL_TauCharge;
     delete TLL_TauDecayMode;
     delete TLL_TauEmFraction;
@@ -390,26 +316,9 @@ tll::Branches::Delete()
 void
 tll::Branches::Null()
 {
+    roast::Branches::Null();
+
     // >>> Begin null <<<
-    CSVeventWeight = 0;
-    CSVeventWeightCErr1down = 0;
-    CSVeventWeightCErr1up = 0;
-    CSVeventWeightCErr2down = 0;
-    CSVeventWeightCErr2up = 0;
-    CSVeventWeightHFStats1down = 0;
-    CSVeventWeightHFStats1up = 0;
-    CSVeventWeightHFStats2down = 0;
-    CSVeventWeightHFStats2up = 0;
-    CSVeventWeightHFdown = 0;
-    CSVeventWeightHFup = 0;
-    CSVeventWeightLFStats1down = 0;
-    CSVeventWeightLFStats1up = 0;
-    CSVeventWeightLFStats2down = 0;
-    CSVeventWeightLFStats2up = 0;
-    CSVeventWeightLFdown = 0;
-    CSVeventWeightLFup = 0;
-    CleanJetIndices = 0;
-    TLL_HT = 0;
     TLL_Lepton1Eta = 0;
     TLL_Lepton1EventWeight = 0;
     TLL_Lepton1GenMatchDaughter0Id = 0;
@@ -467,27 +376,6 @@ tll::Branches::Null()
     TLL_Lepton2Phi = 0;
     TLL_Lepton2Pt = 0;
     TLL_Lepton2RelIso = 0;
-    TLL_MomentumRank = 0;
-    TLL_NumCSVLbtagJets = 0;
-    TLL_NumCSVMbtagJets = 0;
-    TLL_NumCSVTbtagJets = 0;
-    TLL_NumCleanCSVLbtagJets = 0;
-    TLL_NumCleanCSVMbtagJets = 0;
-    TLL_NumCleanCSVTbtagJets = 0;
-    TLL_NumCleanNonCSVLbtagJets = 0;
-    TLL_NumCleanNonCSVMbtagJets = 0;
-    TLL_NumCleanNonCSVTbtagJets = 0;
-    TLL_NumCombos = 0;
-    TLL_NumExLooseElectrons = 0;
-    TLL_NumExLooseMuons = 0;
-    TLL_NumLooseElectrons = 0;
-    TLL_NumLooseMuons = 0;
-    TLL_NumNonCSVLbtagJets = 0;
-    TLL_NumNonCSVMbtagJets = 0;
-    TLL_NumNonCSVTbtagJets = 0;
-    TLL_NumTaus = 0;
-    TLL_NumTightElectrons = 0;
-    TLL_NumTightMuons = 0;
     TLL_TauCharge = 0;
     TLL_TauDecayMode = 0;
     TLL_TauEmFraction = 0;
@@ -583,6 +471,8 @@ tll::Branches::Null()
 void
 tll::Branches::SetBranchAddresses()
 {
+    roast::Branches::SetBranchAddresses();
+
     // >>> Begin address <<<
     fChain->SetBranchAddress("TLL_CSVeventWeight", &CSVeventWeight);
     fChain->SetBranchAddress("TLL_CSVeventWeightCErr1down", &CSVeventWeightCErr1down);
@@ -602,7 +492,7 @@ tll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TLL_CSVeventWeightLFdown", &CSVeventWeightLFdown);
     fChain->SetBranchAddress("TLL_CSVeventWeightLFup", &CSVeventWeightLFup);
     fChain->SetBranchAddress("TLL_CleanJetIndices", &CleanJetIndices);
-    fChain->SetBranchAddress("TLL_HT", &TLL_HT);
+    fChain->SetBranchAddress("TLL_HT", &HT);
     fChain->SetBranchAddress("TLL_Lepton1Eta", &TLL_Lepton1Eta);
     fChain->SetBranchAddress("TLL_Lepton1EventWeight", &TLL_Lepton1EventWeight);
     fChain->SetBranchAddress("TLL_Lepton1GenMatchDaughter0Id", &TLL_Lepton1GenMatchDaughter0Id);
@@ -660,27 +550,27 @@ tll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TLL_Lepton2Phi", &TLL_Lepton2Phi);
     fChain->SetBranchAddress("TLL_Lepton2Pt", &TLL_Lepton2Pt);
     fChain->SetBranchAddress("TLL_Lepton2RelIso", &TLL_Lepton2RelIso);
-    fChain->SetBranchAddress("TLL_MomentumRank", &TLL_MomentumRank);
-    fChain->SetBranchAddress("TLL_NumCSVLbtagJets", &TLL_NumCSVLbtagJets);
-    fChain->SetBranchAddress("TLL_NumCSVMbtagJets", &TLL_NumCSVMbtagJets);
-    fChain->SetBranchAddress("TLL_NumCSVTbtagJets", &TLL_NumCSVTbtagJets);
-    fChain->SetBranchAddress("TLL_NumCleanCSVLbtagJets", &TLL_NumCleanCSVLbtagJets);
-    fChain->SetBranchAddress("TLL_NumCleanCSVMbtagJets", &TLL_NumCleanCSVMbtagJets);
-    fChain->SetBranchAddress("TLL_NumCleanCSVTbtagJets", &TLL_NumCleanCSVTbtagJets);
-    fChain->SetBranchAddress("TLL_NumCleanNonCSVLbtagJets", &TLL_NumCleanNonCSVLbtagJets);
-    fChain->SetBranchAddress("TLL_NumCleanNonCSVMbtagJets", &TLL_NumCleanNonCSVMbtagJets);
-    fChain->SetBranchAddress("TLL_NumCleanNonCSVTbtagJets", &TLL_NumCleanNonCSVTbtagJets);
-    fChain->SetBranchAddress("TLL_NumCombos", &TLL_NumCombos);
-    fChain->SetBranchAddress("TLL_NumExLooseElectrons", &TLL_NumExLooseElectrons);
-    fChain->SetBranchAddress("TLL_NumExLooseMuons", &TLL_NumExLooseMuons);
-    fChain->SetBranchAddress("TLL_NumLooseElectrons", &TLL_NumLooseElectrons);
-    fChain->SetBranchAddress("TLL_NumLooseMuons", &TLL_NumLooseMuons);
-    fChain->SetBranchAddress("TLL_NumNonCSVLbtagJets", &TLL_NumNonCSVLbtagJets);
-    fChain->SetBranchAddress("TLL_NumNonCSVMbtagJets", &TLL_NumNonCSVMbtagJets);
-    fChain->SetBranchAddress("TLL_NumNonCSVTbtagJets", &TLL_NumNonCSVTbtagJets);
-    fChain->SetBranchAddress("TLL_NumTaus", &TLL_NumTaus);
-    fChain->SetBranchAddress("TLL_NumTightElectrons", &TLL_NumTightElectrons);
-    fChain->SetBranchAddress("TLL_NumTightMuons", &TLL_NumTightMuons);
+    fChain->SetBranchAddress("TLL_MomentumRank", &MomentumRank);
+    fChain->SetBranchAddress("TLL_NumCSVLbtagJets", &NumCSVLbtagJets);
+    fChain->SetBranchAddress("TLL_NumCSVMbtagJets", &NumCSVMbtagJets);
+    fChain->SetBranchAddress("TLL_NumCSVTbtagJets", &NumCSVTbtagJets);
+    fChain->SetBranchAddress("TLL_NumCleanCSVLbtagJets", &NumCleanCSVLbtagJets);
+    fChain->SetBranchAddress("TLL_NumCleanCSVMbtagJets", &NumCleanCSVMbtagJets);
+    fChain->SetBranchAddress("TLL_NumCleanCSVTbtagJets", &NumCleanCSVTbtagJets);
+    fChain->SetBranchAddress("TLL_NumCleanNonCSVLbtagJets", &NumCleanNonCSVLbtagJets);
+    fChain->SetBranchAddress("TLL_NumCleanNonCSVMbtagJets", &NumCleanNonCSVMbtagJets);
+    fChain->SetBranchAddress("TLL_NumCleanNonCSVTbtagJets", &NumCleanNonCSVTbtagJets);
+    fChain->SetBranchAddress("TLL_NumCombos", &NumCombos);
+    fChain->SetBranchAddress("TLL_NumExLooseElectrons", &NumExLooseElectrons);
+    fChain->SetBranchAddress("TLL_NumExLooseMuons", &NumExLooseMuons);
+    fChain->SetBranchAddress("TLL_NumLooseElectrons", &NumLooseElectrons);
+    fChain->SetBranchAddress("TLL_NumLooseMuons", &NumLooseMuons);
+    fChain->SetBranchAddress("TLL_NumNonCSVLbtagJets", &NumNonCSVLbtagJets);
+    fChain->SetBranchAddress("TLL_NumNonCSVMbtagJets", &NumNonCSVMbtagJets);
+    fChain->SetBranchAddress("TLL_NumNonCSVTbtagJets", &NumNonCSVTbtagJets);
+    fChain->SetBranchAddress("TLL_NumTaus", &NumTaus);
+    fChain->SetBranchAddress("TLL_NumTightElectrons", &NumTightElectrons);
+    fChain->SetBranchAddress("TLL_NumTightMuons", &NumTightMuons);
     fChain->SetBranchAddress("TLL_TauCharge", &TLL_TauCharge);
     fChain->SetBranchAddress("TLL_TauDecayMode", &TLL_TauDecayMode);
     fChain->SetBranchAddress("TLL_TauEmFraction", &TLL_TauEmFraction);
