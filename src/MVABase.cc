@@ -34,7 +34,7 @@ namespace roast {
     void
     MVABase::Var::Update(roast::Branches* b, int i)
     {
-        value = GetVal(b, i);
+        value = GetVal(b, i, -1);
     }
 
     MVABase::~MVABase()

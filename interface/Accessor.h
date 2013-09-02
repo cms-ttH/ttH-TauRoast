@@ -8,7 +8,7 @@
 namespace roast {
     class Branches;
 
-    typedef float (*GetValue_t)(Branches*, const int&);
+    typedef float (*GetValue_t)(Branches*, int, int);
 
     GetValue_t get_accessor(const std::string&);
     std::vector<std::string> get_accessor_names();

@@ -63,7 +63,7 @@ HWrapper::~HWrapper()
 void
 HWrapper::Fill(Branches* b, int i, float w)
 {
-    histo->Fill(fill(b, i), w);
+    histo->Fill(fill(b, i, -1), w);
 }
 
 // Getter methods
