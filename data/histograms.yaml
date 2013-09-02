@@ -501,6 +501,7 @@ NumTaus:
 DitauVisibleMass:
     type: th1f
     dir: tau
+    channels: [ttl]
     binning: [30, 0, 200]
     axis labels: ["Visible Mass #tau_{1, 2}", Events]
     visible: [0, 200]
@@ -510,6 +511,7 @@ DitauVisibleMass:
 TT_DeltaR:
     type: th1f
     dir: tau
+    channels: [ttl]
     binning: [30, 0, 6.28]
     axis labels: ["#DeltaR #tau_{1, 2}", Events]
     visible: [0, 6.28]

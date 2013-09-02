@@ -94,7 +94,7 @@ namespace roast {
                     break;
                 case kUp:
                 case kDown:
-                    fct = [](roast::Branches *b, const int& idx) -> float {
+                    fct = [](roast::Branches *b, int idx, int n) -> float {
                         auto e = dynamic_cast<roast::ttl::Branches*>(b);
                         unsigned int matches = 0;
                         if (e->GetTau1MatchIndex(idx) == 4)
@@ -112,7 +112,7 @@ namespace roast {
                     break;
                 case kUp:
                 case kDown:
-                    fct = [](roast::Branches *b, const int& idx) -> float {
+                    fct = [](roast::Branches *b, int idx, int n) -> float {
                         auto e = dynamic_cast<roast::ttl::Branches*>(b);
                         unsigned int matches = 0;
                         if (e->GetTau1MatchIndex(idx) == 1)
@@ -130,7 +130,7 @@ namespace roast {
                     break;
                 case kUp:
                 case kDown:
-                    fct = [](roast::Branches *b, const int& idx) -> float {
+                    fct = [](roast::Branches *b, int idx, int n) -> float {
                         auto e = dynamic_cast<roast::ttl::Branches*>(b);
                         unsigned int matches = 0;
                         if (e->GetTau1MatchIndex(idx) == 2)

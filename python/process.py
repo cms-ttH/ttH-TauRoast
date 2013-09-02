@@ -89,6 +89,7 @@ def fill_histos(config, processes, module):
                     h.GetXaxis().SetRangeUser(*histcfg['visible'])
                 w = roast.HWrapper(histcfg['dir'], h, name)
                 p.AddHistogram(name, w)
+                logging.debug("added histogram %s", name)
             except Exception as e:
                 logging.error("unable to create histogram %s", name)
 
@@ -136,7 +137,8 @@ def fill_histos(config, processes, module):
         splitter = split[name] if name in split else 0
 
         logging.debug("selecting best particle combination with %s", repr(select))
-        logging.debug("splitting sample with %s", repr(splitter))
+        if splitter:
+            logging.debug("splitting sample with %s", repr(splitter))
 
         split_count = module.fill(p, weights, log, splitter, select)
         total_count = p.GetGoodEvents().size()
