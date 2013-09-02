@@ -60,12 +60,13 @@ physics:
       - {name: T_ParentAbsId, min: 25, max: 25}
       # tops
       - {name: J_NumCleanCSVM, min: 1, max: 2}
+      - {name: J_NumCleanNonCSVM, min: 0}
       - {name: J_NumInclusive, min: 2}
       # lepton
-      - {name: NumTightLeptons, min: 2, max: 2}
-      - {name: NumExLooseLeptons, min: 0, max: 0}
+      - {name: NumTightLeptons, min: 1, max: 2}
+      - {name: NumLooseLeptons, min: 2, max: 2}
       - {name: L1_Pt, min: 20}
-      - {name: L2_Pt, min: 20}
+      - {name: L2_Pt, min: 10}
       # taus
       # kinematic
       - {name: T_Pt, min: 20}
@@ -99,7 +100,7 @@ paths:
     # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
     # name; {m} = mode (_log)
     stack format: "test/tmp_tll/{t}/{d}/{n}{m}.{t}"
-    ntuples: /store/user/matze/ttH/v48/tll/2012
+    ntuples: /store/user/matze/ttH/v49/tll/2012
     tree: makeNtuple/TTbarHTauTau
 
 processes: processes.yaml
