@@ -17,6 +17,14 @@ namespace roast {
             ClassDef(PtPicker, 1);
     };
 
+    namespace tll {
+        class IsoPicker : roast::Picker {
+            public:
+                virtual int Pick(roast::Branches*, const std::vector<int>&);
+                ClassDef(IsoPicker, 1);
+        };
+    }
+
     namespace ttl {
         class IsoPicker : roast::Picker {
             public:

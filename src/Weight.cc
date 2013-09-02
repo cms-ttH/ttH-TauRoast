@@ -26,7 +26,7 @@ namespace roast {
         std::string label;
         GetValue_t fct = 0;
 
-        if (name == "qSquared" || name == "PUcorr" || name == "lepton" || name == "topPt") {
+        if (name == "qSquared" || name == "PUcorr" || name.find("lepton") == 0 || name == "topPt") {
             auto varname = name;
             if (name == "qSquared") {
                 label = "Q^2 shift";
@@ -37,6 +37,12 @@ namespace roast {
             } else if (name == "lepton") {
                 label = "Lepton SF";
                 varname = "L_Event";
+            } else if (name == "lepton1") {
+                label = "Lepton 1 SF";
+                varname = "L1_Event";
+            } else if (name == "lepton2") {
+                label = "Lepton 2 SF";
+                varname = "L2_Event";
             } else if (name == "topPt") {
                 label = "Top Pt SF";
                 varname = "TopPt";
@@ -78,7 +84,7 @@ namespace roast {
                 case kNominal:
                     fct = [](roast::Branches *b, const int& idx) -> float {
                         unsigned int matches = 0;
-                        for (const auto& id: *dynamic_cast<roast::ttl::Branches*>(b)->GT_ParentId)
+                        for (const auto& id: *b->GT_ParentId)
                             matches += (abs(id) == 25);
                         return (matches == 2) ? 0.0632 / 0.0722 : (1 - 0.0632) / (1 - 0.0722);
                     };

@@ -49,7 +49,8 @@ physics:
     lumi: 19400
     flags:
       - [topPt, nominal]
-      - [lepton, nominal]
+      - [lepton1, nominal]
+      - [lepton2, nominal]
       - [PUcorr, nominal]
       - [CSVeventWeight, nominal]
       - [brSF, nominal]

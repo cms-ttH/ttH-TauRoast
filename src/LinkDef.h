@@ -36,6 +36,7 @@
 #pragma link C++ class std::vector<roast::CutFlow::Cut>+;
 #pragma link C++ class roast::Picker+;
 #pragma link C++ class roast::PtPicker+;
+#pragma link C++ class roast::tll::IsoPicker+;
 #pragma link C++ class roast::ttl::IsoPicker+;
 #pragma link C++ class roast::Process+;
 #pragma link C++ class roast::Process::Event+;
