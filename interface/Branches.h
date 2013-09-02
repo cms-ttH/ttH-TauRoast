@@ -15,6 +15,7 @@ namespace roast {
     class Branches {
         protected:
 
+            void RegenerateCaches();
             void SetUp(std::map<std::string,std::string> const &, std::vector<std::string> const &);
             virtual void Null();
             virtual void Delete();
@@ -25,16 +26,25 @@ namespace roast {
             std::map<std::string,std::string>		params;
             TChain* fChain;
 
+            bool caches_dirty;
+            std::vector<std::vector<int> > clean_btag_cache;
+            std::vector<std::vector<int> > clean_nonbtag_cache;
+
         public:
             Branches();
             Branches(const std::string&, const std::vector<std::string>&);
             ~Branches();
 
-            void	Init();
-            virtual void	GetEntry(double);
+            void Init();
+            void GetEntry(double);
             Long64_t GetEntries();
             unsigned int GetNumCombos() { return NumCombos; };
             virtual bool IsGoodGenMatch(const int&) const = 0;
+
+            float GetCleanJetBTagEta(unsigned int, unsigned int);
+            float GetCleanJetBTagPt(unsigned int, unsigned int);
+            float GetCleanJetNonBTagEta(unsigned int, unsigned int);
+            float GetCleanJetNonBTagPt(unsigned int, unsigned int);
 
             // >>> Begin declarations <<<
             std::vector<int>* E_ElectronGenMatchDaughter0Id;

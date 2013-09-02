@@ -87,7 +87,10 @@ def fill_histos(config, processes, module):
                         *histcfg['binning'])
                 if 'visible' in histcfg:
                     h.GetXaxis().SetRangeUser(*histcfg['visible'])
-                w = roast.HWrapper(histcfg['dir'], h, name)
+                if 'max' in histcfg:
+                    w = roast.HWrapper(histcfg['dir'], h, name, histcfg['max'])
+                else:
+                    w = roast.HWrapper(histcfg['dir'], h, name)
                 p.AddHistogram(name, w)
                 logging.debug("added histogram %s", name)
             except Exception as e:

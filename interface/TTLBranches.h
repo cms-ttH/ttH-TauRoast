@@ -8,10 +8,6 @@ namespace roast {
     namespace ttl {
         class Branches : public roast::Branches {
             private:
-                float conesize;
-                std::vector<int> jetIndexCache;
-                int jetIndexCacheCombo;
-
                 void	Null();
                 void	Delete();
                 void	Clear();
@@ -22,7 +18,6 @@ namespace roast {
                 Branches(const std::string&, const std::vector<std::string>&);
                 ~Branches();
 
-                virtual void GetEntry(double);
                 virtual bool IsGoodGenMatch(const int&) const;
 
                 unsigned int	GetTau1IsolationIndex(const unsigned int) const;

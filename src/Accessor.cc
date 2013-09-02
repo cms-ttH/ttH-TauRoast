@@ -118,6 +118,18 @@ namespace roast {
         };
 
         // >>> Begin attr <<<
+        accessors["CleanJ_BTagEta"] = [](Branches *b, int idx, int n) -> float {
+            return b->GetCleanJetBTagEta(idx, n);
+        };
+        accessors["CleanJ_BTagPt"] = [](Branches *b, int idx, int n) -> float {
+            return b->GetCleanJetBTagPt(idx, n);
+        };
+        accessors["CleanJ_NonBTagEta"] = [](Branches *b, int idx, int n) -> float {
+            return b->GetCleanJetNonBTagEta(idx, n);
+        };
+        accessors["CleanJ_NonBTagPt"] = [](Branches *b, int idx, int n) -> float {
+            return b->GetCleanJetNonBTagPt(idx, n);
+        };
         accessors["T1_AntiElectronIndex"] = [](Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return e->GetTau1AntiElectronIndex(idx);
@@ -336,6 +348,10 @@ namespace roast {
         accessors["IsTauEvent"] = [](Branches *b, int idx, int n) -> float {
             return b->Ev_IsTauEvent;
         };
+        accessors["CleanJ_Eta"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            return (*b->J_Eta).at(i);
+        };
         accessors["LJ_Eta"] = [](Branches *b, int idx, int n) -> float {
             int i = (*b->CleanJetIndices)[idx][0];
             return (*b->J_Eta).at(i);
@@ -351,6 +367,13 @@ namespace roast {
         accessors["SubSubSubLJ_Eta"] = [](Branches *b, int idx, int n) -> float {
             int i = (*b->CleanJetIndices)[idx][3];
             return (*b->J_Eta).at(i);
+        };
+        accessors["J_Eta"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_Eta)[idx];
+        };
+        accessors["CleanJ_MomentumRank"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            return (*b->J_MomentumRank).at(i);
         };
         accessors["LJ_MomentumRank"] = [](Branches *b, int idx, int n) -> float {
             int i = (*b->CleanJetIndices)[idx][0];
@@ -368,8 +391,15 @@ namespace roast {
             int i = (*b->CleanJetIndices)[idx][3];
             return (*b->J_MomentumRank).at(i);
         };
+        accessors["J_MomentumRank"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_MomentumRank)[idx];
+        };
         accessors["J_NumJets"] = [](Branches *b, int idx, int n) -> float {
             return b->J_NumJets;
+        };
+        accessors["CleanJ_Phi"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            return (*b->J_Phi).at(i);
         };
         accessors["LJ_Phi"] = [](Branches *b, int idx, int n) -> float {
             int i = (*b->CleanJetIndices)[idx][0];
@@ -387,6 +417,13 @@ namespace roast {
             int i = (*b->CleanJetIndices)[idx][3];
             return (*b->J_Phi).at(i);
         };
+        accessors["J_Phi"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_Phi)[idx];
+        };
+        accessors["CleanJ_Pt"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            return (*b->J_Pt).at(i);
+        };
         accessors["LJ_Pt"] = [](Branches *b, int idx, int n) -> float {
             int i = (*b->CleanJetIndices)[idx][0];
             return (*b->J_Pt).at(i);
@@ -402,6 +439,9 @@ namespace roast {
         accessors["SubSubSubLJ_Pt"] = [](Branches *b, int idx, int n) -> float {
             int i = (*b->CleanJetIndices)[idx][3];
             return (*b->J_Pt).at(i);
+        };
+        accessors["J_Pt"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_Pt)[idx];
         };
         accessors["L1L2_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);

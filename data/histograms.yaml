@@ -214,6 +214,16 @@ J_NumCleanNonCSVT:
     logy: 1
     centerLabels: true
 
+CleanJ_Pt:
+    type: th1f
+    dir: jets
+    max: J_NumCleanInclusive
+    binning: [30, 30, 250]
+    axis labels: ['Jet p_{T}', Events]
+    visible: [30, 250]
+    showOF: true
+    logy: 1
+
 LJ_Pt:
     type: th1f
     dir: jets
@@ -286,36 +296,40 @@ SubSubSubLJ_Eta:
     showOF: false
     logy: 1
 
-BTagJet_Pt:
+CleanJ_BTagPt:
     type: th1f
     dir: jets
+    max: J_NumCleanCSVM
     binning: [30, 30, 250]
     axis labels: ['Tagged jet p_{T}', Events]
     visible: [30, 250]
     showOF: true
     logy: 1
 
-BTagJet_Eta:
+CleanJ_BTagEta:
     type: th1f
     dir: jets
+    max: J_NumCleanCSVM
     binning: [40, -3, 3]
     axis labels: ["Tagged jet #eta", Events]
     visible: [-3, 3]
     showOF: false
     logy: 1
 
-NonBTagJet_Pt:
+CleanJ_NonBTagPt:
     type: th1f
     dir: jets
+    max: J_NumCleanNonCSVM
     binning: [30, 30, 250]
     axis labels: ['Untagged jet p_{T}', Events]
     visible: [30, 250]
     showOF: true
     logy: 1
 
-NonBTagJet_Eta:
+CleanJ_NonBTagEta:
     type: th1f
     dir: jets
+    max: J_NumCleanNonCSVM
     binning: [40, -3, 3]
     axis labels: ["Untagged jet #eta", Events]
     visible: [-3, 3]

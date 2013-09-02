@@ -222,8 +222,9 @@ for ignore in "GetBestCombo GetEntries GetEntry GetNumCombos".split():
 for fn in sorted(fct_names.keys()):
     name = fn.replace("Get", "")
     m = re.match('(?:(?:Lepton|Tau)\d?)+', name)
-
     if m:
+        combo_var = True
+
         full_pre = m.group(0)
         pre = ""
         for (particle, num) in re.findall('(Lepton|Tau)(\d)?', full_pre):
@@ -232,6 +233,12 @@ for fn in sorted(fct_names.keys()):
                 pre += num
 
         name = name.replace(m.group(0), pre + '_')
+
+    m = re.match('((?:Clean)?)Jet', name)
+    if m:
+        combo_var = False
+        name = name.replace(m.group(0), m.group(1) + 'J_')
+
     lines.append(indent * 2 + declare.format(name))
     if len(fct_names[fn]) == 1:
         channel = fct_names[fn][0]
@@ -239,7 +246,10 @@ for fn in sorted(fct_names.keys()):
         if channel != "":
             var = 'e'
             lines.append(indent * 3 + cast.format(channel.lower()) + ';\n')
-        lines.append(indent * 3 + 'return {0}->{1}(idx);\n'.format(var, fn))
+        if combo_var:
+            lines.append(indent * 3 + 'return {0}->{1}(idx);\n'.format(var, fn))
+        else:
+            lines.append(indent * 3 + 'return {0}->{1}(idx, n);\n'.format(var, fn))
         lines.append(indent * 2 + '};\n')
     else:
         # FIXME not yet implemented
@@ -295,21 +305,29 @@ for k in sorted(attrs.keys()):
                 varname = prefix + '_' + var
             obj = 'b'
 
+            idx = 'idx' if prefixes[0] in channels else 'n'
+
             if prefix in channels:
                 chan = prefix.lower()
                 varname = prefix + "_" + var
                 obj = 'e'
                 tmp_lines.append(indent * 3 + cast.format(chan) + ';\n')
             elif prefix == 'J' and ptr and not 'BTag' in var:
-                tmp_lines = []
+                jet_lines = []
+
+                jet_lines.append(indent * 2 + declare.format('Clean' + k))
+                jet_lines.append(indent * 3 + reindex.format('n'))
+                jet_lines.append(indent * 3 + generate_return_line(obj, varname, type, idx='i', safe=True) + '\n')
+                jet_lines.append(indent * 2 + '};\n')
+
+                # leading jet etc.
                 for (n, j) in enumerate(jets):
                     new_key = k.replace('J', j)
-                    tmp_lines.append(indent * 2 + declare.format(new_key))
-                    tmp_lines.append(indent * 3 + reindex.format(n))
-                    tmp_lines.append(indent * 3 + generate_return_line(obj, varname, type, 'i', safe=True) + '\n')
-                    tmp_lines.append(indent * 2 + '};\n')
-                lines += tmp_lines
-                continue
+                    jet_lines.append(indent * 2 + declare.format(new_key))
+                    jet_lines.append(indent * 3 + reindex.format(n))
+                    jet_lines.append(indent * 3 + generate_return_line(obj, varname, type, idx='i', safe=True) + '\n')
+                    jet_lines.append(indent * 2 + '};\n')
+                lines += jet_lines
             elif ptr and prefix != '':
                 continue
             tmp_lines.append(indent * 3 + generate_return_line(obj, varname, type) + '\n')

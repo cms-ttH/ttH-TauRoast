@@ -9,12 +9,12 @@ using namespace std;
 using namespace roast;
 
 // Default constructor
-tll::Branches::Branches() : roast::Branches(), conesize(.25), jetIndexCacheCombo(-1) {
+tll::Branches::Branches() : roast::Branches() {
     Null();
 }
 
 tll::Branches::Branches(const std::string& tree_name, const vector<string>& paths) :
-    roast::Branches(tree_name, paths), conesize(.25), jetIndexCacheCombo(-1)
+    roast::Branches(tree_name, paths)
 {
     Null();
     SetBranchAddresses();
@@ -24,13 +24,6 @@ tll::Branches::~Branches()
 {
     Delete();
     Null();
-}
-
-    void
-tll::Branches::GetEntry(double i)
-{
-    fChain->GetEntry(i);
-    jetIndexCacheCombo = -1;
 }
 
 bool
