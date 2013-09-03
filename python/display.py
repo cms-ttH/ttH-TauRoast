@@ -381,14 +381,19 @@ def stack(config, processes):
                 text += ' ' + label
             return text
 
+        if config['analysis']['channel'] == 'ttl':
+            channel_label = "Lep + #tau_{h}#tau_{h} + "
+        elif config['analysis']['channel'] == 'tll':
+            channel_label = "Dilepton + #tau_{h} + "
+
         tex = r.TLatex()
         tex.SetNDC()
         tex.SetTextFont(42)
         tex.SetTextSize(0.05)
         tex.SetTextAlign(31)
         tex.DrawLatex(.99 - r.gPad.GetRightMargin(), .84,
-                "Lep + #tau_{h}#tau_{h} + "
-                + extract_info('J_NumCleanNonCSVM', 'jet') + ' + '
+                channel_label
+                + extract_info('J_NumCleanInclusive', 'jet') + ' + '
                 + extract_info('J_NumCleanCSVM', 'b-tag'))
         tex.SetTextSize(0.055)
         tex.SetTextAlign(11)
