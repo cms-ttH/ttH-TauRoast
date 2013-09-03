@@ -371,7 +371,7 @@ def stack(config, processes):
             cfg = filter(lambda c: c['name'] == cut, config['physics']['cuts'])[0]
             text = ""
             if 'max' not in cfg:
-                text += "#ge"
+                text += "#geq "
             text += str(cfg['min'])
             if 'max' in cfg and cfg['max'] != cfg['min']:
                 text += '-' + str(cfg['max']) + ' ' + label + 's'
