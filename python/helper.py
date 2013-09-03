@@ -1,5 +1,6 @@
 # vim: ts=4:sw=4:et:sta
 import logging
+import math
 import os
 import yaml
 import ROOT as r
@@ -178,6 +179,26 @@ def print_cutflow(config, processes):
             logging.debug("%s", c[i].name)
             out.write("{0:15}".format(c[i].passedSignalEvents))
         out.write("\n")
+
+    bkg_sum = 0.
+    for p in procs:
+        if p.IsBackground():
+            bkg_sum += p.GetCutFlow().GetCuts()[-1].passedSignalEvents
+
+    out.write("{0:20}".format("s / sqrt{s + b}"))
+    for p in procs:
+        if p.IsSignal():
+            count = p.GetCutFlow().GetCuts()[-1].passedSignalEvents
+            sig = count / math.sqrt(count + bkg_sum)
+            out.write("{0:15}".format(sig))
+        else:
+            out.write(" " * 15)
+    out.write("\n")
+
+    out.write(" " * 20)
+    for p in procs:
+        out.write("{0:^15}".format(p.GetShortName()))
+    out.write("\n")
 
 def vectorize(items, cls=None):
     """Create a vector of class `cls` and fill it with the object in the
