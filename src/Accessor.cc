@@ -90,13 +90,15 @@ namespace roast {
             return DeltaR((*e->TLL_Lepton1Eta)[idx], (*e->TLL_Lepton1Phi)[idx],
                     (*e->TLL_Lepton2Eta)[idx], (*e->TLL_Lepton2Phi)[idx]);
         };
+        accessors["LL_ChargeProduct"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton1Charge)[idx] * (*e->TLL_Lepton2Charge)[idx];
+        };
 
         accessors["TT_DeltaR"] = [](roast::Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return (*e->TTL_DitauDeltaR)[idx];
         };
-
-
         accessors["TT_ChargeProduct"] = [](roast::Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return (*e->TTL_Tau1Charge)[idx] * (*e->TTL_Tau2Charge)[idx];
@@ -455,6 +457,10 @@ namespace roast {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return (*e->TLL_Lepton1Lepton2VisibleMass)[idx];
         };
+        accessors["L1_Charge"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton1Charge)[idx];
+        };
         accessors["L1_Eta"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return (*e->TLL_Lepton1Eta)[idx];
@@ -562,6 +568,10 @@ namespace roast {
         accessors["L1_RelIso"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return (*e->TLL_Lepton1RelIso)[idx];
+        };
+        accessors["L2_Charge"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton2Charge)[idx];
         };
         accessors["L2_Eta"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);

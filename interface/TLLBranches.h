@@ -32,6 +32,7 @@ namespace roast {
                 unsigned int GetTauMatchIndex(const unsigned int) const;
 
                 // >>> Begin declarations <<<
+                std::vector<float>* TLL_Lepton1Charge;
                 std::vector<float>* TLL_Lepton1Eta;
                 std::vector<float>* TLL_Lepton1EventWeight;
                 std::vector<int>* TLL_Lepton1GenMatchDaughter0Id;
@@ -62,6 +63,7 @@ namespace roast {
                 std::vector<float>* TLL_Lepton1Phi;
                 std::vector<float>* TLL_Lepton1Pt;
                 std::vector<float>* TLL_Lepton1RelIso;
+                std::vector<float>* TLL_Lepton2Charge;
                 std::vector<float>* TLL_Lepton2Eta;
                 std::vector<float>* TLL_Lepton2EventWeight;
                 std::vector<int>* TLL_Lepton2GenMatchDaughter0Id;

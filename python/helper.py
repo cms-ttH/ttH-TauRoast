@@ -1,6 +1,7 @@
 # vim: ts=4:sw=4:et:sta
 import logging
 import os
+import yaml
 import ROOT as r
 import sys
 
@@ -195,6 +196,29 @@ def save(items, name, file):
     f = r.TFile(file, "RECREATE")
     f.WriteObject(vectorize(items, "roast::Process*"), name)
     f.Close()
+
+def load_config(filename, basedir):
+    config = yaml.load(open(filename))
+    processconfig = yaml.load(open(os.path.join(basedir, config['processes'])))
+    histogramconfig = yaml.load(open(os.path.join(basedir, config['histograms'])))
+
+    channel = config['analysis']['channel']
+    for (name, cfg) in histogramconfig.items():
+        if 'channels' in cfg and channel not in cfg['channels']:
+            del histogramconfig[name]
+
+    config['processes'] = processconfig
+    config['histograms'] = histogramconfig
+
+    config['processes']['Collisions'] = config['processes']['Collisions'][channel]
+
+    if 'root' in config['paths']:
+        basedir = config['paths']['root']
+        for (k, v) in config['paths'].items():
+            if k == 'root':
+                continue
+            config['paths'][k] = v.replace('{root}', basedir)
+    return config
 
 def load(name, file):
     """Load an object with key `name` from `file`, which can either be a

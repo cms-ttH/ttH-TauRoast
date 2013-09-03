@@ -9,6 +9,7 @@ tll::Branches::Clear()
     roast::Branches::Clear();
 
     // >>> Begin clear <<<
+    TLL_Lepton1Charge->clear();
     TLL_Lepton1Eta->clear();
     TLL_Lepton1EventWeight->clear();
     TLL_Lepton1GenMatchDaughter0Id->clear();
@@ -39,6 +40,7 @@ tll::Branches::Clear()
     TLL_Lepton1Phi->clear();
     TLL_Lepton1Pt->clear();
     TLL_Lepton1RelIso->clear();
+    TLL_Lepton2Charge->clear();
     TLL_Lepton2Eta->clear();
     TLL_Lepton2EventWeight->clear();
     TLL_Lepton2GenMatchDaughter0Id->clear();
@@ -164,6 +166,7 @@ tll::Branches::Delete()
     roast::Branches::Delete();
 
     // >>> Begin delete <<<
+    delete TLL_Lepton1Charge;
     delete TLL_Lepton1Eta;
     delete TLL_Lepton1EventWeight;
     delete TLL_Lepton1GenMatchDaughter0Id;
@@ -194,6 +197,7 @@ tll::Branches::Delete()
     delete TLL_Lepton1Phi;
     delete TLL_Lepton1Pt;
     delete TLL_Lepton1RelIso;
+    delete TLL_Lepton2Charge;
     delete TLL_Lepton2Eta;
     delete TLL_Lepton2EventWeight;
     delete TLL_Lepton2GenMatchDaughter0Id;
@@ -319,6 +323,7 @@ tll::Branches::Null()
     roast::Branches::Null();
 
     // >>> Begin null <<<
+    TLL_Lepton1Charge = 0;
     TLL_Lepton1Eta = 0;
     TLL_Lepton1EventWeight = 0;
     TLL_Lepton1GenMatchDaughter0Id = 0;
@@ -349,6 +354,7 @@ tll::Branches::Null()
     TLL_Lepton1Phi = 0;
     TLL_Lepton1Pt = 0;
     TLL_Lepton1RelIso = 0;
+    TLL_Lepton2Charge = 0;
     TLL_Lepton2Eta = 0;
     TLL_Lepton2EventWeight = 0;
     TLL_Lepton2GenMatchDaughter0Id = 0;
@@ -493,6 +499,7 @@ tll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TLL_CSVeventWeightLFup", &CSVeventWeightLFup);
     fChain->SetBranchAddress("TLL_CleanJetIndices", &CleanJetIndices);
     fChain->SetBranchAddress("TLL_HT", &HT);
+    fChain->SetBranchAddress("TLL_Lepton1Charge", &TLL_Lepton1Charge);
     fChain->SetBranchAddress("TLL_Lepton1Eta", &TLL_Lepton1Eta);
     fChain->SetBranchAddress("TLL_Lepton1EventWeight", &TLL_Lepton1EventWeight);
     fChain->SetBranchAddress("TLL_Lepton1GenMatchDaughter0Id", &TLL_Lepton1GenMatchDaughter0Id);
@@ -523,6 +530,7 @@ tll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TLL_Lepton1Phi", &TLL_Lepton1Phi);
     fChain->SetBranchAddress("TLL_Lepton1Pt", &TLL_Lepton1Pt);
     fChain->SetBranchAddress("TLL_Lepton1RelIso", &TLL_Lepton1RelIso);
+    fChain->SetBranchAddress("TLL_Lepton2Charge", &TLL_Lepton2Charge);
     fChain->SetBranchAddress("TLL_Lepton2Eta", &TLL_Lepton2Eta);
     fChain->SetBranchAddress("TLL_Lepton2EventWeight", &TLL_Lepton2EventWeight);
     fChain->SetBranchAddress("TLL_Lepton2GenMatchDaughter0Id", &TLL_Lepton2GenMatchDaughter0Id);

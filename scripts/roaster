@@ -91,10 +91,7 @@ if opts.list_vars:
 logging.info("reading configuration from %s", configfile)
 
 basedir = os.path.join(os.environ['CMSSW_BASE'], 'src/TTHTauTau/Roast/data')
-
-baseconfig = yaml.load(open(configfile))
-processconfig = yaml.load(open(os.path.join(basedir, baseconfig['processes'])))
-histogramconfig = yaml.load(open(os.path.join(basedir, baseconfig['histograms'])))
+baseconfig = load_config(configfile, basedir)
 
 channel = baseconfig['analysis']['channel']
 if channel == 'tll':
@@ -105,19 +102,10 @@ else:
     logging.critical('invalid channel "{0}"'.format(channel))
     sys.exit(1)
 
-for (name, cfg) in histogramconfig.items():
-    if 'channels' in cfg and channel not in cfg['channels']:
-        del histogramconfig[name]
-
-baseconfig['processes'] = processconfig
-baseconfig['histograms'] = histogramconfig
-
 if opts.max:
     baseconfig['analysis']['max events'] = opts.max
 
 logging.info("analyzing a maximum of {0} events per process.".format(baseconfig['analysis']['max events']))
-
-baseconfig['processes']['Collisions'] = baseconfig['processes']['Collisions'][channel]
 
 to_combine = dict(filter(
     lambda (k, v): 'combine' in v,
