@@ -1081,9 +1081,9 @@ L1_Pt:
     type: th1f
     dir: leptons
     channels: [tll]
-    binning: [30, 0, 100]
+    binning: [30, 0, 150]
     axis labels: ['lepton_{1} p_{T}', Events]
-    visible: [30, 100]
+    visible: [20, 150]
     showOF: true
     logy: 1
 
@@ -1121,9 +1121,9 @@ L2_Pt:
     type: th1f
     dir: leptons
     channels: [tll]
-    binning: [30, 0, 100]
+    binning: [30, 0, 150]
     axis labels: ['lepton_{2} p_{T}', Events]
-    visible: [30, 100]
+    visible: [10, 100]
     showOF: true
     logy: 1
 
@@ -1147,7 +1147,7 @@ L2_Phi:
     showOF: false
     logy: 1
 
-L2T_DeltaR:
+TL2_DeltaR:
     type: th1f
     dir: leptons
     channels: [tll]
