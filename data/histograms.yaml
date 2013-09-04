@@ -1217,6 +1217,24 @@ T_LTPt:
     showOF: true
     logy: 1
 
+T_LTIpVtdxy:
+    type: th1f
+    dir: tau
+    channels: [tll]
+    binning: [50, -0.03, 0.03]
+    axis labels: ["#tau LT #Delta xy", Events]
+    showOF: true
+    logy: 1
+
+T_LTIpVtdz:
+    type: th1f
+    dir: tau
+    channels: [tll]
+    binning: [60, -0.15, 0.15]
+    axis labels: ["#tau LT #Delta z", Events]
+    showOF: true
+    logy: 1
+
 T_DecayMode:
     type: th1f
     dir: tau
