@@ -95,6 +95,32 @@ Branches::RegenerateCaches()
     }
 }
 
+unsigned int
+Branches::TranslateMatchIndex(int idx) const
+{
+    if (idx == -99)
+        return 0; // no match
+
+    switch (abs(idx)) {
+        case 15:
+            return 2; // tau
+        case 13:
+            return 3; // muon
+        case 11:
+            return 4; // electron
+        case 22:
+            return 5; // photon
+        case 23:
+            return 6; // Z
+        case 24:
+            return 7; // W
+        case 25:
+            return 8; // Higgs
+        default:
+            return 1; // hadronic
+    }
+}
+
 float
 Branches::GetCleanJetBTagEta(unsigned int idx, unsigned int n)
 {

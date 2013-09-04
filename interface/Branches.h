@@ -17,6 +17,7 @@ namespace roast {
 
             void RegenerateCaches();
             void SetUp(std::map<std::string,std::string> const &, std::vector<std::string> const &);
+            unsigned int TranslateMatchIndex(int) const;
             virtual void Null();
             virtual void Delete();
             virtual void Clear();

@@ -168,28 +168,28 @@ unsigned int ttl::Branches::GetTau2AntiMuonIndex2(const unsigned int iCombo) con
 	return 0;
 }
 
-unsigned int ttl::Branches::GetTau1MatchIndex(const unsigned int iCombo) const {
-	if((*TTL_Tau1GenMatchId)[iCombo] == -99){  return 0; } // no match
-	if(abs((*TTL_Tau1GenMatchId)[iCombo]) == 15){	return 2; } // tau
-	if(abs((*TTL_Tau1GenMatchId)[iCombo]) == 13){	return 3; } // muon
-	if(abs((*TTL_Tau1GenMatchId)[iCombo]) == 11){	return 4; } // electron
-	if(abs((*TTL_Tau1GenMatchId)[iCombo]) == 22){	return 5; } // photon
-	if(abs((*TTL_Tau1GenMatchId)[iCombo]) == 23){	return 6; } // Z
-	if(abs((*TTL_Tau1GenMatchId)[iCombo]) == 24){	return 7; } // W
-	if(abs((*TTL_Tau1GenMatchId)[iCombo]) == 25){	return 8; } // Higgs
-	return 1; // hadronic
+unsigned int
+ttl::Branches::GetTau1MatchIndex(unsigned int idx) const
+{
+    return TranslateMatchIndex((*TTL_Tau1GenMatchId)[idx]);
 }
 
-unsigned int ttl::Branches::GetTau2MatchIndex(const unsigned int iCombo) const {
-	if((*TTL_Tau2GenMatchId)[iCombo] == -99){  return 0; } // no match
-	if(abs((*TTL_Tau2GenMatchId)[iCombo]) == 15){	return 2; } // tau
-	if(abs((*TTL_Tau2GenMatchId)[iCombo]) == 13){	return 3; } // muon
-	if(abs((*TTL_Tau2GenMatchId)[iCombo]) == 11){	return 4; } // electron
-	if(abs((*TTL_Tau2GenMatchId)[iCombo]) == 22){	return 5; } // photon
-	if(abs((*TTL_Tau2GenMatchId)[iCombo]) == 23){	return 6; } // Z
-	if(abs((*TTL_Tau2GenMatchId)[iCombo]) == 24){	return 7; } // W
-	if(abs((*TTL_Tau2GenMatchId)[iCombo]) == 25){	return 8; } // Higgs
-	return 1; // hadronic
+unsigned int
+ttl::Branches::GetTau1ParentMatchIndex(unsigned int idx) const
+{
+    return TranslateMatchIndex((*TTL_Tau1GenMatchMother0Id)[idx]);
+}
+
+unsigned int
+ttl::Branches::GetTau2MatchIndex(unsigned int idx) const
+{
+    return TranslateMatchIndex((*TTL_Tau2GenMatchId)[idx]);
+}
+
+unsigned int
+ttl::Branches::GetTau2ParentMatchIndex(unsigned int idx) const
+{
+    return TranslateMatchIndex((*TTL_Tau2GenMatchMother0Id)[idx]);
 }
 
 ClassImp(roast::ttl::Branches)

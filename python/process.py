@@ -85,8 +85,13 @@ def fill_histos(config, processes, module):
                         name + str(random.randint(0, 1000000000)),
                         ';'.join([name] + histcfg['axis labels']),
                         *histcfg['binning'])
+
+                if 'bin labels' in histcfg:
+                    for (n, l) in enumerate(histcfg['bin labels']):
+                        h.GetXaxis().SetBinLabel(n + 1, l)
                 if 'visible' in histcfg:
                     h.GetXaxis().SetRangeUser(*histcfg['visible'])
+
                 if 'max' in histcfg:
                     w = roast.HWrapper(histcfg['dir'], h, name, histcfg['max'])
                 else:

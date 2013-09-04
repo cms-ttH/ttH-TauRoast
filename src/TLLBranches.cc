@@ -98,16 +98,16 @@ unsigned int tll::Branches::GetTauAntiMuonIndex2(const unsigned int iCombo) cons
     return 0;
 }
 
-unsigned int tll::Branches::GetTauMatchIndex(const unsigned int iCombo) const {
-    if((*TLL_TauGenMatchId)[iCombo] == -99){ return 0; } // no match
-    if(abs((*TLL_TauGenMatchId)[iCombo]) == 15){ return 2; } // tau
-    if(abs((*TLL_TauGenMatchId)[iCombo]) == 13){ return 3; } // muon
-    if(abs((*TLL_TauGenMatchId)[iCombo]) == 11){ return 4; } // electron
-    if(abs((*TLL_TauGenMatchId)[iCombo]) == 22){ return 5; } // photon
-    if(abs((*TLL_TauGenMatchId)[iCombo]) == 23){ return 6; } // Z
-    if(abs((*TLL_TauGenMatchId)[iCombo]) == 24){ return 7; } // W
-    if(abs((*TLL_TauGenMatchId)[iCombo]) == 25){ return 8; } // Higgs
-    return 1; // hadronic
+unsigned int
+tll::Branches::GetTauMatchIndex(unsigned int idx) const
+{
+    return TranslateMatchIndex((*TLL_TauGenMatchId)[idx]);
+}
+
+unsigned int
+tll::Branches::GetTauParentMatchIndex(unsigned int idx) const
+{
+    return TranslateMatchIndex((*TLL_TauGenMatchMother0Id)[idx]);
 }
 
 ClassImp(roast::tll::Branches)

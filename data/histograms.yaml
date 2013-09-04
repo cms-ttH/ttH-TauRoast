@@ -812,9 +812,9 @@ T1_MatchIndex:
     type: th1f
     dir: tau
     channels: [ttl]
-    binning: [10, 0, 10]
+    binning: [9, 0, 9]
+    bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, W, H]
     axis labels: ["#tau_{1} match", Events]
-    visible: [0, 10]
     showOF: false
     logy: 1
 
@@ -822,29 +822,29 @@ T2_MatchIndex:
     type: th1f
     dir: tau
     channels: [ttl]
-    binning: [10, 0, 10]
+    binning: [9, 0, 9]
+    bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, W, H]
     axis labels: ["#tau_{2} match", Events]
-    visible: [0, 10]
     showOF: false
     logy: 1
 
-T1_Parent:
+T1_ParentMatchIndex:
     type: th1f
     dir: tau
     channels: [ttl]
-    binning: [10, 0, 10]
+    binning: [9, 0, 9]
+    bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, W, H]
     axis labels: ["#tau_{1} Parent", Events]
-    visible: [0, 10]
     showOF: false
     logy: 1
 
-T2_Parent:
+T2_ParentMatchIndex:
     type: th1f
     dir: tau
     channels: [ttl]
-    binning: [10, 0, 10]
+    binning: [9, 0, 9]
+    bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, W, H]
     axis labels: ["#tau_{2} Parent", Events]
-    visible: [0, 10]
     showOF: false
     logy: 1
 
@@ -1319,19 +1319,19 @@ T_MatchIndex:
     type: th1f
     dir: tau
     channels: [tll]
-    binning: [10, 0, 10]
+    binning: [9, 0, 9]
+    bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, W, H]
     axis labels: ["#tau match", Events]
-    visible: [0, 10]
     showOF: false
     logy: 1
 
-T_Parent:
+T_ParentMatchIndex:
     type: th1f
     dir: tau
     channels: [tll]
-    binning: [10, 0, 10]
+    binning: [9, 0, 9]
+    bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, W, H]
     axis labels: ["#tau Parent", Events]
-    visible: [0, 10]
     showOF: false
     logy: 1
 
