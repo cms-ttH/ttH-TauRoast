@@ -67,7 +67,7 @@ def book_mva(config, processes, module):
     for method, opts in cfg['methods'].items():
         mva = roast.MVABase(mvadir, vectorize(vars), module.Get(), 1)
         if mva.BookMVA(method):
-            roast.register_mva(method, mva);
+            roast.register_mva('Final' + method, mva);
 
 def split_processes(config, ps):
     split_fct = {}

@@ -115,8 +115,9 @@ namespace roast {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return (*e->TTL_DitauCosDeltaPhi)[idx];
         };
-        accessors["MVA"] = [](Branches *b, int idx, int n) -> float {
-            return MVABase::gMVA["CFMlpANN"] ? MVABase::gMVA["CFMlpANN"]->Evaluate(b, idx) : 0.;
+
+        accessors["FinalBDTG"] = [](Branches *b, int idx, int n) -> float {
+            return MVABase::gMVA["FinalBDTG"] ? MVABase::gMVA["FinalBDTG"]->Evaluate(b, idx) : 0.;
         };
 
         // >>> Begin attr <<<
