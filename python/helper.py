@@ -69,6 +69,29 @@ def book_mva(config, processes, module):
         if mva.BookMVA(method):
             roast.register_mva('Final' + method, mva);
 
+def print_mva_ranking(config):
+    mvadir = config['paths']['mva output'].format(m='final mva')
+    logfile = os.path.join(mvadir, 'tmva.log')
+
+    first = True
+    prefix = None
+
+    with open(logfile) as f:
+        for l in f.readlines():
+            if 'Ranking result' in l:
+                prefix = l.split()[1]
+                if not first:
+                    print
+                else:
+                    first = False
+                print '# ' + prefix
+            elif prefix:
+                if l.split()[1] == prefix:
+                    idx = l.index(':') + 2
+                    print l[idx:-1]
+                else:
+                    prefix = None
+
 def split_processes(config, ps):
     split_fct = {}
 
