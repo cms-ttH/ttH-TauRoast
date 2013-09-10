@@ -1117,6 +1117,34 @@ TL1_DeltaR:
     showOF: true
     logy: 1
 
+L1_ImpactParameter:
+    type: th1f
+    dir: leptons
+    channels: [tll]
+    binning: [50, -0.04, 0.04]
+    axis labels: ["l_{1} Impact parameter", Events]
+
+L2_ImpactParameter:
+    type: th1f
+    dir: leptons
+    channels: [tll]
+    binning: [50, -0.04, 0.04]
+    axis labels: ["l_{2} Impact parameter", Events]
+
+L1_CorrectedDZ:
+    type: th1f
+    dir: leptons
+    channels: [tll]
+    binning: [50, -0.04, 0.04]
+    axis labels: ["l_{1} corrected #Delta z", Events]
+
+L2_CorrectedDZ:
+    type: th1f
+    dir: leptons
+    channels: [tll]
+    binning: [50, -0.04, 0.04]
+    axis labels: ["l_{2} corrected #Delta z", Events]
+
 L2_Pt:
     type: th1f
     dir: leptons

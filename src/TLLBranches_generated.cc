@@ -10,6 +10,8 @@ tll::Branches::Clear()
 
     // >>> Begin clear <<<
     TLL_Lepton1Charge->clear();
+    TLL_Lepton1CorrectedD0->clear();
+    TLL_Lepton1CorrectedDZ->clear();
     TLL_Lepton1Eta->clear();
     TLL_Lepton1EventWeight->clear();
     TLL_Lepton1GenMatchDaughter0Id->clear();
@@ -30,6 +32,7 @@ tll::Branches::Clear()
     TLL_Lepton1GenMatchMother1Id->clear();
     TLL_Lepton1GenMatchMother1Status->clear();
     TLL_Lepton1GenMatchStatus->clear();
+    TLL_Lepton1ImpactParameter->clear();
     TLL_Lepton1IsElectron->clear();
     TLL_Lepton1IsLoose->clear();
     TLL_Lepton1IsMuon->clear();
@@ -41,6 +44,8 @@ tll::Branches::Clear()
     TLL_Lepton1Pt->clear();
     TLL_Lepton1RelIso->clear();
     TLL_Lepton2Charge->clear();
+    TLL_Lepton2CorrectedD0->clear();
+    TLL_Lepton2CorrectedDZ->clear();
     TLL_Lepton2Eta->clear();
     TLL_Lepton2EventWeight->clear();
     TLL_Lepton2GenMatchDaughter0Id->clear();
@@ -61,6 +66,7 @@ tll::Branches::Clear()
     TLL_Lepton2GenMatchMother1Id->clear();
     TLL_Lepton2GenMatchMother1Status->clear();
     TLL_Lepton2GenMatchStatus->clear();
+    TLL_Lepton2ImpactParameter->clear();
     TLL_Lepton2IsElectron->clear();
     TLL_Lepton2IsLoose->clear();
     TLL_Lepton2IsMuon->clear();
@@ -167,6 +173,8 @@ tll::Branches::Delete()
 
     // >>> Begin delete <<<
     delete TLL_Lepton1Charge;
+    delete TLL_Lepton1CorrectedD0;
+    delete TLL_Lepton1CorrectedDZ;
     delete TLL_Lepton1Eta;
     delete TLL_Lepton1EventWeight;
     delete TLL_Lepton1GenMatchDaughter0Id;
@@ -187,6 +195,7 @@ tll::Branches::Delete()
     delete TLL_Lepton1GenMatchMother1Id;
     delete TLL_Lepton1GenMatchMother1Status;
     delete TLL_Lepton1GenMatchStatus;
+    delete TLL_Lepton1ImpactParameter;
     delete TLL_Lepton1IsElectron;
     delete TLL_Lepton1IsLoose;
     delete TLL_Lepton1IsMuon;
@@ -198,6 +207,8 @@ tll::Branches::Delete()
     delete TLL_Lepton1Pt;
     delete TLL_Lepton1RelIso;
     delete TLL_Lepton2Charge;
+    delete TLL_Lepton2CorrectedD0;
+    delete TLL_Lepton2CorrectedDZ;
     delete TLL_Lepton2Eta;
     delete TLL_Lepton2EventWeight;
     delete TLL_Lepton2GenMatchDaughter0Id;
@@ -218,6 +229,7 @@ tll::Branches::Delete()
     delete TLL_Lepton2GenMatchMother1Id;
     delete TLL_Lepton2GenMatchMother1Status;
     delete TLL_Lepton2GenMatchStatus;
+    delete TLL_Lepton2ImpactParameter;
     delete TLL_Lepton2IsElectron;
     delete TLL_Lepton2IsLoose;
     delete TLL_Lepton2IsMuon;
@@ -324,6 +336,8 @@ tll::Branches::Null()
 
     // >>> Begin null <<<
     TLL_Lepton1Charge = 0;
+    TLL_Lepton1CorrectedD0 = 0;
+    TLL_Lepton1CorrectedDZ = 0;
     TLL_Lepton1Eta = 0;
     TLL_Lepton1EventWeight = 0;
     TLL_Lepton1GenMatchDaughter0Id = 0;
@@ -344,6 +358,7 @@ tll::Branches::Null()
     TLL_Lepton1GenMatchMother1Id = 0;
     TLL_Lepton1GenMatchMother1Status = 0;
     TLL_Lepton1GenMatchStatus = 0;
+    TLL_Lepton1ImpactParameter = 0;
     TLL_Lepton1IsElectron = 0;
     TLL_Lepton1IsLoose = 0;
     TLL_Lepton1IsMuon = 0;
@@ -355,6 +370,8 @@ tll::Branches::Null()
     TLL_Lepton1Pt = 0;
     TLL_Lepton1RelIso = 0;
     TLL_Lepton2Charge = 0;
+    TLL_Lepton2CorrectedD0 = 0;
+    TLL_Lepton2CorrectedDZ = 0;
     TLL_Lepton2Eta = 0;
     TLL_Lepton2EventWeight = 0;
     TLL_Lepton2GenMatchDaughter0Id = 0;
@@ -375,6 +392,7 @@ tll::Branches::Null()
     TLL_Lepton2GenMatchMother1Id = 0;
     TLL_Lepton2GenMatchMother1Status = 0;
     TLL_Lepton2GenMatchStatus = 0;
+    TLL_Lepton2ImpactParameter = 0;
     TLL_Lepton2IsElectron = 0;
     TLL_Lepton2IsLoose = 0;
     TLL_Lepton2IsMuon = 0;
@@ -500,6 +518,8 @@ tll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TLL_CleanJetIndices", &CleanJetIndices);
     fChain->SetBranchAddress("TLL_HT", &HT);
     fChain->SetBranchAddress("TLL_Lepton1Charge", &TLL_Lepton1Charge);
+    fChain->SetBranchAddress("TLL_Lepton1CorrectedD0", &TLL_Lepton1CorrectedD0);
+    fChain->SetBranchAddress("TLL_Lepton1CorrectedDZ", &TLL_Lepton1CorrectedDZ);
     fChain->SetBranchAddress("TLL_Lepton1Eta", &TLL_Lepton1Eta);
     fChain->SetBranchAddress("TLL_Lepton1EventWeight", &TLL_Lepton1EventWeight);
     fChain->SetBranchAddress("TLL_Lepton1GenMatchDaughter0Id", &TLL_Lepton1GenMatchDaughter0Id);
@@ -520,6 +540,7 @@ tll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TLL_Lepton1GenMatchMother1Id", &TLL_Lepton1GenMatchMother1Id);
     fChain->SetBranchAddress("TLL_Lepton1GenMatchMother1Status", &TLL_Lepton1GenMatchMother1Status);
     fChain->SetBranchAddress("TLL_Lepton1GenMatchStatus", &TLL_Lepton1GenMatchStatus);
+    fChain->SetBranchAddress("TLL_Lepton1ImpactParameter", &TLL_Lepton1ImpactParameter);
     fChain->SetBranchAddress("TLL_Lepton1IsElectron", &TLL_Lepton1IsElectron);
     fChain->SetBranchAddress("TLL_Lepton1IsLoose", &TLL_Lepton1IsLoose);
     fChain->SetBranchAddress("TLL_Lepton1IsMuon", &TLL_Lepton1IsMuon);
@@ -531,6 +552,8 @@ tll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TLL_Lepton1Pt", &TLL_Lepton1Pt);
     fChain->SetBranchAddress("TLL_Lepton1RelIso", &TLL_Lepton1RelIso);
     fChain->SetBranchAddress("TLL_Lepton2Charge", &TLL_Lepton2Charge);
+    fChain->SetBranchAddress("TLL_Lepton2CorrectedD0", &TLL_Lepton2CorrectedD0);
+    fChain->SetBranchAddress("TLL_Lepton2CorrectedDZ", &TLL_Lepton2CorrectedDZ);
     fChain->SetBranchAddress("TLL_Lepton2Eta", &TLL_Lepton2Eta);
     fChain->SetBranchAddress("TLL_Lepton2EventWeight", &TLL_Lepton2EventWeight);
     fChain->SetBranchAddress("TLL_Lepton2GenMatchDaughter0Id", &TLL_Lepton2GenMatchDaughter0Id);
@@ -551,6 +574,7 @@ tll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TLL_Lepton2GenMatchMother1Id", &TLL_Lepton2GenMatchMother1Id);
     fChain->SetBranchAddress("TLL_Lepton2GenMatchMother1Status", &TLL_Lepton2GenMatchMother1Status);
     fChain->SetBranchAddress("TLL_Lepton2GenMatchStatus", &TLL_Lepton2GenMatchStatus);
+    fChain->SetBranchAddress("TLL_Lepton2ImpactParameter", &TLL_Lepton2ImpactParameter);
     fChain->SetBranchAddress("TLL_Lepton2IsElectron", &TLL_Lepton2IsElectron);
     fChain->SetBranchAddress("TLL_Lepton2IsLoose", &TLL_Lepton2IsLoose);
     fChain->SetBranchAddress("TLL_Lepton2IsMuon", &TLL_Lepton2IsMuon);

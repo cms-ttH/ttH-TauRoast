@@ -34,6 +34,8 @@ namespace roast {
 
                 // >>> Begin declarations <<<
                 std::vector<float>* TLL_Lepton1Charge;
+                std::vector<float>* TLL_Lepton1CorrectedD0;
+                std::vector<float>* TLL_Lepton1CorrectedDZ;
                 std::vector<float>* TLL_Lepton1Eta;
                 std::vector<float>* TLL_Lepton1EventWeight;
                 std::vector<int>* TLL_Lepton1GenMatchDaughter0Id;
@@ -54,6 +56,7 @@ namespace roast {
                 std::vector<int>* TLL_Lepton1GenMatchMother1Id;
                 std::vector<int>* TLL_Lepton1GenMatchMother1Status;
                 std::vector<int>* TLL_Lepton1GenMatchStatus;
+                std::vector<float>* TLL_Lepton1ImpactParameter;
                 std::vector<float>* TLL_Lepton1IsElectron;
                 std::vector<bool>* TLL_Lepton1IsLoose;
                 std::vector<float>* TLL_Lepton1IsMuon;
@@ -65,6 +68,8 @@ namespace roast {
                 std::vector<float>* TLL_Lepton1Pt;
                 std::vector<float>* TLL_Lepton1RelIso;
                 std::vector<float>* TLL_Lepton2Charge;
+                std::vector<float>* TLL_Lepton2CorrectedD0;
+                std::vector<float>* TLL_Lepton2CorrectedDZ;
                 std::vector<float>* TLL_Lepton2Eta;
                 std::vector<float>* TLL_Lepton2EventWeight;
                 std::vector<int>* TLL_Lepton2GenMatchDaughter0Id;
@@ -85,6 +90,7 @@ namespace roast {
                 std::vector<int>* TLL_Lepton2GenMatchMother1Id;
                 std::vector<int>* TLL_Lepton2GenMatchMother1Status;
                 std::vector<int>* TLL_Lepton2GenMatchStatus;
+                std::vector<float>* TLL_Lepton2ImpactParameter;
                 std::vector<float>* TLL_Lepton2IsElectron;
                 std::vector<bool>* TLL_Lepton2IsLoose;
                 std::vector<float>* TLL_Lepton2IsMuon;

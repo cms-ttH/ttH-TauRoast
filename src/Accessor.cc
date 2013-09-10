@@ -473,6 +473,14 @@ namespace roast {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return (*e->TLL_Lepton1Charge)[idx];
         };
+        accessors["L1_CorrectedD0"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton1CorrectedD0)[idx];
+        };
+        accessors["L1_CorrectedDZ"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton1CorrectedDZ)[idx];
+        };
         accessors["L1_Eta"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return (*e->TLL_Lepton1Eta)[idx];
@@ -553,6 +561,10 @@ namespace roast {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return (*e->TLL_Lepton1GenMatchStatus)[idx];
         };
+        accessors["L1_ImpactParameter"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton1ImpactParameter)[idx];
+        };
         accessors["L1_IsElectron"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return (*e->TLL_Lepton1IsElectron)[idx];
@@ -584,6 +596,14 @@ namespace roast {
         accessors["L2_Charge"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return (*e->TLL_Lepton2Charge)[idx];
+        };
+        accessors["L2_CorrectedD0"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton2CorrectedD0)[idx];
+        };
+        accessors["L2_CorrectedDZ"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton2CorrectedDZ)[idx];
         };
         accessors["L2_Eta"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
@@ -664,6 +684,10 @@ namespace roast {
         accessors["L2_GenMatchStatus"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return (*e->TLL_Lepton2GenMatchStatus)[idx];
+        };
+        accessors["L2_ImpactParameter"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton2ImpactParameter)[idx];
         };
         accessors["L2_IsElectron"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
