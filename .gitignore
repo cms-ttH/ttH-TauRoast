@@ -1,3 +1,6 @@
 *.swp
 *.pyc
-test/*.par
+tags
+python/__init__.py
+test/tmp*
+test/*.log
