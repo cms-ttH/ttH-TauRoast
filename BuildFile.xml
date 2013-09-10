@@ -3,9 +3,8 @@
 <use name="boost"/>
 <use name="boost_filesystem"/>
 <use name="boost_python"/>
-<Flags ADD_SUBDIR="yes"/>
 <export>
-	<use name="root"/>
-	<use name="boost"/>
-	<lib name="1"/>
+  <use name="root"/>
+  <use name="boost"/>
+  <lib name="1"/>
 </export>
