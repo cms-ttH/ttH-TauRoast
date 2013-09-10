@@ -1,17 +1,19 @@
 #!/usr/bin/env python
 
+from glob import glob
 import os
+from shutil import copyfile
 import yaml
 
 from optparse import OptionParser
 
-parser = OptionParser(usage="%prog [options] datadir")
+parser = OptionParser(usage="%prog config datadir")
 opts, args = parser.parse_args()
 
-if len(args) != 1:
+if len(args) != 2:
     parser.error("no data directory specified")
 
-(basepath,) = args
+(baseconfig, basepath,) = args
 
 def tag_convention(min, max):
     res = min
@@ -62,9 +64,19 @@ systematics = [
 mva_default_dir = "/afs/crc.nd.edu/user/m/mwolf3/www/pas_weights/"
 mva_categories = filter(lambda xs: xs[4], categories)
 
-analyze = open(os.path.join(os.environ["CMSSW_BASE"], "src/TTHTauTau/Roast/test/stage1_analyze.par"), 'w')
-fill = open(os.path.join(os.environ["CMSSW_BASE"], "src/TTHTauTau/Roast/test/stage2_fill.par"), 'w')
-plot = open(os.path.join(os.environ["CMSSW_BASE"], "src/TTHTauTau/Roast/test/stage3_plot.par"), 'w')
+clusterdir = os.path.join(basepath, '_cluster')
+sourcedir = os.path.join(os.environ["CMSSW_BASE"], "src", "TTHTauTau", "Roast", "data", "cluster")
+
+if not os.path.exists(clusterdir):
+    os.makedirs(clusterdir)
+
+for fn in glob(os.path.join(sourcedir, "*")):
+    copyfile(fn, os.path.join(clusterdir, os.path.basename(fn)))
+
+analyze = open(os.path.join(clusterdir, "stage1_analyze.par"), 'w')
+fill = open(os.path.join(clusterdir, "stage2_fill.par"), 'w')
+plot = open(os.path.join(clusterdir, "stage3_plot.par"), 'w')
+
 analyze.write("cfg,flags\n")
 fill.write("cfg\n")
 plot.write("cfg\n")
@@ -72,7 +84,7 @@ plot.write("cfg\n")
 for (bmin, bmax, jmin, jmax, active_mva) in categories:
     for (unc, shape) in systematics:
         for shift in ("Up", "Down"):
-            with open(os.path.join(os.environ["CMSSW_BASE"], "src/TTHTauTau/Roast/data/generic.yaml")) as f:
+            with open(baseconfig) as f:
                 data = yaml.load(f)
                 postfix = ""
 
