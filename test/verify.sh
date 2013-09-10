@@ -1,14 +1,21 @@
 #!/bin/sh
 
-scram b
-
 if [ "$(basename $PWD)" == "test" ]; then
     dir=$(basename $PWD)
 else
     dir=$PWD
 fi
 
-roaster -atfpvn 12345 $dir/data/generic.yaml 2>&1 | tee $dir/test/verify.log
-roaster -y $dir/data/generic.yaml 2>&1 | tee $dir/test/verify.yield
+chan=$1
 
-cp $dir/test/tmp/final\ mva/TMVAClassification_BDTG.weights.xml $dir/test/verify.weights
+roaster -atfpvn 12345 $dir/data/generic_$chan.yaml &> $dir/test/verify_$chan.log
+roaster -y $dir/data/generic_$chan.yaml &> $dir/test/verify_$chan.yield
+
+cp $dir/test/tmp_$chan/final\ mva/TMVAClassification_BDTG.weights.xml $dir/test/verify_$chan.weights
+
+dff=$(git diff --name-status $dir/test/*$chan*)
+if [ -z "$dff" ]; then
+    echo No changes
+else
+    echo "$dff"
+fi

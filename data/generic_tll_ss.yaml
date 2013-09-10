@@ -23,7 +23,7 @@ analysis:
       - EWK
       - SingleTop
       - ttWZ
-      #  - TTHTauTau_125_real
+      - TTHTauTau_125_real
       #  - TTH_110
       #  - TTH_115
       #  - TTH_120
@@ -102,7 +102,7 @@ paths:
     # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
     # name; {m} = mode (_log)
     stack format: "/afs/crc.nd.edu/user/m/mwolf3/www/{root}/{t}/{d}/{n}{m}.{t}"
-    ntuples: /store/user/matze/ttH/v49/tll/2012
+    ntuples: /store/user/matze/ttH/v50/tll/2012
     tree: makeNtuple/TTbarHTauTau
 
 processes: processes.yaml

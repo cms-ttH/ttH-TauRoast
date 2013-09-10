@@ -15,7 +15,13 @@ analysis:
           - [T_Eta, F]
           - [T_DecayMode, I]
           - [T_IsolationMVA2Raw, F]
+          - [TL1_DeltaR, F]
+          - [TL2_DeltaR, F]
           - [LJ_Pt, F]
+          - [L1_Pt, F]
+          #  - [L2_Pt, F]
+          #  - [HT, F]
+          - [MET, F]
 
     process:
       - Collisions
@@ -23,7 +29,7 @@ analysis:
       - EWK
       - SingleTop
       - ttWZ
-      #  - TTHTauTau_125_real
+      - TTHTauTau_125_real
       #  - TTH_110
       #  - TTH_115
       #  - TTH_120
@@ -102,7 +108,7 @@ paths:
     # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
     # name; {m} = mode (_log)
     stack format: "/afs/crc.nd.edu/user/m/mwolf3/www/{root}/{t}/{d}/{n}{m}.{t}"
-    ntuples: /store/user/matze/ttH/v49/tll/2012
+    ntuples: /store/user/matze/ttH/v50/tll/2012
     tree: makeNtuple/TTbarHTauTau
 
 processes: processes.yaml
