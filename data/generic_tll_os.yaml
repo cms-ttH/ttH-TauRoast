@@ -89,6 +89,7 @@ physics:
       - {name: T_IsolationMVA2Raw, min: 0.25}
       # topological
       - {name: LL_ChargeProduct, min: -1, max: -1}
+      - {name: LL_ZPeakVeto, min: 0, max: 0}
     pair selection: iso
     systematics:
         eTauFake: 1.05

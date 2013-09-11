@@ -94,6 +94,11 @@ namespace roast {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return (*e->TLL_Lepton1Charge)[idx] * (*e->TLL_Lepton2Charge)[idx];
         };
+        accessors["LL_ZPeakVeto"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            float m = (*e->TLL_Lepton1Lepton2VisibleMass)[idx];
+            return (81. <= m && m <= 101.);
+        };
 
         accessors["TT_DeltaR"] = [](roast::Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
