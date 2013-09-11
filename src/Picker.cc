@@ -15,10 +15,10 @@ tau_iso(roast::tll::Branches *b, int idx)
 inline double
 ditau_iso(roast::ttl::Branches *b, int idx)
 {
-    return (*b->TTL_Tau1HPSbyIsolationMVA2raw)[idx] *
-        (*b->TTL_Tau1HPSbyIsolationMVA2raw)[idx] +
-        (*b->TTL_Tau2HPSbyIsolationMVA2raw)[idx] *
-        (*b->TTL_Tau2HPSbyIsolationMVA2raw)[idx];
+    return ((*b->TTL_Tau1HPSbyIsolationMVA2raw)[idx] + 1.) *
+        ((*b->TTL_Tau1HPSbyIsolationMVA2raw)[idx] + 1.) +
+        ((*b->TTL_Tau2HPSbyIsolationMVA2raw)[idx] + 1.) *
+        ((*b->TTL_Tau2HPSbyIsolationMVA2raw)[idx] + 1.);
 }
 
 int
