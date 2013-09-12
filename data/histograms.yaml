@@ -1175,6 +1175,13 @@ L2_Phi:
     showOF: false
     logy: 1
 
+L1L2_VisibleMass:
+    type: th1f
+    dir: leptons
+    channels: [tll]
+    binning: [40, 0, 200]
+    axis labels: ["Dilepton Visible Mass", Events]
+
 TL2_DeltaR:
     type: th1f
     dir: leptons
