@@ -4,11 +4,11 @@
     <Info name="TMVA Release" value="4.1.2 [262402]"/>
     <Info name="ROOT Release" value="5.32/00 [335872]"/>
     <Info name="Creator" value="mwolf3"/>
-    <Info name="Date" value="Tue Sep 10 11:25:05 2013"/>
+    <Info name="Date" value="Thu Sep 12 13:49:18 2013"/>
     <Info name="Host" value="Linux lxbuild167.cern.ch 2.6.18-308.1.1.el5 #1 SMP Wed Mar 7 19:25:07 CET 2012 x86_64 x86_64 x86_64 GNU/Linux"/>
     <Info name="Dir" value="/afs/crc.nd.edu/user/m/mwolf3/work/ttH/CMSSW_5_3_2_patch5/src/TTHTauTau/Roast"/>
     <Info name="Training events" value="1132"/>
-    <Info name="TrainingTime" value="1.16881490e+00"/>
+    <Info name="TrainingTime" value="1.14908004e+00"/>
     <Info name="AnalysisType" value="Classification"/>
   </GeneralInfo>
   <Options>

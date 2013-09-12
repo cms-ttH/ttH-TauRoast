@@ -105,7 +105,7 @@ physics:
 
 paths:
     # root path, referenced by {root}
-    root: test/tmp_ttl
+    root: /afs/crc.nd.edu/user/m/mwolf3/www/test/ttl
     # for analyzed processes
     input: "{root}/roast_processed.root"
     # {s} is replaced with systematic shifts
@@ -115,7 +115,7 @@ paths:
     mva output: "{root}/{m}"
     # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
     # name; {m} = mode (_log)
-    stack format: "/afs/crc.nd.edu/user/m/mwolf3/www/{root}/{t}/{d}/{n}{m}.{t}"
+    stack format: "{root}/{t}/{d}/{n}{m}.{t}"
     ntuples: /store/user/matze/ttH/v48/ttl/2012
     tree: makeNtuple/TTbarHTauTau
 

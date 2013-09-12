@@ -8,8 +8,8 @@ fi
 
 chan=$1
 
-roaster -atfpvn 12345 $dir/data/generic_$chan.yaml &> $dir/test/verify_$chan.log
-roaster -y $dir/data/generic_$chan.yaml &> $dir/test/verify_$chan.yield
+roaster -o paths.root=test/tmp_$chan -atfpvvn 12345 $dir/data/generic_$chan.yaml &> $dir/test/verify_$chan.log
+roaster -o paths.root=test/tmp_$chan -y $dir/data/generic_$chan.yaml &> $dir/test/verify_$chan.yield
 
 cp $dir/test/tmp_$chan/final\ mva/TMVAClassification_BDTG.weights.xml $dir/test/verify_$chan.weights
 

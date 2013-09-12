@@ -241,8 +241,25 @@ def save(items, name, file):
     f.WriteObject(vectorize(items, "roast::Process*"), name)
     f.Close()
 
-def load_config(filename, basedir):
+def load_config(filename, basedir, overrides):
     config = yaml.load(open(filename))
+
+    if overrides:
+        for setting in overrides:
+            try:
+                (path, value) = setting.split("=", 1)
+                obj = config
+                keys = path.split('.')
+                while len(keys) > 1 and keys[0] in obj:
+                    obj = obj[keys.pop(0)]
+                if len(keys) != 1:
+                    raise KeyError
+                obj[keys[0]] = value
+            except ValueError:
+                logging.error("cannot override path %s without a value", setting)
+            except KeyError:
+                logging.error("cannot override path %s", path)
+
     processconfig = yaml.load(open(os.path.join(basedir, config['processes'])))
     histogramconfig = yaml.load(open(os.path.join(basedir, config['histograms'])))
 

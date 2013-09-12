@@ -32,6 +32,12 @@ parser.add_option("-n",
         metavar="NUM",
         default=None,
         help="process NUM events (default: configuration)")
+parser.add_option("-o", "--override",
+        action="append",
+        dest="overrides",
+        metavar="OPT",
+        help="override configuration file options, where OPT is formatted "
+        "as path.subpath.key=value.")
 parser.add_option("-p", "--plot",
         action="store_true",
         dest="plot",
@@ -95,7 +101,9 @@ if opts.list_vars:
 logging.info("reading configuration from %s", configfile)
 
 basedir = os.path.join(os.environ['CMSSW_BASE'], 'src/TTHTauTau/Roast/data')
-baseconfig = load_config(configfile, basedir)
+baseconfig = load_config(configfile, basedir, opts.overrides)
+
+logging.debug("using base path %s", baseconfig['paths']['root'])
 
 channel = baseconfig['analysis']['channel']
 if channel == 'tll':
