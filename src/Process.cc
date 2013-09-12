@@ -3,7 +3,6 @@
 
 #include "boost/lexical_cast.hpp"
 
-#include "../interface/Helper.h"
 #include "../interface/Process.h"
 
 using namespace std;

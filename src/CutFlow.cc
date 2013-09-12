@@ -4,7 +4,6 @@
 #include "boost/lexical_cast.hpp"
 
 #include "../interface/Accessor.h"
-#include "../interface/Helper.h"
 #include "../interface/MVABase.h"
 #include "../interface/TLLBranches.h"
 #include "../interface/TTLBranches.h"

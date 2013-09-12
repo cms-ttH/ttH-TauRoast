@@ -2,8 +2,9 @@
 
 #include <map>
 
+#include "DataFormats/Math/interface/deltaR.h"
+
 #include "../interface/Accessor.h"
-#include "../interface/Helper.h"
 #include "../interface/MVABase.h"
 #include "../interface/TLLBranches.h"
 #include "../interface/TTLBranches.h"
@@ -87,7 +88,7 @@ namespace roast {
 
         accessors["LL_DeltaR"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return DeltaR((*e->TLL_Lepton1Eta)[idx], (*e->TLL_Lepton1Phi)[idx],
+            return reco::deltaR((*e->TLL_Lepton1Eta)[idx], (*e->TLL_Lepton1Phi)[idx],
                     (*e->TLL_Lepton2Eta)[idx], (*e->TLL_Lepton2Phi)[idx]);
         };
         accessors["LL_ChargeProduct"] = [](roast::Branches *b, int idx, int n) -> float {
