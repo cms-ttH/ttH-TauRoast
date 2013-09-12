@@ -8,7 +8,7 @@ import ROOT as r
 import sys
 
 r.gROOT.SetBatch()
-r.gSystem.Load("libTTHTauTauRoast")
+r.gSystem.Load("libttHTauRoast")
 
 try:
     from ROOT import roast
@@ -16,7 +16,7 @@ except:
     sys.stderr.write("Failed to import 'roast'!\n")
     sys.exit(1)
 
-from TTHTauTau.Roast.helper import *
+from ttH.TauRoast.helper import *
 
 def get_bkg_stack(histname, processes):
     res = r.THStack(histname + "_stack", histname + "_stack")

@@ -65,7 +65,7 @@ mva_default_dir = "/afs/crc.nd.edu/user/m/mwolf3/www/pas_weights/"
 mva_categories = filter(lambda xs: xs[4], categories)
 
 clusterdir = os.path.join(basepath, '_cluster')
-sourcedir = os.path.join(os.environ["CMSSW_BASE"], "src", "TTHTauTau", "Roast", "data", "cluster")
+sourcedir = os.path.join(os.environ["LOCALRT"], "src", "ttH", "TauRoast", "data", "cluster")
 
 if not os.path.exists(clusterdir):
     os.makedirs(clusterdir)

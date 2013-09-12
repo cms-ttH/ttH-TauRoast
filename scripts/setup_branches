@@ -126,8 +126,8 @@ def generate_type_info(channel, vars, common_vars, indent=16):
         null_lines.append("    {0} = 0;\n".format(varname))
     if not channel:
         channel = ""
-    header = os.path.join(os.environ["CMSSW_BASE"], 'src', 'TTHTauTau', 'Roast', 'interface', channel + 'Branches.h')
-    source = os.path.join(os.environ["CMSSW_BASE"], 'src', 'TTHTauTau', 'Roast', 'src', channel + 'Branches_generated.cc')
+    header = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'interface', channel + 'Branches.h')
+    source = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'src', channel + 'Branches_generated.cc')
     inject_lines(header, "declarations", declare_lines)
     inject_lines(source, "address", address_lines)
     inject_lines(source, "clear", clear_lines)
@@ -209,8 +209,8 @@ returns = {0: 'return {0}->{1};', 1: 'return (*{0}->{1})[{2}];'}
 
 fct_names = {}
 for channel in list(channels) + [""]:
-    for fn in gather_function_info(os.path.join(os.environ["CMSSW_BASE"],
-            'src', 'TTHTauTau', 'Roast','interface', channel + 'Branches.h')):
+    for fn in gather_function_info(os.path.join(os.environ["LOCALRT"],
+            'src', 'ttH', 'TauRoast','interface', channel + 'Branches.h')):
         if fn not in fct_names:
             fct_names[fn] = []
         fct_names[fn].append(channel)
@@ -361,5 +361,5 @@ for k in sorted(attrs.keys()):
     except NestingError as e:
         print '{0} has too many nested containers'.format(k)
 
-source = os.path.join(os.environ["CMSSW_BASE"], 'src', 'TTHTauTau', 'Roast', 'src', 'Accessor.cc')
+source = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'src', 'Accessor.cc')
 inject_lines(source, "attr", lines)

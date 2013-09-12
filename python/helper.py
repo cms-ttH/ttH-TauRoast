@@ -7,7 +7,7 @@ import ROOT as r
 import sys
 
 r.gROOT.SetBatch()
-r.gSystem.Load("libTTHTauTauRoast")
+r.gSystem.Load("libttHTauRoast")
 
 try:
     from ROOT import roast

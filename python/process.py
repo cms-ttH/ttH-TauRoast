@@ -11,7 +11,7 @@ except:
     sys.stderr.write("Failed to import 'roast'!\n")
     sys.exit(1)
 
-from TTHTauTau.Roast.helper import *
+from ttH.TauRoast.helper import *
 
 def analyze(config, module):
     """Create a list of processes, as defined in `process_vXX.yaml`, and

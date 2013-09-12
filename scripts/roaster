@@ -76,7 +76,7 @@ import sys
 
 r.gROOT.SetBatch()
 r.gErrorIgnoreLevel = 1001
-r.gSystem.Load("libTTHTauTauRoast")
+r.gSystem.Load("libttHTauRoast")
 
 try:
     from ROOT import roast
@@ -86,10 +86,10 @@ except:
 
 import yaml
 
-from TTHTauTau.Roast.display import stack
-from TTHTauTau.Roast.helper import *
-from TTHTauTau.Roast.process import analyze, fill_histos
-from TTHTauTau.Roast.style import *
+from ttH.TauRoast.display import stack
+from ttH.TauRoast.helper import *
+from ttH.TauRoast.process import analyze, fill_histos
+from ttH.TauRoast.style import *
 
 if opts.list_vars:
     for v in roast.get_accessor_names():
@@ -100,7 +100,7 @@ if opts.list_vars:
 
 logging.info("reading configuration from %s", configfile)
 
-basedir = os.path.join(os.environ['CMSSW_BASE'], 'src/TTHTauTau/Roast/data')
+basedir = os.path.join(os.environ['LOCALRT'], 'src/ttH/TauRoast/data')
 baseconfig = load_config(configfile, basedir, opts.overrides)
 
 logging.debug("using base path %s", baseconfig['paths']['root'])

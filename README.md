@@ -14,17 +14,17 @@ locally after executing `cmsenv`:
 
 Afterwards, clone this repository in the CMSSW source area:
 
-    mkdir -p TTHTauTau
-    git clone https://github.com/matz-e/TTHTauTau-Roast.git TTHTauTau/Roast
+    mkdir -p ttH
+    git clone https://github.com/cms-ttH/ttH-TauRoast.git ttH/TauRoast
     scram b -j32
 
 ## Basic usage
 
-Configuration files are stored in `TTHTauTau/Roast/data`,
+Configuration files are stored in `ttH/TauRoast/data`,
 with `generic.yaml` being the main configuration file.
 Start a test analysis with:
 
-    roaster -atfpv -n 12345 TTHTauTau/Roast/data/generic.yaml
+    roaster -atfpv -n 12345 $LOCALRT/src/ttH/TauRoast/data/generic.yaml
 
 See the full list of options with `roaster -h`.
 
@@ -34,7 +34,7 @@ To add new variables, several places need to be changed:
 
 * The `Branches` class:  Do this by running `setup_branches` on a ROOT file
   containing the desired variable branches.  (optional)
-* Add new access functions to `TTHTauTau/Roast/src/Accessor.cc` - before
+* Add new access functions to `ttH/TauRoast/src/Accessor.cc` - before
   automatically generated ones.
 
 For new weights, additional modifications to `Weights.cc` will be in order.

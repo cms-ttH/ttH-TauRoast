@@ -38,7 +38,7 @@ if len(args) < 1:
 import ROOT as r
 
 r.gROOT.SetBatch()
-r.gSystem.Load("libTTHTauTauRoast")
+r.gSystem.Load("libttHTauRoast")
 
 try:
     from ROOT import roast
@@ -46,7 +46,7 @@ except:
     sys.stderr.write("Failed to import 'roast'!\n")
     sys.exit(1)
 
-from TTHTauTau.Roast.helper import *
+from ttH.TauRoast.helper import *
 
 samples = {
         'data_obs': ['Collisions'],
@@ -119,6 +119,7 @@ def copy_histos(outfile, config, infile, invar, outvar, mod_string):
             pass
     for p in procs:
         del p
+    del procs
 
 outfile = r.TFile(opts.file, "recreate")
 
@@ -126,7 +127,7 @@ for fn in args:
     with open(fn) as f:
         config = yaml.load(f)
 
-        basedir = os.path.join(os.environ['CMSSW_BASE'], 'src/TTHTauTau/Roast/data')
+        basedir = os.path.join(os.environ['LOCALRT'], 'src/ttH/TauRoast/data')
         processes = yaml.load(open(os.path.join(basedir, config['processes'])))
         config['processes'] = processes
 
