@@ -18,9 +18,9 @@ analysis:
           - [T2_DecayMode, I]
           - [T1_IsolationMVA2Raw, F]
           - [T2_IsolationMVA2Raw, F]
+          - [T1L_DeltaR, F]
           - [LJ_Pt, F]
           - [DitauVisibleMass, F]
-          - [T1L_DeltaR, F]
 
     process:
       - Collisions
