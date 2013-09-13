@@ -9,15 +9,6 @@ import sys
 
 r.gROOT.SetBatch()
 
-class ChannelError(Exception):
-    pass
-
-class ImplementationError(Exception):
-    pass
-
-class NestingError(Exception):
-    pass
-
 # class used to store accessor information
 Attr = namedtuple('Attr', ['name', 'type', 'pointer', 'prefixes'])
 
@@ -253,14 +244,14 @@ for fn in sorted(fct_names.keys()):
         lines.append(indent * 2 + '};\n')
     else:
         # FIXME not yet implemented
-        raise ImplementationError()
+        raise NotImplementedError
 
 attrs = generate_accessor_info(vars)
 
 def generate_return_line(obj, varname, type, idx='idx', safe=False):
     cnt = type.count('vector')
     if cnt not in returns:
-        raise NestingError()
+        raise TypeError
     if safe:
         return returns[cnt].replace("[{2}]", ".at({2})").format(obj, varname, idx)
     else:
@@ -337,7 +328,7 @@ for k in sorted(attrs.keys()):
 
             for p in prefixes:
                 if p not in channels:
-                    raise ChannelError(p)
+                    raise ValueError(p)
 
                 chan = p.lower()
                 if var not in shared_var_names:
@@ -356,10 +347,10 @@ for k in sorted(attrs.keys()):
         tmp_lines.append(indent * 2 + '};\n')
 
         lines += tmp_lines
-    except ChannelError as e:
-        print '{0} not defined as a channel'.format(e)
-    except NestingError as e:
-        print '{0} has too many nested containers'.format(k)
+    except ValueError as e:
+        print '{0} is not a valid channel'.format(e)
+    except TypeError as e:
+        print '{0} is of unprocessable type'.format(k)
 
 source = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'src', 'Accessor.cc')
 inject_lines(source, "attr", lines)

@@ -15,9 +15,6 @@ except:
     sys.stderr.write("Failed to import 'roast'!\n")
     sys.exit(1)
 
-class IncorrectProcessCountError(Exception):
-    pass
-
 def train_mva(config, processes, module):
     cfg = config['analysis']['final mva']
 
@@ -145,7 +142,7 @@ def get_collisions(ps):
             logging.critical("more than one collision process found")
         else:
             logging.critical("no collisions present")
-        raise IncorrectProcessCountError()
+        raise LookupError
     return res[0]
 
 def get_process(name, processes):
@@ -155,7 +152,7 @@ def get_process(name, processes):
             logging.critical("more than one process with name %s", name)
         else:
             logging.critical("no process with name %s found", name)
-        raise IncorrectProcessCountError()
+        raise LookupError
     return res[0]
 
 def normalize_processes(config, processes):
