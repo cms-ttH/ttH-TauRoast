@@ -1,8 +1,10 @@
 # vim: ts=4:sw=4:et:sta
+from copy import deepcopy
 import logging
 import math
 import os
 import yaml
+import re
 import ROOT as r
 import sys
 
@@ -238,6 +240,53 @@ def save(items, name, file):
     f.WriteObject(vectorize(items, "roast::Process*"), name)
     f.Close()
 
+def deep_replace(obj, s, r):
+    """Recursively performs replacements on strings, substituting `r` for `s`.
+    This works only for objects composed of lists, tuples, dicts, and simple
+    data types.
+
+    >>> deep_replace({'foo': ['bar', 'ham', 'spam', {'org': 1}]}, 'o', 'a')
+    {'faa': ['bar', 'ham', 'spam', {'arg': 1}]}
+
+    This method tries to preserve the type of the replacement, if possible:
+
+    >>> deep_replace('foo', 'foo', 10)
+    10
+    """
+    if isinstance(obj, list) or isinstance(obj, tuple):
+        obj = map(lambda o: deep_replace(o, s, r), obj)
+    elif isinstance(obj, dict):
+        obj = dict(map(lambda o: deep_replace(o, s, r), obj.items()))
+    elif isinstance(obj, str):
+        if obj == s:
+            obj = r
+        else:
+            obj = obj.replace(s, r)
+    else:
+        obj = deepcopy(obj)
+    return obj
+
+def expand_histogram_config(config):
+    """Looks for a key 'replace'  with a nested list of replacements and
+    applies them to the contents.
+
+    >>> expand_histogram_config({r'$0_Label': {'replace': [['T', 't'], ['L', 'l']], 'axis labels': ['$1 this', 'Num']}})
+    {'L_Label': {'axis labels': ['l this', 'Num']}, 'T_Label': {'axis labels': ['t this', 'Num']}}
+    """
+    res = {}
+    for (key, cfg) in config.items():
+        if not 'replace' in cfg:
+            res[key] = cfg
+            continue
+
+        for replacements in cfg['replace']:
+            (newkey, newcfg) = (key, cfg)
+            for (n, repl) in enumerate(replacements):
+                (newkey, newcfg) = deep_replace((newkey, newcfg), '${0}'.format(n), repl)
+            del newcfg['replace']
+            res[newkey] = newcfg
+    return res
+
 def load_config(filename, basedir, overrides):
     config = yaml.load(open(filename))
 
@@ -258,7 +307,7 @@ def load_config(filename, basedir, overrides):
                 logging.error("cannot override path %s", path)
 
     processconfig = yaml.load(open(os.path.join(basedir, config['processes'])))
-    histogramconfig = yaml.load(open(os.path.join(basedir, config['histograms'])))
+    histogramconfig = expand_histogram_config(yaml.load(open(os.path.join(basedir, config['histograms']))))
 
     channel = config['analysis']['channel']
     for (name, cfg) in histogramconfig.items():
