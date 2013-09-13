@@ -98,7 +98,7 @@ physics:
 
 paths:
     # root path, referenced by {root}
-    root: /afs/crc.nd.edu/user/m/mwolf3/www/test/tll_ss
+    root: /afs/crc.nd.edu/user/m/mwolf3/www/test/tll_os
     # for analyzed processes
     input: "{root}/roast_processed.root"
     # {s} is replaced with systematic shifts
