@@ -91,6 +91,105 @@ namespace roast {
             return reco::deltaR((*e->TLL_Lepton1Eta)[idx], (*e->TLL_Lepton1Phi)[idx],
                     (*e->TLL_Lepton2Eta)[idx], (*e->TLL_Lepton2Phi)[idx]);
         };
+
+        accessors["L1LJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return reco::deltaR(
+                    (*e->TLL_Lepton1Eta)[idx],
+                    (*e->TLL_Lepton1Phi)[idx],
+                    e->J_Eta->at((*e->CleanJetIndices)[idx].at(0)),
+                    e->J_Phi->at((*e->CleanJetIndices)[idx].at(0)));
+        };
+        accessors["L1SubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return reco::deltaR(
+                    (*e->TLL_Lepton1Eta)[idx],
+                    (*e->TLL_Lepton1Phi)[idx],
+                    e->J_Eta->at((*e->CleanJetIndices)[idx].at(1)),
+                    e->J_Phi->at((*e->CleanJetIndices)[idx].at(1)));
+        };
+        accessors["L1LJ_BtagDeltaR"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return reco::deltaR(
+                    (*e->TLL_Lepton1Eta)[idx],
+                    (*e->TLL_Lepton1Phi)[idx],
+                    e->GetCleanJetBTagEta(idx, 0),
+                    e->GetCleanJetBTagPhi(idx, 0));
+        };
+        accessors["L1SubLJ_BtagDeltaR"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return reco::deltaR(
+                    (*e->TLL_Lepton1Eta)[idx],
+                    (*e->TLL_Lepton1Phi)[idx],
+                    e->GetCleanJetBTagEta(idx, 1),
+                    e->GetCleanJetBTagPhi(idx, 1));
+        };
+        accessors["L1LJ_NonBtagDeltaR"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return reco::deltaR(
+                    (*e->TLL_Lepton1Eta)[idx],
+                    (*e->TLL_Lepton1Phi)[idx],
+                    e->GetCleanJetNonBTagEta(idx, 0),
+                    e->GetCleanJetNonBTagPhi(idx, 0));
+        };
+        accessors["L1SubLJ_NonBtagDeltaR"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return reco::deltaR(
+                    (*e->TLL_Lepton1Eta)[idx],
+                    (*e->TLL_Lepton1Phi)[idx],
+                    e->GetCleanJetNonBTagEta(idx, 1),
+                    e->GetCleanJetNonBTagPhi(idx, 1));
+        };
+
+        accessors["L2LJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return reco::deltaR(
+                    (*e->TLL_Lepton2Eta)[idx],
+                    (*e->TLL_Lepton2Phi)[idx],
+                    e->J_Eta->at((*e->CleanJetIndices)[idx].at(0)),
+                    e->J_Phi->at((*e->CleanJetIndices)[idx].at(0)));
+        };
+        accessors["L2SubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return reco::deltaR(
+                    (*e->TLL_Lepton2Eta)[idx],
+                    (*e->TLL_Lepton2Phi)[idx],
+                    e->J_Eta->at((*e->CleanJetIndices)[idx].at(1)),
+                    e->J_Phi->at((*e->CleanJetIndices)[idx].at(1)));
+        };
+        accessors["L2LJ_BtagDeltaR"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return reco::deltaR(
+                    (*e->TLL_Lepton2Eta)[idx],
+                    (*e->TLL_Lepton2Phi)[idx],
+                    e->GetCleanJetBTagEta(idx, 0),
+                    e->GetCleanJetBTagPhi(idx, 0));
+        };
+        accessors["L2SubLJ_BtagDeltaR"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return reco::deltaR(
+                    (*e->TLL_Lepton2Eta)[idx],
+                    (*e->TLL_Lepton2Phi)[idx],
+                    e->GetCleanJetBTagEta(idx, 1),
+                    e->GetCleanJetBTagPhi(idx, 1));
+        };
+        accessors["L2LJ_NonBtagDeltaR"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return reco::deltaR(
+                    (*e->TLL_Lepton2Eta)[idx],
+                    (*e->TLL_Lepton2Phi)[idx],
+                    e->GetCleanJetNonBTagEta(idx, 0),
+                    e->GetCleanJetNonBTagPhi(idx, 0));
+        };
+        accessors["L2SubLJ_NonBtagDeltaR"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return reco::deltaR(
+                    (*e->TLL_Lepton2Eta)[idx],
+                    (*e->TLL_Lepton2Phi)[idx],
+                    e->GetCleanJetNonBTagEta(idx, 1),
+                    e->GetCleanJetNonBTagPhi(idx, 1));
+        };
+
         accessors["LL_ChargeProduct"] = [](roast::Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return (*e->TLL_Lepton1Charge)[idx] * (*e->TLL_Lepton2Charge)[idx];
@@ -130,11 +229,17 @@ namespace roast {
         accessors["CleanJ_BTagEta"] = [](Branches *b, int idx, int n) -> float {
             return b->GetCleanJetBTagEta(idx, n);
         };
+        accessors["CleanJ_BTagPhi"] = [](Branches *b, int idx, int n) -> float {
+            return b->GetCleanJetBTagPhi(idx, n);
+        };
         accessors["CleanJ_BTagPt"] = [](Branches *b, int idx, int n) -> float {
             return b->GetCleanJetBTagPt(idx, n);
         };
         accessors["CleanJ_NonBTagEta"] = [](Branches *b, int idx, int n) -> float {
             return b->GetCleanJetNonBTagEta(idx, n);
+        };
+        accessors["CleanJ_NonBTagPhi"] = [](Branches *b, int idx, int n) -> float {
+            return b->GetCleanJetNonBTagPhi(idx, n);
         };
         accessors["CleanJ_NonBTagPt"] = [](Branches *b, int idx, int n) -> float {
             return b->GetCleanJetNonBTagPt(idx, n);

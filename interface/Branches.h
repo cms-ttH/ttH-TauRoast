@@ -43,8 +43,10 @@ namespace roast {
             virtual bool IsGoodGenMatch(const int&) const = 0;
 
             float GetCleanJetBTagEta(unsigned int, unsigned int);
+            float GetCleanJetBTagPhi(unsigned int, unsigned int);
             float GetCleanJetBTagPt(unsigned int, unsigned int);
             float GetCleanJetNonBTagEta(unsigned int, unsigned int);
+            float GetCleanJetNonBTagPhi(unsigned int, unsigned int);
             float GetCleanJetNonBTagPt(unsigned int, unsigned int);
 
             // >>> Begin declarations <<<

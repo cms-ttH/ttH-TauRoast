@@ -125,28 +125,42 @@ float
 Branches::GetCleanJetBTagEta(unsigned int idx, unsigned int n)
 {
     RegenerateCaches();
-    return J_Eta->at(clean_btag_cache[idx][n]);
+    return J_Eta->at(clean_btag_cache[idx].at(n));
 }
 
 float
 Branches::GetCleanJetBTagPt(unsigned int idx, unsigned int n)
 {
     RegenerateCaches();
-    return J_Pt->at(clean_btag_cache[idx][n]);
+    return J_Pt->at(clean_btag_cache[idx].at(n));
+}
+
+float
+Branches::GetCleanJetBTagPhi(unsigned int idx, unsigned int n)
+{
+    RegenerateCaches();
+    return J_Phi->at(clean_btag_cache[idx].at(n));
 }
 
 float
 Branches::GetCleanJetNonBTagEta(unsigned int idx, unsigned int n)
 {
     RegenerateCaches();
-    return J_Eta->at(clean_nonbtag_cache[idx][n]);
+    return J_Eta->at(clean_nonbtag_cache[idx].at(n));
 }
 
 float
 Branches::GetCleanJetNonBTagPt(unsigned int idx, unsigned int n)
 {
     RegenerateCaches();
-    return J_Pt->at(clean_nonbtag_cache[idx][n]);
+    return J_Pt->at(clean_nonbtag_cache[idx].at(n));
+}
+
+float
+Branches::GetCleanJetNonBTagPhi(unsigned int idx, unsigned int n)
+{
+    RegenerateCaches();
+    return J_Phi->at(clean_nonbtag_cache[idx].at(n));
 }
 
 ClassImp(roast::Branches)

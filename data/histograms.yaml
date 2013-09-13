@@ -386,15 +386,6 @@ T2L_DeltaR:
     showOF: true
     logy: 1
 
-DeltaR_LJ1:
-    type: th1f
-    dir: lepton
-    binning: [30, 0, 10]
-    axis labels: ["#Delta R(l, #tau_{1})", Events]
-    visible: [0, 6]
-    showOF: true
-    logy: 1
-
 DeltaR_LJ2:
     type: th1f
     dir: lepton
@@ -1117,6 +1108,54 @@ TL1_DeltaR:
     showOF: true
     logy: 1
 
+L1LJ_DeltaR:
+    type: th1f
+    dir: leptons
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{1}, leading jet)", Events]
+    visible: [0, 6]
+
+L1SubLJ_DeltaR:
+    type: th1f
+    dir: leptons
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{1}, subleading jet)", Events]
+    visible: [0, 6]
+
+L1LJ_BtagDeltaR:
+    type: th1f
+    dir: leptons
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{1}, leading b-tag jet)", Events]
+    visible: [0, 6]
+
+L1SubLJ_BtagDeltaR:
+    type: th1f
+    dir: leptons
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{1}, subleading b-tag jet)", Events]
+    visible: [0, 6]
+
+L1LJ_NonBtagDeltaR:
+    type: th1f
+    dir: leptons
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{1}, leading non b-tag jet)", Events]
+    visible: [0, 6]
+
+L1SubLJ_NonBtagDeltaR:
+    type: th1f
+    dir: leptons
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{1}, subleading non b-tag jet)", Events]
+    visible: [0, 6]
+
 L1_ImpactParameter:
     type: th1f
     dir: leptons
@@ -1175,6 +1214,54 @@ L2_Phi:
     showOF: false
     logy: 1
 
+L2LJ_DeltaR:
+    type: th1f
+    dir: leptons
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{2}, leading jet)", Events]
+    visible: [0, 6]
+
+L2SubLJ_DeltaR:
+    type: th1f
+    dir: leptons
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{2}, subleading jet)", Events]
+    visible: [0, 6]
+
+L2LJ_BtagDeltaR:
+    type: th1f
+    dir: leptons
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{2}, leading b-tag jet)", Events]
+    visible: [0, 6]
+
+L2SubLJ_BtagDeltaR:
+    type: th1f
+    dir: leptons
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{2}, subleading b-tag jet)", Events]
+    visible: [0, 6]
+
+L2LJ_NonBtagDeltaR:
+    type: th1f
+    dir: leptons
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{2}, leading non b-tag jet)", Events]
+    visible: [0, 6]
+
+L2SubLJ_NonBtagDeltaR:
+    type: th1f
+    dir: leptons
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{2}, subleading non b-tag jet)", Events]
+    visible: [0, 6]
+
 L1L2_VisibleMass:
     type: th1f
     dir: leptons
@@ -1188,26 +1275,6 @@ TL2_DeltaR:
     channels: [tll]
     binning: [50, 0, 10]
     axis labels: ["#Delta R(l_{2}, #tau)", Events]
-    visible: [0, 6]
-    showOF: true
-    logy: 1
-
-DeltaR_LJ1:
-    type: th1f
-    dir: leptons
-    channels: [tll]
-    binning: [50, 0, 10]
-    axis labels: ["#Delta R(l, #tau_{1})", Events]
-    visible: [0, 6]
-    showOF: true
-    logy: 1
-
-DeltaR_LJ2:
-    type: th1f
-    dir: leptons
-    channels: [tll]
-    binning: [50, 0, 10]
-    axis labels: ["#Delta R(l, #tau_{2})", Events]
     visible: [0, 6]
     showOF: true
     logy: 1
@@ -1479,12 +1546,3 @@ T_AntiElectronDeadECAL:
     visible: [0, 1]
     showOF: false
     logy: 1
-
-Btags:
-    type: th1f
-    dir: vertex
-    binning: [30, 0, 30]
-    axis labels: [Number of b-tags, Events]
-    visible: [0, 6]
-    logy: 1
-    centerLabels: true
