@@ -43,8 +43,8 @@ namespace roast {
             void FillTree(TTree*, const roast::Process*);
             void FillTree(TTree*, TTree*, const roast::Process*);
             void FillVariables(Branches*, const int);
-            bool BookMVA(const string&);
-            void TrainMVA(const map<string, string>&);
+            bool BookMVA(const std::string&);
+            void TrainMVA(const std::map<std::string, std::string>&);
 
         protected:
             template<typename T> void SetupVariables(T obj);

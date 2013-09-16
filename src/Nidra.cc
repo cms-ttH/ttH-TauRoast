@@ -54,7 +54,7 @@ namespace roast {
             // Inform cflow that a new event is starting
             cflow.StartOfEvent();
 
-            vector<int> combos;
+            std::vector<int> combos;
             for (unsigned int i = 0; i < event->GetNumCombos(); ++i) {
                 if (cflow.CheckCuts(event, i, !checkReality))
                     combos.push_back(i);

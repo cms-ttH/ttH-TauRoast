@@ -71,11 +71,6 @@ HWrapper::Fill(Branches* b, int i, float w)
     }
 }
 
-// Getter methods
-string			HWrapper::GetName() const { return name; }
-string			HWrapper::GetSubDir() const { return subdir; }
-double const	HWrapper::GetNOEraw() const { return NOEraw; }
-
 void
 HWrapper::SetHisto(const TH1* hist)
 {
@@ -134,8 +129,15 @@ void HWrapper::Positivize(){
     }
 }
 
-double const HWrapper::GetMaximum() const { return histo->GetBinContent(histo->GetMaximumBin()); }
-double const HWrapper::GetMaximumWithError() const {
+double
+HWrapper::GetMaximum() const
+{
+    return histo->GetBinContent(histo->GetMaximumBin());
+}
+
+double
+HWrapper::GetMaximumWithError() const
+{
 	double result = 0;
 	for(int b = 1; b <= histo->GetNbinsX(); b++){
 		double content = histo->GetBinContent(b);	
@@ -143,26 +145,6 @@ double const HWrapper::GetMaximumWithError() const {
 		if((content+error) > result){ result = content+error; }
 	}
 	return result;
-}
-
-void HWrapper::PrintInfo(){
-	cout << "\n\n" << endl;
-	cout << "\tName......." << GetName() << endl;
-	cout << "\tNbinsX....." << histo->GetNbinsX() << endl;
-	cout << "\tMin X......" << histo->GetBinLowEdge(1) << endl;
-	cout << "\tMax X......" << histo->GetBinLowEdge(histo->GetNbinsX()) << endl;
-	cout << "\tIntegral..." << histo->Integral() << endl;
-	cout << "\tMax........" << GetMaximum() << endl;
-	cout << "\tMax w err.." << GetMaximumWithError() << endl;
-	cout << "--------------------------" << endl;
-
-	for(int b=0; b <= histo->GetNbinsX(); b++){
-		cout << "\t" << b << "\t" << histo->GetBinLowEdge(b) << "\t" << histo->GetBinContent(b) << "\t+/-\t" << histo->GetBinError(b) << endl;
-	}
-	cout << "==========================\n\n" << endl;
-
-
-
 }
 
 ClassImp(roast::HWrapper)

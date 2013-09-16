@@ -166,7 +166,7 @@ namespace roast {
             std::vector<float>* CSVeventWeightLFStats2up;
             std::vector<float>* CSVeventWeightLFdown;
             std::vector<float>* CSVeventWeightLFup;
-            std::vector<vector<unsigned int> >* CleanJetIndices;
+            std::vector<std::vector<unsigned int> >* CleanJetIndices;
             std::vector<float>* HT;
             std::vector<int>* MomentumRank;
             std::vector<unsigned int>* NumCSVLbtagJets;

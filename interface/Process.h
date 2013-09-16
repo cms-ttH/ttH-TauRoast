@@ -25,121 +25,120 @@ namespace roast {
                 ClassDef(roast::Process::Event, 1);
             };
 
-       private:
+        private:
             std::vector<roast::Process::Event> goodEvents;
             std::map<std::string, roast::HWrapper*> hContainer;
-          CutFlow					cutFlow;
-          CutFlow					normalizedCutFlow;
+            CutFlow cutFlow;
+            CutFlow normalizedCutFlow;
 
-          string shortName;
-          string niceName;
-          string labelForLegend;
-          string type;
-          string treename;
-          bool checkReality;
+            std::string shortName;
+            std::string niceName;
+            std::string labelForLegend;
+            std::string type;
+            std::string treename;
+            bool checkReality;
             std::vector<std::string> ntuplePaths;
-          int color;
-          bool analyzed;
-          bool plot;
+            int color;
+            bool analyzed;
+            bool plot;
 
 
-          float crossSection;
-          float branchingRatio;
-          float otherScaleFactor;
+            float crossSection;
+            float branchingRatio;
+            float otherScaleFactor;
 
-          double NOEinDS;
-          double NoEreadByNUTter;
-          double NOEinNtuple;
-          double NOEanalyzed;
-          double NOEexpected;
+            double NOEinDS;
+            double NoEreadByNUTter;
+            double NOEinNtuple;
+            double NOEanalyzed;
+            double NOEexpected;
 
-          bool obtainedGoodEvents;
-          bool filledHistos;
-          bool normalizedHistos;
-          
+            bool obtainedGoodEvents;
+            bool filledHistos;
+            bool normalizedHistos;
+
             double relSysUncertainty;
 
-          bool PlotProcess(string const);
+            bool PlotProcess(std::string const);
 
-       public :
-          // Default constructor
-          Process();
-          Process(const roast::Process&);
-          Process(const std::string&, const std::string&, const std::string&, const std::string&,
-                  const std::string&, const std::vector<std::string>&, int, int, int,
-                  double, double, bool genmatch=false);
-          virtual ~Process();
-          void Update(roast::Process const *);
+        public:
+            Process();
+            Process(const roast::Process&);
+            Process(const std::string&, const std::string&, const std::string&, const std::string&,
+                    const std::string&, const std::vector<std::string>&, int, int, int,
+                    double, double, bool genmatch=false);
+            virtual ~Process();
+            void Update(roast::Process const *);
 
 
-          int const			GetNOEinDS() const;
-          int const			GetNoEreadByNUTter() const;
-          int const			GetNOEinNtuple() const;
-          int const			GetNOEanalyzed() const;
+            int const GetNOEinDS() const;
+            int const GetNoEreadByNUTter() const;
+            int const GetNOEinNtuple() const;
+            int const GetNOEanalyzed() const;
 
-          inline std::string GetTreeName() const { return treename; };
+            inline std::string GetTreeName() const { return treename; };
 
-          void				SetShortName(std::string const);
-          void				SetNiceName(std::string const);
-          void				SetLabelForLegend(std::string const);
-          void				SetColor(int const);
-          void				SetNOEanalyzed(double const);
-          void				SetNOEinNtuple(double const);
-          void				SetNtuplePaths(std::vector<std::string> const);
-            void                SetRelSysUncertainty(double const);
+            void SetShortName(std::string const);
+            void SetNiceName(std::string const);
+            void SetLabelForLegend(std::string const);
+            void SetColor(int const);
+            void SetNOEanalyzed(double const);
+            void SetNOEinNtuple(double const);
+            void SetNtuplePaths(std::vector<std::string> const);
+            void SetRelSysUncertainty(double const);
 
-          void				NormalizeToLumi(double const);
-          void				BuildNormalizedCutFlow();
-          void				SetAnalyzed();
-          bool const			Analyzed() const;
+            void NormalizeToLumi(double const);
+            void BuildNormalizedCutFlow();
+            void SetAnalyzed();
+            bool const Analyzed() const;
 
             std::vector<Event> const GetGoodEvents() const;
-          void				SetCutFlow(CutFlow const &);
-          void				SetNormalizedCutFlow(CutFlow const &);
-          CutFlow *			GetCutFlow();
-          CutFlow const *		GetConstCutFlow() const;
-          CutFlow *			GetNormalizedCutFlow();
-          CutFlow const *		GetNormalizedCutFlow() const;
+            void SetCutFlow(CutFlow const &);
+            void SetNormalizedCutFlow(CutFlow const &);
+            CutFlow* GetCutFlow();
+            CutFlow const* GetConstCutFlow() const;
+            CutFlow* GetNormalizedCutFlow();
+            CutFlow const* GetNormalizedCutFlow() const;
 
-          int const			GetColor() const;
-          string const		GetShortName() const;
-          string const		GetNiceName() const;
-          string const		GetLabelForLegend() const;
-            std::vector<std::string> const		GetNtuplePaths() const;
-          string const		GetType() const;
-          bool const			CheckReality() const;
-          bool const			IsCollisions() const;
-          bool const			IsBackground() const;
-          bool const			IsSignal() const;
-          bool const			IsMC() const;
-          bool const			Plot() const;
+            int const GetColor() const;
+            std::string const GetShortName() const;
+            std::string const GetNiceName() const;
+            std::string const GetLabelForLegend() const;
+            std::vector<std::string> const GetNtuplePaths() const;
+            std::string const GetType() const;
+            bool const CheckReality() const;
+            bool const IsCollisions() const;
+            bool const IsBackground() const;
+            bool const IsSignal() const;
+            bool const IsMC() const;
+            bool const Plot() const;
 
-          double const		GetCrossSection() const;
-          double const		GetBranchingRatio() const;
-          double const		GetOtherScaleFactor() const;
-          double const		GetNOEexpected() const;
-            double const        GetRelSysUncertainty() const;
-          bool const			ObtainedGoodEvents() const;
-          bool const			FilledHistos() const;
-          bool const			NormalizedHistos() const;
+            double const GetCrossSection() const;
+            double const GetBranchingRatio() const;
+            double const GetOtherScaleFactor() const;
+            double const GetNOEexpected() const;
+            double const GetRelSysUncertainty() const;
+            bool const ObtainedGoodEvents() const;
+            bool const FilledHistos() const;
+            bool const NormalizedHistos() const;
 
 
-          inline void AddHistogram(const std::string& name, const roast::HWrapper& histo) { hContainer[name] = new HWrapper(histo); };
-          inline std::map<std::string, roast::HWrapper*>& GetHContainer() {
-              return hContainer;
-          };
-          inline const std::map<std::string, roast::HWrapper*> GetHContainer() const {
-              return hContainer;
-          };
-          void ResetHistograms();
-          void ScaleHistograms(double);
-          inline HWrapper* GetHistogram(const std::string& n) { return hContainer[n]; };
-          std::vector<std::string> GetHistogramNames() const;
+            inline void AddHistogram(const std::string& name, const roast::HWrapper& histo) { hContainer[name] = new HWrapper(histo); };
+            inline std::map<std::string, roast::HWrapper*>& GetHContainer() {
+                return hContainer;
+            };
+            inline const std::map<std::string, roast::HWrapper*> GetHContainer() const {
+                return hContainer;
+            };
+            void ResetHistograms();
+            void ScaleHistograms(double);
+            inline HWrapper* GetHistogram(const std::string& n) { return hContainer[n]; };
+            std::vector<std::string> GetHistogramNames() const;
 
-          void 				SetGoodEvents(const std::vector<roast::Process::Event>&);
-          void				Add(roast::Process*);
+            void SetGoodEvents(const std::vector<roast::Process::Event>&);
+            void Add(roast::Process*);
 
-          ClassDef(Process, 1);
+            ClassDef(Process, 1);
     };
 }
 

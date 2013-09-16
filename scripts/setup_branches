@@ -39,7 +39,7 @@ def gather_type_info(filename):
         (start, end) = name.split("_", 1)
 
         if cls.startswith("vector"):
-            cls = "std::" + cls + "*"
+            cls = cls.replace("vector", "std::vector") + "*"
             ptr = True
         elif cls == "":
             cls = tpl.GetLeaf(name).GetTypeName()

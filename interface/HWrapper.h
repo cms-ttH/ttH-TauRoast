@@ -12,8 +12,6 @@
 
 #include "Accessor.h"
 
-using namespace std;
-
 namespace roast {
     class HWrapper{
        public :
@@ -32,30 +30,28 @@ namespace roast {
 
           void Fill(Branches*, int, float);
 
-          string			GetName() const;
-          string			GetSubDir() const;
-          double const	GetNOEraw() const;
-          double const	GetMaximum() const;
-          double const	GetMaximumWithError() const;
+          inline std::string GetName() const { return name; };
+          inline std::string GetSubDir() const { return subdir; };
+          inline double GetNOEraw() const { return NOEraw; };
+          double GetMaximum() const;
+          double GetMaximumWithError() const;
 
           void SetHisto(const TH1*);
-          void	SetMaximum(double const);
-          void	ResetMaximum(double const iFactor=1.1);
-          void	Add(TH1 const &, double const iFactor=1.0);
-          void	Add(HWrapper const &, double const);
+          void SetMaximum(double const);
+          void ResetMaximum(double const iFactor=1.1);
+          void Add(TH1 const &, double const iFactor=1.0);
+          void Add(HWrapper const &, double const);
           inline void Add(const HWrapper& w) { Add(w, 1.0); };
-          void	NormalizeTo(double const);
-          void	ScaleBy(double const);
-          void	ScaleErrorBy(double const);
-          void	AddRelErrorInQuadrature(double const);
-          void	AddRelErrorInQuadrature(double const, int);
-          void	Positivize();
-
-          void	PrintInfo();
+          void NormalizeTo(double const);
+          void ScaleBy(double const);
+          void ScaleErrorBy(double const);
+          void AddRelErrorInQuadrature(double const);
+          void AddRelErrorInQuadrature(double const, int);
+          void Positivize();
 
        private:
-          string name;
-          string subdir;
+          std::string name;
+          std::string subdir;
 
           TH1*  histo;
 
