@@ -79,232 +79,71 @@ SelectedComboRank:
     showOF: false
     logy: 1
 
-J_NumInclusive:
+J_Num$0:
     type: th1f
     dir: jets
     binning: [30, 0, 30]
-    axis labels: [Number of non H-tau jets, Events]
-    visible: [0, 10]
+    axis labels: [Number of $1, Events]
+    visible: [$2, $3]
     logy: 1
     centerLabels: true
+    replace:
+      - [Inclusive, non H-tau jets, 0, 10]
+      - [CSVL, b-tags (CSVL), 0, 8]
+      - [CSVM, b-tags (CSVM), 0, 5]
+      - [CSVT, b-tags (CSVT), 0, 5]
+      - [NonCSVL, non b-tags (CSVL), 0, 10]
+      - [NonCSVM, non b-tags (CSVM), 0, 10]
+      - [NonCSVT, non b-tags (CSVT), 0, 10]
+      - [CleanInclusive, non H-tau jets, 0, 10]
+      - [CleanCSVL, b-tags (CSVL), 0, 5]
+      - [CleanCSVM, b-tags (CSVM), 0, 3]
+      - [CleanCSVT, b-tags (CSVT), 0, 3]
+      - [CleanNonCSVL, non b-tags (CSVL), 0, 10]
+      - [CleanNonCSVM, non b-tags (CSVM), 0, 10]
+      - [CleanNonCSVT, non b-tags (CSVT), 0, 10]
 
-J_NumCSVL:
+CleanJ_$0Pt:
     type: th1f
     dir: jets
-    binning: [30, 0, 30]
-    axis labels: [Number of b-tags (CSVL), Events]
-    visible: [0, 8]
-    logy: 1
-    centerLabels: true
-
-J_NumCSVM:
-    type: th1f
-    dir: jets
-    binning: [30, 0, 30]
-    axis labels: [Number of b-tags (CSVM), Events]
-    visible: [0, 5]
-    logy: 1
-    centerLabels: true
-
-J_NumCSVT:
-    type: th1f
-    dir: jets
-    binning: [30, 0, 30]
-    axis labels: [Number of b-tags (CSVT), Events]
-    visible: [0, 5]
-    logy: 1
-    centerLabels: true
-
-J_NumNonCSVL:
-    type: th1f
-    dir: jets
-    binning: [30, 0, 30]
-    axis labels: [Number of non-b-tags (CSVM), Events]
-    visible: [0, 10]
-    logy: 1
-    centerLabels: true
-
-J_NumNonCSVM:
-    type: th1f
-    dir: jets
-    binning: [30, 0, 30]
-    axis labels: [Number of non-b-tags (CSVM), Events]
-    visible: [0, 10]
-    logy: 1
-    centerLabels: true
-
-J_NumNonCSVT:
-    type: th1f
-    dir: jets
-    binning: [30, 0, 30]
-    axis labels: [Number of non-b-tags (CSVT), Events]
-    visible: [0, 10]
-    logy: 1
-    centerLabels: true
-
-J_NumCleanInclusive:
-    type: th1f
-    dir: jets
-    binning: [30, 0, 30]
-    axis labels: [Number of non H-tau jets, Events]
-    visible: [0, 10]
-    logy: 1
-    centerLabels: true
-
-J_NumCleanCSVL:
-    type: th1f
-    dir: jets
-    binning: [30, 0, 30]
-    axis labels: [Number of b-tags (CSVL), Events]
-    visible: [0, 5]
-    logy: 1
-    centerLabels: true
-
-J_NumCleanCSVM:
-    type: th1f
-    dir: jets
-    binning: [30, 0, 30]
-    axis labels: [Number of b-tags (CSVM), Events]
-    visible: [1, 3]
-    logy: 1
-    centerLabels: true
-
-J_NumCleanCSVT:
-    type: th1f
-    dir: jets
-    binning: [30, 0, 30]
-    axis labels: [Number of b-tags (CSVT), Events]
-    visible: [1, 3]
-    logy: 1
-    centerLabels: true
-
-J_NumInclusive:
-    type: th1f
-    dir: jets
-    binning: [30, 0, 30]
-    axis labels: [Number of jets, Events]
-    visible: [4, 10]
-    logy: 1
-    centerLabels: true
-
-J_NumCleanNonCSVL:
-    type: th1f
-    dir: jets
-    binning: [30, 0, 30]
-    axis labels: [Number of non-b-tags (CSVM), Events]
-    visible: [0, 10]
-    logy: 1
-    centerLabels: true
-
-J_NumCleanNonCSVM:
-    type: th1f
-    dir: jets
-    binning: [30, 0, 30]
-    axis labels: [Number of non-b-tags (CSVM), Events]
-    visible: [0, 10]
-    logy: 1
-    centerLabels: true
-
-J_NumCleanNonCSVT:
-    type: th1f
-    dir: jets
-    binning: [30, 0, 30]
-    axis labels: [Number of non-b-tags (CSVT), Events]
-    visible: [0, 10]
-    logy: 1
-    centerLabels: true
-
-CleanJ_Pt:
-    type: th1f
-    dir: jets
-    max: J_NumCleanInclusive
+    max: J_NumClean$1
     binning: [30, 30, 250]
-    axis labels: ['Jet p_{T}', Events]
+    axis labels: ['$2 p_{T}', Events]
     visible: [30, 250]
     showOF: true
     logy: 1
+    replace:
+      - ["", Inclusive, Jet]
+      - [BTag, CSVM, Tagged jet]
+      - [NonBTag, NonCSVM, Untagged jet]
 
-LJ_Pt:
+$0_Pt:
     type: th1f
     dir: jets
     binning: [30, 30, 250]
-    axis labels: ['Leading jet p_{T}', Events]
+    axis labels: ['$1 p_{T}', Events]
     visible: [30, 250]
     showOF: true
     logy: 1
+    replace:
+      - [LJ, Leading jet]
+      - [SubLJ, Sub-leading jet]
+      - [SubSubLJ, Jet 3]
+      - [SubSubSubLJ, Jet 4]
 
-SubLJ_Pt:
-    type: th1f
-    dir: jets
-    binning: [30, 30, 250]
-    axis labels: ['Sub-leading jet p_{T}', Events]
-    visible: [30, 250]
-    showOF: true
-    logy: 1
-
-SubSubLJ_Pt:
-    type: th1f
-    dir: jets
-    binning: [30, 30, 250]
-    axis labels: ['Jet 3 p_{T}', Events]
-    visible: [30, 250]
-    showOF: true
-    logy: 1
-
-SubSubSubLJ_Pt:
-    type: th1f
-    dir: jets
-    binning: [30, 30, 250]
-    axis labels: ['Jet 4 p_{T}', Events]
-    visible: [30, 250]
-    showOF: true
-    logy: 1
-
-LJ_Eta:
+$0_Eta:
     type: th1f
     dir: jets
     binning: [40, -3, 3]
-    axis labels: ["Leading jet #eta", Events]
+    axis labels: ["$1 #eta", Events]
     visible: [-3, 3]
     showOF: false
     logy: 1
-
-SubLJ_Eta:
-    type: th1f
-    dir: jets
-    binning: [40, -3, 3]
-    axis labels: ["Sub-leading jet #eta", Events]
-    visible: [-3, 3]
-    showOF: false
-    logy: 1
-
-SubSubLJ_Eta:
-    type: th1f
-    dir: jets
-    binning: [40, -3, 3]
-    axis labels: ["Jet 3 #eta", Events]
-    visible: [-3, 3]
-    showOF: false
-    logy: 1
-
-SubSubSubLJ_Eta:
-    type: th1f
-    dir: jets
-    binning: [40, -3, 3]
-    axis labels: ["Jet 4 #eta", Events]
-    visible: [-3, 3]
-    showOF: false
-    logy: 1
-
-CleanJ_BTagPt:
-    type: th1f
-    dir: jets
-    max: J_NumCleanCSVM
-    binning: [30, 30, 250]
-    axis labels: ['Tagged jet p_{T}', Events]
-    visible: [30, 250]
-    showOF: true
-    logy: 1
+    replace:
+      - [LJ, Leading jet]
+      - [SubLJ, Sub-leading jet]
+      - [SubSubLJ, Jet 3]
+      - [SubSubSubLJ, Jet 4]
 
 CleanJ_BTagEta:
     type: th1f
@@ -314,16 +153,6 @@ CleanJ_BTagEta:
     axis labels: ["Tagged jet #eta", Events]
     visible: [-3, 3]
     showOF: false
-    logy: 1
-
-CleanJ_NonBTagPt:
-    type: th1f
-    dir: jets
-    max: J_NumCleanNonCSVM
-    binning: [30, 30, 250]
-    axis labels: ['Untagged jet p_{T}', Events]
-    visible: [30, 250]
-    showOF: true
     logy: 1
 
 CleanJ_NonBTagEta:
@@ -336,25 +165,33 @@ CleanJ_NonBTagEta:
     showOF: false
     logy: 1
 
-L_Pt:
+L$0_Pt:
     type: th1f
     dir: lepton
-    channels: [ttl]
-    binning: [30, 0, 100]
-    axis labels: ['lepton p_{T}', Events]
-    visible: [30, 100]
+    channels: [$2]
+    binning: [60, 0, 200]
+    axis labels: ['lepton $1p_{T}', Events]
+    visible: [$3, $4]
     showOF: true
     logy: 1
+    replace:
+      - ["", "", ttl, 30, 100]
+      - [1, "_{1}", tll, 20, 150]
+      - [2, "_{2}", tll, 10, 100]
 
-L_Eta:
+L$0_Eta:
     type: th1f
     dir: lepton
-    channels: [ttl]
+    channels: [$2]
     binning: [30, -3, 3]
-    axis labels: ["lepton #eta", Events]
+    axis labels: ["lepton$1 #eta", Events]
     visible: [-2.1, 2.1]
     showOF: false
     logy: 1
+    replace:
+      - ["", "", ttl]
+      - [1, "_{1}", tll]
+      - [2, "_{2}", tll]
 
 L_Phi:
     type: th1f
@@ -979,85 +816,50 @@ T2_IsolationIndexMVA2:
     showOF: false
     logy: 1
 
-T1_AntiElectronMVA:
+T$1_AntiElectronMVA:
     type: th1f
     dir: tau
-    channels: [ttl]
+    channels: [$2]
     binning: [2, 0, 1]
-    axis labels: ["#tau_{1} anti-elec MVA", Events]
+    axis labels: ["#tau$1 anti-elec MVA", Events]
     visible: [0, 1]
     showOF: false
     logy: 1
+    replace:
+      - [1, "_{1}", ttl]
+      - [2, "_{2}", ttl]
+      - ["", "", tll]
 
-T2_AntiElectronMVA:
+T$0_AntiElectronMVA$3Raw:
     type: th1f
     dir: tau
-    channels: [ttl]
+    channels: [$2]
+    binning: [50, -1, 1]
+    axis labels: ["#tau$1 anti-elec MVA($3)", Events]
+    visible: [-1, 1]
+    showOF: false
+    logy: 1
+    replace:
+      - [1, "_{1}", ttl, 2]
+      - [1, "_{1}", ttl, 3]
+      - [2, "_{2}", ttl, 2]
+      - [2, "_{2}", ttl, 3]
+      - ["", "", tll, 2]
+      - ["", "", tll, 3]
+
+T$0_AntiElectronDeadECAL:
+    type: th1f
+    dir: tau
+    channels: [$2]
     binning: [2, 0, 1]
-    axis labels: ["#tau_{2} anti-elec MVA", Events]
+    axis labels: ["#tau$1 anti-elec (dead crystals)", Events]
     visible: [0, 1]
     showOF: false
     logy: 1
-
-T1_AntiElectronMVA2Raw:
-    type: th1f
-    dir: tau
-    channels: [ttl]
-    binning: [50, -1, 1]
-    axis labels: ["#tau_{1} anti-elec MVA(2)", Events]
-    visible: [-1, 1]
-    showOF: false
-    logy: 1
-
-T2_AntiElectronMVA2Raw:
-    type: th1f
-    dir: tau
-    channels: [ttl]
-    binning: [50, -1, 1]
-    axis labels: ["#tau_{2} anti-elec MVA(2)", Events]
-    visible: [-1, 1]
-    showOF: false
-    logy: 1
-
-T1_AntiElectronMVA3Raw:
-    type: th1f
-    dir: tau
-    channels: [ttl]
-    binning: [50, -1, 1]
-    axis labels: ["#tau_{1} anti-elec MVA(3)", Events]
-    visible: [-1, 1]
-    showOF: false
-    logy: 1
-
-T2_AntiElectronMVA3Raw:
-    type: th1f
-    dir: tau
-    channels: [ttl]
-    binning: [50, -1, 1]
-    axis labels: ["#tau_{2} anti-elec MVA(3)", Events]
-    visible: [-1, 1]
-    showOF: false
-    logy: 1
-
-T1_AntiElectronDeadECAL:
-    type: th1f
-    dir: tau
-    channels: [ttl]
-    binning: [2, 0, 1]
-    axis labels: ["#tau_{1} anti-elec (dead crystals)", Events]
-    visible: [0, 1]
-    showOF: false
-    logy: 1
-
-T2_AntiElectronDeadECAL:
-    type: th1f
-    dir: tau
-    channels: [ttl]
-    binning: [2, 0, 1]
-    axis labels: ["#tau_{2} anti-elec (dead crystals)", Events]
-    visible: [0, 1]
-    showOF: false
-    logy: 1
+    replace:
+      - [1, "_{1}", ttl]
+      - [2, "_{2}", ttl]
+      - ["", "", tll]
 
 ZcoordDiff_TT:
     type: th1f
@@ -1065,26 +867,6 @@ ZcoordDiff_TT:
     binning: [50, 0, 2]
     axis labels: ["#DeltaVZ #tau_{1, 2}", Events]
     visible: [0, 2]
-    showOF: false
-    logy: 1
-
-L1_Pt:
-    type: th1f
-    dir: leptons
-    channels: [tll]
-    binning: [30, 0, 150]
-    axis labels: ['lepton_{1} p_{T}', Events]
-    visible: [20, 150]
-    showOF: true
-    logy: 1
-
-L1_Eta:
-    type: th1f
-    dir: leptons
-    channels: [tll]
-    binning: [30, -3, 3]
-    axis labels: ["lepton_{1} #eta", Events]
-    visible: [-2.1, 2.1]
     showOF: false
     logy: 1
 
@@ -1183,26 +965,6 @@ L2_CorrectedDZ:
     channels: [tll]
     binning: [50, -0.04, 0.04]
     axis labels: ["l_{2} corrected #Delta z", Events]
-
-L2_Pt:
-    type: th1f
-    dir: leptons
-    channels: [tll]
-    binning: [30, 0, 150]
-    axis labels: ['lepton_{2} p_{T}', Events]
-    visible: [10, 100]
-    showOF: true
-    logy: 1
-
-L2_Eta:
-    type: th1f
-    dir: leptons
-    channels: [tll]
-    binning: [30, -3, 3]
-    axis labels: ["lepton_{2} #eta", Events]
-    visible: [-2.1, 2.1]
-    showOF: false
-    logy: 1
 
 L2_Phi:
     type: th1f
@@ -1504,45 +1266,5 @@ T_IsolationIndexMVA2:
     binning: [10, 0, 10]
     axis labels: ["#tau isolation index (MVA2)", Events]
     visible: [0, 5.99]
-    showOF: false
-    logy: 1
-
-T_AntiElectronMVA:
-    type: th1f
-    dir: tau
-    channels: [tll]
-    binning: [2, 0, 1]
-    axis labels: ["#tau anti-elec MVA", Events]
-    visible: [0, 1]
-    showOF: false
-    logy: 1
-
-T_AntiElectronMVA2Raw:
-    type: th1f
-    dir: tau
-    channels: [tll]
-    binning: [50, -1, 1]
-    axis labels: ["#tau anti-elec MVA(2)", Events]
-    visible: [-1, 1]
-    showOF: false
-    logy: 1
-
-T_AntiElectronMVA3Raw:
-    type: th1f
-    dir: tau
-    channels: [tll]
-    binning: [50, -1, 1]
-    axis labels: ["#tau anti-elec MVA(3)", Events]
-    visible: [-1, 1]
-    showOF: false
-    logy: 1
-
-T_AntiElectronDeadECAL:
-    type: th1f
-    dir: tau
-    channels: [tll]
-    binning: [2, 0, 1]
-    axis labels: ["#tau anti-elec (dead crystals)", Events]
-    visible: [0, 1]
     showOF: false
     logy: 1
