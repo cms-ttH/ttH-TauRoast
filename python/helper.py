@@ -259,9 +259,9 @@ def deep_replace(obj, s, r):
         obj = dict(map(lambda o: deep_replace(o, s, r), obj.items()))
     elif isinstance(obj, str):
         if obj == s:
-            obj = r
+            obj = str(r)
         else:
-            obj = obj.replace(s, r)
+            obj = obj.replace(s, str(r))
     else:
         obj = deepcopy(obj)
     return obj
