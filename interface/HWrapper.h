@@ -14,11 +14,12 @@
 
 namespace roast {
     class HWrapper{
-       public :
+       public:
+          static HWrapper* Create1D(const std::string&, TH1*, const std::string&, const std::string="");
+          static HWrapper* Create2D(const std::string&, TH1*, const std::string&, const std::string&, const std::string="");
           HWrapper();
           HWrapper(const roast::HWrapper&);
-          HWrapper(const std::string& subdir, TH1*, const std::string&);
-          HWrapper(const std::string& subdir, TH1*, const std::string&, const std::string&);
+          HWrapper(const std::string&, TH1*, GetValue_t, GetValue_t, GetValue_t);
           virtual ~HWrapper();
 
           inline TH1 const * GetHisto() const { return histo; };
@@ -55,7 +56,8 @@ namespace roast {
 
           TH1*  histo;
 
-          GetValue_t fill;
+          GetValue_t xval;
+          GetValue_t yval;
           GetValue_t max;
 
           double NOEraw;

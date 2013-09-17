@@ -1,4 +1,5 @@
 # vim: ts=4:sw=4:et:sta
+from contextlib import contextmanager
 from glob import glob
 import logging
 import math
@@ -17,6 +18,7 @@ except:
     sys.exit(1)
 
 from ttH.TauRoast.helper import *
+from ttH.TauRoast import style
 
 def get_bkg_stack(histname, processes):
     res = r.THStack(histname + "_stack", histname + "_stack")
@@ -240,21 +242,87 @@ class Legend:
         self.__tex.DrawLatex(text_x, text_y, label)
         self.advance()
 
+@contextmanager
+def create_plot(config, histname, plot_ratio, is2d=False, procname="", hist=None, max=None, scale=None):
+    small_number = 1e-5
+
+    if plot_ratio:
+        min_y = 0.002
+        canvas = r.TCanvas(histname, histname, 600, 700)
+        canvas.Divide(1, 2)
+        canvas.cd(1)
+        style.setup_upper_pad(canvas.GetPad(1))
+        style.setup_lower_pad(canvas.GetPad(2))
+
+        pads = (scale, canvas.GetPad(1), canvas.GetPad(2))
+    else:
+        min_y = 0.001
+        canvas = r.TCanvas(histname + procname, histname, 600, 600)
+
+        if is2d:
+            r.gPad.SetRightMargin(.18)
+            r.gPad.SetTopMargin(.18)
+
+        pads = (scale, canvas,)
+
+    yield pads
+
+    if plot_ratio:
+        canvas.cd(1)
+
+    style.draw_channel_info(config, plot_ratio)
+
+    if plot_ratio:
+        canvas.cd(2)
+        line = r.TLine()
+        line.SetLineColor(1)
+        line.SetLineWidth(1)
+        line.DrawLineNDC(
+                r.gPad.GetLeftMargin(),
+                r.gPad.GetBottomMargin() + (1 / style.ratio_plot_max) * (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin()),
+                1 - r.gPad.GetRightMargin(),
+                r.gPad.GetBottomMargin() + (1 / style.ratio_plot_max) * (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin()))
+
+    if procname != "":
+        procname = "_" + procname
+
+    subdir = config['histograms'][histname]['dir']
+    for t in ("png", "pdf"):
+        filename = config['paths']['stack format'].format(t=t,
+                d=subdir, n=histname, m="", p=procname)
+
+        dirname = os.path.dirname(filename)
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
+
+        canvas.SaveAs(filename)
+
+    # Reset log-scale maximum y-value
+    if max and hist:
+        new_max = 10 ** (((scale - 1) * 2 + 1) * math.log10(max / scale))
+        hist.GetHisto().GetYaxis().SetRangeUser(0.002, new_max)
+    if plot_ratio:
+        canvas.cd(1)
+
+    if is2d:
+        r.gPad.SetLogz()
+    else:
+        r.gPad.SetLogy()
+
+    canvas.Update()
+
+    for t in ("png", "pdf"):
+        filename = config['paths']['stack format'].format(t=t,
+                d=subdir, n=histname, m="_log", p=procname)
+
+        canvas.SaveAs(filename)
+
 def stack(config, processes):
     procs = map(lambda n: get_process(n, processes), config['analysis']['plot'])
 
     err = SysErrors(config)
 
     plot_ratio = True
-
-    y_divide = 0.3
-    ratio_plot_max = 2.3
-    small_number = 1e-5
-
-    if config['display']['legend']:
-        scale = 1.45
-    else:
-        scale = 1.15
 
     for histname in config['histograms'].keys():
         try:
@@ -267,247 +335,163 @@ def stack(config, processes):
 
         logging.info("plotting %s", histname)
 
-        bkg_procs = get_backgrounds(procs)
-        bkg_stack = get_bkg_stack(histname, bkg_procs)
-        bkg_stack.Draw("hist")
-
-        max_y = scale * max(get_maximum(histname, procs, True),
-                bkg_stack.GetMaximum())
-
-        if plot_ratio:
-            min_y = 0.002
-            canvas = r.TCanvas(histname, histname, 600, 700)
-            canvas.Divide(1, 2)
-            canvas.GetPad(1).SetPad(small_number, y_divide + small_number, 1 - small_number, 1 - small_number)
-            canvas.GetPad(1).SetTopMargin(0.1)
-            canvas.GetPad(1).SetBottomMargin(small_number)
-            canvas.GetPad(1).SetLeftMargin(0.11)
-            canvas.GetPad(1).SetRightMargin(0.05)
-            canvas.GetPad(1).SetTicks(0, 0)
-
-            canvas.GetPad(2).SetPad(small_number, small_number, 1 - small_number, y_divide - small_number)
-            canvas.GetPad(2).SetBottomMargin(0.3)
-            canvas.GetPad(2).SetLeftMargin(0.11)
-            canvas.GetPad(2).SetRightMargin(0.05)
-            canvas.GetPad(2).SetTopMargin(small_number)
-            canvas.GetPad(2).SetTicks(1, 0)
-            canvas.cd(1)
+        if procs[0].GetHistogram(histname).ClassName().startswith("TH2"):
+            for p in procs:
+                with create_plot(config, histname, is2d=True, plot_ratio=False, procname=p.GetShortName()) as (scale, pad1,):
+                    pad1.cd()
+                    h = p.GetHistogram(histname)
+                    style.setup_upper_axis(h, False)
+                    h.Draw("COLZ")
         else:
-            min_y = 0.001
-            canvas = r.TCanvas(histname, histname, 600, 600)
-            canvas.cd()
+            base_histo = roast.HWrapper(procs[0].GetHistogram(histname))
 
-        bkg_stack.Draw("hist")
-        bkg_stack.SetMinimum(min_y)
-        bkg_stack.SetMaximum(max_y)
-        bkg_stack.GetYaxis().SetRangeUser(min_y, max_y)
+            bkg_procs = get_backgrounds(procs)
+            bkg_stack = get_bkg_stack(histname, bkg_procs)
+            bkg_stack.Draw("hist")
 
-        base_histo = roast.HWrapper(procs[0].GetHistogram(histname))
-        base_histo.ScaleBy(0)
-        base_histo.SetTitle("")
-        base_histo.GetYaxis().SetTitleSize(.05)
-        base_histo.GetYaxis().SetTitleOffset(1.1)
-        base_histo.GetYaxis().SetLabelSize(.04)
-        base_histo.GetYaxis().SetRangeUser(min_y, max_y)
-        # base_histo.GetXaxis().SetRangeUser(base_histo.GetMinXVis(), base_histo.GetMaxXVis())
-        base_histo.Draw("hist")
+            scale = 1.15
+            if config['display']['legend']:
+                scale = 1.45
 
-        bkg_stack.Draw("hist same")
+            max_y = scale * max(
+                    get_maximum(histname, procs, True),
+                    bkg_stack.GetMaximum())
 
-        bkg_sum = get_bkg_sum(histname, procs)
-        bkg_sum.SetFillStyle(3654)
-        bkg_sum.SetFillColor(r.kBlack)
-        bkg_sum.SetMarkerStyle(0)
-        # bkg_sum.GetHisto().Draw("E2 same")
+            with create_plot(config, histname, plot_ratio, hist=base_histo, max=max_y, scale=scale) as (scale, pad1, pad2):
+                pad1.cd()
 
-        (abs_err, rel_err) = err.get_errors(histname, bkg_sum)
-        abs_err.SetFillStyle(3654)
-        abs_err.SetFillColor(r.kBlack)
-        abs_err.SetMarkerStyle(0)
-        abs_err.Draw("2 same")
+                bkg_stack.Draw("hist")
+                bkg_stack.SetMinimum(0.002)
+                bkg_stack.SetMaximum(max_y)
+                bkg_stack.GetYaxis().SetRangeUser(0.002, max_y)
 
-        sig_procs = get_signals(procs)
-        for p in sig_procs:
-            h = p.GetHistogram(histname).GetHisto()
-            h.Scale(config['display']['signal scale factor'])
-            h.SetFillStyle(0)
-            h.SetLineWidth(4)
-            h.SetLineColor(p.GetColor())
-            h.GetYaxis().SetRangeUser(min_y, max_y)
+                bkg_stack.Draw("hist")
 
-            # FIXME implement stacking signals on top of bkg
+                base_histo = roast.HWrapper(procs[0].GetHistogram(histname))
+                style.setup_upper_axis(base_histo)
+                base_histo.GetYaxis().SetRangeUser(0.002, max_y)
+                # base_histo.GetXaxis().SetRangeUser(base_histo.GetMinXVis(), base_histo.GetMaxXVis())
+                base_histo.Draw("hist")
 
-            h.Draw("hist same")
+                bkg_stack.Draw("hist same")
 
-        try:
-            coll = get_collisions(procs)
-            h = coll.GetHistogram(histname).GetHisto()
-            h.SetMarkerStyle(20)
-            h.SetMarkerSize(1)
-            h.GetYaxis().SetRangeUser(min_y, max_y)
-            h.SetLineWidth(4)
-            h.Draw("E1 P same")
-        except:
-            coll = None
-            # FIXME do something more sensible
-            pass
+                bkg_sum = get_bkg_sum(histname, procs)
+                bkg_sum.SetFillStyle(3654)
+                bkg_sum.SetFillColor(r.kBlack)
+                bkg_sum.SetMarkerStyle(0)
+                # bkg_sum.GetHisto().Draw("E2 same")
 
-        if config['display']['legend']:
-            l = Legend(0.05, 3)
-            for p in bkg_procs:
-                l.draw_box(1001, p.GetColor(), p.GetLabelForLegend())
-            l.draw_box(3654, r.kBlack, "Bkg. err.", True)
-            if coll:
-                l.draw_marker(20, r.kBlack, coll.GetLabelForLegend())
-            l.new_row()
-            for p in sig_procs:
-                sig_scale = config['display']['signal scale factor']
-                suffix = "" if sig_scale == 1 else " (#times {0})".format(sig_scale)
-                l.draw_line(2, p.GetColor(), p.GetLabelForLegend() + suffix)
+                (abs_err, rel_err) = err.get_errors(histname, bkg_sum)
+                abs_err.SetFillStyle(3654)
+                abs_err.SetFillColor(r.kBlack)
+                abs_err.SetMarkerStyle(0)
+                abs_err.Draw("2 same")
 
-        base_histo.GetHisto().Draw("axis same")
+                sig_procs = get_signals(procs)
+                for p in sig_procs:
+                    h = p.GetHistogram(histname).GetHisto()
+                    h.Scale(config['display']['signal scale factor'])
+                    h.SetFillStyle(0)
+                    h.SetLineWidth(4)
+                    h.SetLineColor(p.GetColor())
+                    h.GetYaxis().SetRangeUser(0.002, max_y)
 
-        def extract_info(cut, label):
-            cfg = filter(lambda c: c['name'] == cut, config['physics']['cuts'])[0]
-            text = ""
-            if 'max' not in cfg:
-                text += "#geq "
-            text += str(cfg['min'])
-            if 'max' in cfg and cfg['max'] != cfg['min']:
-                text += '-' + str(cfg['max']) + ' ' + label + 's'
-            elif cfg['min'] != 1:
-                text += ' ' + label + 's'
-            else:
-                text += ' ' + label
-            return text
+                    # FIXME implement stacking signals on top of bkg
 
-        if config['analysis']['channel'] == 'ttl':
-            channel_label = "Lep + #tau_{h}#tau_{h} + "
-        elif config['analysis']['channel'] == 'tll':
-            channel_label = "Dilepton + #tau_{h} + "
+                    h.Draw("hist same")
 
-        tex = r.TLatex()
-        tex.SetNDC()
-        tex.SetTextFont(42)
-        tex.SetTextSize(0.05)
-        tex.SetTextAlign(31)
-        tex.DrawLatex(.99 - r.gPad.GetRightMargin(), .84,
-                channel_label
-                + extract_info('J_NumCleanInclusive', 'jet') + ' + '
-                + extract_info('J_NumCleanCSVM', 'b-tag'))
-        tex.SetTextSize(0.055)
-        tex.SetTextAlign(11)
-        tex.DrawLatex(0.14, 0.91, "CMS Preliminary")
-        tex.SetTextAlign(31)
-        tex.DrawLatex(1 - r.gPad.GetRightMargin(), 0.91, "#sqrt{s} = 8 TeV, L = 19.5 fb^{-1}")
+                try:
+                    coll = get_collisions(procs)
+                    h = coll.GetHistogram(histname).GetHisto()
+                    h.SetMarkerStyle(20)
+                    h.SetMarkerSize(1)
+                    h.GetYaxis().SetRangeUser(0.002, max_y)
+                    h.SetLineWidth(4)
+                    h.Draw("E1 P same")
+                except:
+                    coll = None
+                    # FIXME do something more sensible
+                    pass
 
-        if plot_ratio:
-            canvas.cd(2)
+                if config['display']['legend']:
+                    canvas.cd(1)
+                    l = Legend(0.05, 3)
+                    for p in bkg_procs:
+                        l.draw_box(1001, p.GetColor(), p.GetLabelForLegend())
+                    l.draw_box(3654, r.kBlack, "Bkg. err.", True)
+                    if coll:
+                        l.draw_marker(20, r.kBlack, coll.GetLabelForLegend())
+                    l.new_row()
+                    for p in sig_procs:
+                        sig_scale = config['display']['signal scale factor']
+                        suffix = "" if sig_scale == 1 else " (#times {0})".format(sig_scale)
+                        l.draw_line(2, p.GetColor(), p.GetLabelForLegend() + suffix)
 
-            try:
-                ratio = coll.GetHistogram(histname).GetHisto().Clone()
-                ratio.Divide(bkg_sum.GetHisto())
-            except:
-                ratio = base_histo.GetHisto().Clone()
+                base_histo.GetHisto().Draw("axis same")
 
-            # ratio.GetXaxis().SetRangeUser(
-                    # bkg_sum.GetMinXVis(), bkg_sum.GetMaxXVis())
+                if plot_ratio:
+                    pad2.cd()
 
-            ratio.GetXaxis().SetTitleSize(0.14)
-            ratio.GetXaxis().SetTitleOffset(0.9)
-            ratio.GetXaxis().SetLabelSize(0.12)
-            ratio.GetXaxis().SetLabelOffset(0.02)
+                    try:
+                        ratio = coll.GetHistogram(histname).GetHisto().Clone()
+                        ratio.Divide(bkg_sum.GetHisto())
+                    except:
+                        ratio = base_histo.GetHisto().Clone()
 
-            ratio.GetYaxis().SetTitle("Data/MC")
-            ratio.GetYaxis().CenterTitle()
-            ratio.GetYaxis().SetTitleSize(0.1)
-            ratio.GetYaxis().SetTitleOffset(0.45)
-            ratio.GetYaxis().SetLabelSize(0.1)
-            ratio.GetYaxis().SetRangeUser(0, ratio_plot_max)
-            ratio.GetYaxis().SetNdivisions(505)
-            ratio.Draw("axis")
+                    # ratio.GetXaxis().SetRangeUser(
+                            # bkg_sum.GetMinXVis(), bkg_sum.GetMaxXVis())
+                    style.setup_lower_axis(ratio)
+                    ratio.Draw("axis")
 
-            bkg_err = base_histo.GetHisto().Clone()
-            for i in range(bkg_err.GetNbinsX()):
-                bkg_err.SetBinContent(i + 1, 1)
+                    bkg_err = base_histo.GetHisto().Clone()
+                    for i in range(bkg_err.GetNbinsX()):
+                        bkg_err.SetBinContent(i + 1, 1)
 
-                if bkg_sum.GetHisto().GetBinContent(i + 1) > 0.001:
-                    bkg_err.SetBinError(i + 1,
-                            bkg_sum.GetHisto().GetBinError(i + 1) /
-                            bkg_sum.GetHisto().GetBinContent(i + 1))
-                else:
-                    bkg_err.SetBinError(i + 1, 0)
-            bkg_err.SetMarkerSize(0)
-            bkg_err.SetFillColor(r.kGreen)
-            rel_err.SetMarkerSize(0)
-            rel_err.SetFillColor(r.kGreen)
-            rel_err.SetFillStyle(1001)
-            if ratio:
-                # bkg_err.Draw("E2 same")
-                rel_err.Draw("2 same")
-            else:
-                # bkg_err.Draw("E2")
-                rel_err.Draw("2")
-
-            if coll:
-                ratio_err = r.TGraphAsymmErrors(ratio)
-                for i in range(ratio_err.GetN()):
-                    x_coord = ratio.GetBinCenter(i + 1)
-                    width = ratio.GetBinWidth(i + 1)
-                    y_ratio = ratio.GetBinContent(i + 1)
-                    y_data = coll.GetHistogram(histname).GetHisto().GetBinContent(i + 1)
-                    y_data_err = coll.GetHistogram(histname).GetHisto().GetBinError(i + 1)
-                    y_bkg = bkg_sum.GetHisto().GetBinContent(i + 1)
-
-                    if y_ratio > small_number and y_ratio < ratio_plot_max * 0.99:
-                        if y_bkg > small_number:
-                            y_up = (y_data + y_data_err) / y_bkg
-                            y_down = (y_data - y_data_err) / y_bkg
+                        if bkg_sum.GetHisto().GetBinContent(i + 1) > 0.001:
+                            bkg_err.SetBinError(i + 1,
+                                    bkg_sum.GetHisto().GetBinError(i + 1) /
+                                    bkg_sum.GetHisto().GetBinContent(i + 1))
                         else:
-                            y_up = 0
-                            y_down = 0
-                        ratio_err.SetPoint(i, x_coord, y_ratio)
-                        ratio_err.SetPointEYhigh(i, y_up - y_ratio)
-                        ratio_err.SetPointEYlow(i, y_ratio - y_down)
-                        ratio_err.SetPointEXhigh(i, width / 2)
-                        ratio_err.SetPointEXlow(i, width / 2)
+                            bkg_err.SetBinError(i + 1, 0)
+                    bkg_err.SetMarkerSize(0)
+                    bkg_err.SetFillColor(r.kGreen)
+                    rel_err.SetMarkerSize(0)
+                    rel_err.SetFillColor(r.kGreen)
+                    rel_err.SetFillStyle(1001)
+                    if ratio:
+                        # bkg_err.Draw("E2 same")
+                        rel_err.Draw("2 same")
                     else:
-                        ratio_err.SetPoint(i, x_coord, 999)
+                        # bkg_err.Draw("E2")
+                        rel_err.Draw("2")
 
-                ratio_err.SetMarkerSize(1.)
-                ratio_err.SetMarkerStyle(0)
-                ratio_err.SetLineWidth(4)
-                ratio_err.Draw("P same")
-                ratio.Draw("axis same")
+                    if coll:
+                        ratio_err = r.TGraphAsymmErrors(ratio)
+                        for i in range(ratio_err.GetN()):
+                            x_coord = ratio.GetBinCenter(i + 1)
+                            width = ratio.GetBinWidth(i + 1)
+                            y_ratio = ratio.GetBinContent(i + 1)
+                            y_data = coll.GetHistogram(histname).GetHisto().GetBinContent(i + 1)
+                            y_data_err = coll.GetHistogram(histname).GetHisto().GetBinError(i + 1)
+                            y_bkg = bkg_sum.GetHisto().GetBinContent(i + 1)
 
-            line = r.TLine()
-            line.SetLineColor(1)
-            line.SetLineWidth(1)
-            line.DrawLineNDC(
-                    r.gPad.GetLeftMargin(),
-                    r.gPad.GetBottomMargin() + (1 / ratio_plot_max) * (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin()),
-                    1 - r.gPad.GetRightMargin(),
-                    r.gPad.GetBottomMargin() + (1 / ratio_plot_max) * (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin()))
+                            if y_ratio > style.small_number and y_ratio < style.ratio_plot_max * 0.99:
+                                if y_bkg > style.small_number:
+                                    y_up = (y_data + y_data_err) / y_bkg
+                                    y_down = (y_data - y_data_err) / y_bkg
+                                else:
+                                    y_up = 0
+                                    y_down = 0
+                                ratio_err.SetPoint(i, x_coord, y_ratio)
+                                ratio_err.SetPointEYhigh(i, y_up - y_ratio)
+                                ratio_err.SetPointEYlow(i, y_ratio - y_down)
+                                ratio_err.SetPointEXhigh(i, width / 2)
+                                ratio_err.SetPointEXlow(i, width / 2)
+                            else:
+                                ratio_err.SetPoint(i, x_coord, 999)
 
-        for t in ("png", "pdf"):
-            filename = config['paths']['stack format'].format(t=t,
-                    d=base_histo.GetSubDir(), n=histname, m="")
-
-            dirname = os.path.dirname(filename)
-            if not os.path.exists(dirname):
-                os.makedirs(dirname)
-
-            canvas.SaveAs(filename)
-
-        # Reset log-scale maximum y-value
-        new_max_y = 10 ** (((scale - 1) * 2 + 1) * math.log10(max_y / scale))
-        canvas.cd(1)
-        base_histo.GetHisto().GetYaxis().SetRangeUser(0.002, new_max_y)
-        r.gPad.SetLogy()
-        canvas.Update()
-
-        for t in ("png", "pdf"):
-            filename = config['paths']['stack format'].format(t=t,
-                    d=base_histo.GetSubDir(), n=histname, m="_log")
-
-            canvas.SaveAs(filename)
+                        ratio_err.SetMarkerSize(1.)
+                        ratio_err.SetMarkerStyle(0)
+                        ratio_err.SetLineWidth(4)
+                        ratio_err.Draw("P same")
+                        ratio.Draw("axis same")

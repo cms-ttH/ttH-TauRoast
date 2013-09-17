@@ -17,6 +17,22 @@ except:
     sys.stderr.write("Failed to import 'roast'!\n")
     sys.exit(1)
 
+def extract_info(config, cut, label):
+    """Extract information about a jet multiplicity `cut` and convert it into
+    a legend-type string, using the `label` as name."""
+    cfg = filter(lambda c: c['name'] == cut, config['physics']['cuts'])[0]
+    text = ""
+    if 'max' not in cfg:
+        text += "#geq "
+    text += str(cfg['min'])
+    if 'max' in cfg and cfg['max'] != cfg['min']:
+        text += '-' + str(cfg['max']) + ' ' + label + 's'
+    elif cfg['min'] != 1:
+        text += ' ' + label + 's'
+    else:
+        text += ' ' + label
+    return text
+
 def train_mva(config, processes, module):
     cfg = config['analysis']['final mva']
 

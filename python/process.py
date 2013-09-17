@@ -81,25 +81,49 @@ def fill_histos(config, processes, module):
         logging.info("registering histograms for %s", p.GetShortName())
         for name, histcfg in config['histograms'].items():
             try:
-                h = r.TH1F(
-                        name + str(random.randint(0, 1000000000)),
-                        ';'.join([name] + histcfg['axis labels']),
-                        *histcfg['binning'])
+                if 'values' in histcfg:
+                    (xval, yval) = histcfg['values']
+                    axes = [r.TH1.GetXaxis, r.TH1.GetYaxis]
 
-                if 'bin labels' in histcfg:
-                    for (n, l) in enumerate(histcfg['bin labels']):
-                        h.GetXaxis().SetBinLabel(n + 1, l)
-                if 'visible' in histcfg:
-                    h.GetXaxis().SetRangeUser(*histcfg['visible'])
+                    h = r.TH2F(
+                            name + str(random.randint(0, 1000000000)),
+                            ';'.join([name] + histcfg['axis labels']),
+                            *histcfg['binning'])
 
-                if 'max' in histcfg:
-                    w = roast.HWrapper(histcfg['dir'], h, name, histcfg['max'])
+                    if 'bin labels' in histcfg:
+                        for (axis, labels) in zip(axes, histcfg['bin labels']):
+                            for (n, l) in enumerate(labels):
+                                axis(h).SetBinLabel(n + 1, l)
+                    if 'visible' in histcfg:
+                        for (axis, range) in zip(axes, histcfg['visible']):
+                            axis(h).SetRangeUser(*map(float, range))
+
+                    if 'max' in histcfg:
+                        w = roast.HWrapper.Create2D(histcfg['dir'], h, xval, yval, histcfg['max'])
+                    else:
+                        w = roast.HWrapper.Create2D(histcfg['dir'], h, xval, yval)
                 else:
-                    w = roast.HWrapper(histcfg['dir'], h, name)
+                    h = r.TH1F(
+                            name + str(random.randint(0, 1000000000)),
+                            ';'.join([name] + histcfg['axis labels']),
+                            *histcfg['binning'])
+
+                    if 'bin labels' in histcfg:
+                        for (n, l) in enumerate(histcfg['bin labels']):
+                            h.GetXaxis().SetBinLabel(n + 1, l)
+                    if 'visible' in histcfg:
+                        h.GetXaxis().SetRangeUser(*map(float, histcfg['visible']))
+
+                    if 'max' in histcfg:
+                        w = roast.HWrapper.Create1D(histcfg['dir'], h, name, histcfg['max'])
+                    else:
+                        w = roast.HWrapper.Create1D(histcfg['dir'], h, name)
+
                 p.AddHistogram(name, w)
                 logging.debug("added histogram %s", name)
             except Exception as e:
                 logging.error("unable to create histogram %s", name)
+                logging.debug("got: %s", e)
 
         branches = module.Branches(p.GetTreeName(), p.GetNtuplePaths())
         cutflow = p.GetCutFlow()

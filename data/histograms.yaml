@@ -1,5 +1,4 @@
 Events:
-    type: th1f
     dir: general
     binning: [1, 0, 1]
     axis labels: ["", Events]
@@ -8,7 +7,6 @@ Events:
     logy: 1
 
 Combos:
-    type: th1f
     dir: general
     binning: [20, 1, 21]
     axis labels: [Combos, Events]
@@ -17,7 +15,6 @@ Combos:
     logy: 1
 
 MomentumRank:
-    type: th1f
     dir: general
     binning: [10, 0, 10]
     axis labels: [Momentum Rank, Events]
@@ -26,7 +23,6 @@ MomentumRank:
     logy: 1
 
 MET:
-    type: th1f
     dir: general
     binning: [100, 0, 300]
     axis labels: [MET, Events]
@@ -35,7 +31,6 @@ MET:
     logy: 1
 
 HT:
-    type: th1f
     dir: general
     binning: [50, 0, 1500]
     axis labels: ['H_{T}', Events]
@@ -44,7 +39,6 @@ HT:
     logy: 1
 
 FinalBDTG:
-    type: th1f
     dir: general
     binning: [10, -1, 1]
     axis labels: [BDT output, Events]
@@ -53,7 +47,6 @@ FinalBDTG:
     logy: 1
 
 FinalCFMlpANN:
-    type: th1f
     dir: general
     binning: [30, -1, 1]
     axis labels: [CFMlpANN response, Events]
@@ -62,7 +55,6 @@ FinalCFMlpANN:
     logy: 1
 
 ComboBDT:
-    type: th1f
     dir: general
     binning: [30, -1, 1]
     axis labels: [Combo selector response, Events]
@@ -71,7 +63,6 @@ ComboBDT:
     logy: 1
 
 SelectedComboRank:
-    type: th1f
     dir: general
     binning: [20, 0, 20]
     axis labels: [Selected combo rank, Events]
@@ -80,7 +71,6 @@ SelectedComboRank:
     logy: 1
 
 J_Num$0:
-    type: th1f
     dir: jets
     binning: [30, 0, 30]
     axis labels: [Number of $1, Events]
@@ -104,7 +94,6 @@ J_Num$0:
       - [CleanNonCSVT, non b-tags (CSVT), 0, 10]
 
 CleanJ_$0Pt:
-    type: th1f
     dir: jets
     max: J_NumClean$1
     binning: [30, 30, 250]
@@ -118,7 +107,6 @@ CleanJ_$0Pt:
       - [NonBTag, NonCSVM, Untagged jet]
 
 $0_Pt:
-    type: th1f
     dir: jets
     binning: [30, 30, 250]
     axis labels: ['$1 p_{T}', Events]
@@ -132,7 +120,6 @@ $0_Pt:
       - [SubSubSubLJ, Jet 4]
 
 $0_Eta:
-    type: th1f
     dir: jets
     binning: [40, -3, 3]
     axis labels: ["$1 #eta", Events]
@@ -146,7 +133,6 @@ $0_Eta:
       - [SubSubSubLJ, Jet 4]
 
 CleanJ_BTagEta:
-    type: th1f
     dir: jets
     max: J_NumCleanCSVM
     binning: [40, -3, 3]
@@ -156,7 +142,6 @@ CleanJ_BTagEta:
     logy: 1
 
 CleanJ_NonBTagEta:
-    type: th1f
     dir: jets
     max: J_NumCleanNonCSVM
     binning: [40, -3, 3]
@@ -166,7 +151,6 @@ CleanJ_NonBTagEta:
     logy: 1
 
 L$0_Pt:
-    type: th1f
     dir: lepton
     channels: [$2]
     binning: [60, 0, 200]
@@ -180,7 +164,6 @@ L$0_Pt:
       - [2, "_{2}", tll, 10, 100]
 
 L$0_Eta:
-    type: th1f
     dir: lepton
     channels: [$2]
     binning: [30, -3, 3]
@@ -194,7 +177,6 @@ L$0_Eta:
       - [2, "_{2}", tll]
 
 L_Phi:
-    type: th1f
     dir: lepton
     channels: [ttl]
     binning: [30, -3.2, 3.2]
@@ -204,7 +186,6 @@ L_Phi:
     logy: 1
 
 T1L_DeltaR:
-    type: th1f
     dir: lepton
     channels: [ttl]
     binning: [30, 0, 10]
@@ -214,7 +195,6 @@ T1L_DeltaR:
     logy: 1
 
 T2L_DeltaR:
-    type: th1f
     dir: lepton
     channels: [ttl]
     binning: [30, 0, 10]
@@ -224,7 +204,6 @@ T2L_DeltaR:
     logy: 1
 
 DeltaR_LJ2:
-    type: th1f
     dir: lepton
     binning: [30, 0, 10]
     axis labels: ["#Delta R(l, #tau_{2})", Events]
@@ -233,7 +212,6 @@ DeltaR_LJ2:
     logy: 1
 
 NumberPV_noPURW:
-    type: th1f
     dir: pileup
     binning: [40, 0, 40]
     axis labels: [Number PV, no PURW, Events]
@@ -242,7 +220,6 @@ NumberPV_noPURW:
     logy: 1
 
 V_NumInteractionsBX0_noPURW:
-    type: th1f
     dir: pileup
     binning: [40, 0, 40]
     axis labels: [Number BX0, no PURW, Events]
@@ -251,7 +228,6 @@ V_NumInteractionsBX0_noPURW:
     logy: 1
 
 V_NumInteractionsBXm1_noPURW:
-    type: th1f
     dir: pileup
     binning: [40, 0, 40]
     axis labels: [Number BXm1, no PURW, Events]
@@ -260,7 +236,6 @@ V_NumInteractionsBXm1_noPURW:
     logy: 1
 
 V_NumInteractionsBXp1_noPURW:
-    type: th1f
     dir: pileup
     binning: [40, 0, 40]
     axis labels: [Number BXp1, no PURW, Events]
@@ -269,7 +244,6 @@ V_NumInteractionsBXp1_noPURW:
     logy: 1
 
 V_NumVertices:
-    type: th1f
     dir: pileup
     binning: [40, 0, 40]
     axis labels: [Number PV, after PURW, Events]
@@ -278,7 +252,6 @@ V_NumVertices:
     logy: 1
 
 V_NumInteractionsBX0:
-    type: th1f
     dir: pileup
     binning: [40, 0, 40]
     axis labels: [Number BX0, after PURW, Events]
@@ -287,7 +260,6 @@ V_NumInteractionsBX0:
     logy: 1
 
 V_NumInteractionsBXm1:
-    type: th1f
     dir: pileup
     binning: [40, 0, 40]
     axis labels: [Number BXm1, after PURW, Events]
@@ -296,7 +268,6 @@ V_NumInteractionsBXm1:
     logy: 1
 
 V_NumInteractionsBXp1:
-    type: th1f
     dir: pileup
     binning: [40, 0, 40]
     axis labels: [Number BXp1, after PURW, Events]
@@ -305,7 +276,6 @@ V_NumInteractionsBXp1:
     logy: 1
 
 PUweights_noPURW:
-    type: th1f
     dir: pileup
     binning: [40, 0, 4]
     axis labels: [PUweights, no PURW, Events]
@@ -314,7 +284,6 @@ PUweights_noPURW:
     logy: 1
 
 PUweights:
-    type: th1f
     dir: pileup
     binning: [40, 0, 4]
     axis labels: [PUweights, after PURW, Events]
@@ -323,7 +292,6 @@ PUweights:
     logy: 1
 
 VertexZcoord:
-    type: th1f
     dir: pileup
     binning: [40, -20, 20]
     axis labels: [Vertex Z coordinate, after PURW, Events]
@@ -332,7 +300,6 @@ VertexZcoord:
     logy: 1
 
 NumTaus:
-    type: th1f
     dir: tau
     binning: [20, 0, 20]
     axis labels: [Number of taus, Events]
@@ -341,7 +308,6 @@ NumTaus:
     logy: 1
 
 DitauVisibleMass:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [30, 0, 200]
@@ -351,7 +317,6 @@ DitauVisibleMass:
     logy: 1
 
 TT_DeltaR:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [30, 0, 6.28]
@@ -361,7 +326,6 @@ TT_DeltaR:
     logy: 1
 
 DeltaR_T1J1:
-    type: th1f
     dir: tau
     binning: [30, 0, 6.28]
     axis labels: ["#DeltaR (#tau_{1}, jet_{1})", Events]
@@ -370,7 +334,6 @@ DeltaR_T1J1:
     logy: 1
 
 DeltaR_T2J1:
-    type: th1f
     dir: tau
     binning: [30, 0, 6.28]
     axis labels: ["#DeltaR (#tau_{2}, jet_{1})", Events]
@@ -379,7 +342,6 @@ DeltaR_T2J1:
     logy: 1
 
 DeltaR_T1J2:
-    type: th1f
     dir: tau
     binning: [30, 0, 6.28]
     axis labels: ["#DeltaR (#tau_{1}, jet_{2})", Events]
@@ -388,7 +350,6 @@ DeltaR_T1J2:
     logy: 1
 
 DeltaR_T2J2:
-    type: th1f
     dir: tau
     binning: [30, 0, 6.28]
     axis labels: ["#DeltaR (#tau_{2}, jet_{2})", Events]
@@ -397,7 +358,6 @@ DeltaR_T2J2:
     logy: 1
 
 T1_Pt:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [30, 0, 150]
@@ -407,7 +367,6 @@ T1_Pt:
     logy: 1
 
 T2_Pt:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [30, 0, 100]
@@ -417,7 +376,6 @@ T2_Pt:
     logy: 1
 
 T1_Eta:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [30, -3, 3]
@@ -427,7 +385,6 @@ T1_Eta:
     logy: 1
 
 T2_Eta:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [30, -3, 3]
@@ -437,7 +394,6 @@ T2_Eta:
     logy: 1
 
 T1_Phi:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [30, -3.2, 3.2]
@@ -447,7 +403,6 @@ T1_Phi:
     logy: 1
 
 T2_Phi:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [30, -3.2, 3.2]
@@ -457,7 +412,6 @@ T2_Phi:
     logy: 1
 
 T1_LTPt:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [30, 0, 150]
@@ -467,7 +421,6 @@ T1_LTPt:
     logy: 1
 
 T2_LTPt:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [30, 0, 100]
@@ -477,7 +430,6 @@ T2_LTPt:
     logy: 1
 
 T1_DecayMode:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [20, 0, 20]
@@ -487,7 +439,6 @@ T1_DecayMode:
     logy: 1
 
 T2_DecayMode:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [20, 0, 20]
@@ -497,7 +448,6 @@ T2_DecayMode:
     logy: 1
 
 T1_NumProngs:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [10, 0, 10]
@@ -507,7 +457,6 @@ T1_NumProngs:
     logy: 1
 
 T2_NumProngs:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [10, 0, 10]
@@ -517,7 +466,6 @@ T2_NumProngs:
     logy: 1
 
 T1_IsolationIndex:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [10, 0, 10]
@@ -527,7 +475,6 @@ T1_IsolationIndex:
     logy: 1
 
 T2_IsolationIndex:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [10, 0, 10]
@@ -537,7 +484,6 @@ T2_IsolationIndex:
     logy: 1
 
 T1_AntiElectronIndex:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [10, 0, 10]
@@ -547,7 +493,6 @@ T1_AntiElectronIndex:
     logy: 1
 
 T2_AntiElectronIndex:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [10, 0, 10]
@@ -557,7 +502,6 @@ T2_AntiElectronIndex:
     logy: 1
 
 T1_AntiElectronIndexMVA2:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [10, 0, 10]
@@ -567,7 +511,6 @@ T1_AntiElectronIndexMVA2:
     logy: 1
 
 T2_AntiElectronIndexMVA2:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [10, 0, 10]
@@ -577,7 +520,6 @@ T2_AntiElectronIndexMVA2:
     logy: 1
 
 T1_AntiElectronIndexMVA3:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [10, 0, 10]
@@ -587,7 +529,6 @@ T1_AntiElectronIndexMVA3:
     logy: 1
 
 T2_AntiElectronIndexMVA3:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [10, 0, 10]
@@ -597,7 +538,6 @@ T2_AntiElectronIndexMVA3:
     logy: 1
 
 T1_AntiMuonIndex:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [10, 0, 10]
@@ -607,7 +547,6 @@ T1_AntiMuonIndex:
     logy: 1
 
 T2_AntiMuonIndex:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [10, 0, 10]
@@ -617,7 +556,6 @@ T2_AntiMuonIndex:
     logy: 1
 
 T1_AntiMuonIndex2:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [10, 0, 10]
@@ -627,7 +565,6 @@ T1_AntiMuonIndex2:
     logy: 1
 
 T2_AntiMuonIndex2:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [10, 0, 10]
@@ -637,7 +574,6 @@ T2_AntiMuonIndex2:
     logy: 1
 
 T1_MatchIndex:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [9, 0, 9]
@@ -647,7 +583,6 @@ T1_MatchIndex:
     logy: 1
 
 T2_MatchIndex:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [9, 0, 9]
@@ -657,7 +592,6 @@ T2_MatchIndex:
     logy: 1
 
 T1_ParentMatchIndex:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [9, 0, 9]
@@ -667,7 +601,6 @@ T1_ParentMatchIndex:
     logy: 1
 
 T2_ParentMatchIndex:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [9, 0, 9]
@@ -677,7 +610,6 @@ T2_ParentMatchIndex:
     logy: 1
 
 T1_CombinedIsolationDeltaBetaCorrRaw:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [50, 0, 300]
@@ -687,7 +619,6 @@ T1_CombinedIsolationDeltaBetaCorrRaw:
     logy: 1
 
 T2_CombinedIsolationDeltaBetaCorrRaw:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [50, 0, 300]
@@ -697,7 +628,6 @@ T2_CombinedIsolationDeltaBetaCorrRaw:
     logy: 1
 
 T1_CombinedIsolationDeltaBetaCorrRaw3Hits:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [50, 0, 300]
@@ -707,7 +637,6 @@ T1_CombinedIsolationDeltaBetaCorrRaw3Hits:
     logy: 1
 
 T2_CombinedIsolationDeltaBetaCorrRaw3Hits:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [50, 0, 300]
@@ -717,7 +646,6 @@ T2_CombinedIsolationDeltaBetaCorrRaw3Hits:
     logy: 1
 
 T1_IsolationMVARaw:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [40, -1, 1]
@@ -727,7 +655,6 @@ T1_IsolationMVARaw:
     logy: 1
 
 T2_IsolationMVARaw:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [40, -1, 1]
@@ -737,7 +664,6 @@ T2_IsolationMVARaw:
     logy: 1
 
 T1_IsolationMVA2Raw:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [50, -1, 1]
@@ -747,7 +673,6 @@ T1_IsolationMVA2Raw:
     logy: 1
 
 T2_IsolationMVA2Raw:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [50, -1, 1]
@@ -757,7 +682,6 @@ T2_IsolationMVA2Raw:
     logy: 1
 
 T1_IsolationIndex3Hits:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [10, 0, 10]
@@ -767,7 +691,6 @@ T1_IsolationIndex3Hits:
     logy: 1
 
 T2_IsolationIndex3Hits:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [10, 0, 10]
@@ -777,7 +700,6 @@ T2_IsolationIndex3Hits:
     logy: 1
 
 T1_IsolationIndexMVA:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [10, 0, 10]
@@ -787,7 +709,6 @@ T1_IsolationIndexMVA:
     logy: 1
 
 T2_IsolationIndexMVA:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [10, 0, 10]
@@ -797,7 +718,6 @@ T2_IsolationIndexMVA:
     logy: 1
 
 T1_IsolationIndexMVA2:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [10, 0, 10]
@@ -807,7 +727,6 @@ T1_IsolationIndexMVA2:
     logy: 1
 
 T2_IsolationIndexMVA2:
-    type: th1f
     dir: tau
     channels: [ttl]
     binning: [10, 0, 10]
@@ -817,7 +736,6 @@ T2_IsolationIndexMVA2:
     logy: 1
 
 T$1_AntiElectronMVA:
-    type: th1f
     dir: tau
     channels: [$2]
     binning: [2, 0, 1]
@@ -831,7 +749,6 @@ T$1_AntiElectronMVA:
       - ["", "", tll]
 
 T$0_AntiElectronMVA$3Raw:
-    type: th1f
     dir: tau
     channels: [$2]
     binning: [50, -1, 1]
@@ -848,7 +765,6 @@ T$0_AntiElectronMVA$3Raw:
       - ["", "", tll, 3]
 
 T$0_AntiElectronDeadECAL:
-    type: th1f
     dir: tau
     channels: [$2]
     binning: [2, 0, 1]
@@ -862,7 +778,6 @@ T$0_AntiElectronDeadECAL:
       - ["", "", tll]
 
 ZcoordDiff_TT:
-    type: th1f
     dir: tau
     binning: [50, 0, 2]
     axis labels: ["#DeltaVZ #tau_{1, 2}", Events]
@@ -871,7 +786,6 @@ ZcoordDiff_TT:
     logy: 1
 
 L1_Phi:
-    type: th1f
     dir: leptons
     channels: [tll]
     binning: [40, -3.2, 3.2]
@@ -881,7 +795,6 @@ L1_Phi:
     logy: 1
 
 TL1_DeltaR:
-    type: th1f
     dir: leptons
     channels: [tll]
     binning: [50, 0, 10]
@@ -891,7 +804,6 @@ TL1_DeltaR:
     logy: 1
 
 L1LJ_DeltaR:
-    type: th1f
     dir: leptons
     channels: [tll]
     binning: [50, 0, 10]
@@ -899,7 +811,6 @@ L1LJ_DeltaR:
     visible: [0, 6]
 
 L1SubLJ_DeltaR:
-    type: th1f
     dir: leptons
     channels: [tll]
     binning: [50, 0, 10]
@@ -907,7 +818,6 @@ L1SubLJ_DeltaR:
     visible: [0, 6]
 
 L1LJ_BtagDeltaR:
-    type: th1f
     dir: leptons
     channels: [tll]
     binning: [50, 0, 10]
@@ -915,7 +825,6 @@ L1LJ_BtagDeltaR:
     visible: [0, 6]
 
 L1SubLJ_BtagDeltaR:
-    type: th1f
     dir: leptons
     channels: [tll]
     binning: [50, 0, 10]
@@ -923,7 +832,6 @@ L1SubLJ_BtagDeltaR:
     visible: [0, 6]
 
 L1LJ_NonBtagDeltaR:
-    type: th1f
     dir: leptons
     channels: [tll]
     binning: [50, 0, 10]
@@ -931,7 +839,6 @@ L1LJ_NonBtagDeltaR:
     visible: [0, 6]
 
 L1SubLJ_NonBtagDeltaR:
-    type: th1f
     dir: leptons
     channels: [tll]
     binning: [50, 0, 10]
@@ -939,35 +846,30 @@ L1SubLJ_NonBtagDeltaR:
     visible: [0, 6]
 
 L1_ImpactParameter:
-    type: th1f
     dir: leptons
     channels: [tll]
     binning: [50, -0.04, 0.04]
     axis labels: ["l_{1} Impact parameter", Events]
 
 L2_ImpactParameter:
-    type: th1f
     dir: leptons
     channels: [tll]
     binning: [50, -0.04, 0.04]
     axis labels: ["l_{2} Impact parameter", Events]
 
 L1_CorrectedDZ:
-    type: th1f
     dir: leptons
     channels: [tll]
     binning: [50, -0.04, 0.04]
     axis labels: ["l_{1} corrected #Delta z", Events]
 
 L2_CorrectedDZ:
-    type: th1f
     dir: leptons
     channels: [tll]
     binning: [50, -0.04, 0.04]
     axis labels: ["l_{2} corrected #Delta z", Events]
 
 L2_Phi:
-    type: th1f
     dir: leptons
     channels: [tll]
     binning: [40, -3.2, 3.2]
@@ -977,7 +879,6 @@ L2_Phi:
     logy: 1
 
 L2LJ_DeltaR:
-    type: th1f
     dir: leptons
     channels: [tll]
     binning: [50, 0, 10]
@@ -985,7 +886,6 @@ L2LJ_DeltaR:
     visible: [0, 6]
 
 L2SubLJ_DeltaR:
-    type: th1f
     dir: leptons
     channels: [tll]
     binning: [50, 0, 10]
@@ -993,7 +893,6 @@ L2SubLJ_DeltaR:
     visible: [0, 6]
 
 L2LJ_BtagDeltaR:
-    type: th1f
     dir: leptons
     channels: [tll]
     binning: [50, 0, 10]
@@ -1001,7 +900,6 @@ L2LJ_BtagDeltaR:
     visible: [0, 6]
 
 L2SubLJ_BtagDeltaR:
-    type: th1f
     dir: leptons
     channels: [tll]
     binning: [50, 0, 10]
@@ -1009,7 +907,6 @@ L2SubLJ_BtagDeltaR:
     visible: [0, 6]
 
 L2LJ_NonBtagDeltaR:
-    type: th1f
     dir: leptons
     channels: [tll]
     binning: [50, 0, 10]
@@ -1017,7 +914,6 @@ L2LJ_NonBtagDeltaR:
     visible: [0, 6]
 
 L2SubLJ_NonBtagDeltaR:
-    type: th1f
     dir: leptons
     channels: [tll]
     binning: [50, 0, 10]
@@ -1025,14 +921,12 @@ L2SubLJ_NonBtagDeltaR:
     visible: [0, 6]
 
 L1L2_VisibleMass:
-    type: th1f
     dir: leptons
     channels: [tll]
     binning: [40, 0, 200]
     axis labels: ["Dilepton Visible Mass", Events]
 
 TL2_DeltaR:
-    type: th1f
     dir: leptons
     channels: [tll]
     binning: [50, 0, 10]
@@ -1042,7 +936,6 @@ TL2_DeltaR:
     logy: 1
 
 T_Pt:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [50, 0, 150]
@@ -1052,7 +945,6 @@ T_Pt:
     logy: 1
 
 T_Eta:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [40, -3, 3]
@@ -1062,7 +954,6 @@ T_Eta:
     logy: 1
 
 T_Phi:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [30, -3.2, 3.2]
@@ -1072,7 +963,6 @@ T_Phi:
     logy: 1
 
 T_LTPt:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [50, 0, 150]
@@ -1082,7 +972,6 @@ T_LTPt:
     logy: 1
 
 T_LTIpVtdxy:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [50, -0.03, 0.03]
@@ -1091,7 +980,6 @@ T_LTIpVtdxy:
     logy: 1
 
 T_LTIpVtdz:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [60, -0.15, 0.15]
@@ -1100,7 +988,6 @@ T_LTIpVtdz:
     logy: 1
 
 T_DecayMode:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [20, 0, 20]
@@ -1110,7 +997,6 @@ T_DecayMode:
     logy: 1
 
 T_NumProngs:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [10, 0, 10]
@@ -1120,7 +1006,6 @@ T_NumProngs:
     logy: 1
 
 T_IsolationIndex:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [10, 0, 10]
@@ -1130,7 +1015,6 @@ T_IsolationIndex:
     logy: 1
 
 T_AntiElectronIndex:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [10, 0, 10]
@@ -1140,7 +1024,6 @@ T_AntiElectronIndex:
     logy: 1
 
 T_AntiElectronIndexMVA2:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [10, 0, 10]
@@ -1150,7 +1033,6 @@ T_AntiElectronIndexMVA2:
     logy: 1
 
 T_AntiElectronIndexMVA3:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [10, 0, 10]
@@ -1160,7 +1042,6 @@ T_AntiElectronIndexMVA3:
     logy: 1
 
 T_AntiMuonIndex:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [10, 0, 10]
@@ -1170,7 +1051,6 @@ T_AntiMuonIndex:
     logy: 1
 
 T_AntiMuonIndex2:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [10, 0, 10]
@@ -1179,8 +1059,25 @@ T_AntiMuonIndex2:
     showOF: false
     logy: 1
 
+$0_MatchMatrix:
+    values: [$0_MatchIndex, $0_ParentMatchIndex]
+    dir: $2
+    channels: [$3]
+    binning: [9, 0, 9, 9, 0, 9]
+    bin labels:
+      - ["null", had, "#tau", "#mu", e, "#gamma", Z, W, H]
+      - ["null", had, "#tau", "#mu", e, "#gamma", Z, W, H]
+    axis labels: ["$1 match", "#tau parent match", Events]
+    showOF: false
+    replace:
+      - [T, "#tau", tau, tll]
+      - [T1, "#tau_{1}", tau, ttl]
+      - [T2, "#tau_{2}", tau, ttl]
+      - [L, "lepton", lepton, ttl]
+      - [L1, "lepton 1", lepton, tll]
+      - [L2, "lepton 2", lepton, tll]
+
 T_MatchIndex:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [9, 0, 9]
@@ -1190,7 +1087,6 @@ T_MatchIndex:
     logy: 1
 
 T_ParentMatchIndex:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [9, 0, 9]
@@ -1200,7 +1096,6 @@ T_ParentMatchIndex:
     logy: 1
 
 T_CombinedIsolationDeltaBetaCorrRaw:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [50, 0, 300]
@@ -1210,7 +1105,6 @@ T_CombinedIsolationDeltaBetaCorrRaw:
     logy: 1
 
 T_CombinedIsolationDeltaBetaCorrRaw3Hits:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [50, 0, 300]
@@ -1220,7 +1114,6 @@ T_CombinedIsolationDeltaBetaCorrRaw3Hits:
     logy: 1
 
 T_IsolationMVARaw:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [50, -1, 1]
@@ -1230,7 +1123,6 @@ T_IsolationMVARaw:
     logy: 1
 
 T_IsolationMVA2Raw:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [50, -1, 1]
@@ -1240,7 +1132,6 @@ T_IsolationMVA2Raw:
     logy: 1
 
 T_IsolationIndex3Hits:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [10, 0, 10]
@@ -1250,7 +1141,6 @@ T_IsolationIndex3Hits:
     logy: 1
 
 T_IsolationIndexMVA:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [10, 0, 10]
@@ -1260,7 +1150,6 @@ T_IsolationIndexMVA:
     logy: 1
 
 T_IsolationIndexMVA2:
-    type: th1f
     dir: tau
     channels: [tll]
     binning: [10, 0, 10]

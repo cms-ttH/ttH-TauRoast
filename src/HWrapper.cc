@@ -12,18 +12,20 @@ using namespace std;
 using namespace roast;
 
 // Default constructor
-HWrapper::HWrapper() : histo(0), fill(0), max(0) {}
+HWrapper::HWrapper() : histo(0), xval(0), yval(0), max(0) {}
 
 // Copy constructor
 HWrapper::HWrapper(const HWrapper& iHWrapper) :
     histo(0),
-    fill(0),
+    xval(0),
+    yval(0),
     max(0)
 {
     if (iHWrapper.GetHisto())
         this->SetHisto(iHWrapper.GetHisto());
 
-    fill = iHWrapper.fill;
+    xval = iHWrapper.xval;
+    yval = iHWrapper.yval;
     max = iHWrapper.max;
 
     name = iHWrapper.GetName();
@@ -31,27 +33,13 @@ HWrapper::HWrapper(const HWrapper& iHWrapper) :
     NOEraw = iHWrapper.GetNOEraw();
 }
 
-HWrapper::HWrapper(const std::string& subdir, TH1* hist, const std::string& fill_f) :
+HWrapper::HWrapper(const std::string& subdir, TH1* hist, GetValue_t x, GetValue_t y, GetValue_t m) :
     subdir(subdir),
-    histo(0),
-    fill(0),
-    max(0)
+    xval(x),
+    yval(y),
+    max(m)
 {
     histo = dynamic_cast<TH1*>(hist->Clone());
-
-    fill = get_accessor(fill_f);
-}
-
-HWrapper::HWrapper(const std::string& subdir, TH1* hist, const std::string& fill_f, const std::string& max_f) :
-    subdir(subdir),
-    histo(0),
-    fill(0),
-    max(0)
-{
-    histo = dynamic_cast<TH1*>(hist->Clone());
-
-    fill = get_accessor(fill_f);
-    max = get_accessor(max_f);
 }
 
 HWrapper::~HWrapper()
@@ -60,14 +48,42 @@ HWrapper::~HWrapper()
         delete histo;
 }
 
+HWrapper *
+HWrapper::Create1D(const std::string& subdir, TH1* hist, const std::string& xfill, const std::string max)
+{
+    auto x = get_accessor(xfill);
+    auto m = (max != "") ? get_accessor(max) : 0;
+
+    return new HWrapper(subdir, hist, x, 0, m);
+}
+
+HWrapper *
+HWrapper::Create2D(const std::string& subdir, TH1* hist, const std::string& xfill, const std::string& yfill, const std::string max)
+{
+    auto x = get_accessor(xfill);
+    auto y = get_accessor(yfill);
+    auto m = (max != "") ? get_accessor(max) : 0;
+
+    return new HWrapper(subdir, hist, x, y, m);
+}
+
 void
 HWrapper::Fill(Branches* b, int i, float w)
 {
-    if (!max) {
-        histo->Fill(fill(b, i, -1), w);
+    if (yval) {
+        if (!max) {
+            dynamic_cast<TH2*>(histo)->Fill(xval(b, i, -1), yval(b, i, -1), w);
+        } else {
+            for (int n = 0; n < max(b, i, -1); ++n)
+                dynamic_cast<TH2*>(histo)->Fill(xval(b, i, n), yval(b, i, n), w);
+        }
     } else {
-        for (int n = 0; n < max(b, i, -1); ++n)
-            histo->Fill(fill(b, i, n), w);
+        if (!max) {
+            histo->Fill(xval(b, i, -1), w);
+        } else {
+            for (int n = 0; n < max(b, i, -1); ++n)
+                histo->Fill(xval(b, i, n), w);
+        }
     }
 }
 
@@ -82,7 +98,7 @@ HWrapper::SetHisto(const TH1* hist)
     if (histo)
         delete histo;
 
-    histo = dynamic_cast<TH1F*>(hist->Clone((ssName.str()).c_str()));
+    histo = dynamic_cast<TH1*>(hist->Clone((ssName.str()).c_str()));
 }
 
 void HWrapper::SetMaximum(double const iValue){ histo->SetMaximum(iValue); }
