@@ -17,7 +17,6 @@ namespace roast {
 
             void RegenerateCaches();
             void SetUp(std::map<std::string,std::string> const &, std::vector<std::string> const &);
-            unsigned int TranslateMatchIndex(int) const;
             virtual void Null();
             virtual void Delete();
             virtual void Clear();
@@ -48,6 +47,8 @@ namespace roast {
             float GetCleanJetNonBTagEta(unsigned int, unsigned int);
             float GetCleanJetNonBTagPhi(unsigned int, unsigned int);
             float GetCleanJetNonBTagPt(unsigned int, unsigned int);
+
+            unsigned int TranslateMatchIndex(int) const;
 
             // >>> Begin declarations <<<
             std::vector<int>* E_ElectronGenMatchDaughter0Id;

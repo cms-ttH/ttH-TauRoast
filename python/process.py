@@ -118,6 +118,8 @@ def fill_histos(config, processes, module):
                         w = roast.HWrapper.Create1D(histcfg['dir'], h, name, histcfg['max'])
                     else:
                         w = roast.HWrapper.Create1D(histcfg['dir'], h, name)
+                if 'translate match id' in histcfg and histcfg['translate match id']:
+                    w.SetTranslate()
 
                 p.AddHistogram(name, w)
                 logging.debug("added histogram %s", name)

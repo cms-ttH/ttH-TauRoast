@@ -6,13 +6,14 @@
 #include "TRandom.h"
 #include "TTimeStamp.h"
 
+#include "../interface/Branches.h"
 #include "../interface/HWrapper.h"
 
 using namespace std;
 using namespace roast;
 
 // Default constructor
-HWrapper::HWrapper() : histo(0), xval(0), yval(0), max(0) {}
+HWrapper::HWrapper() : histo(0), xval(0), yval(0), max(0), translate(false) {}
 
 // Copy constructor
 HWrapper::HWrapper(const HWrapper& iHWrapper) :
@@ -28,6 +29,8 @@ HWrapper::HWrapper(const HWrapper& iHWrapper) :
     yval = iHWrapper.yval;
     max = iHWrapper.max;
 
+    translate = iHWrapper.translate;
+
     name = iHWrapper.GetName();
     subdir = iHWrapper.GetSubDir();
     NOEraw = iHWrapper.GetNOEraw();
@@ -37,7 +40,8 @@ HWrapper::HWrapper(const std::string& subdir, TH1* hist, GetValue_t x, GetValue_
     subdir(subdir),
     xval(x),
     yval(y),
-    max(m)
+    max(m),
+    translate(false)
 {
     histo = dynamic_cast<TH1*>(hist->Clone());
 }
@@ -72,17 +76,45 @@ HWrapper::Fill(Branches* b, int i, float w)
 {
     if (yval) {
         if (!max) {
-            dynamic_cast<TH2*>(histo)->Fill(xval(b, i, -1), yval(b, i, -1), w);
+            auto x = xval(b, i, -1);
+            auto y = yval(b, i, -1);
+
+            if (translate) {
+                x = b->TranslateMatchIndex(int(x + 0.5));
+                y = b->TranslateMatchIndex(int(y + 0.5));
+            }
+
+            dynamic_cast<TH2*>(histo)->Fill(x, y, w);
         } else {
-            for (int n = 0; n < max(b, i, -1); ++n)
-                dynamic_cast<TH2*>(histo)->Fill(xval(b, i, n), yval(b, i, n), w);
+            for (int n = 0; n < max(b, i, -1); ++n) {
+                auto x = xval(b, i, n);
+                auto y = yval(b, i, n);
+
+                if (translate) {
+                    x = b->TranslateMatchIndex(int(x + 0.5));
+                    y = b->TranslateMatchIndex(int(y + 0.5));
+                }
+
+                dynamic_cast<TH2*>(histo)->Fill(x, y, w);
+            }
         }
     } else {
         if (!max) {
-            histo->Fill(xval(b, i, -1), w);
+            float x = xval(b, i, -1);
+
+            if (translate)
+                x = b->TranslateMatchIndex(x);
+
+            histo->Fill(x, w);
         } else {
-            for (int n = 0; n < max(b, i, -1); ++n)
-                histo->Fill(xval(b, i, n), w);
+            for (int n = 0; n < max(b, i, -1); ++n) {
+                auto x = xval(b, i, n);
+
+                if (translate)
+                    x = b->TranslateMatchIndex(x);
+
+                histo->Fill(x, w);
+            }
         }
     }
 }

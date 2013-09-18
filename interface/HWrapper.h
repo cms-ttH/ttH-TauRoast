@@ -29,6 +29,8 @@ namespace roast {
           inline TH1* operator->() { return histo; };
           // inline const TH1* operator->() { return histo; };
 
+          void SetTranslate(bool t=true) { translate = t; };
+
           void Fill(Branches*, int, float);
 
           inline std::string GetName() const { return name; };
@@ -60,6 +62,7 @@ namespace roast {
           GetValue_t yval;
           GetValue_t max;
 
+          bool translate;
           double NOEraw;
 
           ClassDef(HWrapper, 1);
