@@ -17,14 +17,15 @@ namespace roast {
     class MVABase {
         public:
             struct Var {
-                Var() : GetVal(0), name(""), type('F'), value(0.) {};
-                Var(const std::string&, char);
+                Var() : GetVal(0), name(""), type('F'), value(0.), absolute(false) {};
+                Var(const std::string&, char, bool=false);
                 void Update(roast::Branches*, int);
 
                 GetValue_t GetVal;
                 std::string name;
                 char type;
                 float value;
+                bool absolute;
             };
 
             static std::map<std::string, MVABase*> gMVA;

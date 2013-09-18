@@ -25,7 +25,7 @@ namespace roast {
     map<string, MVABase*> MVABase::gMVA;
     map<string, MVABase*> MVABase::gComboMVA;
 
-    MVABase::Var::Var(const std::string& n, char t) : name(n), type(t), value(0)
+    MVABase::Var::Var(const std::string& n, char t, bool abs) : name(n), type(t), value(0), absolute(abs)
     {
         GetVal = get_accessor(name);
     }
@@ -34,6 +34,9 @@ namespace roast {
     MVABase::Var::Update(roast::Branches* b, int i)
     {
         value = GetVal(b, i, -1);
+
+        if (absolute)
+            value = fabs(value);
     }
 
     MVABase::~MVABase()

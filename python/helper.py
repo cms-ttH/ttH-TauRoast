@@ -43,9 +43,9 @@ def train_mva(config, processes, module):
 
     vars = []
     err = False
-    for (name, type) in cfg['variables']:
+    for varcfg in cfg['variables']:
         try:
-            vars.append(roast.MVABase.Var(name, type))
+            vars.append(roast.MVABase.Var(*varcfg))
         except:
             logging.error("undefined variable %s", name)
             err = True
@@ -72,9 +72,9 @@ def book_mva(config, processes, module):
 
     vars = []
     err = False
-    for (name, type) in cfg['variables']:
+    for varcfg in cfg['variables']:
         try:
-            vars.append(roast.MVABase.Var(name, type))
+            vars.append(roast.MVABase.Var(*varcfg))
         except:
             logging.error("undefined variable %s", name)
             err = True

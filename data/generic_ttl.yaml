@@ -12,7 +12,7 @@ analysis:
         background: [TTbar_Hadronic, TTbar_SemiLept, TTbar_FullLept]
         variables:
           - [T1_Pt, F]
-          - [T1_Eta, F]
+          - [T1_Eta, F, True]
           - [T2_Pt, F]
           - [T1_DecayMode, I]
           - [T2_DecayMode, I]
