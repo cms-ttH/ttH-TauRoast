@@ -82,7 +82,12 @@ def fill_histos(config, processes, module):
         for name, histcfg in config['histograms'].items():
             try:
                 if 'values' in histcfg:
-                    (xval, yval) = histcfg['values']
+                    values = histcfg['values']
+                else:
+                    values = [name]
+
+                if len(values) == 2:
+                    (xval, yval) = values
                     axes = [r.TH1.GetXaxis, r.TH1.GetYaxis]
 
                     h = r.TH2F(
@@ -102,7 +107,8 @@ def fill_histos(config, processes, module):
                         w = roast.HWrapper.Create2D(histcfg['dir'], h, xval, yval, histcfg['max'])
                     else:
                         w = roast.HWrapper.Create2D(histcfg['dir'], h, xval, yval)
-                else:
+                elif len(values) == 1:
+                    (xval,) = values
                     h = r.TH1F(
                             name + str(random.randint(0, 1000000000)),
                             ';'.join([name] + histcfg['axis labels']),
@@ -115,9 +121,12 @@ def fill_histos(config, processes, module):
                         h.GetXaxis().SetRangeUser(*map(float, histcfg['visible']))
 
                     if 'max' in histcfg:
-                        w = roast.HWrapper.Create1D(histcfg['dir'], h, name, histcfg['max'])
+                        w = roast.HWrapper.Create1D(histcfg['dir'], h, xval, histcfg['max'])
                     else:
-                        w = roast.HWrapper.Create1D(histcfg['dir'], h, name)
+                        w = roast.HWrapper.Create1D(histcfg['dir'], h, xval)
+                else:
+                    raise TypeError("Need either one or two values for histograms")
+
                 if 'translate match id' in histcfg and histcfg['translate match id']:
                     w.SetTranslate()
 
@@ -125,7 +134,9 @@ def fill_histos(config, processes, module):
                 logging.debug("added histogram %s", name)
             except Exception as e:
                 logging.error("unable to create histogram %s", name)
-                logging.debug("got: %s", e)
+                logging.debug("got: %s - %s", type(e), e)
+                if type(e) is not Exception:
+                    raise
 
         branches = module.Branches(p.GetTreeName(), p.GetNtuplePaths())
         cutflow = p.GetCutFlow()
