@@ -808,7 +808,7 @@ ZcoordDiff_TT:
     logy: 1
 
 L1_Phi:
-    dir: leptons
+    dir: lepton
     channels: [tll]
     binning: [40, -3.2, 3.2]
     axis labels: ["l #phi", Events]
@@ -817,7 +817,7 @@ L1_Phi:
     logy: 1
 
 TL1_DeltaR:
-    dir: leptons
+    dir: lepton
     channels: [tll]
     binning: [50, 0, 10]
     axis labels: ["#Delta R(l_{1}, #tau)", Events]
@@ -826,73 +826,73 @@ TL1_DeltaR:
     logy: 1
 
 L1LJ_DeltaR:
-    dir: leptons
+    dir: lepton
     channels: [tll]
     binning: [50, 0, 10]
     axis labels: ["#Delta R(l_{1}, leading jet)", Events]
     visible: [0, 6]
 
 L1SubLJ_DeltaR:
-    dir: leptons
+    dir: lepton
     channels: [tll]
     binning: [50, 0, 10]
     axis labels: ["#Delta R(l_{1}, subleading jet)", Events]
     visible: [0, 6]
 
 L1LJ_BtagDeltaR:
-    dir: leptons
+    dir: lepton
     channels: [tll]
     binning: [50, 0, 10]
     axis labels: ["#Delta R(l_{1}, leading b-tag jet)", Events]
     visible: [0, 6]
 
 L1SubLJ_BtagDeltaR:
-    dir: leptons
+    dir: lepton
     channels: [tll]
     binning: [50, 0, 10]
     axis labels: ["#Delta R(l_{1}, subleading b-tag jet)", Events]
     visible: [0, 6]
 
 L1LJ_NonBtagDeltaR:
-    dir: leptons
+    dir: lepton
     channels: [tll]
     binning: [50, 0, 10]
     axis labels: ["#Delta R(l_{1}, leading non b-tag jet)", Events]
     visible: [0, 6]
 
 L1SubLJ_NonBtagDeltaR:
-    dir: leptons
+    dir: lepton
     channels: [tll]
     binning: [50, 0, 10]
     axis labels: ["#Delta R(l_{1}, subleading non b-tag jet)", Events]
     visible: [0, 6]
 
 L1_ImpactParameter:
-    dir: leptons
+    dir: lepton
     channels: [tll]
     binning: [50, -0.04, 0.04]
     axis labels: ["l_{1} Impact parameter", Events]
 
 L2_ImpactParameter:
-    dir: leptons
+    dir: lepton
     channels: [tll]
     binning: [50, -0.04, 0.04]
     axis labels: ["l_{2} Impact parameter", Events]
 
 L1_CorrectedDZ:
-    dir: leptons
+    dir: lepton
     channels: [tll]
     binning: [50, -0.04, 0.04]
     axis labels: ["l_{1} corrected #Delta z", Events]
 
 L2_CorrectedDZ:
-    dir: leptons
+    dir: lepton
     channels: [tll]
     binning: [50, -0.04, 0.04]
     axis labels: ["l_{2} corrected #Delta z", Events]
 
 L2_Phi:
-    dir: leptons
+    dir: lepton
     channels: [tll]
     binning: [40, -3.2, 3.2]
     axis labels: ["l #phi", Events]
@@ -901,55 +901,55 @@ L2_Phi:
     logy: 1
 
 L2LJ_DeltaR:
-    dir: leptons
+    dir: lepton
     channels: [tll]
     binning: [50, 0, 10]
     axis labels: ["#Delta R(l_{2}, leading jet)", Events]
     visible: [0, 6]
 
 L2SubLJ_DeltaR:
-    dir: leptons
+    dir: lepton
     channels: [tll]
     binning: [50, 0, 10]
     axis labels: ["#Delta R(l_{2}, subleading jet)", Events]
     visible: [0, 6]
 
 L2LJ_BtagDeltaR:
-    dir: leptons
+    dir: lepton
     channels: [tll]
     binning: [50, 0, 10]
     axis labels: ["#Delta R(l_{2}, leading b-tag jet)", Events]
     visible: [0, 6]
 
 L2SubLJ_BtagDeltaR:
-    dir: leptons
+    dir: lepton
     channels: [tll]
     binning: [50, 0, 10]
     axis labels: ["#Delta R(l_{2}, subleading b-tag jet)", Events]
     visible: [0, 6]
 
 L2LJ_NonBtagDeltaR:
-    dir: leptons
+    dir: lepton
     channels: [tll]
     binning: [50, 0, 10]
     axis labels: ["#Delta R(l_{2}, leading non b-tag jet)", Events]
     visible: [0, 6]
 
 L2SubLJ_NonBtagDeltaR:
-    dir: leptons
+    dir: lepton
     channels: [tll]
     binning: [50, 0, 10]
     axis labels: ["#Delta R(l_{2}, subleading non b-tag jet)", Events]
     visible: [0, 6]
 
 L1L2_VisibleMass:
-    dir: leptons
+    dir: lepton
     channels: [tll]
     binning: [40, 0, 200]
     axis labels: ["Dilepton Visible Mass", Events]
 
 TL2_DeltaR:
-    dir: leptons
+    dir: lepton
     channels: [tll]
     binning: [50, 0, 10]
     axis labels: ["#Delta R(l_{2}, #tau)", Events]
