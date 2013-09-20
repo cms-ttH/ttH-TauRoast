@@ -407,6 +407,7 @@ def stack(config, processes):
                     h.SetMarkerSize(1)
                     h.GetYaxis().SetRangeUser(0.002, max_y)
                     h.SetLineWidth(4)
+                    h.SetLineColor(r.kBlack)
                     h.Draw("E1 P same")
                 except:
                     coll = None
@@ -493,5 +494,6 @@ def stack(config, processes):
                         ratio_err.SetMarkerSize(1.)
                         ratio_err.SetMarkerStyle(0)
                         ratio_err.SetLineWidth(4)
+                        ratio_err.SetLineColor(r.kBlack)
                         ratio_err.Draw("P same")
                         ratio.Draw("axis same")
