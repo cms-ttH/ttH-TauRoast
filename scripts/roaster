@@ -89,7 +89,7 @@ import yaml
 from ttH.TauRoast.display import stack
 from ttH.TauRoast.helper import *
 from ttH.TauRoast.process import analyze, fill_histos
-from ttH.TauRoast.style import *
+from ttH.TauRoast import style
 
 if opts.list_vars:
     for v in roast.get_accessor_names():
@@ -159,8 +159,7 @@ normalize_processes(baseconfig, procs)
 combine_processes(baseconfig, procs)
 
 if opts.plot:
-    # style = create_tdr_style()
-    # style.cd()
+    style.setup()
     stack(baseconfig, procs)
 
 if opts.nums:
