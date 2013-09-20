@@ -8,7 +8,7 @@
 namespace roast {
     template<typename T>
     long
-    analyze(roast::Process& proc, const std::vector<roast::CutFlow::Cut>& cuts, const int& limit, PyObject *log)
+    analyze(roast::Process& proc, const roast::CutFlow::Cuts& cuts, const int& limit, PyObject *log)
     {
         CutFlow cflow;
         cflow.Reset();
@@ -21,7 +21,7 @@ namespace roast {
         bool checkReality = proc.CheckReality();
 
         cflow.RegisterCut("Read from DS", 0);
-        cflow.RegisterCut("skimming + PAT", 0);
+        // cflow.RegisterCut("skimming + PAT", 0);
         cflow.RegisterCut("nTuple making", 0);
         if (limit >= 0)
             cflow.RegisterCut("User event limit", 0);
@@ -32,7 +32,7 @@ namespace roast {
         // customarily set to nentries in the topology specification
         // cflow.SetCutCounts("skimming + PAT", proc.GetNoEreadByNUTter());
         for (const auto& cut: cuts)
-            cflow.RegisterCut(cut);
+            cflow.RegisterCut(cut->Clone());
 
         Long64_t nentries = event->GetEntries();
         cflow.SetCutCounts("nTuple making", nentries);
@@ -127,7 +127,7 @@ namespace roast {
 
     namespace tll {
         long
-        analyze(roast::Process& p, const std::vector<roast::CutFlow::Cut>& cuts, const int& limit, PyObject *log)
+        analyze(roast::Process& p, const roast::CutFlow::Cuts& cuts, const int& limit, PyObject *log)
         {
             return roast::analyze<roast::tll::Branches>(p, cuts, limit, log);
         }
@@ -141,7 +141,7 @@ namespace roast {
 
     namespace ttl {
         long
-        analyze(roast::Process& p, const std::vector<roast::CutFlow::Cut>& cuts, const int& limit, PyObject *log)
+        analyze(roast::Process& p, const roast::CutFlow::Cuts& cuts, const int& limit, PyObject *log)
         {
             return roast::analyze<roast::ttl::Branches>(p, cuts, limit, log);
         }

@@ -31,7 +31,10 @@
 #pragma link C++ class std::map<std::string, roast::HWrapper*>+;
 #pragma link C++ class roast::CutFlow+;
 #pragma link C++ class roast::CutFlow::Cut+;
-#pragma link C++ class std::vector<roast::CutFlow::Cut>+;
+#pragma link C++ class roast::CutFlow::RelativeCut+;
+#pragma link C++ class roast::CutFlow::ValueCut+;
+#pragma link C++ class roast::CutFlow::ComposedCut+;
+#pragma link C++ class std::vector<roast::CutFlow::Cut*>+;
 #pragma link C++ class roast::Picker+;
 #pragma link C++ class roast::PtPicker+;
 #pragma link C++ class roast::tll::IsoPicker+;

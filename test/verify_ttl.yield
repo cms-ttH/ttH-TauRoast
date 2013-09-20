@@ -1,6 +1,5 @@
                       Collisions        TTbar           EWK         SingleTop        ttWZ          TTH_125    
 Read from DS            5.60717e+08    6.87677e+07    1.97561e+08    7.08435e+06       406206.0       995697.0
-skimming + PAT                  0.0            0.0            0.0            0.0            0.0            0.0
 nTuple making               75220.0       797474.0        52234.0        11659.0         9356.0        19299.0
 User event limit            12345.0        24962.0        49423.0        11659.0         9356.0        12345.0
 AtLeastOneCombo             12345.0        24962.0        49423.0        11659.0         9356.0        12345.0

@@ -54,7 +54,7 @@ def analyze(config, module):
         min = cutcfg['min'] if 'min' in cutcfg else -float('inf')
         max = cutcfg['max'] if 'max' in cutcfg else float('inf')
         try:
-            cuts.append(roast.CutFlow.Cut(cutcfg['name'], min, max))
+            cuts.append(roast.CutFlow.ValueCut(cutcfg['name'], min, max))
         except:
             logging.error("undefined variable %s", cutcfg['name'])
             err = True
@@ -63,7 +63,7 @@ def analyze(config, module):
 
     processed = []
     for p in processes:
-        n = module.analyze(p, vectorize(cuts), config['analysis']['max events'],
+        n = module.analyze(p, vectorize(cuts, 'roast::CutFlow::Cut*'), config['analysis']['max events'],
                 lambda i: logging.info("analyzing %s, event %i", p.GetShortName(), i) if i % 1000 == 0 else None)
         logging.info("analyzed %i events of %s", n, p.GetShortName())
         processed.append(p)
@@ -196,5 +196,5 @@ def fill_histos(config, processes, module):
         else:
             ratio = 0
 
-        cutflow.RegisterCutFromLast("Sample splitting", 2, ratio)
+        cutflow.RegisterCutFromLast("Sample splitting", ratio)
         logging.info("filled %i events of %s", split_count, name)

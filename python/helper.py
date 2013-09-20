@@ -180,7 +180,7 @@ def normalize_processes(config, processes):
         coll = get_collisions(processes)
         if coll.GetNOEanalyzed() != coll.GetNOEinNtuple():
             lumi *= coll.GetNOEanalyzed() / float(coll.GetNOEinNtuple())
-        coll.GetCutFlow().RegisterCutFromLast("Lumi norm", 2, 1)
+        coll.GetCutFlow().RegisterCutFromLast("Lumi norm", 1)
         coll.BuildNormalizedCutFlow()
     except:
         pass
@@ -197,7 +197,7 @@ def normalize_processes(config, processes):
             scale = est_lumi / raw_events
 
         p.ScaleHistograms(scale)
-        p.GetCutFlow().RegisterCutFromLast("Lumi norm", 2, scale)
+        p.GetCutFlow().RegisterCutFromLast("Lumi norm", scale)
         p.BuildNormalizedCutFlow()
 
 def print_cutflow(config, processes):
@@ -215,18 +215,18 @@ def print_cutflow(config, processes):
         out.write("{0:20}".format(cuts[0][i].name))
         for c in cuts:
             logging.debug("%s", c[i].name)
-            out.write("{0:15}".format(c[i].passedSignalEvents))
+            out.write("{0:15}".format(c[i].events_passed))
         out.write("\n")
 
     bkg_sum = 0.
     for p in procs:
         if p.IsBackground():
-            bkg_sum += p.GetCutFlow().GetCuts()[-1].passedSignalEvents
+            bkg_sum += p.GetCutFlow().GetCuts()[-1].events_passed
 
     out.write("{0:20}".format("s / sqrt{s + b}"))
     for p in procs:
         if p.IsSignal():
-            count = p.GetCutFlow().GetCuts()[-1].passedSignalEvents
+            count = p.GetCutFlow().GetCuts()[-1].events_passed
             sig = count / math.sqrt(count + bkg_sum)
             out.write("{0:15}".format(sig))
         else:

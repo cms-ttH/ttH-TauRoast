@@ -111,7 +111,7 @@ void Process::Update(Process const * iProcess){
 
 	// Update cutflow
 	cutFlow.SetCutCounts("Read from DS", iProcess->GetNOEinDS());
-	cutFlow.SetCutCounts("skimming + PAT", iProcess->GetNoEreadByNUTter());
+    // cutFlow.SetCutCounts("skimming + PAT", iProcess->GetNoEreadByNUTter());
 	
 }
 
@@ -218,7 +218,7 @@ Process::NormalizeToLumi(double const iIntLumi)
 			<< "\trelSysSuncertainty....." << relSysUncertainty*100 << "%" << "\n" << endl; //*/
 
         ScaleHistograms(lumiNormalization);
-		GetCutFlow()->RegisterCutFromLast("Lumi norm", 2, lumiNormalization);
+		GetCutFlow()->RegisterCutFromLast("Lumi norm", lumiNormalization);
 
       // FIXME
         // hContainer.AddRelErrorInQuadrature(relSysUncertainty);

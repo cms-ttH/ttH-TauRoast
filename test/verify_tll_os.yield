@@ -1,6 +1,5 @@
                       Collisions        TTbar           EWK         SingleTop        ttWZ          TTH_125    
 Read from DS            5.60717e+08    6.87677e+07    1.97561e+08    7.08435e+06       406206.0       995697.0
-skimming + PAT                  0.0            0.0            0.0            0.0            0.0            0.0
 nTuple making               18526.0       257980.0        55012.0         1453.0         3941.0         6836.0
 User event limit            12345.0        13928.0        39488.0         1453.0         3941.0         6836.0
 AtLeastOneCombo             12345.0        13928.0        39488.0         1453.0         3941.0         6836.0
@@ -32,6 +31,6 @@ PU reweighing                 279.0        790.513        340.153        45.3009
 Jet CSV weight                279.0        757.539        374.226        43.0332        516.299        1474.85
 BR correction                 279.0        757.539        374.226        43.0332        516.299        1385.77
 Sample splitting              279.0        757.539        374.226        43.0332        516.299        1385.77
-Lumi norm                     279.0        391.365        33.7324        10.6518         7.4763        2.34253
+Lumi norm                     279.0        391.365        33.7324        10.6518        7.47631        2.34253
 s / sqrt{s + b}                                                                                       0.110976
                       Collisions        TTbar           EWK         SingleTop        ttWZ          TTH_125    
