@@ -186,6 +186,16 @@ L_Phi:
     showOF: false
     logy: 1
 
+L$0_RelIso:
+    dir: lepton
+    channels: [$2]
+    binning: [30, 0, .25]
+    axis labels: ["l$1 RelIso", Events]
+    replace:
+      - ["", "", ttl]
+      - [1, "_{1}", tll]
+      - [2, "_{2}", tll]
+
 T1L_DeltaR:
     dir: lepton
     channels: [ttl]
@@ -307,6 +317,17 @@ NumTaus:
     visible: [0, 19.99]
     showOF: true
     logy: 1
+
+NumLoose$0:
+    dir: lepton
+    binning: [20, 0, 20]
+    axis labels: [Number of $1 (loose), Events]
+    visible: [0, 19.99]
+    showOF: true
+    logy: 1
+    replace:
+      - [Electrons, electrons]
+      - [Muons, muons]
 
 DitauVisibleMass:
     dir: tau
