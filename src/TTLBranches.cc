@@ -167,28 +167,4 @@ unsigned int ttl::Branches::GetTau2AntiMuonIndex2(const unsigned int iCombo) con
 	return 0;
 }
 
-unsigned int
-ttl::Branches::GetTau1MatchIndex(unsigned int idx) const
-{
-    return TranslateMatchIndex((*TTL_Tau1GenMatchId)[idx]);
-}
-
-unsigned int
-ttl::Branches::GetTau1ParentMatchIndex(unsigned int idx) const
-{
-    return TranslateMatchIndex((*TTL_Tau1GenMatchMother0Id)[idx]);
-}
-
-unsigned int
-ttl::Branches::GetTau2MatchIndex(unsigned int idx) const
-{
-    return TranslateMatchIndex((*TTL_Tau2GenMatchId)[idx]);
-}
-
-unsigned int
-ttl::Branches::GetTau2ParentMatchIndex(unsigned int idx) const
-{
-    return TranslateMatchIndex((*TTL_Tau2GenMatchMother0Id)[idx]);
-}
-
 ClassImp(roast::ttl::Branches)

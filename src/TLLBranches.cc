@@ -97,16 +97,4 @@ unsigned int tll::Branches::GetTauAntiMuonIndex2(const unsigned int iCombo) cons
     return 0;
 }
 
-unsigned int
-tll::Branches::GetTauMatchIndex(unsigned int idx) const
-{
-    return TranslateMatchIndex((*TLL_TauGenMatchId)[idx]);
-}
-
-unsigned int
-tll::Branches::GetTauParentMatchIndex(unsigned int idx) const
-{
-    return TranslateMatchIndex((*TLL_TauGenMatchMother0Id)[idx]);
-}
-
 ClassImp(roast::tll::Branches)

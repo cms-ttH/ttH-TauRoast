@@ -595,41 +595,80 @@ T2_AntiMuonIndex2:
     showOF: false
     logy: 1
 
-T1_MatchIndex:
+T$0_MatchIndex:
+    values: [T$0_GenMatchId]
+    translate match id: true
     dir: tau
-    channels: [ttl]
+    channels: [$2]
     binning: [9, 0, 9]
     bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, W, H]
-    axis labels: ["#tau_{1} match", Events]
-    showOF: false
-    logy: 1
+    axis labels: ["#tau$1 match", Events]
+    replace:
+      - ["", "", tll]
+      - [1, "_{1}", ttl]
+      - [2, "_{2}", ttl]
 
-T2_MatchIndex:
-    dir: tau
-    channels: [ttl]
+L$0_MatchIndex:
+    values: [L$0_GenMatchId]
+    translate match id: true
+    dir: lepton
+    channels: [$1]
     binning: [9, 0, 9]
     bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, W, H]
-    axis labels: ["#tau_{2} match", Events]
-    showOF: false
-    logy: 1
+    axis labels: ["lepton $0 match", Events]
+    replace:
+      - ["", ttl]
+      - [1, tll]
+      - [2, tll]
 
-T1_ParentMatchIndex:
+T$0_ParentMatchIndex:
+    values: [T$0_GenMatchMother0Id]
+    translate match id: true
     dir: tau
-    channels: [ttl]
+    channels: [$2]
     binning: [9, 0, 9]
     bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, W, H]
-    axis labels: ["#tau_{1} Parent", Events]
+    axis labels: ["#tau$1 Parent", Events]
     showOF: false
     logy: 1
+    replace:
+      - ["", "", tll]
+      - [1, "_{1}", ttl]
+      - [2, "_{2}", ttl]
 
-T2_ParentMatchIndex:
-    dir: tau
-    channels: [ttl]
+L$0_ParentMatchIndex:
+    values: [L$0_GenMatchMother0Id]
+    translate match id: true
+    dir: lepton
+    channels: [$2]
     binning: [9, 0, 9]
     bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, W, H]
-    axis labels: ["#tau_{2} Parent", Events]
+    axis labels: ["lepton$1 Parent", Events]
     showOF: false
     logy: 1
+    replace:
+      - ["", "", ttl]
+      - [1, "_{1}", tll]
+      - [2, "_{2}", tll]
+
+$0_MatchMatrix:
+    values: [$0_GenMatchId, $0_GenMatchMother0Id]
+    translate match id: true
+    dir: $2
+    channels: [$3]
+    binning: [9, 0, 9, 9, 0, 9]
+    bin labels:
+      - ["null", had, "#tau", "#mu", e, "#gamma", Z, W, H]
+      - ["null", had, "#tau", "#mu", e, "#gamma", Z, W, H]
+    axis labels: ["$1 match", "#tau parent match", Events]
+    showOF: false
+    replace:
+      - [T, "#tau", tau, tll]
+      - [T1, "#tau_{1}", tau, ttl]
+      - [T2, "#tau_{2}", tau, ttl]
+      - [L, "lepton", lepton, ttl]
+      - [L1, "lepton 1", lepton, tll]
+      - [L2, "lepton 2", lepton, tll]
 
 T1_CombinedIsolationDeltaBetaCorrRaw:
     dir: tau
@@ -1078,42 +1117,6 @@ T_AntiMuonIndex2:
     binning: [10, 0, 10]
     axis labels: ["#tau anti-#mu index (2)", Events]
     visible: [0, 5.99]
-    showOF: false
-    logy: 1
-
-$0_MatchMatrix:
-    values: [$0_MatchIndex, $0_ParentMatchIndex]
-    dir: $2
-    channels: [$3]
-    binning: [9, 0, 9, 9, 0, 9]
-    bin labels:
-      - ["null", had, "#tau", "#mu", e, "#gamma", Z, W, H]
-      - ["null", had, "#tau", "#mu", e, "#gamma", Z, W, H]
-    axis labels: ["$1 match", "#tau parent match", Events]
-    showOF: false
-    replace:
-      - [T, "#tau", tau, tll]
-      - [T1, "#tau_{1}", tau, ttl]
-      - [T2, "#tau_{2}", tau, ttl]
-      - [L, "lepton", lepton, ttl]
-      - [L1, "lepton 1", lepton, tll]
-      - [L2, "lepton 2", lepton, tll]
-
-T_MatchIndex:
-    dir: tau
-    channels: [tll]
-    binning: [9, 0, 9]
-    bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, W, H]
-    axis labels: ["#tau match", Events]
-    showOF: false
-    logy: 1
-
-T_ParentMatchIndex:
-    dir: tau
-    channels: [tll]
-    binning: [9, 0, 9]
-    bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, W, H]
-    axis labels: ["#tau Parent", Events]
     showOF: false
     logy: 1
 

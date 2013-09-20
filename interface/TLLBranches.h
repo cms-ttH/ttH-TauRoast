@@ -29,8 +29,6 @@ namespace roast {
                 unsigned int GetTauAntiElectronIndexMVA3(const unsigned int) const;
                 unsigned int GetTauAntiMuonIndex(const unsigned int) const;
                 unsigned int GetTauAntiMuonIndex2(const unsigned int) const;
-                unsigned int GetTauMatchIndex(unsigned int) const;
-                unsigned int GetTauParentMatchIndex(unsigned int) const;
 
                 // >>> Begin declarations <<<
                 std::vector<float>* TLL_Lepton1Charge;

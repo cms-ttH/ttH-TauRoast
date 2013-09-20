@@ -38,10 +38,6 @@ namespace roast {
                 unsigned int	GetTau2AntiMuonIndex(const unsigned int) const;
                 unsigned int	GetTau1AntiMuonIndex2(const unsigned int) const;
                 unsigned int	GetTau2AntiMuonIndex2(const unsigned int) const;
-                unsigned int GetTau1MatchIndex(unsigned int) const;
-                unsigned int GetTau1ParentMatchIndex(unsigned int) const;
-                unsigned int GetTau2MatchIndex(unsigned int) const;
-                unsigned int GetTau2ParentMatchIndex(unsigned int) const;
 
                 // >>> Begin declarations <<<
                 std::vector<float>* TTL_DitauCosDeltaPhi;

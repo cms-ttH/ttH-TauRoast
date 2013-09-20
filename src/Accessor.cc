@@ -280,14 +280,6 @@ namespace roast {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return e->GetTau1IsolationIndexMVA2(idx);
         };
-        accessors["T1_MatchIndex"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return e->GetTau1MatchIndex(idx);
-        };
-        accessors["T1_ParentMatchIndex"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return e->GetTau1ParentMatchIndex(idx);
-        };
         accessors["T2_AntiElectronIndex"] = [](Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return e->GetTau2AntiElectronIndex(idx);
@@ -324,14 +316,6 @@ namespace roast {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return e->GetTau2IsolationIndexMVA2(idx);
         };
-        accessors["T2_MatchIndex"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return e->GetTau2MatchIndex(idx);
-        };
-        accessors["T2_ParentMatchIndex"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return e->GetTau2ParentMatchIndex(idx);
-        };
         accessors["T_AntiElectronIndex"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return e->GetTauAntiElectronIndex(idx);
@@ -367,14 +351,6 @@ namespace roast {
         accessors["T_IsolationIndexMVA2"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return e->GetTauIsolationIndexMVA2(idx);
-        };
-        accessors["T_MatchIndex"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return e->GetTauMatchIndex(idx);
-        };
-        accessors["T_ParentMatchIndex"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return e->GetTauParentMatchIndex(idx);
         };
         accessors["BQuarkCount"] = [](Branches *b, int idx, int n) -> float {
             return b->Ev_bQuarkCount;

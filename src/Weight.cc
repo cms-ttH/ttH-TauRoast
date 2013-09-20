@@ -103,9 +103,9 @@ namespace roast {
                     fct = [](roast::Branches *b, int idx, int n) -> float {
                         auto e = dynamic_cast<roast::ttl::Branches*>(b);
                         unsigned int matches = 0;
-                        if (e->GetTau1MatchIndex(idx) == 4)
+                        if (abs((*e->TTL_Tau1GenMatchId)[idx]) == 11)
                             ++matches;
-                        if (e->GetTau2MatchIndex(idx) == 4)
+                        if (abs((*e->TTL_Tau1GenMatchId)[idx]) == 11)
                             ++matches;
                         return matches;
                     };
@@ -121,9 +121,9 @@ namespace roast {
                     fct = [](roast::Branches *b, int idx, int n) -> float {
                         auto e = dynamic_cast<roast::ttl::Branches*>(b);
                         unsigned int matches = 0;
-                        if (e->GetTau1MatchIndex(idx) == 1)
+                        if (e->TranslateMatchIndex((*e->TTL_Tau1GenMatchId)[idx]) == 1)
                             ++matches;
-                        if (e->GetTau2MatchIndex(idx) == 1)
+                        if (e->TranslateMatchIndex((*e->TTL_Tau2GenMatchId)[idx]) == 1)
                             ++matches;
                         return matches;
                     };
@@ -139,9 +139,9 @@ namespace roast {
                     fct = [](roast::Branches *b, int idx, int n) -> float {
                         auto e = dynamic_cast<roast::ttl::Branches*>(b);
                         unsigned int matches = 0;
-                        if (e->GetTau1MatchIndex(idx) == 2)
+                        if (abs((*e->TTL_Tau1GenMatchId)[idx]) == 15)
                             ++matches;
-                        if (e->GetTau2MatchIndex(idx) == 2)
+                        if (abs((*e->TTL_Tau2GenMatchId)[idx]) == 15)
                             ++matches;
                         return matches;
                     };
