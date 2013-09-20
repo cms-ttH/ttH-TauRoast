@@ -1,3 +1,4 @@
+# vim: set sw=4 sta et :
 Events:
     dir: general
     binning: [1, 0, 1]
