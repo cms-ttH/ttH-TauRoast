@@ -89,4 +89,6 @@ def setup():
     r.gStyle.SetFrameLineStyle(1)
     r.gStyle.SetFrameLineWidth(1)
 
+    r.gStyle.SetPalette(1);
+
     r.gStyle.SetOptStat(0)
