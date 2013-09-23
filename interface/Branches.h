@@ -48,7 +48,7 @@ namespace roast {
             float GetCleanJetNonBTagPhi(unsigned int, unsigned int);
             float GetCleanJetNonBTagPt(unsigned int, unsigned int);
 
-            unsigned int TranslateMatchIndex(int) const;
+            unsigned int TranslateMatchIndex(int, int=-99) const;
 
             // >>> Begin declarations <<<
             std::vector<int>* E_ElectronGenMatchDaughter0Id;

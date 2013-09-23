@@ -39,6 +39,9 @@ namespace roast {
           double GetMaximum() const;
           double GetMaximumWithError() const;
 
+          void SetAdditionalXInfo(const std::string& n) { xadd = get_accessor(n); };
+          void SetAdditionalYInfo(const std::string& n) { yadd = get_accessor(n); };
+
           void SetHisto(const TH1*);
           void SetMaximum(double const);
           void ResetMaximum(double const iFactor=1.1);
@@ -61,6 +64,10 @@ namespace roast {
           GetValue_t xval;
           GetValue_t yval;
           GetValue_t max;
+
+          // additional info to be handled (e.g., for translation)
+          GetValue_t xadd;
+          GetValue_t yadd;
 
           bool translate;
           double NOEraw;

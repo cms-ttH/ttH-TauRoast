@@ -127,6 +127,19 @@ def fill_histos(config, processes, module):
                 else:
                     raise TypeError("Need either one or two values for histograms")
 
+                if 'additional info' in histcfg:
+                    vals = histcfg['additional info']
+                    if isinstance(vals, list):
+                        if len(vals) > 0:
+                            w.SetAdditionalXInfo(vals[0])
+                        if len(vals) > 1:
+                            w.SetAdditionalYInfo(vals[1])
+                    elif isinstance(vals, dict):
+                        if 'x' in vals:
+                            w.SetAdditionalXInfo(vals['x'])
+                        if 'y' in vals:
+                            w.SetAdditionalYInfo(vals['y'])
+
                 if 'translate match id' in histcfg and histcfg['translate match id']:
                     w.SetTranslate()
 

@@ -96,7 +96,7 @@ Branches::RegenerateCaches()
 }
 
 unsigned int
-Branches::TranslateMatchIndex(int idx) const
+Branches::TranslateMatchIndex(int idx, int pidx) const
 {
     if (idx == -99)
         return 0; // no match
@@ -113,9 +113,14 @@ Branches::TranslateMatchIndex(int idx) const
         case 23:
             return 6; // Z
         case 24:
-            return 7; // W
+            if (abs(pidx) == 25)
+                return 10; // W from H
+            else if (abs(pidx) == 8)
+                return 9; // W from t
+            else
+                return 8; // other W
         case 25:
-            return 8; // Higgs
+            return 7; // Higgs
         default:
             return 1; // hadronic
     }

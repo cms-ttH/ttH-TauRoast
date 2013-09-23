@@ -13,14 +13,16 @@ using namespace std;
 using namespace roast;
 
 // Default constructor
-HWrapper::HWrapper() : histo(0), xval(0), yval(0), max(0), translate(false) {}
+HWrapper::HWrapper() : histo(0), xval(0), yval(0), max(0), xadd(0), yadd(0), translate(false) {}
 
 // Copy constructor
 HWrapper::HWrapper(const HWrapper& iHWrapper) :
     histo(0),
     xval(0),
     yval(0),
-    max(0)
+    max(0),
+    xadd(iHWrapper.xadd),
+    yadd(iHWrapper.yadd)
 {
     if (iHWrapper.GetHisto())
         this->SetHisto(iHWrapper.GetHisto());
@@ -41,6 +43,8 @@ HWrapper::HWrapper(const std::string& subdir, TH1* hist, GetValue_t x, GetValue_
     xval(x),
     yval(y),
     max(m),
+    xadd(0),
+    yadd(0),
     translate(false)
 {
     histo = dynamic_cast<TH1*>(hist->Clone());
@@ -80,8 +84,15 @@ HWrapper::Fill(Branches* b, int i, float w)
             auto y = yval(b, i, -1);
 
             if (translate) {
-                x = b->TranslateMatchIndex(int(x + 0.5));
-                y = b->TranslateMatchIndex(int(y + 0.5));
+                if (xadd)
+                    x = b->TranslateMatchIndex(int(x + 0.5), int(xadd(b, i, -1) + 0.5));
+                else
+                    x = b->TranslateMatchIndex(int(x + 0.5));
+
+                if (yadd)
+                    y = b->TranslateMatchIndex(int(y + 0.5), int(yadd(b, i, -1) + 0.5));
+                else
+                    y = b->TranslateMatchIndex(int(y + 0.5));
             }
 
             dynamic_cast<TH2*>(histo)->Fill(x, y, w);
@@ -91,8 +102,15 @@ HWrapper::Fill(Branches* b, int i, float w)
                 auto y = yval(b, i, n);
 
                 if (translate) {
-                    x = b->TranslateMatchIndex(int(x + 0.5));
-                    y = b->TranslateMatchIndex(int(y + 0.5));
+                    if (xadd)
+                        x = b->TranslateMatchIndex(int(x + 0.5), int(xadd(b, i , n) + 0.5));
+                    else
+                        x = b->TranslateMatchIndex(int(x + 0.5));
+
+                    if (yadd)
+                        y = b->TranslateMatchIndex(int(y + 0.5), int(yadd(b, i, n) + 0.5));
+                    else
+                        y = b->TranslateMatchIndex(int(y + 0.5));
                 }
 
                 dynamic_cast<TH2*>(histo)->Fill(x, y, w);
@@ -102,16 +120,24 @@ HWrapper::Fill(Branches* b, int i, float w)
         if (!max) {
             float x = xval(b, i, -1);
 
-            if (translate)
-                x = b->TranslateMatchIndex(x);
+            if (translate) {
+                if (xadd)
+                    x = b->TranslateMatchIndex(x, xadd(b, i, -1));
+                else
+                    x = b->TranslateMatchIndex(x);
+            }
 
             histo->Fill(x, w);
         } else {
             for (int n = 0; n < max(b, i, -1); ++n) {
                 auto x = xval(b, i, n);
 
-                if (translate)
-                    x = b->TranslateMatchIndex(x);
+                if (translate) {
+                    if (xadd)
+                        x = b->TranslateMatchIndex(x, xadd(b, i, n));
+                    else
+                        x = b->TranslateMatchIndex(x);
+                }
 
                 histo->Fill(x, w);
             }
