@@ -131,10 +131,10 @@ namespace roast {
 
         Branches *event = get->Branches(process);
 
-        auto goodEvents = process->GetGoodEvents();
-        for (unsigned int i = 0; i < goodEvents.size(); i++) {
-            event->GetEntry(goodEvents.at(i).entry);
-            int combo = goodEvents[i].combos[0];
+        auto events = process->GetEvents();
+        for (unsigned int i = 0; i < events.size(); i++) {
+            event->GetEntry(events.at(i).entry);
+            int combo = events[i].combos[0];
             FillVariables(event, combo);
 
             tree->Fill();
@@ -149,9 +149,9 @@ namespace roast {
 
         Branches *event = get->Branches(process);
 
-        auto goodEvents = process->GetGoodEvents();
-        for (unsigned int i = 0; i < goodEvents.size(); i++) {
-            event->GetEntry(goodEvents.at(i).entry);
+        auto events = process->GetEvents();
+        for (unsigned int i = 0; i < events.size(); i++) {
+            event->GetEntry(events.at(i).entry);
 
             for (unsigned int i = 0; i < event->GetNumCombos(); ++i) {
                 FillVariables(event, i);

@@ -26,7 +26,7 @@ namespace roast {
             };
 
         private:
-            std::vector<roast::Process::Event> goodEvents;
+            std::vector<roast::Process::Event> events;
             std::map<std::string, roast::HWrapper*> hContainer;
             CutFlow cutFlow;
             CutFlow normalizedCutFlow;
@@ -42,7 +42,6 @@ namespace roast {
             bool analyzed;
             bool plot;
 
-
             float crossSection;
             float branchingRatio;
             float otherScaleFactor;
@@ -52,10 +51,6 @@ namespace roast {
             double NOEinNtuple;
             double NOEanalyzed;
             double NOEexpected;
-
-            bool obtainedGoodEvents;
-            bool filledHistos;
-            bool normalizedHistos;
 
             double relSysUncertainty;
 
@@ -92,7 +87,7 @@ namespace roast {
             void SetAnalyzed();
             bool const Analyzed() const;
 
-            std::vector<Event> const GetGoodEvents() const;
+            inline std::vector<Event> GetEvents() const { return events; };
             void SetCutFlow(CutFlow const &);
             void SetNormalizedCutFlow(CutFlow const &);
             CutFlow* GetCutFlow();
@@ -118,10 +113,6 @@ namespace roast {
             double const GetOtherScaleFactor() const;
             double const GetNOEexpected() const;
             double const GetRelSysUncertainty() const;
-            bool const ObtainedGoodEvents() const;
-            bool const FilledHistos() const;
-            bool const NormalizedHistos() const;
-
 
             inline void AddHistogram(const std::string& name, const roast::HWrapper& histo) { hContainer[name] = new HWrapper(histo); };
             inline std::map<std::string, roast::HWrapper*>& GetHContainer() {
@@ -135,7 +126,7 @@ namespace roast {
             inline HWrapper* GetHistogram(const std::string& n) { return hContainer[n]; };
             std::vector<std::string> GetHistogramNames() const;
 
-            void SetGoodEvents(const std::vector<roast::Process::Event>&);
+            void SetEvents(const std::vector<roast::Process::Event>& evs) { events = evs; };
             void Add(roast::Process*);
 
             ClassDef(Process, 1);

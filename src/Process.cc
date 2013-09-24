@@ -11,13 +11,13 @@ using namespace roast;
 Process::Process()
 {
    analyzed			= false;
-   goodEvents.clear();
+   events.clear();
    plot				= false;
 }
 
-Process::Process(const Process& iProcess){
-
-	goodEvents				= iProcess.GetGoodEvents();
+Process::Process(const Process& iProcess)
+{
+    events = iProcess.GetEvents();
 
     for (auto& pair: hContainer)
         delete pair.second;
@@ -50,16 +50,12 @@ Process::Process(const Process& iProcess){
 	NOEexpected			= iProcess.GetNOEexpected();
 	plot							= iProcess.Plot();
 
-	obtainedGoodEvents		= iProcess.ObtainedGoodEvents();
-	filledHistos			= iProcess.FilledHistos();
-	normalizedHistos		= iProcess.NormalizedHistos();
-
 }
 
 Process::Process(const std::string& name, const std::string& alias, const std::string& title,
       const std::string& type, const std::string& tree, const std::vector<std::string>& paths, int color,
       int ds_count, int nut_count, double xsec, double branch, bool genmatch):
-   goodEvents(),
+   events(),
    shortName(name),
    niceName(alias),
    labelForLegend(title),
@@ -77,9 +73,6 @@ Process::Process(const std::string& name, const std::string& alias, const std::s
    NoEreadByNUTter(nut_count),
    NOEanalyzed(0),
    NOEexpected(0),
-   obtainedGoodEvents(false),
-   filledHistos(false),
-   normalizedHistos(false),
    relSysUncertainty(0.)
 {
 }
@@ -107,16 +100,12 @@ void Process::Update(Process const * iProcess){
 
 	plot							= iProcess->Plot();
 
-	normalizedHistos		= false;
-
 	// Update cutflow
 	cutFlow.SetCutCounts("Read from DS", iProcess->GetNOEinDS());
     // cutFlow.SetCutCounts("skimming + PAT", iProcess->GetNoEreadByNUTter());
 	
 }
 
-
-vector<Process::Event> const Process::GetGoodEvents() const { return goodEvents; }
 void Process::SetCutFlow(CutFlow const & iCutFlow){ cutFlow	= CutFlow(iCutFlow); }
 void Process::SetNormalizedCutFlow(CutFlow const & iCutFlow){ normalizedCutFlow	= CutFlow(iCutFlow); }
 void Process::SetNOEanalyzed(double const iEvents){ NOEanalyzed = iEvents; }
@@ -151,9 +140,6 @@ double const Process::GetBranchingRatio() const{ return branchingRatio;}
 double const Process::GetOtherScaleFactor() const{ return otherScaleFactor;}
 double const Process::GetNOEexpected() const{ return NOEexpected;}
 double const Process::GetRelSysUncertainty() const{ return relSysUncertainty;}
-bool const Process::ObtainedGoodEvents() const{ return obtainedGoodEvents;}
-bool const Process::FilledHistos() const{ return filledHistos;}
-bool const Process::NormalizedHistos() const{ return normalizedHistos;}
 
 
 void Process::SetShortName(string const iVal){ 
@@ -189,14 +175,10 @@ Process::GetHistogramNames() const
     return res;
 }
 
-// Massive set histogram properties
-void Process::SetGoodEvents(const vector<Process::Event>& iVector){ goodEvents = iVector; }
-
-
 void
 Process::NormalizeToLumi(double const iIntLumi)
 {
-	if ((!IsCollisions()) && (!normalizedHistos)) {
+	if ((!IsCollisions()) && (!false)) {
 		double NOElumi				= iIntLumi*crossSection*branchingRatio;
 		double NOEraw				= GetNOEinDS()*(GetNOEanalyzed()/(double)GetNOEinNtuple());	
 		double lumiNormalization	= NOElumi/NOEraw;
@@ -223,7 +205,6 @@ Process::NormalizeToLumi(double const iIntLumi)
       // FIXME
         // hContainer.AddRelErrorInQuadrature(relSysUncertainty);
 	}
-	normalizedHistos	= true;
 }
 
 void Process::BuildNormalizedCutFlow(){ normalizedCutFlow.BuildNormalizedCutFlow(&cutFlow); }

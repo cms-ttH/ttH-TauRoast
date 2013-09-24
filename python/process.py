@@ -199,7 +199,7 @@ def fill_histos(config, processes, module):
             logging.debug("splitting sample with %s", repr(splitter))
 
         split_count = module.fill(p, weights, log, splitter, select)
-        total_count = p.GetGoodEvents().size()
+        total_count = p.GetEvents().size()
 
         for weight in weights:
             weight.RegisterCut(cutflow)

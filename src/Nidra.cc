@@ -14,7 +14,7 @@ namespace roast {
         cflow.Reset();
         cflow.Zero();
 
-        std::vector<roast::Process::Event> good_events;
+        std::vector<roast::Process::Event> events;
 
         T *event = new T(proc.GetTreeName(), proc.GetNtuplePaths());
 
@@ -62,7 +62,7 @@ namespace roast {
 
             // Fill good event vectors for signal analysis
             if (combos.size() > 0) {
-                good_events.push_back(Process::Event(jentry, combos));
+                events.push_back(Process::Event(jentry, combos));
             }
 
             NOEanalyzed++;
@@ -73,7 +73,7 @@ namespace roast {
 
         cflow.SetCutCounts("AtLeastOneCombo", NOEwithAtLeastOneCombo);
 
-        proc.SetGoodEvents(good_events);
+        proc.SetEvents(events);
         proc.SetNOEinNtuple(nentries);
         proc.SetNOEanalyzed(NOEanalyzed);
         proc.SetCutFlow(cflow);
@@ -90,7 +90,7 @@ namespace roast {
         T* branches = new T(proc.GetTreeName(), proc.GetNtuplePaths());
 
         long count = 0;
-        for (const auto& e: proc.GetGoodEvents()) {
+        for (const auto& e: proc.GetEvents()) {
             branches->GetEntry(e.entry);
 
             int idx = p->Pick(branches, e.combos);
