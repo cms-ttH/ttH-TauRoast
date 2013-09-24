@@ -85,14 +85,14 @@ HWrapper::Fill(Branches* b, int i, float w)
 
             if (translate) {
                 if (xadd)
-                    x = b->TranslateMatchIndex(int(x + 0.5), int(xadd(b, i, -1) + 0.5));
+                    x = b->TranslateMatchIndex(x, xadd(b, i, -1));
                 else
-                    x = b->TranslateMatchIndex(int(x + 0.5));
+                    x = b->TranslateMatchIndex(x);
 
                 if (yadd)
-                    y = b->TranslateMatchIndex(int(y + 0.5), int(yadd(b, i, -1) + 0.5));
+                    y = b->TranslateMatchIndex(y, yadd(b, i, -1));
                 else
-                    y = b->TranslateMatchIndex(int(y + 0.5));
+                    y = b->TranslateMatchIndex(y);
             }
 
             dynamic_cast<TH2*>(histo)->Fill(x, y, w);
@@ -103,14 +103,14 @@ HWrapper::Fill(Branches* b, int i, float w)
 
                 if (translate) {
                     if (xadd)
-                        x = b->TranslateMatchIndex(int(x + 0.5), int(xadd(b, i , n) + 0.5));
+                        x = b->TranslateMatchIndex(x, xadd(b, i , n));
                     else
-                        x = b->TranslateMatchIndex(int(x + 0.5));
+                        x = b->TranslateMatchIndex(x);
 
                     if (yadd)
-                        y = b->TranslateMatchIndex(int(y + 0.5), int(yadd(b, i, n) + 0.5));
+                        y = b->TranslateMatchIndex(y, yadd(b, i, n));
                     else
-                        y = b->TranslateMatchIndex(int(y + 0.5));
+                        y = b->TranslateMatchIndex(y);
                 }
 
                 dynamic_cast<TH2*>(histo)->Fill(x, y, w);
