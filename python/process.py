@@ -18,8 +18,6 @@ def analyze(config, module):
     specified in the process/analysis section of the configuration.  Return
     analyzed processes."""
 
-    r.TH1.SetDefaultSumw2()
-
     processes = r.std.vector('roast::Process*')()
     for proc in config['analysis']['process']:
         cfg = config['processes'][proc]
@@ -74,6 +72,8 @@ def fill_histos(config, processes, module):
     split = config['analysis']['split']
 
     procs = filter(lambda p: p.GetShortName() in config['analysis']['process'], processes)
+
+    r.TH1.SetDefaultSumw2()
 
     for p in procs:
         p.ResetHistograms()
