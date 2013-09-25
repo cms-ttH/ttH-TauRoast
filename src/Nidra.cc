@@ -1,9 +1,25 @@
 // vim: ts=4:sw=4:et:sta
+#include <unordered_set>
+
 #include "../interface/Nidra.h"
 #include "../interface/TLLBranches.h"
 #include "../interface/TTLBranches.h"
 
 #include "boost/python.hpp"
+
+typedef std::tuple<unsigned long, unsigned long, unsigned long> info;
+
+namespace std {
+    template <>
+        class hash<info>{
+            public:
+                size_t operator()(const info &i) const {
+                    return hash<unsigned long>()(get<0>(i))
+                        ^ hash<unsigned long>()(get<1>(i))
+                        ^ hash<unsigned long>()(get<2>(i));
+                }
+        };
+}
 
 namespace roast {
     template<typename T>
@@ -13,6 +29,8 @@ namespace roast {
         CutFlow cflow;
         cflow.Reset();
         cflow.Zero();
+
+        std::unordered_set<info> infos;
 
         std::vector<roast::Process::Event> events;
 
@@ -47,6 +65,11 @@ namespace roast {
             }
 
             event->GetEntry(jentry);
+
+            info i(event->Ev_runNumber, event->Ev_lumiBlock, event->Ev_eventNumber);
+            if (infos.find(i) != infos.end())
+                continue;
+            infos.insert(i);
 
             if (event->GetNumCombos() > 0)
                 NOEwithAtLeastOneCombo++;
