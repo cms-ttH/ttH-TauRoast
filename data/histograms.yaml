@@ -622,12 +622,13 @@ L$0_MatchIndex:
       - [2, tll]
 
 T$0_ParentMatchIndex:
-    values: [T$0_GenMatchMother0Id]
+    values: [T$0_GoodParentId]
+    additional info: [T$0_GoodGrandParentId]
     translate match id: true
     dir: tau
     channels: [$2]
-    binning: [9, 0, 9]
-    bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W]
+    binning: [11, 0, 11]
+    bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W, W (t), W (H)]
     axis labels: ["#tau$1 Parent", Events]
     showOF: false
     logy: 1
@@ -637,12 +638,13 @@ T$0_ParentMatchIndex:
       - [2, "_{2}", ttl]
 
 L$0_ParentMatchIndex:
-    values: [L$0_GenMatchMother0Id]
+    values: [L$0_GoodParentId]
+    additional info: [L$0_GoodGrandParentId]
     translate match id: true
     dir: lepton
     channels: [$2]
-    binning: [9, 0, 9]
-    bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W]
+    binning: [11, 0, 11]
+    bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W, W (t), W (H)]
     axis labels: ["lepton$1 Parent", Events]
     showOF: false
     logy: 1
