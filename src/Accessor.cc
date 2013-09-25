@@ -46,13 +46,10 @@ namespace roast {
         accessors["Events"] = [](Branches *b, int idx, int n) -> float {
             return 0;
         };
+
         accessors["T_MatchAbsId"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return abs((*e->TLL_TauGenMatchId)[idx]);
-        };
-        accessors["T_ParentAbsId"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return abs((*e->TLL_TauGenMatchMother0Id)[idx]);
         };
         accessors["T1_MatchAbsId"] = [](roast::Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
@@ -62,6 +59,11 @@ namespace roast {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return abs((*e->TTL_Tau2GenMatchId)[idx]);
         };
+
+        accessors["T_ParentAbsId"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return abs((*e->TLL_TauGenMatchMother0Id)[idx]);
+        };
         accessors["T1_ParentAbsId"] = [](roast::Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return abs((*e->TTL_Tau1GenMatchMother0Id)[idx]);
@@ -70,6 +72,117 @@ namespace roast {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return abs((*e->TTL_Tau2GenMatchMother0Id)[idx]);
         };
+
+        accessors["T_GoodParentId"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            int mother = (*e->TLL_TauGenMatchMother0Id)[idx];
+            if (mother == -99)
+                mother = (*e->TLL_TauGenMatchMother1Id)[idx];
+            return mother;
+        };
+        accessors["T1_GoodParentId"] = [](Branches *b, int idx, int n) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            int mother = (*e->TTL_Tau1GenMatchMother0Id)[idx];
+            if (mother == -99)
+                mother = (*e->TTL_Tau1GenMatchMother1Id)[idx];
+            return mother;
+        };
+        accessors["T2_GoodParentId"] = [](Branches *b, int idx, int n) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            int mother = (*e->TTL_Tau2GenMatchMother0Id)[idx];
+            if (mother == -99)
+                mother = (*e->TTL_Tau2GenMatchMother1Id)[idx];
+            return mother;
+        };
+        accessors["L_GoodParentId"] = [](Branches *b, int idx, int n) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            int mother = (*e->TTL_LeptonGenMatchMother0Id)[idx];
+            if (mother == -99)
+                mother = (*e->TTL_LeptonGenMatchMother1Id)[idx];
+            return mother;
+        };
+        accessors["L1_GoodParentId"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            int mother = (*e->TLL_Lepton1GenMatchMother0Id)[idx];
+            if (mother == -99)
+                mother = (*e->TLL_Lepton1GenMatchMother1Id)[idx];
+            return mother;
+        };
+        accessors["L2_GoodParentId"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            int mother = (*e->TLL_Lepton2GenMatchMother0Id)[idx];
+            if (mother == -99)
+                mother = (*e->TLL_Lepton2GenMatchMother1Id)[idx];
+            return mother;
+        };
+
+        accessors["T_GoodGrandParentId"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            int grannie = (*e->TLL_TauGenMatchGrandmother00Id)[idx];
+            if (grannie == -99)
+                grannie = (*e->TLL_TauGenMatchGrandmother01Id)[idx];
+            if (grannie == -99)
+                grannie = (*e->TLL_TauGenMatchGrandmother10Id)[idx];
+            if (grannie == -99)
+                grannie = (*e->TLL_TauGenMatchGrandmother11Id)[idx];
+            return grannie;
+        };
+        accessors["T1_GoodGrandParentId"] = [](Branches *b, int idx, int n) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            int grannie = (*e->TTL_Tau1GenMatchGrandmother00Id)[idx];
+            if (grannie == -99)
+                grannie = (*e->TTL_Tau1GenMatchGrandmother01Id)[idx];
+            if (grannie == -99)
+                grannie = (*e->TTL_Tau1GenMatchGrandmother10Id)[idx];
+            if (grannie == -99)
+                grannie = (*e->TTL_Tau1GenMatchGrandmother11Id)[idx];
+            return grannie;
+        };
+        accessors["T2_GoodGrandParentId"] = [](Branches *b, int idx, int n) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            int grannie = (*e->TTL_Tau2GenMatchGrandmother00Id)[idx];
+            if (grannie == -99)
+                grannie = (*e->TTL_Tau2GenMatchGrandmother01Id)[idx];
+            if (grannie == -99)
+                grannie = (*e->TTL_Tau2GenMatchGrandmother10Id)[idx];
+            if (grannie == -99)
+                grannie = (*e->TTL_Tau2GenMatchGrandmother11Id)[idx];
+            return grannie;
+        };
+        accessors["L_GoodGrandParentId"] = [](Branches *b, int idx, int n) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            int grannie = (*e->TTL_LeptonGenMatchGrandmother00Id)[idx];
+            if (grannie == -99)
+                grannie = (*e->TTL_LeptonGenMatchGrandmother01Id)[idx];
+            if (grannie == -99)
+                grannie = (*e->TTL_LeptonGenMatchGrandmother10Id)[idx];
+            if (grannie == -99)
+                grannie = (*e->TTL_LeptonGenMatchGrandmother11Id)[idx];
+            return grannie;
+        };
+        accessors["L1_GoodGrandParentId"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            int grannie = (*e->TLL_Lepton1GenMatchGrandmother00Id)[idx];
+            if (grannie == -99)
+                grannie = (*e->TLL_Lepton1GenMatchGrandmother01Id)[idx];
+            if (grannie == -99)
+                grannie = (*e->TLL_Lepton1GenMatchGrandmother10Id)[idx];
+            if (grannie == -99)
+                grannie = (*e->TLL_Lepton1GenMatchGrandmother11Id)[idx];
+            return grannie;
+        };
+        accessors["L2_GoodGrandParentId"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            int grannie = (*e->TLL_Lepton2GenMatchGrandmother00Id)[idx];
+            if (grannie == -99)
+                grannie = (*e->TLL_Lepton2GenMatchGrandmother01Id)[idx];
+            if (grannie == -99)
+                grannie = (*e->TLL_Lepton2GenMatchGrandmother10Id)[idx];
+            if (grannie == -99)
+                grannie = (*e->TLL_Lepton2GenMatchGrandmother11Id)[idx];
+            return grannie;
+        };
+
         accessors["J_NumInclusive"] = [](Branches *b, int idx, int n) -> float {
             return (*b->NumCSVMbtagJets)[idx] + (*b->NumNonCSVMbtagJets)[idx];
         };

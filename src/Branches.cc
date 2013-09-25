@@ -115,7 +115,7 @@ Branches::TranslateMatchIndex(int idx, int pidx) const
         case 24:
             if (abs(pidx) == 25)
                 return 10; // W from H
-            else if (abs(pidx) == 8)
+            else if (abs(pidx) == 6)
                 return 9; // W from t
             else
                 return 8; // other W

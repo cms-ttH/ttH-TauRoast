@@ -653,7 +653,7 @@ L$0_ParentMatchIndex:
 
 $0_MatchMatrix:
     values: [$0_GenMatchId, $0_GenMatchMother0Id]
-    additional info: {y: $0_GenMatchGrandmother00Id}
+    additional info: {y: $0_GoodGrandParentId}
     translate match id: true
     dir: $2
     channels: [$3]
