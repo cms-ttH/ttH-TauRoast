@@ -909,6 +909,36 @@ L1SubLJ_NonBtagDeltaR:
     axis labels: ["#Delta R(l_{1}, subleading non b-tag jet)", Events]
     visible: [0, 6]
 
+L$0J_MinDeltaR:
+    dir: lepton
+    channels: [$2]
+    binning: [50, 0, 10]
+    axis labels: ["min #Delta R(l$1, jet)", Events]
+    visible: [0, 6]
+    replace:
+      - [1, "_{1}", tll]
+      - [2, "_{2}", tll]
+
+L$0J_BtagMinDeltaR:
+    dir: lepton
+    channels: [$2]
+    binning: [50, 0, 10]
+    axis labels: ["min #Delta R(l$1, b-tag jet)", Events]
+    visible: [0, 6]
+    replace:
+      - [1, "_{1}", tll]
+      - [2, "_{2}", tll]
+
+L$0J_NonBtagMinDeltaR:
+    dir: lepton
+    channels: [$2]
+    binning: [50, 0, 10]
+    axis labels: ["min #Delta R(l$1, non b-tag jet)", Events]
+    visible: [0, 6]
+    replace:
+      - [1, "_{1}", tll]
+      - [2, "_{2}", tll]
+
 L1_ImpactParameter:
     dir: lepton
     channels: [tll]

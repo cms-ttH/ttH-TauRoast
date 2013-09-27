@@ -254,6 +254,83 @@ namespace roast {
                     e->GetCleanJetNonBTagPhi(idx, 1));
         };
 
+        accessors["L1J_MinDeltaR"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            std::vector<float> deltars;
+            for (const auto& i: (*e->CleanJetIndices)[idx]) {
+                deltars.push_back(reco::deltaR(
+                            (*e->TLL_Lepton1Eta)[idx],
+                            (*e->TLL_Lepton1Phi)[idx],
+                            e->J_Eta->at(i),
+                            e->J_Phi->at(i)));
+            }
+            return *(min_element(deltars.begin(), deltars.end()));
+        };
+        accessors["L2J_MinDeltaR"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            std::vector<float> deltars;
+            for (const auto& i: (*e->CleanJetIndices)[idx]) {
+                deltars.push_back(reco::deltaR(
+                            (*e->TLL_Lepton2Eta)[idx],
+                            (*e->TLL_Lepton2Phi)[idx],
+                            e->J_Eta->at(i),
+                            e->J_Phi->at(i)));
+            }
+            return *(min_element(deltars.begin(), deltars.end()));
+        };
+        accessors["L1J_BtagMinDeltaR"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            std::vector<float> deltars;
+            for (unsigned int i = 0; i < (*e->NumCleanCSVMbtagJets)[idx]; ++i) {
+                deltars.push_back(reco::deltaR(
+                            (*e->TLL_Lepton1Eta)[idx],
+                            (*e->TLL_Lepton1Phi)[idx],
+                            e->GetCleanJetBTagEta(idx, i),
+                            e->GetCleanJetBTagPhi(idx, i)));
+            }
+            return *(min_element(deltars.begin(), deltars.end()));
+        };
+        accessors["L2J_BtagMinDeltaR"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            std::vector<float> deltars;
+            for (unsigned int i = 0; i < (*e->NumCleanCSVMbtagJets)[idx]; ++i) {
+                deltars.push_back(reco::deltaR(
+                            (*e->TLL_Lepton2Eta)[idx],
+                            (*e->TLL_Lepton2Phi)[idx],
+                            e->GetCleanJetBTagEta(idx, i),
+                            e->GetCleanJetBTagPhi(idx, i)));
+            }
+            return *(min_element(deltars.begin(), deltars.end()));
+        };
+        accessors["L1J_NonBtagMinDeltaR"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            std::vector<float> deltars;
+            for (unsigned int i = 0; i < (*e->NumCleanNonCSVMbtagJets)[idx]; ++i) {
+                deltars.push_back(reco::deltaR(
+                            (*e->TLL_Lepton1Eta)[idx],
+                            (*e->TLL_Lepton1Phi)[idx],
+                            e->GetCleanJetNonBTagEta(idx, i),
+                            e->GetCleanJetNonBTagPhi(idx, i)));
+            }
+            if (deltars.size() > 0)
+                return *(min_element(deltars.begin(), deltars.end()));
+            return 1. / 0.;
+        };
+        accessors["L2J_NonBtagMinDeltaR"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            std::vector<float> deltars;
+            for (unsigned int i = 0; i < (*e->NumCleanNonCSVMbtagJets)[idx]; ++i) {
+                deltars.push_back(reco::deltaR(
+                            (*e->TLL_Lepton2Eta)[idx],
+                            (*e->TLL_Lepton2Phi)[idx],
+                            e->GetCleanJetNonBTagEta(idx, i),
+                            e->GetCleanJetNonBTagPhi(idx, i)));
+            }
+            if (deltars.size() > 0)
+                return *(min_element(deltars.begin(), deltars.end()));
+            return 1. / 0.;
+        };
+
         accessors["L2LJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return reco::deltaR(
