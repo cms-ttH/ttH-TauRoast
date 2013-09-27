@@ -179,11 +179,14 @@ def normalize_processes(config, processes):
     try:
         coll = get_collisions(processes)
         if coll.GetNOEanalyzed() != coll.GetNOEinNtuple():
+            logging.debug("Collision: analyzed %f - in ntuple %f", coll.GetNOEanalyzed(), coll.GetNOEinNtuple())
             lumi *= coll.GetNOEanalyzed() / float(coll.GetNOEinNtuple())
         coll.GetCutFlow().RegisterCutFromLast("Lumi norm", 1)
         coll.BuildNormalizedCutFlow()
     except:
         pass
+
+    logging.debug("lumi to normalize to: %f", lumi)
 
     for p in processes:
         if p.IsCollisions():
@@ -193,6 +196,7 @@ def normalize_processes(config, processes):
         if p.GetNOEinNtuple() == 0:
             scale = 0
         else:
+            logging.debug("%s: analyzed %f - in ntuple %f", p.GetShortName(), p.GetNOEanalyzed(), p.GetNOEinNtuple())
             raw_events = p.GetNOEinDS() * p.GetNOEanalyzed() / float(p.GetNOEinNtuple())
             scale = est_lumi / raw_events
 
