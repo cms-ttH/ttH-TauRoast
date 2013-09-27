@@ -97,7 +97,7 @@ namespace roast {
         cflow.SetCutCounts("AtLeastOneCombo", NOEwithAtLeastOneCombo);
 
         proc.SetEvents(events);
-        proc.SetNOEinNtuple(nentries);
+        proc.SetNOEinNtuple(infos.size());
         proc.SetNOEanalyzed(NOEanalyzed);
         proc.SetCutFlow(cflow);
 
