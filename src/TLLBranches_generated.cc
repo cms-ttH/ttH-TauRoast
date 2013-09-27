@@ -163,6 +163,7 @@ tll::Branches::Clear()
     TLL_TauNSignalNeutrals->clear();
     TLL_TauPhi->clear();
     TLL_TauPt->clear();
+    TLL_TriggerEventWeight->clear();
     // >>> End clear <<<
 }
 
@@ -326,6 +327,7 @@ tll::Branches::Delete()
     delete TLL_TauNSignalNeutrals;
     delete TLL_TauPhi;
     delete TLL_TauPt;
+    delete TLL_TriggerEventWeight;
     // >>> End delete <<<
 }
 
@@ -489,6 +491,7 @@ tll::Branches::Null()
     TLL_TauNSignalNeutrals = 0;
     TLL_TauPhi = 0;
     TLL_TauPt = 0;
+    TLL_TriggerEventWeight = 0;
     // >>> End null <<<
 }
 
@@ -692,5 +695,6 @@ tll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TLL_TauNSignalNeutrals", &TLL_TauNSignalNeutrals);
     fChain->SetBranchAddress("TLL_TauPhi", &TLL_TauPhi);
     fChain->SetBranchAddress("TLL_TauPt", &TLL_TauPt);
+    fChain->SetBranchAddress("TLL_TriggerEventWeight", &TLL_TriggerEventWeight);
     // >>> End address <<<
 }

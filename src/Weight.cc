@@ -147,6 +147,16 @@ namespace roast {
                     };
                     break;
             }
+        } else if (name == "trigger") {
+            label = "Trigger SF";
+            switch (kind) {
+                case kNominal:
+                    fct = get_accessor("TriggerEventWeight");
+                    break;
+                case kUp:
+                case kDown:
+                    break;
+            }
         }
 
         if (!fct)

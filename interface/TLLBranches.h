@@ -185,6 +185,7 @@ namespace roast {
                 std::vector<unsigned int>* TLL_TauNSignalNeutrals;
                 std::vector<float>* TLL_TauPhi;
                 std::vector<float>* TLL_TauPt;
+                std::vector<float>* TLL_TriggerEventWeight;
                 // >>> End declarations <<<
 
                 ClassDef(Branches, 1);

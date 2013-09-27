@@ -2237,6 +2237,10 @@ namespace roast {
         accessors["TopPtWeightUp"] = [](Branches *b, int idx, int n) -> float {
             return b->Ev_topPtWeightUp;
         };
+        accessors["TriggerEventWeight"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_TriggerEventWeight)[idx];
+        };
         accessors["V_NumInteractionsBX0"] = [](Branches *b, int idx, int n) -> float {
             return b->V_NumInteractionsBX0;
         };
