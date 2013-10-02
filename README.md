@@ -32,10 +32,11 @@ See the full list of options with `roaster -h`.
 
 To add new variables, several places need to be changed:
 
+* The `TauAnalysis` package, to add new branches to the ntuples
 * The `Branches` class:  Do this by running `setup_branches` on a ROOT file
-  containing the desired variable branches.  (optional)
+  containing the desired variable branches.
 * Add new access functions to `ttH/TauRoast/src/Accessor.cc` - before
-  automatically generated ones.
+  automatically generated ones - if needed.
 
-For new weights, additional modifications to `Weights.cc` will be in order.
-These variables can be used in cuts and MVA definitions.
+These variables can be used in cuts, MVA definitions, and plots.
+For new weights, additional modifications to `Weights.cc` might be in order.
