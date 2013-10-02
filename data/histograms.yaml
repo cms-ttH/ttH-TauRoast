@@ -1014,6 +1014,14 @@ L2SubLJ_NonBtagDeltaR:
     axis labels: ["#Delta R(l_{2}, subleading non b-tag jet)", Events]
     visible: [0, 6]
 
+L1L2_VisibleMass_zoom:
+    values: [L1L2_VisibleMass]
+    dir: lepton
+    channels: [tll]
+    binning: [300, 0, 200]
+    axis labels: ["Dilepton Visible Mass", Events]
+    visible: [76, 106]
+
 L1L2_VisibleMass:
     dir: lepton
     channels: [tll]
