@@ -24,7 +24,6 @@
 #pragma link C++ nestedclasses;
 
 #pragma link C++ class std::map<std::string, std::string>+;
-#pragma link C++ class std::pair<std::string, std::string>+;
 #pragma link C++ class roast::Branches+;
 #pragma link C++ class roast::tll::Branches+;
 #pragma link C++ class roast::ttl::Branches+;
