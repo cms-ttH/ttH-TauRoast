@@ -91,13 +91,16 @@ namespace roast {
             NOEanalyzed++;
         }
 
-        if (limit >= 0)
+        if (limit >= 0) {
             cflow.SetCutCounts("User event limit", NOEanalyzed);
+            proc.SetNOEinNtuple(nentries); // this does not remove duplicated events
+        } else {
+            proc.SetNOEinNtuple(infos.size());
+        }
 
         cflow.SetCutCounts("AtLeastOneCombo", NOEwithAtLeastOneCombo);
 
         proc.SetEvents(events);
-        proc.SetNOEinNtuple(infos.size());
         proc.SetNOEanalyzed(NOEanalyzed);
         proc.SetCutFlow(cflow);
 
