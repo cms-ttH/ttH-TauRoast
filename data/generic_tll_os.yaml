@@ -57,6 +57,7 @@ physics:
       - [topPt, nominal]
       - [lepton1, nominal]
       - [lepton2, nominal]
+      - [trigger, nominal]
       - [PUcorr, nominal]
       - [CSVeventWeight, nominal]
       - [brSF, nominal]
@@ -73,6 +74,7 @@ physics:
       - {name: NumLooseLeptons, min: 2, max: 2}
       - {name: L1_Pt, min: 20}
       - {name: L2_Pt, min: 10}
+      - {name: L1L2_DeltaR, min: 0.25}
       # taus
       # kinematic
       - {name: T_Pt, min: 20}
@@ -109,7 +111,7 @@ paths:
     # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
     # name; {m} = mode (_log)
     stack format: "{root}/{t}/{d}/{n}{p}{m}.{t}"
-    ntuples: /store/user/matze/ttH/v51/tll/2012
+    ntuples: /store/user/matze/ttH/v52/tll/2012
     tree: makeNtuple/TTbarHTauTau
 
 processes: processes.yaml

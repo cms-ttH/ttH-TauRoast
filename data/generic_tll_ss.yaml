@@ -51,6 +51,7 @@ physics:
       - [topPt, nominal]
       - [lepton1, nominal]
       - [lepton2, nominal]
+      - [trigger, nominal]
       - [PUcorr, nominal]
       - [CSVeventWeight, nominal]
       - [brSF, nominal]
@@ -102,7 +103,7 @@ paths:
     # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
     # name; {m} = mode (_log)
     stack format: "{root}/{t}/{d}/{n}{p}{m}.{t}"
-    ntuples: /store/user/matze/ttH/v51/tll/2012
+    ntuples: /store/user/matze/ttH/v52/tll/2012
     tree: makeNtuple/TTbarHTauTau
 
 processes: processes.yaml
