@@ -62,6 +62,7 @@ namespace roast {
                 std::vector<float>* TLL_Lepton1Lepton2CosDeltaPhi;
                 std::vector<float>* TLL_Lepton1Lepton2DeltaR;
                 std::vector<float>* TLL_Lepton1Lepton2VisibleMass;
+                std::vector<float>* TLL_Lepton1Mt;
                 std::vector<float>* TLL_Lepton1Phi;
                 std::vector<float>* TLL_Lepton1Pt;
                 std::vector<float>* TLL_Lepton1RelIso;
@@ -93,6 +94,7 @@ namespace roast {
                 std::vector<bool>* TLL_Lepton2IsLoose;
                 std::vector<float>* TLL_Lepton2IsMuon;
                 std::vector<bool>* TLL_Lepton2IsTight;
+                std::vector<float>* TLL_Lepton2Mt;
                 std::vector<float>* TLL_Lepton2Phi;
                 std::vector<float>* TLL_Lepton2Pt;
                 std::vector<float>* TLL_Lepton2RelIso;

@@ -40,6 +40,7 @@ tll::Branches::Clear()
     TLL_Lepton1Lepton2CosDeltaPhi->clear();
     TLL_Lepton1Lepton2DeltaR->clear();
     TLL_Lepton1Lepton2VisibleMass->clear();
+    TLL_Lepton1Mt->clear();
     TLL_Lepton1Phi->clear();
     TLL_Lepton1Pt->clear();
     TLL_Lepton1RelIso->clear();
@@ -71,6 +72,7 @@ tll::Branches::Clear()
     TLL_Lepton2IsLoose->clear();
     TLL_Lepton2IsMuon->clear();
     TLL_Lepton2IsTight->clear();
+    TLL_Lepton2Mt->clear();
     TLL_Lepton2Phi->clear();
     TLL_Lepton2Pt->clear();
     TLL_Lepton2RelIso->clear();
@@ -204,6 +206,7 @@ tll::Branches::Delete()
     delete TLL_Lepton1Lepton2CosDeltaPhi;
     delete TLL_Lepton1Lepton2DeltaR;
     delete TLL_Lepton1Lepton2VisibleMass;
+    delete TLL_Lepton1Mt;
     delete TLL_Lepton1Phi;
     delete TLL_Lepton1Pt;
     delete TLL_Lepton1RelIso;
@@ -235,6 +238,7 @@ tll::Branches::Delete()
     delete TLL_Lepton2IsLoose;
     delete TLL_Lepton2IsMuon;
     delete TLL_Lepton2IsTight;
+    delete TLL_Lepton2Mt;
     delete TLL_Lepton2Phi;
     delete TLL_Lepton2Pt;
     delete TLL_Lepton2RelIso;
@@ -368,6 +372,7 @@ tll::Branches::Null()
     TLL_Lepton1Lepton2CosDeltaPhi = 0;
     TLL_Lepton1Lepton2DeltaR = 0;
     TLL_Lepton1Lepton2VisibleMass = 0;
+    TLL_Lepton1Mt = 0;
     TLL_Lepton1Phi = 0;
     TLL_Lepton1Pt = 0;
     TLL_Lepton1RelIso = 0;
@@ -399,6 +404,7 @@ tll::Branches::Null()
     TLL_Lepton2IsLoose = 0;
     TLL_Lepton2IsMuon = 0;
     TLL_Lepton2IsTight = 0;
+    TLL_Lepton2Mt = 0;
     TLL_Lepton2Phi = 0;
     TLL_Lepton2Pt = 0;
     TLL_Lepton2RelIso = 0;
@@ -551,6 +557,7 @@ tll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TLL_Lepton1Lepton2CosDeltaPhi", &TLL_Lepton1Lepton2CosDeltaPhi);
     fChain->SetBranchAddress("TLL_Lepton1Lepton2DeltaR", &TLL_Lepton1Lepton2DeltaR);
     fChain->SetBranchAddress("TLL_Lepton1Lepton2VisibleMass", &TLL_Lepton1Lepton2VisibleMass);
+    fChain->SetBranchAddress("TLL_Lepton1Mt", &TLL_Lepton1Mt);
     fChain->SetBranchAddress("TLL_Lepton1Phi", &TLL_Lepton1Phi);
     fChain->SetBranchAddress("TLL_Lepton1Pt", &TLL_Lepton1Pt);
     fChain->SetBranchAddress("TLL_Lepton1RelIso", &TLL_Lepton1RelIso);
@@ -582,6 +589,7 @@ tll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TLL_Lepton2IsLoose", &TLL_Lepton2IsLoose);
     fChain->SetBranchAddress("TLL_Lepton2IsMuon", &TLL_Lepton2IsMuon);
     fChain->SetBranchAddress("TLL_Lepton2IsTight", &TLL_Lepton2IsTight);
+    fChain->SetBranchAddress("TLL_Lepton2Mt", &TLL_Lepton2Mt);
     fChain->SetBranchAddress("TLL_Lepton2Phi", &TLL_Lepton2Phi);
     fChain->SetBranchAddress("TLL_Lepton2Pt", &TLL_Lepton2Pt);
     fChain->SetBranchAddress("TLL_Lepton2RelIso", &TLL_Lepton2RelIso);

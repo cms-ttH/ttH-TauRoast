@@ -859,6 +859,10 @@ namespace roast {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return (*e->TLL_Lepton1IsTight)[idx];
         };
+        accessors["L1_Mt"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton1Mt)[idx];
+        };
         accessors["L1_Phi"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return (*e->TLL_Lepton1Phi)[idx];
@@ -982,6 +986,10 @@ namespace roast {
         accessors["L2_IsTight"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return (*e->TLL_Lepton2IsTight)[idx];
+        };
+        accessors["L2_Mt"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton2Mt)[idx];
         };
         accessors["L2_Phi"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
