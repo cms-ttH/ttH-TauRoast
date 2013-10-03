@@ -39,6 +39,7 @@ def train_mva(config, processes, module):
     mvadir = config['paths']['mva output'].format(m='final mva')
 
     if not os.path.exists(mvadir):
+        logging.debug("creating directory %s", mvadir)
         os.makedirs(mvadir)
 
     vars = []
@@ -254,8 +255,10 @@ def vectorize(items, cls=None):
 
 def save(items, name, file):
     """Save a list of objects to a `file` with the key `name`."""
-    if not os.path.isdir(os.path.dirname(file)):
-        os.makedirs(os.path.dirname(file))
+    dirname = os.path.dirname(file)
+    if not os.path.isdir(dirname):
+        logging.debug("creating directory %s", dirname)
+        os.makedirs(dirname)
     f = r.TFile(file, "RECREATE")
     f.WriteObject(vectorize(items, "roast::Process*"), name)
     f.Close()

@@ -293,6 +293,7 @@ def create_plot(config, histname, plot_ratio, is2d=False, procname="", hist=None
 
         dirname = os.path.dirname(filename)
         if not os.path.exists(dirname):
+            logging.debug("creating directory %s", dirname)
             os.makedirs(dirname)
 
         canvas.SaveAs(filename)
