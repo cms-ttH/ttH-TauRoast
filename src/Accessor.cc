@@ -264,7 +264,9 @@ namespace roast {
                             e->J_Eta->at(i),
                             e->J_Phi->at(i)));
             }
-            return *(min_element(deltars.begin(), deltars.end()));
+            if (deltars.size() > 0)
+                return *(min_element(deltars.begin(), deltars.end()));
+            return 1. / 0.;
         };
         accessors["L2J_MinDeltaR"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
@@ -276,7 +278,9 @@ namespace roast {
                             e->J_Eta->at(i),
                             e->J_Phi->at(i)));
             }
-            return *(min_element(deltars.begin(), deltars.end()));
+            if (deltars.size() > 0)
+                return *(min_element(deltars.begin(), deltars.end()));
+            return 1. / 0.;
         };
         accessors["L1J_BtagMinDeltaR"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
@@ -288,7 +292,9 @@ namespace roast {
                             e->GetCleanJetBTagEta(idx, i),
                             e->GetCleanJetBTagPhi(idx, i)));
             }
-            return *(min_element(deltars.begin(), deltars.end()));
+            if (deltars.size() > 0)
+                return *(min_element(deltars.begin(), deltars.end()));
+            return 1. / 0.;
         };
         accessors["L2J_BtagMinDeltaR"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
@@ -300,7 +306,9 @@ namespace roast {
                             e->GetCleanJetBTagEta(idx, i),
                             e->GetCleanJetBTagPhi(idx, i)));
             }
-            return *(min_element(deltars.begin(), deltars.end()));
+            if (deltars.size() > 0)
+                return *(min_element(deltars.begin(), deltars.end()));
+            return 1. / 0.;
         };
         accessors["L1J_NonBtagMinDeltaR"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
