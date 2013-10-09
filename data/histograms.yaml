@@ -811,7 +811,7 @@ T2_IsolationIndexMVA2:
     showOF: false
     logy: 1
 
-T$1_AntiElectronMVA:
+T$0_AntiElectronMVA:
     dir: tau
     channels: [$2]
     binning: [2, 0, 1]
