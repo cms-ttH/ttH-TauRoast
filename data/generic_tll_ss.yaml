@@ -107,4 +107,4 @@ paths:
     tree: makeNtuple/TTbarHTauTau
 
 processes: !include processes.yaml
-histograms: !include histograms.yaml
+histograms: !include histograms*.yaml

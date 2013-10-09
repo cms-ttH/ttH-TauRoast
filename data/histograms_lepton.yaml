@@ -1,0 +1,277 @@
+# vim: set sw=4 sta et :
+
+L$0_Pt:
+    dir: lepton
+    channels: [$2]
+    binning: [60, 0, 200]
+    axis labels: ['lepton$1 p_{T}', Events]
+    visible: [$3, $4]
+    showOF: true
+    logy: 1
+    replace:
+      - ["", "", ttl, 30, 100]
+      - [1, "_{1}", tll, 20, 150]
+      - [2, "_{2}", tll, 10, 100]
+
+L$0_Mt:
+    dir: lepton
+    channels: [$2]
+    binning: [60, 0, 150]
+    axis labels: ['lepton$1 m_{T}', Events]
+    showOF: true
+    logy: 1
+    replace:
+      - ["", "", ttl]
+      - [1, "_{1}", tll]
+      - [2, "_{2}", tll]
+
+L$0_Eta:
+    dir: lepton
+    channels: [$2]
+    binning: [30, -3, 3]
+    axis labels: ["lepton$1 #eta", Events]
+    visible: [-2.1, 2.1]
+    showOF: false
+    logy: 1
+    replace:
+      - ["", "", ttl]
+      - [1, "_{1}", tll]
+      - [2, "_{2}", tll]
+
+L_Phi:
+    dir: lepton
+    channels: [ttl]
+    binning: [30, -3.2, 3.2]
+    axis labels: ["l #phi", Events]
+    visible: [-3.2, 3.2]
+    showOF: false
+    logy: 1
+
+L$0_RelIso:
+    dir: lepton
+    channels: [$2]
+    binning: [30, 0, .25]
+    axis labels: ["l$1 RelIso", Events]
+    replace:
+      - ["", "", ttl]
+      - [1, "_{1}", tll]
+      - [2, "_{2}", tll]
+
+DeltaR_LJ2:
+    dir: lepton
+    binning: [30, 0, 10]
+    axis labels: ["#Delta R(l, #tau_{2})", Events]
+    visible: [0, 6]
+    showOF: true
+    logy: 1
+
+L$0_MatchIndex:
+    values: [L$0_GenMatchId]
+    translate match id: true
+    dir: lepton
+    channels: [$1]
+    binning: [9, 0, 9]
+    bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W]
+    axis labels: ["lepton $0 match", Events]
+    replace:
+      - ["", ttl]
+      - [1, tll]
+      - [2, tll]
+
+L$0_ParentMatchIndex:
+    values: [L$0_GoodParentId]
+    additional info: [L$0_GoodGrandParentId]
+    translate match id: true
+    dir: lepton
+    channels: [$2]
+    binning: [11, 0, 11]
+    bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W, W (t), W (H)]
+    axis labels: ["lepton$1 Parent", Events]
+    showOF: false
+    logy: 1
+    replace:
+      - ["", "", ttl]
+      - [1, "_{1}", tll]
+      - [2, "_{2}", tll]
+
+L1_Phi:
+    dir: lepton
+    channels: [tll]
+    binning: [40, -3.2, 3.2]
+    axis labels: ["l #phi", Events]
+    visible: [-3.2, 3.2]
+    showOF: false
+    logy: 1
+
+L1LJ_DeltaR:
+    dir: lepton
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{1}, leading jet)", Events]
+    visible: [0, 6]
+
+L1SubLJ_DeltaR:
+    dir: lepton
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{1}, subleading jet)", Events]
+    visible: [0, 6]
+
+L1LJ_BtagDeltaR:
+    dir: lepton
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{1}, leading b-tag jet)", Events]
+    visible: [0, 6]
+
+L1SubLJ_BtagDeltaR:
+    dir: lepton
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{1}, subleading b-tag jet)", Events]
+    visible: [0, 6]
+
+L1LJ_NonBtagDeltaR:
+    dir: lepton
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{1}, leading non b-tag jet)", Events]
+    visible: [0, 6]
+
+L1SubLJ_NonBtagDeltaR:
+    dir: lepton
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{1}, subleading non b-tag jet)", Events]
+    visible: [0, 6]
+
+L$0J_MinDeltaR:
+    dir: lepton
+    channels: [$2]
+    binning: [50, 0, 10]
+    axis labels: ["min #Delta R(l$1, jet)", Events]
+    visible: [0, 6]
+    replace:
+      - [1, "_{1}", tll]
+      - [2, "_{2}", tll]
+
+L$0J_BtagMinDeltaR:
+    dir: lepton
+    channels: [$2]
+    binning: [50, 0, 10]
+    axis labels: ["min #Delta R(l$1, b-tag jet)", Events]
+    visible: [0, 6]
+    replace:
+      - [1, "_{1}", tll]
+      - [2, "_{2}", tll]
+
+L$0J_NonBtagMinDeltaR:
+    dir: lepton
+    channels: [$2]
+    binning: [50, 0, 10]
+    axis labels: ["min #Delta R(l$1, non b-tag jet)", Events]
+    visible: [0, 6]
+    replace:
+      - [1, "_{1}", tll]
+      - [2, "_{2}", tll]
+
+L1_ImpactParameter:
+    dir: lepton
+    channels: [tll]
+    binning: [50, -0.04, 0.04]
+    axis labels: ["l_{1} Impact parameter", Events]
+
+L2_ImpactParameter:
+    dir: lepton
+    channels: [tll]
+    binning: [50, -0.04, 0.04]
+    axis labels: ["l_{2} Impact parameter", Events]
+
+L1_CorrectedDZ:
+    dir: lepton
+    channels: [tll]
+    binning: [50, -0.04, 0.04]
+    axis labels: ["l_{1} corrected #Delta z", Events]
+
+L2_CorrectedDZ:
+    dir: lepton
+    channels: [tll]
+    binning: [50, -0.04, 0.04]
+    axis labels: ["l_{2} corrected #Delta z", Events]
+
+L2_Phi:
+    dir: lepton
+    channels: [tll]
+    binning: [40, -3.2, 3.2]
+    axis labels: ["l #phi", Events]
+    visible: [-3.2, 3.2]
+    showOF: false
+    logy: 1
+
+L2LJ_DeltaR:
+    dir: lepton
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{2}, leading jet)", Events]
+    visible: [0, 6]
+
+L2SubLJ_DeltaR:
+    dir: lepton
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{2}, subleading jet)", Events]
+    visible: [0, 6]
+
+L2LJ_BtagDeltaR:
+    dir: lepton
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{2}, leading b-tag jet)", Events]
+    visible: [0, 6]
+
+L2SubLJ_BtagDeltaR:
+    dir: lepton
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{2}, subleading b-tag jet)", Events]
+    visible: [0, 6]
+
+L2LJ_NonBtagDeltaR:
+    dir: lepton
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{2}, leading non b-tag jet)", Events]
+    visible: [0, 6]
+
+L2SubLJ_NonBtagDeltaR:
+    dir: lepton
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{2}, subleading non b-tag jet)", Events]
+    visible: [0, 6]
+
+L1L2_VisibleMass_zoom:
+    values: [L1L2_VisibleMass]
+    dir: lepton
+    channels: [tll]
+    binning: [300, 0, 200]
+    axis labels: ["Dilepton Visible Mass", Events]
+    visible: [76, 106]
+
+L1L2_VisibleMass:
+    dir: lepton
+    channels: [tll]
+    binning: [40, 0, 200]
+    axis labels: ["Dilepton Visible Mass", Events]
+
+NumLoose$0:
+    dir: lepton
+    binning: [20, 0, 20]
+    axis labels: [Number of $1 (loose), Events]
+    visible: [0, 19.99]
+    showOF: true
+    logy: 1
+    replace:
+      - [Electrons, electrons]
+      - [Muons, muons]
+

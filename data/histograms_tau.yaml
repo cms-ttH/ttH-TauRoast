@@ -1,0 +1,704 @@
+# vim: set sw=4 sta et :
+
+T1L_DeltaR:
+    dir: lepton
+    channels: [ttl]
+    binning: [30, 0, 10]
+    axis labels: ["#Delta R(l, #tau_{1})", Events]
+    visible: [0, 6]
+    showOF: true
+    logy: 1
+
+T2L_DeltaR:
+    dir: lepton
+    channels: [ttl]
+    binning: [30, 0, 10]
+    axis labels: ["#Delta R(l, #tau_{2})", Events]
+    visible: [0, 6]
+    showOF: true
+    logy: 1
+
+TT_DeltaR:
+    dir: tau
+    channels: [ttl]
+    binning: [30, 0, 6.28]
+    axis labels: ["#DeltaR #tau_{1, 2}", Events]
+    visible: [0, 6.28]
+    showOF: true
+    logy: 1
+
+DeltaR_T1J1:
+    dir: tau
+    binning: [30, 0, 6.28]
+    axis labels: ["#DeltaR (#tau_{1}, jet_{1})", Events]
+    visible: [0, 6.28]
+    showOF: true
+    logy: 1
+
+DeltaR_T2J1:
+    dir: tau
+    binning: [30, 0, 6.28]
+    axis labels: ["#DeltaR (#tau_{2}, jet_{1})", Events]
+    visible: [0, 6.28]
+    showOF: true
+    logy: 1
+
+DeltaR_T1J2:
+    dir: tau
+    binning: [30, 0, 6.28]
+    axis labels: ["#DeltaR (#tau_{1}, jet_{2})", Events]
+    visible: [0, 6.28]
+    showOF: true
+    logy: 1
+
+DeltaR_T2J2:
+    dir: tau
+    binning: [30, 0, 6.28]
+    axis labels: ["#DeltaR (#tau_{2}, jet_{2})", Events]
+    visible: [0, 6.28]
+    showOF: true
+    logy: 1
+
+T1_Pt:
+    dir: tau
+    channels: [ttl]
+    binning: [30, 0, 150]
+    axis labels: ["#tau_{1} p_{T}", Events]
+    visible: [20, 100]
+    showOF: true
+    logy: 1
+
+T2_Pt:
+    dir: tau
+    channels: [ttl]
+    binning: [30, 0, 100]
+    axis labels: ["#tau_{2} p_{T}", Events]
+    visible: [20, 60]
+    showOF: true
+    logy: 1
+
+T1_Eta:
+    dir: tau
+    channels: [ttl]
+    binning: [30, -3, 3]
+    axis labels: ["#tau_{1} #eta", Events]
+    visible: [-3, 3]
+    showOF: false
+    logy: 1
+
+T2_Eta:
+    dir: tau
+    channels: [ttl]
+    binning: [30, -3, 3]
+    axis labels: ["#tau_{2} #eta", Events]
+    visible: [-3, 3]
+    showOF: false
+    logy: 1
+
+T1_Phi:
+    dir: tau
+    channels: [ttl]
+    binning: [30, -3.2, 3.2]
+    axis labels: ["#tau_{1} #phi", Events]
+    visible: [-3.2, 3.2]
+    showOF: false
+    logy: 1
+
+T2_Phi:
+    dir: tau
+    channels: [ttl]
+    binning: [30, -3.2, 3.2]
+    axis labels: ["#tau_{2} #phi", Events]
+    visible: [-3.2, 3.2]
+    showOF: false
+    logy: 1
+
+T1_LTPt:
+    dir: tau
+    channels: [ttl]
+    binning: [30, 0, 150]
+    axis labels: ["#tau_{1} LT p_{T}", Events]
+    visible: [0, 100]
+    showOF: true
+    logy: 1
+
+T2_LTPt:
+    dir: tau
+    channels: [ttl]
+    binning: [30, 0, 100]
+    axis labels: ["#tau_{2} LT p_{T}", Events]
+    visible: [0, 50]
+    showOF: true
+    logy: 1
+
+T1_DecayMode:
+    dir: tau
+    channels: [ttl]
+    binning: [20, 0, 20]
+    axis labels: ["#tau_{1} Decay Mode", Events]
+    visible: [0, 6]
+    showOF: false
+    logy: 1
+
+T2_DecayMode:
+    dir: tau
+    channels: [ttl]
+    binning: [20, 0, 20]
+    axis labels: ["#tau_{2} Decay Mode", Events]
+    visible: [0, 6]
+    showOF: false
+    logy: 1
+
+T1_NumProngs:
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} Num Prongs", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T2_NumProngs:
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} Num Prongs", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T1_IsolationIndex:
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} isolation index", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T2_IsolationIndex:
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} isolation index", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T1_AntiElectronIndex:
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} anti-e index", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T2_AntiElectronIndex:
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} anti-e index", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T1_AntiElectronIndexMVA2:
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} anti-e index (MVA2)", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T2_AntiElectronIndexMVA2:
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} anti-e index (MVA2)", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T1_AntiElectronIndexMVA3:
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} anti-e index (MVA3)", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T2_AntiElectronIndexMVA3:
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} anti-e index (MVA3)", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T1_AntiMuonIndex:
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} anti-#mu index", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T2_AntiMuonIndex:
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} anti-#mu index", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T1_AntiMuonIndex2:
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} anti-#mu index (2)", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T2_AntiMuonIndex2:
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} anti-#mu index (2)", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T$0_MatchIndex:
+    values: [T$0_GenMatchId]
+    translate match id: true
+    dir: tau
+    channels: [$2]
+    binning: [9, 0, 9]
+    bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W]
+    axis labels: ["#tau$1 match", Events]
+    replace:
+      - ["", "", tll]
+      - [1, "_{1}", ttl]
+      - [2, "_{2}", ttl]
+
+T$0_ParentMatchIndex:
+    values: [T$0_GoodParentId]
+    additional info: [T$0_GoodGrandParentId]
+    translate match id: true
+    dir: tau
+    channels: [$2]
+    binning: [11, 0, 11]
+    bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W, W (t), W (H)]
+    axis labels: ["#tau$1 Parent", Events]
+    showOF: false
+    logy: 1
+    replace:
+      - ["", "", tll]
+      - [1, "_{1}", ttl]
+      - [2, "_{2}", ttl]
+
+T1_CombinedIsolationDeltaBetaCorrRaw:
+    dir: tau
+    channels: [ttl]
+    binning: [50, 0, 300]
+    axis labels: ["#tau_{1} Raw Isolation ", Events]
+    visible: [0, 200]
+    showOF: false
+    logy: 1
+
+T2_CombinedIsolationDeltaBetaCorrRaw:
+    dir: tau
+    channels: [ttl]
+    binning: [50, 0, 300]
+    axis labels: ["#tau_{2} Raw Isolation ", Events]
+    visible: [0, 200]
+    showOF: false
+    logy: 1
+
+T1_CombinedIsolationDeltaBetaCorrRaw3Hits:
+    dir: tau
+    channels: [ttl]
+    binning: [50, 0, 300]
+    axis labels: ["#tau_{1} Raw Isolation (3 hits)", Events]
+    visible: [0, 200]
+    showOF: false
+    logy: 1
+
+T2_CombinedIsolationDeltaBetaCorrRaw3Hits:
+    dir: tau
+    channels: [ttl]
+    binning: [50, 0, 300]
+    axis labels: ["#tau_{2} Raw Isolation (3 hits)", Events]
+    visible: [0, 200]
+    showOF: false
+    logy: 1
+
+T1_IsolationMVARaw:
+    dir: tau
+    channels: [ttl]
+    binning: [40, -1, 1]
+    axis labels: ["#tau_{1} Isolation MVA", Events]
+    visible: [-1, 1]
+    showOF: false
+    logy: 1
+
+T2_IsolationMVARaw:
+    dir: tau
+    channels: [ttl]
+    binning: [40, -1, 1]
+    axis labels: ["#tau_{2} Isolation MVA", Events]
+    visible: [-1, 1]
+    showOF: false
+    logy: 1
+
+T1_IsolationMVA2Raw:
+    dir: tau
+    channels: [ttl]
+    binning: [50, -1, 1]
+    axis labels: ["#tau_{1} Isolation MVA(2)", Events]
+    visible: [0, 1]
+    showOF: false
+    logy: 1
+
+T2_IsolationMVA2Raw:
+    dir: tau
+    channels: [ttl]
+    binning: [50, -1, 1]
+    axis labels: ["#tau_{2} Isolation MVA(2)", Events]
+    visible: [0, 1]
+    showOF: false
+    logy: 1
+
+T1_IsolationIndex3Hits:
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} isolation index (3 hits)", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T2_IsolationIndex3Hits:
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} isolation index (3 hits)", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T1_IsolationIndexMVA:
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} isolation index (MVA)", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T2_IsolationIndexMVA:
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} isolation index (MVA)", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T1_IsolationIndexMVA2:
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{1} isolation index (MVA2)", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T2_IsolationIndexMVA2:
+    dir: tau
+    channels: [ttl]
+    binning: [10, 0, 10]
+    axis labels: ["#tau_{2} isolation index (MVA2)", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T$0_AntiElectronMVA:
+    dir: tau
+    channels: [$2]
+    binning: [2, 0, 1]
+    axis labels: ["#tau$1 anti-elec MVA", Events]
+    visible: [0, 1]
+    showOF: false
+    logy: 1
+    replace:
+      - [1, "_{1}", ttl]
+      - [2, "_{2}", ttl]
+      - ["", "", tll]
+
+T$0_AntiElectronMVA$3Raw:
+    dir: tau
+    channels: [$2]
+    binning: [50, -1, 1]
+    axis labels: ["#tau$1 anti-elec MVA($3)", Events]
+    visible: [-1, 1]
+    showOF: false
+    logy: 1
+    replace:
+      - [1, "_{1}", ttl, 2]
+      - [1, "_{1}", ttl, 3]
+      - [2, "_{2}", ttl, 2]
+      - [2, "_{2}", ttl, 3]
+      - ["", "", tll, 2]
+      - ["", "", tll, 3]
+
+T$0_AntiElectronDeadECAL:
+    dir: tau
+    channels: [$2]
+    binning: [2, 0, 1]
+    axis labels: ["#tau$1 anti-elec (dead crystals)", Events]
+    visible: [0, 1]
+    showOF: false
+    logy: 1
+    replace:
+      - [1, "_{1}", ttl]
+      - [2, "_{2}", ttl]
+      - ["", "", tll]
+
+TL1_DeltaR:
+    dir: lepton
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{1}, #tau)", Events]
+    visible: [0, 6]
+    showOF: true
+    logy: 1
+
+TL2_DeltaR:
+    dir: lepton
+    channels: [tll]
+    binning: [50, 0, 10]
+    axis labels: ["#Delta R(l_{2}, #tau)", Events]
+    visible: [0, 6]
+    showOF: true
+    logy: 1
+
+T_Pt:
+    dir: tau
+    channels: [tll]
+    binning: [50, 0, 150]
+    axis labels: ["#tau p_{T} (GeV/c)", Events]
+    visible: [20, 100]
+    showOF: true
+    logy: 1
+
+T_Eta:
+    dir: tau
+    channels: [tll]
+    binning: [40, -3, 3]
+    axis labels: ["#tau #eta", Events]
+    visible: [-3, 3]
+    showOF: false
+    logy: 1
+
+T_Phi:
+    dir: tau
+    channels: [tll]
+    binning: [30, -3.2, 3.2]
+    axis labels: ["#tau #phi", Events]
+    visible: [-3.2, 3.2]
+    showOF: false
+    logy: 1
+
+T_LTPt:
+    dir: tau
+    channels: [tll]
+    binning: [50, 0, 150]
+    axis labels: ["#tau LT p_{T} (GeV)", Events]
+    visible: [0, 100]
+    showOF: true
+    logy: 1
+
+T_LTIpVtdxy:
+    dir: tau
+    channels: [tll]
+    binning: [50, -0.03, 0.03]
+    axis labels: ["#tau LT #Delta xy", Events]
+    showOF: true
+    logy: 1
+
+T_LTIpVtdz:
+    dir: tau
+    channels: [tll]
+    binning: [60, -0.15, 0.15]
+    axis labels: ["#tau LT #Delta z", Events]
+    showOF: true
+    logy: 1
+
+T_DecayMode:
+    dir: tau
+    channels: [tll]
+    binning: [20, 0, 20]
+    axis labels: ["#tau Decay Mode", Events]
+    visible: [0, 6]
+    showOF: false
+    logy: 1
+
+T_NumProngs:
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau Num Prongs", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T_IsolationIndex:
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau isolation index", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T_AntiElectronIndex:
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau anti-e index", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T_AntiElectronIndexMVA2:
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau anti-e index (MVA2)", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T_AntiElectronIndexMVA3:
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau anti-e index (MVA3)", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T_AntiMuonIndex:
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau anti-#mu index", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T_AntiMuonIndex2:
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau anti-#mu index (2)", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T_CombinedIsolationDeltaBetaCorrRaw:
+    dir: tau
+    channels: [tll]
+    binning: [50, 0, 300]
+    axis labels: ["#tau Raw Isolation ", Events]
+    visible: [0, 200]
+    showOF: false
+    logy: 1
+
+T_CombinedIsolationDeltaBetaCorrRaw3Hits:
+    dir: tau
+    channels: [tll]
+    binning: [50, 0, 300]
+    axis labels: ["#tau Raw Isolation (3 hits)", Events]
+    visible: [0, 200]
+    showOF: false
+    logy: 1
+
+T_IsolationMVARaw:
+    dir: tau
+    channels: [tll]
+    binning: [50, -1, 1]
+    axis labels: ["#tau Isolation MVA", Events]
+    visible: [-1, 1]
+    showOF: false
+    logy: 1
+
+T_IsolationMVA2Raw:
+    dir: tau
+    channels: [tll]
+    binning: [50, -1, 1]
+    axis labels: ["#tau Isolation MVA(2)", Events]
+    visible: [-1, 1]
+    showOF: false
+    logy: 1
+
+T_IsolationIndex3Hits:
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau isolation index (3 hits)", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T_IsolationIndexMVA:
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau isolation index (MVA)", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+T_IsolationIndexMVA2:
+    dir: tau
+    channels: [tll]
+    binning: [10, 0, 10]
+    axis labels: ["#tau isolation index (MVA2)", Events]
+    visible: [0, 5.99]
+    showOF: false
+    logy: 1
+
+NumTaus:
+    dir: tau
+    binning: [20, 0, 20]
+    axis labels: [Number of taus, Events]
+    visible: [0, 19.99]
+    showOF: true
+    logy: 1
+
+DitauVisibleMass:
+    dir: tau
+    channels: [ttl]
+    binning: [30, 0, 200]
+    axis labels: ["Visible Mass #tau_{1, 2}", Events]
+    visible: [0, 200]
+    showOF: true
+    logy: 1
+
+ZcoordDiff_TT:
+    dir: tau
+    binning: [50, 0, 2]
+    axis labels: ["#DeltaVZ #tau_{1, 2}", Events]
+    visible: [0, 2]
+    showOF: false
+    logy: 1
+

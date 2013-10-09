@@ -1,0 +1,82 @@
+# vim: set sw=4 sta et :
+
+J_Num$0:
+    dir: jets
+    binning: [30, 0, 30]
+    axis labels: [Number of $1, Events]
+    visible: [$2, $3]
+    logy: 1
+    centerLabels: true
+    replace:
+      - [Inclusive, non H-tau jets, 0, 10]
+      - [CSVL, b-tags (CSVL), 0, 8]
+      - [CSVM, b-tags (CSVM), 0, 5]
+      - [CSVT, b-tags (CSVT), 0, 5]
+      - [NonCSVL, non b-tags (CSVL), 0, 10]
+      - [NonCSVM, non b-tags (CSVM), 0, 10]
+      - [NonCSVT, non b-tags (CSVT), 0, 10]
+      - [CleanInclusive, non H-tau jets, 0, 10]
+      - [CleanCSVL, b-tags (CSVL), 0, 5]
+      - [CleanCSVM, b-tags (CSVM), 0, 3]
+      - [CleanCSVT, b-tags (CSVT), 0, 3]
+      - [CleanNonCSVL, non b-tags (CSVL), 0, 10]
+      - [CleanNonCSVM, non b-tags (CSVM), 0, 10]
+      - [CleanNonCSVT, non b-tags (CSVT), 0, 10]
+
+CleanJ_$0Pt:
+    dir: jets
+    max: J_NumClean$1
+    binning: [30, 30, 250]
+    axis labels: ['$2 p_{T}', Events]
+    visible: [30, 250]
+    showOF: true
+    logy: 1
+    replace:
+      - ["", Inclusive, Jet]
+      - [BTag, CSVM, Tagged jet]
+      - [NonBTag, NonCSVM, Untagged jet]
+
+$0_Pt:
+    dir: jets
+    binning: [30, 30, 250]
+    axis labels: ['$1 p_{T}', Events]
+    visible: [30, 250]
+    showOF: true
+    logy: 1
+    replace:
+      - [LJ, Leading jet]
+      - [SubLJ, Sub-leading jet]
+      - [SubSubLJ, Jet 3]
+      - [SubSubSubLJ, Jet 4]
+
+$0_Eta:
+    dir: jets
+    binning: [40, -3, 3]
+    axis labels: ["$1 #eta", Events]
+    visible: [-3, 3]
+    showOF: false
+    logy: 1
+    replace:
+      - [LJ, Leading jet]
+      - [SubLJ, Sub-leading jet]
+      - [SubSubLJ, Jet 3]
+      - [SubSubSubLJ, Jet 4]
+
+CleanJ_BTagEta:
+    dir: jets
+    max: J_NumCleanCSVM
+    binning: [40, -3, 3]
+    axis labels: ["Tagged jet #eta", Events]
+    visible: [-3, 3]
+    showOF: false
+    logy: 1
+
+CleanJ_NonBTagEta:
+    dir: jets
+    max: J_NumCleanNonCSVM
+    binning: [40, -3, 3]
+    axis labels: ["Untagged jet #eta", Events]
+    visible: [-3, 3]
+    showOF: false
+    logy: 1
+
