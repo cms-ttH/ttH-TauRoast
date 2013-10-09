@@ -94,6 +94,9 @@ class SysErrors:
             procs = get_backgrounds(map(lambda n: get_process(n, procs), candidates))
             self.__down.append((fn, procs))
 
+    def has_errors(self):
+        return len(self.__down) > 0 or len(self.__up) > 0
+
     def get_squared_bkg_shifts(self, procs, histname, histo):
         res = [0] * histo.GetHisto().GetNbinsX()
         for (fn, ps) in procs:
@@ -380,13 +383,16 @@ def stack(config, processes):
                 bkg_sum.SetFillStyle(3654)
                 bkg_sum.SetFillColor(r.kBlack)
                 bkg_sum.SetMarkerStyle(0)
-                # bkg_sum.GetHisto().Draw("E2 same")
 
                 (abs_err, rel_err) = err.get_errors(histname, bkg_sum)
                 abs_err.SetFillStyle(3654)
                 abs_err.SetFillColor(r.kBlack)
                 abs_err.SetMarkerStyle(0)
-                abs_err.Draw("2 same")
+
+                if err.has_errors():
+                    abs_err.Draw("2 same")
+                else:
+                    bkg_sum.GetHisto().Draw("E2 same")
 
                 sig_procs = get_signals(procs)
                 for p in sig_procs:
