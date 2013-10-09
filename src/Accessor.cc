@@ -1011,6 +1011,18 @@ namespace roast {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return (*e->TLL_Lepton2RelIso)[idx];
         };
+        accessors["L_Charge"] = [](Branches *b, int idx, int n) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_LeptonCharge)[idx];
+        };
+        accessors["L_CorrectedD0"] = [](Branches *b, int idx, int n) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_LeptonCorrectedD0)[idx];
+        };
+        accessors["L_CorrectedDZ"] = [](Branches *b, int idx, int n) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_LeptonCorrectedDZ)[idx];
+        };
         accessors["L_Eta"] = [](Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return (*e->TTL_LeptonEta)[idx];
@@ -1091,6 +1103,10 @@ namespace roast {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return (*e->TTL_LeptonGenMatchStatus)[idx];
         };
+        accessors["L_ImpactParameter"] = [](Branches *b, int idx, int n) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_LeptonImpactParameter)[idx];
+        };
         accessors["L_IsElectron"] = [](Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return (*e->TTL_LeptonIsElectron)[idx];
@@ -1110,6 +1126,10 @@ namespace roast {
         accessors["L_MomentumRank"] = [](Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return (*e->TTL_LeptonMomentumRank)[idx];
+        };
+        accessors["L_Mt"] = [](Branches *b, int idx, int n) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_LeptonMt)[idx];
         };
         accessors["L_Phi"] = [](Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);

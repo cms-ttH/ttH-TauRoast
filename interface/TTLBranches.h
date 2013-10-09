@@ -45,6 +45,9 @@ namespace roast {
                 std::vector<float>* TTL_DitauMETMass;
                 std::vector<float>* TTL_DitauVisibleMass;
                 std::vector<int>* TTL_ElectronMomentumRank;
+                std::vector<float>* TTL_LeptonCharge;
+                std::vector<float>* TTL_LeptonCorrectedD0;
+                std::vector<float>* TTL_LeptonCorrectedDZ;
                 std::vector<float>* TTL_LeptonEta;
                 std::vector<float>* TTL_LeptonEventWeight;
                 std::vector<int>* TTL_LeptonGenMatchDaughter0Id;
@@ -65,11 +68,13 @@ namespace roast {
                 std::vector<int>* TTL_LeptonGenMatchMother1Id;
                 std::vector<int>* TTL_LeptonGenMatchMother1Status;
                 std::vector<int>* TTL_LeptonGenMatchStatus;
+                std::vector<float>* TTL_LeptonImpactParameter;
                 std::vector<float>* TTL_LeptonIsElectron;
                 std::vector<bool>* TTL_LeptonIsLoose;
                 std::vector<float>* TTL_LeptonIsMuon;
                 std::vector<bool>* TTL_LeptonIsTight;
                 std::vector<int>* TTL_LeptonMomentumRank;
+                std::vector<float>* TTL_LeptonMt;
                 std::vector<float>* TTL_LeptonPhi;
                 std::vector<float>* TTL_LeptonPt;
                 std::vector<float>* TTL_LeptonRelIso;
