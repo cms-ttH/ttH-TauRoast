@@ -28,7 +28,7 @@ def analyze(config, module):
 
         vpaths = r.std.vector('string')()
         for p in cfg['ntuplePath']:
-            vpaths.push_back(os.path.join(config['paths']['ntuples'], p))
+            vpaths.push_back(config['paths']['ntuples'].format(p=p))
 
         p = roast.Process(
             proc,
