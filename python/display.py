@@ -146,13 +146,13 @@ def to_ndc(x, y):
     return (new_x, new_y)
 
 class Legend:
-    def __init__(self, margin, ncols):
+    def __init__(self, margin, ncols, topmargin=0):
         self.__current = 0
         self.__box_dx = 0.06
         self.__box_dy = 0.04
         self.__legend_x = margin
         self.__legend_dx = (1. - 2 * margin) / ncols
-        self.__legend_y = (1. - 0.5 * margin)
+        self.__legend_y = 1. - 0.5 * margin - topmargin
         self.__legend_dy = 1.4 * self.__box_dy
         self.__pos_x = self.__legend_x
         self.__pos_y = self.__legend_y
@@ -416,8 +416,8 @@ def stack(config, processes):
                     pass
 
                 if config['display']['legend']:
-                    canvas.cd(1)
-                    l = Legend(0.05, 3)
+                    pad1.cd()
+                    l = Legend(0.05, 3, 0.08)
                     for p in bkg_procs:
                         l.draw_box(1001, p.GetColor(), p.GetLabelForLegend())
                     l.draw_box(3654, r.kBlack, "Bkg. err.", True)
