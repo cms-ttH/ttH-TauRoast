@@ -1,5 +1,6 @@
 # vim: ts=4:sw=4:et:sta
 from copy import deepcopy
+from glob import glob
 import logging
 import math
 import os
@@ -16,6 +17,37 @@ try:
 except:
     sys.stderr.write("Failed to import 'roast'!\n")
     sys.exit(1)
+
+class Loader(yaml.Loader):
+    """Allow to nest yaml files inside each other.  Use `!include` to
+    reference a file (or list thereof) to be loaded and put in place.
+    Shell globs as per python standard library are allowed.
+
+    See http://stackoverflow.com/questions/528281/how-can-i-include-an-yaml-file-inside-another
+    for the basic idea."""
+    def __init__(self, stream):
+        super(Loader, self).__init__(stream)
+
+        self._root = os.path.dirname(stream.name)
+        self.add_constructor('!include', self._include)
+
+    def _include(self, loader, node):
+        names = []
+
+        try:
+            names.append(self.construct_scalar(node))
+        except:
+            names += self.construct_sequence(node)
+
+        filenames = []
+        for fn in map(lambda fn: os.path.join(self._root, fn), names):
+            filenames += glob(fn)
+
+        values = {}
+        for fn in filenames:
+            with open(fn, 'r') as f:
+                values.update(yaml.load(f, Loader))
+        return values
 
 def extract_info(config, cut, label):
     """Extract information about a jet multiplicity `cut` and convert it into
@@ -311,7 +343,8 @@ def expand_histogram_config(config):
     return res
 
 def load_config(filename, basedir, overrides):
-    config = yaml.load(open(filename))
+    with open(filename, 'r') as f:
+        config = yaml.load(f, Loader)
 
     if overrides:
         for setting in overrides:
@@ -329,16 +362,13 @@ def load_config(filename, basedir, overrides):
             except KeyError:
                 logging.error("cannot override path %s", path)
 
-    processconfig = yaml.load(open(os.path.join(basedir, config['processes'])))
-    histogramconfig = expand_histogram_config(yaml.load(open(os.path.join(basedir, config['histograms']))))
-
     channel = config['analysis']['channel']
-    for (name, cfg) in histogramconfig.items():
-        if 'channels' in cfg and channel not in cfg['channels']:
-            del histogramconfig[name]
 
-    config['processes'] = processconfig
-    config['histograms'] = histogramconfig
+    histcfg = expand_histogram_config(config['histograms'])
+    for (name, cfg) in histcfg.items():
+        if 'channels' in cfg and channel not in cfg['channels']:
+            del histcfg[name]
+    config['histograms'] = histcfg
 
     config['processes']['Collisions'] = config['processes']['Collisions'][channel]
 
