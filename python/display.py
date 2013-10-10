@@ -299,6 +299,10 @@ def create_plot(config, histname, plot_ratio, is2d=False, procname="", hist=None
             logging.debug("creating directory %s", dirname)
             os.makedirs(dirname)
 
+            php = os.path.join(os.environ["LOCALRT"], 'src/ttHMultileptonAnalysis/DrawPlots/python/utilities/index.php')
+            if os.path.isfile(php):
+                os.symlink(php, os.path.join(dirname, 'index.php'))
+
         canvas.SaveAs(filename)
 
     if plot_ratio:
@@ -322,6 +326,15 @@ def create_plot(config, histname, plot_ratio, is2d=False, procname="", hist=None
     for t in ("png", "pdf"):
         filename = config['paths']['stack format'].format(t=t,
                 d=subdir, n=histname, m="_log", p=procname)
+
+        dirname = os.path.dirname(filename)
+        if not os.path.exists(dirname):
+            logging.debug("creating directory %s", dirname)
+            os.makedirs(dirname)
+
+            php = os.path.join(os.environ["LOCALRT"], 'src/ttHMultileptonAnalysis/DrawPlots/python/utilities/index.php')
+            if os.path.isfile(php):
+                os.symlink(php, os.path.join(dirname, 'index.php'))
 
         canvas.SaveAs(filename)
 

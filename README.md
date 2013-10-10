@@ -18,6 +18,12 @@ Afterwards, clone this repository in the CMSSW source area:
     git clone https://github.com/cms-ttH/ttH-TauRoast.git ttH/TauRoast
     scram b -j32
 
+To obtain a nice webfolder display for plot output directories, clone the
+[ttH multi-lepton](https://github.com/cms-ttH/ttHMultileptonAnalysis) code:
+
+    cd $LOCALRT/src
+    git clone https://github.com/cms-ttH/ttHMultileptonAnalysis.git
+
 ## Basic usage
 
 Configuration files are stored in `ttH/TauRoast/data`,
