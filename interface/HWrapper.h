@@ -11,14 +11,18 @@
 #include "TH2F.h"
 
 #include "Accessor.h"
+#include "Weight.h"
 
 namespace roast {
     class HWrapper{
        public:
+          enum Transformation { kNone, kUnweighed, kTranslateId };
+
           static HWrapper* Create1D(const std::string&, TH1*, const std::string&, const std::string="");
           static HWrapper* Create2D(const std::string&, TH1*, const std::string&, const std::string&, const std::string="");
           HWrapper();
           HWrapper(const roast::HWrapper&);
+          HWrapper(const std::string&, TH1*, const Weight&);
           HWrapper(const std::string&, TH1*, GetValue_t, GetValue_t, GetValue_t);
           virtual ~HWrapper();
 
@@ -29,18 +33,21 @@ namespace roast {
           inline TH1* operator->() { return histo; };
           // inline const TH1* operator->() { return histo; };
 
-          void SetTranslate(bool t=true) { translate = t; };
+          void SetTranslate(bool t=true) { trafo = kTranslateId; };
+          void SetUnweighing(const Weight& w) { unweigh = w.GetVal; };
+
+          float Translate(GetValue_t, GetValue_t, Branches*, int, int=-1);
 
           void Fill(Branches*, int, float);
 
           inline std::string GetName() const { return name; };
           inline std::string GetSubDir() const { return subdir; };
-          inline double GetNOEraw() const { return NOEraw; };
           double GetMaximum() const;
           double GetMaximumWithError() const;
 
           void SetAdditionalXInfo(const std::string& n) { xadd = get_accessor(n); };
           void SetAdditionalYInfo(const std::string& n) { yadd = get_accessor(n); };
+          void SetTransformation(Transformation t) { trafo = t; };
 
           void SetHisto(const TH1*);
           void SetMaximum(double const);
@@ -59,7 +66,7 @@ namespace roast {
           std::string name;
           std::string subdir;
 
-          TH1*  histo;
+          TH1* histo;
 
           GetValue_t xval;
           GetValue_t yval;
@@ -69,10 +76,11 @@ namespace roast {
           GetValue_t xadd;
           GetValue_t yadd;
 
-          bool translate;
-          double NOEraw;
+          GetValue_t unweigh;
 
-          ClassDef(HWrapper, 1);
+          Transformation trafo;
+
+          ClassDef(HWrapper, 2);
     };
 }
 

@@ -10,14 +10,14 @@ namespace roast {
     float
     Weight::operator()(Branches* b, int idx)
     {
-        float w = GetVal(b, idx, -1);
+        value = GetVal(b, idx, -1);
         if (strength > 0)
-            w = pow(strength, w);
+            value = pow(strength, value);
 
         n += 1.;
-        sum += w;
+        sum += value;
 
-        return w;
+        return value;
     }
 
     Weight
@@ -162,7 +162,7 @@ namespace roast {
         if (!fct)
             throw "";
 
-        return Weight(label, fct, strength);
+        return Weight(name, label, fct, strength);
     }
 }
 

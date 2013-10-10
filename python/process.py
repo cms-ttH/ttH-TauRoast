@@ -78,11 +78,41 @@ def fill_histos(config, processes, module):
     for p in procs:
         p.ResetHistograms()
 
+        logging.info("registering weights for %s", p.GetShortName())
+        weights = []
+        for (flag, val) in flags:
+            try:
+                strength = -1.
+                if flag in config['physics']['systematics']:
+                    if val == "up":
+                        strength = config['physics']['systematics'][flag]
+                    elif val == "down":
+                        strength = 2 - config['physics']['systematics'][flag]
+                    else:
+                        logging.critcal("invalid direction for flag %s: %s", flag, val)
+                        sys.exit(1)
+
+                if flag == 'brSF':
+                    if not p.GetShortName().startswith("TTH_"):
+                        strength = 1.
+
+                if val == "nominal":
+                    weights.append(roast.Weight.Create(flag, roast.Weight.kNominal, strength))
+                elif val == "up":
+                    weights.append(roast.Weight.Create(flag, roast.Weight.kUp, strength))
+                elif val == "down":
+                    weights.append(roast.Weight.Create(flag, roast.Weight.kDown, strength))
+            except Exception, e:
+                logging.critical("could not create flag %s with value %s", flag, val)
+                sys.exit(1)
+
         logging.info("registering histograms for %s", p.GetShortName())
         for name, histcfg in config['histograms'].items():
             try:
                 if 'values' in histcfg:
                     values = histcfg['values']
+                elif 'plot weight' in histcfg:
+                    values = [histcfg['plot weight']]
                 else:
                     values = [name]
 
@@ -120,12 +150,31 @@ def fill_histos(config, processes, module):
                     if 'visible' in histcfg:
                         h.GetXaxis().SetRangeUser(*map(float, histcfg['visible']))
 
-                    if 'max' in histcfg:
+                    if xval == 'Weights':
+                        w = roast.HWrapper(histcfg['dir'], h, 0, 0, 0)
+                    elif 'plot weight' in histcfg:
+                        try:
+                            weight = filter(lambda w: w.alias == xval, weights)[0]
+                            w = roast.HWrapper(histcfg['dir'], h, weight)
+                        except IndexError as e:
+                            logging.error("unable to find weight with name '%s'", xval)
+                    elif 'max' in histcfg:
                         w = roast.HWrapper.Create1D(histcfg['dir'], h, xval, histcfg['max'])
                     else:
                         w = roast.HWrapper.Create1D(histcfg['dir'], h, xval)
                 else:
                     raise TypeError("Need either one or two values for histograms")
+
+                if 'cancel weight' in histcfg:
+                    wname = histcfg['cancel weight']
+                    if wname.lower() == 'all':
+                        w.SetTransformation(roast.HWrapper.kUnweighed)
+                    else:
+                        try:
+                            weight = filter(lambda w: w.alias == wname, weights)[0]
+                            w.SetUnweighing(weight)
+                        except IndexError as e:
+                            logging.error("unable to find weight with name '%s'", wname)
 
                 if 'additional info' in histcfg:
                     vals = histcfg['additional info']
@@ -162,33 +211,6 @@ def fill_histos(config, processes, module):
             logging.critical("invalid selection mechanism: %s", config['physics']['pair selection'])
             sys.exit(1)
 
-        weights = r.std.vector('roast::Weight')()
-        for (flag, val) in flags:
-            try:
-                strength = -1.
-                if flag in config['physics']['systematics']:
-                    if val == "up":
-                        strength = config['physics']['systematics'][flag]
-                    elif val == "down":
-                        strength = 2 - config['physics']['systematics'][flag]
-                    else:
-                        logging.critcal("invalid direction for flag %s: %s", flag, val)
-                        sys.exit(1)
-
-                if flag == 'brSF':
-                    if not p.GetShortName().startswith("TTH_"):
-                        strength = 1.
-
-                if val == "nominal":
-                    weights.push_back(roast.Weight.Create(flag, roast.Weight.kNominal, strength))
-                elif val == "up":
-                    weights.push_back(roast.Weight.Create(flag, roast.Weight.kUp, strength))
-                elif val == "down":
-                    weights.push_back(roast.Weight.Create(flag, roast.Weight.kDown, strength))
-            except Exception, e:
-                logging.critical("could not create flag %s with value %s", flag, val)
-                sys.exit(1)
-
         name = p.GetShortName()
 
         log = lambda i: logging.info("filling %s, event %i", name, i) if i % 25 == 0 else None
@@ -198,7 +220,7 @@ def fill_histos(config, processes, module):
         if splitter:
             logging.debug("splitting sample with %s", repr(splitter))
 
-        split_count = module.fill(p, weights, log, splitter, select)
+        split_count = module.fill(p, vectorize(weights), log, splitter, select)
         total_count = p.GetEvents().size()
 
         for weight in weights:

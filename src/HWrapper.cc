@@ -13,7 +13,7 @@ using namespace std;
 using namespace roast;
 
 // Default constructor
-HWrapper::HWrapper() : histo(0), xval(0), yval(0), max(0), xadd(0), yadd(0), translate(false) {}
+HWrapper::HWrapper() : histo(0), xval(0), yval(0), max(0), xadd(0), yadd(0), unweigh(0), trafo(kNone) {}
 
 // Copy constructor
 HWrapper::HWrapper(const HWrapper& iHWrapper) :
@@ -22,7 +22,8 @@ HWrapper::HWrapper(const HWrapper& iHWrapper) :
     yval(0),
     max(0),
     xadd(iHWrapper.xadd),
-    yadd(iHWrapper.yadd)
+    yadd(iHWrapper.yadd),
+    unweigh(iHWrapper.unweigh)
 {
     if (iHWrapper.GetHisto())
         this->SetHisto(iHWrapper.GetHisto());
@@ -31,11 +32,23 @@ HWrapper::HWrapper(const HWrapper& iHWrapper) :
     yval = iHWrapper.yval;
     max = iHWrapper.max;
 
-    translate = iHWrapper.translate;
+    trafo = iHWrapper.trafo;
 
     name = iHWrapper.GetName();
     subdir = iHWrapper.GetSubDir();
-    NOEraw = iHWrapper.GetNOEraw();
+}
+
+HWrapper::HWrapper(const std::string& subdir, TH1* hist, const Weight& w) :
+    subdir(subdir),
+    xval(w.GetVal),
+    yval(0),
+    max(0),
+    xadd(0),
+    yadd(0),
+    unweigh(0),
+    trafo(kNone)
+{
+    histo = dynamic_cast<TH1*>(hist->Clone());
 }
 
 HWrapper::HWrapper(const std::string& subdir, TH1* hist, GetValue_t x, GetValue_t y, GetValue_t m) :
@@ -45,7 +58,8 @@ HWrapper::HWrapper(const std::string& subdir, TH1* hist, GetValue_t x, GetValue_
     max(m),
     xadd(0),
     yadd(0),
-    translate(false)
+    unweigh(0),
+    trafo(kNone)
 {
     histo = dynamic_cast<TH1*>(hist->Clone());
 }
@@ -75,71 +89,56 @@ HWrapper::Create2D(const std::string& subdir, TH1* hist, const std::string& xfil
     return new HWrapper(subdir, hist, x, y, m);
 }
 
+float
+HWrapper::Translate(GetValue_t val, GetValue_t aux, Branches* b, int i, int n)
+{
+    if (trafo == kTranslateId) {
+        if (aux) {
+            return b->TranslateMatchIndex(val(b, i, n), aux(b, i, n));
+        } else {
+            return b->TranslateMatchIndex(val(b, i, n));
+        }
+    }
+    return val(b, i, n);
+}
+
+// Filling the histogram has a special case:  if no filling functions are
+// defined, the weight will be plotted.
 void
 HWrapper::Fill(Branches* b, int i, float w)
 {
-    if (yval) {
-        if (!max) {
-            auto x = xval(b, i, -1);
-            auto y = yval(b, i, -1);
+    float w_orig = w;
+    if (trafo == kUnweighed)
+        w = 1.;
 
-            if (translate) {
-                if (xadd)
-                    x = b->TranslateMatchIndex(x, xadd(b, i, -1));
-                else
-                    x = b->TranslateMatchIndex(x);
+    if (!max) {
+        if (unweigh)
+            w /= unweigh(b, i, -1);
 
-                if (yadd)
-                    y = b->TranslateMatchIndex(y, yadd(b, i, -1));
-                else
-                    y = b->TranslateMatchIndex(y);
-            }
+        if (yval) {
+            auto x = Translate(xval, xadd, b, i, -1);
+            auto y = Translate(yval, yadd, b, i, -1);
 
             dynamic_cast<TH2*>(histo)->Fill(x, y, w);
-        } else {
-            for (int n = 0; n < max(b, i, -1); ++n) {
-                auto x = xval(b, i, n);
-                auto y = yval(b, i, n);
-
-                if (translate) {
-                    if (xadd)
-                        x = b->TranslateMatchIndex(x, xadd(b, i , n));
-                    else
-                        x = b->TranslateMatchIndex(x);
-
-                    if (yadd)
-                        y = b->TranslateMatchIndex(y, yadd(b, i, n));
-                    else
-                        y = b->TranslateMatchIndex(y);
-                }
-
-                dynamic_cast<TH2*>(histo)->Fill(x, y, w);
-            }
-        }
-    } else {
-        if (!max) {
-            float x = xval(b, i, -1);
-
-            if (translate) {
-                if (xadd)
-                    x = b->TranslateMatchIndex(x, xadd(b, i, -1));
-                else
-                    x = b->TranslateMatchIndex(x);
-            }
+        } else if (xval) {
+            auto x = Translate(xval, xadd, b, i, -1);
 
             histo->Fill(x, w);
         } else {
-            for (int n = 0; n < max(b, i, -1); ++n) {
-                auto x = xval(b, i, n);
+            histo->Fill(w_orig, w);
+        }
+    } else {
+        for (int n = 0; n < max(b, i, -1); ++n) {
+            auto new_w = w;
+            if (unweigh)
+                new_w /= unweigh(b, i, -1);
 
-                if (translate) {
-                    if (xadd)
-                        x = b->TranslateMatchIndex(x, xadd(b, i, n));
-                    else
-                        x = b->TranslateMatchIndex(x);
-                }
-
-                histo->Fill(x, w);
+            auto x = Translate(xval, xadd, b, i, n);
+            if (yval) {
+                auto y = Translate(yval, yadd, b, i, n);
+                dynamic_cast<TH2*>(histo)->Fill(x, y, new_w);
+            } else {
+                histo->Fill(x, new_w);
             }
         }
     }

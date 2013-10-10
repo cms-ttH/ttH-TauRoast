@@ -7,6 +7,39 @@ Events:
     showOF: false
     logy: 1
 
+Weights:
+    dir: general
+    binning: [30, 0, 2]
+    axis labels: [Weight, Events]
+
+Weights_PU:
+    plot weight: PUcorr
+    cancel weight: PUcorr
+    dir: general
+    binning: [30, 0, 2]
+    axis labels: [PU Weight, Events]
+
+Weights_PU_unweighed:
+    plot weight: PUcorr
+    cancel weight: all
+    dir: general
+    binning: [30, 0, 2]
+    axis labels: [PU Weight, Events]
+
+Weights_TopPt:
+    plot weight: topPt
+    cancel weight: topPt
+    dir: general
+    binning: [30, 0, 2]
+    axis labels: ["Top p_{T} Weight", Events]
+
+Weights_TopPt_unweighed:
+    plot weight: topPt
+    cancel weight: all
+    dir: general
+    binning: [30, 0, 2]
+    axis labels: ["Top p_{T} Weight", Events]
+
 Combos:
     dir: general
     binning: [20, 1, 21]
