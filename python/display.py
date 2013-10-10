@@ -301,12 +301,16 @@ def create_plot(config, histname, plot_ratio, is2d=False, procname="", hist=None
 
         canvas.SaveAs(filename)
 
+    if plot_ratio:
+        canvas.cd(1)
+    else:
+        canvas.cd()
+
     # Reset log-scale maximum y-value
     if max and hist:
         new_max = 10 ** (((scale - 1) * 2 + 1) * math.log10(max / scale))
-        hist.GetHisto().GetYaxis().SetRangeUser(0.002, new_max)
-    if plot_ratio:
-        canvas.cd(1)
+        hist.GetYaxis().SetRangeUser(0.002, new_max)
+        r.gPad.Update()
 
     if is2d:
         r.gPad.SetLogz()
@@ -371,7 +375,6 @@ def stack(config, processes):
 
                 bkg_stack.Draw("hist")
 
-                base_histo = roast.HWrapper(procs[0].GetHistogram(histname))
                 style.setup_upper_axis(base_histo)
                 base_histo.GetYaxis().SetRangeUser(0.002, max_y)
                 # base_histo.GetXaxis().SetRangeUser(base_histo.GetMinXVis(), base_histo.GetMaxXVis())
