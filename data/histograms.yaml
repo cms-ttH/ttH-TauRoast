@@ -12,33 +12,93 @@ Weights:
     binning: [30, 0, 2]
     axis labels: [Weight, Events]
 
+Weights_unweighed:
+    cancel weight: all
+    dir: general
+    binning: [30, 0, 2]
+    axis labels: [Weight, Events]
+
+Weights_CSV:
+    plot weight: CSVeventWeight
+    cancel weight: CSVeventWeight
+    dir: general
+    binning: [30, 0.4, 2]
+    axis labels: [CSV Event Weight, Events]
+
+Weights_CSV_unweighed:
+    plot weight: CSVeventWeight
+    cancel weight: all
+    dir: general
+    binning: [30, 0.4, 2]
+    axis labels: [CSV Event Weight, Events]
+
 Weights_PU:
     plot weight: PUcorr
     cancel weight: PUcorr
     dir: general
-    binning: [30, 0, 2]
+    binning: [30, 0, 1.5]
     axis labels: [PU Weight, Events]
 
 Weights_PU_unweighed:
     plot weight: PUcorr
     cancel weight: all
     dir: general
-    binning: [30, 0, 2]
+    binning: [30, 0, 1.5]
     axis labels: [PU Weight, Events]
 
 Weights_TopPt:
     plot weight: topPt
     cancel weight: topPt
     dir: general
-    binning: [30, 0, 2]
+    binning: [30, 0.6, 1.3]
     axis labels: ["Top p_{T} Weight", Events]
 
 Weights_TopPt_unweighed:
     plot weight: topPt
     cancel weight: all
     dir: general
-    binning: [30, 0, 2]
+    binning: [30, 0.6, 1.3]
     axis labels: ["Top p_{T} Weight", Events]
+
+Weights_Trigger:
+    plot weight: trigger
+    cancel weight: trigger
+    dir: general
+    channel: [tll]
+    binning: [30, 0.8, 1.2]
+    axis labels: ["Trigger Weight", Events]
+
+Weights_Trigger_unweighed:
+    plot weight: trigger
+    cancel weight: all
+    dir: general
+    channel: [tll]
+    binning: [30, 0.8, 1.2]
+    axis labels: ["Trigger Weight", Events]
+
+Weights_Lepton$0SF:
+    plot weight: lepton$0
+    cancel weight: lepton$0
+    dir: general
+    channels: [$1]
+    binning: [30, 0.8, 1.2]
+    axis labels: ["Lepton $0 Scale Factor", Events]
+    replace:
+      - ["", ttl]
+      - [1, tll]
+      - [2, tll]
+
+Weights_Lepton$0SF_unweighed:
+    plot weight: lepton$0
+    cancel weight: all
+    dir: general
+    channels: [$1]
+    binning: [30, 0.8, 1.2]
+    axis labels: ["Lepton $0 Scale Factor", Events]
+    replace:
+      - ["", ttl]
+      - [1, tll]
+      - [2, tll]
 
 Combos:
     dir: general
