@@ -80,7 +80,7 @@ namespace roast {
         struct Get : roast::MVABase::Get {
             virtual roast::Branches* Branches(const roast::Process *proc)
             {
-                return new roast::tll::Branches(proc->GetTreeName(), proc->GetNtuplePaths());
+                return new roast::tll::Branches(proc->GetNtuplePaths());
             };
         };
     }
@@ -89,7 +89,7 @@ namespace roast {
         struct Get : roast::MVABase::Get {
             virtual roast::Branches* Branches(const roast::Process *proc)
             {
-                return new roast::ttl::Branches(proc->GetTreeName(), proc->GetNtuplePaths());
+                return new roast::ttl::Branches(proc->GetNtuplePaths());
             };
         };
     }

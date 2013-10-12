@@ -15,7 +15,7 @@ namespace roast {
 
             public:
                 Branches();
-                Branches(const std::string&, const std::vector<std::string>&);
+                Branches(const std::vector<std::string>&);
                 ~Branches();
 
                 virtual bool IsGoodGenMatch(const int&) const;

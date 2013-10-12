@@ -35,7 +35,6 @@ namespace roast {
             std::string niceName;
             std::string labelForLegend;
             std::string type;
-            std::string treename;
             bool checkReality;
             std::vector<std::string> ntuplePaths;
             int color;
@@ -59,7 +58,7 @@ namespace roast {
         public:
             Process();
             Process(const roast::Process&);
-            Process(const std::string&, const std::string&, const std::string&, const std::string&,
+            Process(const std::string&, const std::string&, const std::string&,
                     const std::string&, const std::vector<std::string>&, int, int, int,
                     double, double, bool genmatch=false);
             virtual ~Process();
@@ -70,8 +69,6 @@ namespace roast {
             int const GetNoEreadByNUTter() const;
             int const GetNOEinNtuple() const;
             int const GetNOEanalyzed() const;
-
-            inline std::string GetTreeName() const { return treename; };
 
             void SetShortName(std::string const);
             void SetNiceName(std::string const);

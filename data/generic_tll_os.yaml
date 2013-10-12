@@ -5,6 +5,8 @@ analysis:
 
     max events: -1
 
+    limit variable: FinalBDTG
+
     final mva:
         methods:
             BDTG: "!H:!V:NTrees=1000:BoostType=Grad:Shrinkage=0.10:UseBaggedGrad:GradBaggingFraction=0.5:nCuts=20:NNodesMax=5"
@@ -107,12 +109,13 @@ paths:
     systematics input: "{root}_{s!r:20}/roast_filled.root"
     # for processes with filled histograms
     output: "{root}/roast_filled.root"
+    # for further processing with `mk_datcard` and `combine`.  
+    limit output: "{root}/roast_limit.root:{p}_MVA_tllXX"
     mva output: "{root}/{m}"
     # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
     # name; {m} = mode (_log)
     stack format: "{root}/{t}/{d}/{n}{p}{m}.{t}"
-    ntuples: "/hadoop/users/matze/ttH/v53/2012/tll_{p}"
-    tree: makeNtuple/TTbarHTauTau
+    ntuples: "/hadoop/users/matze/ttH/v54/2012/tll_{p}/*_ntuple.root"
 
 processes: !include processes.yaml
 histograms: !include histograms*.yaml

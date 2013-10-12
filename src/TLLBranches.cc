@@ -12,8 +12,8 @@ tll::Branches::Branches() : roast::Branches() {
     Null();
 }
 
-tll::Branches::Branches(const std::string& tree_name, const vector<string>& paths) :
-    roast::Branches(tree_name, paths)
+tll::Branches::Branches(const vector<string>& paths) :
+    roast::Branches(paths)
 {
     Null();
     SetBranchAddresses();

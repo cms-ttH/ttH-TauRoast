@@ -21,12 +21,12 @@ Branches::Branches() : fChain(0), caches_dirty(true)
     SetBranchAddresses();
 }
 
-Branches::Branches(const string& tree_name, vector<string> const & iPath) :
+Branches::Branches(vector<string> const & iPath) :
     caches_dirty(true)
 {
-    fChain = new TChain(tree_name.c_str());
+    fChain = new TChain("TTbarHTauTau");
     for (const auto& p: iPath)
-        fChain->Add((p + "/*.root").c_str());
+        fChain->Add(p.c_str());
 
     // Set branch addresses and branch pointers
     if (!fChain){ cerr << "ERROR: Trying to initialize NULL TChain" << endl; exit(1); }

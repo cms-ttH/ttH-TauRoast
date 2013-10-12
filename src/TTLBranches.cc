@@ -13,8 +13,8 @@ ttl::Branches::Branches() : roast::Branches()
     Null();
 }
 
-ttl::Branches::Branches(const std::string& tree_name, const vector<string>& paths) :
-        roast::Branches(tree_name, paths)
+ttl::Branches::Branches(const vector<string>& paths) :
+        roast::Branches(paths)
 {
     Null();
     SetBranchAddresses();

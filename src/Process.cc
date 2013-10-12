@@ -32,7 +32,6 @@ Process::Process(const Process& iProcess)
 	niceName						= iProcess.GetNiceName();
 	labelForLegend					= iProcess.GetLabelForLegend();
 	type							= iProcess.GetType();
-   treename = iProcess.GetTreeName();
 	checkReality					= iProcess.CheckReality();
 	ntuplePaths						= iProcess.GetNtuplePaths();
 	color							= iProcess.GetColor();
@@ -53,14 +52,13 @@ Process::Process(const Process& iProcess)
 }
 
 Process::Process(const std::string& name, const std::string& alias, const std::string& title,
-      const std::string& type, const std::string& tree, const std::vector<std::string>& paths, int color,
+      const std::string& type, const std::vector<std::string>& paths, int color,
       int ds_count, int nut_count, double xsec, double branch, bool genmatch):
    events(),
    shortName(name),
    niceName(alias),
    labelForLegend(title),
    type(type),
-   treename(tree),
    checkReality(genmatch),
    ntuplePaths(paths),
    color(color),
@@ -86,7 +84,6 @@ Process::~Process()
 // Update process
 void Process::Update(Process const * iProcess){
 
-   treename = iProcess->GetTreeName();
 	niceName						= iProcess->GetNiceName();
 	labelForLegend					= iProcess->GetLabelForLegend();
 	type							= iProcess->GetType();

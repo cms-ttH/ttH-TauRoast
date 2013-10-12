@@ -35,7 +35,6 @@ def analyze(config, module):
             cfg['niceName'],
             cfg['labelForLegend'],
             cfg['type'],
-            config['paths']['tree'],
             vpaths,
             cfg['color'],
             cfg['NOEinDS'],
@@ -200,7 +199,7 @@ def fill_histos(config, processes, module):
                 if type(e) is not Exception:
                     raise
 
-        branches = module.Branches(p.GetTreeName(), p.GetNtuplePaths())
+        branches = module.Branches(p.GetNtuplePaths())
         cutflow = p.GetCutFlow()
 
         if config['physics']['pair selection'] == 'iso':

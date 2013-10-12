@@ -34,7 +34,7 @@ namespace roast {
 
         std::vector<roast::Process::Event> events;
 
-        T *event = new T(proc.GetTreeName(), proc.GetNtuplePaths());
+        T *event = new T(proc.GetNtuplePaths());
 
         bool checkReality = proc.CheckReality();
 
@@ -113,7 +113,7 @@ namespace roast {
     long
     fill(roast::Process& proc, std::vector<roast::Weight>& weights, PyObject* log, roast::Splitter *s, roast::Picker *p)
     {
-        T* branches = new T(proc.GetTreeName(), proc.GetNtuplePaths());
+        T* branches = new T(proc.GetNtuplePaths());
 
         long count = 0;
         for (const auto& e: proc.GetEvents()) {
