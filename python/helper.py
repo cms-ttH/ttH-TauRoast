@@ -167,6 +167,43 @@ def split_processes(config, ps):
 
     config['analysis']['split'] = split_fct
 
+def save_limit_histograms(config, ps):
+    """Save histograms as defined in `config` and present in `ps` to a ROOT
+    file."""
+    var = config['analysis']['limit variable']
+    (filename, histname) = config['paths']['limit output'].split(':')
+
+    file = r.TFile(filename, 'RECREATE')
+    if not file.IsOpen():
+        logging.error("can't open file '{0}' for writing!".format(filename))
+        raise SystemError
+
+    logging.info("writing limit histograms to '{0}'".format(filename))
+
+    for (name, cfg) in config['processes'].items():
+        if 'limit alias' not in cfg:
+            continue
+
+        alias = cfg['limit alias']
+        process = []
+
+        try:
+            process.append((alias, get_process(name, ps)))
+        except LookupError:
+            pass
+
+        if 'split' in cfg:
+            for split in cfg['split'].keys():
+                newalias = '_'.join([alias, split])
+                newname = '_'.join([name, split])
+                try:
+                    process.append((newalias, get_process(newname, ps)))
+                except LookupError:
+                    pass
+
+        for (alias, proc) in process:
+            file.WriteObject(proc.GetHistogram(var).GetHisto(), histname.format(p=alias))
+
 def combine_processes(config, ps):
     cfgs = filter(lambda (k, v): 'combine' in v, config['processes'].items())
     for (alias, cfg) in cfgs:

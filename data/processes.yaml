@@ -4,6 +4,7 @@ Collisions:
         sampleNumber: -1
         niceName: Collisions
         labelForLegend: Collisions
+        limit alias: data_obs
         type: collisions
         ntuplePath: [data_DoubleElectron_2012A_06Aug, data_DoubleElectron_2012A_12Jul, data_DoubleElectron_2012B_13Jul, data_DoubleElectron_2012C_24Aug, data_DoubleElectron_2012C_PR, data_DoubleElectron_2012D_PR, data_DoubleMu_2012A_06Aug, data_DoubleMu_2012A_13Jul, data_DoubleMu_2012B_PR, data_DoubleMu_2012C_24Aug, data_DoubleMu_2012C_PR, data_DoubleMu_2012D_PR, data_MuEG_2012A_06Aug, data_MuEG_2012A_13Jul, data_MuEG_2012B_13Jul, data_MuEG_2012C_24Aug, data_MuEG_2012C_PR, data_MuEG_2012D_PR]
         color: 1
@@ -16,6 +17,7 @@ Collisions:
         sampleNumber: -1
         niceName: Collisions
         labelForLegend: Collisions
+        limit alias: data_obs
         type: collisions
         ntuplePath: [data_SingleElectron_2012A_06Aug, data_SingleElectron_2012A_13July, data_SingleElectron_2012B_13Jul, data_SingleElectron_2012C_24Aug, data_SingleElectron_2012C_PR, data_SingleElectron_2012D_PR, data_SingleMu_2012A_06Aug, data_SingleMu_2012A_13July, data_SingleMu_2012B_13July, data_SingleMu_2012C_24Aug, data_SingleMu_2012C_PR, data_SingleMu_2012D_PR]
         color: 1
@@ -302,6 +304,7 @@ ttPlusW:
     sampleNumber: 2524
     niceName: tbarW
     labelForLegend: "#bar{t} + W"
+    limit alias: ttbarW
     type: mcBackground
     ntuplePath: [ttPlusW_Summer12]
     color: 800 # change this
@@ -315,6 +318,7 @@ ttPlusZ:
     sampleNumber: 2523
     niceName: tbarZ
     labelForLegend: "#bar{t} + Z"
+    limit alias: ttbarZ
     type: mcBackground
     ntuplePath: [ttPlusZ_Summer12]
     color: 800 # change this
@@ -328,6 +332,7 @@ TTH_110:
     sampleNumber: 9110
     niceName: ttH(110)
     labelForLegend: "t#bar{t}H(110) "
+    limit alias: ttH110
     type: signal
     ntuplePath: [TTH_110]
     color: 600
@@ -342,6 +347,7 @@ TTH_115:
     sampleNumber: 9115
     niceName: ttH(115)
     labelForLegend: "t#bar{t}H(115) "
+    limit alias: ttH115
     type: signal
     ntuplePath: [TTH_115]
     color: 600
@@ -356,6 +362,7 @@ TTH_120:
     sampleNumber: 9120
     niceName: ttH(120)
     labelForLegend: "t#bar{t}H(120) "
+    limit alias: ttH120
     type: signal
     ntuplePath: [TTH_120]
     color: 600
@@ -370,6 +377,7 @@ TTH_125:
     sampleNumber: 9125
     niceName: ttH(125)
     labelForLegend: "t#bar{t}H(125) "
+    limit alias: ttH125
     type: signal
     ntuplePath: [TTH_125]
     color: 600
@@ -384,6 +392,7 @@ TTH_130:
     sampleNumber: 9130
     niceName: ttH(130)
     labelForLegend: "t#bar{t}H(130) "
+    limit alias: ttH130
     type: signal
     ntuplePath: [TTH_130]
     color: 600
@@ -398,6 +407,7 @@ TTH_135:
     sampleNumber: 9135
     niceName: ttH(135)
     labelForLegend: "t#bar{t}H(135) "
+    limit alias: ttH135
     type: signal
     ntuplePath: [TTH_135]
     color: 600
@@ -412,6 +422,7 @@ TTH_140:
     sampleNumber: 9140
     niceName: ttH(140)
     labelForLegend: "t#bar{t}H(140) "
+    limit alias: ttH140
     type: signal
     ntuplePath: [TTH_140]
     color: 600
@@ -614,12 +625,14 @@ TTHTauTau_140_real:
 TTbar:
     niceName: t + tbar
     labelForLegend: "t #bar{t}"
+    limit alias: ttbar
     color: 625
     combine: [TTbar_Hadronic, TTbar_SemiLept, TTbar_FullLept]
 
 Zjets:
     niceName: Z + jets
     labelForLegend: Z + jets
+    limit alias: zjets
     color: 418
     combine: [ZplusJets_LowMass, ZplusOneJet, ZplusTwoJets, ZplusThreeJets, ZplusFourJets]
 
@@ -632,12 +645,14 @@ EWK:
 DiBoson:
     niceName: WW, WZ, ZZ
     labelForLegend: WW, WZ, ZZ
+    limit alias: diboson
     color: 432
     combine: [WW, WZ, ZZ]
 
 SingleTop:
     niceName: Single t/tbar
     labelForLegend: "single t/#bar{t}"
+    limit alias: singlet
     color: 616
     combine: [singleTopSch, singleTopBarSch, singleTopTch, singleTopBarTch, singleTopPlusW, singleTopBarPlusW]
 
@@ -650,5 +665,6 @@ ttWZ:
 Wjets:
     niceName: W + jets
     labelForLegend: W + jets
+    limit alias: wjets
     color: 861
     combine: [WplusOneJet, WplusTwoJets, WplusThreeJets, WplusFourJets]
