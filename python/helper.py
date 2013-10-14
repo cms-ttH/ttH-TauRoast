@@ -274,7 +274,7 @@ def normalize_processes(config, processes):
         p.GetCutFlow().RegisterCutFromLast("Lumi norm", scale)
         p.BuildNormalizedCutFlow()
 
-def print_cutflow(config, processes):
+def print_cutflow(config, processes, relative=False):
     procs = map(lambda n: get_process(n, processes), config['analysis']['plot'])
     cuts = map(lambda p: p.GetCutFlow().GetCuts(), procs)
 
@@ -285,12 +285,28 @@ def print_cutflow(config, processes):
         out.write("{0:^15}".format(p.GetShortName()))
     out.write("\n")
 
-    for i in range(len(cuts[0])):
-        out.write("{0:20}".format(cuts[0][i].name))
-        for c in cuts:
-            logging.debug("%s", c[i].name)
-            out.write("{0:15}".format(c[i].events_passed))
-        out.write("\n")
+    if relative:
+        last_cuts = [None] * len(cuts)
+        for i in range(len(cuts[0])):
+            out.write("{0:20}".format(cuts[0][i].name))
+            for (n, c) in enumerate(cuts):
+                logging.debug("%s", c[i].name)
+
+                if last_cuts[n]:
+                    val = c[i].events_passed * 100.0 / last_cuts[n]
+                else:
+                    val = 100.0
+
+                last_cuts[n] = c[i].events_passed
+                out.write("{0:15.2f}".format(val))
+            out.write("\n")
+    else:
+        for i in range(len(cuts[0])):
+            out.write("{0:20}".format(cuts[0][i].name))
+            for c in cuts:
+                logging.debug("%s", c[i].name)
+                out.write("{0:15}".format(c[i].events_passed))
+            out.write("\n")
 
     bkg_sum = 0.
     for p in procs:

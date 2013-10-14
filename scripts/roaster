@@ -64,6 +64,10 @@ parser.add_option("-y", "--yields",
         action="store_true",
         dest="nums",
         help="print event yield information")
+parser.add_option("-Y", "--relative-yields",
+        action="store_true",
+        dest="nums_rel",
+        help="print relative event yield information")
 parser.add_option("-r", "--ranking",
         action="store_true",
         dest="ranking",
@@ -74,6 +78,9 @@ logging.__dict__['root'].level = (opts.quietness - opts.verbosity) * 10
 
 if len(args) != 1 and not opts.list_vars:
     parser.error('wrong number of arguments')
+
+if opts.nums and opts.nums_rel:
+    parser.error('both relative and absolute event yields requested')
 
 import ROOT as r
 import sys
@@ -153,7 +160,7 @@ if opts.fill:
     fill_histos(baseconfig, procs, module)
     save(procs, "Roast", baseconfig['paths']['output'])
 
-if not any([opts.plot, opts.limit_file, opts.nums, opts.ranking]):
+if not any([opts.plot, opts.limit_file, opts.nums, opts.nums_rel, opts.ranking]):
     sys.exit(0)
 
 if not procs:
@@ -171,6 +178,8 @@ if opts.limit_file:
 
 if opts.nums:
     print_cutflow(baseconfig, procs)
+elif opts.nums_rel:
+    print_cutflow(baseconfig, procs, True)
 
 if opts.ranking:
     print_mva_ranking(baseconfig)
