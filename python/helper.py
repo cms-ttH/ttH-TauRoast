@@ -29,9 +29,9 @@ class Loader(yaml.Loader):
         super(Loader, self).__init__(stream)
 
         self._root = os.path.dirname(stream.name)
-        self.add_constructor('!include', self._include)
+        Loader.add_constructor('!include', Loader._include)
 
-    def _include(self, loader, node):
+    def _include(self, node):
         names = []
 
         try:
