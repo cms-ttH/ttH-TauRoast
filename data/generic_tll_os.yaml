@@ -41,7 +41,7 @@ analysis:
       #  - TTH_140
 
     plot:
-      #  - Collisions
+      - Collisions
       - TTbar
       - EWK
       - SingleTop
@@ -110,7 +110,7 @@ paths:
     # for processes with filled histograms
     output: "{root}/roast_filled.root"
     # for further processing with `mk_datcard` and `combine`.  
-    limit output: "{root}/roast_limit.root:{p}_MVA_tllXX"
+    limit output: "{root}/roast_limit.root:{p}_MVA_tll"
     mva output: "{root}/{m}"
     # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
     # name; {m} = mode (_log)
