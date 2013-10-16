@@ -274,9 +274,12 @@ def normalize_processes(config, processes):
         p.GetCutFlow().RegisterCutFromLast("Lumi norm", scale)
         p.BuildNormalizedCutFlow()
 
-def print_cutflow(config, processes, relative=False):
+def print_cutflow(config, processes, relative=False, normalized=False):
     procs = map(lambda n: get_process(n, processes), config['analysis']['plot'])
-    cuts = map(lambda p: p.GetCutFlow().GetCuts(), procs)
+    if normalized:
+        cuts = map(lambda p: p.GetNormalizedCutFlow().GetCuts(), procs)
+    else:
+        cuts = map(lambda p: p.GetCutFlow().GetCuts(), procs)
 
     out = sys.stdout
 

@@ -68,6 +68,10 @@ parser.add_option("-Y", "--relative-yields",
         action="store_true",
         dest="nums_rel",
         help="print relative event yield information")
+parser.add_option("--normalized",
+        action="store_true",
+        dest="nums_norm",
+        help="print relative event yield information")
 parser.add_option("-r", "--ranking",
         action="store_true",
         dest="ranking",
@@ -81,6 +85,9 @@ if len(args) != 1 and not opts.list_vars:
 
 if opts.nums and opts.nums_rel:
     parser.error('both relative and absolute event yields requested')
+
+if opts.nums_norm and not (opts.nums or opts.nums_rel):
+    parser.error("can't specifiy normalized yields without printing yields")
 
 import ROOT as r
 import sys
@@ -177,9 +184,9 @@ if opts.limit_file:
     save_limit_histograms(baseconfig, procs)
 
 if opts.nums:
-    print_cutflow(baseconfig, procs)
+    print_cutflow(baseconfig, procs, normalized=opts.nums_norm)
 elif opts.nums_rel:
-    print_cutflow(baseconfig, procs, True)
+    print_cutflow(baseconfig, procs, True, normalized=opts.nums_norm)
 
 if opts.ranking:
     print_mva_ranking(baseconfig)
