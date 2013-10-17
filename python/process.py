@@ -219,7 +219,8 @@ def fill_histos(config, processes, module):
         if splitter:
             logging.debug("splitting sample with %s", repr(splitter))
 
-        split_count = module.fill(p, vectorize(weights), log, splitter, select)
+        weights = vectorize(weights)
+        split_count = module.fill(p, weights, log, splitter, select)
         total_count = p.GetEvents().size()
 
         for weight in weights:
