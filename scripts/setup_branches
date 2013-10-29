@@ -29,7 +29,7 @@ def gather_type_info(filename):
     results = []
 
     f = r.TFile(filename)
-    tpl = f.Get("makeNtuple/TTbarHTauTau")
+    tpl = f.Get("TTbarHTauTau")
 
     for bn in tpl.GetListOfBranches():
         name = bn.GetName()

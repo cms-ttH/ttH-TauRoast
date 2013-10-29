@@ -524,7 +524,13 @@ tll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TLL_CSVeventWeightLFStats2up", &CSVeventWeightLFStats2up);
     fChain->SetBranchAddress("TLL_CSVeventWeightLFdown", &CSVeventWeightLFdown);
     fChain->SetBranchAddress("TLL_CSVeventWeightLFup", &CSVeventWeightLFup);
+    fChain->SetBranchAddress("TLL_CleanJetCSVLIndices", &CleanJetCSVLIndices);
+    fChain->SetBranchAddress("TLL_CleanJetCSVMIndices", &CleanJetCSVMIndices);
+    fChain->SetBranchAddress("TLL_CleanJetCSVTIndices", &CleanJetCSVTIndices);
     fChain->SetBranchAddress("TLL_CleanJetIndices", &CleanJetIndices);
+    fChain->SetBranchAddress("TLL_CleanJetNonCSVLIndices", &CleanJetNonCSVLIndices);
+    fChain->SetBranchAddress("TLL_CleanJetNonCSVMIndices", &CleanJetNonCSVMIndices);
+    fChain->SetBranchAddress("TLL_CleanJetNonCSVTIndices", &CleanJetNonCSVTIndices);
     fChain->SetBranchAddress("TLL_HT", &HT);
     fChain->SetBranchAddress("TLL_Lepton1Charge", &TLL_Lepton1Charge);
     fChain->SetBranchAddress("TLL_Lepton1CorrectedD0", &TLL_Lepton1CorrectedD0);

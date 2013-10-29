@@ -648,6 +648,52 @@ namespace roast {
         accessors["IsTauEvent"] = [](Branches *b, int idx, int n) -> float {
             return b->Ev_IsTauEvent;
         };
+        accessors["CleanJ_CSV"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            return (*b->J_CSV).at(i);
+        };
+        accessors["LJ_CSV"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][0];
+            return (*b->J_CSV).at(i);
+        };
+        accessors["SubLJ_CSV"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][1];
+            return (*b->J_CSV).at(i);
+        };
+        accessors["SubSubLJ_CSV"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][2];
+            return (*b->J_CSV).at(i);
+        };
+        accessors["SubSubSubLJ_CSV"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][3];
+            return (*b->J_CSV).at(i);
+        };
+        accessors["J_CSV"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_CSV)[idx];
+        };
+        accessors["CleanJ_Charge"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            return (*b->J_Charge).at(i);
+        };
+        accessors["LJ_Charge"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][0];
+            return (*b->J_Charge).at(i);
+        };
+        accessors["SubLJ_Charge"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][1];
+            return (*b->J_Charge).at(i);
+        };
+        accessors["SubSubLJ_Charge"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][2];
+            return (*b->J_Charge).at(i);
+        };
+        accessors["SubSubSubLJ_Charge"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][3];
+            return (*b->J_Charge).at(i);
+        };
+        accessors["J_Charge"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_Charge)[idx];
+        };
         accessors["CleanJ_Eta"] = [](Branches *b, int idx, int n) -> float {
             int i = (*b->CleanJetIndices)[idx][n];
             return (*b->J_Eta).at(i);
@@ -696,6 +742,328 @@ namespace roast {
         };
         accessors["J_NumJets"] = [](Branches *b, int idx, int n) -> float {
             return b->J_NumJets;
+        };
+        accessors["CleanJ_PartonGrandmother00Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            return (*b->J_PartonGrandmother00Id).at(i);
+        };
+        accessors["LJ_PartonGrandmother00Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][0];
+            return (*b->J_PartonGrandmother00Id).at(i);
+        };
+        accessors["SubLJ_PartonGrandmother00Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][1];
+            return (*b->J_PartonGrandmother00Id).at(i);
+        };
+        accessors["SubSubLJ_PartonGrandmother00Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][2];
+            return (*b->J_PartonGrandmother00Id).at(i);
+        };
+        accessors["SubSubSubLJ_PartonGrandmother00Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][3];
+            return (*b->J_PartonGrandmother00Id).at(i);
+        };
+        accessors["J_PartonGrandmother00Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother00Id)[idx];
+        };
+        accessors["CleanJ_PartonGrandmother00Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            return (*b->J_PartonGrandmother00Status).at(i);
+        };
+        accessors["LJ_PartonGrandmother00Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][0];
+            return (*b->J_PartonGrandmother00Status).at(i);
+        };
+        accessors["SubLJ_PartonGrandmother00Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][1];
+            return (*b->J_PartonGrandmother00Status).at(i);
+        };
+        accessors["SubSubLJ_PartonGrandmother00Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][2];
+            return (*b->J_PartonGrandmother00Status).at(i);
+        };
+        accessors["SubSubSubLJ_PartonGrandmother00Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][3];
+            return (*b->J_PartonGrandmother00Status).at(i);
+        };
+        accessors["J_PartonGrandmother00Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother00Status)[idx];
+        };
+        accessors["CleanJ_PartonGrandmother01Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            return (*b->J_PartonGrandmother01Id).at(i);
+        };
+        accessors["LJ_PartonGrandmother01Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][0];
+            return (*b->J_PartonGrandmother01Id).at(i);
+        };
+        accessors["SubLJ_PartonGrandmother01Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][1];
+            return (*b->J_PartonGrandmother01Id).at(i);
+        };
+        accessors["SubSubLJ_PartonGrandmother01Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][2];
+            return (*b->J_PartonGrandmother01Id).at(i);
+        };
+        accessors["SubSubSubLJ_PartonGrandmother01Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][3];
+            return (*b->J_PartonGrandmother01Id).at(i);
+        };
+        accessors["J_PartonGrandmother01Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother01Id)[idx];
+        };
+        accessors["CleanJ_PartonGrandmother01Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            return (*b->J_PartonGrandmother01Status).at(i);
+        };
+        accessors["LJ_PartonGrandmother01Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][0];
+            return (*b->J_PartonGrandmother01Status).at(i);
+        };
+        accessors["SubLJ_PartonGrandmother01Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][1];
+            return (*b->J_PartonGrandmother01Status).at(i);
+        };
+        accessors["SubSubLJ_PartonGrandmother01Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][2];
+            return (*b->J_PartonGrandmother01Status).at(i);
+        };
+        accessors["SubSubSubLJ_PartonGrandmother01Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][3];
+            return (*b->J_PartonGrandmother01Status).at(i);
+        };
+        accessors["J_PartonGrandmother01Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother01Status)[idx];
+        };
+        accessors["CleanJ_PartonGrandmother10Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            return (*b->J_PartonGrandmother10Id).at(i);
+        };
+        accessors["LJ_PartonGrandmother10Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][0];
+            return (*b->J_PartonGrandmother10Id).at(i);
+        };
+        accessors["SubLJ_PartonGrandmother10Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][1];
+            return (*b->J_PartonGrandmother10Id).at(i);
+        };
+        accessors["SubSubLJ_PartonGrandmother10Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][2];
+            return (*b->J_PartonGrandmother10Id).at(i);
+        };
+        accessors["SubSubSubLJ_PartonGrandmother10Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][3];
+            return (*b->J_PartonGrandmother10Id).at(i);
+        };
+        accessors["J_PartonGrandmother10Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother10Id)[idx];
+        };
+        accessors["CleanJ_PartonGrandmother10Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            return (*b->J_PartonGrandmother10Status).at(i);
+        };
+        accessors["LJ_PartonGrandmother10Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][0];
+            return (*b->J_PartonGrandmother10Status).at(i);
+        };
+        accessors["SubLJ_PartonGrandmother10Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][1];
+            return (*b->J_PartonGrandmother10Status).at(i);
+        };
+        accessors["SubSubLJ_PartonGrandmother10Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][2];
+            return (*b->J_PartonGrandmother10Status).at(i);
+        };
+        accessors["SubSubSubLJ_PartonGrandmother10Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][3];
+            return (*b->J_PartonGrandmother10Status).at(i);
+        };
+        accessors["J_PartonGrandmother10Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother10Status)[idx];
+        };
+        accessors["CleanJ_PartonGrandmother11Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            return (*b->J_PartonGrandmother11Id).at(i);
+        };
+        accessors["LJ_PartonGrandmother11Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][0];
+            return (*b->J_PartonGrandmother11Id).at(i);
+        };
+        accessors["SubLJ_PartonGrandmother11Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][1];
+            return (*b->J_PartonGrandmother11Id).at(i);
+        };
+        accessors["SubSubLJ_PartonGrandmother11Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][2];
+            return (*b->J_PartonGrandmother11Id).at(i);
+        };
+        accessors["SubSubSubLJ_PartonGrandmother11Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][3];
+            return (*b->J_PartonGrandmother11Id).at(i);
+        };
+        accessors["J_PartonGrandmother11Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother11Id)[idx];
+        };
+        accessors["CleanJ_PartonGrandmother11Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            return (*b->J_PartonGrandmother11Status).at(i);
+        };
+        accessors["LJ_PartonGrandmother11Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][0];
+            return (*b->J_PartonGrandmother11Status).at(i);
+        };
+        accessors["SubLJ_PartonGrandmother11Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][1];
+            return (*b->J_PartonGrandmother11Status).at(i);
+        };
+        accessors["SubSubLJ_PartonGrandmother11Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][2];
+            return (*b->J_PartonGrandmother11Status).at(i);
+        };
+        accessors["SubSubSubLJ_PartonGrandmother11Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][3];
+            return (*b->J_PartonGrandmother11Status).at(i);
+        };
+        accessors["J_PartonGrandmother11Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother11Status)[idx];
+        };
+        accessors["CleanJ_PartonId"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            return (*b->J_PartonId).at(i);
+        };
+        accessors["LJ_PartonId"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][0];
+            return (*b->J_PartonId).at(i);
+        };
+        accessors["SubLJ_PartonId"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][1];
+            return (*b->J_PartonId).at(i);
+        };
+        accessors["SubSubLJ_PartonId"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][2];
+            return (*b->J_PartonId).at(i);
+        };
+        accessors["SubSubSubLJ_PartonId"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][3];
+            return (*b->J_PartonId).at(i);
+        };
+        accessors["J_PartonId"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonId)[idx];
+        };
+        accessors["CleanJ_PartonMother0Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            return (*b->J_PartonMother0Id).at(i);
+        };
+        accessors["LJ_PartonMother0Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][0];
+            return (*b->J_PartonMother0Id).at(i);
+        };
+        accessors["SubLJ_PartonMother0Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][1];
+            return (*b->J_PartonMother0Id).at(i);
+        };
+        accessors["SubSubLJ_PartonMother0Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][2];
+            return (*b->J_PartonMother0Id).at(i);
+        };
+        accessors["SubSubSubLJ_PartonMother0Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][3];
+            return (*b->J_PartonMother0Id).at(i);
+        };
+        accessors["J_PartonMother0Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother0Id)[idx];
+        };
+        accessors["CleanJ_PartonMother0Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            return (*b->J_PartonMother0Status).at(i);
+        };
+        accessors["LJ_PartonMother0Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][0];
+            return (*b->J_PartonMother0Status).at(i);
+        };
+        accessors["SubLJ_PartonMother0Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][1];
+            return (*b->J_PartonMother0Status).at(i);
+        };
+        accessors["SubSubLJ_PartonMother0Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][2];
+            return (*b->J_PartonMother0Status).at(i);
+        };
+        accessors["SubSubSubLJ_PartonMother0Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][3];
+            return (*b->J_PartonMother0Status).at(i);
+        };
+        accessors["J_PartonMother0Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother0Status)[idx];
+        };
+        accessors["CleanJ_PartonMother1Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            return (*b->J_PartonMother1Id).at(i);
+        };
+        accessors["LJ_PartonMother1Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][0];
+            return (*b->J_PartonMother1Id).at(i);
+        };
+        accessors["SubLJ_PartonMother1Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][1];
+            return (*b->J_PartonMother1Id).at(i);
+        };
+        accessors["SubSubLJ_PartonMother1Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][2];
+            return (*b->J_PartonMother1Id).at(i);
+        };
+        accessors["SubSubSubLJ_PartonMother1Id"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][3];
+            return (*b->J_PartonMother1Id).at(i);
+        };
+        accessors["J_PartonMother1Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother1Id)[idx];
+        };
+        accessors["CleanJ_PartonMother1Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            return (*b->J_PartonMother1Status).at(i);
+        };
+        accessors["LJ_PartonMother1Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][0];
+            return (*b->J_PartonMother1Status).at(i);
+        };
+        accessors["SubLJ_PartonMother1Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][1];
+            return (*b->J_PartonMother1Status).at(i);
+        };
+        accessors["SubSubLJ_PartonMother1Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][2];
+            return (*b->J_PartonMother1Status).at(i);
+        };
+        accessors["SubSubSubLJ_PartonMother1Status"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][3];
+            return (*b->J_PartonMother1Status).at(i);
+        };
+        accessors["J_PartonMother1Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother1Status)[idx];
+        };
+        accessors["CleanJ_PartonStatus"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            return (*b->J_PartonStatus).at(i);
+        };
+        accessors["LJ_PartonStatus"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][0];
+            return (*b->J_PartonStatus).at(i);
+        };
+        accessors["SubLJ_PartonStatus"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][1];
+            return (*b->J_PartonStatus).at(i);
+        };
+        accessors["SubSubLJ_PartonStatus"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][2];
+            return (*b->J_PartonStatus).at(i);
+        };
+        accessors["SubSubSubLJ_PartonStatus"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][3];
+            return (*b->J_PartonStatus).at(i);
+        };
+        accessors["J_PartonStatus"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonStatus)[idx];
         };
         accessors["CleanJ_Phi"] = [](Branches *b, int idx, int n) -> float {
             int i = (*b->CleanJetIndices)[idx][n];
@@ -1236,6 +1604,30 @@ namespace roast {
         };
         accessors["PuWeight"] = [](Branches *b, int idx, int n) -> float {
             return b->Ev_puWeight;
+        };
+        accessors["PuWeight2012A"] = [](Branches *b, int idx, int n) -> float {
+            return b->Ev_puWeight2012A;
+        };
+        accessors["PuWeight2012AB"] = [](Branches *b, int idx, int n) -> float {
+            return b->Ev_puWeight2012AB;
+        };
+        accessors["PuWeight2012ABC"] = [](Branches *b, int idx, int n) -> float {
+            return b->Ev_puWeight2012ABC;
+        };
+        accessors["PuWeight2012B"] = [](Branches *b, int idx, int n) -> float {
+            return b->Ev_puWeight2012B;
+        };
+        accessors["PuWeight2012BC"] = [](Branches *b, int idx, int n) -> float {
+            return b->Ev_puWeight2012BC;
+        };
+        accessors["PuWeight2012C"] = [](Branches *b, int idx, int n) -> float {
+            return b->Ev_puWeight2012C;
+        };
+        accessors["PuWeight2012CD"] = [](Branches *b, int idx, int n) -> float {
+            return b->Ev_puWeight2012CD;
+        };
+        accessors["PuWeight2012D"] = [](Branches *b, int idx, int n) -> float {
+            return b->Ev_puWeight2012D;
         };
         accessors["PuWeightDown"] = [](Branches *b, int idx, int n) -> float {
             return b->Ev_puWeightDown;

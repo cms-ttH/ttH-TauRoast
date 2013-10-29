@@ -668,7 +668,13 @@ ttl::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TTL_CSVeventWeightLFStats2up", &CSVeventWeightLFStats2up);
     fChain->SetBranchAddress("TTL_CSVeventWeightLFdown", &CSVeventWeightLFdown);
     fChain->SetBranchAddress("TTL_CSVeventWeightLFup", &CSVeventWeightLFup);
+    fChain->SetBranchAddress("TTL_CleanJetCSVLIndices", &CleanJetCSVLIndices);
+    fChain->SetBranchAddress("TTL_CleanJetCSVMIndices", &CleanJetCSVMIndices);
+    fChain->SetBranchAddress("TTL_CleanJetCSVTIndices", &CleanJetCSVTIndices);
     fChain->SetBranchAddress("TTL_CleanJetIndices", &CleanJetIndices);
+    fChain->SetBranchAddress("TTL_CleanJetNonCSVLIndices", &CleanJetNonCSVLIndices);
+    fChain->SetBranchAddress("TTL_CleanJetNonCSVMIndices", &CleanJetNonCSVMIndices);
+    fChain->SetBranchAddress("TTL_CleanJetNonCSVTIndices", &CleanJetNonCSVTIndices);
     fChain->SetBranchAddress("TTL_DitauCosDeltaPhi", &TTL_DitauCosDeltaPhi);
     fChain->SetBranchAddress("TTL_DitauDeltaR", &TTL_DitauDeltaR);
     fChain->SetBranchAddress("TTL_DitauMETMass", &TTL_DitauMETMass);
