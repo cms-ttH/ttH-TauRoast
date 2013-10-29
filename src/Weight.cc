@@ -26,12 +26,12 @@ namespace roast {
         std::string label;
         GetValue_t fct = 0;
 
-        if (name == "qSquared" || name == "PUcorr" || name.find("lepton") == 0 || name == "topPt") {
+        if (name == "qSquared" || name.find("PUcorr") == 0 || name.find("lepton") == 0 || name == "topPt") {
             auto varname = name;
             if (name == "qSquared") {
                 label = "Q^2 shift";
                 varname = "Q2";
-            } else if (name == "PUcorr") {
+            } else if (name.find("PUcorr") == 0) {
                 label = "PU reweighing";
                 varname = "Pu";
             } else if (name == "lepton") {
@@ -49,6 +49,9 @@ namespace roast {
             }
 
             varname += "Weight";
+
+            if (name.find("PUcorr") == 0)
+                varname += name.substr(6);
 
             switch (kind) {
                 case kUp:
