@@ -126,6 +126,35 @@ Branches::TranslateMatchIndex(int idx, int pidx) const
     }
 }
 
+unsigned int
+Branches::TranslateJetMatchIndex(int idx) const
+{
+    if (idx == -99)
+        return 0; // no match
+
+    switch (abs(idx)) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+            return idx + 1; // quarks
+        case 11:
+            return 8; // electron
+        case 13:
+            return 9; // muon
+        case 15:
+            return 10; // tau
+        case 21:
+            return 11; // gluon
+        case 24:
+            return 12; // W
+        default:
+            return 1;
+    }
+}
+
 float
 Branches::GetCleanJetBTagEta(unsigned int idx, unsigned int n)
 {

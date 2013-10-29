@@ -73,6 +73,25 @@ namespace roast {
             return abs((*e->TTL_Tau2GenMatchMother0Id)[idx]);
         };
 
+        accessors["CleanJ_PartonGoodParentId"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            int mother = (*b->J_PartonMother0Id)[i];
+            if (mother == -99)
+                mother = (*b->J_PartonMother1Id)[i];
+            return mother;
+        };
+        accessors["CleanJ_PartonGoodGrandParentId"] = [](Branches *b, int idx, int n) -> float {
+            int i = (*b->CleanJetIndices)[idx][n];
+            int grannie = (*b->J_PartonGrandmother00Id)[i];
+            if (grannie == -99)
+                grannie = (*b->J_PartonGrandmother01Id)[i];
+            if (grannie == -99)
+                grannie = (*b->J_PartonGrandmother10Id)[i];
+            if (grannie == -99)
+                grannie = (*b->J_PartonGrandmother11Id)[i];
+            return grannie;
+        };
+
         accessors["T_GoodParentId"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             int mother = (*e->TLL_TauGenMatchMother0Id)[idx];

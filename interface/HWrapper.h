@@ -16,7 +16,7 @@
 namespace roast {
     class HWrapper{
        public:
-          enum Transformation { kNone, kUnweighed, kTranslateId };
+          enum Transformation { kNone, kUnweighed, kTranslateId, kTranslateJetId };
 
           static HWrapper* Create1D(const std::string&, TH1*, const std::string&, const std::string="");
           static HWrapper* Create2D(const std::string&, TH1*, const std::string&, const std::string&, const std::string="");

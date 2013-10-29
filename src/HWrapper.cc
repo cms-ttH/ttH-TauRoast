@@ -98,6 +98,8 @@ HWrapper::Translate(GetValue_t val, GetValue_t aux, Branches* b, int i, int n)
         } else {
             return b->TranslateMatchIndex(val(b, i, n));
         }
+    } else if (trafo == kTranslateJetId) {
+        return b->TranslateJetMatchIndex(val(b, i, n));
     }
     return val(b, i, n);
 }

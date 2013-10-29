@@ -190,6 +190,8 @@ def fill_histos(config, processes, module):
 
                 if 'translate match id' in histcfg and histcfg['translate match id']:
                     w.SetTranslate()
+                if 'translate jet match id' in histcfg and histcfg['translate jet match id']:
+                    w.SetTransformation(roast.HWrapper.kTranslateJetId)
 
                 p.AddHistogram(name, w)
                 logging.debug("added histogram %s", name)
