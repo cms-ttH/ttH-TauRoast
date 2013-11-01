@@ -112,7 +112,7 @@ def book_mva(config, processes, module):
         try:
             vars.append(roast.MVABase.Var(*varcfg))
         except:
-            logging.error("undefined variable %s", name)
+            logging.error("undefined variable %s", varcfg[0])
             err = True
 
     for method, opts in cfg['methods'].items():
