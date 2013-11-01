@@ -23,62 +23,61 @@ J_Num$0:
       - [CleanNonCSVM, non b-tags (CSVM), 0, 10]
       - [CleanNonCSVT, non b-tags (CSVT), 0, 10]
 
-CleanJ_$0Pt:
-    dir: jets
+$0J_Pt:
+    dir: jets/kinematic
     max: J_NumClean$1
     binning: [30, 30, 250]
     axis labels: ['$2 p_{T}', Events]
-    visible: [30, 250]
-    showOF: true
-    logy: 1
     replace:
-      - ["", Inclusive, Jet]
-      - [BTag, CSVM, Tagged jet]
-      - [NonBTag, NonCSVM, Untagged jet]
+      - [Clean, Inclusive, Jet]
+      - [Tagged, CSVM, Tagged jet]
+      - [Untagged, NonCSVM, Untagged jet]
+
+$0J_Eta:
+    dir: jets/kinematic
+    max: J_NumClean$1
+    binning: [40, -3, 3]
+    axis labels: ["$2 #eta", Events]
+    replace:
+      - [Clean, Inclusive, Jet]
+      - [Tagged, CSVM, Tagged jet]
+      - [Untagged, NonCSVM, Untagged jet]
 
 $0_Pt:
-    dir: jets
+    dir: jets/kinematic
     binning: [30, 30, 250]
     axis labels: ['$1 p_{T}', Events]
-    visible: [30, 250]
-    showOF: true
-    logy: 1
     replace:
-      - [LJ, Leading jet]
-      - [SubLJ, Sub-leading jet]
-      - [SubSubLJ, Jet 3]
-      - [SubSubSubLJ, Jet 4]
+      - [CleanLJ, Leading jet]
+      - [CleanSubLJ, Sub-leading jet]
+      - [CleanSubSubLJ, Jet 3]
+      - [CleanSubSubSubLJ, Jet 4]
+      - [TaggedLJ, Tagged Leading jet]
+      - [TaggedSubLJ, Tagged Sub-leading jet]
+      - [TaggedSubSubLJ, Tagged Jet 3]
+      - [TaggedSubSubSubLJ, Tagged Jet 4]
+      - [UntaggedLJ, Untagged Leading jet]
+      - [UntaggedSubLJ, Untagged Sub-leading jet]
+      - [UntaggedSubSubLJ, Untagged Jet 3]
+      - [UntaggedSubSubSubLJ, Untagged Jet 4]
 
 $0_Eta:
-    dir: jets
+    dir: jets/kinematic
     binning: [40, -3, 3]
     axis labels: ["$1 #eta", Events]
-    visible: [-3, 3]
-    showOF: false
-    logy: 1
     replace:
-      - [LJ, Leading jet]
-      - [SubLJ, Sub-leading jet]
-      - [SubSubLJ, Jet 3]
-      - [SubSubSubLJ, Jet 4]
-
-#  CleanJ_BTagEta:
-    #  dir: jets
-    #  max: J_NumCleanCSVM
-    #  binning: [40, -3, 3]
-    #  axis labels: ["Tagged jet #eta", Events]
-    #  visible: [-3, 3]
-    #  showOF: false
-    #  logy: 1
-
-#  CleanJ_NonBTagEta:
-    #  dir: jets
-    #  max: J_NumCleanNonCSVM
-    #  binning: [40, -3, 3]
-    #  axis labels: ["Untagged jet #eta", Events]
-    #  visible: [-3, 3]
-    #  showOF: false
-    #  logy: 1
+      - [CleanLJ, Leading jet]
+      - [CleanSubLJ, Sub-leading jet]
+      - [CleanSubSubLJ, Jet 3]
+      - [CleanSubSubSubLJ, Jet 4]
+      - [TaggedLJ, Tagged Leading jet]
+      - [TaggedSubLJ, Tagged Sub-leading jet]
+      - [TaggedSubSubLJ, Tagged Jet 3]
+      - [TaggedSubSubSubLJ, Tagged Jet 4]
+      - [UntaggedLJ, Untagged Leading jet]
+      - [UntaggedSubLJ, Untagged Sub-leading jet]
+      - [UntaggedSubSubLJ, Untagged Jet 3]
+      - [UntaggedSubSubSubLJ, Untagged Jet 4]
 
 #  $0J_CSV:
     #  value: $0J_combOB
