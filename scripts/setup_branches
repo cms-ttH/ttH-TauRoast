@@ -195,7 +195,11 @@ lines = []
 
 cast = '{0}::Branches* e = dynamic_cast<{0}::Branches*>(b)'
 declare = 'accessors["{0}"] = [](Branches *b, int idx, int n) -> float {{\n'
-reindex = 'int i = (*b->CleanJetIndices)[idx][{0}];\n'
+reindex = [
+        ('Clean', 'int i = (*b->CleanJetIndices)[idx][{0}];\n'),
+        ('Tagged', 'int i = (*b->CleanJetCSVMIndices)[idx][{0}];\n'),
+        ('Untagged', 'int i = (*b->CleanJetNonCSVMIndices)[idx][{0}];\n')
+        ]
 returns = {0: 'return {0}->{1};', 1: 'return (*{0}->{1})[{2}];'}
 
 fct_names = {}
@@ -306,18 +310,19 @@ for k in sorted(attrs.keys()):
             elif prefix == 'J' and ptr and not 'BTag' in var:
                 jet_lines = []
 
-                jet_lines.append(indent * 2 + declare.format('Clean' + k))
-                jet_lines.append(indent * 3 + reindex.format('n'))
-                jet_lines.append(indent * 3 + generate_return_line(obj, varname, type, idx='i', safe=True) + '\n')
-                jet_lines.append(indent * 2 + '};\n')
-
-                # leading jet etc.
-                for (n, j) in enumerate(jets):
-                    new_key = k.replace('J', j)
-                    jet_lines.append(indent * 2 + declare.format(new_key))
-                    jet_lines.append(indent * 3 + reindex.format(n))
+                for (label, index_statement) in reindex:
+                    jet_lines.append(indent * 2 + declare.format(label + k))
+                    jet_lines.append(indent * 3 + index_statement.format('n'))
                     jet_lines.append(indent * 3 + generate_return_line(obj, varname, type, idx='i', safe=True) + '\n')
                     jet_lines.append(indent * 2 + '};\n')
+
+                    # leading jet etc.
+                    for (n, j) in enumerate(jets):
+                        new_key = label + k.replace('J', j)
+                        jet_lines.append(indent * 2 + declare.format(new_key))
+                        jet_lines.append(indent * 3 + index_statement.format(n))
+                        jet_lines.append(indent * 3 + generate_return_line(obj, varname, type, idx='i', safe=True) + '\n')
+                        jet_lines.append(indent * 2 + '};\n')
                 lines += jet_lines
             elif ptr and prefix != '':
                 continue
