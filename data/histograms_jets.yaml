@@ -62,45 +62,69 @@ $0_Eta:
       - [SubSubLJ, Jet 3]
       - [SubSubSubLJ, Jet 4]
 
-CleanJ_BTagEta:
-    dir: jets
-    max: J_NumCleanCSVM
-    binning: [40, -3, 3]
-    axis labels: ["Tagged jet #eta", Events]
-    visible: [-3, 3]
-    showOF: false
-    logy: 1
+#  CleanJ_BTagEta:
+    #  dir: jets
+    #  max: J_NumCleanCSVM
+    #  binning: [40, -3, 3]
+    #  axis labels: ["Tagged jet #eta", Events]
+    #  visible: [-3, 3]
+    #  showOF: false
+    #  logy: 1
 
-CleanJ_NonBTagEta:
-    dir: jets
-    max: J_NumCleanNonCSVM
-    binning: [40, -3, 3]
-    axis labels: ["Untagged jet #eta", Events]
-    visible: [-3, 3]
-    showOF: false
-    logy: 1
+#  CleanJ_NonBTagEta:
+    #  dir: jets
+    #  max: J_NumCleanNonCSVM
+    #  binning: [40, -3, 3]
+    #  axis labels: ["Untagged jet #eta", Events]
+    #  visible: [-3, 3]
+    #  showOF: false
+    #  logy: 1
 
-CleanJ_MatchIndex:
-    values: [CleanJ_PartonId]
-    translate jet match id: true
-    dir: jets
-    max: J_NumCleanInclusive
-    binning: [13, 0, 13]
-    bin labels: ["null", other, d, u, s, c, b, t, e, "#mu", "#tau", g, W]
-    axis labels: ["Clean jet match", Events]
+#  $0J_CSV:
+    #  value: $0J_combOB
+    #  dir: jets
+    #  max: J_Num$1
+    #  binning: [30, -1, 1]
+    #  axis labels: ["$0 jet CSV", Events]
+    #  replace:
+      #  - [Clean, CleanInclusive]
+      #  - [Tagged, CleanCSVM]
+      #  - [Untagged, CleanNonCSVM]
 
-CleanJ_ParentMatchIndex:
-    values: [CleanJ_PartonGoodParentId]
-    translate jet match id: true
-    dir: jets
-    max: J_NumCleanInclusive
-    binning: [13, 0, 13]
-    bin labels: ["null", other, d, u, s, c, b, t, e, "#mu", "#tau", g, W]
-    axis labels: ["Clean jet parent match", Events]
+#  $0J_MatchIndex:
+    #  values: [CleanJ_PartonId]
+    #  translate jet match id: true
+    #  dir: jets
+    #  max: J_Num$1
+    #  binning: [13, 0, 13]
+    #  bin labels: ["null", other, d, u, s, c, b, t, e, "#mu", "#tau", g, W]
+    #  axis labels: ["$0 jet match", Events]
+    #  replace:
+      #  - [Clean, CleanInclusive]
+      #  - [Tagged, CleanCSVM]
+      #  - [Untagged, CleanNonCSVM]
 
-CleanJ_ParentMatchId:
-    values: [CleanJ_PartonMother0Id]
-    dir: jets
-    max: J_NumCleanInclusive
-    binning: [120, -600, 600]
-    axis labels: ["Clean jet parent id", Events]
+#  CleanJ_ParentMatchIndex:
+    #  values: [CleanJ_PartonGoodParentId]
+    #  translate jet match id: true
+    #  dir: jets
+    #  max: J_NumCleanInclusive
+    #  binning: [13, 0, 13]
+    #  bin labels: ["null", other, d, u, s, c, b, t, e, "#mu", "#tau", g, W]
+    #  axis labels: ["Clean jet parent match", Events]
+
+#  CleanJ_MotherMatchIndex:
+    #  values: [CleanJ_PartonMother0Id]
+    #  translate jet match id: true
+    #  dir: jets
+    #  max: J_NumCleanInclusive
+    #  binning: [13, 0, 13]
+    #  bin labels: ["null", other, d, u, s, c, b, t, e, "#mu", "#tau", g, W]
+    #  axis labels: ["Clean jet parent match", Events]
+
+#  CleanJ_ParentMatchId:
+    #  values: [CleanJ_PartonMother0Id]
+    #  dir: jets
+    #  max: J_NumCleanInclusive
+    #  binning: [120, -600, 600]
+    #  axis labels: ["Clean jet parent id", Events]

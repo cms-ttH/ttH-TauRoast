@@ -19,7 +19,7 @@ analysis:
           - [T_IsolationMVA2Raw, F]
           - [TL1_DeltaR, F]
           - [TL2_DeltaR, F]
-          - [LJ_Pt, F]
+          - [CleanLJ_Pt, F]
           - [L1_Pt, F]
           #  - [L2_Pt, F]
           #  - [HT, F]
@@ -115,7 +115,7 @@ paths:
     # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
     # name; {m} = mode (_log)
     stack format: "{root}/{t}/{d}/{n}{p}{m}.{t}"
-    ntuples: "/hadoop/users/matze/ttH/v54/2012/tll_{p}/*_ntuple.root"
+    ntuples: "/hadoop/users/matze/ttH/v54.1/2012/tll_{p}/*_ntuple.root"
 
 processes: !include processes.yaml
 histograms: !include histograms*.yaml

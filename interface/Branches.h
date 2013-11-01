@@ -14,8 +14,6 @@
 namespace roast {
     class Branches {
         protected:
-
-            void RegenerateCaches();
             void SetUp(std::map<std::string,std::string> const &, std::vector<std::string> const &);
             virtual void Null();
             virtual void Delete();
@@ -40,13 +38,6 @@ namespace roast {
             Long64_t GetEntries();
             unsigned int GetNumCombos() { return NumCombos; };
             virtual bool IsGoodGenMatch(const int&) const = 0;
-
-            float GetCleanJetBTagEta(unsigned int, unsigned int);
-            float GetCleanJetBTagPhi(unsigned int, unsigned int);
-            float GetCleanJetBTagPt(unsigned int, unsigned int);
-            float GetCleanJetNonBTagEta(unsigned int, unsigned int);
-            float GetCleanJetNonBTagPhi(unsigned int, unsigned int);
-            float GetCleanJetNonBTagPt(unsigned int, unsigned int);
 
             unsigned int TranslateMatchIndex(int, int=-99) const;
             unsigned int TranslateJetMatchIndex(int) const;
@@ -129,6 +120,7 @@ namespace roast {
             std::vector<float>* J_Eta;
             std::vector<float>* J_MomentumRank;
             Int_t J_NumJets;
+            std::vector<int>* J_PartonGrandParentId;
             std::vector<int>* J_PartonGrandmother00Id;
             std::vector<int>* J_PartonGrandmother00Status;
             std::vector<int>* J_PartonGrandmother01Id;
@@ -142,6 +134,7 @@ namespace roast {
             std::vector<int>* J_PartonMother0Status;
             std::vector<int>* J_PartonMother1Id;
             std::vector<int>* J_PartonMother1Status;
+            std::vector<int>* J_PartonParentId;
             std::vector<int>* J_PartonStatus;
             std::vector<float>* J_Phi;
             std::vector<float>* J_Pt;
@@ -192,13 +185,9 @@ namespace roast {
             std::vector<float>* CSVeventWeightLFStats2up;
             std::vector<float>* CSVeventWeightLFdown;
             std::vector<float>* CSVeventWeightLFup;
-            std::vector<std::vector<unsigned int> >* CleanJetCSVLIndices;
             std::vector<std::vector<unsigned int> >* CleanJetCSVMIndices;
-            std::vector<std::vector<unsigned int> >* CleanJetCSVTIndices;
             std::vector<std::vector<unsigned int> >* CleanJetIndices;
-            std::vector<std::vector<unsigned int> >* CleanJetNonCSVLIndices;
             std::vector<std::vector<unsigned int> >* CleanJetNonCSVMIndices;
-            std::vector<std::vector<unsigned int> >* CleanJetNonCSVTIndices;
             std::vector<float>* HT;
             std::vector<int>* MomentumRank;
             std::vector<unsigned int>* NumCSVLbtagJets;

@@ -70,31 +70,6 @@ Long64_t Branches::GetEntries(){
 	return fChain->GetEntries();
 }
 
-void
-Branches::RegenerateCaches()
-{
-    if (caches_dirty) {
-        clean_btag_cache.clear();
-        clean_nonbtag_cache.clear();
-
-        for (const auto& v: *CleanJetIndices) {
-            std::vector<int> btag_indices;
-            std::vector<int> nonbtag_indices;
-
-            for (const auto& i: v) {
-                if ((*J_combSecVtxMediumBTag)[i])
-                    btag_indices.push_back(i);
-                else
-                    nonbtag_indices.push_back(i);
-            }
-
-            clean_btag_cache.push_back(btag_indices);
-            clean_nonbtag_cache.push_back(nonbtag_indices);
-        }
-        caches_dirty = false;
-    }
-}
-
 unsigned int
 Branches::TranslateMatchIndex(int idx, int pidx) const
 {
@@ -153,48 +128,6 @@ Branches::TranslateJetMatchIndex(int idx) const
         default:
             return 1;
     }
-}
-
-float
-Branches::GetCleanJetBTagEta(unsigned int idx, unsigned int n)
-{
-    RegenerateCaches();
-    return J_Eta->at(clean_btag_cache[idx].at(n));
-}
-
-float
-Branches::GetCleanJetBTagPt(unsigned int idx, unsigned int n)
-{
-    RegenerateCaches();
-    return J_Pt->at(clean_btag_cache[idx].at(n));
-}
-
-float
-Branches::GetCleanJetBTagPhi(unsigned int idx, unsigned int n)
-{
-    RegenerateCaches();
-    return J_Phi->at(clean_btag_cache[idx].at(n));
-}
-
-float
-Branches::GetCleanJetNonBTagEta(unsigned int idx, unsigned int n)
-{
-    RegenerateCaches();
-    return J_Eta->at(clean_nonbtag_cache[idx].at(n));
-}
-
-float
-Branches::GetCleanJetNonBTagPt(unsigned int idx, unsigned int n)
-{
-    RegenerateCaches();
-    return J_Pt->at(clean_nonbtag_cache[idx].at(n));
-}
-
-float
-Branches::GetCleanJetNonBTagPhi(unsigned int idx, unsigned int n)
-{
-    RegenerateCaches();
-    return J_Phi->at(clean_nonbtag_cache[idx].at(n));
 }
 
 ClassImp(roast::Branches)

@@ -84,6 +84,7 @@ Branches::Clear()
     J_Eta->clear();
     J_MomentumRank->clear();
     J_NumJets = 0;
+    J_PartonGrandParentId->clear();
     J_PartonGrandmother00Id->clear();
     J_PartonGrandmother00Status->clear();
     J_PartonGrandmother01Id->clear();
@@ -97,6 +98,7 @@ Branches::Clear()
     J_PartonMother0Status->clear();
     J_PartonMother1Id->clear();
     J_PartonMother1Status->clear();
+    J_PartonParentId->clear();
     J_PartonStatus->clear();
     J_Phi->clear();
     J_Pt->clear();
@@ -147,13 +149,9 @@ Branches::Clear()
     CSVeventWeightLFStats2up->clear();
     CSVeventWeightLFdown->clear();
     CSVeventWeightLFup->clear();
-    CleanJetCSVLIndices->clear();
     CleanJetCSVMIndices->clear();
-    CleanJetCSVTIndices->clear();
     CleanJetIndices->clear();
-    CleanJetNonCSVLIndices->clear();
     CleanJetNonCSVMIndices->clear();
-    CleanJetNonCSVTIndices->clear();
     HT->clear();
     MomentumRank->clear();
     NumCSVLbtagJets->clear();
@@ -326,6 +324,7 @@ Branches::Delete()
     delete J_Charge;
     delete J_Eta;
     delete J_MomentumRank;
+    delete J_PartonGrandParentId;
     delete J_PartonGrandmother00Id;
     delete J_PartonGrandmother00Status;
     delete J_PartonGrandmother01Id;
@@ -339,6 +338,7 @@ Branches::Delete()
     delete J_PartonMother0Status;
     delete J_PartonMother1Id;
     delete J_PartonMother1Status;
+    delete J_PartonParentId;
     delete J_PartonStatus;
     delete J_Phi;
     delete J_Pt;
@@ -388,13 +388,9 @@ Branches::Delete()
     delete CSVeventWeightLFStats2up;
     delete CSVeventWeightLFdown;
     delete CSVeventWeightLFup;
-    delete CleanJetCSVLIndices;
     delete CleanJetCSVMIndices;
-    delete CleanJetCSVTIndices;
     delete CleanJetIndices;
-    delete CleanJetNonCSVLIndices;
     delete CleanJetNonCSVMIndices;
-    delete CleanJetNonCSVTIndices;
     delete HT;
     delete MomentumRank;
     delete NumCSVLbtagJets;
@@ -589,6 +585,7 @@ Branches::Null()
     J_Eta = 0;
     J_MomentumRank = 0;
     J_NumJets = 0;
+    J_PartonGrandParentId = 0;
     J_PartonGrandmother00Id = 0;
     J_PartonGrandmother00Status = 0;
     J_PartonGrandmother01Id = 0;
@@ -602,6 +599,7 @@ Branches::Null()
     J_PartonMother0Status = 0;
     J_PartonMother1Id = 0;
     J_PartonMother1Status = 0;
+    J_PartonParentId = 0;
     J_PartonStatus = 0;
     J_Phi = 0;
     J_Pt = 0;
@@ -652,13 +650,9 @@ Branches::Null()
     CSVeventWeightLFStats2up = 0;
     CSVeventWeightLFdown = 0;
     CSVeventWeightLFup = 0;
-    CleanJetCSVLIndices = 0;
     CleanJetCSVMIndices = 0;
-    CleanJetCSVTIndices = 0;
     CleanJetIndices = 0;
-    CleanJetNonCSVLIndices = 0;
     CleanJetNonCSVMIndices = 0;
-    CleanJetNonCSVTIndices = 0;
     HT = 0;
     MomentumRank = 0;
     NumCSVLbtagJets = 0;
@@ -860,6 +854,7 @@ Branches::SetBranchAddresses()
     fChain->SetBranchAddress("J_Eta", &J_Eta);
     fChain->SetBranchAddress("J_MomentumRank", &J_MomentumRank);
     fChain->SetBranchAddress("J_NumJets", &J_NumJets);
+    fChain->SetBranchAddress("J_PartonGrandParentId", &J_PartonGrandParentId);
     fChain->SetBranchAddress("J_PartonGrandmother00Id", &J_PartonGrandmother00Id);
     fChain->SetBranchAddress("J_PartonGrandmother00Status", &J_PartonGrandmother00Status);
     fChain->SetBranchAddress("J_PartonGrandmother01Id", &J_PartonGrandmother01Id);
@@ -873,6 +868,7 @@ Branches::SetBranchAddresses()
     fChain->SetBranchAddress("J_PartonMother0Status", &J_PartonMother0Status);
     fChain->SetBranchAddress("J_PartonMother1Id", &J_PartonMother1Id);
     fChain->SetBranchAddress("J_PartonMother1Status", &J_PartonMother1Status);
+    fChain->SetBranchAddress("J_PartonParentId", &J_PartonParentId);
     fChain->SetBranchAddress("J_PartonStatus", &J_PartonStatus);
     fChain->SetBranchAddress("J_Phi", &J_Phi);
     fChain->SetBranchAddress("J_Pt", &J_Pt);
