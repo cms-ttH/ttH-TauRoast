@@ -39,20 +39,30 @@ def setup_upper_axis(histo, scale=True):
     if scale:
         histo.ScaleBy(0)
     histo.SetTitle("")
+
+    histo.GetXaxis().SetLabelFont(62)
+    histo.GetXaxis().SetTitleFont(62)
+
+    histo.GetYaxis().SetTitleFont(62)
     histo.GetYaxis().SetTitleSize(.05)
     histo.GetYaxis().SetTitleOffset(1.1)
+    histo.GetYaxis().SetLabelFont(62)
     histo.GetYaxis().SetLabelSize(.04)
 
 def setup_lower_axis(histo):
+    histo.GetXaxis().SetTitleFont(62)
     histo.GetXaxis().SetTitleSize(0.14)
     histo.GetXaxis().SetTitleOffset(0.9)
+    histo.GetXaxis().SetLabelFont(62)
     histo.GetXaxis().SetLabelSize(0.12)
     histo.GetXaxis().SetLabelOffset(0.02)
 
+    histo.GetYaxis().SetTitleFont(62)
     histo.GetYaxis().SetTitle("Data/MC")
     histo.GetYaxis().CenterTitle()
     histo.GetYaxis().SetTitleSize(0.1)
     histo.GetYaxis().SetTitleOffset(0.45)
+    histo.GetYaxis().SetLabelFont(62)
     histo.GetYaxis().SetLabelSize(0.1)
     histo.GetYaxis().SetRangeUser(0, ratio_plot_max)
     histo.GetYaxis().SetNdivisions(505)
