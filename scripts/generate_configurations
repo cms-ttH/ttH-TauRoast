@@ -15,6 +15,37 @@ if len(args) != 2:
 
 (baseconfig, basepath,) = args
 
+class Include:
+    def __init__(self, *args):
+        if len(args) == 1:
+            self.args = args[0]
+        else:
+            self.args = list(args)
+
+    def __repr__(self):
+        return "<{0}({1})>".format(self.__class__.__name__, self.args)
+
+    def __str__(self):
+        if isinstance(self.args, list):
+            return str(self.args)
+        return self.args
+
+def include_constructor(loader, node):
+    try:
+        value = loader.construct_scalar(node)
+        return Include(value)
+    except:
+        values = loader.construct_sequence(node)
+        return Include(*values)
+
+def include_representer(dumper, data):
+    if isinstance(data.args, list):
+        return dumper.represent_sequence(u'!include', data.args)
+    return dumper.represent_scalar(u'!include', data.args)
+
+yaml.add_constructor(u'!include', include_constructor)
+yaml.add_representer(Include, include_representer)
+
 def tag_convention(min, max):
     res = min
     if max == "":
@@ -127,7 +158,7 @@ for (bmin, bmax, jmin, jmax, active_mva) in categories:
                         ))
 
                     if shape:
-                        data['paths']['tree'] = "makeNtuple{0}/TTbarHTauTau{0}".format(postfix.replace("Up", "up").replace("Down", "down"))
+                        data['paths']['ntuples'] = data['paths']['ntuples'].replace(".root", postfix + ".root")
                         basedir = dir
 
                         analyze.write(os.path.join(dir, "roast_configuration.yaml") + ",\n")
