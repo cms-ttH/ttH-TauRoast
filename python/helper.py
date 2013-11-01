@@ -40,8 +40,11 @@ class Loader(yaml.Loader):
             names += self.construct_sequence(node)
 
         filenames = []
-        for fn in map(lambda fn: os.path.join(self._root, fn), names):
-            filenames += glob(fn)
+        for fn in names:
+            fns = glob(os.path.join(self._root, fn))
+            if len(fns) == 0:
+                fns = glob(os.path.join(os.environ["LOCALRT"], "src", "ttH", "TauRoast", "data", fn))
+            filenames += fns
 
         values = {}
         for fn in filenames:
