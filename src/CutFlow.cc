@@ -25,8 +25,8 @@ CutFlow::Cut::Check(Branches *b, const int idx, const bool bypass)
     return false;
 }
 
-CutFlow::ValueCut::ValueCut(const std::string& n, float mn, float mx, bool skp) :
-    CutFlow::Cut(n), skip(skp), min(mn), max(mx)
+CutFlow::ValueCut::ValueCut(const std::string& n, float mn, float mx, bool skp, bool neg) :
+    CutFlow::Cut(n), negate(neg), skip(skp), min(mn), max(mx)
 {
     if (n.find("AbsId") != std::string::npos)
         skip = true;
@@ -38,8 +38,8 @@ bool
 CutFlow::ValueCut::RealCheck(Branches *b, int idx, bool bypass)
 {
     float val = GetVal(b, idx, -1);
-
-    return ((min <= val) && (val <= max)) || (skip && bypass);
+    bool res = ((min <= val) && (val <= max)) || (skip && bypass);
+    return negate ? !res : res;
 }
 
 bool

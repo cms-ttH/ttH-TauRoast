@@ -51,13 +51,14 @@ namespace roast {
             };
 
             struct ValueCut : public Cut {
+                bool negate;
                 bool skip;
                 float min;
                 float max;
                 GetValue_t GetVal;
 
-                ValueCut() : Cut(""), skip(false), min(0), max(0), GetVal(0) {};
-                ValueCut(const std::string&, float, float, bool=false);
+                ValueCut() : Cut(""), negate(false), skip(false), min(0), max(0), GetVal(0) {};
+                ValueCut(const std::string&, float, float, bool=false, bool=false);
 
                 virtual Cut* Clone() { return new ValueCut(*this); };
                 virtual bool RealCheck(Branches*, int, bool);

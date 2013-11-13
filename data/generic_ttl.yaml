@@ -60,43 +60,43 @@ physics:
       - [brSF, nominal]
     cuts:
       # reality
-      - {name: T1_MatchAbsId, min: 15, max: 15}
-      - {name: T2_MatchAbsId, min: 15, max: 15}
-      - {name: T1_ParentAbsId, min: 25, max: 25}
-      - {name: T2_ParentAbsId, min: 25, max: 25}
+      - T1_MatchAbsId = 15
+      - T2_MatchAbsId = 15
+      - T1_ParentAbsId = 25
+      - T2_ParentAbsId = 25
       # tops
-      - {name: J_NumCleanCSVM, min: 1, max: 2}
-      - {name: J_NumCleanNonCSVM, min: 0}
-      - {name: J_NumCleanInclusive, min: 2}
+      - 1 ≤ J_NumCleanCSVM ≤ 2
+      - J_NumCleanNonCSVM ≥ 0
+      - J_NumCleanInclusive ≥ 2
       # lepton
-      - {name: NumTightLeptons, min: 1, max: 1}
-      - {name: NumExLooseLeptons, min: 0, max: 0}
-      - {name: L_Pt, min: 30}
+      - NumTightLeptons = 1
+      - NumExLooseLeptons = 0
+      - L_Pt ≥ 30
       # taus
       # kinematic
-      - {name: T1_Pt, min: 20}
-      - {name: T2_Pt, min: 20}
-      - {name: T1_Eta, min: -2.1, max: 2.1}
-      - {name: T2_Eta, min: -2.1, max: 2.1}
-      - {name: TT_DeltaR, min: 0.5}
+      - T1_Pt ≥ 20
+      - T2_Pt ≥ 20
+      - -2.1 ≤ T1_Eta ≤ 2.1
+      - -2.1 ≤ T2_Eta ≤ 2.1
+      - TT_DeltaR ≥ 0.5
       # topological
-      - {name: T1L_DeltaR, min: 0.25}
-      - {name: T2L_DeltaR, min: 0.25}
+      - T1L_DeltaR ≥ 0.25
+      - T2L_DeltaR ≥ 0.25
       # optimization
-      - {name: T1_DecayModeFinding, min: 1, max: 1}
-      - {name: T2_DecayModeFinding, min: 1, max: 1}
-      - {name: T1_LTPt, min: 5}
-      - {name: T2_LTPt, min: 5}
-      - {name: T1_NumProngs, min: 1, max: 1}
-      - {name: T2_NumProngs, min: 1, max: 1}
-      - {name: T1_AntiElectronIndex, min: 1}
-      - {name: T2_AntiElectronIndex, min: 1}
-      - {name: T1_AntiMuonIndex, min: 1}
-      - {name: T2_AntiMuonIndex, min: 1}
-      - {name: T1_IsolationMVA2Raw, min: 0.25}
-      - {name: T2_IsolationMVA2Raw, min: 0}
+      - T1_DecayModeFinding = 1
+      - T2_DecayModeFinding = 1
+      - T1_LTPt ≥ 5
+      - T2_LTPt ≥ 5
+      - T1_NumProngs = 1
+      - T2_NumProngs = 1
+      - T1_AntiElectronIndex ≥ 1
+      - T2_AntiElectronIndex ≥ 1
+      - T1_AntiMuonIndex ≥ 1
+      - T2_AntiMuonIndex ≥ 1
+      - T1_IsolationMVA2Raw ≥ 0.25
+      - T2_IsolationMVA2Raw ≥ 0
       # topological
-      - {name: TT_ChargeProduct, min: -1, max: -1}
+      - TT_ChargeProduct = -1
     pair selection: iso
     systematics:
         eTauFake: 1.05

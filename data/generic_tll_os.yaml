@@ -65,35 +65,35 @@ physics:
       - [brSF, nominal]
     cuts:
       # reality
-      - {name: T_MatchAbsId, min: 15, max: 15}
-      - {name: T_ParentAbsId, min: 25, max: 25}
+      - T_MatchAbsId = 15
+      - T_ParentAbsId = 25
       # tops
-      - {name: J_NumCleanCSVM, min: 1, max: 2}
-      - {name: J_NumCleanNonCSVM, min: 0}
-      - {name: J_NumCleanInclusive, min: 2}
+      - 1 ≤ J_NumCleanCSVM ≤ 2
+      - J_NumCleanNonCSVM ≥ 0
+      - J_NumCleanInclusive ≥ 2
       # lepton
-      - {name: NumTightLeptons, min: 1, max: 2}
-      - {name: NumLooseLeptons, min: 2, max: 2}
-      - {name: L1_Pt, min: 20}
-      - {name: L2_Pt, min: 10}
-      - {name: L1L2_DeltaR, min: 0.25}
+      - 1 ≤ NumTightLeptons ≤ 2
+      - NumLooseLeptons = 2
+      - L1_Pt ≥ 20
+      - L2_Pt ≥ 10
+      - L1L2_DeltaR ≥ 0.25
       # taus
       # kinematic
-      - {name: T_Pt, min: 20}
-      - {name: T_Eta, min: -2.1, max: 2.1}
+      - T_Pt ≥ 20
+      - -2.1 ≤ T_Eta ≤ 2.1
       # topological
-      - {name: TL1_DeltaR, min: 0.25}
-      - {name: TL2_DeltaR, min: 0.25}
+      - TL1_DeltaR ≥ 0.25
+      - TL2_DeltaR ≥ 0.25
       # optimization
-      - {name: T_DecayModeFinding, min: 1, max: 1}
-      - {name: T_LTPt, min: 5}
-      - {name: T_NumProngs, min: 1, max: 1}
-      - {name: T_AntiElectronIndex, min: 1}
-      - {name: T_AntiMuonIndex, min: 1}
-      - {name: T_IsolationMVA2Raw, min: 0.25}
+      - T_DecayModeFinding = 1
+      - T_LTPt ≥ 5
+      - T_NumProngs = 1
+      - T_AntiElectronIndex ≥ 1
+      - T_AntiMuonIndex ≥ 1
+      - T_IsolationMVA2Raw ≥ 0.25
       # topological
-      - {name: LL_ChargeProduct, min: -1, max: -1}
-      - {name: LL_ZPeakVeto, min: 0, max: 0}
+      - LL_ChargeProduct = -1
+      - Z-Peak veto: not 81.0 ≤ L1L2_VisibleMass ≤ 101.0 or NumLooseMuons = 1
     pair selection: iso
     systematics:
         eTauFake: 1.05
