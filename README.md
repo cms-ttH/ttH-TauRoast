@@ -2,8 +2,8 @@
 
 ## Installation
 
-[PyYaml](http://pyyaml.org/wiki/PyYAML) is a pre-requisite.  Install it
-locally after executing `cmsenv`:
+[PyYaml](http://pyyaml.org/wiki/PyYAML) and [pyparsing]() are pre-requisites.
+Install them locally after executing `cmsenv`:
 
     cd /tmp
     wget -O - http://pyyaml.org/download/pyyaml/PyYAML-3.10.tar.gz|tar xzf -
@@ -11,6 +11,12 @@ locally after executing `cmsenv`:
     python setup.py install --user
     cd ..
     rm -rf PyYAML-3.10/
+
+    wget -O - "http://downloads.sourceforge.net/project/pyparsing/pyparsing/pyparsing-2.0.1/pyparsing-2.0.1.tar.gz?r=&ts=1384527918&use_mirror=hivelocity"|tar xzf -
+    cd pyparsing-2.0.1/
+    python setup.py install --user
+    cd ..
+    rm -rf pyparsing-2.0.1/
 
 Afterwards, clone this repository in the CMSSW source area:
 
