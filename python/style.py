@@ -33,7 +33,7 @@ def draw_channel_info(config, plot_ratio):
     tex.SetTextAlign(11)
     tex.DrawLatex(0.14, 0.91, "CMS Preliminary")
     tex.SetTextAlign(31)
-    tex.DrawLatex(1 - r.gPad.GetRightMargin(), 0.91, "#sqrt{s} = 8 TeV, L = 19.5 fb^{-1}")
+    tex.DrawLatex(1 - r.gPad.GetRightMargin(), 0.91, "#sqrt{s} = 8 TeV, L = 19.3 fb^{-1}")
 
 def setup_upper_axis(histo, scale=True):
     if scale:
