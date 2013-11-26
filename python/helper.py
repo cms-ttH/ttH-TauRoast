@@ -415,7 +415,7 @@ def load_config(filename, basedir, overrides):
                     obj = obj[keys.pop(0)]
                 if len(keys) != 1:
                     raise KeyError
-                obj[keys[0]] = value
+                obj[keys[0]] = yaml.load(value)
             except ValueError:
                 logging.error("cannot override path %s without a value", setting)
             except KeyError:
