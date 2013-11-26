@@ -37,8 +37,10 @@ CutFlow::ValueCut::ValueCut(const std::string& n, float mn, float mx, bool skp, 
 bool
 CutFlow::ValueCut::RealCheck(Branches *b, int idx, bool bypass)
 {
+    if (skip && bypass)
+        return true;
     float val = GetVal(b, idx, -1);
-    bool res = ((min <= val) && (val <= max)) || (skip && bypass);
+    bool res = (min <= val) && (val <= max);
     return negate ? !res : res;
 }
 
@@ -118,11 +120,21 @@ CutFlow::SetCutCounts(string const iName, double const iEvents)
 }
 
 bool
-CutFlow::CheckCuts(Branches *b, const int& idx, const bool bypass)
+CutFlow::CheckCuts(Branches *b, const int& idx, const bool bypass, bool debug)
 {
-    for (auto& c: cuts)
-        if (!c->Check(b, idx, bypass))
+    for (auto& c: cuts) {
+        if (debug)
+            std::cout << c->name;
+
+        if (!c->Check(b, idx, bypass)) {
+            if (debug)
+                std::cout << " failed" << std::endl;
             return false;
+        }
+
+        if (debug)
+            std::cout << " passed" << std::endl;
+    }
     return true;
 }
 
