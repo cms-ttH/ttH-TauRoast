@@ -76,6 +76,7 @@ tll::Branches::Clear()
     TLL_Lepton2Phi->clear();
     TLL_Lepton2Pt->clear();
     TLL_Lepton2RelIso->clear();
+    TLL_PassZMask->clear();
     TLL_TauCharge->clear();
     TLL_TauDecayMode->clear();
     TLL_TauEmFraction->clear();
@@ -242,6 +243,7 @@ tll::Branches::Delete()
     delete TLL_Lepton2Phi;
     delete TLL_Lepton2Pt;
     delete TLL_Lepton2RelIso;
+    delete TLL_PassZMask;
     delete TLL_TauCharge;
     delete TLL_TauDecayMode;
     delete TLL_TauEmFraction;
@@ -408,6 +410,7 @@ tll::Branches::Null()
     TLL_Lepton2Phi = 0;
     TLL_Lepton2Pt = 0;
     TLL_Lepton2RelIso = 0;
+    TLL_PassZMask = 0;
     TLL_TauCharge = 0;
     TLL_TauDecayMode = 0;
     TLL_TauEmFraction = 0;
@@ -616,6 +619,7 @@ tll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TLL_NumTaus", &NumTaus);
     fChain->SetBranchAddress("TLL_NumTightElectrons", &NumTightElectrons);
     fChain->SetBranchAddress("TLL_NumTightMuons", &NumTightMuons);
+    fChain->SetBranchAddress("TLL_PassZMask", &TLL_PassZMask);
     fChain->SetBranchAddress("TLL_TauCharge", &TLL_TauCharge);
     fChain->SetBranchAddress("TLL_TauDecayMode", &TLL_TauDecayMode);
     fChain->SetBranchAddress("TLL_TauEmFraction", &TLL_TauEmFraction);

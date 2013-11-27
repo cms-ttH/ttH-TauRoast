@@ -98,6 +98,7 @@ namespace roast {
                 std::vector<float>* TLL_Lepton2Phi;
                 std::vector<float>* TLL_Lepton2Pt;
                 std::vector<float>* TLL_Lepton2RelIso;
+                std::vector<bool>* TLL_PassZMask;
                 std::vector<float>* TLL_TauCharge;
                 std::vector<unsigned int>* TLL_TauDecayMode;
                 std::vector<float>* TLL_TauEmFraction;

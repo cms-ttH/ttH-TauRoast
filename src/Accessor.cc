@@ -2327,6 +2327,10 @@ namespace roast {
         accessors["NumTightMuons"] = [](Branches *b, int idx, int n) -> float {
             return (*b->NumTightMuons)[idx];
         };
+        accessors["PassZMask"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_PassZMask)[idx];
+        };
         accessors["PuWeight"] = [](Branches *b, int idx, int n) -> float {
             return b->Ev_puWeight;
         };
