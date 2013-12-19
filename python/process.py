@@ -76,7 +76,7 @@ def analyze(config, module):
     processed = []
     for p in processes:
         n = module.analyze(p, vectorize(cuts, 'roast::CutFlow::Cut*'), config['analysis']['max events'],
-                lambda i: logging.info("analyzing %s, event %i", p.GetShortName(), i) if i % 1000 == 0 else None)
+                lambda i: logging.info("analyzing %s, event %i", p.GetShortName(), i) if i % 10000 == 0 else None)
         logging.info("analyzed %i events of %s", n, p.GetShortName())
         processed.append(p)
     return processed
@@ -229,7 +229,7 @@ def fill_histos(config, processes, module):
 
         name = p.GetShortName()
 
-        log = lambda i: logging.info("filling %s, event %i", name, i) if i % 25 == 0 else None
+        log = lambda i: logging.info("filling %s, event %i", name, i) if i % 1000 == 0 else None
         splitter = split[name] if name in split else 0
 
         logging.debug("selecting best particle combination with %s", repr(select))
