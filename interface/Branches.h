@@ -189,6 +189,7 @@ namespace roast {
             std::vector<std::vector<unsigned int> >* CleanJetIndices;
             std::vector<std::vector<unsigned int> >* CleanJetNonCSVMIndices;
             std::vector<float>* HT;
+            std::vector<float>* MHT;
             std::vector<int>* MomentumRank;
             std::vector<unsigned int>* NumCSVLbtagJets;
             std::vector<unsigned int>* NumCSVMbtagJets;

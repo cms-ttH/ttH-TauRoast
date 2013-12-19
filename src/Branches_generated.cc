@@ -153,6 +153,7 @@ Branches::Clear()
     CleanJetIndices->clear();
     CleanJetNonCSVMIndices->clear();
     HT->clear();
+    MHT->clear();
     MomentumRank->clear();
     NumCSVLbtagJets->clear();
     NumCSVMbtagJets->clear();
@@ -392,6 +393,7 @@ Branches::Delete()
     delete CleanJetIndices;
     delete CleanJetNonCSVMIndices;
     delete HT;
+    delete MHT;
     delete MomentumRank;
     delete NumCSVLbtagJets;
     delete NumCSVMbtagJets;
@@ -654,6 +656,7 @@ Branches::Null()
     CleanJetIndices = 0;
     CleanJetNonCSVMIndices = 0;
     HT = 0;
+    MHT = 0;
     MomentumRank = 0;
     NumCSVLbtagJets = 0;
     NumCSVMbtagJets = 0;

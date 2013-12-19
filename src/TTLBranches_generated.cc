@@ -44,6 +44,7 @@ ttl::Branches::Clear()
     TTL_LeptonIsTight->clear();
     TTL_LeptonMomentumRank->clear();
     TTL_LeptonMt->clear();
+    TTL_LeptonMt2->clear();
     TTL_LeptonPhi->clear();
     TTL_LeptonPt->clear();
     TTL_LeptonRelIso->clear();
@@ -259,6 +260,7 @@ ttl::Branches::Delete()
     delete TTL_LeptonIsTight;
     delete TTL_LeptonMomentumRank;
     delete TTL_LeptonMt;
+    delete TTL_LeptonMt2;
     delete TTL_LeptonPhi;
     delete TTL_LeptonPt;
     delete TTL_LeptonRelIso;
@@ -471,6 +473,7 @@ ttl::Branches::Null()
     TTL_LeptonIsTight = 0;
     TTL_LeptonMomentumRank = 0;
     TTL_LeptonMt = 0;
+    TTL_LeptonMt2 = 0;
     TTL_LeptonPhi = 0;
     TTL_LeptonPt = 0;
     TTL_LeptonRelIso = 0;
@@ -707,9 +710,11 @@ ttl::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TTL_LeptonIsTight", &TTL_LeptonIsTight);
     fChain->SetBranchAddress("TTL_LeptonMomentumRank", &TTL_LeptonMomentumRank);
     fChain->SetBranchAddress("TTL_LeptonMt", &TTL_LeptonMt);
+    fChain->SetBranchAddress("TTL_LeptonMt2", &TTL_LeptonMt2);
     fChain->SetBranchAddress("TTL_LeptonPhi", &TTL_LeptonPhi);
     fChain->SetBranchAddress("TTL_LeptonPt", &TTL_LeptonPt);
     fChain->SetBranchAddress("TTL_LeptonRelIso", &TTL_LeptonRelIso);
+    fChain->SetBranchAddress("TTL_MHT", &MHT);
     fChain->SetBranchAddress("TTL_MomentumRank", &MomentumRank);
     fChain->SetBranchAddress("TTL_MuonMomentumRank", &TTL_MuonMomentumRank);
     fChain->SetBranchAddress("TTL_NumCSVLbtagJets", &NumCSVLbtagJets);

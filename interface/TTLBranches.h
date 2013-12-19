@@ -75,6 +75,7 @@ namespace roast {
                 std::vector<bool>* TTL_LeptonIsTight;
                 std::vector<int>* TTL_LeptonMomentumRank;
                 std::vector<float>* TTL_LeptonMt;
+                std::vector<float>* TTL_LeptonMt2;
                 std::vector<float>* TTL_LeptonPhi;
                 std::vector<float>* TTL_LeptonPt;
                 std::vector<float>* TTL_LeptonRelIso;

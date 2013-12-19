@@ -1964,6 +1964,10 @@ namespace roast {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return (*e->TLL_Lepton1Mt)[idx];
         };
+        accessors["L1_Mt2"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton1Mt2)[idx];
+        };
         accessors["L1_Phi"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return (*e->TLL_Lepton1Phi)[idx];
@@ -2091,6 +2095,10 @@ namespace roast {
         accessors["L2_Mt"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return (*e->TLL_Lepton2Mt)[idx];
+        };
+        accessors["L2_Mt2"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_Lepton2Mt2)[idx];
         };
         accessors["L2_Phi"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
@@ -2224,6 +2232,10 @@ namespace roast {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return (*e->TTL_LeptonMt)[idx];
         };
+        accessors["L_Mt2"] = [](Branches *b, int idx, int n) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            return (*e->TTL_LeptonMt2)[idx];
+        };
         accessors["L_Phi"] = [](Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return (*e->TTL_LeptonPhi)[idx];
@@ -2244,6 +2256,9 @@ namespace roast {
         };
         accessors["METphi"] = [](Branches *b, int idx, int n) -> float {
             return b->Ev_METphi;
+        };
+        accessors["MHT"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->MHT)[idx];
         };
         accessors["M_NumMuons"] = [](Branches *b, int idx, int n) -> float {
             return b->M_NumMuons;
@@ -2326,6 +2341,14 @@ namespace roast {
         };
         accessors["NumTightMuons"] = [](Branches *b, int idx, int n) -> float {
             return (*b->NumTightMuons)[idx];
+        };
+        accessors["PassZMask"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_PassZMask)[idx];
+        };
+        accessors["PassZMask2"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_PassZMask2)[idx];
         };
         accessors["PuWeight"] = [](Branches *b, int idx, int n) -> float {
             return b->Ev_puWeight;
