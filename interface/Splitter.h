@@ -19,6 +19,23 @@ namespace roast {
             int _mode;
             ClassDef(InclusiveSignalSplitter, 1);
     };
+
+    class TTbarSplitter : Splitter {
+        public:
+            TTbarSplitter(int mode) : _mode(mode) {};
+            virtual bool Use(Branches *b, int idx) {
+                if (b->Ev_bQuarkCount >= 2)
+                    return 3;
+                if (b->Ev_bQuarkCount == 1)
+                    return 2;
+                if (b->Ev_cQuarkCount == 2)
+                    return 1;
+                return 0;
+            };
+        private:
+            int _mode;
+            ClassDef(TTbarSplitter, 1);
+    };
 }
 
 #endif
