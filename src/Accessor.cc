@@ -2245,6 +2245,10 @@ namespace roast {
         accessors["METphi"] = [](Branches *b, int idx, int n) -> float {
             return b->Ev_METphi;
         };
+        accessors["MHT"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_MHT)[idx];
+        };
         accessors["M_NumMuons"] = [](Branches *b, int idx, int n) -> float {
             return b->M_NumMuons;
         };
@@ -2330,6 +2334,10 @@ namespace roast {
         accessors["PassZMask"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return (*e->TLL_PassZMask)[idx];
+        };
+        accessors["PassZMask2"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            return (*e->TLL_PassZMask2)[idx];
         };
         accessors["PuWeight"] = [](Branches *b, int idx, int n) -> float {
             return b->Ev_puWeight;
