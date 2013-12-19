@@ -143,6 +143,7 @@ to_combine = dict(filter(
 to_process = []
 for p in baseconfig['analysis']['process']:
     if p in to_combine:
+        logging.debug("adding {0} to be processed".format(to_combine[p]['combine']))
         to_process += to_combine[p]['combine']
     else:
         to_process.append(p)
