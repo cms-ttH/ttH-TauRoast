@@ -6,7 +6,9 @@ Collisions:
         labelForLegend: Collisions
         limit alias: data_obs
         type: collisions
-        ntuplePath: [data_DoubleElectron_2012A_06Aug, data_DoubleElectron_2012A_12Jul, data_DoubleElectron_2012B_13Jul, data_DoubleElectron_2012C_24Aug, data_DoubleElectron_2012C_PR, data_DoubleElectron_2012D_PR, data_DoubleMu_2012A_06Aug, data_DoubleMu_2012A_13Jul, data_DoubleMu_2012B_PR, data_DoubleMu_2012C_24Aug, data_DoubleMu_2012C_PR, data_DoubleMu_2012D_PR, data_MuEG_2012A_06Aug, data_MuEG_2012A_13Jul, data_MuEG_2012B_13Jul, data_MuEG_2012C_24Aug, data_MuEG_2012C_PR, data_MuEG_2012D_PR]
+        ntuplePath: [data_DoubleElectron_2012A_06Aug, data_DoubleElectron_2012A_12Jul, data_DoubleElectron_2012B_13Jul, data_DoubleElectron_2012C_24Aug, data_DoubleElectron_2012C_PR, data_DoubleElectron_2012D_PR,
+            data_DoubleMu_2012A_06Aug, data_DoubleMu_2012A_13Jul, data_DoubleMu_2012B_PR, data_DoubleMu_2012C_24Aug, data_DoubleMu_2012C_PR, data_DoubleMu_2012D_PR,
+            data_MuEG_2012A_06Aug, data_MuEG_2012A_13Jul, data_MuEG_2012B_13Jul, data_MuEG_2012C_24Aug, data_MuEG_2012C_PR, data_MuEG_2012D_PR]
         color: 1
         crossSection: 1
         branchingRatio: 1
