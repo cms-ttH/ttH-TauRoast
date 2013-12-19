@@ -127,8 +127,12 @@ CutFlow::CheckCuts(Branches *b, const int& idx, const bool bypass, bool debug)
             std::cout << c->name;
 
         if (!c->Check(b, idx, bypass)) {
-            if (debug)
-                std::cout << " failed" << std::endl;
+            if (debug) {
+                if (auto vc = dynamic_cast<roast::CutFlow::ValueCut*>(c))
+                    std::cout << " failed with value: " << vc->GetVal(b, idx, -1) << std::endl;
+                else
+                    std::cout << " failed" << std::endl;
+            }
             return false;
         }
 
