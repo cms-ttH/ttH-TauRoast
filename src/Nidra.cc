@@ -1,4 +1,5 @@
 // vim: ts=4:sw=4:et:sta
+#include <fstream>
 #include <unordered_set>
 
 #include "../interface/Nidra.h"
@@ -31,6 +32,16 @@ namespace roast {
         cflow.Zero();
 
         std::unordered_set<info> infos;
+        std::unordered_set<info> debug_events;
+        std::fstream fs;
+        fs.open("events.txt", std::fstream::in);
+        if (fs.is_open()) {
+            unsigned long run, ls, event;
+            while (fs >> run >> ls >> event) {
+                info i(run, ls, event);
+                debug_events.insert(i);
+            }
+        }
 
         std::vector<roast::Process::Event> events;
 
@@ -74,12 +85,16 @@ namespace roast {
             if (event->GetNumCombos() > 0)
                 NOEwithAtLeastOneCombo++;
 
+            bool debug = debug_events.find(i) != debug_events.end();
+            if (debug)
+                std::cout << std::get<0>(i) << "\t" << std::get<1>(i) << "\t" << std::get<2>(i) << std::endl;
+
             // Inform cflow that a new event is starting
             cflow.StartOfEvent();
 
             std::vector<int> combos;
             for (unsigned int i = 0; i < event->GetNumCombos(); ++i) {
-                if (cflow.CheckCuts(event, i, !checkReality))
+                if (cflow.CheckCuts(event, i, !checkReality, debug))
                     combos.push_back(i);
             }
 
@@ -139,6 +154,7 @@ namespace roast {
 
             for (auto& h: proc.GetHContainer()) {
                 try {
+                    // std::cout << h.first << std::endl;
                     h.second->Fill(branches, idx, weight);
                 } catch (std::out_of_range e) {}
             }

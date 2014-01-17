@@ -52,6 +52,7 @@
 #pragma link C++ class std::vector<roast::Process*>+;
 #pragma link C++ class roast::Splitter+;
 #pragma link C++ class roast::InclusiveSignalSplitter+;
+#pragma link C++ class roast::TTbarSplitter+;
 #pragma link C++ class roast::Weight+;
 #pragma link C++ class std::vector<roast::Weight>+;
 #pragma link C++ function roast::register_mva;

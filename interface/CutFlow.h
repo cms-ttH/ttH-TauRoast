@@ -97,7 +97,7 @@ namespace roast {
             void RegisterCutFromLast(const std::string&, double);
             void SetCutCounts(std::string const, double const);
 
-            bool CheckCuts(Branches*, const int&, const bool bypass=false);
+            bool CheckCuts(Branches*, const int&, const bool bypass=false, bool debug=false);
             void StartOfEvent();
 
             inline float GetPassedEvents(const std::string& n) const { return cuts[name2idx.find(n)->second]->events_passed; };

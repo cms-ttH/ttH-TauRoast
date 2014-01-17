@@ -211,17 +211,25 @@ def combine_processes(config, ps):
     cfgs = filter(lambda (k, v): 'combine' in v, config['processes'].items())
     for (alias, cfg) in cfgs:
         to_combine = cfg['combine']
-        res = roast.Process(get_process(to_combine[0], ps))
+        res = None
 
-        for other in to_combine[1:]:
-            res.Add(get_process(other, ps))
+        for procname in to_combine:
+            try:
+                p = get_process(procname, ps)
+                if not res:
+                    res = roast.Process(p)
+                else:
+                    res.Add(p)
+            except LookupError, e:
+                logging.error("could not combine process {0} into {1}".format(procname, alias))
 
-        res.SetShortName(alias)
-        res.SetNiceName(cfg['niceName'])
-        res.SetLabelForLegend(cfg['labelForLegend'])
-        res.SetColor(cfg['color'])
+        if res:
+            res.SetShortName(alias)
+            res.SetNiceName(cfg['niceName'])
+            res.SetLabelForLegend(cfg['labelForLegend'])
+            res.SetColor(cfg['color'])
 
-        ps.append(res)
+            ps.append(res)
 
 get_signals = lambda ps: filter(lambda p: p.IsSignal(), ps)
 get_backgrounds = lambda ps: filter(lambda p: p.IsBackground(), ps)

@@ -6,7 +6,9 @@ Collisions:
         labelForLegend: Collisions
         limit alias: data_obs
         type: collisions
-        ntuplePath: [data_DoubleElectron_2012A_06Aug, data_DoubleElectron_2012A_12Jul, data_DoubleElectron_2012B_13Jul, data_DoubleElectron_2012C_24Aug, data_DoubleElectron_2012C_PR, data_DoubleElectron_2012D_PR, data_DoubleMu_2012A_06Aug, data_DoubleMu_2012A_13Jul, data_DoubleMu_2012B_PR, data_DoubleMu_2012C_24Aug, data_DoubleMu_2012C_PR, data_DoubleMu_2012D_PR, data_MuEG_2012A_06Aug, data_MuEG_2012A_13Jul, data_MuEG_2012B_13Jul, data_MuEG_2012C_24Aug, data_MuEG_2012C_PR, data_MuEG_2012D_PR]
+        ntuplePath: [data_DoubleElectron_2012A_06Aug, data_DoubleElectron_2012A_12Jul, data_DoubleElectron_2012B_13Jul, data_DoubleElectron_2012C_24Aug, data_DoubleElectron_2012C_PR, data_DoubleElectron_2012D_PR,
+            data_DoubleMu_2012A_06Aug, data_DoubleMu_2012A_13Jul, data_DoubleMu_2012B_PR, data_DoubleMu_2012C_24Aug, data_DoubleMu_2012C_PR, data_DoubleMu_2012D_PR,
+            data_MuEG_2012A_06Aug, data_MuEG_2012A_13Jul, data_MuEG_2012B_13Jul, data_MuEG_2012C_24Aug, data_MuEG_2012C_PR, data_MuEG_2012D_PR]
         color: 1
         crossSection: 1
         branchingRatio: 1
@@ -210,7 +212,7 @@ ZplusFourJets:
     NoEreadByNUTter: 15156
 
 ZplusJets_LowMass:
-    sampleNumber: 2310
+    sampleNumber: 2850
     niceName: Z + jets M10-50
     labelForLegend: Z + jets M10-50
     type: mcBackground
@@ -220,6 +222,19 @@ ZplusJets_LowMass:
     branchingRatio: 1
     otherScaleFactor: 1
     NOEinDS: 37835275
+    NoEreadByNUTter: 50
+
+ZplusJets_HighMass:
+    sampleNumber: 2310
+    niceName: Z + jets M50+
+    labelForLegend: Z + jets M50+
+    type: mcBackground
+    ntuplePath: [ZplusJets_HighMass_Summer12]
+    color: 21
+    crossSection: 3505.7
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 30459503
     NoEreadByNUTter: 50
 
 singleTopPlusW:
@@ -634,13 +649,13 @@ Zjets:
     labelForLegend: Z + jets
     limit alias: zjets
     color: 418
-    combine: [ZplusJets_LowMass, ZplusOneJet, ZplusTwoJets, ZplusThreeJets, ZplusFourJets]
+    combine: [ZplusJets_LowMass, ZplusJets_HighMass, ZplusOneJet, ZplusTwoJets, ZplusThreeJets, ZplusFourJets]
 
 EWK:
     niceName: EWK
     labelForLegend: EWK
     color: 862
-    combine: [ZplusJets_LowMass, ZplusOneJet, ZplusTwoJets, ZplusThreeJets, ZplusFourJets, WplusOneJet, WplusTwoJets, WplusThreeJets, WplusFourJets, WW, WZ, ZZ]
+    combine: [ZplusJets_LowMass, ZplusJets_HighMass, ZplusOneJet, ZplusTwoJets, ZplusThreeJets, ZplusFourJets, WplusOneJet, WplusTwoJets, WplusThreeJets, WplusFourJets, WW, WZ, ZZ]
 
 DiBoson:
     niceName: WW, WZ, ZZ

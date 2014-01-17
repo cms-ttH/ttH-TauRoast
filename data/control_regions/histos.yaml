@@ -1,0 +1,245 @@
+# vim: set sw=4 sta et :
+Events:
+    dir: general
+    binning: [1, 0, 1]
+    axis labels: ["", Events]
+    visible: [0, 1]
+    showOF: false
+    logy: 1
+
+Weights:
+    dir: general
+    binning: [30, 0, 2]
+    axis labels: [Weight, Events]
+
+Weights_unweighed:
+    cancel weight: all
+    dir: general
+    binning: [30, 0, 2]
+    axis labels: [Weight, Events]
+
+Weights_CSV:
+    plot weight: CSVeventWeight
+    cancel weight: CSVeventWeight
+    dir: general
+    binning: [30, 0.4, 2]
+    axis labels: [CSV Event Weight, Events]
+
+Weights_CSV_unweighed:
+    plot weight: CSVeventWeight
+    cancel weight: all
+    dir: general
+    binning: [30, 0.4, 2]
+    axis labels: [CSV Event Weight, Events]
+
+Weights_PU:
+    plot weight: PUcorr
+    cancel weight: PUcorr
+    dir: general
+    binning: [30, 0, 1.5]
+    axis labels: [PU Weight, Events]
+
+Weights_PU_unweighed:
+    plot weight: PUcorr
+    cancel weight: all
+    dir: general
+    binning: [30, 0, 1.5]
+    axis labels: [PU Weight, Events]
+
+Weights_TopPt:
+    plot weight: topPt
+    cancel weight: topPt
+    dir: general
+    binning: [30, 0.6, 1.3]
+    axis labels: ["Top p_{T} Weight", Events]
+
+Weights_TopPt_unweighed:
+    plot weight: topPt
+    cancel weight: all
+    dir: general
+    binning: [30, 0.6, 1.3]
+    axis labels: ["Top p_{T} Weight", Events]
+
+Weights_Trigger:
+    plot weight: trigger
+    cancel weight: trigger
+    dir: general
+    channel: [tll]
+    binning: [30, 0.8, 1.2]
+    axis labels: ["Trigger Weight", Events]
+
+Weights_Trigger_unweighed:
+    plot weight: trigger
+    cancel weight: all
+    dir: general
+    channel: [tll]
+    binning: [30, 0.8, 1.2]
+    axis labels: ["Trigger Weight", Events]
+
+Weights_Lepton$0SF:
+    plot weight: lepton$0
+    cancel weight: lepton$0
+    dir: general
+    channels: [$1]
+    binning: [30, 0.8, 1.2]
+    axis labels: ["Lepton $0 Scale Factor", Events]
+    replace:
+      - ["", ttl]
+      - [1, tll]
+      - [2, tll]
+
+Weights_Lepton$0SF_unweighed:
+    plot weight: lepton$0
+    cancel weight: all
+    dir: general
+    channels: [$1]
+    binning: [30, 0.8, 1.2]
+    axis labels: ["Lepton $0 Scale Factor", Events]
+    replace:
+      - ["", ttl]
+      - [1, tll]
+      - [2, tll]
+
+Combos:
+    dir: general
+    binning: [20, 1, 21]
+    axis labels: [Combos, Events]
+    visible: [1, 21]
+    showOF: false
+    logy: 1
+
+MET:
+    dir: general
+    binning: [100, 0, 300]
+    axis labels: [MET, Events]
+    visible: [0, 99.99]
+    showOF: true
+    logy: 1
+
+HT:
+    dir: general
+    binning: [50, 0, 1500]
+    axis labels: ['H_{T}', Events]
+    visible: [200, 1000]
+    showOF: true
+    logy: 1
+
+FinalBDTG:
+    dir: general
+    binning: [10, -1, 1]
+    axis labels: [BDT output, Events]
+    visible: [-1, 1]
+    showOF: false
+    logy: 1
+
+FinalCFMlpANN:
+    dir: general
+    binning: [30, -1, 1]
+    axis labels: [CFMlpANN response, Events]
+    visible: [0, 1]
+    showOF: false
+    logy: 1
+
+ComboBDT:
+    dir: general
+    binning: [30, -1, 1]
+    axis labels: [Combo selector response, Events]
+    visible: [-1, 1]
+    showOF: false
+    logy: 1
+
+SelectedComboRank:
+    dir: general
+    binning: [20, 0, 20]
+    axis labels: [Selected combo rank, Events]
+    visible: [0, 20]
+    showOF: false
+    logy: 1
+
+NumberPV_noPURW:
+    dir: pileup
+    binning: [40, 0, 40]
+    axis labels: [Number PV, no PURW, Events]
+    visible: [0, 40]
+    showOF: true
+    logy: 1
+
+V_NumInteractionsBX0_noPURW:
+    dir: pileup
+    binning: [40, 0, 40]
+    axis labels: [Number BX0, no PURW, Events]
+    visible: [0, 40]
+    showOF: true
+    logy: 1
+
+V_NumInteractionsBXm1_noPURW:
+    dir: pileup
+    binning: [40, 0, 40]
+    axis labels: [Number BXm1, no PURW, Events]
+    visible: [0, 40]
+    showOF: true
+    logy: 1
+
+V_NumInteractionsBXp1_noPURW:
+    dir: pileup
+    binning: [40, 0, 40]
+    axis labels: [Number BXp1, no PURW, Events]
+    visible: [0, 40]
+    showOF: true
+    logy: 1
+
+V_NumVertices:
+    dir: pileup
+    binning: [40, 0, 40]
+    axis labels: [Number PV, after PURW, Events]
+    visible: [0, 40]
+    showOF: true
+    logy: 1
+
+V_NumInteractionsBX0:
+    dir: pileup
+    binning: [40, 0, 40]
+    axis labels: [Number BX0, after PURW, Events]
+    visible: [0, 40]
+    showOF: true
+    logy: 1
+
+V_NumInteractionsBXm1:
+    dir: pileup
+    binning: [40, 0, 40]
+    axis labels: [Number BXm1, after PURW, Events]
+    visible: [0, 40]
+    showOF: true
+    logy: 1
+
+V_NumInteractionsBXp1:
+    dir: pileup
+    binning: [40, 0, 40]
+    axis labels: [Number BXp1, after PURW, Events]
+    visible: [0, 40]
+    showOF: true
+    logy: 1
+
+PUweights_noPURW:
+    dir: pileup
+    binning: [40, 0, 4]
+    axis labels: [PUweights, no PURW, Events]
+    visible: [0, 4]
+    showOF: true
+    logy: 1
+
+PUweights:
+    dir: pileup
+    binning: [40, 0, 4]
+    axis labels: [PUweights, after PURW, Events]
+    visible: [0, 4]
+    showOF: true
+    logy: 1
+
+VertexZcoord:
+    dir: pileup
+    binning: [40, -20, 20]
+    axis labels: [Vertex Z coordinate, after PURW, Events]
+    visible: [-20, 20]
+    showOF: true
+    logy: 1
