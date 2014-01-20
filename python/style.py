@@ -26,9 +26,10 @@ def draw_channel_info(config, plot_ratio):
     tex.SetTextSize(0.05 * scale)
     tex.SetTextAlign(31)
     tex.DrawLatex(.99 - r.gPad.GetRightMargin(), .84,
-            channel_label
-            + extract_info(config, 'J_NumCleanInclusive', 'jet') + ' + '
-            + extract_info(config, 'J_NumCleanCSVM', 'b-tag'))
+            channel_label)
+            # FIXME extract_info is broken
+            # + extract_info(config, 'J_NumCleanInclusive', 'jet') + ' + '
+            # + extract_info(config, 'J_NumCleanCSVM', 'b-tag'))
     tex.SetTextSize(0.055 * scale)
     tex.SetTextAlign(11)
     tex.DrawLatex(0.14, 0.91, "CMS Preliminary")
