@@ -93,7 +93,7 @@ physics:
       - T_IsolationMVA2Raw ≥ 0.25
       # topological
       - LL_ChargeProduct = -1
-      - Z-Peak veto: not 81.0 ≤ L1L2_VisibleMass ≤ 101.0 or NumLooseMuons = 1
+      - Z-Peak veto: PassZMask = 1 or NumLooseMuons = 1
     pair selection: iso
     systematics:
         eTauFake: 1.05
@@ -102,7 +102,7 @@ physics:
 
 paths:
     # root path, referenced by {root}
-    root: /afs/crc.nd.edu/user/m/mwolf3/www/ttH/v59/tll_os
+    root: /afs/crc.nd.edu/user/m/mwolf3/www/ttH/v59.1/tll_os
     # for analyzed processes
     input: "{root}/roast_processed.root"
     # {s} is replaced with systematic shifts
@@ -115,7 +115,7 @@ paths:
     # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
     # name; {m} = mode (_log)
     stack format: "{root}/{t}/{d}/{n}{p}{m}.{t}"
-    ntuples: "/hadoop/users/matze/ttH/v59/2012/tll_{p}/*_ntuple.root"
+    ntuples: "/hadoop/users/matze/ttH/v59.1/2012/tll_{p}/*_ntuple.root"
 
 processes: !include processes.yaml
 histograms: !include histograms*.yaml
