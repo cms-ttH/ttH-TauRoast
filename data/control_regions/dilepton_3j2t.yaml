@@ -26,12 +26,13 @@ analysis:
           - [MET, F]
 
     process:
+      #  - Zjets
       - Collisions
       - TTbar
       - EWK
       - SingleTop
       - ttWZ
-      #  - TTHTauTau_125_real
+      - TTHTauTau_125_real
       #  - TTH_110
       #  - TTH_115
       #  - TTH_120
@@ -41,6 +42,7 @@ analysis:
       #  - TTH_140
 
     plot:
+      #  - Zjets
       - Collisions
       - TTbar
       - EWK
@@ -89,7 +91,7 @@ physics:
 
 paths:
     # root path, referenced by {root}
-    root: /afs/crc.nd.edu/user/m/mwolf3/www/v58.4/dil_3j2t
+    root: /afs/crc.nd.edu/user/m/mwolf3/www/ttH/v58.5/dil_3j2t
     # for analyzed processes
     input: "{root}/roast_processed.root"
     # {s} is replaced with systematic shifts
@@ -102,7 +104,7 @@ paths:
     # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
     # name; {m} = mode (_log)
     stack format: "{root}/{t}/{d}/{n}{p}{m}.{t}"
-    ntuples: "/hadoop/users/matze/ttH/v58.4/2012/tll_{p}/*_ntuple.root"
+    ntuples: "/hadoop/users/matze/ttH/v58.5/2012/tll_{p}/*_ntuple.root"
 
 processes: !include ../processes.yaml
 histograms: !include histos.yaml
