@@ -218,7 +218,7 @@ ZplusJets_LowMass:
     type: mcBackground
     ntuplePath: [ZplusJets_LowMass_Summer12]
     color: 20
-    crossSection: 860
+    crossSection: 14702
     branchingRatio: 1
     otherScaleFactor: 1
     NOEinDS: 37835275
