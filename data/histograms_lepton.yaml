@@ -25,6 +25,62 @@ L$0_Mt:
       - [1, "_{1}", tll]
       - [2, "_{2}", tll]
 
+L$0_Mt2:
+    dir: lepton
+    channels: [$2]
+    binning: [60, 0, 150]
+    axis labels: ['lepton$1 m_{T}', Events]
+    showOF: true
+    logy: 1
+    replace:
+      - ["", "", ttl]
+      - [1, "_{1}", tll]
+      - [2, "_{2}", tll]
+
+L$0_Mt:
+    dir: lepton
+    channels: [$2]
+    binning: [60, 0, 150]
+    axis labels: ['lepton$1 m_{T}', Events]
+    showOF: true
+    logy: 1
+    replace:
+      - ["", "", ttl]
+      - [1, "_{1}", tll]
+      - [2, "_{2}", tll]
+
+L1L2_Pt:
+    values: [L1_Pt, L2_Pt]
+    dir: lepton
+    channels: [tll]
+    binning: [40, 0, 200, 40, 0, 200]
+    axis labels: ['lepton1 p_{T}', 'lepton2 p_{T}']
+
+T$0L$2_Pt:
+    values: [T$0_Pt, L$2_Pt]
+    dir: lepton
+    channels: [$4]
+    binning: [40, 0, 200, 40, 0, 200]
+    axis labels: ['tau$1 p_{T}', 'lepton$3 p_{T}']
+    replace:
+      - [1, "_{1}", "", "", ttl]
+      - [2, "_{2}", "", "", ttl]
+      - ["", "", 1, "_{1}", tll]
+      - ["", "", 2, "_{2}", tll]
+
+L1L2_DeltaR:
+    dir: lepton
+    channels: [tll]
+    binning: [40, 0, 10]
+    axis labels: ['#Delta R(lepton 1,2)', Events]
+
+L1L2_Mt:
+    values: [L1_Mt, L2_Mt]
+    dir: lepton
+    channels: [tll]
+    binning: [60, 0, 150, 60, 0, 150]
+    axis labels: ['lepton1 m_{T}', 'lepton2 m_{T}']
+
 L$0_Eta:
     dir: lepton
     channels: [$2]
@@ -263,6 +319,26 @@ L1L2_VisibleMass:
     channels: [tll]
     binning: [40, 0, 200]
     axis labels: ["Dilepton Visible Mass", Events]
+
+L1L2_VisibleMass_$0:
+    values: [L1L2_VisibleMass, $0]
+    dir: lepton
+    channels: [tll]
+    binning: [40, 0, 200, 100, 0, 300]
+    axis labels: ["Dilepton Visible Mass", $0]
+    replace:
+      - [MET]
+      - [MHT]
+
+L1L2_VisibleMass_$0_zoom:
+    values: [L1L2_VisibleMass, $0]
+    dir: lepton
+    channels: [tll]
+    binning: [60, 70, 110, 60, 0, 100]
+    axis labels: ["Dilepton Visible Mass", $0]
+    replace:
+      - [MET]
+      - [MHT]
 
 NumLoose$0:
     dir: lepton
