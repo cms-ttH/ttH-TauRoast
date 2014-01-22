@@ -240,6 +240,16 @@ namespace roast {
             return MVABase::gMVA["FinalBDTG"] ? MVABase::gMVA["FinalBDTG"]->Evaluate(b, idx) : 0.;
         };
 
+        accessors["PassZMask3"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            auto dilmass = (*e->TLL_Lepton1Lepton2VisibleMass)[idx];
+            auto met = e->Ev_MET;
+            bool zpeak = dilmass > 82 && dilmass < 100 &&
+                    met - 40 < 30 / 9. * (dilmass - 82) &&
+                    met - 40 < 30 - 30 / 9. * (dilmass - 91);
+            return !zpeak;
+        };
+
         // >>> Begin attr <<<
         accessors["T1_AntiElectronIndex"] = [](Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);

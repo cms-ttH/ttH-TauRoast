@@ -93,7 +93,7 @@ physics:
       - T_IsolationMVA2Raw ≥ 0.25
       # topological
       - LL_ChargeProduct = -1
-      - Z-Peak veto: PassZMask = 1 or NumLooseMuons = 1
+      - Z-Peak veto: PassZMask3 = 1 or NumLooseMuons = 1
     pair selection: iso
     systematics:
         eTauFake: 1.05
