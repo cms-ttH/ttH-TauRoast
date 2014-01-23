@@ -285,6 +285,41 @@ def normalize_processes(config, processes):
         p.GetCutFlow().RegisterCutFromLast("Lumi norm", scale)
         p.BuildNormalizedCutFlow()
 
+def print_yields(config, processes):
+    procs = map(lambda n: get_process(n, processes), config['analysis']['plot'])
+
+    out = sys.stdout
+
+    out.write("{0:^15}  {1:^15}\n".format("Sample", "Events"))
+    out.write("-" * 32 + "\n")
+
+    bkg_sum = 0
+    for bkg in get_backgrounds(procs):
+        yld = bkg.GetCutFlow().GetCuts()[-1].events_passed
+        bkg_sum += yld
+
+    for sig in get_signals(procs):
+        yld = sig.GetCutFlow().GetCuts()[-1].events_passed
+        out.write("{0:15}  {1:15.2f}\n".format(sig.GetShortName(), yld))
+        out.write("{0:15}  {1:15.2f}\n".format("s / sqrt{s + b}", yld / math.sqrt(yld + bkg_sum)))
+        out.write("-" * 32 + "\n")
+
+    for bkg in get_backgrounds(procs):
+        yld = bkg.GetCutFlow().GetCuts()[-1].events_passed
+        out.write("{0:15}  {1:15.2f}\n".format(bkg.GetShortName(), yld))
+
+    out.write("-" * 32 + "\n")
+    out.write("{0:15}  {1:15.2f}\n".format("Total bkg.", bkg_sum))
+
+    try:
+        col = get_collisions(procs)
+        yld = col.GetCutFlow().GetCuts()[-1].events_passed
+        out.write("{0:15}  {1:15.2f}\n".format("Data / MC", yld / bkg_sum))
+        out.write("-" * 32 + "\n")
+        out.write("{0:15}  {1:15.2f}\n".format(col.GetShortName(), yld))
+    except:
+        pass
+
 def print_cutflow(config, processes, relative=False, normalized=False):
     procs = map(lambda n: get_process(n, processes), config['analysis']['plot'])
     if normalized:

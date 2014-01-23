@@ -64,6 +64,10 @@ parser.add_option("-y", "--yields",
         action="store_true",
         dest="nums",
         help="print event yield information")
+parser.add_option("--yield-summary",
+        action="store_true",
+        dest="nums_summary",
+        help="print condensed event yield information")
 parser.add_option("-Y", "--relative-yields",
         action="store_true",
         dest="nums_rel",
@@ -168,7 +172,7 @@ if opts.fill:
     fill_histos(baseconfig, procs, module)
     save(procs, "Roast", baseconfig['paths']['output'])
 
-if not any([opts.plot, opts.limit_file, opts.nums, opts.nums_rel, opts.ranking]):
+if not any([opts.plot, opts.limit_file, opts.nums, opts.nums_rel, opts.nums_summary, opts.ranking]):
     sys.exit(0)
 
 if not procs:
@@ -188,6 +192,9 @@ if opts.nums:
     print_cutflow(baseconfig, procs, normalized=opts.nums_norm)
 elif opts.nums_rel:
     print_cutflow(baseconfig, procs, True, normalized=opts.nums_norm)
+
+if opts.nums_summary:
+    print_yields(baseconfig, procs)
 
 if opts.ranking:
     print_mva_ranking(baseconfig)
