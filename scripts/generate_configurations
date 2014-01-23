@@ -69,7 +69,8 @@ categories = [
         # ["2", "2", "1", "", False],
         ["2", "2", "2", "", False],
         # ["1", "2", "1", "", True],
-        # ["1", "2", "0", "", True],
+        # ["1", "2", "0", "", False],
+        ["1", "2", "0", "", True],
         ]
 
 systematics = [
@@ -92,7 +93,9 @@ systematics = [
         ("CSVeventWeightCErr2", False),
         ]
 
-mva_default_dir = "/afs/crc.nd.edu/user/m/mwolf3/www/pas_weights/"
+systematics = [("", False)]
+
+# mva_default_dir = "/afs/crc.nd.edu/user/m/mwolf3/www/pas_weights/"
 mva_categories = filter(lambda xs: xs[4], categories)
 
 clusterdir = os.path.join(basepath, '_cluster')
@@ -120,18 +123,25 @@ for (bmin, bmax, jmin, jmax, active_mva) in categories:
                 postfix = ""
 
                 for i in range(len(data['physics']['cuts'])):
-                    if data['physics']['cuts'][i]['name'] == 'J_NumCleanCSVM':
-                        data['physics']['cuts'][i]['min'] = int(bmin)
+                    cut = data['physics']['cuts'][i]
+                    if 'J_NumCleanCSVM' in cut:
+                        new_cut = 'J_NumCleanCSVM'
                         if bmax != "":
-                            data['physics']['cuts'][i]['max'] = int(bmax)
-                        elif 'max' in data['physics']['cuts'][i]:
-                            del data['physics']['cuts'][i]['max']
-                    elif data['physics']['cuts'][i]['name'] == 'J_NumCleanNonCSVM':
-                        data['physics']['cuts'][i]['min'] = int(jmin)
+                            new_cut += " <= " + bmax
+                            if bmin != "":
+                                new_cut = bmin + " <= " + new_cut
+                        else:
+                            new_cut += " >= " + bmin
+                        data['physics']['cuts'][i] = new_cut
+                    elif 'J_NumCleanNonCSVM' in cut:
+                        new_cut = 'J_NumCleanNonCSVM'
                         if jmax != "":
-                            data['physics']['cuts'][i]['max'] = int(jmax)
-                        elif 'max' in data['physics']['cuts'][i]:
-                            del data['physics']['cuts'][i]['max']
+                            new_cut += " <= " + jmax
+                            if jmin != "":
+                                new_cut = jmin + " <= " + new_cut
+                        else:
+                            new_cut += " >= " + jmin
+                        data['physics']['cuts'][i] = new_cut
 
                 basedir = os.path.join(basepath, "{0}b_{1}nb".format(
                     tag_convention(bmin, bmax),
