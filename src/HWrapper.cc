@@ -1,6 +1,8 @@
 // vim: ts=4:sw=4:et:sta
 #include <iostream>
 
+#include <stdint.h>
+
 #include "boost/lexical_cast.hpp"
 
 #include "TRandom.h"
@@ -13,7 +15,7 @@ using namespace std;
 using namespace roast;
 
 // Default constructor
-HWrapper::HWrapper() : histo(0), xval(0), yval(0), max(0), xadd(0), yadd(0), unweigh(0), trafo(kNone) {}
+HWrapper::HWrapper() : histo(0), xval(0), yval(0), max(0), xadd(0), yadd(0), unweigh(0), mode(kAll), trafo(kNone) {}
 
 // Copy constructor
 HWrapper::HWrapper(const HWrapper& iHWrapper) :
@@ -33,6 +35,7 @@ HWrapper::HWrapper(const HWrapper& iHWrapper) :
     max = iHWrapper.max;
 
     trafo = iHWrapper.trafo;
+    mode = iHWrapper.mode;
 
     name = iHWrapper.GetName();
     subdir = iHWrapper.GetSubDir();
@@ -46,6 +49,7 @@ HWrapper::HWrapper(const std::string& subdir, TH1* hist, const Weight& w) :
     xadd(0),
     yadd(0),
     unweigh(0),
+    mode(kAll),
     trafo(kNone)
 {
     histo = dynamic_cast<TH1*>(hist->Clone());
@@ -59,6 +63,7 @@ HWrapper::HWrapper(const std::string& subdir, TH1* hist, GetValue_t x, GetValue_
     xadd(0),
     yadd(0),
     unweigh(0),
+    mode(kAll),
     trafo(kNone)
 {
     histo = dynamic_cast<TH1*>(hist->Clone());
@@ -113,35 +118,125 @@ HWrapper::Fill(Branches* b, int i, float w)
     if (trafo == kUnweighed)
         w = 1.;
 
-    if (!max) {
+    std::vector<float> v_weights;
+    std::vector<float> v_xvals;
+    std::vector<float> v_yvals;
+
+    int begin = -1;
+    int end = 0;
+
+    if (max) {
+        begin = 0;
+        end = max(b, i, -1);
+    }
+
+    for (int n = begin; n < end; ++n) {
+        float new_w = w;
         if (unweigh)
-            w /= unweigh(b, i, -1);
+            new_w /= unweigh(b, i, n);
 
-        if (yval) {
-            auto x = Translate(xval, xadd, b, i, -1);
-            auto y = Translate(yval, yadd, b, i, -1);
+        v_weights.push_back(new_w);
 
-            dynamic_cast<TH2*>(histo)->Fill(x, y, w);
-        } else if (xval) {
-            auto x = Translate(xval, xadd, b, i, -1);
+        if (xval)
+            v_xvals.push_back(Translate(xval, xadd, b, i, n));
+        else
+            v_xvals.push_back(w_orig);
 
-            histo->Fill(x, w);
-        } else {
-            histo->Fill(w_orig, w);
-        }
-    } else {
-        for (int n = 0; n < max(b, i, -1); ++n) {
-            auto new_w = w;
-            if (unweigh)
-                new_w /= unweigh(b, i, -1);
+        if (yval)
+            v_yvals.push_back(Translate(yval, yadd, b, i, n));
+    }
 
-            auto x = Translate(xval, xadd, b, i, n);
-            if (yval) {
-                auto y = Translate(yval, yadd, b, i, n);
-                dynamic_cast<TH2*>(histo)->Fill(x, y, new_w);
-            } else {
-                histo->Fill(x, new_w);
+    if (mode != kAll) {
+        float nx = 0;
+        float ny = 0;
+        float nw = 0;
+
+        if (mode == kAvg) {
+            float x_denom = 0;
+
+            if (v_xvals.size() > 0) {
+                for (unsigned int i = 0; i < v_xvals.size(); ++i) {
+                    nx += v_xvals[i] * v_weights[i];
+                    x_denom += v_weights[i];
+                }
+
+                nx /= x_denom;
             }
+
+            if (v_yvals.size() > 0) {
+                float y_denom = 0;
+
+                for (unsigned int i = 0; i < v_yvals.size(); ++i) {
+                    ny += v_yvals[i] * v_weights[i];
+                    y_denom += v_weights[i];
+                }
+
+                ny /= y_denom;
+            }
+
+            nw = x_denom / v_weights.size();
+        } else if (mode == kMax) {
+            if (v_xvals.size() > 0) {
+                nx = v_xvals[0];
+                nw = v_weights[0];
+                for (unsigned int n = 1; n < v_xvals.size(); ++n) {
+                    if (v_xvals[n] > nx) {
+                        nx = v_xvals[n];
+                        nw = v_weights[n];
+                    }
+                }
+            }
+
+            if (v_yvals.size() > 0) {
+                ny = v_yvals[0];
+                float nw_y = v_weights[0];
+                for (unsigned int n = 1; n < v_yvals.size(); ++n) {
+                    if (v_yvals[n] > ny) {
+                        ny = v_yvals[n];
+                        nw_y = v_weights[n];
+                    }
+                }
+
+                nw = (nw + nw_y) * .5;
+            }
+        } else if (mode == kMin) {
+            if (v_xvals.size() > 0) {
+                nx = v_xvals[0];
+                nw = v_weights[0];
+                for (unsigned int n = 1; n < v_xvals.size(); ++n) {
+                    if (v_xvals[n] < nx) {
+                        nx = v_xvals[n];
+                        nw = v_weights[n];
+                    }
+                }
+            }
+
+            if (v_yvals.size() > 0) {
+                ny = v_yvals[0];
+                float nw_y = v_weights[0];
+                for (unsigned int n = 1; n < v_yvals.size(); ++n) {
+                    if (v_yvals[n] < ny) {
+                        ny = v_yvals[n];
+                        nw_y = v_weights[n];
+                    }
+                }
+
+                nw = (nw + nw_y) * .5;
+            }
+        }
+
+        if (v_xvals.size() > 0)
+            v_xvals = {nx};
+        if (v_yvals.size() > 0)
+            v_yvals = {ny};
+        v_weights = {nw};
+    }
+
+    for (unsigned int i = 0; i < v_xvals.size(); ++i) {
+        if (yval) {
+            dynamic_cast<TH2*>(histo)->Fill(v_xvals[i], v_yvals[i], v_weights[i]);
+        } else {
+            histo->Fill(v_xvals[i], v_weights[i]);
         }
     }
 }

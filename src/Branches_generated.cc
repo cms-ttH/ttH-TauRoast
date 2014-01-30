@@ -82,6 +82,8 @@ Branches::Clear()
     J_CSV->clear();
     J_Charge->clear();
     J_Eta->clear();
+    J_Lepton1DeltaR->clear();
+    J_Lepton2DeltaR->clear();
     J_MomentumRank->clear();
     J_NumJets = 0;
     J_PartonGrandParentId->clear();
@@ -102,6 +104,7 @@ Branches::Clear()
     J_PartonStatus->clear();
     J_Phi->clear();
     J_Pt->clear();
+    J_TauDeltaR->clear();
     J_combSecVtxBTag->clear();
     J_combSecVtxLooseBTag->clear();
     J_combSecVtxMediumBTag->clear();
@@ -324,6 +327,8 @@ Branches::Delete()
     delete J_CSV;
     delete J_Charge;
     delete J_Eta;
+    delete J_Lepton1DeltaR;
+    delete J_Lepton2DeltaR;
     delete J_MomentumRank;
     delete J_PartonGrandParentId;
     delete J_PartonGrandmother00Id;
@@ -343,6 +348,7 @@ Branches::Delete()
     delete J_PartonStatus;
     delete J_Phi;
     delete J_Pt;
+    delete J_TauDeltaR;
     delete J_combSecVtxBTag;
     delete J_combSecVtxLooseBTag;
     delete J_combSecVtxMediumBTag;
@@ -585,6 +591,8 @@ Branches::Null()
     J_CSV = 0;
     J_Charge = 0;
     J_Eta = 0;
+    J_Lepton1DeltaR = 0;
+    J_Lepton2DeltaR = 0;
     J_MomentumRank = 0;
     J_NumJets = 0;
     J_PartonGrandParentId = 0;
@@ -605,6 +613,7 @@ Branches::Null()
     J_PartonStatus = 0;
     J_Phi = 0;
     J_Pt = 0;
+    J_TauDeltaR = 0;
     J_combSecVtxBTag = 0;
     J_combSecVtxLooseBTag = 0;
     J_combSecVtxMediumBTag = 0;
@@ -855,6 +864,8 @@ Branches::SetBranchAddresses()
     fChain->SetBranchAddress("J_CSV", &J_CSV);
     fChain->SetBranchAddress("J_Charge", &J_Charge);
     fChain->SetBranchAddress("J_Eta", &J_Eta);
+    fChain->SetBranchAddress("J_Lepton1DeltaR", &J_Lepton1DeltaR);
+    fChain->SetBranchAddress("J_Lepton2DeltaR", &J_Lepton2DeltaR);
     fChain->SetBranchAddress("J_MomentumRank", &J_MomentumRank);
     fChain->SetBranchAddress("J_NumJets", &J_NumJets);
     fChain->SetBranchAddress("J_PartonGrandParentId", &J_PartonGrandParentId);
@@ -875,6 +886,7 @@ Branches::SetBranchAddresses()
     fChain->SetBranchAddress("J_PartonStatus", &J_PartonStatus);
     fChain->SetBranchAddress("J_Phi", &J_Phi);
     fChain->SetBranchAddress("J_Pt", &J_Pt);
+    fChain->SetBranchAddress("J_TauDeltaR", &J_TauDeltaR);
     fChain->SetBranchAddress("J_combSecVtxBTag", &J_combSecVtxBTag);
     fChain->SetBranchAddress("J_combSecVtxLooseBTag", &J_combSecVtxLooseBTag);
     fChain->SetBranchAddress("J_combSecVtxMediumBTag", &J_combSecVtxMediumBTag);

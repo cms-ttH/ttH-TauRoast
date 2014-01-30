@@ -27,38 +27,6 @@ TT_DeltaR:
     showOF: true
     logy: 1
 
-DeltaR_T1J1:
-    dir: tau
-    binning: [30, 0, 6.28]
-    axis labels: ["#DeltaR (#tau_{1}, jet_{1})", Events]
-    visible: [0, 6.28]
-    showOF: true
-    logy: 1
-
-DeltaR_T2J1:
-    dir: tau
-    binning: [30, 0, 6.28]
-    axis labels: ["#DeltaR (#tau_{2}, jet_{1})", Events]
-    visible: [0, 6.28]
-    showOF: true
-    logy: 1
-
-DeltaR_T1J2:
-    dir: tau
-    binning: [30, 0, 6.28]
-    axis labels: ["#DeltaR (#tau_{1}, jet_{2})", Events]
-    visible: [0, 6.28]
-    showOF: true
-    logy: 1
-
-DeltaR_T2J2:
-    dir: tau
-    binning: [30, 0, 6.28]
-    axis labels: ["#DeltaR (#tau_{2}, jet_{2})", Events]
-    visible: [0, 6.28]
-    showOF: true
-    logy: 1
-
 T1_Pt:
     dir: tau
     channels: [ttl]

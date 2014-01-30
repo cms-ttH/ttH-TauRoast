@@ -16,6 +16,7 @@
 namespace roast {
     class HWrapper{
        public:
+          enum Mode { kAll, kAvg, kMin, kMax };
           enum Transformation { kNone, kUnweighed, kTranslateId, kTranslateJetId };
 
           static HWrapper* Create1D(const std::string&, TH1*, const std::string&, const std::string="");
@@ -35,6 +36,7 @@ namespace roast {
 
           void SetTranslate(bool t=true) { trafo = kTranslateId; };
           void SetUnweighing(const Weight& w) { unweigh = w.GetVal; };
+          void SetMode(Mode m) { mode = m; };
 
           float Translate(GetValue_t, GetValue_t, Branches*, int, int=-1);
 
@@ -78,9 +80,10 @@ namespace roast {
 
           GetValue_t unweigh;
 
+          Mode mode;
           Transformation trafo;
 
-          ClassDef(HWrapper, 2);
+          ClassDef(HWrapper, 3);
     };
 }
 

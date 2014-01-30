@@ -118,6 +118,8 @@ namespace roast {
             std::vector<double>* J_CSV;
             std::vector<float>* J_Charge;
             std::vector<float>* J_Eta;
+            std::vector<std::vector<float> >* J_Lepton1DeltaR;
+            std::vector<std::vector<float> >* J_Lepton2DeltaR;
             std::vector<float>* J_MomentumRank;
             Int_t J_NumJets;
             std::vector<int>* J_PartonGrandParentId;
@@ -138,6 +140,7 @@ namespace roast {
             std::vector<int>* J_PartonStatus;
             std::vector<float>* J_Phi;
             std::vector<float>* J_Pt;
+            std::vector<std::vector<float> >* J_TauDeltaR;
             std::vector<float>* J_combSecVtxBTag;
             std::vector<bool>* J_combSecVtxLooseBTag;
             std::vector<bool>* J_combSecVtxMediumBTag;

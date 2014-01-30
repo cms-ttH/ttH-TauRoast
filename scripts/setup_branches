@@ -200,7 +200,11 @@ reindex = [
         ('Tagged', 'int i = (*b->CleanJetCSVMIndices)[idx][{0}];\n'),
         ('Untagged', 'int i = (*b->CleanJetNonCSVMIndices)[idx].at({0});\n')
         ]
-returns = {0: 'return {0}->{1};', 1: 'return (*{0}->{1})[{2}];'}
+returns = {
+        0: 'return {0}->{1};',
+        1: 'return (*{0}->{1})[{2}];',
+        2: 'return (*{0}->{1})[{2}][{3}];'
+        }
 
 fct_names = {}
 for channel in list(channels) + [""]:
@@ -252,19 +256,21 @@ for fn in sorted(fct_names.keys()):
 
 attrs = generate_accessor_info(vars)
 
-def generate_return_line(obj, varname, type, idx='idx', safe=False):
+def generate_return_line(obj, varname, type, idx='idx', subidx='n', safe=False):
     cnt = type.count('vector')
     if cnt not in returns:
         raise TypeError
     if safe:
-        return returns[cnt].replace("[{2}]", ".at({2})").format(obj, varname, idx)
+        return returns[cnt].replace("[{2}]", ".at({2})").replace("[{3}]", ".at({3})").format(obj, varname, idx, subidx)
     else:
-        return returns[cnt].format(obj, varname, idx)
+        return returns[cnt].format(obj, varname, idx, subidx)
 
 jets = 'LJ SubLJ SubSubLJ SubSubSubLJ'.split()
 
 for k in sorted(attrs.keys()):
     (var, type, ptr, prefixes) = attrs[k]
+
+    cnt = type.count('vector')
 
     # manipulate variable names to get "historic" naming scheme
     # FIXME rename branches in ntuplizer
@@ -288,6 +294,9 @@ for k in sorted(attrs.keys()):
     k = k.replace("raw", "Raw")
 
     try:
+        if 'J' in prefixes:
+            for (particle, count) in re.findall('(Tau|Lepton)(\d)?', k):
+                k = k.replace('_', particle[0] + count + '_', 1).replace(particle + count, '', 1)
         tmp_lines = []
         tmp_lines.append(indent * 2 + declare.format(k))
 
@@ -310,10 +319,15 @@ for k in sorted(attrs.keys()):
             elif prefix == 'J' and ptr and not 'BTag' in var:
                 jet_lines = []
 
+                for (particle, count) in re.findall('(Tau|Lepton)(\d)?', k):
+                    k = k.replace('_', particle[0] + count + '_', 1).replace(particle + count, '', 1)
+
                 for (label, index_statement) in reindex:
+                    index = 'i' if cnt == 1 else 'idx'
+                    subindex = 'n' if cnt == 1 else 'i'
                     jet_lines.append(indent * 2 + declare.format(label + k))
                     jet_lines.append(indent * 3 + index_statement.format('n'))
-                    jet_lines.append(indent * 3 + generate_return_line(obj, varname, type, idx='i', safe=True) + '\n')
+                    jet_lines.append(indent * 3 + generate_return_line(obj, varname, type, idx=index, subidx=subindex, safe=True) + '\n')
                     jet_lines.append(indent * 2 + '};\n')
 
                     # leading jet etc.
@@ -321,7 +335,7 @@ for k in sorted(attrs.keys()):
                         new_key = label + k.replace('J', j)
                         jet_lines.append(indent * 2 + declare.format(new_key))
                         jet_lines.append(indent * 3 + index_statement.format(n))
-                        jet_lines.append(indent * 3 + generate_return_line(obj, varname, type, idx='i', safe=True) + '\n')
+                        jet_lines.append(indent * 3 + generate_return_line(obj, varname, type, idx=index, subidx=subindex, safe=True) + '\n')
                         jet_lines.append(indent * 2 + '};\n')
                 lines += jet_lines
             elif ptr and prefix != '':

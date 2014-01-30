@@ -179,6 +179,16 @@ def fill_histos(config, processes, module):
                 else:
                     raise TypeError("Need either one or two values for histograms")
 
+                if 'mode' in histcfg:
+                    if histcfg['mode'] == 'average':
+                        w.SetMode(roast.HWrapper.kAvg)
+                    elif histcfg['mode'] == 'min':
+                        w.SetMode(roast.HWrapper.kMin)
+                    elif histcfg['mode'] == 'max':
+                        w.SetMode(roast.HWrapper.kMax)
+                    else:
+                        logging.error("invalid histogram mode %s", histcfg['mode'])
+
                 if 'cancel weight' in histcfg:
                     wname = histcfg['cancel weight']
                     if wname.lower() == 'all':
