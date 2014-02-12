@@ -412,7 +412,7 @@ def stack(config, processes):
 
                 sig_procs = get_signals(procs)
                 for p in sig_procs:
-                    h = p.GetHistogram(histname).GetHisto()
+                    h = p.GetHistogram(histname).GetHisto().Clone()
                     h.Scale(config['display']['signal scale factor'])
                     h.SetFillStyle(0)
                     h.SetLineWidth(4)
@@ -421,7 +421,7 @@ def stack(config, processes):
 
                     # FIXME implement stacking signals on top of bkg
 
-                    h.Draw("hist same")
+                    h.DrawCopy("hist same")
 
                 try:
                     coll = get_collisions(procs)
