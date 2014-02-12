@@ -118,15 +118,12 @@ MomentumRank:
 
 MET:
     dir: general
-    binning: [50, 0, 300]
+    binning: [20, 0, 300]
     axis labels: [MET, Events]
-    visible: [0, 200]
-    showOF: true
-    logy: 1
 
 HT:
     dir: general
-    binning: [50, 0, 1500]
+    binning: [20, 0, 1500]
     axis labels: ['H_{T}', Events]
     visible: [200, 1000]
     showOF: true
@@ -134,11 +131,8 @@ HT:
 
 MHT:
     dir: general
-    binning: [50, 0, 300]
+    binning: [20, 0, 200]
     axis labels: [MHT, Events]
-    visible: [0, 200]
-    showOF: true
-    logy: 1
 
 FinalBDTG:
     dir: general
@@ -174,75 +168,48 @@ FinalBDTG:
 
 NumberPV_noPURW:
     dir: pileup
-    binning: [40, 0, 40]
+    binning: [20, 0, 40]
     axis labels: [Number PV, no PURW, Events]
-    visible: [0, 40]
-    showOF: true
-    logy: 1
 
 V_NumInteractionsBX0_noPURW:
     dir: pileup
-    binning: [40, 0, 40]
+    binning: [20, 0, 40]
     axis labels: [Number BX0, no PURW, Events]
-    visible: [0, 40]
-    showOF: true
-    logy: 1
 
 V_NumInteractionsBXm1_noPURW:
     dir: pileup
-    binning: [40, 0, 40]
+    binning: [20, 0, 40]
     axis labels: [Number BXm1, no PURW, Events]
-    visible: [0, 40]
-    showOF: true
-    logy: 1
 
 V_NumInteractionsBXp1_noPURW:
     dir: pileup
-    binning: [40, 0, 40]
+    binning: [20, 0, 40]
     axis labels: [Number BXp1, no PURW, Events]
-    visible: [0, 40]
-    showOF: true
-    logy: 1
 
 V_NumVertices:
     dir: pileup
-    binning: [40, 0, 40]
+    binning: [20, 0, 40]
     axis labels: [Number PV, after PURW, Events]
-    visible: [0, 40]
-    showOF: true
-    logy: 1
 
 V_NumInteractionsBX0:
     dir: pileup
-    binning: [40, 0, 40]
+    binning: [20, 0, 40]
     axis labels: [Number BX0, after PURW, Events]
-    visible: [0, 40]
-    showOF: true
-    logy: 1
 
 V_NumInteractionsBXm1:
     dir: pileup
-    binning: [40, 0, 40]
+    binning: [20, 0, 40]
     axis labels: [Number BXm1, after PURW, Events]
-    visible: [0, 40]
-    showOF: true
-    logy: 1
 
 V_NumInteractionsBXp1:
     dir: pileup
-    binning: [40, 0, 40]
+    binning: [20, 0, 40]
     axis labels: [Number BXp1, after PURW, Events]
-    visible: [0, 40]
-    showOF: true
-    logy: 1
 
 VertexZcoord:
     dir: pileup
     binning: [40, -20, 20]
     axis labels: [Vertex Z coordinate, after PURW, Events]
-    visible: [-20, 20]
-    showOF: true
-    logy: 1
 
 $0_MatchMatrix:
     values: [$0_GenMatchId, $0_GenMatchMother0Id]
@@ -254,7 +221,7 @@ $0_MatchMatrix:
     bin labels:
       - ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W]
       - ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W, W (t), W (H)]
-    axis labels: ["$1 match", "#tau parent match", Events]
+    axis labels: ["$1 match", "$1 parent match", Events]
     showOF: false
     replace:
       - [T, "#tau", tau, tll]
