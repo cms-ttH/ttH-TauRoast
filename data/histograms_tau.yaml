@@ -3,7 +3,7 @@
 TT_DeltaR:
     dir: tau
     channels: [ttl]
-    binning: [30, 0, 6.28]
+    binning: [20, 0, 6.28]
     axis labels: ["#DeltaR #tau_{1, 2}", Events]
     visible: [0, 6.28]
     showOF: true
@@ -542,7 +542,7 @@ DitauVisibleMass:
 T$0$1_DeltaR:
     dir: tau/geometric
     channels: [$4]
-    binning: [30, 0, 6.28]
+    binning: [20, 0, 6.28]
     axis labels: ["#Delta R(#tau$2, lepton$3)", Events]
     showOF: true
     logy: 1

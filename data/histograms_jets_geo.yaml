@@ -2,7 +2,7 @@
 
 $0J$3_DeltaR:
     dir: jets/geometric
-    binning: [30, 0, 6.28]
+    binning: [20, 0, 6.28]
     channels: [$5]
     axis labels: ['#Delta R($2, $4)', Events]
     max: J_NumClean$1
@@ -20,7 +20,7 @@ $0J$3_DeltaR:
 $0J$3_AvgDeltaR:
     values: [$0J$3_DeltaR]
     dir: jets/geometric
-    binning: [30, 0, 6.28]
+    binning: [20, 0, 6.28]
     channels: [$5]
     axis labels: ['Average #Delta R($2, $4)', Events]
     max: J_NumClean$1
@@ -39,7 +39,7 @@ $0J$3_AvgDeltaR:
 $0J$3_MaxDeltaR:
     values: [$0J$3_DeltaR]
     dir: jets/geometric
-    binning: [30, 0, 6.28]
+    binning: [20, 0, 6.28]
     channels: [$5]
     axis labels: ['Max #Delta R($2, $4)', Events]
     max: J_NumClean$1
@@ -58,7 +58,7 @@ $0J$3_MaxDeltaR:
 $0J$3_MinDeltaR:
     values: [$0J$3_DeltaR]
     dir: jets/geometric
-    binning: [30, 0, 6.28]
+    binning: [20, 0, 6.28]
     channels: [$5]
     axis labels: ['Min #Delta R($2, $4)', Events]
     max: J_NumClean$1
@@ -76,7 +76,7 @@ $0J$3_MinDeltaR:
 
 $0LJ$3_DeltaR:
     dir: jets/geometric
-    binning: [30, 0, 6.28]
+    binning: [20, 0, 6.28]
     channels: [$5]
     axis labels: ['#Delta R($2, $4)', Events]
     replace:
@@ -92,7 +92,7 @@ $0LJ$3_DeltaR:
 
 $0SubLJ$3_DeltaR:
     dir: jets/geometric
-    binning: [30, 0, 6.28]
+    binning: [20, 0, 6.28]
     channels: [$5]
     axis labels: ['#Delta R($2, $4)', Events]
     replace:

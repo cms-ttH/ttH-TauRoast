@@ -48,7 +48,7 @@ $0_Phi:
 $0_Mt:
     dir: lepton
     channels: [$2]
-    binning: [30, 0, 150]
+    binning: [20, 0, 200]
     axis labels: ['lepton$1 m_{T}', Events]
     showOF: true
     logy: 1
@@ -62,7 +62,7 @@ $0_Mt:
 $0_Mt2:
     dir: lepton
     channels: [$2]
-    binning: [30, 0, 150]
+    binning: [20, 0, 200]
     axis labels: ['lepton$1 m_{T}', Events]
     showOF: true
     logy: 1
@@ -95,7 +95,7 @@ T$0L$2_Pt:
 L1L2_DeltaR:
     dir: lepton/geometric
     channels: [tll]
-    binning: [40, 0, 10]
+    binning: [20, 0, 6.28]
     axis labels: ['#Delta R(lepton 1,2)', Events]
 
 L1L2_Mt:
