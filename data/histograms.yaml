@@ -100,13 +100,13 @@ Weights_Lepton$0SF_unweighed:
       - [1, tll]
       - [2, tll]
 
-Combos:
-    dir: general
-    binning: [20, 1, 21]
-    axis labels: [Combos, Events]
-    visible: [1, 21]
-    showOF: false
-    logy: 1
+#  Combos:
+    #  dir: general
+    #  binning: [20, 1, 21]
+    #  axis labels: [Combos, Events]
+    #  visible: [1, 21]
+    #  showOF: false
+    #  logy: 1
 
 MomentumRank:
     dir: general
@@ -118,9 +118,9 @@ MomentumRank:
 
 MET:
     dir: general
-    binning: [100, 0, 300]
+    binning: [50, 0, 300]
     axis labels: [MET, Events]
-    visible: [0, 99.99]
+    visible: [0, 200]
     showOF: true
     logy: 1
 
@@ -132,6 +132,14 @@ HT:
     showOF: true
     logy: 1
 
+MHT:
+    dir: general
+    binning: [50, 0, 300]
+    axis labels: [MHT, Events]
+    visible: [0, 200]
+    showOF: true
+    logy: 1
+
 FinalBDTG:
     dir: general
     binning: [10, -1, 1]
@@ -140,29 +148,29 @@ FinalBDTG:
     showOF: false
     logy: 1
 
-FinalCFMlpANN:
-    dir: general
-    binning: [30, -1, 1]
-    axis labels: [CFMlpANN response, Events]
-    visible: [0, 1]
-    showOF: false
-    logy: 1
+#  FinalCFMlpANN:
+    #  dir: general
+    #  binning: [30, -1, 1]
+    #  axis labels: [CFMlpANN response, Events]
+    #  visible: [0, 1]
+    #  showOF: false
+    #  logy: 1
 
-ComboBDT:
-    dir: general
-    binning: [30, -1, 1]
-    axis labels: [Combo selector response, Events]
-    visible: [-1, 1]
-    showOF: false
-    logy: 1
+#  ComboBDT:
+    #  dir: general
+    #  binning: [30, -1, 1]
+    #  axis labels: [Combo selector response, Events]
+    #  visible: [-1, 1]
+    #  showOF: false
+    #  logy: 1
 
-SelectedComboRank:
-    dir: general
-    binning: [20, 0, 20]
-    axis labels: [Selected combo rank, Events]
-    visible: [0, 20]
-    showOF: false
-    logy: 1
+#  SelectedComboRank:
+    #  dir: general
+    #  binning: [20, 0, 20]
+    #  axis labels: [Selected combo rank, Events]
+    #  visible: [0, 20]
+    #  showOF: false
+    #  logy: 1
 
 NumberPV_noPURW:
     dir: pileup
@@ -225,22 +233,6 @@ V_NumInteractionsBXp1:
     binning: [40, 0, 40]
     axis labels: [Number BXp1, after PURW, Events]
     visible: [0, 40]
-    showOF: true
-    logy: 1
-
-PUweights_noPURW:
-    dir: pileup
-    binning: [40, 0, 4]
-    axis labels: [PUweights, no PURW, Events]
-    visible: [0, 4]
-    showOF: true
-    logy: 1
-
-PUweights:
-    dir: pileup
-    binning: [40, 0, 4]
-    axis labels: [PUweights, after PURW, Events]
-    visible: [0, 4]
     showOF: true
     logy: 1
 

@@ -326,23 +326,32 @@ T2_IsolationMVARaw:
     showOF: false
     logy: 1
 
-T1_IsolationMVA2Raw:
+T$0_IsolationMVA2Raw:
     dir: tau
-    channels: [ttl]
+    channels: [$2]
     binning: [50, -1, 1]
-    axis labels: ["#tau_{1} Isolation MVA(2)", Events]
+    axis labels: ["#tau$1 Isolation MVA(2)", Events]
     visible: [0, 1]
     showOF: false
     logy: 1
+    replace:
+      - [1, '_{1}', ttl]
+      - [2, '_{2}', ttl]
+      - ['', '', tll]
 
-T2_IsolationMVA2Raw:
+T$0_IsolationMVA2Raw_zoom:
+    values: [T$0_IsolationMVA2Raw]
     dir: tau
-    channels: [ttl]
-    binning: [50, -1, 1]
-    axis labels: ["#tau_{2} Isolation MVA(2)", Events]
-    visible: [0, 1]
+    channels: [$2]
+    binning: [50, .5, 1]
+    axis labels: ["#tau$1 Isolation MVA(2)", Events]
+    visible: [.75, 1]
     showOF: false
     logy: 1
+    replace:
+      - [1, '_{1}', ttl]
+      - [2, '_{2}', ttl]
+      - ['', '', tll]
 
 T1_IsolationIndex3Hits:
     dir: tau
@@ -609,15 +618,6 @@ T_IsolationMVARaw:
     showOF: false
     logy: 1
 
-T_IsolationMVA2Raw:
-    dir: tau
-    channels: [tll]
-    binning: [50, -1, 1]
-    axis labels: ["#tau Isolation MVA(2)", Events]
-    visible: [-1, 1]
-    showOF: false
-    logy: 1
-
 T_IsolationIndex3Hits:
     dir: tau
     channels: [tll]
@@ -662,11 +662,11 @@ DitauVisibleMass:
     showOF: true
     logy: 1
 
-ZcoordDiff_TT:
-    dir: tau
-    binning: [50, 0, 2]
-    axis labels: ["#DeltaVZ #tau_{1, 2}", Events]
-    visible: [0, 2]
-    showOF: false
-    logy: 1
+#  ZcoordDiff_TT:
+    #  dir: tau
+    #  binning: [50, 0, 2]
+    #  axis labels: ["#DeltaVZ #tau_{1, 2}", Events]
+    #  visible: [0, 2]
+    #  showOF: false
+    #  logy: 1
 
