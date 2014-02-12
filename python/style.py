@@ -26,7 +26,7 @@ def draw_channel_info(config, plot_ratio):
     tex.SetTextSize(0.05 * scale)
     tex.SetTextAlign(31)
     tex.DrawLatex(.99 - r.gPad.GetRightMargin(), .84,
-            channel_label)
+            channel_label + "jets")
             # FIXME extract_info is broken
             # + extract_info(config, 'J_NumCleanInclusive', 'jet') + ' + '
             # + extract_info(config, 'J_NumCleanCSVM', 'b-tag'))
@@ -36,7 +36,7 @@ def draw_channel_info(config, plot_ratio):
     tex.SetTextAlign(31)
     tex.DrawLatex(1 - r.gPad.GetRightMargin(), 0.91, "#sqrt{s} = 8 TeV, L = 19.5 fb^{-1}")
 
-def setup_upper_axis(histo, scale=True):
+def setup_upper_axis(histo, scale=True, is2d=False):
     if scale:
         histo.ScaleBy(0)
     histo.SetTitle("")
@@ -49,6 +49,18 @@ def setup_upper_axis(histo, scale=True):
     histo.GetYaxis().SetTitleOffset(1.1)
     histo.GetYaxis().SetLabelFont(62)
     histo.GetYaxis().SetLabelSize(.04)
+
+    if is2d:
+        h.GetYaxis().SetTitleOffset(1.5)
+        h.GetYaxis().SetTitleSize(0.04)
+        h.GetYaxis().SetLabelFont(62)
+        h.GetYaxis().SetLabelSize(.04)
+
+        h.GetZaxis().SetTitleFont(62)
+        h.GetYaxis().SetTitleOffset(1.6)
+        h.GetZaxis().SetTitleSize(0.04)
+        h.GetZaxis().SetLabelFont(62)
+        h.GetZaxis().SetLabelSize(0.03)
 
 def setup_lower_axis(histo):
     histo.GetXaxis().SetTitleFont(62)

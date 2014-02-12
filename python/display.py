@@ -263,8 +263,9 @@ def create_plot(config, histname, plot_ratio, is2d=False, procname="", hist=None
         canvas = r.TCanvas(histname + procname, histname, 600, 600)
 
         if is2d:
-            r.gPad.SetRightMargin(.18)
             r.gPad.SetTopMargin(.18)
+            r.gPad.SetLeftMargin(0.13)
+            r.gPad.SetRightMargin(0.14)
 
         pads = (scale, canvas,)
 
@@ -361,7 +362,7 @@ def stack(config, processes):
                 with create_plot(config, histname, is2d=True, plot_ratio=False, procname=p.GetShortName()) as (scale, pad1,):
                     pad1.cd()
                     h = p.GetHistogram(histname)
-                    style.setup_upper_axis(h, False)
+                    style.setup_upper_axis(h, scale=False, is2d=True)
                     h.Draw("COLZ")
         else:
             base_histo = roast.HWrapper(procs[0].GetHistogram(histname))
