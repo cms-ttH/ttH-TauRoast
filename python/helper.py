@@ -1,4 +1,5 @@
-# vim: ts=4:sw=4:et:sta
+# vim: ts=4:sw=4:et:sta:fileencoding=utf-8
+import codecs
 from copy import deepcopy
 from glob import glob
 import logging
@@ -285,38 +286,46 @@ def normalize_processes(config, processes):
         p.GetCutFlow().RegisterCutFromLast("Lumi norm", scale)
         p.BuildNormalizedCutFlow()
 
+def get_event_count(proc):
+    histo = proc.GetHistogram("Events")
+    return (histo.GetBinContent(1), histo.GetBinError(1))
+
 def print_yields(config, processes):
     procs = map(lambda n: get_process(n, processes), config['analysis']['plot'])
 
-    out = sys.stdout
+    out = codecs.getwriter("UTF-8")(sys.stdout)
 
-    out.write("{0:^15}  {1:^15}\n".format("Sample", "Events"))
-    out.write("-" * 32 + "\n")
+    out.write("{0:^15}  {1:^24}\n".format("Sample", "Events"))
+    out.write("-" * 41 + "\n")
 
     bkg_sum = 0
+    err_sum = 0
     for bkg in get_backgrounds(procs):
-        yld = bkg.GetCutFlow().GetCuts()[-1].events_passed
+        (yld, err) = get_event_count(bkg)
         bkg_sum += yld
+        err_sum += err**2
 
     for sig in get_signals(procs):
-        yld = sig.GetCutFlow().GetCuts()[-1].events_passed
-        out.write("{0:15}  {1:15.2f}\n".format(sig.GetShortName(), yld))
-        out.write("{0:15}  {1:15.2f}\n".format("s / sqrt{s + b}", yld / math.sqrt(yld + bkg_sum)))
-        out.write("-" * 32 + "\n")
+        (yld, err) = get_event_count(sig)
+        out.write(u"{0:15}  {1:15.2f} ± {2:6.2f}\n".format(sig.GetShortName(), yld, err))
+        out.write(u"{0:15}  {1:15.2f}\n".format("s / sqrt{s + b}", yld / math.sqrt(yld + bkg_sum)))
+        out.write("-" * 41 + "\n")
 
     for bkg in get_backgrounds(procs):
-        yld = bkg.GetCutFlow().GetCuts()[-1].events_passed
-        out.write("{0:15}  {1:15.2f}\n".format(bkg.GetShortName(), yld))
+        (yld, err) = get_event_count(bkg)
+        out.write(u"{0:15}  {1:15.2f} ± {2:6.2f}\n".format(bkg.GetShortName(), yld, err))
 
-    out.write("-" * 32 + "\n")
-    out.write("{0:15}  {1:15.2f}\n".format("Total bkg.", bkg_sum))
+    out.write("-" * 41 + "\n")
+    out.write(u"{0:15}  {1:15.2f} ± {2:6.2f}\n".format("Total bkg.", bkg_sum, math.sqrt(err_sum)))
 
     try:
         col = get_collisions(procs)
-        yld = col.GetCutFlow().GetCuts()[-1].events_passed
-        out.write("{0:15}  {1:15.2f}\n".format("Data / MC", yld / bkg_sum))
-        out.write("-" * 32 + "\n")
-        out.write("{0:15}  {1:15.2f}\n".format(col.GetShortName(), yld))
+        (yld, err) = get_event_count(col)
+        ratio = yld / bkg_sum
+        ratio_err = ratio * math.sqrt(err_sum / bkg_sum**2 + err**2 / yld**2)
+        out.write(u"{0:15}  {1:15.2f} ± {2:6.2f}\n".format("Data / MC", ratio, ratio_err))
+        out.write("-" * 41 + "\n")
+        out.write(u"{0:15}  {1:15.2f} ± {2:6.2f}\n".format(col.GetShortName(), yld, err))
     except:
         pass
 
