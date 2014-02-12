@@ -1,7 +1,7 @@
 # vim: set sw=4 sta et :
 
-L$0_Pt:
-    dir: lepton
+$0_Pt:
+    dir: lepton/kinematic
     channels: [$2]
     binning: [60, 0, 200]
     axis labels: ['lepton$1 p_{T}', Events]
@@ -9,56 +9,80 @@ L$0_Pt:
     showOF: true
     logy: 1
     replace:
-      - ["", "", ttl, 30, 100]
-      - [1, "_{1}", tll, 20, 150]
-      - [2, "_{2}", tll, 10, 100]
+      - [L, "", ttl, 30, 100]
+      - [L1, "_{1}", tll, 20, 150]
+      - [L2, "_{2}", tll, 10, 100]
+      - [osL, "^{os}", tll, 20, 150]
+      - [ssL, "^{ss}", tll, 20, 150]
 
-L$0_Mt:
+$0_Eta:
+    dir: lepton/kinematic
+    channels: [$2]
+    binning: [30, -3, 3]
+    axis labels: ["lepton$1 #eta", Events]
+    visible: [-2.1, 2.1]
+    showOF: false
+    logy: 1
+    replace:
+      - [L, "", ttl]
+      - [L1, "_{1}", tll]
+      - [L2, "_{2}", tll]
+      - [osL, "^{os}", tll]
+      - [ssL, "^{ss}", tll]
+
+$0_Phi:
+    dir: lepton/kinematic
+    channels: [$2]
+    binning: [40, -3.2, 3.2]
+    axis labels: ["l$1 #phi", Events]
+    visible: [-3.2, 3.2]
+    showOF: false
+    logy: 1
+    replace:
+      - [L, "", ttl]
+      - [L1, "_{1}", tll]
+      - [L2, "_{2}", tll]
+      - [osL, "^{os}", tll]
+      - [ssL, "^{ss}", tll]
+
+$0_Mt:
     dir: lepton
     channels: [$2]
-    binning: [60, 0, 150]
+    binning: [30, 0, 150]
     axis labels: ['lepton$1 m_{T}', Events]
     showOF: true
     logy: 1
     replace:
-      - ["", "", ttl]
-      - [1, "_{1}", tll]
-      - [2, "_{2}", tll]
+      - [L, "", ttl]
+      - [L1, "_{1}", tll]
+      - [L2, "_{2}", tll]
+      - [osL, "^{os}", tll]
+      - [ssL, "^{ss}", tll]
 
-L$0_Mt2:
+$0_Mt2:
     dir: lepton
     channels: [$2]
-    binning: [60, 0, 150]
+    binning: [30, 0, 150]
     axis labels: ['lepton$1 m_{T}', Events]
     showOF: true
     logy: 1
     replace:
-      - ["", "", ttl]
-      - [1, "_{1}", tll]
-      - [2, "_{2}", tll]
-
-L$0_Mt:
-    dir: lepton
-    channels: [$2]
-    binning: [60, 0, 150]
-    axis labels: ['lepton$1 m_{T}', Events]
-    showOF: true
-    logy: 1
-    replace:
-      - ["", "", ttl]
-      - [1, "_{1}", tll]
-      - [2, "_{2}", tll]
+      - [L, "", ttl]
+      - [L1, "_{1}", tll]
+      - [L2, "_{2}", tll]
+      - [osL, "^{os}", tll]
+      - [ssL, "^{ss}", tll]
 
 L1L2_Pt:
     values: [L1_Pt, L2_Pt]
-    dir: lepton
+    dir: lepton/kinematic
     channels: [tll]
     binning: [40, 0, 200, 40, 0, 200]
     axis labels: ['lepton1 p_{T}', 'lepton2 p_{T}']
 
 T$0L$2_Pt:
     values: [T$0_Pt, L$2_Pt]
-    dir: lepton
+    dir: lepton/kinematic
     channels: [$4]
     binning: [40, 0, 200, 40, 0, 200]
     axis labels: ['tau$1 p_{T}', 'lepton$3 p_{T}']
@@ -69,7 +93,7 @@ T$0L$2_Pt:
       - ["", "", 2, "_{2}", tll]
 
 L1L2_DeltaR:
-    dir: lepton
+    dir: lepton/geometric
     channels: [tll]
     binning: [40, 0, 10]
     axis labels: ['#Delta R(lepton 1,2)', Events]
@@ -80,28 +104,6 @@ L1L2_Mt:
     channels: [tll]
     binning: [60, 0, 150, 60, 0, 150]
     axis labels: ['lepton1 m_{T}', 'lepton2 m_{T}']
-
-L$0_Eta:
-    dir: lepton
-    channels: [$2]
-    binning: [30, -3, 3]
-    axis labels: ["lepton$1 #eta", Events]
-    visible: [-2.1, 2.1]
-    showOF: false
-    logy: 1
-    replace:
-      - ["", "", ttl]
-      - [1, "_{1}", tll]
-      - [2, "_{2}", tll]
-
-L_Phi:
-    dir: lepton
-    channels: [ttl]
-    binning: [30, -3.2, 3.2]
-    axis labels: ["l #phi", Events]
-    visible: [-3.2, 3.2]
-    showOF: false
-    logy: 1
 
 L$0_RelIso:
     dir: lepton
@@ -116,7 +118,7 @@ L$0_RelIso:
 L$0_MatchIndex:
     values: [L$0_GenMatchId]
     translate match id: true
-    dir: lepton
+    dir: lepton/generator
     channels: [$1]
     binning: [9, 0, 9]
     bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W]
@@ -130,7 +132,7 @@ L$0_ParentMatchIndex:
     values: [L$0_GoodParentId]
     additional info: [L$0_GoodGrandParentId]
     translate match id: true
-    dir: lepton
+    dir: lepton/generator
     channels: [$2]
     binning: [11, 0, 11]
     bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W, W (t), W (H)]
@@ -142,47 +144,29 @@ L$0_ParentMatchIndex:
       - [1, "_{1}", tll]
       - [2, "_{2}", tll]
 
-L1_Phi:
+$0_ImpactParameter:
     dir: lepton
-    channels: [tll]
-    binning: [40, -3.2, 3.2]
-    axis labels: ["l #phi", Events]
-    visible: [-3.2, 3.2]
-    showOF: false
-    logy: 1
-
-L1_ImpactParameter:
-    dir: lepton
-    channels: [tll]
+    channels: [$2]
     binning: [50, -0.04, 0.04]
-    axis labels: ["l_{1} Impact parameter", Events]
+    axis labels: ["l$1 Impact parameter", Events]
+    replace:
+      - [L, "", ttl]
+      - [L1, "_{1}", tll]
+      - [L2, "_{2}", tll]
+      - [osL, "^{os}", tll]
+      - [ssL, "^{ss}", tll]
 
-L2_ImpactParameter:
+$0_CorrectedDZ:
     dir: lepton
-    channels: [tll]
+    channels: [$2]
     binning: [50, -0.04, 0.04]
-    axis labels: ["l_{2} Impact parameter", Events]
-
-L1_CorrectedDZ:
-    dir: lepton
-    channels: [tll]
-    binning: [50, -0.04, 0.04]
-    axis labels: ["l_{1} corrected #Delta z", Events]
-
-L2_CorrectedDZ:
-    dir: lepton
-    channels: [tll]
-    binning: [50, -0.04, 0.04]
-    axis labels: ["l_{2} corrected #Delta z", Events]
-
-L2_Phi:
-    dir: lepton
-    channels: [tll]
-    binning: [40, -3.2, 3.2]
-    axis labels: ["l #phi", Events]
-    visible: [-3.2, 3.2]
-    showOF: false
-    logy: 1
+    axis labels: ["l$1 corrected #Delta z", Events]
+    replace:
+      - [L, "", ttl]
+      - [L1, "_{1}", tll]
+      - [L2, "_{2}", tll]
+      - [osL, "^{os}", tll]
+      - [ssL, "^{ss}", tll]
 
 L1L2_VisibleMass_zoom:
     values: [L1L2_VisibleMass]
@@ -202,7 +186,7 @@ L1L2_VisibleMass_$0:
     values: [L1L2_VisibleMass, $0]
     dir: lepton
     channels: [tll]
-    binning: [40, 0, 200, 100, 0, 300]
+    binning: [20, 0, 200, 50, 0, 300]
     axis labels: ["Dilepton Visible Mass", $0]
     replace:
       - [MET]
@@ -212,7 +196,7 @@ L1L2_VisibleMass_$0_zoom:
     values: [L1L2_VisibleMass, $0]
     dir: lepton
     channels: [tll]
-    binning: [60, 70, 110, 60, 0, 100]
+    binning: [30, 70, 110, 30, 0, 100]
     axis labels: ["Dilepton Visible Mass", $0]
     replace:
       - [MET]

@@ -206,6 +206,16 @@ returns = {
         2: 'return (*{0}->{1})[{2}][{3}];'
         }
 
+tll_template = \
+"""        accessors["{1}"] = [](roast::Branches *b, int idx, int n) -> float {{
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] {0} 0) {{
+                return (*e->TLL_{2})[idx];
+            }} else {{
+                return (*e->TLL_{3})[idx];
+            }}
+        }};"""
+
 fct_names = {}
 for channel in list(channels) + [""]:
     for fn in gather_function_info(os.path.join(os.environ["LOCALRT"],
@@ -214,6 +224,7 @@ for channel in list(channels) + [""]:
             fct_names[fn] = []
         fct_names[fn].append(channel)
 
+# Deal with functions first
 for ignore in "GetBestCombo GetEntries GetEntry GetNumCombos".split():
     if ignore in fct_names:
         del fct_names[ignore]
@@ -256,6 +267,7 @@ for fn in sorted(fct_names.keys()):
 
 attrs = generate_accessor_info(vars)
 
+# Now turn to branches
 def generate_return_line(obj, varname, type, idx='idx', subidx='n', safe=False):
     cnt = type.count('vector')
     if cnt not in returns:
@@ -294,9 +306,11 @@ for k in sorted(attrs.keys()):
     k = k.replace("raw", "Raw")
 
     try:
+        # Fix J_Lepton -> JL_ etc...
         if 'J' in prefixes:
             for (particle, count) in re.findall('(Tau|Lepton)(\d)?', k):
                 k = k.replace('_', particle[0] + count + '_', 1).replace(particle + count, '', 1)
+
         tmp_lines = []
         tmp_lines.append(indent * 2 + declare.format(k))
 
@@ -312,11 +326,21 @@ for k in sorted(attrs.keys()):
             idx = 'idx' if prefixes[0] in channels else 'n'
 
             if prefix in channels:
+                # Regular channel variable
                 chan = prefix.lower()
                 varname = prefix + "_" + var
                 obj = 'e'
                 tmp_lines.append(indent * 3 + cast.format(chan) + ';\n')
-            elif prefix == 'J' and ptr and not 'BTag' in var:
+
+                # For OS TLL, we can fix the tau + tau->lepton system
+                if prefix == 'TLL' and 'Lepton1' in var and 'Lepton2' not in var:
+                    lines += tll_template.format("<", k.replace('L1', 'osL'), var, var.replace('Lepton1', 'Lepton2'))
+                    lines += tll_template.format(">", k.replace('L1', 'ssL'), var, var.replace('Lepton1', 'Lepton2'))
+
+            elif prefix == 'J' and ptr and (('BTag' not in var) or var == 'combSecVtxBTag') and var != 'CSV':
+                if var == 'combSecVtxBTag':
+                    k = k.replace('CombSecVtxBTag', 'CSV')
+
                 jet_lines = []
 
                 for (particle, count) in re.findall('(Tau|Lepton)(\d)?', k):
