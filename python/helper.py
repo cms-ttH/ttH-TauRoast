@@ -8,6 +8,7 @@ import os
 import yaml
 import re
 import ROOT as r
+import shutil
 import sys
 
 r.gROOT.SetBatch()
@@ -490,6 +491,12 @@ def load_config(filename, basedir, overrides):
                 continue
             config['paths'][k] = v.replace('{root}', basedir)
     return config
+
+def backup_config(configfile, config, outdir):
+    if os.path.normpath(os.path.join(outdir, 'config_original.yaml')) != os.path.normpath(configfile):
+        shutil.copy(configfile, os.path.join(outdir, 'config_original.yaml'))
+    with open(os.path.join(outdir, 'config_expanded.yaml'), 'w') as f:
+        f.write(yaml.dump(config))
 
 def load(name, file):
     """Load an object with key `name` from `file`, which can either be a

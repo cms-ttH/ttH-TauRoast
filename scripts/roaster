@@ -36,6 +36,10 @@ parser.add_option("-n",
         metavar="NUM",
         default=None,
         help="process NUM events (default: configuration)")
+parser.add_option("--no-backup",
+        action="store_true",
+        dest="nobackup",
+        help="do not make a backup copy of the configuration")
 parser.add_option("-o", "--override",
         action="append",
         dest="overrides",
@@ -125,7 +129,11 @@ logging.info("reading configuration from %s", configfile)
 basedir = os.path.join(os.environ['LOCALRT'], 'src/ttH/TauRoast/data')
 baseconfig = load_config(configfile, basedir, opts.overrides)
 
-logging.debug("using base path %s", baseconfig['paths']['root'])
+if opts.nobackup:
+    logging.debug("using base path %s", baseconfig['paths']['root'])
+else:
+    logging.debug("backing up config in base path %s", baseconfig['paths']['root'])
+    backup_config(configfile, baseconfig, baseconfig['paths']['root'])
 
 channel = baseconfig['analysis']['channel']
 if channel == 'tll':
