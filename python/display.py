@@ -364,6 +364,22 @@ def stack(config, processes):
                     h = p.GetHistogram(histname)
                     style.setup_upper_axis(h, scale=False, is2d=True)
                     h.Draw("COLZ")
+
+            bkg_sum = get_bkg_sum(histname, procs)
+            try:
+                coll = get_collisions(procs)
+                ratio = coll.GetHistogram(histname).Clone()
+                ratio.Divide(bkg_sum.GetHisto())
+                ratio.SetMarkerColor(r.kWhite)
+                ratio.SetMarkerSize(1.5)
+                with create_plot(config, histname, is2d=True, plot_ratio=False, procname="Data-MC") as (scale, pad1,):
+                    pad1.cd()
+                    style.setup_upper_axis(ratio, scale=False, is2d=True)
+                    r.gStyle.SetPaintTextFormat("4.2f");
+                    ratio.Draw("COLZ TEXT E")
+            except:
+                raise
+                pass
         else:
             base_histo = roast.HWrapper(procs[0].GetHistogram(histname))
 
