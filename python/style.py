@@ -51,16 +51,16 @@ def setup_upper_axis(histo, scale=True, is2d=False):
     histo.GetYaxis().SetLabelSize(.04)
 
     if is2d:
-        h.GetYaxis().SetTitleOffset(1.5)
-        h.GetYaxis().SetTitleSize(0.04)
-        h.GetYaxis().SetLabelFont(62)
-        h.GetYaxis().SetLabelSize(.04)
+        histo.GetYaxis().SetTitleOffset(1.5)
+        histo.GetYaxis().SetTitleSize(0.04)
+        histo.GetYaxis().SetLabelFont(62)
+        histo.GetYaxis().SetLabelSize(.04)
 
-        h.GetZaxis().SetTitleFont(62)
-        h.GetYaxis().SetTitleOffset(1.6)
-        h.GetZaxis().SetTitleSize(0.04)
-        h.GetZaxis().SetLabelFont(62)
-        h.GetZaxis().SetLabelSize(0.03)
+        histo.GetZaxis().SetTitleFont(62)
+        histo.GetYaxis().SetTitleOffset(1.6)
+        histo.GetZaxis().SetTitleSize(0.04)
+        histo.GetZaxis().SetLabelFont(62)
+        histo.GetZaxis().SetLabelSize(0.03)
 
 def setup_lower_axis(histo):
     histo.GetXaxis().SetTitleFont(62)
