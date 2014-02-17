@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "../interface/TLBranches.h"
 #include "../interface/TLLBranches.h"
 #include "../interface/TTLBranches.h"
 #include "../interface/Picker.h"
@@ -10,6 +11,12 @@ inline double
 tau_iso(roast::tll::Branches *b, int idx)
 {
     return (*b->TLL_TauHPSbyIsolationMVA2raw)[idx];
+}
+
+inline double
+tau_iso2(roast::tl::Branches *b, int idx)
+{
+    return (*b->TL_TauHPSbyIsolationMVA2raw)[idx];
 }
 
 inline double
@@ -31,6 +38,15 @@ roast::ttl::IsoPicker::Pick(roast::Branches *b, const std::vector<int>& idxs)
 }
 
 int
+roast::tl::IsoPicker::Pick(roast::Branches *b, const std::vector<int>& idxs)
+{
+    roast::tl::Branches *br = dynamic_cast<roast::tl::Branches*>(b);
+    auto idx = std::max_element(idxs.begin(), idxs.end(),
+            [&](int a, int b) -> bool { return tau_iso2(br, a) < tau_iso2(br, b); });
+    return *idx;
+}
+
+int
 roast::tll::IsoPicker::Pick(roast::Branches *b, const std::vector<int>& idxs)
 {
     roast::tll::Branches *br = dynamic_cast<roast::tll::Branches*>(b);
@@ -39,4 +55,6 @@ roast::tll::IsoPicker::Pick(roast::Branches *b, const std::vector<int>& idxs)
     return *idx;
 }
 
+ClassImp(roast::tl::IsoPicker)
+ClassImp(roast::tll::IsoPicker)
 ClassImp(roast::ttl::IsoPicker)

@@ -6,6 +6,7 @@
 
 #include "../interface/Accessor.h"
 #include "../interface/MVABase.h"
+#include "../interface/TLBranches.h"
 #include "../interface/TLLBranches.h"
 #include "../interface/TTLBranches.h"
 
@@ -48,8 +49,12 @@ namespace roast {
         };
 
         accessors["T_MatchAbsId"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return abs((*e->TLL_TauGenMatchId)[idx]);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return abs((*e->TL_TauGenMatchId)[idx]);
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return abs((*e->TLL_TauGenMatchId)[idx]);
+            }
+            throw "";
         };
         accessors["T1_MatchAbsId"] = [](roast::Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
@@ -61,8 +66,12 @@ namespace roast {
         };
 
         accessors["T_ParentAbsId"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return abs((*e->TLL_TauGenMatchMother0Id)[idx]);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return abs((*e->TL_TauGenMatchMother0Id)[idx]);
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return abs((*e->TLL_TauGenMatchMother0Id)[idx]);
+            }
+            throw "";
         };
         accessors["T1_ParentAbsId"] = [](roast::Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
@@ -74,11 +83,18 @@ namespace roast {
         };
 
         accessors["T_GoodParentId"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            int mother = (*e->TLL_TauGenMatchMother0Id)[idx];
-            if (mother == -99)
-                mother = (*e->TLL_TauGenMatchMother1Id)[idx];
-            return mother;
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                int mother = (*e->TL_TauGenMatchMother0Id)[idx];
+                if (mother == -99)
+                    mother = (*e->TL_TauGenMatchMother1Id)[idx];
+                return mother;
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                int mother = (*e->TLL_TauGenMatchMother0Id)[idx];
+                if (mother == -99)
+                    mother = (*e->TLL_TauGenMatchMother1Id)[idx];
+                return mother;
+            }
+            throw "";
         };
         accessors["T1_GoodParentId"] = [](Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
@@ -95,11 +111,18 @@ namespace roast {
             return mother;
         };
         accessors["L_GoodParentId"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            int mother = (*e->TTL_LeptonGenMatchMother0Id)[idx];
-            if (mother == -99)
-                mother = (*e->TTL_LeptonGenMatchMother1Id)[idx];
-            return mother;
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                int mother = (*e->TL_LeptonGenMatchMother0Id)[idx];
+                if (mother == -99)
+                    mother = (*e->TL_LeptonGenMatchMother1Id)[idx];
+                return mother;
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                int mother = (*e->TTL_LeptonGenMatchMother0Id)[idx];
+                if (mother == -99)
+                    mother = (*e->TTL_LeptonGenMatchMother1Id)[idx];
+                return mother;
+            }
+            throw "";
         };
         accessors["L1_GoodParentId"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
@@ -117,15 +140,26 @@ namespace roast {
         };
 
         accessors["T_GoodGrandParentId"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            int grannie = (*e->TLL_TauGenMatchGrandmother00Id)[idx];
-            if (grannie == -99)
-                grannie = (*e->TLL_TauGenMatchGrandmother01Id)[idx];
-            if (grannie == -99)
-                grannie = (*e->TLL_TauGenMatchGrandmother10Id)[idx];
-            if (grannie == -99)
-                grannie = (*e->TLL_TauGenMatchGrandmother11Id)[idx];
-            return grannie;
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                int grannie = (*e->TL_TauGenMatchGrandmother00Id)[idx];
+                if (grannie == -99)
+                    grannie = (*e->TL_TauGenMatchGrandmother01Id)[idx];
+                if (grannie == -99)
+                    grannie = (*e->TL_TauGenMatchGrandmother10Id)[idx];
+                if (grannie == -99)
+                    grannie = (*e->TL_TauGenMatchGrandmother11Id)[idx];
+                return grannie;
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                int grannie = (*e->TLL_TauGenMatchGrandmother00Id)[idx];
+                if (grannie == -99)
+                    grannie = (*e->TLL_TauGenMatchGrandmother01Id)[idx];
+                if (grannie == -99)
+                    grannie = (*e->TLL_TauGenMatchGrandmother10Id)[idx];
+                if (grannie == -99)
+                    grannie = (*e->TLL_TauGenMatchGrandmother11Id)[idx];
+                return grannie;
+            }
+            throw "";
         };
         accessors["T1_GoodGrandParentId"] = [](Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
@@ -150,15 +184,26 @@ namespace roast {
             return grannie;
         };
         accessors["L_GoodGrandParentId"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            int grannie = (*e->TTL_LeptonGenMatchGrandmother00Id)[idx];
-            if (grannie == -99)
-                grannie = (*e->TTL_LeptonGenMatchGrandmother01Id)[idx];
-            if (grannie == -99)
-                grannie = (*e->TTL_LeptonGenMatchGrandmother10Id)[idx];
-            if (grannie == -99)
-                grannie = (*e->TTL_LeptonGenMatchGrandmother11Id)[idx];
-            return grannie;
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                int grannie = (*e->TL_LeptonGenMatchGrandmother00Id)[idx];
+                if (grannie == -99)
+                    grannie = (*e->TL_LeptonGenMatchGrandmother01Id)[idx];
+                if (grannie == -99)
+                    grannie = (*e->TL_LeptonGenMatchGrandmother10Id)[idx];
+                if (grannie == -99)
+                    grannie = (*e->TL_LeptonGenMatchGrandmother11Id)[idx];
+                return grannie;
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                int grannie = (*e->TTL_LeptonGenMatchGrandmother00Id)[idx];
+                if (grannie == -99)
+                    grannie = (*e->TTL_LeptonGenMatchGrandmother01Id)[idx];
+                if (grannie == -99)
+                    grannie = (*e->TTL_LeptonGenMatchGrandmother10Id)[idx];
+                if (grannie == -99)
+                    grannie = (*e->TTL_LeptonGenMatchGrandmother11Id)[idx];
+                return grannie;
+            }
+            throw "";
         };
         accessors["L1_GoodGrandParentId"] = [](Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
@@ -341,40 +386,76 @@ namespace roast {
             return e->GetTau2IsolationIndexMVA2(idx);
         };
         accessors["T_AntiElectronIndex"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return e->GetTauAntiElectronIndex(idx);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return e->GetTauAntiElectronIndex(idx);
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return e->GetTauAntiElectronIndex(idx);
+            }
+            throw "";
         };
         accessors["T_AntiElectronIndexMVA2"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return e->GetTauAntiElectronIndexMVA2(idx);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return e->GetTauAntiElectronIndexMVA2(idx);
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return e->GetTauAntiElectronIndexMVA2(idx);
+            }
+            throw "";
         };
         accessors["T_AntiElectronIndexMVA3"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return e->GetTauAntiElectronIndexMVA3(idx);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return e->GetTauAntiElectronIndexMVA3(idx);
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return e->GetTauAntiElectronIndexMVA3(idx);
+            }
+            throw "";
         };
         accessors["T_AntiMuonIndex"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return e->GetTauAntiMuonIndex(idx);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return e->GetTauAntiMuonIndex(idx);
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return e->GetTauAntiMuonIndex(idx);
+            }
+            throw "";
         };
         accessors["T_AntiMuonIndex2"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return e->GetTauAntiMuonIndex2(idx);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return e->GetTauAntiMuonIndex2(idx);
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return e->GetTauAntiMuonIndex2(idx);
+            }
+            throw "";
         };
         accessors["T_IsolationIndex"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return e->GetTauIsolationIndex(idx);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return e->GetTauIsolationIndex(idx);
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return e->GetTauIsolationIndex(idx);
+            }
+            throw "";
         };
         accessors["T_IsolationIndex3Hits"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return e->GetTauIsolationIndex3Hits(idx);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return e->GetTauIsolationIndex3Hits(idx);
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return e->GetTauIsolationIndex3Hits(idx);
+            }
+            throw "";
         };
         accessors["T_IsolationIndexMVA"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return e->GetTauIsolationIndexMVA(idx);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return e->GetTauIsolationIndexMVA(idx);
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return e->GetTauIsolationIndexMVA(idx);
+            }
+            throw "";
         };
         accessors["T_IsolationIndexMVA2"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return e->GetTauIsolationIndexMVA2(idx);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return e->GetTauIsolationIndexMVA2(idx);
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return e->GetTauIsolationIndexMVA2(idx);
+            }
+            throw "";
         };
         accessors["BQuarkCount"] = [](Branches *b, int idx, int n) -> float {
             return b->Ev_bQuarkCount;
@@ -672,131 +753,23 @@ namespace roast {
         accessors["J_Eta"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_Eta)[idx];
         };
-        accessors["CleanJL1_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetIndices)[idx][n];
-            return (*b->J_Lepton1DeltaR).at(idx).at(i);
-        };
-        accessors["CleanLJL1_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetIndices)[idx][0];
-            return (*b->J_Lepton1DeltaR).at(idx).at(i);
-        };
-        accessors["CleanSubLJL1_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetIndices)[idx][1];
-            return (*b->J_Lepton1DeltaR).at(idx).at(i);
-        };
-        accessors["CleanSubSubLJL1_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetIndices)[idx][2];
-            return (*b->J_Lepton1DeltaR).at(idx).at(i);
-        };
-        accessors["CleanSubSubSubLJL1_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetIndices)[idx][3];
-            return (*b->J_Lepton1DeltaR).at(idx).at(i);
-        };
-        accessors["TaggedJL1_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetCSVMIndices)[idx][n];
-            return (*b->J_Lepton1DeltaR).at(idx).at(i);
-        };
-        accessors["TaggedLJL1_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetCSVMIndices)[idx][0];
-            return (*b->J_Lepton1DeltaR).at(idx).at(i);
-        };
-        accessors["TaggedSubLJL1_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetCSVMIndices)[idx][1];
-            return (*b->J_Lepton1DeltaR).at(idx).at(i);
-        };
-        accessors["TaggedSubSubLJL1_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetCSVMIndices)[idx][2];
-            return (*b->J_Lepton1DeltaR).at(idx).at(i);
-        };
-        accessors["TaggedSubSubSubLJL1_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetCSVMIndices)[idx][3];
-            return (*b->J_Lepton1DeltaR).at(idx).at(i);
-        };
-        accessors["UntaggedJL1_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetNonCSVMIndices)[idx].at(n);
-            return (*b->J_Lepton1DeltaR).at(idx).at(i);
-        };
-        accessors["UntaggedLJL1_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetNonCSVMIndices)[idx].at(0);
-            return (*b->J_Lepton1DeltaR).at(idx).at(i);
-        };
-        accessors["UntaggedSubLJL1_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetNonCSVMIndices)[idx].at(1);
-            return (*b->J_Lepton1DeltaR).at(idx).at(i);
-        };
-        accessors["UntaggedSubSubLJL1_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetNonCSVMIndices)[idx].at(2);
-            return (*b->J_Lepton1DeltaR).at(idx).at(i);
-        };
-        accessors["UntaggedSubSubSubLJL1_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetNonCSVMIndices)[idx].at(3);
-            return (*b->J_Lepton1DeltaR).at(idx).at(i);
-        };
         accessors["JL1_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->J_Lepton1DeltaR)[idx][n];
-        };
-        accessors["CleanJL2_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetIndices)[idx][n];
-            return (*b->J_Lepton2DeltaR).at(idx).at(i);
-        };
-        accessors["CleanLJL2_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetIndices)[idx][0];
-            return (*b->J_Lepton2DeltaR).at(idx).at(i);
-        };
-        accessors["CleanSubLJL2_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetIndices)[idx][1];
-            return (*b->J_Lepton2DeltaR).at(idx).at(i);
-        };
-        accessors["CleanSubSubLJL2_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetIndices)[idx][2];
-            return (*b->J_Lepton2DeltaR).at(idx).at(i);
-        };
-        accessors["CleanSubSubSubLJL2_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetIndices)[idx][3];
-            return (*b->J_Lepton2DeltaR).at(idx).at(i);
-        };
-        accessors["TaggedJL2_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetCSVMIndices)[idx][n];
-            return (*b->J_Lepton2DeltaR).at(idx).at(i);
-        };
-        accessors["TaggedLJL2_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetCSVMIndices)[idx][0];
-            return (*b->J_Lepton2DeltaR).at(idx).at(i);
-        };
-        accessors["TaggedSubLJL2_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetCSVMIndices)[idx][1];
-            return (*b->J_Lepton2DeltaR).at(idx).at(i);
-        };
-        accessors["TaggedSubSubLJL2_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetCSVMIndices)[idx][2];
-            return (*b->J_Lepton2DeltaR).at(idx).at(i);
-        };
-        accessors["TaggedSubSubSubLJL2_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetCSVMIndices)[idx][3];
-            return (*b->J_Lepton2DeltaR).at(idx).at(i);
-        };
-        accessors["UntaggedJL2_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetNonCSVMIndices)[idx].at(n);
-            return (*b->J_Lepton2DeltaR).at(idx).at(i);
-        };
-        accessors["UntaggedLJL2_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetNonCSVMIndices)[idx].at(0);
-            return (*b->J_Lepton2DeltaR).at(idx).at(i);
-        };
-        accessors["UntaggedSubLJL2_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetNonCSVMIndices)[idx].at(1);
-            return (*b->J_Lepton2DeltaR).at(idx).at(i);
-        };
-        accessors["UntaggedSubSubLJL2_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetNonCSVMIndices)[idx].at(2);
-            return (*b->J_Lepton2DeltaR).at(idx).at(i);
-        };
-        accessors["UntaggedSubSubSubLJL2_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = (*b->CleanJetNonCSVMIndices)[idx].at(3);
-            return (*b->J_Lepton2DeltaR).at(idx).at(i);
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->J_Lepton1DeltaR)[idx][n];
+            }
+            throw "";
         };
         accessors["JL2_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->J_Lepton2DeltaR)[idx][n];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->J_Lepton2DeltaR)[idx][n];
+            }
+            throw "";
+        };
+        accessors["JL_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->J_LeptonDeltaR)[idx][n];
+            }
+            throw "";
         };
         accessors["CleanJ_MomentumRank"] = [](Branches *b, int idx, int n) -> float {
             int i = (*b->CleanJetIndices)[idx][n];
@@ -2800,140 +2773,272 @@ namespace roast {
             return (*e->TLL_Lepton2RelIso)[idx];
         };
         accessors["L_Charge"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonCharge)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonCharge)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonCharge)[idx];
+            }
+            throw "";
         };
         accessors["L_CorrectedD0"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonCorrectedD0)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonCorrectedD0)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonCorrectedD0)[idx];
+            }
+            throw "";
         };
         accessors["L_CorrectedDZ"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonCorrectedDZ)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonCorrectedDZ)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonCorrectedDZ)[idx];
+            }
+            throw "";
         };
         accessors["L_Eta"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonEta)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonEta)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonEta)[idx];
+            }
+            throw "";
         };
         accessors["L_EventWeight"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonEventWeight)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonEventWeight)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonEventWeight)[idx];
+            }
+            throw "";
         };
         accessors["L_GenMatchDaughter0Id"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonGenMatchDaughter0Id)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonGenMatchDaughter0Id)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonGenMatchDaughter0Id)[idx];
+            }
+            throw "";
         };
         accessors["L_GenMatchDaughter0Status"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonGenMatchDaughter0Status)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonGenMatchDaughter0Status)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonGenMatchDaughter0Status)[idx];
+            }
+            throw "";
         };
         accessors["L_GenMatchDaughter1Id"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonGenMatchDaughter1Id)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonGenMatchDaughter1Id)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonGenMatchDaughter1Id)[idx];
+            }
+            throw "";
         };
         accessors["L_GenMatchDaughter1Status"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonGenMatchDaughter1Status)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonGenMatchDaughter1Status)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonGenMatchDaughter1Status)[idx];
+            }
+            throw "";
         };
         accessors["L_GenMatchGrandmother00Id"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonGenMatchGrandmother00Id)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonGenMatchGrandmother00Id)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonGenMatchGrandmother00Id)[idx];
+            }
+            throw "";
         };
         accessors["L_GenMatchGrandmother00Status"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonGenMatchGrandmother00Status)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonGenMatchGrandmother00Status)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonGenMatchGrandmother00Status)[idx];
+            }
+            throw "";
         };
         accessors["L_GenMatchGrandmother01Id"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonGenMatchGrandmother01Id)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonGenMatchGrandmother01Id)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonGenMatchGrandmother01Id)[idx];
+            }
+            throw "";
         };
         accessors["L_GenMatchGrandmother01Status"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonGenMatchGrandmother01Status)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonGenMatchGrandmother01Status)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonGenMatchGrandmother01Status)[idx];
+            }
+            throw "";
         };
         accessors["L_GenMatchGrandmother10Id"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonGenMatchGrandmother10Id)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonGenMatchGrandmother10Id)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonGenMatchGrandmother10Id)[idx];
+            }
+            throw "";
         };
         accessors["L_GenMatchGrandmother10Status"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonGenMatchGrandmother10Status)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonGenMatchGrandmother10Status)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonGenMatchGrandmother10Status)[idx];
+            }
+            throw "";
         };
         accessors["L_GenMatchGrandmother11Id"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonGenMatchGrandmother11Id)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonGenMatchGrandmother11Id)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonGenMatchGrandmother11Id)[idx];
+            }
+            throw "";
         };
         accessors["L_GenMatchGrandmother11Status"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonGenMatchGrandmother11Status)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonGenMatchGrandmother11Status)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonGenMatchGrandmother11Status)[idx];
+            }
+            throw "";
         };
         accessors["L_GenMatchId"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonGenMatchId)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonGenMatchId)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonGenMatchId)[idx];
+            }
+            throw "";
         };
         accessors["L_GenMatchMother0Id"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonGenMatchMother0Id)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonGenMatchMother0Id)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonGenMatchMother0Id)[idx];
+            }
+            throw "";
         };
         accessors["L_GenMatchMother0Status"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonGenMatchMother0Status)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonGenMatchMother0Status)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonGenMatchMother0Status)[idx];
+            }
+            throw "";
         };
         accessors["L_GenMatchMother1Id"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonGenMatchMother1Id)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonGenMatchMother1Id)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonGenMatchMother1Id)[idx];
+            }
+            throw "";
         };
         accessors["L_GenMatchMother1Status"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonGenMatchMother1Status)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonGenMatchMother1Status)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonGenMatchMother1Status)[idx];
+            }
+            throw "";
         };
         accessors["L_GenMatchStatus"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonGenMatchStatus)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonGenMatchStatus)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonGenMatchStatus)[idx];
+            }
+            throw "";
         };
         accessors["L_ImpactParameter"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonImpactParameter)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonImpactParameter)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonImpactParameter)[idx];
+            }
+            throw "";
         };
         accessors["L_IsElectron"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonIsElectron)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonIsElectron)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonIsElectron)[idx];
+            }
+            throw "";
         };
         accessors["L_IsLoose"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonIsLoose)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonIsLoose)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonIsLoose)[idx];
+            }
+            throw "";
         };
         accessors["L_IsMuon"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonIsMuon)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonIsMuon)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonIsMuon)[idx];
+            }
+            throw "";
         };
         accessors["L_IsTight"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonIsTight)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonIsTight)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonIsTight)[idx];
+            }
+            throw "";
         };
         accessors["L_MomentumRank"] = [](Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return (*e->TTL_LeptonMomentumRank)[idx];
         };
         accessors["L_Mt"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonMt)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonMt)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonMt)[idx];
+            }
+            throw "";
         };
         accessors["L_Mt2"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonMt2)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonMt2)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonMt2)[idx];
+            }
+            throw "";
         };
         accessors["L_Phi"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonPhi)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonPhi)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonPhi)[idx];
+            }
+            throw "";
         };
         accessors["L_Pt"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonPt)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonPt)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonPt)[idx];
+            }
+            throw "";
         };
         accessors["L_RelIso"] = [](Branches *b, int idx, int n) -> float {
-            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            return (*e->TTL_LeptonRelIso)[idx];
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_LeptonRelIso)[idx];
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->TTL_LeptonRelIso)[idx];
+            }
+            throw "";
         };
         accessors["LumiBlock"] = [](Branches *b, int idx, int n) -> float {
             return b->Ev_lumiBlock;
@@ -2956,6 +3061,12 @@ namespace roast {
         accessors["MuonMomentumRank"] = [](Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return (*e->TTL_MuonMomentumRank)[idx];
+        };
+        accessors["NTruePV"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return e->Ev_NTruePV;
+            }
+            throw "";
         };
         accessors["J_NumCSVL"] = [](Branches *b, int idx, int n) -> float {
             return (*b->NumCSVLbtagJets)[idx];
@@ -3823,329 +3934,669 @@ namespace roast {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             return (*e->TLL_TauLepton2VisibleMass)[idx];
         };
+        accessors["TL_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
+            tl::Branches* e = dynamic_cast<tl::Branches*>(b);
+            return (*e->TL_TauLeptonCosDeltaPhi)[idx];
+        };
+        accessors["TL_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            tl::Branches* e = dynamic_cast<tl::Branches*>(b);
+            return (*e->TL_TauLeptonDeltaR)[idx];
+        };
+        accessors["TL_METMass"] = [](Branches *b, int idx, int n) -> float {
+            tl::Branches* e = dynamic_cast<tl::Branches*>(b);
+            return (*e->TL_TauLeptonMETMass)[idx];
+        };
+        accessors["TL_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            tl::Branches* e = dynamic_cast<tl::Branches*>(b);
+            return (*e->TL_TauLeptonVisibleMass)[idx];
+        };
         accessors["T_Charge"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauCharge)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauCharge)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauCharge)[idx];
+            }
+            throw "";
         };
         accessors["T_DecayMode"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauDecayMode)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauDecayMode)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauDecayMode)[idx];
+            }
+            throw "";
         };
         accessors["T_EmFraction"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauEmFraction)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauEmFraction)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauEmFraction)[idx];
+            }
+            throw "";
         };
         accessors["T_Eta"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauEta)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauEta)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauEta)[idx];
+            }
+            throw "";
         };
         accessors["T_GenMatchDaughter0Id"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauGenMatchDaughter0Id)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauGenMatchDaughter0Id)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauGenMatchDaughter0Id)[idx];
+            }
+            throw "";
         };
         accessors["T_GenMatchDaughter0Status"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauGenMatchDaughter0Status)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauGenMatchDaughter0Status)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauGenMatchDaughter0Status)[idx];
+            }
+            throw "";
         };
         accessors["T_GenMatchDaughter1Id"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauGenMatchDaughter1Id)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauGenMatchDaughter1Id)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauGenMatchDaughter1Id)[idx];
+            }
+            throw "";
         };
         accessors["T_GenMatchDaughter1Status"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauGenMatchDaughter1Status)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauGenMatchDaughter1Status)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauGenMatchDaughter1Status)[idx];
+            }
+            throw "";
         };
         accessors["T_GenMatchGrandmother00Id"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauGenMatchGrandmother00Id)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauGenMatchGrandmother00Id)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauGenMatchGrandmother00Id)[idx];
+            }
+            throw "";
         };
         accessors["T_GenMatchGrandmother00Status"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauGenMatchGrandmother00Status)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauGenMatchGrandmother00Status)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauGenMatchGrandmother00Status)[idx];
+            }
+            throw "";
         };
         accessors["T_GenMatchGrandmother01Id"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauGenMatchGrandmother01Id)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauGenMatchGrandmother01Id)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauGenMatchGrandmother01Id)[idx];
+            }
+            throw "";
         };
         accessors["T_GenMatchGrandmother01Status"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauGenMatchGrandmother01Status)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauGenMatchGrandmother01Status)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauGenMatchGrandmother01Status)[idx];
+            }
+            throw "";
         };
         accessors["T_GenMatchGrandmother10Id"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauGenMatchGrandmother10Id)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauGenMatchGrandmother10Id)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauGenMatchGrandmother10Id)[idx];
+            }
+            throw "";
         };
         accessors["T_GenMatchGrandmother10Status"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauGenMatchGrandmother10Status)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauGenMatchGrandmother10Status)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauGenMatchGrandmother10Status)[idx];
+            }
+            throw "";
         };
         accessors["T_GenMatchGrandmother11Id"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauGenMatchGrandmother11Id)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauGenMatchGrandmother11Id)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauGenMatchGrandmother11Id)[idx];
+            }
+            throw "";
         };
         accessors["T_GenMatchGrandmother11Status"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauGenMatchGrandmother11Status)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauGenMatchGrandmother11Status)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauGenMatchGrandmother11Status)[idx];
+            }
+            throw "";
         };
         accessors["T_GenMatchId"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauGenMatchId)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauGenMatchId)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauGenMatchId)[idx];
+            }
+            throw "";
         };
         accessors["T_GenMatchMother0Id"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauGenMatchMother0Id)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauGenMatchMother0Id)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauGenMatchMother0Id)[idx];
+            }
+            throw "";
         };
         accessors["T_GenMatchMother0Status"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauGenMatchMother0Status)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauGenMatchMother0Status)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauGenMatchMother0Status)[idx];
+            }
+            throw "";
         };
         accessors["T_GenMatchMother1Id"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauGenMatchMother1Id)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauGenMatchMother1Id)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauGenMatchMother1Id)[idx];
+            }
+            throw "";
         };
         accessors["T_GenMatchMother1Status"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauGenMatchMother1Status)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauGenMatchMother1Status)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauGenMatchMother1Status)[idx];
+            }
+            throw "";
         };
         accessors["T_GenMatchStatus"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauGenMatchStatus)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauGenMatchStatus)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauGenMatchStatus)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiElectronDeadECAL"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstElectronDeadECAL)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstElectronDeadECAL)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstElectronDeadECAL)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiElectronLoose"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstElectronLoose)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstElectronLoose)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstElectronLoose)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiElectronLooseMVA2"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstElectronLooseMVA2)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstElectronLooseMVA2)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstElectronLooseMVA2)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiElectronLooseMVA3"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstElectronLooseMVA3)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstElectronLooseMVA3)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstElectronLooseMVA3)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiElectronMVA"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstElectronMVA)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstElectronMVA)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstElectronMVA)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiElectronMVA2category"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstElectronMVA2category)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstElectronMVA2category)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstElectronMVA2category)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiElectronMVA2Raw"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstElectronMVA2raw)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstElectronMVA2raw)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstElectronMVA2raw)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiElectronMVA3category"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstElectronMVA3category)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstElectronMVA3category)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstElectronMVA3category)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiElectronMVA3Raw"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstElectronMVA3raw)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstElectronMVA3raw)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstElectronMVA3raw)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiElectronMedium"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstElectronMedium)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstElectronMedium)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstElectronMedium)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiElectronMediumMVA2"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstElectronMediumMVA2)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstElectronMediumMVA2)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstElectronMediumMVA2)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiElectronMediumMVA3"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstElectronMediumMVA3)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstElectronMediumMVA3)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstElectronMediumMVA3)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiElectronTight"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstElectronTight)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstElectronTight)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstElectronTight)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiElectronTightMVA2"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstElectronTightMVA2)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstElectronTightMVA2)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstElectronTightMVA2)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiElectronTightMVA3"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstElectronTightMVA3)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstElectronTightMVA3)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstElectronTightMVA3)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiElectronVLooseMVA2"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstElectronVLooseMVA2)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstElectronVLooseMVA2)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstElectronVLooseMVA2)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiElectronVTightMVA3"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstElectronVTightMVA3)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstElectronVTightMVA3)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstElectronVTightMVA3)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiMuonLoose"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstMuonLoose)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstMuonLoose)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstMuonLoose)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiMuonLoose2"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstMuonLoose2)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstMuonLoose2)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstMuonLoose2)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiMuonMedium"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstMuonMedium)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstMuonMedium)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstMuonMedium)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiMuonMedium2"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstMuonMedium2)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstMuonMedium2)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstMuonMedium2)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiMuonTight"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstMuonTight)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstMuonTight)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstMuonTight)[idx];
+            }
+            throw "";
         };
         accessors["T_AntiMuonTight2"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSagainstMuonTight2)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSagainstMuonTight2)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSagainstMuonTight2)[idx];
+            }
+            throw "";
         };
         accessors["T_CombinedIsolationDeltaBetaCorrRaw"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSbyCombinedIsolationDeltaBetaCorrRaw)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSbyCombinedIsolationDeltaBetaCorrRaw)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSbyCombinedIsolationDeltaBetaCorrRaw)[idx];
+            }
+            throw "";
         };
         accessors["T_CombinedIsolationDeltaBetaCorrRaw3Hits"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSbyCombinedIsolationDeltaBetaCorrRaw3Hits)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSbyCombinedIsolationDeltaBetaCorrRaw3Hits)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSbyCombinedIsolationDeltaBetaCorrRaw3Hits)[idx];
+            }
+            throw "";
         };
         accessors["T_IsolationMVA2Raw"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSbyIsolationMVA2raw)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSbyIsolationMVA2raw)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSbyIsolationMVA2raw)[idx];
+            }
+            throw "";
         };
         accessors["T_IsolationMVARaw"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSbyIsolationMVAraw)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSbyIsolationMVAraw)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSbyIsolationMVAraw)[idx];
+            }
+            throw "";
         };
         accessors["T_LooseCombinedIsolationDeltaBetaCorr"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSbyLooseCombinedIsolationDeltaBetaCorr)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSbyLooseCombinedIsolationDeltaBetaCorr)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSbyLooseCombinedIsolationDeltaBetaCorr)[idx];
+            }
+            throw "";
         };
         accessors["T_LooseCombinedIsolationDeltaBetaCorr3Hits"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSbyLooseCombinedIsolationDeltaBetaCorr3Hits)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSbyLooseCombinedIsolationDeltaBetaCorr3Hits)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSbyLooseCombinedIsolationDeltaBetaCorr3Hits)[idx];
+            }
+            throw "";
         };
         accessors["T_LooseIsolationMVA"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSbyLooseIsolationMVA)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSbyLooseIsolationMVA)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSbyLooseIsolationMVA)[idx];
+            }
+            throw "";
         };
         accessors["T_LooseIsolationMVA2"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSbyLooseIsolationMVA2)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSbyLooseIsolationMVA2)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSbyLooseIsolationMVA2)[idx];
+            }
+            throw "";
         };
         accessors["T_MediumCombinedIsolationDeltaBetaCorr"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSbyMediumCombinedIsolationDeltaBetaCorr)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSbyMediumCombinedIsolationDeltaBetaCorr)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSbyMediumCombinedIsolationDeltaBetaCorr)[idx];
+            }
+            throw "";
         };
         accessors["T_MediumCombinedIsolationDeltaBetaCorr3Hits"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSbyMediumCombinedIsolationDeltaBetaCorr3Hits)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSbyMediumCombinedIsolationDeltaBetaCorr3Hits)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSbyMediumCombinedIsolationDeltaBetaCorr3Hits)[idx];
+            }
+            throw "";
         };
         accessors["T_MediumIsolationMVA"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSbyMediumIsolationMVA)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSbyMediumIsolationMVA)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSbyMediumIsolationMVA)[idx];
+            }
+            throw "";
         };
         accessors["T_MediumIsolationMVA2"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSbyMediumIsolationMVA2)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSbyMediumIsolationMVA2)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSbyMediumIsolationMVA2)[idx];
+            }
+            throw "";
         };
         accessors["T_TightCombinedIsolationDeltaBetaCorr"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSbyTightCombinedIsolationDeltaBetaCorr)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSbyTightCombinedIsolationDeltaBetaCorr)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSbyTightCombinedIsolationDeltaBetaCorr)[idx];
+            }
+            throw "";
         };
         accessors["T_TightCombinedIsolationDeltaBetaCorr3Hits"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSbyTightCombinedIsolationDeltaBetaCorr3Hits)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSbyTightCombinedIsolationDeltaBetaCorr3Hits)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSbyTightCombinedIsolationDeltaBetaCorr3Hits)[idx];
+            }
+            throw "";
         };
         accessors["T_TightIsolationMVA"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSbyTightIsolationMVA)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSbyTightIsolationMVA)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSbyTightIsolationMVA)[idx];
+            }
+            throw "";
         };
         accessors["T_TightIsolationMVA2"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSbyTightIsolationMVA2)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSbyTightIsolationMVA2)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSbyTightIsolationMVA2)[idx];
+            }
+            throw "";
         };
         accessors["T_VLooseCombinedIsolationDeltaBetaCorr"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSbyVLooseCombinedIsolationDeltaBetaCorr)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSbyVLooseCombinedIsolationDeltaBetaCorr)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSbyVLooseCombinedIsolationDeltaBetaCorr)[idx];
+            }
+            throw "";
         };
         accessors["T_DecayModeFinding"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauHPSdecayModeFinding)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauHPSdecayModeFinding)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauHPSdecayModeFinding)[idx];
+            }
+            throw "";
         };
         accessors["T_IsInTheCracks"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauIsInTheCracks)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauIsInTheCracks)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauIsInTheCracks)[idx];
+            }
+            throw "";
         };
         accessors["T_LTIpVtdxy"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauLTIpVtdxy)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauLTIpVtdxy)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauLTIpVtdxy)[idx];
+            }
+            throw "";
         };
         accessors["T_LTIpVtdxyError"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauLTIpVtdxyError)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauLTIpVtdxyError)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauLTIpVtdxyError)[idx];
+            }
+            throw "";
         };
         accessors["T_LTIpVtdz"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauLTIpVtdz)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauLTIpVtdz)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauLTIpVtdz)[idx];
+            }
+            throw "";
         };
         accessors["T_LTIpVtdzError"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauLTIpVtdzError)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauLTIpVtdzError)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauLTIpVtdzError)[idx];
+            }
+            throw "";
         };
         accessors["T_LTNormChiSqrd"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauLTNormChiSqrd)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauLTNormChiSqrd)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauLTNormChiSqrd)[idx];
+            }
+            throw "";
         };
         accessors["T_LTPt"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauLTPt)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauLTPt)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauLTPt)[idx];
+            }
+            throw "";
         };
         accessors["T_LTValidHits"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauLTValidHits)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauLTValidHits)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauLTValidHits)[idx];
+            }
+            throw "";
         };
         accessors["T_LTvalid"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauLTvalid)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauLTvalid)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauLTvalid)[idx];
+            }
+            throw "";
         };
         accessors["T_LTvx"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauLTvx)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauLTvx)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauLTvx)[idx];
+            }
+            throw "";
         };
         accessors["T_LTvy"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauLTvy)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauLTvy)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauLTvy)[idx];
+            }
+            throw "";
         };
         accessors["T_LTvz"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauLTvz)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauLTvz)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauLTvz)[idx];
+            }
+            throw "";
         };
         accessors["T_MomentumRank"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauMomentumRank)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauMomentumRank)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauMomentumRank)[idx];
+            }
+            throw "";
         };
         accessors["T_NumProngs"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauNProngs)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauNProngs)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauNProngs)[idx];
+            }
+            throw "";
         };
         accessors["T_NumSignalGammas"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauNSignalGammas)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauNSignalGammas)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauNSignalGammas)[idx];
+            }
+            throw "";
         };
         accessors["T_NumSignalNeutrals"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauNSignalNeutrals)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauNSignalNeutrals)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauNSignalNeutrals)[idx];
+            }
+            throw "";
         };
         accessors["T_Phi"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauPhi)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauPhi)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauPhi)[idx];
+            }
+            throw "";
         };
         accessors["T_Pt"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TauPt)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TauPt)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TauPt)[idx];
+            }
+            throw "";
         };
         accessors["TopPtWeight"] = [](Branches *b, int idx, int n) -> float {
             return b->Ev_topPtWeight;
@@ -4157,8 +4608,12 @@ namespace roast {
             return b->Ev_topPtWeightUp;
         };
         accessors["TriggerEventWeight"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return (*e->TLL_TriggerEventWeight)[idx];
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->TLL_TriggerEventWeight)[idx];
+            } else if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->TL_TriggerEventWeight)[idx];
+            }
+            throw "";
         };
         accessors["V_NumInteractionsBX0"] = [](Branches *b, int idx, int n) -> float {
             return b->V_NumInteractionsBX0;

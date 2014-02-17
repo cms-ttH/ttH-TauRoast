@@ -136,7 +136,9 @@ else:
     backup_config(configfile, baseconfig, baseconfig['paths']['root'])
 
 channel = baseconfig['analysis']['channel']
-if channel == 'tll':
+if channel == 'tl':
+    module = roast.tl
+elif channel == 'tll':
     module = roast.tll
 elif channel == 'ttl':
     module = roast.ttl

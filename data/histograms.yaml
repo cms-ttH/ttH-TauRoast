@@ -64,7 +64,7 @@ Weights_Trigger:
     plot weight: trigger
     cancel weight: trigger
     dir: general
-    channel: [tll]
+    channels: [tll]
     binning: [30, 0.8, 1.2]
     axis labels: ["Trigger Weight", Events]
 
@@ -72,7 +72,7 @@ Weights_Trigger_unweighed:
     plot weight: trigger
     cancel weight: all
     dir: general
-    channel: [tll]
+    channels: [tll]
     binning: [30, 0.8, 1.2]
     axis labels: ["Trigger Weight", Events]
 
@@ -124,6 +124,7 @@ MET:
 HT:
     dir: general
     binning: [20, 0, 1500]
+    channels: [tll, ttl]
     axis labels: ['H_{T}', Events]
     visible: [200, 1000]
     showOF: true
@@ -166,25 +167,33 @@ FinalBDTG:
     #  showOF: false
     #  logy: 1
 
-NumberPV_noPURW:
+V_NumVertices_noPURW:
+    values: [V_NumVertices]
+    cancel weight: PUcorr
     dir: pileup
     binning: [20, 0, 40]
-    axis labels: [Number PV, no PURW, Events]
+    axis labels: ["Number PV, no PURW", Events]
 
 V_NumInteractionsBX0_noPURW:
+    values: [V_NumInteractionsBX0]
+    cancel weight: PUcorr
     dir: pileup
     binning: [20, 0, 40]
-    axis labels: [Number BX0, no PURW, Events]
+    axis labels: ["Number BX0, no PURW", Events]
 
 V_NumInteractionsBXm1_noPURW:
+    values: [V_NumInteractionsBX0m1]
+    cancel weight: PUcorr
     dir: pileup
     binning: [20, 0, 40]
-    axis labels: [Number BXm1, no PURW, Events]
+    axis labels: ["Number BXm1, no PURW", Events]
 
 V_NumInteractionsBXp1_noPURW:
+    values: [V_NumInteractionsBX0p1]
+    cancel weight: PUcorr
     dir: pileup
     binning: [20, 0, 40]
-    axis labels: [Number BXp1, no PURW, Events]
+    axis labels: ["Number BXp1, no PURW", Events]
 
 V_NumVertices:
     dir: pileup

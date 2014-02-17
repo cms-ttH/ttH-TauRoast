@@ -100,6 +100,8 @@ def generate_type_info(channel, vars, common_vars, indent=16):
         elif not (channel and n in common_vars):
             varname = "_".join([c, n])
             declare_lines.append(' ' * indent + t + ' ' + varname + ';\n')
+        elif c == 'J':
+            varname = "_".join([c, n])
         else:
             varname = n
 
@@ -144,21 +146,30 @@ def inject_lines(filename, key, lines):
 # main script part  >--------------------------------------------------
 #------------------/
 
-channels = set(["TTL", "TLL"])
+channels = set(["TTL", "TLL", "TL"])
 
 # extract type information from ROOT files passed as arguments, only
 # process each unique branch name once
 type_info = []
 var_names = set()
+single_var_names = {}
+single_var_names_dup = set()
 for fn in sys.argv[1:]:
     for tpl in gather_type_info(fn):
         varname = tpl[0] + '_' + tpl[1]
         if varname in var_names:
+            single_var_names_dup.add(varname)
             continue
+        if tpl[0] not in channels:
+            single_var_names[varname] = filter(lambda c: '/' + c.lower() + '_' in fn, channels)[0]
         var_names.add(varname)
         type_info.append(tpl)
 
 vars = sorted(type_info, key=lambda tpl: "_".join(tpl[:2]))
+
+for key in single_var_names.keys():
+    if key in single_var_names_dup:
+        del single_var_names[key]
 
 # variables with different branch names in the channels, but same
 channel_vars = [set([tpl[1] for tpl in vars if tpl[0] == c]) for c in channels]
@@ -173,7 +184,7 @@ for tpl in tmp_vars:
     else:
         varname = tpl[0] + '_' + tpl[1]
 
-    if varname in shared_var_names:
+    if varname in shared_var_names or varname in single_var_names:
         continue
     shared_var_names.add(varname)
     shared_vars.append(tpl)
@@ -181,7 +192,9 @@ for tpl in tmp_vars:
 generate_type_info(None, shared_vars, common_vars, 12)
 
 for channel in channels:
-    channel_vars = filter(lambda (k, s, t, p): k == channel, vars)
+    unique_var_names = [k for (k, v) in single_var_names.items() if v == channel]
+    print channel, unique_var_names
+    channel_vars = filter(lambda (k, s, t, p): k == channel or k + '_' + s in unique_var_names, vars)
     print "{0} variables for {1}".format(len(channel_vars), channel)
     if len(channel_vars) > 0:
         generate_type_info(channel, channel_vars, common_vars)
@@ -262,8 +275,28 @@ for fn in sorted(fct_names.keys()):
             lines.append(indent * 3 + 'return {0}->{1}(idx, n);\n'.format(var, fn))
         lines.append(indent * 2 + '};\n')
     else:
-        # FIXME not yet implemented
-        raise NotImplementedError
+        cond = 'if ('
+
+        for p in fct_names[fn]:
+            if p not in channels:
+                raise ValueError(p)
+
+            chan = p.lower()
+            if var not in shared_var_names:
+                varname = p + "_" + var
+            else:
+                varname = var
+            lines.append(indent * 3 + cond + cast.format(chan) + ') {\n')
+            if combo_var:
+                lines.append(indent * 4 + 'return {0}->{1}(idx);\n'.format(var, fn))
+            else:
+                lines.append(indent * 4 + 'return {0}->{1}(idx, n);\n'.format(var, fn))
+
+            cond = '} else if ('
+        lines.append(indent * 3 + '}\n')
+        lines.append(indent * 3 + 'throw "";\n')
+        # lines.append(indent * 3 + 'return -1. / 0.;\n')
+        lines.append(indent * 2 + '};\n')
 
 attrs = generate_accessor_info(vars)
 
@@ -314,7 +347,8 @@ for k in sorted(attrs.keys()):
         tmp_lines = []
         tmp_lines.append(indent * 2 + declare.format(k))
 
-        if len(prefixes) == 1 or var in common_vars:
+        if (len(prefixes) == 1 and not prefixes[0] + '_' + var in single_var_names) \
+                or var in common_vars:
             if prefixes[0] in channels and var in common_vars:
                 prefix = ""
                 varname = var
@@ -370,10 +404,14 @@ for k in sorted(attrs.keys()):
             first = True
 
             for p in prefixes:
-                if p not in channels:
-                    raise ValueError(p)
+                if p in channels:
+                    chan = p.lower()
+                else:
+                    try:
+                        chan = single_var_names[p + '_' + var].lower()
+                    except KeyError:
+                        raise ValueError(v)
 
-                chan = p.lower()
                 if var not in shared_var_names:
                     varname = p + "_" + var
                 else:
@@ -391,7 +429,7 @@ for k in sorted(attrs.keys()):
 
         lines += tmp_lines
     except ValueError as e:
-        print '{0} is not a valid channel'.format(e)
+        print 'cannot associate {0} with a valid channel'.format(e)
     except TypeError as e:
         print '{0} is of unprocessable type'.format(k)
 

@@ -9,6 +9,7 @@ $0_Pt:
     showOF: true
     logy: 1
     replace:
+      - [L, "", tl, 30, 100]
       - [L, "", ttl, 30, 100]
       - [L1, "_{1}", tll, 20, 150]
       - [L2, "_{2}", tll, 10, 100]
@@ -24,6 +25,7 @@ $0_Eta:
     showOF: false
     logy: 1
     replace:
+      - [L, "", tl]
       - [L, "", ttl]
       - [L1, "_{1}", tll]
       - [L2, "_{2}", tll]
@@ -39,6 +41,7 @@ $0_Phi:
     showOF: false
     logy: 1
     replace:
+      - [L, "", tl]
       - [L, "", ttl]
       - [L1, "_{1}", tll]
       - [L2, "_{2}", tll]
@@ -53,6 +56,7 @@ $0_Mt:
     showOF: true
     logy: 1
     replace:
+      - [L, "", tl]
       - [L, "", ttl]
       - [L1, "_{1}", tll]
       - [L2, "_{2}", tll]
@@ -67,6 +71,7 @@ $0_Mt2:
     showOF: true
     logy: 1
     replace:
+      - [L, "", tl]
       - [L, "", ttl]
       - [L1, "_{1}", tll]
       - [L2, "_{2}", tll]
@@ -95,7 +100,7 @@ T$0L$2_Pt:
 L1L2_DeltaR:
     dir: lepton/geometric
     channels: [tll]
-    binning: [20, 0, 6.28]
+    binning: [15, 0, 6.28]
     axis labels: ['#Delta R(lepton 1,2)', Events]
 
 L1L2_Mt:
@@ -111,6 +116,7 @@ L$0_RelIso:
     binning: [30, 0, .25]
     axis labels: ["l$1 RelIso", Events]
     replace:
+      - ["", "", tl]
       - ["", "", ttl]
       - [1, "_{1}", tll]
       - [2, "_{2}", tll]
@@ -124,6 +130,7 @@ L$0_MatchIndex:
     bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W]
     axis labels: ["lepton $0 match", Events]
     replace:
+      - ["", tl]
       - ["", ttl]
       - [1, tll]
       - [2, tll]
@@ -140,6 +147,7 @@ L$0_ParentMatchIndex:
     showOF: false
     logy: 1
     replace:
+      - ["", tl]
       - ["", "", ttl]
       - [1, "_{1}", tll]
       - [2, "_{2}", tll]
@@ -150,6 +158,7 @@ $0_ImpactParameter:
     binning: [50, -0.04, 0.04]
     axis labels: ["l$1 Impact parameter", Events]
     replace:
+      - [L, "", tl]
       - [L, "", ttl]
       - [L1, "_{1}", tll]
       - [L2, "_{2}", tll]
@@ -162,6 +171,7 @@ $0_CorrectedDZ:
     binning: [50, -0.04, 0.04]
     axis labels: ["l$1 corrected #Delta z", Events]
     replace:
+      - [L, "", tl]
       - [L, "", ttl]
       - [L1, "_{1}", tll]
       - [L2, "_{2}", tll]

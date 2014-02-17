@@ -3,6 +3,7 @@
 #include <unordered_set>
 
 #include "../interface/Nidra.h"
+#include "../interface/TLBranches.h"
 #include "../interface/TLLBranches.h"
 #include "../interface/TTLBranches.h"
 
@@ -165,6 +166,20 @@ namespace roast {
         delete branches;
 
         return count;
+    }
+
+    namespace tl {
+        long
+        analyze(roast::Process& p, const roast::CutFlow::Cuts& cuts, const int& limit, PyObject *log)
+        {
+            return roast::analyze<roast::tl::Branches>(p, cuts, limit, log);
+        }
+
+        long
+        fill(roast::Process& proc, std::vector<roast::Weight>& weights, PyObject* log, roast::Splitter *s, roast::Picker *p)
+        {
+            return roast::fill<roast::tl::Branches>(proc, weights, log, s, p);
+        }
     }
 
     namespace tll {

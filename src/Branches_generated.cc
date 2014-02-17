@@ -82,8 +82,6 @@ Branches::Clear()
     J_CSV->clear();
     J_Charge->clear();
     J_Eta->clear();
-    J_Lepton1DeltaR->clear();
-    J_Lepton2DeltaR->clear();
     J_MomentumRank->clear();
     J_NumJets = 0;
     J_PartonGrandParentId->clear();
@@ -327,8 +325,6 @@ Branches::Delete()
     delete J_CSV;
     delete J_Charge;
     delete J_Eta;
-    delete J_Lepton1DeltaR;
-    delete J_Lepton2DeltaR;
     delete J_MomentumRank;
     delete J_PartonGrandParentId;
     delete J_PartonGrandmother00Id;
@@ -591,8 +587,6 @@ Branches::Null()
     J_CSV = 0;
     J_Charge = 0;
     J_Eta = 0;
-    J_Lepton1DeltaR = 0;
-    J_Lepton2DeltaR = 0;
     J_MomentumRank = 0;
     J_NumJets = 0;
     J_PartonGrandParentId = 0;
@@ -864,8 +858,6 @@ Branches::SetBranchAddresses()
     fChain->SetBranchAddress("J_CSV", &J_CSV);
     fChain->SetBranchAddress("J_Charge", &J_Charge);
     fChain->SetBranchAddress("J_Eta", &J_Eta);
-    fChain->SetBranchAddress("J_Lepton1DeltaR", &J_Lepton1DeltaR);
-    fChain->SetBranchAddress("J_Lepton2DeltaR", &J_Lepton2DeltaR);
     fChain->SetBranchAddress("J_MomentumRank", &J_MomentumRank);
     fChain->SetBranchAddress("J_NumJets", &J_NumJets);
     fChain->SetBranchAddress("J_PartonGrandParentId", &J_PartonGrandParentId);

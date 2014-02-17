@@ -1,5 +1,18 @@
 # vim: set sw=4 ts=4 sta et :
 Collisions:
+    tl:
+        sampleNumber: -1
+        niceName: Collisions
+        labelForLegend: Collisions
+        limit alias: data_obs
+        type: collisions
+        ntuplePath: [data_SingleElectron_2012A_06Aug, data_SingleElectron_2012A_13July, data_SingleElectron_2012B_13Jul, data_SingleElectron_2012C_24Aug, data_SingleElectron_2012C_PR, data_SingleElectron_2012D_PR, data_SingleMu_2012A_06Aug, data_SingleMu_2012A_13July, data_SingleMu_2012B_13July, data_SingleMu_2012C_24Aug, data_SingleMu_2012C_PR, data_SingleMu_2012D_PR]
+        color: 1
+        crossSection: 1
+        branchingRatio: 1
+        otherScaleFactor: 1
+        NOEinDS: 560717449
+        NoEreadByNUTter: 75220
     tll:
         sampleNumber: -1
         niceName: Collisions
