@@ -433,7 +433,7 @@ def deep_replace(obj, s, r):
         obj = deepcopy(obj)
     return obj
 
-def expand_histogram_config(config):
+def expand_histogram_config(config, channel=None):
     """Looks for a key 'replace'  with a nested list of replacements and
     applies them to the contents.
 
@@ -451,6 +451,9 @@ def expand_histogram_config(config):
             for (n, repl) in enumerate(replacements):
                 (newkey, newcfg) = deep_replace((newkey, newcfg), '${0}'.format(n), repl)
             del newcfg['replace']
+
+            if 'channels' in newcfg and channel not in newcfg['channels']:
+                continue
             res[newkey] = newcfg
     return res
 
@@ -476,7 +479,7 @@ def load_config(filename, basedir, overrides):
 
     channel = config['analysis']['channel']
 
-    histcfg = expand_histogram_config(config['histograms'])
+    histcfg = expand_histogram_config(config['histograms'], channel)
     for (name, cfg) in histcfg.items():
         if 'channels' in cfg and channel not in cfg['channels']:
             del histcfg[name]
