@@ -1,7 +1,7 @@
 # vim: set sw=4 sta et :
 
 J_Num$0:
-    dir: jets
+    dir: counts
     binning: [30, 0, 30]
     axis labels: [Number of $1, Events]
     visible: [$2, $3]
@@ -22,6 +22,14 @@ J_Num$0:
       - [CleanNonCSVL, non b-tags (CSVL), 0, 10]
       - [CleanNonCSVM, non b-tags (CSVM), 0, 10]
       - [CleanNonCSVT, non b-tags (CSVT), 0, 10]
+
+J_NumOverview:
+    values: [J_NumCleanInclusive, J_NumCleanCSVM]
+    dir: counts
+    binning: [30, 0, 30, 30, 0, 30]
+    axis labels: [Number of non H-tau jets, Number of b-tags (CSVM)]
+    visible: [[2, 8], [1, 2]]
+    centerLabels: true
 
 $0J_Pt:
     dir: jets/kinematic
