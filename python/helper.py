@@ -493,6 +493,8 @@ def load_config(filename, basedir, overrides):
     return config
 
 def backup_config(configfile, config, outdir):
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
     if os.path.normpath(os.path.join(outdir, 'config_original.yaml')) != os.path.normpath(configfile):
         shutil.copy(configfile, os.path.join(outdir, 'config_original.yaml'))
     with open(os.path.join(outdir, 'config_expanded.yaml'), 'w') as f:
