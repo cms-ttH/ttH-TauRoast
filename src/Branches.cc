@@ -30,8 +30,6 @@ Branches::Branches(vector<string> const & iPath) :
 
     // Set branch addresses and branch pointers
     if (!fChain){ cerr << "ERROR: Trying to initialize NULL TChain" << endl; exit(1); }
-    fChain->SetMakeClass(1);
-    Init();
 
     Null();
     SetBranchAddresses();
@@ -48,15 +46,6 @@ Branches::~Branches()
 }
 
 void Branches::SetChain(TChain* iChain){ fChain = iChain; } 
-
-void Branches::Init()
-{
-	// Set branch addresses and branch pointers
-	fChain->SetMakeClass(1);
-	fChain->ResetBranchAddresses();
-
-	//Clear();
-}
 
 void
 Branches::GetEntry(double iEntry)

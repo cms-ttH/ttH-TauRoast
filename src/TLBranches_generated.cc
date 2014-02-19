@@ -9,6 +9,7 @@ tl::Branches::Clear()
     roast::Branches::Clear();
 
     // >>> Begin clear <<<
+    Ev_METcov->clear();
     Ev_NTruePV = 0;
     J_LeptonDeltaR->clear();
     TL_LeptonCharge->clear();
@@ -41,6 +42,7 @@ tl::Branches::Clear()
     TL_LeptonIsTight->clear();
     TL_LeptonMt->clear();
     TL_LeptonMt2->clear();
+    TL_LeptonP->clear();
     TL_LeptonPhi->clear();
     TL_LeptonPt->clear();
     TL_LeptonRelIso->clear();
@@ -127,6 +129,7 @@ tl::Branches::Clear()
     TL_TauNProngs->clear();
     TL_TauNSignalGammas->clear();
     TL_TauNSignalNeutrals->clear();
+    TL_TauP->clear();
     TL_TauPhi->clear();
     TL_TauPt->clear();
     TL_TriggerEventWeight->clear();
@@ -139,6 +142,7 @@ tl::Branches::Delete()
     roast::Branches::Delete();
 
     // >>> Begin delete <<<
+    delete Ev_METcov;
     delete J_LeptonDeltaR;
     delete TL_LeptonCharge;
     delete TL_LeptonCorrectedD0;
@@ -170,6 +174,7 @@ tl::Branches::Delete()
     delete TL_LeptonIsTight;
     delete TL_LeptonMt;
     delete TL_LeptonMt2;
+    delete TL_LeptonP;
     delete TL_LeptonPhi;
     delete TL_LeptonPt;
     delete TL_LeptonRelIso;
@@ -256,6 +261,7 @@ tl::Branches::Delete()
     delete TL_TauNProngs;
     delete TL_TauNSignalGammas;
     delete TL_TauNSignalNeutrals;
+    delete TL_TauP;
     delete TL_TauPhi;
     delete TL_TauPt;
     delete TL_TriggerEventWeight;
@@ -268,6 +274,7 @@ tl::Branches::Null()
     roast::Branches::Null();
 
     // >>> Begin null <<<
+    Ev_METcov = 0;
     Ev_NTruePV = 0;
     J_LeptonDeltaR = 0;
     TL_LeptonCharge = 0;
@@ -300,6 +307,7 @@ tl::Branches::Null()
     TL_LeptonIsTight = 0;
     TL_LeptonMt = 0;
     TL_LeptonMt2 = 0;
+    TL_LeptonP = 0;
     TL_LeptonPhi = 0;
     TL_LeptonPt = 0;
     TL_LeptonRelIso = 0;
@@ -386,6 +394,7 @@ tl::Branches::Null()
     TL_TauNProngs = 0;
     TL_TauNSignalGammas = 0;
     TL_TauNSignalNeutrals = 0;
+    TL_TauP = 0;
     TL_TauPhi = 0;
     TL_TauPt = 0;
     TL_TriggerEventWeight = 0;
@@ -398,6 +407,7 @@ tl::Branches::SetBranchAddresses()
     roast::Branches::SetBranchAddresses();
 
     // >>> Begin address <<<
+    fChain->SetBranchAddress("Ev_METcov", &Ev_METcov);
     fChain->SetBranchAddress("Ev_NTruePV", &Ev_NTruePV);
     fChain->SetBranchAddress("J_LeptonDeltaR", &J_LeptonDeltaR);
     fChain->SetBranchAddress("TL_CSVeventWeight", &CSVeventWeight);
@@ -451,6 +461,7 @@ tl::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TL_LeptonIsTight", &TL_LeptonIsTight);
     fChain->SetBranchAddress("TL_LeptonMt", &TL_LeptonMt);
     fChain->SetBranchAddress("TL_LeptonMt2", &TL_LeptonMt2);
+    fChain->SetBranchAddress("TL_LeptonP", &TL_LeptonP);
     fChain->SetBranchAddress("TL_LeptonPhi", &TL_LeptonPhi);
     fChain->SetBranchAddress("TL_LeptonPt", &TL_LeptonPt);
     fChain->SetBranchAddress("TL_LeptonRelIso", &TL_LeptonRelIso);
@@ -559,6 +570,7 @@ tl::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TL_TauNProngs", &TL_TauNProngs);
     fChain->SetBranchAddress("TL_TauNSignalGammas", &TL_TauNSignalGammas);
     fChain->SetBranchAddress("TL_TauNSignalNeutrals", &TL_TauNSignalNeutrals);
+    fChain->SetBranchAddress("TL_TauP", &TL_TauP);
     fChain->SetBranchAddress("TL_TauPhi", &TL_TauPhi);
     fChain->SetBranchAddress("TL_TauPt", &TL_TauPt);
     fChain->SetBranchAddress("TL_TriggerEventWeight", &TL_TriggerEventWeight);

@@ -315,6 +315,9 @@ jets = 'LJ SubLJ SubSubLJ SubSubSubLJ'.split()
 for k in sorted(attrs.keys()):
     (var, type, ptr, prefixes) = attrs[k]
 
+    if 'LorentzVector' in type:
+        continue
+
     cnt = type.count('vector')
 
     # manipulate variable names to get "historic" naming scheme

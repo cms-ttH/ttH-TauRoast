@@ -404,6 +404,12 @@ DitauVisibleMass:
     showOF: true
     logy: 1
 
+TL_Mass:
+    dir: tau
+    channels: [tl]
+    binning: [50, 0, 300]
+    axis labels: ["Mass tau, lepton, from SVfit", Events]
+
 TL_VisibleMass:
     dir: tau
     channels: [tl]

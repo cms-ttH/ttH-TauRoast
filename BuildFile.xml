@@ -1,4 +1,5 @@
 <use name="DataFormats/Math"/>
+<use name="TauAnalysis/SVfitStandalone"/>
 <use name="root"/>
 <use name="roottmva"/>
 <use name="boost"/>

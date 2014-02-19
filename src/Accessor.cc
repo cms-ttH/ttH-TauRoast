@@ -3,6 +3,7 @@
 #include <map>
 
 #include "DataFormats/Math/interface/deltaR.h"
+#include "TauAnalysis/SVfitStandalone/interface/SVfitStandaloneAlgorithm.h"
 
 #include "../interface/Accessor.h"
 #include "../interface/MVABase.h"
@@ -260,7 +261,7 @@ namespace roast {
             return (81. <= m && m <= 101.);
         };
 
-        accessors["LT_METMass"] = [](roast::Branches *b, int idx, int n) -> float {
+        accessors["TL_METMass"] = [](roast::Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
                 return (*e->TLL_TauLepton1METMass)[idx];
@@ -268,13 +269,38 @@ namespace roast {
                 return (*e->TLL_TauLepton2METMass)[idx];
             }
         };
-        accessors["LT_VissMass"] = [](roast::Branches *b, int idx, int n) -> float {
+        accessors["TL_VissMass"] = [](roast::Branches *b, int idx, int n) -> float {
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
                 return (*e->TLL_TauLepton1VisibleMass)[idx];
             } else {
                 return (*e->TLL_TauLepton2VisibleMass)[idx];
             }
+        };
+
+        accessors["TL_Mass"] = [](roast::Branches *b, int idx, int n) -> float {
+            tl::Branches* e = dynamic_cast<tl::Branches*>(b);
+
+            svFitStandalone::Vector met(e->Ev_MET * TMath::Sin(e->Ev_METphi), e->Ev_MET * TMath::Cos(e->Ev_METphi), 0.);
+            TMatrixD covMET(2, 2);
+            covMET[0][0] = (*e->Ev_METcov)[0];
+            covMET[0][1] = (*e->Ev_METcov)[1];
+            covMET[1][0] = (*e->Ev_METcov)[2];
+            covMET[1][1] = (*e->Ev_METcov)[3];
+
+            svFitStandalone::LorentzVector t((*e->TL_TauP)[idx]);
+            svFitStandalone::LorentzVector l((*e->TL_LeptonP)[idx]);
+
+            std::vector<svFitStandalone::MeasuredTauLepton> prods = {
+                svFitStandalone::MeasuredTauLepton(svFitStandalone::kHadDecay, t),
+                svFitStandalone::MeasuredTauLepton(svFitStandalone::kLepDecay, l)
+            };
+
+            SVfitStandaloneAlgorithm algo(prods, met, covMET, 2);
+            algo.addLogM(true);
+            algo.integrateVEGAS();
+            double mass = algo.getMass();
+            return algo.isValidSolution() ? mass : -1.0;
         };
 
         accessors["TT_DeltaR"] = [](roast::Branches *b, int idx, int n) -> float {
@@ -3045,6 +3071,12 @@ namespace roast {
         };
         accessors["MET"] = [](Branches *b, int idx, int n) -> float {
             return b->Ev_MET;
+        };
+        accessors["METcov"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->Ev_METcov)[idx];
+            }
+            throw "";
         };
         accessors["METphi"] = [](Branches *b, int idx, int n) -> float {
             return b->Ev_METphi;

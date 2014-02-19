@@ -76,6 +76,8 @@ namespace roast {
                 PyGILState_Release(state);
             }
 
+            // std::cout << jentry << std::endl;
+
             event->GetEntry(jentry);
 
             info i(event->Ev_runNumber, event->Ev_lumiBlock, event->Ev_eventNumber);

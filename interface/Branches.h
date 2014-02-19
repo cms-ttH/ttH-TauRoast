@@ -33,7 +33,6 @@ namespace roast {
             Branches(const std::vector<std::string>&);
             ~Branches();
 
-            void Init();
             void GetEntry(double);
             Long64_t GetEntries();
             unsigned int GetNumCombos() { return NumCombos; };

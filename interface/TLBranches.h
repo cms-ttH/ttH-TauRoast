@@ -2,6 +2,8 @@
 #ifndef TLBranches_h
 #define TLBranches_h
 
+#include "Math/LorentzVector.h"
+
 #include "Branches.h"
 
 namespace roast {
@@ -31,6 +33,7 @@ namespace roast {
                 unsigned int GetTauAntiMuonIndex2(const unsigned int) const;
 
                 // >>> Begin declarations <<<
+                std::vector<double>* Ev_METcov;
                 Int_t Ev_NTruePV;
                 std::vector<std::vector<float> >* J_LeptonDeltaR;
                 std::vector<float>* TL_LeptonCharge;
@@ -63,6 +66,7 @@ namespace roast {
                 std::vector<bool>* TL_LeptonIsTight;
                 std::vector<float>* TL_LeptonMt;
                 std::vector<float>* TL_LeptonMt2;
+                std::vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* TL_LeptonP;
                 std::vector<float>* TL_LeptonPhi;
                 std::vector<float>* TL_LeptonPt;
                 std::vector<float>* TL_LeptonRelIso;
@@ -149,6 +153,7 @@ namespace roast {
                 std::vector<unsigned int>* TL_TauNProngs;
                 std::vector<unsigned int>* TL_TauNSignalGammas;
                 std::vector<unsigned int>* TL_TauNSignalNeutrals;
+                std::vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* TL_TauP;
                 std::vector<float>* TL_TauPhi;
                 std::vector<float>* TL_TauPt;
                 std::vector<float>* TL_TriggerEventWeight;
