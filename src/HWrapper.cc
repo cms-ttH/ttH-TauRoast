@@ -253,6 +253,7 @@ HWrapper::SetHisto(const TH1* hist)
         delete histo;
 
     histo = dynamic_cast<TH1*>(hist->Clone((ssName.str()).c_str()));
+    histo->SetDirectory(0);
 }
 
 void HWrapper::SetMaximum(double const iValue){ histo->SetMaximum(iValue); }
@@ -261,10 +262,21 @@ void HWrapper::ResetMaximum(double const iFactor){ histo->SetMaximum(iFactor*his
 // Other methods
 void HWrapper::Add(TH1 const & iHisto, double iFactor){ 
 	if(iFactor != iFactor){ cerr << "ERROR: trying to Add(TH1&, nan)" << endl; exit(1); }
-	histo->Add(&iHisto, iFactor);
+    if (histo) {
+        histo->Add(&iHisto, iFactor);
+    } else {
+        histo = new TH1(iHisto);
+        histo->Scale(iFactor);
+    }
 }
 void HWrapper::Add(HWrapper const & iHisto, double const iFactor){ 
-	histo->Add((iHisto.GetHisto()), iFactor);
+    std::cout << "ADD2 " << histo << std::endl;
+    if (histo) {
+        histo->Add((iHisto.GetHisto()), iFactor);
+    } else {
+        histo = new TH1(*iHisto.GetHisto());
+        histo->Scale(iFactor);
+    }
 }
 void HWrapper::ScaleBy(double const iFactor){
 	if(iFactor != iFactor){ cerr << "ERROR: trying to ScaleBy(nan)" << endl; exit(1); }
