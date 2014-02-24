@@ -145,6 +145,19 @@ def print_mva_ranking(config):
                 else:
                     prefix = None
 
+def split_combined_processes(config, ps):
+    if 'split fakes' in config['analysis'] and config['analysis']['split fakes']:
+        for (name, cfg) in config['processes'].items():
+            if not 'combine' in cfg:
+                continue
+
+            for mode in ("real", "fake"):
+                newname = name + "_" + mode
+                newcfg = deepcopy(cfg)
+                newcfg['niceName'] += " (" + mode + ")"
+                newcfg['combine'] = map(lambda s: s + '_' + mode, newcfg['combine'])
+                config['processes'][newname] = newcfg
+
 def split_processes(config, ps):
     split_fct = {}
 
@@ -158,7 +171,7 @@ def split_processes(config, ps):
         for (mode, val) in cfg['split'].items():
             newname = p.GetShortName() + "_" + mode
             logging.info("creating new split process %s", newname)
-            split_fct[newname] = roast.InclusiveSignalSplitter(val)
+            split_fct[newname] = [roast.InclusiveSignalSplitter(val)]
 
             splitp = roast.Process(p)
             splitp.SetShortName(newname)
@@ -169,6 +182,28 @@ def split_processes(config, ps):
                 config['analysis']['process'].append(newname)
             # if p.GetShortName() in config['analysis']['plot']:
                 # config['analysis']['plot'].append(newname)
+
+    if 'split fakes' in config['analysis'] and config['analysis']['split fakes']:
+        for p in get_montecarlo(ps):
+            name = p.GetShortName()
+
+            for (mode, splitter) in [("real", roast.FakeSplitter(True)),
+                    ("fake", roast.FakeSplitter(False))]:
+                newname = p.GetShortName() + "_" + mode
+                logging.info("creating new split process %s", newname)
+
+                splitp = roast.Process(p)
+                splitp.SetShortName(newname)
+                splitp.SetNiceName((p.GetNiceName() + " (" + mode + ")").replace(") (", ", "))
+                ps.append(splitp)
+
+                if name in split_fct:
+                    split_fct[newname] = split_fct[name] + [splitter]
+                else:
+                    split_fct[newname] = [splitter]
+
+                if name in config['analysis']['process']:
+                    config['analysis']['process'].append(newname)
 
     config['analysis']['split'] = split_fct
 
@@ -235,6 +270,7 @@ def combine_processes(config, ps):
 
 get_signals = lambda ps: filter(lambda p: p.IsSignal(), ps)
 get_backgrounds = lambda ps: filter(lambda p: p.IsBackground(), ps)
+get_montecarlo = lambda ps: filter(lambda p: p.IsMC(), ps)
 
 def get_collisions(ps):
     res = filter(lambda p: p.IsCollisions(), ps)

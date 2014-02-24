@@ -25,8 +25,13 @@ def get_bkg_stack(histname, processes):
 
     for p in reversed(processes):
         h = p.GetHistogram(histname).GetHisto()
-        h.SetFillStyle(1001)
         h.SetFillColor(p.GetColor())
+        if 'fake' in p.GetShortName():
+            h.SetFillStyle(3244)
+        elif 'real' in p.GetShortName():
+            h.SetFillStyle(3010)
+        else:
+            h.SetFillStyle(1001)
         h.SetLineColor(p.GetColor())
         h.SetLineWidth(0)
         res.Add(h)

@@ -129,7 +129,7 @@ namespace roast {
 
     template<typename T>
     long
-    fill(roast::Process& proc, std::vector<roast::Weight>& weights, PyObject* log, roast::Splitter *s, roast::Picker *p)
+    fill(roast::Process& proc, std::vector<roast::Weight>& weights, PyObject* log, std::vector<roast::Splitter*> splitters, roast::Picker *p)
     {
         T* branches = new T(proc.GetNtuplePaths());
 
@@ -139,7 +139,12 @@ namespace roast {
 
             int idx = p->Pick(branches, e.combos);
 
-            if (s && !s->Use(branches, idx))
+            bool use = true;
+            for (auto& s: splitters)
+                if (!s->Use(branches, idx))
+                    use = false;
+
+            if (!use)
                 continue;
 
             if (log && count % 100 == 0) {
@@ -178,7 +183,7 @@ namespace roast {
         }
 
         long
-        fill(roast::Process& proc, std::vector<roast::Weight>& weights, PyObject* log, roast::Splitter *s, roast::Picker *p)
+        fill(roast::Process& proc, std::vector<roast::Weight>& weights, PyObject* log, std::vector<roast::Splitter*> s, roast::Picker *p)
         {
             return roast::fill<roast::tl::Branches>(proc, weights, log, s, p);
         }
@@ -192,7 +197,7 @@ namespace roast {
         }
 
         long
-        fill(roast::Process& proc, std::vector<roast::Weight>& weights, PyObject* log, roast::Splitter *s, roast::Picker *p)
+        fill(roast::Process& proc, std::vector<roast::Weight>& weights, PyObject* log, std::vector<roast::Splitter*> s, roast::Picker *p)
         {
             return roast::fill<roast::tll::Branches>(proc, weights, log, s, p);
         }
@@ -206,7 +211,7 @@ namespace roast {
         }
 
         long
-        fill(roast::Process& proc, std::vector<roast::Weight>& weights, PyObject* log, roast::Splitter *s, roast::Picker *p)
+        fill(roast::Process& proc, std::vector<roast::Weight>& weights, PyObject* log, std::vector<roast::Splitter*> s, roast::Picker *p)
         {
             return roast::fill<roast::ttl::Branches>(proc, weights, log, s, p);
         }

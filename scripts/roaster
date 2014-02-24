@@ -200,6 +200,7 @@ if not procs:
     procs = load("Roast", baseconfig['paths']['output'])
 
 normalize_processes(baseconfig, procs)
+split_combined_processes(baseconfig, procs)
 combine_processes(baseconfig, procs)
 
 if opts.plot:

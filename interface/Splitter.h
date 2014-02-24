@@ -3,12 +3,28 @@
 #define Splitter_h
 
 #include "Branches.h"
+#include "TLBranches.h"
 
 namespace roast {
     class Splitter {
         public:
             virtual bool Use(Branches*, int) = 0;
             ClassDef(Splitter, 1);
+    };
+
+    class FakeSplitter : Splitter {
+        public:
+            FakeSplitter(bool real) : _real(real) {};
+            virtual bool Use(Branches *b, int idx) {
+                if (tl::Branches *e = dynamic_cast<tl::Branches*>(b)) {
+                    bool genmatch = abs(e->TL_TauGenMatchId->at(idx)) == 15;
+                    return genmatch == _real;
+                }
+                return false;
+            };
+        private:
+            bool _real;
+            ClassDef(FakeSplitter, 1);
     };
 
     class InclusiveSignalSplitter : Splitter {

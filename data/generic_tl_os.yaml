@@ -5,6 +5,8 @@ analysis:
 
     max events: -1
 
+    split fakes: true
+
     limit variable: FinalBDTG
 
     final mva:
@@ -41,8 +43,10 @@ analysis:
 
     plot:
       - Collisions
-      - TTbar
-      - EWK
+      - TTbar_real
+      - TTbar_fake
+      - EWK_real
+      - EWK_fake
       - SingleTop
       - ttWZ
       - TTH_125

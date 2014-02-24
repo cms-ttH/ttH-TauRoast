@@ -243,14 +243,14 @@ def fill_histos(config, processes, module):
         name = p.GetShortName()
 
         log = lambda i: logging.info("filling %s, event %i", name, i) if i % 1000 == 0 else None
-        splitter = split[name] if name in split else 0
+        splitters = split[name] if name in split else []
 
         logging.debug("selecting best particle combination with %s", repr(select))
-        if splitter:
-            logging.debug("splitting sample with %s", repr(splitter))
+        if splitters:
+            logging.debug("splitting sample with %s", repr(splitters))
 
         weights = vectorize(weights)
-        split_count = module.fill(p, weights, log, splitter, select)
+        split_count = module.fill(p, weights, log, vectorize(splitters, "roast::Splitter*"), select)
         total_count = p.GetEvents().size()
 
         for weight in weights:
