@@ -75,7 +75,10 @@ def analyze(config, module):
 
     processed = []
     for p in processes:
-        n = module.analyze(p, vectorize(cuts, 'roast::CutFlow::Cut*'), config['analysis']['max events'],
+        n = module.analyze(p,
+                vectorize(cuts, 'roast::CutFlow::Cut*'),
+                config['analysis']['offset'],
+                config['analysis']['max events'],
                 lambda i: logging.info("analyzing %s, event %i", p.GetShortName(), i) if i % 10000 == 0 else None)
         logging.info("analyzed %i events of %s", n, p.GetShortName())
         processed.append(p)

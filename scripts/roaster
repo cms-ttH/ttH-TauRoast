@@ -29,13 +29,20 @@ parser.add_option("--list-vars",
         action="store_true",
         dest="list_vars",
         help="list variables for cuts, MVA, etc.")
-parser.add_option("-n",
+parser.add_option("-n", "--max-events",
         action="store",
         dest="max",
         type="int",
         metavar="NUM",
         default=None,
         help="process NUM events (default: configuration)")
+parser.add_option("-s", "--skip-events",
+        action="store",
+        dest="skip",
+        type="int",
+        metavar="NUM",
+        default=None,
+        help="skip the NUM first events when processing")
 parser.add_option("--no-backup",
         action="store_true",
         dest="nobackup",
@@ -148,6 +155,10 @@ else:
 
 if opts.max:
     baseconfig['analysis']['max events'] = opts.max
+if opts.skip:
+    baseconfig['analysis']['offset'] = opts.skip
+elif 'offset' not in baseconfig['analysis']:
+    baseconfig['analysis']['offset'] = 0
 
 logging.info("analyzing a maximum of {0} events per process.".format(baseconfig['analysis']['max events']))
 

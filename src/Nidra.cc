@@ -26,7 +26,7 @@ namespace std {
 namespace roast {
     template<typename T>
     long
-    analyze(roast::Process& proc, const roast::CutFlow::Cuts& cuts, const int& limit, PyObject *log)
+    analyze(roast::Process& proc, const roast::CutFlow::Cuts& cuts, const int offset, const int limit, PyObject *log)
     {
         CutFlow cflow;
         cflow.Reset();
@@ -69,7 +69,7 @@ namespace roast {
 
         double NOEanalyzed = 0;
         double NOEwithAtLeastOneCombo = 0;
-        for (Long64_t jentry=0; jentry < nentries && (jentry < limit || limit <= 0); jentry++) {
+        for (Long64_t jentry=offset; jentry < nentries && (jentry < offset + limit || limit <= 0); jentry++) {
             if (log) {
                 PyGILState_STATE state = PyGILState_Ensure();
                 boost::python::call<void>(log, jentry);
@@ -172,9 +172,9 @@ namespace roast {
 
     namespace tl {
         long
-        analyze(roast::Process& p, const roast::CutFlow::Cuts& cuts, const int& limit, PyObject *log)
+        analyze(roast::Process& p, const roast::CutFlow::Cuts& cuts, const int offset, const int limit, PyObject *log)
         {
-            return roast::analyze<roast::tl::Branches>(p, cuts, limit, log);
+            return roast::analyze<roast::tl::Branches>(p, cuts, offset, limit, log);
         }
 
         long
@@ -186,9 +186,9 @@ namespace roast {
 
     namespace tll {
         long
-        analyze(roast::Process& p, const roast::CutFlow::Cuts& cuts, const int& limit, PyObject *log)
+        analyze(roast::Process& p, const roast::CutFlow::Cuts& cuts, const int offset, const int limit, PyObject *log)
         {
-            return roast::analyze<roast::tll::Branches>(p, cuts, limit, log);
+            return roast::analyze<roast::tll::Branches>(p, cuts, offset, limit, log);
         }
 
         long
@@ -200,9 +200,9 @@ namespace roast {
 
     namespace ttl {
         long
-        analyze(roast::Process& p, const roast::CutFlow::Cuts& cuts, const int& limit, PyObject *log)
+        analyze(roast::Process& p, const roast::CutFlow::Cuts& cuts, const int offset, const int limit, PyObject *log)
         {
-            return roast::analyze<roast::ttl::Branches>(p, cuts, limit, log);
+            return roast::analyze<roast::ttl::Branches>(p, cuts, offset, limit, log);
         }
 
         long

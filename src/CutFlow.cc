@@ -177,7 +177,8 @@ string const CutFlow::GetLastCut() const{
     return cuts.back()->name;
 }
 
-void CutFlow::Add(CutFlow const & iCutFlow, float const iFactor){
+void
+CutFlow::Add(const CutFlow& iCutFlow, bool same, float iFactor){
     // Check the current cuts	
     if (cuts.size() == 0) {
         // If there are none, add them from the input CutFlow
@@ -203,8 +204,14 @@ void CutFlow::Add(CutFlow const & iCutFlow, float const iFactor){
                     cerr << "\t" << cuts[j]->name << "\t" << other_cuts[j]->name << endl;
                 }
                 exit(1);
-            } else {
+            } else if (!same || i >= 2) {
                 cuts[i]->events_passed += other_cuts[i]->events_passed * iFactor;
+            } else if (same && i < 2) {
+                if (cuts[i]->events_passed != other_cuts[i]->events_passed) {
+                    std::cout << "WARNING: event count mismatch in " << cuts[i]->name <<
+                        "          " << cuts[i]->events_passed << " vs " <<
+                        other_cuts[i]->events_passed << std::endl;
+                }
             }
         }
     }

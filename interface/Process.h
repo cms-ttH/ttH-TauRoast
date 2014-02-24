@@ -124,7 +124,7 @@ namespace roast {
             std::vector<std::string> GetHistogramNames() const;
 
             void SetEvents(const std::vector<roast::Process::Event>& evs) { events = evs; };
-            void Add(roast::Process*);
+            void Add(roast::Process*, bool same=false);
 
             ClassDef(Process, 1);
     };

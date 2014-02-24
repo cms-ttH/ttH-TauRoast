@@ -1,0 +1,108 @@
+#!/usr/bin/env python
+
+import math
+import os.path
+import ROOT as r
+import sys
+
+r.gROOT.SetBatch()
+r.gErrorIgnoreLevel = 1001
+r.gSystem.Load("libttHTauRoast")
+
+try:
+    from ROOT import roast
+except:
+    sys.stderr.write("Failed to import 'roast'!\n")
+    sys.exit(1)
+
+import yaml
+
+from ttH.TauRoast.helper import *
+
+configfile, outdir = sys.argv[1:]
+
+if not os.path.exists(outdir):
+    os.makedirs(outdir)
+
+basedir = os.path.join(os.environ['LOCALRT'], 'src/ttH/TauRoast/data')
+config = load_config(configfile, basedir, [])
+
+channel = config['analysis']['channel']
+if channel == 'tl':
+    module = roast.tl
+elif channel == 'tll':
+    module = roast.tll
+elif channel == 'ttl':
+    module = roast.ttl
+else:
+    logging.critical('invalid channel "{0}"'.format(channel))
+    sys.exit(1)
+
+to_combine = dict(filter(
+    lambda (k, v): 'combine' in v,
+    config['processes'].items()))
+to_process = []
+for p in config['analysis']['process']:
+    if p in to_combine:
+        logging.debug("adding {0} to be processed".format(to_combine[p]['combine']))
+        to_process += to_combine[p]['combine']
+    else:
+        to_process.append(p)
+config['analysis']['process'] = to_process
+
+jobinfo = "num,proc,offset,size,cfg\n"
+jobsize = 1000
+jobcount = 0
+for proc in config['analysis']['process']:
+    cfg = config['processes'][proc]
+
+    vpaths = r.std.vector('string')()
+    for p in cfg['ntuplePath']:
+        vpaths.push_back(config['paths']['ntuples'].format(p=p))
+    branches = module.Branches(vpaths)
+    jobs = int(math.ceil(branches.GetEntries() / float(jobsize)))
+    for j in range(jobs):
+        jobinfo += ",".join(map(str, [jobcount, proc, jobsize * j, jobsize, configfile])) + "\n"
+        jobcount += 1
+
+with open(os.path.join(outdir, 'jobs.par'), 'w') as f:
+    f.write(jobinfo)
+
+with open(os.path.join(outdir, 'job.sh'), 'w') as f:
+    f.write("""#!/bin/sh
+
+set -e
+
+export SCRAM_ARCH=slc5_amd64_gcc462
+
+cd {0}
+cmsenv
+roaster -v $*
+    """.format(os.environ['LOCALRT']))
+
+with open(os.path.join(outdir, 'gc.cfg'), 'w') as f:
+    f.write("""
+[global]
+module = UserMod
+backend = Condor
+# backend = Host
+workdir = gc.work
+
+[local]
+# sites = -d6copt313.crc.nd.edu
+
+[jobs]
+wall time = 6:00
+# in flight = 16
+
+# [Condor]
+# JDLData = +IsExpressJob=True
+
+[UserMod]
+executable = job.sh
+arguments = -af -s @offset@ -n @size@ -o analysis.process=@proc@ -o analysis.plot=@proc@ -o paths.input="'{root}/roast_processed_@num@.root'" -o paths.output="'{root}/roast_filled_@num@.root'" @cfg@
+
+[parameters]
+parameters = <csv>
+csv source = jobs.par
+    """)

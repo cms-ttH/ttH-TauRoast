@@ -206,13 +206,16 @@ Process::NormalizeToLumi(double const iIntLumi)
 
 void Process::BuildNormalizedCutFlow(){ normalizedCutFlow.BuildNormalizedCutFlow(&cutFlow); }
 
-void Process::Add(Process* iProcess){
+void
+Process::Add(Process* iProcess, bool same)
+{
     for (const auto& p: iProcess->GetNtuplePaths())
         ntuplePaths.push_back(p);
     for (auto& pair: hContainer)
         pair.second->Add(*iProcess->GetHistogram(pair.first)->GetHisto());
-	cutFlow.Add(*(iProcess->GetCutFlow()));
-	normalizedCutFlow.Add(*(iProcess->GetNormalizedCutFlow()));
+    cutFlow.Add(*(iProcess->GetCutFlow()), same);
+    normalizedCutFlow.Add(*(iProcess->GetNormalizedCutFlow()), same);
+    NOEanalyzed += iProcess->GetNOEanalyzed();
 }
 
 ClassImp(roast::Process)

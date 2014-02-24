@@ -106,7 +106,7 @@ namespace roast {
             std::string const GetLastCut() const;
             inline double GetLastCount() const { return cuts.back()->events_passed; };
 
-            void Add(roast::CutFlow const &, float const iFactor=1.0);
+            void Add(const roast::CutFlow&, bool same=false, float iFactor=1.0);
             void BuildNormalizedCutFlow(roast::CutFlow const *);
             void Zero();
 

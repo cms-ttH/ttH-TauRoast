@@ -270,7 +270,6 @@ void HWrapper::Add(TH1 const & iHisto, double iFactor){
     }
 }
 void HWrapper::Add(HWrapper const & iHisto, double const iFactor){ 
-    std::cout << "ADD2 " << histo << std::endl;
     if (histo) {
         histo->Add((iHisto.GetHisto()), iFactor);
     } else {
