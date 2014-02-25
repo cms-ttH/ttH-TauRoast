@@ -1,6 +1,9 @@
 // vim: ts=4:sw=4:et:sta
 #include <cmath>
 
+#include "TH1F.h"
+
+#include "../interface/TLBranches.h"
 #include "../interface/TTLBranches.h"
 #include "../interface/Weight.h"
 
@@ -112,6 +115,49 @@ namespace roast {
                             ++matches;
                         return matches;
                     };
+                    break;
+            }
+        } else if (name == "jetTauFakeScale") {
+            label = "Tau ID scale";
+            switch (kind) {
+                case kNominal:
+                    fct = [](roast::Branches *b, int idx, int n) -> float {
+                        static TH1D * tau_fake_scale = 0;
+                        if (tau_fake_scale == 0) {
+                            tau_fake_scale = new TH1D("tau_fake_scale", "", 15, 0, 150);
+                            double vals[] = {
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.3942559957504272,
+                                1.2666946649551392,
+                                1.1317439079284668,
+                                1.1534698009490967,
+                                1.0859955549240112,
+                                1.2146579027175903,
+                                1.0547099113464355,
+                                1.0547881126403809,
+                                0.85909730195999146,
+                                1.0713921785354614,
+                                0.96107715368270874,
+                                1.3806561231613159,
+                                0.98702037334442139,
+                                0.81862592697143555
+                            };
+
+                            for (int i = 0; i <= 16; ++i)
+                                tau_fake_scale->SetBinContent(i, vals[i]);
+                        }
+
+                        auto e = dynamic_cast<roast::tl::Branches*>(b);
+                        if (e->TranslateMatchIndex((*e->TL_TauGenMatchId)[idx]) == 1) {
+                            return tau_fake_scale->GetBinContent(tau_fake_scale->FindBin((*e->TL_TauPt)[idx]));
+                        }
+                        return 1.;
+                    };
+                    break;
+                case kUp:
+                case kDown:
                     break;
             }
         } else if (name == "jetTauFake") {
