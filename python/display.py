@@ -351,7 +351,7 @@ def stack(config, processes):
 
     plot_ratio = True
 
-    for histname in config['histograms'].keys():
+    for (histname, cfg) in config['histograms'].items():
         try:
             if all(map(lambda v: v <= 0, get_integrals(histname, procs))):
                 logging.warn("empty histogram: %s", histname)
@@ -488,6 +488,12 @@ def stack(config, processes):
                             # bkg_sum.GetMinXVis(), bkg_sum.GetMaxXVis())
                     style.setup_lower_axis(ratio)
                     ratio.Draw("axis")
+
+                    if 'dump' in cfg:
+                        bins = [ratio.GetBinLowEdge(b) for b in xrange(1, ratio.GetNbinsX() + 2)]
+                        content = [ratio.GetBinContent(b) for b in xrange(ratio.GetNbinsX() + 2)]
+                        print bins
+                        print content
 
                     bkg_err = base_histo.GetHisto().Clone()
                     for i in range(bkg_err.GetNbinsX()):

@@ -172,16 +172,17 @@ T$0_AntiElectronDeadECAL:
 T$0_Pt:
     dir: tau/kinematic
     channels: [$2]
-    binning: [20, 0, 150]
+    binning: [15, 0, 150]
     axis labels: ["#tau$1 p_{T} (GeV/c)", Events]
     visible: [20, 100]
+    dump: $3
     showOF: true
     logy: 1
     replace:
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
-      - ["", "", tll]
-      - ["", "", tl]
+      - [1, "_{1}", ttl, false]
+      - [2, "_{2}", ttl, false]
+      - ["", "", tll, false]
+      - ["", "", tl, true]
 
 T$0_Pt_NumVertices:
     values: [T$0_Pt, V_NumVertices]
