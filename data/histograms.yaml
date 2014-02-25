@@ -233,9 +233,11 @@ $0_MatchMatrix:
     axis labels: ["$1 match", "$1 parent match", Events]
     showOF: false
     replace:
+      - [T, "#tau", tau, tl]
       - [T, "#tau", tau, tll]
       - [T1, "#tau_{1}", tau, ttl]
       - [T2, "#tau_{2}", tau, ttl]
+      - [L, "lepton", lepton, tl]
       - [L, "lepton", lepton, ttl]
       - [L1, "lepton 1", lepton, tll]
       - [L2, "lepton 2", lepton, tll]
