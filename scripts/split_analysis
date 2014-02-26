@@ -51,7 +51,7 @@ for p in config['analysis']['process']:
 config['analysis']['process'] = to_process
 
 jobinfo = "num,proc,offset,size,cfg\n"
-jobsize = 1000
+jobsize = 1000000
 jobcount = 0
 for proc in config['analysis']['process']:
     cfg = config['processes'][proc]
@@ -62,7 +62,7 @@ for proc in config['analysis']['process']:
     branches = module.Branches(vpaths)
     jobs = int(math.ceil(branches.GetEntries() / float(jobsize)))
     for j in range(jobs):
-        jobinfo += ",".join(map(str, [jobcount, proc, jobsize * j, jobsize, configfile])) + "\n"
+        jobinfo += ",".join(map(str, [jobcount, proc, jobsize * j, jobsize, os.path.join(os.environ['PWD'], configfile)])) + "\n"
         jobcount += 1
 
 with open(os.path.join(outdir, 'jobs.par'), 'w') as f:
@@ -72,6 +72,9 @@ with open(os.path.join(outdir, 'job.sh'), 'w') as f:
     f.write("""#!/bin/sh
 
 set -e
+
+export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch
+source $VO_CMS_SW_DIR/cmsset_default.sh
 
 export SCRAM_ARCH=slc5_amd64_gcc462
 
@@ -88,19 +91,19 @@ backend = Condor
 # backend = Host
 workdir = gc.work
 
-[local]
+# [local]
 # sites = -d6copt313.crc.nd.edu
 
 [jobs]
 wall time = 6:00
-# in flight = 16
+in flight = 16
 
 # [Condor]
 # JDLData = +IsExpressJob=True
 
 [UserMod]
 executable = job.sh
-arguments = -af -s @offset@ -n @size@ -o analysis.process=@proc@ -o analysis.plot=@proc@ -o paths.input="'{root}/roast_processed_@num@.root'" -o paths.output="'{root}/roast_filled_@num@.root'" @cfg@
+arguments = -af --no-backup -s @offset@ -n @size@ -o analysis.process="[@proc@]" -o analysis.plot="[@proc@]" -o paths.input="'{root}/_cluster_output/roast_processed_@num@.root'" -o paths.output="'{root}/_cluster_output/roast_filled_@num@.root'" @cfg@
 
 [parameters]
 parameters = <csv>
