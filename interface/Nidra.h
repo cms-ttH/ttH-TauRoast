@@ -17,6 +17,11 @@ namespace roast {
     template<typename T>
     long fill(roast::Process&, std::vector<roast::Weight>&, PyObject*, std::vector<roast::Splitter*>, roast::Picker*);
 
+    namespace ll {
+        long analyze(roast::Process&, const roast::CutFlow::Cuts&, const int, const int, PyObject*);
+        long fill(roast::Process&, std::vector<roast::Weight>&, PyObject*, std::vector<roast::Splitter*>, roast::Picker* p=0);
+    }
+
     namespace tl {
         long analyze(roast::Process&, const roast::CutFlow::Cuts&, const int, const int, PyObject*);
         long fill(roast::Process&, std::vector<roast::Weight>&, PyObject*, std::vector<roast::Splitter*>, roast::Picker* p=0);

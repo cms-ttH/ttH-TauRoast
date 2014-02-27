@@ -10,7 +10,7 @@ import sys
 r.gROOT.SetBatch()
 
 # class used to store accessor information
-Attr = namedtuple('Attr', ['name', 'type', 'pointer', 'prefixes'])
+Attr = namedtuple('Attr', ['prefix', 'name', 'channels'])
 
 def gather_function_info(filename):
     """Returns a list of function names starting with `Get` from a header
@@ -23,9 +23,9 @@ def gather_function_info(filename):
                 names.append(m.group(1))
     return names
 
-def gather_type_info(filename):
-    """Returns a list containing prefix, name, class, and bool indicating
-    a pointer."""
+def gather_type_info(filename, channel):
+    """Returns a list containing channel, prefix, name, class, and bool
+    indicating a pointer."""
     results = []
 
     f = r.TFile(filename)
@@ -44,44 +44,44 @@ def gather_type_info(filename):
         elif cls == "":
             cls = tpl.GetLeaf(name).GetTypeName()
 
-        results.append((start, end, cls, ptr))
+        results.append((channel, start, end, cls, ptr))
     return results
 
 def generate_accessor_info(vars):
     attrs = {}
-    for (c, n, t, p) in vars:
+    for (chan, pre, stem, type, ptr) in vars:
         # capitalize first letter
-        name = n[0].upper() + n[1:]
+        name = stem[0].upper() + stem[1:]
 
         # skip single tau info for now
         # FIXME including this yields a conflict with TLL
-        if c == 'T':
+        if pre == 'T':
             continue
 
         # TTL, TLL, and event variables are not prefixed
-        if c not in channels and c != 'Ev':
-            name = c + '_' + name
+        if pre not in channels and pre != 'Ev':
+            name = pre + '_' + name
 
         # lepton1 => L1, tau1 => t1, etc...
         if c in channels:
             m = re.match('(?:(?:Lepton|Tau)\d?)+', name)
 
             if m:
-                full_pre = m.group(0)
-                pre = ""
-                for (particle, num) in re.findall('(Lepton|Tau)(\d)?', full_pre):
-                    pre += particle[0]
+                full_lep = m.group(0)
+                lep = ""
+                for (particle, num) in re.findall('(Lepton|Tau)(\d)?', full_lep):
+                    lep += particle[0]
                     if num:
-                        pre += num
+                        lep += num
 
-                name = name.replace(m.group(0), pre + '_')
+                name = name.replace(m.group(0), lep + '_')
 
         if name in attrs:
-            if c in attrs[name].prefixes:
+            if chan in attrs[name].channels:
                 continue
-            attrs[name].prefixes.append(c)
+            attrs[name].channels[chan] = (type, ptr)
         else:
-            attrs[name] = Attr(n, t, p, [c])
+            attrs[name] = Attr(pre, stem, {chan: (type, ptr)})
     return attrs
 
 def generate_type_info(channel, vars, common_vars, indent=16):
@@ -146,56 +146,66 @@ def inject_lines(filename, key, lines):
 # main script part  >--------------------------------------------------
 #------------------/
 
-channels = set(["TTL", "TLL", "TL"])
+channels = set(["TTL", "TLL", "TL", "LL"])
 
 # extract type information from ROOT files passed as arguments, only
 # process each unique branch name once
 type_info = []
-var_names = set()
-single_var_names = {}
-single_var_names_dup = set()
 for fn in sys.argv[1:]:
-    for tpl in gather_type_info(fn):
-        varname = tpl[0] + '_' + tpl[1]
-        if varname in var_names:
-            single_var_names_dup.add(varname)
-            continue
-        if tpl[0] not in channels:
-            single_var_names[varname] = filter(lambda c: '/' + c.lower() + '_' in fn, channels)[0]
-        var_names.add(varname)
+    file_channels = filter(lambda c: '/' + c.lower() + '_' in fn, channels)
+    if len(file_channels) != 1:
+        sys.stderr.write("unable to determine channel of file '{0}'\n".format(fn))
+        raise KeyError
+
+    for tpl in gather_type_info(fn, file_channels[0]):
         type_info.append(tpl)
 
-vars = sorted(type_info, key=lambda tpl: "_".join(tpl[:2]))
+vars = sorted(type_info, key=lambda tpl: "_".join(tpl[1:3]))
 
-for key in single_var_names.keys():
-    if key in single_var_names_dup:
-        del single_var_names[key]
+single_var_names = {}
+for (chan, pre, name, type, ptr) in vars:
+    if pre in channels:
+        continue
+    try:
+        var = pre + '_' + name
+        single_var_names[var].append(chan)
+        if len(single_var_names[var]) == len(channels):
+            del single_var_names[var]
+    except KeyError:
+        single_var_names[var] = [chan]
 
-# variables with different branch names in the channels, but same
-channel_vars = [set([tpl[1] for tpl in vars if tpl[0] == c]) for c in channels]
-common_vars = reduce(lambda a, b: a & b, channel_vars[1:], channel_vars[0])
+for (k, v) in list(single_var_names.items()):
+    if len(v) == len(channels):
+        del single_var_names[k]
 
+# Variables with different branch names in the channels, but same variable
+# name stem.
+channel_var_info = [set([tpl[2:] for tpl in vars if tpl[1] == c]) for c in channels]
+common_var_info = reduce(lambda a, b: a & b, channel_var_info[1:], channel_var_info[0])
+common_vars = [tpl[0] for tpl in common_var_info]
+
+# Variables shared between the different channels.  This includes the common
+# variables.
 shared_var_names = set()
 shared_vars = []
-tmp_vars = filter(lambda (c, n, t, p): c not in channels or n in common_vars, vars)
-for tpl in tmp_vars:
-    if tpl[0] in channels and tpl[1] in common_vars:
-        varname = tpl[1]
+tmp_vars = filter(lambda (chan, pre, name, type, ptr): pre not in channels or name in common_vars, vars)
+for (chan, pre, name, type, ptr) in tmp_vars:
+    if pre in channels and name in common_vars:
+        varname = name
     else:
-        varname = tpl[0] + '_' + tpl[1]
+        varname = pre + '_' + name
 
     if varname in shared_var_names or varname in single_var_names:
         continue
     shared_var_names.add(varname)
-    shared_vars.append(tpl)
+    shared_vars.append((pre, name, type, ptr))
 
 generate_type_info(None, shared_vars, common_vars, 12)
 
 for channel in channels:
-    unique_var_names = [k for (k, v) in single_var_names.items() if v == channel]
-    print channel, unique_var_names
-    channel_vars = filter(lambda (k, s, t, p): k == channel or k + '_' + s in unique_var_names, vars)
-    print "{0} variables for {1}".format(len(channel_vars), channel)
+    unique_var_names = [k for (k, v) in single_var_names.items() if channel in v]
+    channel_vars = sorted(set([(pre, name, type, ptr) for (chan, pre, name, type, ptr) in vars if chan == channel and (pre == channel or pre + '_' + name in unique_var_names)]), key=lambda tpl: '_'.join(tpl[:2]))
+    print "{0} variables for {1}, unique: {2}".format(len(channel_vars), channel, ", ".join(unique_var_names))
     if len(channel_vars) > 0:
         generate_type_info(channel, channel_vars, common_vars)
 
@@ -219,6 +229,19 @@ returns = {
         2: 'return (*{0}->{1})[{2}][{3}];'
         }
 
+accessor_template = \
+"""        accessors["{0}"] = [](roast::Branches *b, int idx, int n) -> float {{
+            {1}
+        }};
+"""
+
+cast_template = """if ({0}::Branches* e = dynamic_cast<{0}::Branches*>(b)) {{
+                {1}
+            }}"""
+
+throw_template = """
+            throw;"""
+
 tll_template = \
 """        accessors["{1}"] = [](roast::Branches *b, int idx, int n) -> float {{
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
@@ -227,7 +250,8 @@ tll_template = \
             }} else {{
                 return (*e->TLL_{3})[idx];
             }}
-        }};"""
+        }};
+"""
 
 fct_names = {}
 for channel in list(channels) + [""]:
@@ -301,99 +325,132 @@ for fn in sorted(fct_names.keys()):
 attrs = generate_accessor_info(vars)
 
 # Now turn to branches
-def generate_return_line(obj, varname, type, idx='idx', subidx='n', safe=False):
-    cnt = type.count('vector')
-    if cnt not in returns:
-        raise TypeError
-    if safe:
-        return returns[cnt].replace("[{2}]", ".at({2})").replace("[{3}]", ".at({3})").format(obj, varname, idx, subidx)
-    else:
+def generate_return_line(obj, varname, typeinfo, idx='idx', subidx=None, safe=False):
+    if not isinstance(typeinfo, dict):
+        cnt = typeinfo.count('vector')
+
+        if cnt not in returns:
+            raise TypeError
+
+        if cnt == 2 and subidx == None:
+            subidx = 'n'
+
+        if safe:
+            return returns[cnt].replace("[{2}]", ".at({2})").replace("[{3}]", ".at({3})").format(obj, varname, idx, subidx)
         return returns[cnt].format(obj, varname, idx, subidx)
+    else:
+        lines = []
+        for (chan, (type, ptr)) in typeinfo.items():
+            cnt = type.count('vector')
+            ret_line = returns[cnt]
+
+            parts = varname.split('_', 1)
+            if parts[0] in channels:
+                varname = chan + '_' + parts[1]
+
+            nidx = idx
+            if cnt == 2 and subidx == None:
+                raise "foo"
+            elif cnt == 1 and subidx != None:
+                nidx = subidx
+
+            if safe:
+                ret_line = ret_line.replace("[{2}]", ".at({2})").replace("[{3}]", ".at({3})")
+            lines.append(cast_template.format(chan.lower(), ret_line.format('e', varname, nidx, subidx)))
+        return " else ".join(lines) + throw_template
 
 jets = 'LJ SubLJ SubSubLJ SubSubSubLJ'.split()
 
-for k in sorted(attrs.keys()):
-    (var, type, ptr, prefixes) = attrs[k]
+for accessor in sorted(attrs.keys()):
+    (pre, var, chans) = attrs[accessor]
 
-    if 'LorentzVector' in type:
+    # consolidate type information
+    types = set(chans.values())
+    if len(types) == 1 and 'LorentzVector' in list(types)[0][0]:
+        # cannot do anything with a LorentzVector at the moment
         continue
-
-    cnt = type.count('vector')
 
     # manipulate variable names to get "historic" naming scheme
     # FIXME rename branches in ntuplizer
 
     # no mention of HPS anywhere
-    rm = re.search(r'HPS(?:by)?(.)', k)
+    rm = re.search(r'HPS(?:by)?(.)', accessor)
     if rm:
-        k = k.replace(rm.group(0), rm.group(1).upper())
-        k = k.replace("Against", "Anti")
+        accessor = accessor.replace(rm.group(0), rm.group(1).upper())
+        accessor = accessor.replace("Against", "Anti")
 
     # N -> Num where appropriate
-    num = re.search(r'_N([A-Z][a-z])', k)
+    num = re.search(r'_N([A-Z][a-z])', accessor)
     if num:
-        k = k.replace(num.group(0), '_Num' + num.group(1))
+        accessor = accessor.replace(num.group(0), '_Num' + num.group(1))
 
     # remove btagJets at end of varname
-    if k.endswith('btagJets'):
-        k = 'J_' + k[:-8]
+    if accessor.endswith('btagJets'):
+        accessor = 'J_' + accessor[:-8]
 
     # camel case correctly
-    k = k.replace("raw", "Raw")
+    accessor = accessor.replace("raw", "Raw")
+
+    # Fix J_Lepton -> JL_ etc...
+    if pre == 'J':
+        for (particle, count) in re.findall('(Tau|Lepton)(\d)?', accessor):
+            accessor = accessor.replace('_', particle[0] + count + '_', 1).replace(particle + count, '', 1)
+
+    if len(types) == 1:
+        (type, ptr) = list(types)[0]
+        cnt = type.count('vector')
+        if len(chans.items()) == len(channels):
+            chans = {}
 
     try:
-        # Fix J_Lepton -> JL_ etc...
-        if 'J' in prefixes:
-            for (particle, count) in re.findall('(Tau|Lepton)(\d)?', k):
-                k = k.replace('_', particle[0] + count + '_', 1).replace(particle + count, '', 1)
-
         tmp_lines = []
-        tmp_lines.append(indent * 2 + declare.format(k))
+        tmp_lines.append(indent * 2 + declare.format(accessor))
 
-        if (len(prefixes) == 1 and not prefixes[0] + '_' + var in single_var_names) \
-                or var in common_vars:
-            if prefixes[0] in channels and var in common_vars:
+        if len(chans.items()) < 2:
+            if pre in channels and var in common_vars:
                 prefix = ""
                 varname = var
             else:
-                prefix = prefixes[0]
+                prefix = pre
                 varname = prefix + '_' + var
-            obj = 'b'
 
-            idx = 'idx' if prefixes[0] in channels else 'n'
+            obj = 'b'
+            idx = 'idx' if pre in channels else 'n'
+            if len(chans) == 1:
+                type = chans
 
             if prefix in channels:
                 # Regular channel variable
                 chan = prefix.lower()
                 varname = prefix + "_" + var
                 obj = 'e'
-                tmp_lines.append(indent * 3 + cast.format(chan) + ';\n')
+                # tmp_lines.append(indent * 3 + cast.format(chan) + ';\n')
 
                 # For OS TLL, we can fix the tau + tau->lepton system
                 if prefix == 'TLL' and 'Lepton1' in var and 'Lepton2' not in var:
-                    lines += tll_template.format("<", k.replace('L1', 'osL'), var, var.replace('Lepton1', 'Lepton2'))
-                    lines += tll_template.format(">", k.replace('L1', 'ssL'), var, var.replace('Lepton1', 'Lepton2'))
+                    lines += tll_template.format("<", accessor.replace('L1', 'osL'), var, var.replace('Lepton1', 'Lepton2'))
+                    lines += tll_template.format(">", accessor.replace('L1', 'ssL'), var, var.replace('Lepton1', 'Lepton2'))
 
             elif prefix == 'J' and ptr and (('BTag' not in var) or var == 'combSecVtxBTag') and var != 'CSV':
                 if var == 'combSecVtxBTag':
-                    k = k.replace('CombSecVtxBTag', 'CSV')
+                    accessor = accessor.replace('CombSecVtxBTag', 'CSV')
 
                 jet_lines = []
 
-                for (particle, count) in re.findall('(Tau|Lepton)(\d)?', k):
-                    k = k.replace('_', particle[0] + count + '_', 1).replace(particle + count, '', 1)
+                for (particle, count) in re.findall('(Tau|Lepton)(\d)?', accessor):
+                    accessor = accessor.replace('_', particle[0] + count + '_', 1).replace(particle + count, '', 1)
 
                 for (label, index_statement) in reindex:
                     index = 'i' if cnt == 1 else 'idx'
                     subindex = 'n' if cnt == 1 else 'i'
-                    jet_lines.append(indent * 2 + declare.format(label + k))
+                    jet_lines.append(indent * 2 + declare.format(label + accessor))
                     jet_lines.append(indent * 3 + index_statement.format('n'))
                     jet_lines.append(indent * 3 + generate_return_line(obj, varname, type, idx=index, subidx=subindex, safe=True) + '\n')
                     jet_lines.append(indent * 2 + '};\n')
 
                     # leading jet etc.
                     for (n, j) in enumerate(jets):
-                        new_key = label + k.replace('J', j)
+                        new_key = label + accessor.replace('J', j)
                         jet_lines.append(indent * 2 + declare.format(new_key))
                         jet_lines.append(indent * 3 + index_statement.format(n))
                         jet_lines.append(indent * 3 + generate_return_line(obj, varname, type, idx=index, subidx=subindex, safe=True) + '\n')
@@ -402,24 +459,67 @@ for k in sorted(attrs.keys()):
             elif ptr and prefix != '':
                 continue
             tmp_lines.append(indent * 3 + generate_return_line(obj, varname, type) + '\n')
+        elif len(chans.items()) == 1 and pre + '_' + var in single_var_names:
+            cond = 'if ('
+            first = True
+
+            for chan in single_var_names[pre + '_' + var]:
+                chan = chan.lower()
+                tmp_lines.append(indent * 3 + cond + cast.format(chan.lower()) + ') {\n')
+                tmp_lines.append(indent * 4 + generate_return_line('e', varname, type) + '\n')
+
+                if first:
+                    first = False
+                    cond = '} else ' + cond
+            tmp_lines.append(indent * 3 + '}\n')
+            tmp_lines.append(indent * 3 + 'throw "";\n')
         else:
             cond = 'if ('
             first = True
 
-            for p in prefixes:
-                if p in channels:
-                    chan = p.lower()
-                else:
-                    try:
-                        chan = single_var_names[p + '_' + var].lower()
-                    except KeyError:
-                        raise ValueError(v)
+            if pre == 'J':
+                varname = pre + "_" + var
+                print varname, type
+                print types
+                print chans
 
-                if var not in shared_var_names:
-                    varname = p + "_" + var
+                if var == 'combSecVtxBTag':
+                    accessor = accessor.replace('CombSecVtxBTag', 'CSV')
+
+                jet_lines = []
+
+                for (particle, count) in re.findall('(Tau|Lepton)(\d)?', accessor):
+                    accessor = accessor.replace('_', particle[0] + count + '_', 1).replace(particle + count, '', 1)
+
+                for (label, index_statement) in reindex:
+                    index = 'i' if cnt == 1 else 'idx'
+                    subindex = 'n' if cnt == 1 else 'i'
+                    jet_lines.append(indent * 2 + declare.format(label + accessor))
+                    jet_lines.append(indent * 3 + index_statement.format('n'))
+                    jet_lines.append(indent * 3 + generate_return_line(obj, varname, chans, idx=index, subidx=subindex, safe=True) + '\n')
+                    jet_lines.append(indent * 2 + '};\n')
+
+                    # leading jet etc.
+                    for (n, j) in enumerate(jets):
+                        new_key = label + accessor.replace('J', j)
+                        jet_lines.append(indent * 2 + declare.format(new_key))
+                        jet_lines.append(indent * 3 + index_statement.format(n))
+                        jet_lines.append(indent * 3 + generate_return_line(obj, varname, chans, idx=index, subidx=subindex, safe=True) + '\n')
+                        jet_lines.append(indent * 2 + '};\n')
+                lines += jet_lines
+
+            for (chan, (type, ptr)) in chans.items():
+                if chan == 'TLL' and pre == 'TLL' and 'Lepton1' in var and 'Lepton2' not in var:
+                    lines += tll_template.format("<", accessor.replace('L1', 'osL'), var, var.replace('Lepton1', 'Lepton2'))
+                    lines += tll_template.format(">", accessor.replace('L1', 'ssL'), var, var.replace('Lepton1', 'Lepton2'))
+
+                if var not in shared_var_names and pre not in channels:
+                    varname = pre + "_" + var
+                elif var not in shared_var_names:
+                    varname = chan + "_" + var
                 else:
                     varname = var
-                tmp_lines.append(indent * 3 + cond + cast.format(chan) + ') {\n')
+                tmp_lines.append(indent * 3 + cond + cast.format(chan.lower()) + ') {\n')
                 tmp_lines.append(indent * 4 + generate_return_line('e', varname, type) + '\n')
 
                 if first:
@@ -434,7 +534,7 @@ for k in sorted(attrs.keys()):
     except ValueError as e:
         print 'cannot associate {0} with a valid channel'.format(e)
     except TypeError as e:
-        print '{0} is of unprocessable type'.format(k)
+        print '{0} is of unprocessable type'.format(accessor)
 
 source = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'src', 'Accessor.cc')
 inject_lines(source, "attr", lines)

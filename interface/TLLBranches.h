@@ -33,6 +33,7 @@ namespace roast {
                 // >>> Begin declarations <<<
                 std::vector<std::vector<float> >* J_Lepton1DeltaR;
                 std::vector<std::vector<float> >* J_Lepton2DeltaR;
+                std::vector<std::vector<float> >* J_TauDeltaR;
                 std::vector<float>* TLL_Lepton1Charge;
                 std::vector<float>* TLL_Lepton1CorrectedD0;
                 std::vector<float>* TLL_Lepton1CorrectedDZ;

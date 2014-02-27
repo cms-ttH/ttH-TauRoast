@@ -15,7 +15,9 @@ def draw_channel_info(config, plot_ratio):
     else:
         scale = .5 / .7
 
-    if config['analysis']['channel'] == 'tl':
+    if config['analysis']['channel'] == 'll':
+        channel_label = "Dilepton + "
+    elif config['analysis']['channel'] == 'tl':
         channel_label = "Lep + #tau_{h} + "
     elif config['analysis']['channel'] == 'ttl':
         channel_label = "Lep + #tau_{h}#tau_{h} + "

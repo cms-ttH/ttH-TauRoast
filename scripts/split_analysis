@@ -28,7 +28,9 @@ basedir = os.path.join(os.environ['LOCALRT'], 'src/ttH/TauRoast/data')
 config = load_config(configfile, basedir, [])
 
 channel = config['analysis']['channel']
-if channel == 'tl':
+if channel == 'll':
+    module = roast.ll
+elif channel == 'tl':
     module = roast.tl
 elif channel == 'tll':
     module = roast.tll
@@ -108,4 +110,4 @@ arguments = -af --no-backup -s @offset@ -n @size@ -o analysis.process="[@proc@]"
 [parameters]
 parameters = <csv>
 csv source = jobs.par
-    """)
+csv format = excel""")

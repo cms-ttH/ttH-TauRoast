@@ -10,6 +10,7 @@
 #include "Accessor.h"
 #include "Branches.h"
 #include "Process.h"
+#include "LLBranches.h"
 #include "TLBranches.h"
 #include "TLLBranches.h"
 #include "TTLBranches.h"
@@ -76,6 +77,15 @@ namespace roast {
     };
 
     void register_mva(const std::string&, MVABase*);
+
+    namespace ll {
+        struct Get : roast::MVABase::Get {
+            virtual roast::Branches* Branches(const roast::Process *proc)
+            {
+                return new roast::ll::Branches(proc->GetNtuplePaths());
+            };
+        };
+    }
 
     namespace tl {
         struct Get : roast::MVABase::Get {

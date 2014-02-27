@@ -36,6 +36,7 @@ namespace roast {
                 std::vector<double>* Ev_METcov;
                 Int_t Ev_NTruePV;
                 std::vector<std::vector<float> >* J_LeptonDeltaR;
+                std::vector<std::vector<float> >* J_TauDeltaR;
                 std::vector<float>* TL_LeptonCharge;
                 std::vector<float>* TL_LeptonCorrectedD0;
                 std::vector<float>* TL_LeptonCorrectedDZ;

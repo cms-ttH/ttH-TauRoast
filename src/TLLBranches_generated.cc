@@ -11,6 +11,7 @@ tll::Branches::Clear()
     // >>> Begin clear <<<
     J_Lepton1DeltaR->clear();
     J_Lepton2DeltaR->clear();
+    J_TauDeltaR->clear();
     TLL_Lepton1Charge->clear();
     TLL_Lepton1CorrectedD0->clear();
     TLL_Lepton1CorrectedDZ->clear();
@@ -183,6 +184,7 @@ tll::Branches::Delete()
     // >>> Begin delete <<<
     delete J_Lepton1DeltaR;
     delete J_Lepton2DeltaR;
+    delete J_TauDeltaR;
     delete TLL_Lepton1Charge;
     delete TLL_Lepton1CorrectedD0;
     delete TLL_Lepton1CorrectedDZ;
@@ -355,6 +357,7 @@ tll::Branches::Null()
     // >>> Begin null <<<
     J_Lepton1DeltaR = 0;
     J_Lepton2DeltaR = 0;
+    J_TauDeltaR = 0;
     TLL_Lepton1Charge = 0;
     TLL_Lepton1CorrectedD0 = 0;
     TLL_Lepton1CorrectedDZ = 0;
@@ -527,6 +530,7 @@ tll::Branches::SetBranchAddresses()
     // >>> Begin address <<<
     fChain->SetBranchAddress("J_Lepton1DeltaR", &J_Lepton1DeltaR);
     fChain->SetBranchAddress("J_Lepton2DeltaR", &J_Lepton2DeltaR);
+    fChain->SetBranchAddress("J_TauDeltaR", &J_TauDeltaR);
     fChain->SetBranchAddress("TLL_CSVeventWeight", &CSVeventWeight);
     fChain->SetBranchAddress("TLL_CSVeventWeightCErr1down", &CSVeventWeightCErr1down);
     fChain->SetBranchAddress("TLL_CSVeventWeightCErr1up", &CSVeventWeightCErr1up);
