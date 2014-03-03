@@ -1,61 +1,104 @@
 # vim: set sw=4 ts=4 sta et :
+Collisions_DoubleElectron:
+    add cut: NumLooseElectrons = 2
+    sampleNumber: -1
+    niceName: Collisions
+    labelForLegend: Collisions
+    limit alias: data_obs
+    type: collisions
+    ntuplePath: [data_DoubleElectron_2012A_06Aug, data_DoubleElectron_2012A_12Jul, data_DoubleElectron_2012B_13Jul, data_DoubleElectron_2012C_24Aug, data_DoubleElectron_2012C_PR, data_DoubleElectron_2012D_PR]
+    color: 1
+    crossSection: 1
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 105139786
+    NoEreadByNUTter: 75220
+
+Collisions_DoubleMuon:
+    add cut: NumLooseMuons = 2
+    sampleNumber: -1
+    niceName: Collisions
+    labelForLegend: Collisions
+    limit alias: data_obs
+    type: collisions
+    ntuplePath: [data_DoubleMu_2012A_06Aug, data_DoubleMu_2012A_13Jul, data_DoubleMu_2012B_PR, data_DoubleMu_2012C_24Aug, data_DoubleMu_2012C_PR, data_DoubleMu_2012D_PR]
+    color: 1
+    crossSection: 1
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 88169930
+    NoEreadByNUTter: 75220
+
+Collisions_ElectronMuon:
+    add cut: NumLooseElectrons = 1 and NumLooseMuons = 1
+    sampleNumber: -1
+    niceName: Collisions
+    labelForLegend: Collisions
+    limit alias: data_obs
+    type: collisions
+    ntuplePath: [data_MuEG_2012A_06Aug, data_MuEG_2012A_13Jul, data_MuEG_2012B_13Jul, data_MuEG_2012C_24Aug, data_MuEG_2012C_PR, data_MuEG_2012D_PR]
+    color: 1
+    crossSection: 1
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 60158786
+    NoEreadByNUTter: 75220
+
+Collisions_SingleElectron:
+    add cut: NumLooseElectrons = 1
+    sampleNumber: -1
+    niceName: Collisions
+    labelForLegend: Collisions
+    limit alias: data_obs
+    type: collisions
+    ntuplePath: [data_SingleElectron_2012A_06Aug, data_SingleElectron_2012A_13July, data_SingleElectron_2012B_13Jul, data_SingleElectron_2012C_24Aug, data_SingleElectron_2012C_PR, data_SingleElectron_2012D_PR]
+    color: 1
+    crossSection: 1
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 297904375
+    NoEreadByNUTter: 75220
+
+Collisions_SingleMuon:
+    add cut: NumLooseMuons = 1
+    sampleNumber: -1
+    niceName: Collisions
+    labelForLegend: Collisions
+    limit alias: data_obs
+    type: collisions
+    ntuplePath: [data_SingleMu_2012A_06Aug, data_SingleMu_2012A_13July, data_SingleMu_2012B_13July, data_SingleMu_2012C_24Aug, data_SingleMu_2012C_PR, data_SingleMu_2012D_PR]
+    color: 1
+    crossSection: 1
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 262813074
+    NoEreadByNUTter: 75220
+
 Collisions:
     ll:
-        sampleNumber: -1
         niceName: Collisions
         labelForLegend: Collisions
         limit alias: data_obs
-        type: collisions
-        ntuplePath: [data_DoubleElectron_2012A_06Aug, data_DoubleElectron_2012A_12Jul, data_DoubleElectron_2012B_13Jul, data_DoubleElectron_2012C_24Aug, data_DoubleElectron_2012C_PR, data_DoubleElectron_2012D_PR,
-            data_DoubleMu_2012A_06Aug, data_DoubleMu_2012A_13Jul, data_DoubleMu_2012B_PR, data_DoubleMu_2012C_24Aug, data_DoubleMu_2012C_PR, data_DoubleMu_2012D_PR,
-            data_MuEG_2012A_06Aug, data_MuEG_2012A_13Jul, data_MuEG_2012B_13Jul, data_MuEG_2012C_24Aug, data_MuEG_2012C_PR, data_MuEG_2012D_PR]
         color: 1
-        crossSection: 1
-        branchingRatio: 1
-        otherScaleFactor: 1
-        NOEinDS: 165298572
-        NoEreadByNUTter: 75220
+        combine: [Collisions_DoubleElectron, Collisions_DoubleMuon, Collisions_ElectronMuon]
     tl:
-        sampleNumber: -1
         niceName: Collisions
         labelForLegend: Collisions
         limit alias: data_obs
-        type: collisions
-        ntuplePath: [data_SingleElectron_2012A_06Aug, data_SingleElectron_2012A_13July, data_SingleElectron_2012B_13Jul, data_SingleElectron_2012C_24Aug, data_SingleElectron_2012C_PR, data_SingleElectron_2012D_PR, data_SingleMu_2012A_06Aug, data_SingleMu_2012A_13July, data_SingleMu_2012B_13July, data_SingleMu_2012C_24Aug, data_SingleMu_2012C_PR, data_SingleMu_2012D_PR]
         color: 1
-        crossSection: 1
-        branchingRatio: 1
-        otherScaleFactor: 1
-        NOEinDS: 560717449
-        NoEreadByNUTter: 75220
+        combine: [Collisions_SingleElectron, Collisions_SingleMuon]
     tll:
-        sampleNumber: -1
         niceName: Collisions
         labelForLegend: Collisions
         limit alias: data_obs
-        type: collisions
-        ntuplePath: [data_DoubleElectron_2012A_06Aug, data_DoubleElectron_2012A_12Jul, data_DoubleElectron_2012B_13Jul, data_DoubleElectron_2012C_24Aug, data_DoubleElectron_2012C_PR, data_DoubleElectron_2012D_PR,
-            data_DoubleMu_2012A_06Aug, data_DoubleMu_2012A_13Jul, data_DoubleMu_2012B_PR, data_DoubleMu_2012C_24Aug, data_DoubleMu_2012C_PR, data_DoubleMu_2012D_PR,
-            data_MuEG_2012A_06Aug, data_MuEG_2012A_13Jul, data_MuEG_2012B_13Jul, data_MuEG_2012C_24Aug, data_MuEG_2012C_PR, data_MuEG_2012D_PR]
         color: 1
-        crossSection: 1
-        branchingRatio: 1
-        otherScaleFactor: 1
-        NOEinDS: 165298572
-        NoEreadByNUTter: 75220
+        combine: [Collisions_DoubleElectron, Collisions_DoubleMuon, Collisions_ElectronMuon]
     ttl:
-        sampleNumber: -1
         niceName: Collisions
         labelForLegend: Collisions
         limit alias: data_obs
-        type: collisions
-        ntuplePath: [data_SingleElectron_2012A_06Aug, data_SingleElectron_2012A_13July, data_SingleElectron_2012B_13Jul, data_SingleElectron_2012C_24Aug, data_SingleElectron_2012C_PR, data_SingleElectron_2012D_PR, data_SingleMu_2012A_06Aug, data_SingleMu_2012A_13July, data_SingleMu_2012B_13July, data_SingleMu_2012C_24Aug, data_SingleMu_2012C_PR, data_SingleMu_2012D_PR]
         color: 1
-        crossSection: 1
-        branchingRatio: 1
-        otherScaleFactor: 1
-        NOEinDS: 560717449
-        NoEreadByNUTter: 75220
+        combine: [Collisions_SingleElectron, Collisions_SingleMuon]
 
 TTbar_Hadronic:
     sampleNumber: 2566

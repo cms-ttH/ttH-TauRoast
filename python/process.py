@@ -75,12 +75,21 @@ def analyze(config, module):
 
     processed = []
     for p in processes:
+        cfg = config['processes'][p.GetShortName()]
+        if 'add cut' in cfg:
+            c = parser.process(cfg['add cut'])
+            c.name = "REMOVE ME"
+            use_cuts = [c] + cuts
+        else:
+            use_cuts = cuts
         n = module.analyze(p,
-                vectorize(cuts, 'roast::CutFlow::Cut*'),
+                vectorize(use_cuts, 'roast::CutFlow::Cut*'),
                 config['analysis']['offset'],
                 config['analysis']['max events'],
                 lambda i: logging.info("analyzing %s, event %i", p.GetShortName(), i) if i % 10000 == 0 else None)
         logging.info("analyzed %i events of %s", n, p.GetShortName())
+        p.GetCutFlow().RemoveCut("REMOVE ME")
+
         processed.append(p)
     return processed
 

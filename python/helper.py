@@ -244,9 +244,12 @@ def save_limit_histograms(config, ps):
         for (alias, proc) in process:
             file.WriteObject(proc.GetHistogram(var).GetHisto(), histname.format(p=alias))
 
-def combine_processes(config, ps):
+def combine_processes(config, ps, collisions=False):
     cfgs = filter(lambda (k, v): 'combine' in v, config['processes'].items())
     for (alias, cfg) in cfgs:
+        if collisions != (alias == "Collisions"):
+            continue
+
         to_combine = cfg['combine']
         res = None
 
@@ -273,7 +276,7 @@ get_backgrounds = lambda ps: filter(lambda p: p.IsBackground(), ps)
 get_montecarlo = lambda ps: filter(lambda p: p.IsMC(), ps)
 
 def get_collisions(ps):
-    res = filter(lambda p: p.IsCollisions(), ps)
+    res = filter(lambda p: p.IsCollisions() and p.GetShortName() == "Collisions", ps)
     if len(res) != 1:
         if len(res) > 1:
             logging.critical("more than one collision process found")
@@ -297,9 +300,10 @@ def normalize_processes(config, processes):
 
     try:
         coll = get_collisions(processes)
-        if coll.GetNOEanalyzed() != coll.GetNOEinNtuple():
-            logging.debug("Collision: analyzed %f - in ntuple %f", coll.GetNOEanalyzed(), coll.GetNOEinNtuple())
-            lumi *= coll.GetNOEanalyzed() / float(coll.GetNOEinNtuple())
+        ntuple = coll.GetCutFlow().GetCuts()[1].events_passed
+        if coll.GetNOEanalyzed() != ntuple:
+            logging.debug("Collision: analyzed %f - in ntuple %f", coll.GetNOEanalyzed(), ntuple)
+            lumi *= coll.GetNOEanalyzed() / float(ntuple)
         coll.GetCutFlow().RegisterCutFromLast("Lumi norm", 1)
         coll.BuildNormalizedCutFlow()
     except:

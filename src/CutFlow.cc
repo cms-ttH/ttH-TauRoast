@@ -178,6 +178,16 @@ string const CutFlow::GetLastCut() const{
 }
 
 void
+CutFlow::RemoveCut(const std::string& name)
+{
+    auto it = find_if(cuts.begin(), cuts.end(), [&](Cut* c) { return c->name == name; });
+    if (it != cuts.end()) {
+        delete *it;
+        cuts.erase(it);
+    }
+}
+
+void
 CutFlow::Add(const CutFlow& iCutFlow, bool same, float iFactor){
     // Check the current cuts	
     if (cuts.size() == 0) {

@@ -201,6 +201,7 @@ if not any([opts.plot, opts.limit_file, opts.nums, opts.nums_rel, opts.nums_summ
 if not procs:
     procs = load("Roast", baseconfig['paths']['output'])
 
+combine_processes(baseconfig, procs, collisions=True)
 normalize_processes(baseconfig, procs)
 split_combined_processes(baseconfig, procs)
 combine_processes(baseconfig, procs)

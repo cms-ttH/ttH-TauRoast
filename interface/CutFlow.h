@@ -90,6 +90,7 @@ namespace roast {
             CutFlow(roast::CutFlow const &);
 
             void Reset();
+            void RemoveCut(const std::string&);
             int const size() const;
 
             void RegisterCut(roast::CutFlow::Cut*);
