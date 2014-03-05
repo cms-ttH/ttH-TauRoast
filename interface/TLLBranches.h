@@ -2,6 +2,8 @@
 #ifndef TLLBranches_h
 #define TLLBranches_h
 
+#include "Math/LorentzVector.h"
+
 #include "Branches.h"
 
 namespace roast {
@@ -67,6 +69,7 @@ namespace roast {
                 std::vector<float>* TLL_Lepton1Lepton2VisibleMass;
                 std::vector<float>* TLL_Lepton1Mt;
                 std::vector<float>* TLL_Lepton1Mt2;
+                std::vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* TLL_Lepton1P;
                 std::vector<float>* TLL_Lepton1Phi;
                 std::vector<float>* TLL_Lepton1Pt;
                 std::vector<float>* TLL_Lepton1RelIso;
@@ -100,6 +103,7 @@ namespace roast {
                 std::vector<bool>* TLL_Lepton2IsTight;
                 std::vector<float>* TLL_Lepton2Mt;
                 std::vector<float>* TLL_Lepton2Mt2;
+                std::vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* TLL_Lepton2P;
                 std::vector<float>* TLL_Lepton2Phi;
                 std::vector<float>* TLL_Lepton2Pt;
                 std::vector<float>* TLL_Lepton2RelIso;
@@ -192,6 +196,7 @@ namespace roast {
                 std::vector<unsigned int>* TLL_TauNProngs;
                 std::vector<unsigned int>* TLL_TauNSignalGammas;
                 std::vector<unsigned int>* TLL_TauNSignalNeutrals;
+                std::vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* TLL_TauP;
                 std::vector<float>* TLL_TauPhi;
                 std::vector<float>* TLL_TauPt;
                 std::vector<float>* TLL_TriggerEventWeight;

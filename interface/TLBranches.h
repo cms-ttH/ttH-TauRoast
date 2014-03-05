@@ -33,8 +33,6 @@ namespace roast {
                 unsigned int GetTauAntiMuonIndex2(const unsigned int) const;
 
                 // >>> Begin declarations <<<
-                std::vector<double>* Ev_METcov;
-                Int_t Ev_NTruePV;
                 std::vector<std::vector<float> >* J_LeptonDeltaR;
                 std::vector<std::vector<float> >* J_TauDeltaR;
                 std::vector<float>* TL_LeptonCharge;

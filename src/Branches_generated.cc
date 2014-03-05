@@ -34,7 +34,9 @@ Branches::Clear()
     E_Pt->clear();
     Ev_IsTauEvent = 0;
     Ev_MET = 0;
+    Ev_METcov->clear();
     Ev_METphi = 0;
+    Ev_NTruePV = 0;
     Ev_bQuarkCount = 0;
     Ev_cQuarkCount = 0;
     Ev_eventNumber = 0;
@@ -301,6 +303,7 @@ Branches::Delete()
     delete E_MomentumRank;
     delete E_Phi;
     delete E_Pt;
+    delete Ev_METcov;
     delete GJ_Eta;
     delete GJ_IsBjet;
     delete GJ_MomentumRank;
@@ -537,7 +540,9 @@ Branches::Null()
     E_Pt = 0;
     Ev_IsTauEvent = 0;
     Ev_MET = 0;
+    Ev_METcov = 0;
     Ev_METphi = 0;
+    Ev_NTruePV = 0;
     Ev_bQuarkCount = 0;
     Ev_cQuarkCount = 0;
     Ev_eventNumber = 0;
@@ -807,7 +812,9 @@ Branches::SetBranchAddresses()
     fChain->SetBranchAddress("E_Pt", &E_Pt);
     fChain->SetBranchAddress("Ev_IsTauEvent", &Ev_IsTauEvent);
     fChain->SetBranchAddress("Ev_MET", &Ev_MET);
+    fChain->SetBranchAddress("Ev_METcov", &Ev_METcov);
     fChain->SetBranchAddress("Ev_METphi", &Ev_METphi);
+    fChain->SetBranchAddress("Ev_NTruePV", &Ev_NTruePV);
     fChain->SetBranchAddress("Ev_bQuarkCount", &Ev_bQuarkCount);
     fChain->SetBranchAddress("Ev_cQuarkCount", &Ev_cQuarkCount);
     fChain->SetBranchAddress("Ev_eventNumber", &Ev_eventNumber);

@@ -9,8 +9,6 @@ tl::Branches::Clear()
     roast::Branches::Clear();
 
     // >>> Begin clear <<<
-    Ev_METcov->clear();
-    Ev_NTruePV = 0;
     J_LeptonDeltaR->clear();
     J_TauDeltaR->clear();
     TL_LeptonCharge->clear();
@@ -143,7 +141,6 @@ tl::Branches::Delete()
     roast::Branches::Delete();
 
     // >>> Begin delete <<<
-    delete Ev_METcov;
     delete J_LeptonDeltaR;
     delete J_TauDeltaR;
     delete TL_LeptonCharge;
@@ -276,8 +273,6 @@ tl::Branches::Null()
     roast::Branches::Null();
 
     // >>> Begin null <<<
-    Ev_METcov = 0;
-    Ev_NTruePV = 0;
     J_LeptonDeltaR = 0;
     J_TauDeltaR = 0;
     TL_LeptonCharge = 0;
@@ -410,8 +405,6 @@ tl::Branches::SetBranchAddresses()
     roast::Branches::SetBranchAddresses();
 
     // >>> Begin address <<<
-    fChain->SetBranchAddress("Ev_METcov", &Ev_METcov);
-    fChain->SetBranchAddress("Ev_NTruePV", &Ev_NTruePV);
     fChain->SetBranchAddress("J_LeptonDeltaR", &J_LeptonDeltaR);
     fChain->SetBranchAddress("J_TauDeltaR", &J_TauDeltaR);
     fChain->SetBranchAddress("TL_CSVeventWeight", &CSVeventWeight);

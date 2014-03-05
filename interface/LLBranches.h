@@ -23,8 +23,6 @@ namespace roast {
                 virtual bool IsGoodGenMatch(const int&) const { return false; };
 
                 // >>> Begin declarations <<<
-                std::vector<double>* Ev_METcov;
-                Int_t Ev_NTruePV;
                 std::vector<float>* J_Lepton1DeltaR;
                 std::vector<float>* J_Lepton2DeltaR;
                 std::vector<float>* LL_Lepton1Charge;

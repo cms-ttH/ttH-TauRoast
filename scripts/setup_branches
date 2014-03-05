@@ -246,10 +246,9 @@ tll_template = \
 """        accessors["{1}"] = [](roast::Branches *b, int idx, int n) -> float {{
             tll::Branches* e = dynamic_cast<tll::Branches*>(b);
             if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] {0} 0) {{
-                return (*e->TLL_{2})[idx];
-            }} else {{
-                return (*e->TLL_{3})[idx];
+                return (*e->{2})[idx];
             }}
+            return (*e->{3})[idx];
         }};
 """
 
@@ -428,10 +427,12 @@ for accessor in sorted(attrs.keys()):
 
                 # For OS TLL, we can fix the tau + tau->lepton system
                 if prefix == 'TLL' and 'Lepton1' in var and 'Lepton2' not in var:
-                    lines += tll_template.format("<", accessor.replace('L1', 'osL'), var, var.replace('Lepton1', 'Lepton2'))
-                    lines += tll_template.format(">", accessor.replace('L1', 'ssL'), var, var.replace('Lepton1', 'Lepton2'))
+                    varname = prefix + '_' + var
+                    lines += tll_template.format("<", accessor.replace('L1', 'osL'), varname, varname.replace('Lepton1', 'Lepton2'))
+                    lines += tll_template.format(">", accessor.replace('L1', 'ssL'), varname, varname.replace('Lepton1', 'Lepton2'))
 
             elif prefix == 'J' and ptr and (('BTag' not in var) or var == 'combSecVtxBTag') and var != 'CSV':
+                print "GOTCHA"
                 if var == 'combSecVtxBTag':
                     accessor = accessor.replace('CombSecVtxBTag', 'CSV')
 
@@ -460,28 +461,22 @@ for accessor in sorted(attrs.keys()):
                 continue
             tmp_lines.append(indent * 3 + generate_return_line(obj, varname, type) + '\n')
         elif len(chans.items()) == 1 and pre + '_' + var in single_var_names:
-            cond = 'if ('
-            first = True
-
-            for chan in single_var_names[pre + '_' + var]:
-                chan = chan.lower()
-                tmp_lines.append(indent * 3 + cond + cast.format(chan.lower()) + ') {\n')
-                tmp_lines.append(indent * 4 + generate_return_line('e', varname, type) + '\n')
-
-                if first:
-                    first = False
-                    cond = '} else ' + cond
-            tmp_lines.append(indent * 3 + '}\n')
-            tmp_lines.append(indent * 3 + 'throw "";\n')
+            raise
         else:
             cond = 'if ('
             first = True
 
+            if 'TLL' in chans and 'Lepton1' in var and 'Lepton2' not in var and pre != 'J':
+                varname = "TLL_" + var
+                lines += tll_template.format("<", accessor.replace('L1', 'osL'), varname, varname.replace('Lepton1', 'Lepton2'))
+                lines += tll_template.format(">", accessor.replace('L1', 'ssL'), varname, varname.replace('Lepton1', 'Lepton2'))
+
             if pre == 'J':
+                print "GOTCHA NOW", accessor
                 varname = pre + "_" + var
                 print varname, type
-                print types
-                print chans
+                # print types
+                # print chans
 
                 if var == 'combSecVtxBTag':
                     accessor = accessor.replace('CombSecVtxBTag', 'CSV')
@@ -509,10 +504,6 @@ for accessor in sorted(attrs.keys()):
                 lines += jet_lines
 
             for (chan, (type, ptr)) in chans.items():
-                if chan == 'TLL' and pre == 'TLL' and 'Lepton1' in var and 'Lepton2' not in var:
-                    lines += tll_template.format("<", accessor.replace('L1', 'osL'), var, var.replace('Lepton1', 'Lepton2'))
-                    lines += tll_template.format(">", accessor.replace('L1', 'ssL'), var, var.replace('Lepton1', 'Lepton2'))
-
                 if var not in shared_var_names and pre not in channels:
                     varname = pre + "_" + var
                 elif var not in shared_var_names:

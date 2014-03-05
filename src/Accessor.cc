@@ -2552,6 +2552,20 @@ namespace roast {
             }
             throw "";
         };
+        accessors["osL_Charge"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1Charge)[idx];
+            }
+            return (*e->TLL_Lepton2Charge)[idx];
+        };
+        accessors["ssL_Charge"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1Charge)[idx];
+            }
+            return (*e->TLL_Lepton2Charge)[idx];
+        };
         accessors["L1_Charge"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return (*e->LL_Lepton1Charge)[idx];
@@ -2559,6 +2573,20 @@ namespace roast {
                 return (*e->TLL_Lepton1Charge)[idx];
             }
             throw "";
+        };
+        accessors["osL_CorrectedD0"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1CorrectedD0)[idx];
+            }
+            return (*e->TLL_Lepton2CorrectedD0)[idx];
+        };
+        accessors["ssL_CorrectedD0"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1CorrectedD0)[idx];
+            }
+            return (*e->TLL_Lepton2CorrectedD0)[idx];
         };
         accessors["L1_CorrectedD0"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
@@ -2568,6 +2596,20 @@ namespace roast {
             }
             throw "";
         };
+        accessors["osL_CorrectedDZ"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1CorrectedDZ)[idx];
+            }
+            return (*e->TLL_Lepton2CorrectedDZ)[idx];
+        };
+        accessors["ssL_CorrectedDZ"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1CorrectedDZ)[idx];
+            }
+            return (*e->TLL_Lepton2CorrectedDZ)[idx];
+        };
         accessors["L1_CorrectedDZ"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return (*e->LL_Lepton1CorrectedDZ)[idx];
@@ -2575,6 +2617,20 @@ namespace roast {
                 return (*e->TLL_Lepton1CorrectedDZ)[idx];
             }
             throw "";
+        };
+        accessors["osL_Eta"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1Eta)[idx];
+            }
+            return (*e->TLL_Lepton2Eta)[idx];
+        };
+        accessors["ssL_Eta"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1Eta)[idx];
+            }
+            return (*e->TLL_Lepton2Eta)[idx];
         };
         accessors["L1_Eta"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
@@ -2584,6 +2640,20 @@ namespace roast {
             }
             throw "";
         };
+        accessors["osL_EventWeight"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1EventWeight)[idx];
+            }
+            return (*e->TLL_Lepton2EventWeight)[idx];
+        };
+        accessors["ssL_EventWeight"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1EventWeight)[idx];
+            }
+            return (*e->TLL_Lepton2EventWeight)[idx];
+        };
         accessors["L1_EventWeight"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return (*e->LL_Lepton1EventWeight)[idx];
@@ -2591,6 +2661,20 @@ namespace roast {
                 return (*e->TLL_Lepton1EventWeight)[idx];
             }
             throw "";
+        };
+        accessors["osL_GenMatchDaughter0Id"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1GenMatchDaughter0Id)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchDaughter0Id)[idx];
+        };
+        accessors["ssL_GenMatchDaughter0Id"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1GenMatchDaughter0Id)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchDaughter0Id)[idx];
         };
         accessors["L1_GenMatchDaughter0Id"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
@@ -2600,6 +2684,20 @@ namespace roast {
             }
             throw "";
         };
+        accessors["osL_GenMatchDaughter0Status"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1GenMatchDaughter0Status)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchDaughter0Status)[idx];
+        };
+        accessors["ssL_GenMatchDaughter0Status"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1GenMatchDaughter0Status)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchDaughter0Status)[idx];
+        };
         accessors["L1_GenMatchDaughter0Status"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return (*e->LL_Lepton1GenMatchDaughter0Status)[idx];
@@ -2607,6 +2705,20 @@ namespace roast {
                 return (*e->TLL_Lepton1GenMatchDaughter0Status)[idx];
             }
             throw "";
+        };
+        accessors["osL_GenMatchDaughter1Id"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1GenMatchDaughter1Id)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchDaughter1Id)[idx];
+        };
+        accessors["ssL_GenMatchDaughter1Id"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1GenMatchDaughter1Id)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchDaughter1Id)[idx];
         };
         accessors["L1_GenMatchDaughter1Id"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
@@ -2616,6 +2728,20 @@ namespace roast {
             }
             throw "";
         };
+        accessors["osL_GenMatchDaughter1Status"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1GenMatchDaughter1Status)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchDaughter1Status)[idx];
+        };
+        accessors["ssL_GenMatchDaughter1Status"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1GenMatchDaughter1Status)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchDaughter1Status)[idx];
+        };
         accessors["L1_GenMatchDaughter1Status"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return (*e->LL_Lepton1GenMatchDaughter1Status)[idx];
@@ -2623,6 +2749,20 @@ namespace roast {
                 return (*e->TLL_Lepton1GenMatchDaughter1Status)[idx];
             }
             throw "";
+        };
+        accessors["osL_GenMatchGrandmother00Id"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1GenMatchGrandmother00Id)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchGrandmother00Id)[idx];
+        };
+        accessors["ssL_GenMatchGrandmother00Id"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1GenMatchGrandmother00Id)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchGrandmother00Id)[idx];
         };
         accessors["L1_GenMatchGrandmother00Id"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
@@ -2632,6 +2772,20 @@ namespace roast {
             }
             throw "";
         };
+        accessors["osL_GenMatchGrandmother00Status"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1GenMatchGrandmother00Status)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchGrandmother00Status)[idx];
+        };
+        accessors["ssL_GenMatchGrandmother00Status"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1GenMatchGrandmother00Status)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchGrandmother00Status)[idx];
+        };
         accessors["L1_GenMatchGrandmother00Status"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return (*e->LL_Lepton1GenMatchGrandmother00Status)[idx];
@@ -2639,6 +2793,20 @@ namespace roast {
                 return (*e->TLL_Lepton1GenMatchGrandmother00Status)[idx];
             }
             throw "";
+        };
+        accessors["osL_GenMatchGrandmother01Id"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1GenMatchGrandmother01Id)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchGrandmother01Id)[idx];
+        };
+        accessors["ssL_GenMatchGrandmother01Id"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1GenMatchGrandmother01Id)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchGrandmother01Id)[idx];
         };
         accessors["L1_GenMatchGrandmother01Id"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
@@ -2648,6 +2816,20 @@ namespace roast {
             }
             throw "";
         };
+        accessors["osL_GenMatchGrandmother01Status"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1GenMatchGrandmother01Status)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchGrandmother01Status)[idx];
+        };
+        accessors["ssL_GenMatchGrandmother01Status"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1GenMatchGrandmother01Status)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchGrandmother01Status)[idx];
+        };
         accessors["L1_GenMatchGrandmother01Status"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return (*e->LL_Lepton1GenMatchGrandmother01Status)[idx];
@@ -2655,6 +2837,20 @@ namespace roast {
                 return (*e->TLL_Lepton1GenMatchGrandmother01Status)[idx];
             }
             throw "";
+        };
+        accessors["osL_GenMatchGrandmother10Id"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1GenMatchGrandmother10Id)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchGrandmother10Id)[idx];
+        };
+        accessors["ssL_GenMatchGrandmother10Id"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1GenMatchGrandmother10Id)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchGrandmother10Id)[idx];
         };
         accessors["L1_GenMatchGrandmother10Id"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
@@ -2664,6 +2860,20 @@ namespace roast {
             }
             throw "";
         };
+        accessors["osL_GenMatchGrandmother10Status"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1GenMatchGrandmother10Status)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchGrandmother10Status)[idx];
+        };
+        accessors["ssL_GenMatchGrandmother10Status"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1GenMatchGrandmother10Status)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchGrandmother10Status)[idx];
+        };
         accessors["L1_GenMatchGrandmother10Status"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return (*e->LL_Lepton1GenMatchGrandmother10Status)[idx];
@@ -2671,6 +2881,20 @@ namespace roast {
                 return (*e->TLL_Lepton1GenMatchGrandmother10Status)[idx];
             }
             throw "";
+        };
+        accessors["osL_GenMatchGrandmother11Id"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1GenMatchGrandmother11Id)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchGrandmother11Id)[idx];
+        };
+        accessors["ssL_GenMatchGrandmother11Id"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1GenMatchGrandmother11Id)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchGrandmother11Id)[idx];
         };
         accessors["L1_GenMatchGrandmother11Id"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
@@ -2680,6 +2904,20 @@ namespace roast {
             }
             throw "";
         };
+        accessors["osL_GenMatchGrandmother11Status"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1GenMatchGrandmother11Status)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchGrandmother11Status)[idx];
+        };
+        accessors["ssL_GenMatchGrandmother11Status"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1GenMatchGrandmother11Status)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchGrandmother11Status)[idx];
+        };
         accessors["L1_GenMatchGrandmother11Status"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return (*e->LL_Lepton1GenMatchGrandmother11Status)[idx];
@@ -2687,6 +2925,20 @@ namespace roast {
                 return (*e->TLL_Lepton1GenMatchGrandmother11Status)[idx];
             }
             throw "";
+        };
+        accessors["osL_GenMatchId"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1GenMatchId)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchId)[idx];
+        };
+        accessors["ssL_GenMatchId"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1GenMatchId)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchId)[idx];
         };
         accessors["L1_GenMatchId"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
@@ -2696,6 +2948,20 @@ namespace roast {
             }
             throw "";
         };
+        accessors["osL_GenMatchMother0Id"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1GenMatchMother0Id)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchMother0Id)[idx];
+        };
+        accessors["ssL_GenMatchMother0Id"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1GenMatchMother0Id)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchMother0Id)[idx];
+        };
         accessors["L1_GenMatchMother0Id"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return (*e->LL_Lepton1GenMatchMother0Id)[idx];
@@ -2703,6 +2969,20 @@ namespace roast {
                 return (*e->TLL_Lepton1GenMatchMother0Id)[idx];
             }
             throw "";
+        };
+        accessors["osL_GenMatchMother0Status"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1GenMatchMother0Status)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchMother0Status)[idx];
+        };
+        accessors["ssL_GenMatchMother0Status"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1GenMatchMother0Status)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchMother0Status)[idx];
         };
         accessors["L1_GenMatchMother0Status"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
@@ -2712,6 +2992,20 @@ namespace roast {
             }
             throw "";
         };
+        accessors["osL_GenMatchMother1Id"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1GenMatchMother1Id)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchMother1Id)[idx];
+        };
+        accessors["ssL_GenMatchMother1Id"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1GenMatchMother1Id)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchMother1Id)[idx];
+        };
         accessors["L1_GenMatchMother1Id"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return (*e->LL_Lepton1GenMatchMother1Id)[idx];
@@ -2719,6 +3013,20 @@ namespace roast {
                 return (*e->TLL_Lepton1GenMatchMother1Id)[idx];
             }
             throw "";
+        };
+        accessors["osL_GenMatchMother1Status"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1GenMatchMother1Status)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchMother1Status)[idx];
+        };
+        accessors["ssL_GenMatchMother1Status"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1GenMatchMother1Status)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchMother1Status)[idx];
         };
         accessors["L1_GenMatchMother1Status"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
@@ -2728,6 +3036,20 @@ namespace roast {
             }
             throw "";
         };
+        accessors["osL_GenMatchStatus"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1GenMatchStatus)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchStatus)[idx];
+        };
+        accessors["ssL_GenMatchStatus"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1GenMatchStatus)[idx];
+            }
+            return (*e->TLL_Lepton2GenMatchStatus)[idx];
+        };
         accessors["L1_GenMatchStatus"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return (*e->LL_Lepton1GenMatchStatus)[idx];
@@ -2735,6 +3057,20 @@ namespace roast {
                 return (*e->TLL_Lepton1GenMatchStatus)[idx];
             }
             throw "";
+        };
+        accessors["osL_ImpactParameter"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1ImpactParameter)[idx];
+            }
+            return (*e->TLL_Lepton2ImpactParameter)[idx];
+        };
+        accessors["ssL_ImpactParameter"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1ImpactParameter)[idx];
+            }
+            return (*e->TLL_Lepton2ImpactParameter)[idx];
         };
         accessors["L1_ImpactParameter"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
@@ -2744,6 +3080,20 @@ namespace roast {
             }
             throw "";
         };
+        accessors["osL_IsElectron"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1IsElectron)[idx];
+            }
+            return (*e->TLL_Lepton2IsElectron)[idx];
+        };
+        accessors["ssL_IsElectron"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1IsElectron)[idx];
+            }
+            return (*e->TLL_Lepton2IsElectron)[idx];
+        };
         accessors["L1_IsElectron"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return (*e->LL_Lepton1IsElectron)[idx];
@@ -2751,6 +3101,20 @@ namespace roast {
                 return (*e->TLL_Lepton1IsElectron)[idx];
             }
             throw "";
+        };
+        accessors["osL_IsLoose"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1IsLoose)[idx];
+            }
+            return (*e->TLL_Lepton2IsLoose)[idx];
+        };
+        accessors["ssL_IsLoose"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1IsLoose)[idx];
+            }
+            return (*e->TLL_Lepton2IsLoose)[idx];
         };
         accessors["L1_IsLoose"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
@@ -2760,6 +3124,20 @@ namespace roast {
             }
             throw "";
         };
+        accessors["osL_IsMuon"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1IsMuon)[idx];
+            }
+            return (*e->TLL_Lepton2IsMuon)[idx];
+        };
+        accessors["ssL_IsMuon"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1IsMuon)[idx];
+            }
+            return (*e->TLL_Lepton2IsMuon)[idx];
+        };
         accessors["L1_IsMuon"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return (*e->LL_Lepton1IsMuon)[idx];
@@ -2767,6 +3145,20 @@ namespace roast {
                 return (*e->TLL_Lepton1IsMuon)[idx];
             }
             throw "";
+        };
+        accessors["osL_IsTight"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1IsTight)[idx];
+            }
+            return (*e->TLL_Lepton2IsTight)[idx];
+        };
+        accessors["ssL_IsTight"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1IsTight)[idx];
+            }
+            return (*e->TLL_Lepton2IsTight)[idx];
         };
         accessors["L1_IsTight"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
@@ -2776,6 +3168,20 @@ namespace roast {
             }
             throw "";
         };
+        accessors["osL_Mt"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1Mt)[idx];
+            }
+            return (*e->TLL_Lepton2Mt)[idx];
+        };
+        accessors["ssL_Mt"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1Mt)[idx];
+            }
+            return (*e->TLL_Lepton2Mt)[idx];
+        };
         accessors["L1_Mt"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return (*e->LL_Lepton1Mt)[idx];
@@ -2783,6 +3189,20 @@ namespace roast {
                 return (*e->TLL_Lepton1Mt)[idx];
             }
             throw "";
+        };
+        accessors["osL_Mt2"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1Mt2)[idx];
+            }
+            return (*e->TLL_Lepton2Mt2)[idx];
+        };
+        accessors["ssL_Mt2"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1Mt2)[idx];
+            }
+            return (*e->TLL_Lepton2Mt2)[idx];
         };
         accessors["L1_Mt2"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
@@ -2792,6 +3212,20 @@ namespace roast {
             }
             throw "";
         };
+        accessors["osL_Phi"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1Phi)[idx];
+            }
+            return (*e->TLL_Lepton2Phi)[idx];
+        };
+        accessors["ssL_Phi"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1Phi)[idx];
+            }
+            return (*e->TLL_Lepton2Phi)[idx];
+        };
         accessors["L1_Phi"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return (*e->LL_Lepton1Phi)[idx];
@@ -2800,6 +3234,20 @@ namespace roast {
             }
             throw "";
         };
+        accessors["osL_Pt"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1Pt)[idx];
+            }
+            return (*e->TLL_Lepton2Pt)[idx];
+        };
+        accessors["ssL_Pt"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1Pt)[idx];
+            }
+            return (*e->TLL_Lepton2Pt)[idx];
+        };
         accessors["L1_Pt"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return (*e->LL_Lepton1Pt)[idx];
@@ -2807,6 +3255,20 @@ namespace roast {
                 return (*e->TLL_Lepton1Pt)[idx];
             }
             throw "";
+        };
+        accessors["osL_RelIso"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_Lepton1RelIso)[idx];
+            }
+            return (*e->TLL_Lepton2RelIso)[idx];
+        };
+        accessors["ssL_RelIso"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_Lepton1RelIso)[idx];
+            }
+            return (*e->TLL_Lepton2RelIso)[idx];
         };
         accessors["L1_RelIso"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
@@ -3356,14 +3818,6 @@ namespace roast {
         accessors["MET"] = [](Branches *b, int idx, int n) -> float {
             return b->Ev_MET;
         };
-        accessors["METcov"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return (*e->Ev_METcov)[idx];
-            } else if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return (*e->Ev_METcov)[idx];
-            }
-            throw "";
-        };
         accessors["METphi"] = [](Branches *b, int idx, int n) -> float {
             return b->Ev_METphi;
         };
@@ -3383,12 +3837,7 @@ namespace roast {
             throw;
         };
         accessors["NTruePV"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return e->Ev_NTruePV;
-            } else if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return e->Ev_NTruePV;
-            }
-            throw "";
+            return b->Ev_NTruePV;
         };
         accessors["J_NumCSVL"] = [](Branches *b, int idx, int n) -> float {
             return (*b->NumCSVLbtagJets)[idx];
@@ -4510,6 +4959,20 @@ namespace roast {
             }
             throw;
         };
+        accessors["TosL_CosDeltaPhi"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_TauLepton1CosDeltaPhi)[idx];
+            }
+            return (*e->TLL_TauLepton2CosDeltaPhi)[idx];
+        };
+        accessors["TssL_CosDeltaPhi"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_TauLepton1CosDeltaPhi)[idx];
+            }
+            return (*e->TLL_TauLepton2CosDeltaPhi)[idx];
+        };
         accessors["TL1_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return (*e->LL_TauLepton1CosDeltaPhi)[idx];
@@ -4517,6 +4980,20 @@ namespace roast {
                 return (*e->TLL_TauLepton1CosDeltaPhi)[idx];
             }
             throw "";
+        };
+        accessors["TosL_DeltaR"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_TauLepton1DeltaR)[idx];
+            }
+            return (*e->TLL_TauLepton2DeltaR)[idx];
+        };
+        accessors["TssL_DeltaR"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_TauLepton1DeltaR)[idx];
+            }
+            return (*e->TLL_TauLepton2DeltaR)[idx];
         };
         accessors["TL1_DeltaR"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
@@ -4526,6 +5003,20 @@ namespace roast {
             }
             throw "";
         };
+        accessors["TosL_METMass"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_TauLepton1METMass)[idx];
+            }
+            return (*e->TLL_TauLepton2METMass)[idx];
+        };
+        accessors["TssL_METMass"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_TauLepton1METMass)[idx];
+            }
+            return (*e->TLL_TauLepton2METMass)[idx];
+        };
         accessors["TL1_METMass"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return (*e->LL_TauLepton1METMass)[idx];
@@ -4533,6 +5024,20 @@ namespace roast {
                 return (*e->TLL_TauLepton1METMass)[idx];
             }
             throw "";
+        };
+        accessors["TosL_VisibleMass"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] < 0) {
+                return (*e->TLL_TauLepton1VisibleMass)[idx];
+            }
+            return (*e->TLL_TauLepton2VisibleMass)[idx];
+        };
+        accessors["TssL_VisibleMass"] = [](roast::Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            if ((*e->TLL_Lepton1Charge)[idx] * (*e->TLL_TauCharge)[idx] > 0) {
+                return (*e->TLL_TauLepton1VisibleMass)[idx];
+            }
+            return (*e->TLL_TauLepton2VisibleMass)[idx];
         };
         accessors["TL1_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {

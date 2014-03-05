@@ -45,6 +45,7 @@ ttl::Branches::Clear()
     TTL_LeptonMomentumRank->clear();
     TTL_LeptonMt->clear();
     TTL_LeptonMt2->clear();
+    TTL_LeptonP->clear();
     TTL_LeptonPhi->clear();
     TTL_LeptonPt->clear();
     TTL_LeptonRelIso->clear();
@@ -132,6 +133,7 @@ ttl::Branches::Clear()
     TTL_Tau1NProngs->clear();
     TTL_Tau1NSignalGammas->clear();
     TTL_Tau1NSignalNeutrals->clear();
+    TTL_Tau1P->clear();
     TTL_Tau1Phi->clear();
     TTL_Tau1Pt->clear();
     TTL_Tau2Charge->clear();
@@ -214,6 +216,7 @@ ttl::Branches::Clear()
     TTL_Tau2NProngs->clear();
     TTL_Tau2NSignalGammas->clear();
     TTL_Tau2NSignalNeutrals->clear();
+    TTL_Tau2P->clear();
     TTL_Tau2Phi->clear();
     TTL_Tau2Pt->clear();
     // >>> End clear <<<
@@ -261,6 +264,7 @@ ttl::Branches::Delete()
     delete TTL_LeptonMomentumRank;
     delete TTL_LeptonMt;
     delete TTL_LeptonMt2;
+    delete TTL_LeptonP;
     delete TTL_LeptonPhi;
     delete TTL_LeptonPt;
     delete TTL_LeptonRelIso;
@@ -345,6 +349,7 @@ ttl::Branches::Delete()
     delete TTL_Tau1NProngs;
     delete TTL_Tau1NSignalGammas;
     delete TTL_Tau1NSignalNeutrals;
+    delete TTL_Tau1P;
     delete TTL_Tau1Phi;
     delete TTL_Tau1Pt;
     delete TTL_Tau2Charge;
@@ -427,6 +432,7 @@ ttl::Branches::Delete()
     delete TTL_Tau2NProngs;
     delete TTL_Tau2NSignalGammas;
     delete TTL_Tau2NSignalNeutrals;
+    delete TTL_Tau2P;
     delete TTL_Tau2Phi;
     delete TTL_Tau2Pt;
     // >>> End delete <<<
@@ -474,6 +480,7 @@ ttl::Branches::Null()
     TTL_LeptonMomentumRank = 0;
     TTL_LeptonMt = 0;
     TTL_LeptonMt2 = 0;
+    TTL_LeptonP = 0;
     TTL_LeptonPhi = 0;
     TTL_LeptonPt = 0;
     TTL_LeptonRelIso = 0;
@@ -561,6 +568,7 @@ ttl::Branches::Null()
     TTL_Tau1NProngs = 0;
     TTL_Tau1NSignalGammas = 0;
     TTL_Tau1NSignalNeutrals = 0;
+    TTL_Tau1P = 0;
     TTL_Tau1Phi = 0;
     TTL_Tau1Pt = 0;
     TTL_Tau2Charge = 0;
@@ -643,6 +651,7 @@ ttl::Branches::Null()
     TTL_Tau2NProngs = 0;
     TTL_Tau2NSignalGammas = 0;
     TTL_Tau2NSignalNeutrals = 0;
+    TTL_Tau2P = 0;
     TTL_Tau2Phi = 0;
     TTL_Tau2Pt = 0;
     // >>> End null <<<
@@ -711,6 +720,7 @@ ttl::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TTL_LeptonMomentumRank", &TTL_LeptonMomentumRank);
     fChain->SetBranchAddress("TTL_LeptonMt", &TTL_LeptonMt);
     fChain->SetBranchAddress("TTL_LeptonMt2", &TTL_LeptonMt2);
+    fChain->SetBranchAddress("TTL_LeptonP", &TTL_LeptonP);
     fChain->SetBranchAddress("TTL_LeptonPhi", &TTL_LeptonPhi);
     fChain->SetBranchAddress("TTL_LeptonPt", &TTL_LeptonPt);
     fChain->SetBranchAddress("TTL_LeptonRelIso", &TTL_LeptonRelIso);
@@ -820,6 +830,7 @@ ttl::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TTL_Tau1NProngs", &TTL_Tau1NProngs);
     fChain->SetBranchAddress("TTL_Tau1NSignalGammas", &TTL_Tau1NSignalGammas);
     fChain->SetBranchAddress("TTL_Tau1NSignalNeutrals", &TTL_Tau1NSignalNeutrals);
+    fChain->SetBranchAddress("TTL_Tau1P", &TTL_Tau1P);
     fChain->SetBranchAddress("TTL_Tau1Phi", &TTL_Tau1Phi);
     fChain->SetBranchAddress("TTL_Tau1Pt", &TTL_Tau1Pt);
     fChain->SetBranchAddress("TTL_Tau2Charge", &TTL_Tau2Charge);
@@ -902,6 +913,7 @@ ttl::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TTL_Tau2NProngs", &TTL_Tau2NProngs);
     fChain->SetBranchAddress("TTL_Tau2NSignalGammas", &TTL_Tau2NSignalGammas);
     fChain->SetBranchAddress("TTL_Tau2NSignalNeutrals", &TTL_Tau2NSignalNeutrals);
+    fChain->SetBranchAddress("TTL_Tau2P", &TTL_Tau2P);
     fChain->SetBranchAddress("TTL_Tau2Phi", &TTL_Tau2Phi);
     fChain->SetBranchAddress("TTL_Tau2Pt", &TTL_Tau2Pt);
     // >>> End address <<<

@@ -69,7 +69,9 @@ namespace roast {
             std::vector<float>* E_Pt;
             Bool_t Ev_IsTauEvent;
             Double_t Ev_MET;
+            std::vector<double>* Ev_METcov;
             Double_t Ev_METphi;
+            Int_t Ev_NTruePV;
             Int_t Ev_bQuarkCount;
             Int_t Ev_cQuarkCount;
             Double_t Ev_eventNumber;
