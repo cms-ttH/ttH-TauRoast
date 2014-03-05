@@ -47,7 +47,7 @@ def gather_type_info(filename, channel):
         results.append((channel, start, end, cls, ptr))
     return results
 
-def generate_accessor_info(vars):
+def generate_accessor_info(vars, common_vars):
     attrs = {}
     for (chan, pre, stem, type, ptr) in vars:
         # capitalize first letter
@@ -76,12 +76,17 @@ def generate_accessor_info(vars):
 
                 name = name.replace(m.group(0), lep + '_')
 
+        if stem in common_vars:
+            varname = stem
+        else:
+            varname = pre + '_' + stem
+
         if name in attrs:
             if chan in attrs[name].channels:
                 continue
-            attrs[name].channels[chan] = (type, ptr)
+            attrs[name].channels[chan] = (varname, type, ptr)
         else:
-            attrs[name] = Attr(pre, stem, {chan: (type, ptr)})
+            attrs[name] = Attr(pre, stem, {chan: (varname, type, ptr)})
     return attrs
 
 def generate_type_info(channel, vars, common_vars, indent=16):
@@ -321,25 +326,32 @@ for fn in sorted(fct_names.keys()):
         # lines.append(indent * 3 + 'return -1. / 0.;\n')
         lines.append(indent * 2 + '};\n')
 
-attrs = generate_accessor_info(vars)
+attrs = generate_accessor_info(vars, common_vars)
 
 # Now turn to branches
-def generate_return_line(obj, varname, typeinfo, idx='idx', subidx=None, safe=False):
-    if not isinstance(typeinfo, dict):
-        cnt = typeinfo.count('vector')
+def generate_return_line(obj, typeinfo, reindex=False, safe=False):
+    types = set(typeinfo.values())
+    idx = 'idx'
+    subidx = 'n'
+    if len(types) == 1 and len(typeinfo.keys()) == len(channels):
+        (varname, type, ptr) = list(types)[0]
+        cnt = type.count('vector')
 
         if cnt not in returns:
             raise TypeError
 
-        if cnt == 2 and subidx == None:
-            subidx = 'n'
+        if reindex:
+            if cnt == 1:
+                idx = 'i'
+            elif cnt == 2:
+                subidx = 'i'
 
         if safe:
-            return returns[cnt].replace("[{2}]", ".at({2})").replace("[{3}]", ".at({3})").format(obj, varname, idx, subidx)
-        return returns[cnt].format(obj, varname, idx, subidx)
+            return returns[cnt].replace("[{2}]", ".at({2})").replace("[{3}]", ".at({3})").format('b', varname, idx, subidx)
+        return returns[cnt].format('b', varname, idx, subidx)
     else:
         lines = []
-        for (chan, (type, ptr)) in typeinfo.items():
+        for (chan, (varname, type, ptr)) in typeinfo.items():
             cnt = type.count('vector')
             ret_line = returns[cnt]
 
@@ -348,14 +360,16 @@ def generate_return_line(obj, varname, typeinfo, idx='idx', subidx=None, safe=Fa
                 varname = chan + '_' + parts[1]
 
             nidx = idx
-            if cnt == 2 and subidx == None:
-                raise "foo"
-            elif cnt == 1 and subidx != None:
-                nidx = subidx
+            nsubidx = subidx
+            if reindex:
+                if cnt == 1:
+                    nidx = 'i'
+                elif cnt == 2:
+                    nsubidx = 'i'
 
             if safe:
                 ret_line = ret_line.replace("[{2}]", ".at({2})").replace("[{3}]", ".at({3})")
-            lines.append(cast_template.format(chan.lower(), ret_line.format('e', varname, nidx, subidx)))
+            lines.append(cast_template.format(chan.lower(), ret_line.format('e', varname, nidx, nsubidx)))
         return " else ".join(lines) + throw_template
 
 jets = 'LJ SubLJ SubSubLJ SubSubSubLJ'.split()
@@ -364,8 +378,8 @@ for accessor in sorted(attrs.keys()):
     (pre, var, chans) = attrs[accessor]
 
     # consolidate type information
-    types = set(chans.values())
-    if len(types) == 1 and 'LorentzVector' in list(types)[0][0]:
+    types = set([type for (varname, type, ptr) in chans.values()])
+    if len(types) == 1 and 'LorentzVector' in list(types)[0]:
         # cannot do anything with a LorentzVector at the moment
         continue
 
@@ -390,108 +404,45 @@ for accessor in sorted(attrs.keys()):
     # camel case correctly
     accessor = accessor.replace("raw", "Raw")
 
-    # Fix J_Lepton -> JL_ etc...
+    # convert convention for jet variables
     if pre == 'J':
         for (particle, count) in re.findall('(Tau|Lepton)(\d)?', accessor):
             accessor = accessor.replace('_', particle[0] + count + '_', 1).replace(particle + count, '', 1)
 
-    if len(types) == 1:
-        (type, ptr) = list(types)[0]
-        cnt = type.count('vector')
-        if len(chans.items()) == len(channels):
-            chans = {}
-
     try:
         tmp_lines = []
-        tmp_lines.append(indent * 2 + declare.format(accessor))
 
-        if len(chans.items()) < 2:
-            if pre in channels and var in common_vars:
-                prefix = ""
-                varname = var
-            else:
-                prefix = pre
-                varname = prefix + '_' + var
-
-            obj = 'b'
-            idx = 'idx' if pre in channels else 'n'
-            if len(chans) == 1:
-                type = chans
-
-            if prefix in channels:
-                # Regular channel variable
-                chan = prefix.lower()
-                varname = prefix + "_" + var
-                obj = 'e'
-                # tmp_lines.append(indent * 3 + cast.format(chan) + ';\n')
-
-                # For OS TLL, we can fix the tau + tau->lepton system
-                if prefix == 'TLL' and 'Lepton1' in var and 'Lepton2' not in var:
-                    varname = prefix + '_' + var
-                    lines += tll_template.format("<", accessor.replace('L1', 'osL'), varname, varname.replace('Lepton1', 'Lepton2'))
-                    lines += tll_template.format(">", accessor.replace('L1', 'ssL'), varname, varname.replace('Lepton1', 'Lepton2'))
-
-            elif prefix == 'J' and ptr and (('BTag' not in var) or var == 'combSecVtxBTag') and var != 'CSV':
-                print "GOTCHA"
-                if var == 'combSecVtxBTag':
-                    accessor = accessor.replace('CombSecVtxBTag', 'CSV')
-
-                jet_lines = []
-
-                for (particle, count) in re.findall('(Tau|Lepton)(\d)?', accessor):
-                    accessor = accessor.replace('_', particle[0] + count + '_', 1).replace(particle + count, '', 1)
-
-                for (label, index_statement) in reindex:
-                    index = 'i' if cnt == 1 else 'idx'
-                    subindex = 'n' if cnt == 1 else 'i'
-                    jet_lines.append(indent * 2 + declare.format(label + accessor))
-                    jet_lines.append(indent * 3 + index_statement.format('n'))
-                    jet_lines.append(indent * 3 + generate_return_line(obj, varname, type, idx=index, subidx=subindex, safe=True) + '\n')
-                    jet_lines.append(indent * 2 + '};\n')
-
-                    # leading jet etc.
-                    for (n, j) in enumerate(jets):
-                        new_key = label + accessor.replace('J', j)
-                        jet_lines.append(indent * 2 + declare.format(new_key))
-                        jet_lines.append(indent * 3 + index_statement.format(n))
-                        jet_lines.append(indent * 3 + generate_return_line(obj, varname, type, idx=index, subidx=subindex, safe=True) + '\n')
-                        jet_lines.append(indent * 2 + '};\n')
-                lines += jet_lines
-            elif ptr and prefix != '':
-                continue
-            tmp_lines.append(indent * 3 + generate_return_line(obj, varname, type) + '\n')
-        elif len(chans.items()) == 1 and pre + '_' + var in single_var_names:
-            raise
-        else:
-            cond = 'if ('
-            first = True
-
-            if 'TLL' in chans and 'Lepton1' in var and 'Lepton2' not in var and pre != 'J':
-                varname = "TLL_" + var
+        # For OS TLL, we can fix the tau + tau->lepton system
+        if 'TLL' in chans:
+            varname = chans['TLL'][0]
+            if chans['TLL'][1].count('vector') == 1 \
+                    and 'Lepton1' in varname and 'Lepton2' not in varname:
                 lines += tll_template.format("<", accessor.replace('L1', 'osL'), varname, varname.replace('Lepton1', 'Lepton2'))
                 lines += tll_template.format(">", accessor.replace('L1', 'ssL'), varname, varname.replace('Lepton1', 'Lepton2'))
 
-            if pre == 'J':
-                print "GOTCHA NOW", accessor
-                varname = pre + "_" + var
-                print varname, type
-                # print types
-                # print chans
+        if pre != 'J':
+            tmp_lines.append(indent * 2 + declare.format(accessor))
+            if pre not in channels and pre != 'Ev':
+                if 'Num' not in accessor:
+                    continue
+            print accessor
+            tmp_lines.append(indent * 3 + generate_return_line('b', chans) + '\n')
+        else:
+            if var == 'combSecVtxBTag':
+                accessor = accessor.replace('CombSecVtxBTag', 'CSV')
+            elif var == 'CSV' or 'BTag' in var or var == 'MomentumRank':
+                continue
 
-                if var == 'combSecVtxBTag':
-                    accessor = accessor.replace('CombSecVtxBTag', 'CSV')
+            jet_lines = []
 
-                jet_lines = []
+            tmp_lines.append(indent * 2 + declare.format(accessor))
+            tmp_lines.append(indent * 3 + generate_return_line('b', chans) + '\n')
 
-                for (particle, count) in re.findall('(Tau|Lepton)(\d)?', accessor):
-                    accessor = accessor.replace('_', particle[0] + count + '_', 1).replace(particle + count, '', 1)
-
+            if 'Num' not in var:
                 for (label, index_statement) in reindex:
-                    index = 'i' if cnt == 1 else 'idx'
-                    subindex = 'n' if cnt == 1 else 'i'
                     jet_lines.append(indent * 2 + declare.format(label + accessor))
                     jet_lines.append(indent * 3 + index_statement.format('n'))
-                    jet_lines.append(indent * 3 + generate_return_line(obj, varname, chans, idx=index, subidx=subindex, safe=True) + '\n')
+                    jet_lines.append(indent * 3 + generate_return_line('b', chans, reindex=True, safe=True) + '\n')
                     jet_lines.append(indent * 2 + '};\n')
 
                     # leading jet etc.
@@ -499,31 +450,15 @@ for accessor in sorted(attrs.keys()):
                         new_key = label + accessor.replace('J', j)
                         jet_lines.append(indent * 2 + declare.format(new_key))
                         jet_lines.append(indent * 3 + index_statement.format(n))
-                        jet_lines.append(indent * 3 + generate_return_line(obj, varname, chans, idx=index, subidx=subindex, safe=True) + '\n')
+                        jet_lines.append(indent * 3 + generate_return_line('b', chans, reindex=True, safe=True) + '\n')
                         jet_lines.append(indent * 2 + '};\n')
                 lines += jet_lines
 
-            for (chan, (type, ptr)) in chans.items():
-                if var not in shared_var_names and pre not in channels:
-                    varname = pre + "_" + var
-                elif var not in shared_var_names:
-                    varname = chan + "_" + var
-                else:
-                    varname = var
-                tmp_lines.append(indent * 3 + cond + cast.format(chan.lower()) + ') {\n')
-                tmp_lines.append(indent * 4 + generate_return_line('e', varname, type) + '\n')
-
-                if first:
-                    first = False
-                    cond = '} else ' + cond
-            tmp_lines.append(indent * 3 + '}\n')
-            tmp_lines.append(indent * 3 + 'throw "";\n')
-            # tmp_lines.append(indent * 3 + 'return -1. / 0.;\n')
         tmp_lines.append(indent * 2 + '};\n')
 
         lines += tmp_lines
     except ValueError as e:
-        print 'cannot associate {0} with a valid channel'.format(e)
+        print 'cannot associate {0} with a valid channel: {1}'.format(accessor, e)
     except TypeError as e:
         print '{0} is of unprocessable type'.format(accessor)
 
