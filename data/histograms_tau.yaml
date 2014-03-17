@@ -63,7 +63,7 @@ T1_Pt:
     dir: tau
     channels: [ttl]
     binning: [30, 0, 150]
-    axis labels: ["#tau_{1} p_{T}", Events]
+    axis labels: ["#tau_{h} 1 p_{T} (GeV)", Events]
     visible: [20, 100]
     showOF: true
     logy: 1
@@ -689,7 +689,7 @@ DitauVisibleMass:
     dir: tau
     channels: [ttl]
     binning: [30, 0, 200]
-    axis labels: ["Visible Mass #tau_{1, 2}", Events]
+    axis labels: ["M_{vis} (GeV)", Events]
     visible: [0, 200]
     showOF: true
     logy: 1
