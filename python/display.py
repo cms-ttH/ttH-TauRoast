@@ -345,7 +345,7 @@ def stack(config, processes):
 
     plot_ratio = True
 
-    for histname in config['histograms'].keys():
+    for (histname, histcfg) in config['histograms'].items():
         try:
             if all(map(lambda v: v <= 0, get_integrals(histname, procs))):
                 logging.warn("empty histogram: %s", histname)
@@ -361,6 +361,10 @@ def stack(config, processes):
                 with create_plot(config, histname, is2d=True, plot_ratio=False, procname=p.GetShortName()) as (scale, pad1,):
                     pad1.cd()
                     h = p.GetHistogram(histname)
+                    if len(histcfg['axis labels']) == 3:
+                        h.SetTitle(";{0};{1};{2}".format(*histcfg['axis labels']))
+                    else:
+                        h.SetTitle(";{0};{1}".format(*histcfg['axis labels']))
                     style.setup_upper_axis(h, False)
                     h.Draw("COLZ")
         else:
@@ -391,6 +395,7 @@ def stack(config, processes):
                 style.setup_upper_axis(base_histo)
                 base_histo.GetYaxis().SetRangeUser(0.002, max_y)
                 # base_histo.GetXaxis().SetRangeUser(base_histo.GetMinXVis(), base_histo.GetMaxXVis())
+                base_histo.SetTitle(";{0};{1}".format(*histcfg['axis labels']))
                 base_histo.Draw("hist")
 
                 bkg_stack.Draw("hist same")
@@ -464,6 +469,7 @@ def stack(config, processes):
 
                     # ratio.GetXaxis().SetRangeUser(
                             # bkg_sum.GetMinXVis(), bkg_sum.GetMaxXVis())
+                    ratio.SetTitle(";{0};{1}".format(*histcfg['axis labels']))
                     style.setup_lower_axis(ratio)
                     ratio.Draw("axis")
 
