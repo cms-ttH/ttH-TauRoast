@@ -31,7 +31,7 @@ def draw_channel_info(config, plot_ratio):
             + extract_info(config, 'J_NumCleanCSVM', 'b-tag'))
     tex.SetTextSize(0.055 * scale)
     tex.SetTextAlign(11)
-    tex.DrawLatex(0.14, 0.91, "CMS Preliminary")
+    tex.DrawLatex(0.14, 0.91, "CMS")
     tex.SetTextAlign(31)
     tex.DrawLatex(1 - r.gPad.GetRightMargin(), 0.91, "#sqrt{s} = 8 TeV, L = 19.3 fb^{-1}")
 
