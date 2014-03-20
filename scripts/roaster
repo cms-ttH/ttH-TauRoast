@@ -17,6 +17,12 @@ parser.add_option("-a", "--analyze",
         action="store_true",
         dest="analyze",
         help="analyze processes")
+parser.add_option("--dump-file",
+        action="store",
+        dest="dump_file",
+        default=None,
+        metavar="FILE",
+        help="store dumped histograms in FILE")
 parser.add_option("-f", "--fill",
         action="store_true",
         dest="fill",
@@ -154,6 +160,9 @@ elif channel == 'ttl':
 else:
     logging.critical('invalid channel "{0}"'.format(channel))
     sys.exit(1)
+
+if opts.dump_file:
+    baseconfig['paths']['dump file'] = opts.dump_file
 
 if opts.max:
     baseconfig['analysis']['max events'] = opts.max

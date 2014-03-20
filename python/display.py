@@ -495,11 +495,15 @@ def stack(config, processes):
                     style.setup_lower_axis(ratio)
                     ratio.Draw("axis")
 
-                    if 'dump' in cfg:
+                    if 'dump' in cfg and cfg['dump']:
                         bins = [ratio.GetBinLowEdge(b) for b in xrange(1, ratio.GetNbinsX() + 2)]
                         content = [ratio.GetBinContent(b) for b in xrange(ratio.GetNbinsX() + 2)]
                         print bins
                         print content
+                        if 'dump file' in config['paths']:
+                            f = r.TFile(config['paths']['dump file'], 'UPDATE')
+                            f.WriteObject(ratio, "data_mc_ratio")
+                            f.Close()
 
                     bkg_err = base_histo.GetHisto().Clone()
                     for i in range(bkg_err.GetNbinsX()):
