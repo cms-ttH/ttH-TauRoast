@@ -383,7 +383,7 @@ def stack(config, processes):
                 raise
                 pass
 
-            with create_plot(config, histname, is2d=True, plot_ratio=False, procname="Bkg") as (scale, pad1,):
+            with create_plot(config, histname, is2d=True, plot_ratio=False, procname="Background") as (scale, pad1,):
                 pad1.cd()
                 h = bkg_sum.GetHisto()
                 if len(cfg['axis labels']) == 3:
