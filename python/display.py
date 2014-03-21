@@ -363,6 +363,37 @@ def stack(config, processes):
         logging.info("plotting %s", histname)
 
         if procs[0].GetHistogram(histname).ClassName().startswith("TH2"):
+            bkg_sum = get_bkg_sum(histname, procs)
+            zmax = bkg_sum.GetMaximum()
+
+            try:
+                coll = get_collisions(procs)
+                ratio = coll.GetHistogram(histname).Clone()
+                zmax = max(zmax, ratio.GetMaximum())
+                ratio.Divide(bkg_sum.GetHisto())
+                ratio.SetMarkerColor(r.kWhite)
+                ratio.SetMarkerSize(1.5)
+                ratio.SetMarkerSize(0.8)
+                with create_plot(config, histname, is2d=True, plot_ratio=False, procname="Data-MC") as (scale, pad1,):
+                    pad1.cd()
+                    style.setup_upper_axis(ratio, scale=False, is2d=True)
+                    r.gStyle.SetPaintTextFormat("4.2f");
+                    ratio.Draw("COLZ TEXT E")
+            except:
+                raise
+                pass
+
+            with create_plot(config, histname, is2d=True, plot_ratio=False, procname="Bkg") as (scale, pad1,):
+                pad1.cd()
+                h = bkg_sum.GetHisto()
+                if len(cfg['axis labels']) == 3:
+                    h.SetTitle(";{0};{1};{2}".format(*cfg['axis labels']))
+                else:
+                    h.SetTitle(";{0};{1}".format(*cfg['axis labels']))
+                style.setup_upper_axis(h, scale=False, is2d=True)
+                h.GetZaxis().SetRangeUser(0., zmax)
+                h.Draw("COLZ")
+
             for p in procs:
                 with create_plot(config, histname, is2d=True, plot_ratio=False, procname=p.GetShortName()) as (scale, pad1,):
                     pad1.cd()
@@ -372,33 +403,8 @@ def stack(config, processes):
                     else:
                         h.SetTitle(";{0};{1}".format(*cfg['axis labels']))
                     style.setup_upper_axis(h, scale=False, is2d=True)
+                    h.GetZaxis().SetRangeUser(0., zmax)
                     h.Draw("COLZ")
-
-            bkg_sum = get_bkg_sum(histname, procs)
-            with create_plot(config, histname, is2d=True, plot_ratio=False, procname="Bkg") as (scale, pad1,):
-                pad1.cd()
-                h = bkg_sum.GetHisto()
-                if len(cfg['axis labels']) == 3:
-                    h.SetTitle(";{0};{1};{2}".format(*cfg['axis labels']))
-                else:
-                    h.SetTitle(";{0};{1}".format(*cfg['axis labels']))
-                style.setup_upper_axis(h, scale=False, is2d=True)
-                h.Draw("COLZ")
-
-            try:
-                coll = get_collisions(procs)
-                ratio = coll.GetHistogram(histname).Clone()
-                ratio.Divide(bkg_sum.GetHisto())
-                ratio.SetMarkerColor(r.kWhite)
-                ratio.SetMarkerSize(1.5)
-                with create_plot(config, histname, is2d=True, plot_ratio=False, procname="Data-MC") as (scale, pad1,):
-                    pad1.cd()
-                    style.setup_upper_axis(ratio, scale=False, is2d=True)
-                    r.gStyle.SetPaintTextFormat("4.2f");
-                    ratio.Draw("COLZ TEXT E")
-            except:
-                raise
-                pass
         else:
             base_histo = roast.HWrapper(procs[0].GetHistogram(histname))
 
