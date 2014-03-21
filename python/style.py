@@ -7,7 +7,7 @@ ratio_plot_max = 2.3
 small_number = 1e-5
 y_divide = 0.3
 
-def draw_channel_info(config, plot_ratio):
+def draw_channel_info(config, plot_ratio, is2d=False, proc=None):
     """Draws channel information based on cuts and standard CMS labelling and
     lumi information.  The parameter `plot_ratio` determines the text size."""
     if plot_ratio:
@@ -36,6 +36,8 @@ def draw_channel_info(config, plot_ratio):
             # + extract_info(config, 'J_NumCleanCSVM', 'b-tag'))
     tex.SetTextSize(0.055 * scale)
     tex.SetTextAlign(11)
+    if is2d and proc:
+        tex.DrawLatex(0.14, 0.84, proc)
     tex.DrawLatex(0.14, 0.91, "CMS Preliminary")
     tex.SetTextAlign(31)
     tex.DrawLatex(1 - r.gPad.GetRightMargin(), 0.91, "#sqrt{s} = 8 TeV, L = 19.5 fb^{-1}")

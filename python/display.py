@@ -279,7 +279,7 @@ def create_plot(config, histname, plot_ratio, is2d=False, procname="", hist=None
     if plot_ratio:
         canvas.cd(1)
 
-    style.draw_channel_info(config, plot_ratio)
+    style.draw_channel_info(config, plot_ratio, proc=procname, is2d=True)
 
     if plot_ratio:
         canvas.cd(2)
