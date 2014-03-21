@@ -375,6 +375,16 @@ def stack(config, processes):
                     h.Draw("COLZ")
 
             bkg_sum = get_bkg_sum(histname, procs)
+            with create_plot(config, histname, is2d=True, plot_ratio=False, procname="Bkg") as (scale, pad1,):
+                pad1.cd()
+                h = bkg_sum.GetHisto()
+                if len(cfg['axis labels']) == 3:
+                    h.SetTitle(";{0};{1};{2}".format(*cfg['axis labels']))
+                else:
+                    h.SetTitle(";{0};{1}".format(*cfg['axis labels']))
+                style.setup_upper_axis(h, scale=False, is2d=True)
+                h.Draw("COLZ")
+
             try:
                 coll = get_collisions(procs)
                 ratio = coll.GetHistogram(histname).Clone()
