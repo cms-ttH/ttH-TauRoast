@@ -155,9 +155,6 @@ def fill_histos(config, processes, module):
                         for (axis, labels) in zip(axes, histcfg['bin labels']):
                             for (n, l) in enumerate(labels):
                                 axis(h).SetBinLabel(n + 1, l)
-                    if 'visible' in histcfg:
-                        for (axis, range) in zip(axes, histcfg['visible']):
-                            axis(h).SetRangeUser(*map(float, range))
 
                     if 'max' in histcfg:
                         w = roast.HWrapper.Create2D(histcfg['dir'], h, xval, yval, histcfg['max'])
@@ -173,8 +170,6 @@ def fill_histos(config, processes, module):
                     if 'bin labels' in histcfg:
                         for (n, l) in enumerate(histcfg['bin labels']):
                             h.GetXaxis().SetBinLabel(n + 1, l)
-                    if 'visible' in histcfg:
-                        h.GetXaxis().SetRangeUser(*map(float, histcfg['visible']))
 
                     if xval == 'Weights':
                         w = roast.HWrapper(histcfg['dir'], h, 0, 0, 0)

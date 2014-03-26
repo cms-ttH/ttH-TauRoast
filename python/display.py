@@ -365,6 +365,7 @@ def stack(config, processes):
         if procs[0].GetHistogram(histname).ClassName().startswith("TH2"):
             bkg_sum = get_bkg_sum(histname, procs)
             zmax = bkg_sum.GetMaximum()
+            axes = [r.TH1.GetXaxis, r.TH1.GetYaxis]
 
             try:
                 coll = get_collisions(procs)
@@ -378,6 +379,11 @@ def stack(config, processes):
                     pad1.cd()
                     style.setup_upper_axis(ratio, scale=False, is2d=True)
                     r.gStyle.SetPaintTextFormat("4.2f");
+
+                    if 'visible' in cfg:
+                        for (axis, urange) in zip(axes, cfg['visible']):
+                            axis(ratio).SetRangeUser(*map(float, urange))
+
                     ratio.GetZaxis().SetRangeUser(0.33, 3.0)
                     ratio.GetZaxis().SetTitle("Data/MC")
                     ratio.Draw("COLZ TEXT")
@@ -388,6 +394,11 @@ def stack(config, processes):
             with create_plot(config, histname, is2d=True, plot_ratio=False, procname="Background") as (scale, pad1,):
                 pad1.cd()
                 h = bkg_sum.GetHisto()
+
+                if 'visible' in cfg:
+                    for (axis, urange) in zip(axes, cfg['visible']):
+                        axis(h).SetRangeUser(*map(float, urange))
+
                 if len(cfg['axis labels']) == 3:
                     h.SetTitle(";{0};{1};{2}".format(*cfg['axis labels']))
                 else:
@@ -399,7 +410,12 @@ def stack(config, processes):
             for p in procs:
                 with create_plot(config, histname, is2d=True, plot_ratio=False, procname=p.GetShortName()) as (scale, pad1,):
                     pad1.cd()
-                    h = p.GetHistogram(histname)
+                    h = p.GetHistogram(histname).GetHisto()
+
+                    if 'visible' in cfg:
+                        for (axis, urange) in zip(axes, cfg['visible']):
+                            axis(h).SetRangeUser(*map(float, urange))
+
                     if len(cfg['axis labels']) == 3:
                         h.SetTitle(";{0};{1};{2}".format(*cfg['axis labels']))
                     else:
@@ -436,6 +452,10 @@ def stack(config, processes):
                 base_histo.GetYaxis().SetRangeUser(0.002, max_y)
                 # base_histo.GetXaxis().SetRangeUser(base_histo.GetMinXVis(), base_histo.GetMaxXVis())
                 base_histo.SetTitle(";{0};{1}".format(*cfg['axis labels']))
+
+                if 'visible' in cfg:
+                    base_histo.GetXaxis().SetRangeUser(*map(float, cfg['visible']))
+
                 base_histo.Draw("hist")
 
                 bkg_stack.Draw("hist same")
@@ -511,6 +531,10 @@ def stack(config, processes):
                             # bkg_sum.GetMinXVis(), bkg_sum.GetMaxXVis())
                     ratio.SetTitle(";{0};{1}".format(*cfg['axis labels']))
                     style.setup_lower_axis(ratio)
+
+                    if 'visible' in cfg:
+                        ratio.GetXaxis().SetRangeUser(*map(float, cfg['visible']))
+
                     ratio.Draw("axis")
 
                     if 'dump' in cfg and cfg['dump']:
