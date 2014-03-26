@@ -378,7 +378,9 @@ def stack(config, processes):
                     pad1.cd()
                     style.setup_upper_axis(ratio, scale=False, is2d=True)
                     r.gStyle.SetPaintTextFormat("4.2f");
-                    ratio.Draw("COLZ TEXT E")
+                    ratio.GetZaxis().SetRangeUser(0.33, 3.0)
+                    ratio.GetZaxis().SetTitle("Data/MC")
+                    ratio.Draw("COLZ TEXT")
             except:
                 raise
                 pass

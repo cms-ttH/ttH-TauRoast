@@ -139,6 +139,19 @@ TTbar_FullLept:
     NOEinDS: 12119013
     NoEreadByNUTter: 414800
 
+WplusJets:
+    sampleNumber: 2400
+    niceName: W + jets
+    labelForLegend: W + jets
+    type: mcBackgroupnd
+    ntuplePath: [WplusJets_Summer12]
+    color: 92
+    crossSection: 36257
+    branchingRatio: 1
+    otherScaleFactor: 1
+    NOEinDS: 57709905
+    NoEreadByNUTter: -1
+
 WplusOneJet:
     sampleNumber: 2401
     niceName: W + 1 jet
@@ -726,7 +739,7 @@ EWK:
     niceName: EWK
     labelForLegend: EWK
     color: 862
-    combine: [ZplusJets_LowMass, ZplusJets_HighMass, ZplusOneJet, ZplusTwoJets, ZplusThreeJets, ZplusFourJets, WplusOneJet, WplusTwoJets, WplusThreeJets, WplusFourJets, WW, WZ, ZZ]
+    combine: [ZplusJets_LowMass, ZplusJets_HighMass, ZplusOneJet, ZplusTwoJets, ZplusThreeJets, ZplusFourJets, WplusJets, WplusOneJet, WplusTwoJets, WplusThreeJets, WplusFourJets, WW, WZ, ZZ]
 
 DiBoson:
     niceName: WW, WZ, ZZ
@@ -753,4 +766,4 @@ Wjets:
     labelForLegend: W + jets
     limit alias: wjets
     color: 861
-    combine: [WplusOneJet, WplusTwoJets, WplusThreeJets, WplusFourJets]
+    combine: [WplusJets, WplusOneJet, WplusTwoJets, WplusThreeJets, WplusFourJets]
