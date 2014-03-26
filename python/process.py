@@ -1,4 +1,5 @@
 # vim: ts=4:sw=4:et:sta
+import array
 import logging
 import math
 import os
@@ -142,6 +143,16 @@ def fill_histos(config, processes, module):
                 else:
                     values = [name]
 
+                bincfg = histcfg['binning']
+                if 'custom binning' in histcfg and histcfg['custom binning']:
+                    binning = []
+                    if not isinstance(bincfg[0], list):
+                        bincfg = [list(bincfg)]
+                    for bins in bincfg:
+                        binning += [len(bins) - 1, array.array('f', bins)]
+                else:
+                    binning = bincfg
+
                 if len(values) == 2:
                     (xval, yval) = values
                     axes = [r.TH1.GetXaxis, r.TH1.GetYaxis]
@@ -149,7 +160,7 @@ def fill_histos(config, processes, module):
                     h = r.TH2F(
                             name + str(random.randint(0, 1000000000)),
                             ';'.join([name] + histcfg['axis labels']),
-                            *histcfg['binning'])
+                            *binning)
 
                     if 'bin labels' in histcfg:
                         for (axis, labels) in zip(axes, histcfg['bin labels']):
@@ -165,7 +176,7 @@ def fill_histos(config, processes, module):
                     h = r.TH1F(
                             name + str(random.randint(0, 1000000000)),
                             ';'.join([name] + histcfg['axis labels']),
-                            *histcfg['binning'])
+                            *binning)
 
                     if 'bin labels' in histcfg:
                         for (n, l) in enumerate(histcfg['bin labels']):
