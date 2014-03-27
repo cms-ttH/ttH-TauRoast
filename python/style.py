@@ -39,6 +39,8 @@ def draw_channel_info(config, plot_ratio, is2d=False, proc=None):
     if is2d and proc:
         tex.DrawLatex(0.14, 0.84, proc)
     tex.DrawLatex(0.14, 0.91, "CMS Preliminary")
+    # tex.DrawLatex(0.14, 0.91, "CMS ttH")
+    # tex.DrawLatex(0.30, 0.92, "#tau_{h}#tau_{h}")
     tex.SetTextAlign(31)
     tex.DrawLatex(1 - r.gPad.GetRightMargin(), 0.91, "#sqrt{s} = 8 TeV, L = 19.5 fb^{-1}")
 
