@@ -148,7 +148,6 @@ Branches::Clear()
     NumNonCSVLbtagJets->clear();
     NumNonCSVMbtagJets->clear();
     NumNonCSVTbtagJets->clear();
-    NumTaus = 0;
     NumTightElectrons->clear();
     NumTightMuons->clear();
     M_Eta->clear();
@@ -654,7 +653,6 @@ Branches::Null()
     NumNonCSVLbtagJets = 0;
     NumNonCSVMbtagJets = 0;
     NumNonCSVTbtagJets = 0;
-    NumTaus = 0;
     NumTightElectrons = 0;
     NumTightMuons = 0;
     M_Eta = 0;

@@ -86,6 +86,7 @@ namespace roast {
                 UInt_t TTL_NumElectrons;
                 UInt_t TTL_NumLeptons;
                 UInt_t TTL_NumMuons;
+                UInt_t TTL_NumTaus;
                 std::vector<float>* TTL_Tau1Charge;
                 std::vector<unsigned int>* TTL_Tau1DecayMode;
                 std::vector<float>* TTL_Tau1EmFraction;

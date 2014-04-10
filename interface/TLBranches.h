@@ -69,6 +69,7 @@ namespace roast {
                 std::vector<float>* TL_LeptonPhi;
                 std::vector<float>* TL_LeptonPt;
                 std::vector<float>* TL_LeptonRelIso;
+                UInt_t TL_NumTaus;
                 std::vector<float>* TL_TauCharge;
                 std::vector<unsigned int>* TL_TauDecayMode;
                 std::vector<float>* TL_TauEmFraction;

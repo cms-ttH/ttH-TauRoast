@@ -35,7 +35,9 @@ namespace roast {
                 // >>> Begin declarations <<<
                 std::vector<std::vector<float> >* J_Lepton1DeltaR;
                 std::vector<std::vector<float> >* J_Lepton2DeltaR;
+                std::vector<std::vector<float> >* J_METCosDeltaPhi;
                 std::vector<std::vector<float> >* J_TauDeltaR;
+                std::vector<float>* TLL_JetsVisibleMass;
                 std::vector<float>* TLL_Lepton1Charge;
                 std::vector<float>* TLL_Lepton1CorrectedD0;
                 std::vector<float>* TLL_Lepton1CorrectedDZ;
@@ -67,6 +69,7 @@ namespace roast {
                 std::vector<float>* TLL_Lepton1Lepton2CosDeltaPhi;
                 std::vector<float>* TLL_Lepton1Lepton2DeltaR;
                 std::vector<float>* TLL_Lepton1Lepton2VisibleMass;
+                std::vector<float>* TLL_Lepton1METCosDeltaPhi;
                 std::vector<float>* TLL_Lepton1Mt;
                 std::vector<float>* TLL_Lepton1Mt2;
                 std::vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* TLL_Lepton1P;
@@ -101,12 +104,15 @@ namespace roast {
                 std::vector<bool>* TLL_Lepton2IsLoose;
                 std::vector<float>* TLL_Lepton2IsMuon;
                 std::vector<bool>* TLL_Lepton2IsTight;
+                std::vector<float>* TLL_Lepton2METCosDeltaPhi;
                 std::vector<float>* TLL_Lepton2Mt;
                 std::vector<float>* TLL_Lepton2Mt2;
                 std::vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* TLL_Lepton2P;
                 std::vector<float>* TLL_Lepton2Phi;
                 std::vector<float>* TLL_Lepton2Pt;
                 std::vector<float>* TLL_Lepton2RelIso;
+                std::vector<float>* TLL_LeptonJetsVisibleMass;
+                UInt_t TLL_NumTaus;
                 std::vector<bool>* TLL_PassZMask;
                 std::vector<bool>* TLL_PassZMask2;
                 std::vector<float>* TLL_TauCharge;
@@ -192,6 +198,7 @@ namespace roast {
                 std::vector<float>* TLL_TauLepton2DeltaR;
                 std::vector<float>* TLL_TauLepton2METMass;
                 std::vector<float>* TLL_TauLepton2VisibleMass;
+                std::vector<float>* TLL_TauMETCosDeltaPhi;
                 std::vector<int>* TLL_TauMomentumRank;
                 std::vector<unsigned int>* TLL_TauNProngs;
                 std::vector<unsigned int>* TLL_TauNSignalGammas;

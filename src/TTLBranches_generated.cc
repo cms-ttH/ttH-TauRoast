@@ -53,6 +53,7 @@ ttl::Branches::Clear()
     TTL_NumElectrons = 0;
     TTL_NumLeptons = 0;
     TTL_NumMuons = 0;
+    TTL_NumTaus = 0;
     TTL_Tau1Charge->clear();
     TTL_Tau1DecayMode->clear();
     TTL_Tau1EmFraction->clear();
@@ -488,6 +489,7 @@ ttl::Branches::Null()
     TTL_NumElectrons = 0;
     TTL_NumLeptons = 0;
     TTL_NumMuons = 0;
+    TTL_NumTaus = 0;
     TTL_Tau1Charge = 0;
     TTL_Tau1DecayMode = 0;
     TTL_Tau1EmFraction = 0;
@@ -747,7 +749,7 @@ ttl::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TTL_NumNonCSVLbtagJets", &NumNonCSVLbtagJets);
     fChain->SetBranchAddress("TTL_NumNonCSVMbtagJets", &NumNonCSVMbtagJets);
     fChain->SetBranchAddress("TTL_NumNonCSVTbtagJets", &NumNonCSVTbtagJets);
-    fChain->SetBranchAddress("TTL_NumTaus", &NumTaus);
+    fChain->SetBranchAddress("TTL_NumTaus", &TTL_NumTaus);
     fChain->SetBranchAddress("TTL_NumTightElectrons", &NumTightElectrons);
     fChain->SetBranchAddress("TTL_NumTightMuons", &NumTightMuons);
     fChain->SetBranchAddress("TTL_Tau1Charge", &TTL_Tau1Charge);

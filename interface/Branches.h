@@ -183,7 +183,6 @@ namespace roast {
             std::vector<unsigned int>* NumNonCSVLbtagJets;
             std::vector<unsigned int>* NumNonCSVMbtagJets;
             std::vector<unsigned int>* NumNonCSVTbtagJets;
-            UInt_t NumTaus;
             std::vector<unsigned int>* NumTightElectrons;
             std::vector<unsigned int>* NumTightMuons;
             std::vector<float>* M_Eta;

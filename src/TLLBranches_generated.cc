@@ -11,7 +11,9 @@ tll::Branches::Clear()
     // >>> Begin clear <<<
     J_Lepton1DeltaR->clear();
     J_Lepton2DeltaR->clear();
+    J_METCosDeltaPhi->clear();
     J_TauDeltaR->clear();
+    TLL_JetsVisibleMass->clear();
     TLL_Lepton1Charge->clear();
     TLL_Lepton1CorrectedD0->clear();
     TLL_Lepton1CorrectedDZ->clear();
@@ -43,6 +45,7 @@ tll::Branches::Clear()
     TLL_Lepton1Lepton2CosDeltaPhi->clear();
     TLL_Lepton1Lepton2DeltaR->clear();
     TLL_Lepton1Lepton2VisibleMass->clear();
+    TLL_Lepton1METCosDeltaPhi->clear();
     TLL_Lepton1Mt->clear();
     TLL_Lepton1Mt2->clear();
     TLL_Lepton1P->clear();
@@ -77,12 +80,15 @@ tll::Branches::Clear()
     TLL_Lepton2IsLoose->clear();
     TLL_Lepton2IsMuon->clear();
     TLL_Lepton2IsTight->clear();
+    TLL_Lepton2METCosDeltaPhi->clear();
     TLL_Lepton2Mt->clear();
     TLL_Lepton2Mt2->clear();
     TLL_Lepton2P->clear();
     TLL_Lepton2Phi->clear();
     TLL_Lepton2Pt->clear();
     TLL_Lepton2RelIso->clear();
+    TLL_LeptonJetsVisibleMass->clear();
+    TLL_NumTaus = 0;
     TLL_PassZMask->clear();
     TLL_PassZMask2->clear();
     TLL_TauCharge->clear();
@@ -168,6 +174,7 @@ tll::Branches::Clear()
     TLL_TauLepton2DeltaR->clear();
     TLL_TauLepton2METMass->clear();
     TLL_TauLepton2VisibleMass->clear();
+    TLL_TauMETCosDeltaPhi->clear();
     TLL_TauMomentumRank->clear();
     TLL_TauNProngs->clear();
     TLL_TauNSignalGammas->clear();
@@ -187,7 +194,9 @@ tll::Branches::Delete()
     // >>> Begin delete <<<
     delete J_Lepton1DeltaR;
     delete J_Lepton2DeltaR;
+    delete J_METCosDeltaPhi;
     delete J_TauDeltaR;
+    delete TLL_JetsVisibleMass;
     delete TLL_Lepton1Charge;
     delete TLL_Lepton1CorrectedD0;
     delete TLL_Lepton1CorrectedDZ;
@@ -219,6 +228,7 @@ tll::Branches::Delete()
     delete TLL_Lepton1Lepton2CosDeltaPhi;
     delete TLL_Lepton1Lepton2DeltaR;
     delete TLL_Lepton1Lepton2VisibleMass;
+    delete TLL_Lepton1METCosDeltaPhi;
     delete TLL_Lepton1Mt;
     delete TLL_Lepton1Mt2;
     delete TLL_Lepton1P;
@@ -253,12 +263,14 @@ tll::Branches::Delete()
     delete TLL_Lepton2IsLoose;
     delete TLL_Lepton2IsMuon;
     delete TLL_Lepton2IsTight;
+    delete TLL_Lepton2METCosDeltaPhi;
     delete TLL_Lepton2Mt;
     delete TLL_Lepton2Mt2;
     delete TLL_Lepton2P;
     delete TLL_Lepton2Phi;
     delete TLL_Lepton2Pt;
     delete TLL_Lepton2RelIso;
+    delete TLL_LeptonJetsVisibleMass;
     delete TLL_PassZMask;
     delete TLL_PassZMask2;
     delete TLL_TauCharge;
@@ -344,6 +356,7 @@ tll::Branches::Delete()
     delete TLL_TauLepton2DeltaR;
     delete TLL_TauLepton2METMass;
     delete TLL_TauLepton2VisibleMass;
+    delete TLL_TauMETCosDeltaPhi;
     delete TLL_TauMomentumRank;
     delete TLL_TauNProngs;
     delete TLL_TauNSignalGammas;
@@ -363,7 +376,9 @@ tll::Branches::Null()
     // >>> Begin null <<<
     J_Lepton1DeltaR = 0;
     J_Lepton2DeltaR = 0;
+    J_METCosDeltaPhi = 0;
     J_TauDeltaR = 0;
+    TLL_JetsVisibleMass = 0;
     TLL_Lepton1Charge = 0;
     TLL_Lepton1CorrectedD0 = 0;
     TLL_Lepton1CorrectedDZ = 0;
@@ -395,6 +410,7 @@ tll::Branches::Null()
     TLL_Lepton1Lepton2CosDeltaPhi = 0;
     TLL_Lepton1Lepton2DeltaR = 0;
     TLL_Lepton1Lepton2VisibleMass = 0;
+    TLL_Lepton1METCosDeltaPhi = 0;
     TLL_Lepton1Mt = 0;
     TLL_Lepton1Mt2 = 0;
     TLL_Lepton1P = 0;
@@ -429,12 +445,15 @@ tll::Branches::Null()
     TLL_Lepton2IsLoose = 0;
     TLL_Lepton2IsMuon = 0;
     TLL_Lepton2IsTight = 0;
+    TLL_Lepton2METCosDeltaPhi = 0;
     TLL_Lepton2Mt = 0;
     TLL_Lepton2Mt2 = 0;
     TLL_Lepton2P = 0;
     TLL_Lepton2Phi = 0;
     TLL_Lepton2Pt = 0;
     TLL_Lepton2RelIso = 0;
+    TLL_LeptonJetsVisibleMass = 0;
+    TLL_NumTaus = 0;
     TLL_PassZMask = 0;
     TLL_PassZMask2 = 0;
     TLL_TauCharge = 0;
@@ -520,6 +539,7 @@ tll::Branches::Null()
     TLL_TauLepton2DeltaR = 0;
     TLL_TauLepton2METMass = 0;
     TLL_TauLepton2VisibleMass = 0;
+    TLL_TauMETCosDeltaPhi = 0;
     TLL_TauMomentumRank = 0;
     TLL_TauNProngs = 0;
     TLL_TauNSignalGammas = 0;
@@ -539,6 +559,7 @@ tll::Branches::SetBranchAddresses()
     // >>> Begin address <<<
     fChain->SetBranchAddress("J_Lepton1DeltaR", &J_Lepton1DeltaR);
     fChain->SetBranchAddress("J_Lepton2DeltaR", &J_Lepton2DeltaR);
+    fChain->SetBranchAddress("J_METCosDeltaPhi", &J_METCosDeltaPhi);
     fChain->SetBranchAddress("J_TauDeltaR", &J_TauDeltaR);
     fChain->SetBranchAddress("TLL_CSVeventWeight", &CSVeventWeight);
     fChain->SetBranchAddress("TLL_CSVeventWeightCErr1down", &CSVeventWeightCErr1down);
@@ -561,6 +582,7 @@ tll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TLL_CleanJetIndices", &CleanJetIndices);
     fChain->SetBranchAddress("TLL_CleanJetNonCSVMIndices", &CleanJetNonCSVMIndices);
     fChain->SetBranchAddress("TLL_HT", &HT);
+    fChain->SetBranchAddress("TLL_JetsVisibleMass", &TLL_JetsVisibleMass);
     fChain->SetBranchAddress("TLL_Lepton1Charge", &TLL_Lepton1Charge);
     fChain->SetBranchAddress("TLL_Lepton1CorrectedD0", &TLL_Lepton1CorrectedD0);
     fChain->SetBranchAddress("TLL_Lepton1CorrectedDZ", &TLL_Lepton1CorrectedDZ);
@@ -592,6 +614,7 @@ tll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TLL_Lepton1Lepton2CosDeltaPhi", &TLL_Lepton1Lepton2CosDeltaPhi);
     fChain->SetBranchAddress("TLL_Lepton1Lepton2DeltaR", &TLL_Lepton1Lepton2DeltaR);
     fChain->SetBranchAddress("TLL_Lepton1Lepton2VisibleMass", &TLL_Lepton1Lepton2VisibleMass);
+    fChain->SetBranchAddress("TLL_Lepton1METCosDeltaPhi", &TLL_Lepton1METCosDeltaPhi);
     fChain->SetBranchAddress("TLL_Lepton1Mt", &TLL_Lepton1Mt);
     fChain->SetBranchAddress("TLL_Lepton1Mt2", &TLL_Lepton1Mt2);
     fChain->SetBranchAddress("TLL_Lepton1P", &TLL_Lepton1P);
@@ -626,12 +649,14 @@ tll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TLL_Lepton2IsLoose", &TLL_Lepton2IsLoose);
     fChain->SetBranchAddress("TLL_Lepton2IsMuon", &TLL_Lepton2IsMuon);
     fChain->SetBranchAddress("TLL_Lepton2IsTight", &TLL_Lepton2IsTight);
+    fChain->SetBranchAddress("TLL_Lepton2METCosDeltaPhi", &TLL_Lepton2METCosDeltaPhi);
     fChain->SetBranchAddress("TLL_Lepton2Mt", &TLL_Lepton2Mt);
     fChain->SetBranchAddress("TLL_Lepton2Mt2", &TLL_Lepton2Mt2);
     fChain->SetBranchAddress("TLL_Lepton2P", &TLL_Lepton2P);
     fChain->SetBranchAddress("TLL_Lepton2Phi", &TLL_Lepton2Phi);
     fChain->SetBranchAddress("TLL_Lepton2Pt", &TLL_Lepton2Pt);
     fChain->SetBranchAddress("TLL_Lepton2RelIso", &TLL_Lepton2RelIso);
+    fChain->SetBranchAddress("TLL_LeptonJetsVisibleMass", &TLL_LeptonJetsVisibleMass);
     fChain->SetBranchAddress("TLL_MHT", &MHT);
     fChain->SetBranchAddress("TLL_MomentumRank", &MomentumRank);
     fChain->SetBranchAddress("TLL_NumCSVLbtagJets", &NumCSVLbtagJets);
@@ -651,7 +676,7 @@ tll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TLL_NumNonCSVLbtagJets", &NumNonCSVLbtagJets);
     fChain->SetBranchAddress("TLL_NumNonCSVMbtagJets", &NumNonCSVMbtagJets);
     fChain->SetBranchAddress("TLL_NumNonCSVTbtagJets", &NumNonCSVTbtagJets);
-    fChain->SetBranchAddress("TLL_NumTaus", &NumTaus);
+    fChain->SetBranchAddress("TLL_NumTaus", &TLL_NumTaus);
     fChain->SetBranchAddress("TLL_NumTightElectrons", &NumTightElectrons);
     fChain->SetBranchAddress("TLL_NumTightMuons", &NumTightMuons);
     fChain->SetBranchAddress("TLL_PassZMask", &TLL_PassZMask);
@@ -739,6 +764,7 @@ tll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("TLL_TauLepton2DeltaR", &TLL_TauLepton2DeltaR);
     fChain->SetBranchAddress("TLL_TauLepton2METMass", &TLL_TauLepton2METMass);
     fChain->SetBranchAddress("TLL_TauLepton2VisibleMass", &TLL_TauLepton2VisibleMass);
+    fChain->SetBranchAddress("TLL_TauMETCosDeltaPhi", &TLL_TauMETCosDeltaPhi);
     fChain->SetBranchAddress("TLL_TauMomentumRank", &TLL_TauMomentumRank);
     fChain->SetBranchAddress("TLL_TauNProngs", &TLL_TauNProngs);
     fChain->SetBranchAddress("TLL_TauNSignalGammas", &TLL_TauNSignalGammas);
