@@ -3,6 +3,7 @@
 import math
 import os.path
 import ROOT as r
+import shutil
 import sys
 
 r.gROOT.SetBatch()
@@ -21,11 +22,22 @@ from ttH.TauRoast.helper import *
 
 configfile, outdir = sys.argv[1:]
 
+basedir = os.path.join(os.environ['LOCALRT'], 'src/ttH/TauRoast/data')
+config = load_config(configfile, basedir, [])
+
 if not os.path.exists(outdir):
     os.makedirs(outdir)
 
-basedir = os.path.join(os.environ['LOCALRT'], 'src/ttH/TauRoast/data')
-config = load_config(configfile, basedir, [])
+outconfig = os.path.join(outdir, os.path.basename(configfile))
+shutil.copy(configfile, outconfig)
+
+resdir = os.path.join(outdir, "_cluster_output")
+if not os.path.exists(resdir):
+    os.makedirs(resdir)
+
+workdir = os.path.join(outdir, "_cluster")
+if not os.path.exists(workdir):
+    os.makedirs(workdir)
 
 channel = config['analysis']['channel']
 if channel == 'll':
@@ -53,7 +65,7 @@ for p in config['analysis']['process']:
 config['analysis']['process'] = to_process
 
 jobinfo = "num,proc,offset,size,cfg\n"
-jobsize = 1000000
+jobsize = 200000
 jobcount = 0
 for proc in config['analysis']['process']:
     cfg = config['processes'][proc]
@@ -64,13 +76,13 @@ for proc in config['analysis']['process']:
     branches = module.Branches(vpaths)
     jobs = int(math.ceil(branches.GetEntries() / float(jobsize)))
     for j in range(jobs):
-        jobinfo += ",".join(map(str, [jobcount, proc, jobsize * j, jobsize, os.path.join(os.environ['PWD'], configfile)])) + "\n"
+        jobinfo += ",".join(map(str, [jobcount, proc, jobsize * j, jobsize, outconfig])) + "\n"
         jobcount += 1
 
-with open(os.path.join(outdir, 'jobs.par'), 'w') as f:
+with open(os.path.join(workdir, 'jobs.par'), 'w') as f:
     f.write(jobinfo)
 
-with open(os.path.join(outdir, 'job.sh'), 'w') as f:
+with open(os.path.join(workdir, 'job.sh'), 'w') as f:
     f.write("""#!/bin/sh
 
 set -e
@@ -85,7 +97,7 @@ cmsenv
 roaster -v $*
     """.format(os.environ['LOCALRT']))
 
-with open(os.path.join(outdir, 'gc.cfg'), 'w') as f:
+with open(os.path.join(workdir, 'gc.cfg'), 'w') as f:
     f.write("""
 [global]
 module = UserMod
@@ -98,16 +110,15 @@ workdir = gc.work
 
 [jobs]
 wall time = 6:00
-in flight = 16
 
 # [Condor]
 # JDLData = +IsExpressJob=True
 
 [UserMod]
 executable = job.sh
-arguments = -af --no-backup -s @offset@ -n @size@ -o analysis.process="[@proc@]" -o analysis.plot="[@proc@]" -o paths.input="'{root}/_cluster_output/roast_processed_@num@.root'" -o paths.output="'{root}/_cluster_output/roast_filled_@num@.root'" @cfg@
+arguments = -af --no-backup -s @offset@ -n @size@ -o analysis.process="[@proc@]" -o analysis.plot="[@proc@]" -o paths.root="{0}" -o paths.input="'{{root}}/_cluster_output/roast_processed_@num@.root'" -o paths.output="'{{root}}/_cluster_output/roast_filled_@num@.root'" @cfg@
 
 [parameters]
 parameters = <csv>
 csv source = jobs.par
-csv format = excel""")
+csv format = excel""".format(outdir))
