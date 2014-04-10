@@ -225,7 +225,7 @@ cast = '{0}::Branches* e = dynamic_cast<{0}::Branches*>(b)'
 declare = 'accessors["{0}"] = [](Branches *b, int idx, int n) -> float {{\n'
 reindex = [
         ('Clean', 'int i = (*b->CleanJetIndices)[idx][{0}];\n'),
-        ('Tagged', 'int i = (*b->CleanJetCSVMIndices)[idx][{0}];\n'),
+        ('Tagged', 'int i = (*b->CleanJetCSVMIndices)[idx].at({0});\n'),
         ('Untagged', 'int i = (*b->CleanJetNonCSVMIndices)[idx].at({0});\n')
         ]
 returns = {
