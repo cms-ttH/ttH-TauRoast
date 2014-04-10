@@ -12,7 +12,7 @@ TT_DeltaR:
 T$0_MatchIndex:
     values: [T$0_GenMatchId]
     translate match id: true
-    dir: tau
+    dir: tau/generator
     channels: [$2]
     binning: [9, 0, 9]
     bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W]
@@ -27,7 +27,7 @@ T$0_ParentMatchIndex:
     values: [T$0_GoodParentId]
     additional info: [T$0_GoodGrandParentId]
     translate match id: true
-    dir: tau
+    dir: tau/generator
     channels: [$2]
     binning: [11, 0, 11]
     bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W, W (t), W (H)]
@@ -173,6 +173,22 @@ T$0_Pt:
     dir: tau/kinematic
     channels: [$2]
     binning: [15, 0, 150]
+    axis labels: ["#tau$1 p_{T} (GeV/c)", Events]
+    visible: [20, 100]
+    showOF: true
+    logy: 1
+    replace:
+      - [1, "_{1}", ttl, false]
+      - [2, "_{2}", ttl, false]
+      - ["", "", tll, false]
+      - ["", "", tl, true]
+
+T$0_Pt_rebin:
+    values: [T$0_Pt]
+    dir: tau/kinematic
+    channels: [$2]
+    binning: [0, 10, 20, 30, 40, 55, 75, 100, 150, 500]
+    custom binning: true
     axis labels: ["#tau$1 p_{T} (GeV/c)", Events]
     visible: [20, 100]
     dump: $3
@@ -390,6 +406,7 @@ T$0_IsolationIndexMVA2:
 
 NumTaus:
     dir: counts
+    channels: [tl, tll, ttl]
     binning: [20, 0, 20]
     axis labels: [Number of taus, Events]
     visible: [0, 19.99]
@@ -405,11 +422,11 @@ DitauVisibleMass:
     showOF: true
     logy: 1
 
-TL_Mass:
-    dir: tau
-    channels: [tl]
-    binning: [50, 0, 300]
-    axis labels: ["Mass tau, lepton, from SVfit", Events]
+#  TL_Mass:
+    #  dir: tau
+    #  channels: [tl]
+    #  binning: [50, 0, 300]
+    #  axis labels: ["Mass tau, lepton, from SVfit", Events]
 
 TL_VisibleMass:
     dir: tau
@@ -436,7 +453,7 @@ T$0$1_DeltaR:
 TosL_VisibleMass:
     dir: tau
     channels: [tll]
-    binning: [30, 0, 200]
+    binning: [20, 0, 200]
     axis labels: ["Visible Mass #tau^{#pm} l^{os}", Events]
 
 TosL_METMass:
