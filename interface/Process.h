@@ -15,11 +15,14 @@ namespace roast {
     class Process {
         public:
             struct Event {
-                Event(const int& n, const std::vector<int>& cs) : entry(n), combos(cs) {};
-                Event(const Event& e) : entry(e.entry), combos(e.combos) {};
-                Event() : entry(-1), combos() {};
+                Event(const int& n, long r, long l, long e, const std::vector<int>& cs) : entry(n), run(r), lumi(l), event(e), combos(cs) {};
+                Event(const Event& e) : entry(e.entry), run(e.run), lumi(e.lumi), event(e.event), combos(e.combos) {};
+                Event() : entry(-1), run(-1), lumi(-1), event(-1), combos() {};
 
                 int entry;
+                long run;
+                long lumi;
+                long event;
                 std::vector<int> combos;
 
                 ClassDef(roast::Process::Event, 1);

@@ -104,7 +104,7 @@ namespace roast {
 
             // Fill good event vectors for signal analysis
             if (combos.size() > 0) {
-                events.push_back(Process::Event(jentry, combos));
+                events.push_back(Process::Event(jentry, event->Ev_runNumber, event->Ev_lumiBlock, event->Ev_eventNumber, combos));
             }
 
             NOEanalyzed++;

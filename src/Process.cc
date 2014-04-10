@@ -209,8 +209,14 @@ void Process::BuildNormalizedCutFlow(){ normalizedCutFlow.BuildNormalizedCutFlow
 void
 Process::Add(Process* iProcess, bool same)
 {
-    for (const auto& p: iProcess->GetNtuplePaths())
-        ntuplePaths.push_back(p);
+    if (same) {
+        auto oevents = iProcess->GetEvents();
+        events.insert(events.end(), oevents.begin(), oevents.end());
+    } else {
+        auto opaths = iProcess->GetNtuplePaths();
+        ntuplePaths.insert(ntuplePaths.end(), opaths.begin(), opaths.end());
+    }
+
     for (auto& pair: hContainer)
         pair.second->Add(*iProcess->GetHistogram(pair.first));
 
