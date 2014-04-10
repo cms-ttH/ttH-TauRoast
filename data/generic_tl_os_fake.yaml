@@ -76,7 +76,8 @@ physics:
       # lepton
       - NumTightLeptons = 1
       - NumLooseLeptons = 1
-      - L_Pt ≥ 20
+      - L_Pt ≥ 30
+      - PassQCDVeto = 1
       # taus
       # kinematic
       - T_Pt ≥ 20
@@ -100,7 +101,7 @@ physics:
 
 paths:
     # root path, referenced by {root}
-    root: /afs/crc.nd.edu/user/m/mwolf3/www/ttH/v60.2/tl_os_fake
+    root: /afs/crc.nd.edu/user/m/mwolf3/www/ttH/v60.2/tl_os_fake_no_qcd
     # for analyzed processes
     input: "{root}/roast_processed.root"
     # {s} is replaced with systematic shifts

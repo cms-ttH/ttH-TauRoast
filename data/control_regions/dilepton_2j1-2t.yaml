@@ -1,7 +1,7 @@
 # vim: set sw=4 sta et :
 
 analysis:
-    channel: tll
+    channel: ll
 
     max events: -1
 
@@ -19,7 +19,7 @@ analysis:
           - [T_IsolationMVA2Raw, F]
           - [TL1_DeltaR, F]
           - [TL2_DeltaR, F]
-          - [CleanLJ_Pt, F]
+          - [LJ_Pt, F]
           - [L1_Pt, F]
           #  - [L2_Pt, F]
           #  - [HT, F]
@@ -31,7 +31,7 @@ analysis:
       - EWK
       - SingleTop
       - ttWZ
-      - TTHTauTau_125_real
+      #  - TTHTauTau_125_real
       #  - TTH_110
       #  - TTH_115
       #  - TTH_120
@@ -47,7 +47,6 @@ analysis:
       - SingleTop
       - ttWZ
       - TTH_125
-      - TTH_125_htt
 
 display:
     legend: False
@@ -57,7 +56,6 @@ display:
 physics:
     lumi: 19400
     flags:
-      #  - [jetTauFakeScale, nominal]
       - [topPt, nominal]
       - [lepton1, nominal]
       - [lepton2, nominal]
@@ -67,39 +65,22 @@ physics:
       - [brSF, nominal]
     cuts:
       # reality
-      - T_MatchAbsId = 15
-      - T_ParentAbsId = 25
+      #  - T_MatchAbsId = 15
+      #  - T_ParentAbsId = 25
       # tops
-      - J_NumCleanCSVM ≤ 2
-      - J_NumCleanCSVM ≥ 1 or J_NumCleanCSVL ≥ 2
-      - J_NumCleanNonCSVM ≥ 0
-      - J_NumCleanInclusive ≥ 2
+      - 1 ≤ J_NumCleanCSVM ≤ 2
+      - J_NumCleanInclusive = 2
       # lepton
       - 1 ≤ NumTightLeptons ≤ 2
       - NumLooseLeptons = 2
-      #  - MET ≥ 30
       - L1_Pt ≥ 20
       - L2_Pt ≥ 10
-      - L1L2_DeltaR ≥ 0.25
-      # taus
-      # kinematic
-      - T_Pt ≥ 20
-      - -2.1 ≤ T_Eta ≤ 2.1
+      - L1L2_DeltaR ≥ 0.2
+      - L1L2_VisibleMass ≥ 12
       # topological
-      - TL1_DeltaR ≥ 0.25
-      - TL2_DeltaR ≥ 0.25
-      # optimization
-      - T_DecayModeFinding = 1
-      - T_LTPt ≥ 5
-      - T_NumProngs = 1
-      - T_AntiElectronIndex ≥ 1
-      - T_AntiMuonIndex ≥ 1
-      - T_IsolationIndex3Hits ≥ 1
-      #  - T_IsolationMVA2Raw ≥ 0
-      # topological
-      - LL_ChargeProduct = -1
-      - Z-Peak veto: PassZMask3 = 1 or NumLooseMuons = 1
-    pair selection: iso
+      - -1 ≤ LL_ChargeProduct ≤ -1
+      - Z-Peak veto: PassZMask = 1 or NumLooseMuons = 1
+    pair selection: pt
     systematics:
         eTauFake: 1.05
         jetTauFake: 1.2
@@ -107,20 +88,20 @@ physics:
 
 paths:
     # root path, referenced by {root}
-    root: /afs/crc.nd.edu/user/m/mwolf3/www/ttH/v61/tll_os
+    root: /afs/crc.nd.edu/user/m/mwolf3/www/ttH/v61/dil_os_2j1-2t
     # for analyzed processes
     input: "{root}/roast_processed.root"
     # {s} is replaced with systematic shifts
     systematics input: "{root}_{s!r:20}/roast_filled.root"
     # for processes with filled histograms
     output: "{root}/roast_filled.root"
-    # for further processing with `mk_datcard` and `combine`.  
-    limit output: "{root}/roast_limit.root:{p}_MVA_tll"
+    # for further processing with `mk_datcard` and `combine`.
+    limit output: "{root}/roast_limit.root:{p}_MVA_ll"
     mva output: "{root}/{m}"
     # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
     # name; {m} = mode (_log)
     stack format: "{root}/{t}/{d}/{n}{p}{m}.{t}"
-    ntuples: "/hadoop/users/matze/ttH/v61/2012/tll_{p}/*_ntuple.root"
+    ntuples: "/hadoop/users/matze/ttH/v61/2012/ll_{p}/*_ntuple.root"
 
-processes: !include processes.yaml
-histograms: !include histograms*.yaml
+processes: !include ../processes.yaml
+histograms: !include histos.yaml

@@ -45,14 +45,20 @@ analysis:
       - Collisions
       - TTbar_real
       - TTbar_fake
-      - EWK_real
-      - EWK_fake
+      #  - EWK_real
+      #  - EWK_fake
+      - Zjets_real
+      - Zjets_fake
+      - Wjets_real
+      - Wjets_fake
+      - DiBoson_real
+      - DiBoson_fake
       - SingleTop
       - ttWZ
       - TTH_125
 
 display:
-    legend: False
+    legend: True
     legend columns: 3
     signal scale factor: 100
 
@@ -74,9 +80,10 @@ physics:
       #  - J_NumCleanNonCSVM ≥ 0
       - J_NumCleanInclusive ≥ 2
       # lepton
-      - NumTightLeptons = 1
       - NumLooseLeptons = 1
-      - L_Pt ≥ 20
+      - NumTightLeptons = 1
+      - L_Pt ≥ 30
+      - PassQCDVeto = 1
       # taus
       # kinematic
       - T_Pt ≥ 20
@@ -99,7 +106,7 @@ physics:
 
 paths:
     # root path, referenced by {root}
-    root: /afs/crc.nd.edu/user/m/mwolf3/www/ttH/v60.2/tl_os
+    root: /afs/crc.nd.edu/user/m/mwolf3/www/ttH/v60.2/take2/tl_os_no_qcd
     # for analyzed processes
     input: "{root}/roast_processed.root"
     # {s} is replaced with systematic shifts
