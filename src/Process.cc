@@ -212,7 +212,8 @@ Process::Add(Process* iProcess, bool same)
     for (const auto& p: iProcess->GetNtuplePaths())
         ntuplePaths.push_back(p);
     for (auto& pair: hContainer)
-        pair.second->Add(*iProcess->GetHistogram(pair.first)->GetHisto());
+        pair.second->Add(*iProcess->GetHistogram(pair.first));
+
     cutFlow.Add(*(iProcess->GetCutFlow()), same);
     normalizedCutFlow.Add(*(iProcess->GetNormalizedCutFlow()), same);
     NOEanalyzed += iProcess->GetNOEanalyzed();
