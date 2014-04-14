@@ -669,7 +669,7 @@ namespace roast {
         };
         accessors["CleanJ_CSV"] = [](Branches *b, int idx, int n) -> float {
             int i = (*b->CleanJetIndices)[idx][n];
-            return (*b->J_CSV).at(i);
+            return (*b->J_combSecVtxBTag).at(i);
         };
         accessors["LJ_CSV"] = [](Branches *b, int idx, int n) -> float {
             int i = (*b->CleanJetIndices)[idx][0];
