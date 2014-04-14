@@ -38,6 +38,8 @@ namespace roast {
             unsigned int GetNumCombos() { return NumCombos; };
             virtual bool IsGoodGenMatch(const int&) const = 0;
 
+            std::string GetCurrentFilename();
+
             unsigned int TranslateMatchIndex(int, int=-99) const;
             unsigned int TranslateJetMatchIndex(int) const;
 

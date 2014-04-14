@@ -72,6 +72,10 @@
 #pragma link C++ function roast::tl::analyze(roast::Process&, const std::vector<std::string>&, const int, const int, void *);
 #pragma link C++ function roast::tll::analyze(roast::Process&, const std::vector<std::string>&, const int, const int, void *);
 #pragma link C++ function roast::ttl::analyze(roast::Process&, const std::vector<std::string>&, const int, const int, void *);
+#pragma link C++ function roast::ll::dump(roast::Process&, const std::vector<std::string>&, roast::Picker*);
+#pragma link C++ function roast::tl::dump(roast::Process&, const std::vector<std::string>&, roast::Picker*);
+#pragma link C++ function roast::tll::dump(roast::Process&, const std::vector<std::string>&, roast::Picker*);
+#pragma link C++ function roast::ttl::dump(roast::Process&, const std::vector<std::string>&, roast::Picker*);
 #pragma link C++ function roast::ll::fill(roast::Process&,  const std::vector<roast::Weight>&, void *, std::vector<roast::Splitter*>, roast::Picker*);
 #pragma link C++ function roast::tl::fill(roast::Process&,  const std::vector<roast::Weight>&, void *, std::vector<roast::Splitter*>, roast::Picker*);
 #pragma link C++ function roast::tll::fill(roast::Process&,  const std::vector<roast::Weight>&, void *, std::vector<roast::Splitter*>, roast::Picker*);

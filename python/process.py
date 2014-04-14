@@ -94,6 +94,21 @@ def analyze(config, module):
         processed.append(p)
     return processed
 
+def dump_info(config, processes, module):
+    vars = config['analysis']['dump variables']
+    procs = filter(lambda p: p.GetShortName() in config['analysis']['plot'], processes)
+
+    for p in procs:
+        if config['physics']['pair selection'] == 'iso':
+            select = module.IsoPicker()
+        elif config['physics']['pair selection'] == 'pt':
+            select = roast.PtPicker()
+        else:
+            logging.critical("invalid selection mechanism: %s", config['physics']['pair selection'])
+            sys.exit(1)
+
+        module.dump(p, vectorize(vars, 'std::string'), select)
+
 def fill_histos(config, processes, module):
     flags = config['physics']['flags']
     split = config['analysis']['split']

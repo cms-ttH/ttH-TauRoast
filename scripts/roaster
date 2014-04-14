@@ -23,6 +23,10 @@ parser.add_option("--dump-file",
         default=None,
         metavar="FILE",
         help="store dumped histograms in FILE")
+parser.add_option("--dump",
+        action="store_true",
+        dest="dump",
+        help="dump variables for analyzed processes")
 parser.add_option("-f", "--fill",
         action="store_true",
         dest="fill",
@@ -127,7 +131,7 @@ import yaml
 
 from ttH.TauRoast.display import stack
 from ttH.TauRoast.helper import *
-from ttH.TauRoast.process import analyze, fill_histos
+from ttH.TauRoast.process import analyze, dump_info, fill_histos
 from ttH.TauRoast import style
 
 if opts.list_vars:
@@ -203,6 +207,12 @@ if opts.fill:
     split_processes(baseconfig, procs)
     fill_histos(baseconfig, procs, module)
     save(procs, "Roast", baseconfig['paths']['output'])
+
+if opts.dump:
+    if not procs:
+        procs = load("Roast", baseconfig['paths']['input'])
+        book_mva(baseconfig, procs, module)
+    dump_info(baseconfig, procs, module)
 
 if not any([opts.plot, opts.limit_file, opts.nums, opts.nums_rel, opts.nums_summary, opts.ranking]):
     sys.exit(0)

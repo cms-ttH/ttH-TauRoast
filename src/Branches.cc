@@ -119,4 +119,10 @@ Branches::TranslateJetMatchIndex(int idx) const
     }
 }
 
+std::string
+Branches::GetCurrentFilename()
+{
+    return fChain->GetFile()->GetName();
+}
+
 ClassImp(roast::Branches)
