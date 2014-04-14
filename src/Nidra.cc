@@ -1,6 +1,7 @@
 // vim: ts=4:sw=4:et:sta
 #include <unordered_set>
 
+#include "../interface/Accessor.h"
 #include "../interface/Nidra.h"
 #include "../interface/TLLBranches.h"
 #include "../interface/TTLBranches.h"
@@ -110,6 +111,60 @@ namespace roast {
     }
 
     template<typename T>
+    void
+    dump(roast::Process& proc, const std::vector<std::string>& vars, roast::Picker *p)
+    {
+        std::vector<std::pair<GetValue_t, bool>> vals;
+
+        std::cout << "File,Run,Lumi,Event";
+        for (const auto& s: vars) {
+            std::cout << "," << s;
+
+            if (s.size() > 0 and s[0] == '*')
+                vals.push_back(std::make_pair(get_accessor(s.substr(1)), true));
+            else
+                vals.push_back(std::make_pair(get_accessor(s), false));
+        }
+        std::cout << std::endl;
+
+        T* branches = new T(proc.GetNtuplePaths());
+
+        for (const auto& e: proc.GetEvents()) {
+            branches->GetEntry(e.entry);
+
+            int idx = p->Pick(branches, e.combos);
+
+            std::cout << branches->GetCurrentFilename() << ","
+                << long(branches->Ev_runNumber) << ","
+                << long(branches->Ev_lumiBlock) << ","
+                << long(branches->Ev_eventNumber);
+
+            for (auto& pair: vals) {
+                std::cout << ",";
+
+                if (pair.second) {
+                    int n = 0;
+                    do {
+                        try {
+                            auto value = pair.first(branches, idx, n);
+                            if (n > 0)
+                                std::cout << ":";
+                            std::cout << value;
+                        } catch (...) {
+                            break;
+                        }
+                    } while (++n);
+                } else {
+                    std::cout << pair.first(branches, idx, -1);
+                }
+            }
+            std::cout << std::endl;
+        }
+
+        delete branches;
+    }
+
+    template<typename T>
     long
     fill(roast::Process& proc, std::vector<roast::Weight>& weights, PyObject* log, roast::Splitter *s, roast::Picker *p)
     {
@@ -158,6 +213,12 @@ namespace roast {
             return roast::analyze<roast::tll::Branches>(p, cuts, limit, log);
         }
 
+        void
+        dump(roast::Process& proc, const std::vector<std::string>& vars, roast::Picker *p)
+        {
+            roast::dump<roast::tll::Branches>(proc, vars, p);
+        }
+
         long
         fill(roast::Process& proc, std::vector<roast::Weight>& weights, PyObject* log, roast::Splitter *s, roast::Picker *p)
         {
@@ -170,6 +231,12 @@ namespace roast {
         analyze(roast::Process& p, const roast::CutFlow::Cuts& cuts, const int& limit, PyObject *log)
         {
             return roast::analyze<roast::ttl::Branches>(p, cuts, limit, log);
+        }
+
+        void
+        dump(roast::Process& proc, const std::vector<std::string>& vars, roast::Picker *p)
+        {
+            roast::dump<roast::ttl::Branches>(proc, vars, p);
         }
 
         long

@@ -41,6 +41,8 @@ namespace roast {
             unsigned int GetNumCombos() { return NumCombos; };
             virtual bool IsGoodGenMatch(const int&) const = 0;
 
+            std::string GetCurrentFilename();
+
             float GetCleanJetBTagEta(unsigned int, unsigned int);
             float GetCleanJetBTagPhi(unsigned int, unsigned int);
             float GetCleanJetBTagPt(unsigned int, unsigned int);

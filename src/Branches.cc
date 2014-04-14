@@ -155,6 +155,12 @@ Branches::TranslateJetMatchIndex(int idx) const
     }
 }
 
+std::string
+Branches::GetCurrentFilename()
+{
+    return fChain->GetFile()->GetName();
+}
+
 float
 Branches::GetCleanJetBTagEta(unsigned int idx, unsigned int n)
 {

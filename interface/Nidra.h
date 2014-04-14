@@ -16,15 +16,19 @@ namespace roast {
     template<typename T>
     long analyze(roast::Process&, const roast::CutFlow::Cuts&, const int&, PyObject*);
     template<typename T>
+    void dump(roast::Process&, const std::vector<std::string>&, roast::Picker*);
+    template<typename T>
     long fill(roast::Process&, std::vector<roast::Weight>&, PyObject*, roast::Splitter*, roast::Picker*);
 
     namespace tll {
         long analyze(roast::Process&, const roast::CutFlow::Cuts&, const int&, PyObject*);
+        void dump(roast::Process&, const std::vector<std::string>&, roast::Picker*);
         long fill(roast::Process&, std::vector<roast::Weight>&, PyObject*, roast::Splitter* s=0, roast::Picker* p=0);
     }
 
     namespace ttl {
         long analyze(roast::Process&, const roast::CutFlow::Cuts&, const int&, PyObject*);
+        void dump(roast::Process&, const std::vector<std::string>&, roast::Picker*);
         long fill(roast::Process&, std::vector<roast::Weight>&, PyObject*, roast::Splitter* s=0, roast::Picker* p=0);
     }
 }
