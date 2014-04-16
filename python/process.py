@@ -149,7 +149,8 @@ def fill_histos(config, processes, module):
                 sys.exit(1)
 
         logging.info("registering histograms for %s", p.GetShortName())
-        for name, histcfg in config['histograms'].items():
+        for histcfg in config['histograms']:
+            name = histcfg['filename']
             try:
                 if 'values' in histcfg:
                     values = histcfg['values']

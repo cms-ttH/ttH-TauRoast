@@ -1,137 +1,137 @@
 # vim: set sw=4 sta et :
 
-J_Num$0:
-    dir: counts
-    binning: [30, 0, 30]
-    axis labels: [Number of $1, Events]
-    visible: [$2, $3]
-    logy: 1
-    centerLabels: true
-    replace:
-      - [Inclusive, non H-tau jets, 0, 10]
-      - [CSVL, b-tags (CSVL), 0, 8]
-      - [CSVM, b-tags (CSVM), 0, 5]
-      - [CSVT, b-tags (CSVT), 0, 5]
-      - [NonCSVL, non b-tags (CSVL), 0, 10]
-      - [NonCSVM, non b-tags (CSVM), 0, 10]
-      - [NonCSVT, non b-tags (CSVT), 0, 10]
-      - [CleanInclusive, non H-tau jets, 0, 10]
-      - [CleanCSVL, b-tags (CSVL), 0, 5]
-      - [CleanCSVM, b-tags (CSVM), 0, 3]
-      - [CleanCSVT, b-tags (CSVT), 0, 3]
-      - [CleanNonCSVL, non b-tags (CSVL), 0, 10]
-      - [CleanNonCSVM, non b-tags (CSVM), 0, 10]
-      - [CleanNonCSVT, non b-tags (CSVT), 0, 10]
+- filename: J_Num$0
+  dir: counts
+  binning: [30, 0, 30]
+  axis labels: [Number of $1, Events]
+  visible: [$2, $3]
+  logy: 1
+  centerLabels: true
+  replace:
+    - [Inclusive, non H-tau jets, 0, 10]
+    - [CSVL, b-tags (CSVL), 0, 8]
+    - [CSVM, b-tags (CSVM), 0, 5]
+    - [CSVT, b-tags (CSVT), 0, 5]
+    - [NonCSVL, non b-tags (CSVL), 0, 10]
+    - [NonCSVM, non b-tags (CSVM), 0, 10]
+    - [NonCSVT, non b-tags (CSVT), 0, 10]
+    - [CleanInclusive, non H-tau jets, 0, 10]
+    - [CleanCSVL, b-tags (CSVL), 0, 5]
+    - [CleanCSVM, b-tags (CSVM), 0, 3]
+    - [CleanCSVT, b-tags (CSVT), 0, 3]
+    - [CleanNonCSVL, non b-tags (CSVL), 0, 10]
+    - [CleanNonCSVM, non b-tags (CSVM), 0, 10]
+    - [CleanNonCSVT, non b-tags (CSVT), 0, 10]
 
-J_NumOverview:
-    values: [J_NumCleanInclusive, J_NumCleanCSVM]
-    dir: counts
-    binning: [30, 0, 30, 30, 0, 30]
-    axis labels: [Number of non H-tau jets, Number of b-tags (CSVM)]
-    visible: [[2, 8], [1, 2]]
-    centerLabels: true
+- filename: J_NumOverview
+  values: [J_NumCleanInclusive, J_NumCleanCSVM]
+  dir: counts
+  binning: [30, 0, 30, 30, 0, 30]
+  axis labels: [Number of non H-tau jets, Number of b-tags (CSVM)]
+  visible: [[2, 8], [1, 2]]
+  centerLabels: true
 
-$0J_Pt:
-    dir: jets/kinematic
-    max: J_NumClean$1
-    binning: [30, 30, 250]
-    axis labels: ['$2 p_{T}', Events]
-    replace:
-      - [Clean, Inclusive, Jet]
-      - [Tagged, CSVM, Tagged jet]
-      - [Untagged, NonCSVM, Untagged jet]
+- filename: $0J_Pt
+  dir: jets/kinematic
+  max: J_NumClean$1
+  binning: [30, 30, 250]
+  axis labels: ['$2 p_{T}', Events]
+  replace:
+    - [Clean, Inclusive, Jet]
+    - [Tagged, CSVM, Tagged jet]
+    - [Untagged, NonCSVM, Untagged jet]
 
-$0J_Eta:
-    dir: jets/kinematic
-    max: J_NumClean$1
-    binning: [40, -3, 3]
-    axis labels: ["$2 #eta", Events]
-    replace:
-      - [Clean, Inclusive, Jet]
-      - [Tagged, CSVM, Tagged jet]
-      - [Untagged, NonCSVM, Untagged jet]
+- filename: $0J_Eta
+  dir: jets/kinematic
+  max: J_NumClean$1
+  binning: [40, -3, 3]
+  axis labels: ["$2 #eta", Events]
+  replace:
+    - [Clean, Inclusive, Jet]
+    - [Tagged, CSVM, Tagged jet]
+    - [Untagged, NonCSVM, Untagged jet]
 
-$0_Pt:
-    dir: jets/kinematic
-    binning: [30, 30, 250]
-    axis labels: ['$1 p_{T}', Events]
-    replace:
-      - [CleanLJ, Leading jet]
-      - [CleanSubLJ, Sub-leading jet]
-      - [CleanSubSubLJ, Jet 3]
-      - [CleanSubSubSubLJ, Jet 4]
-      - [TaggedLJ, Tagged Leading jet]
-      - [TaggedSubLJ, Tagged Sub-leading jet]
-      - [TaggedSubSubLJ, Tagged Jet 3]
-      - [TaggedSubSubSubLJ, Tagged Jet 4]
-      - [UntaggedLJ, Untagged Leading jet]
-      - [UntaggedSubLJ, Untagged Sub-leading jet]
-      - [UntaggedSubSubLJ, Untagged Jet 3]
-      - [UntaggedSubSubSubLJ, Untagged Jet 4]
+- filename: $0_Pt
+  dir: jets/kinematic
+  binning: [30, 30, 250]
+  axis labels: ['$1 p_{T}', Events]
+  replace:
+    - [CleanLJ, Leading jet]
+    - [CleanSubLJ, Sub-leading jet]
+    - [CleanSubSubLJ, Jet 3]
+    - [CleanSubSubSubLJ, Jet 4]
+    - [TaggedLJ, Tagged Leading jet]
+    - [TaggedSubLJ, Tagged Sub-leading jet]
+    - [TaggedSubSubLJ, Tagged Jet 3]
+    - [TaggedSubSubSubLJ, Tagged Jet 4]
+    - [UntaggedLJ, Untagged Leading jet]
+    - [UntaggedSubLJ, Untagged Sub-leading jet]
+    - [UntaggedSubSubLJ, Untagged Jet 3]
+    - [UntaggedSubSubSubLJ, Untagged Jet 4]
 
-$0_Eta:
-    dir: jets/kinematic
-    binning: [40, -3, 3]
-    axis labels: ["$1 #eta", Events]
-    replace:
-      - [CleanLJ, Leading jet]
-      - [CleanSubLJ, Sub-leading jet]
-      - [CleanSubSubLJ, Jet 3]
-      - [CleanSubSubSubLJ, Jet 4]
-      - [TaggedLJ, Tagged Leading jet]
-      - [TaggedSubLJ, Tagged Sub-leading jet]
-      - [TaggedSubSubLJ, Tagged Jet 3]
-      - [TaggedSubSubSubLJ, Tagged Jet 4]
-      - [UntaggedLJ, Untagged Leading jet]
-      - [UntaggedSubLJ, Untagged Sub-leading jet]
-      - [UntaggedSubSubLJ, Untagged Jet 3]
-      - [UntaggedSubSubSubLJ, Untagged Jet 4]
+- filename: $0_Eta
+  dir: jets/kinematic
+  binning: [40, -3, 3]
+  axis labels: ["$1 #eta", Events]
+  replace:
+    - [CleanLJ, Leading jet]
+    - [CleanSubLJ, Sub-leading jet]
+    - [CleanSubSubLJ, Jet 3]
+    - [CleanSubSubSubLJ, Jet 4]
+    - [TaggedLJ, Tagged Leading jet]
+    - [TaggedSubLJ, Tagged Sub-leading jet]
+    - [TaggedSubSubLJ, Tagged Jet 3]
+    - [TaggedSubSubSubLJ, Tagged Jet 4]
+    - [UntaggedLJ, Untagged Leading jet]
+    - [UntaggedSubLJ, Untagged Sub-leading jet]
+    - [UntaggedSubSubLJ, Untagged Jet 3]
+    - [UntaggedSubSubSubLJ, Untagged Jet 4]
 
 #  $0J_CSV:
-    #  value: $0J_combOB
-    #  dir: jets
-    #  max: J_Num$1
-    #  binning: [30, -1, 1]
-    #  axis labels: ["$0 jet CSV", Events]
-    #  replace:
-      #  - [Clean, CleanInclusive]
-      #  - [Tagged, CleanCSVM]
-      #  - [Untagged, CleanNonCSVM]
+  #  value: $0J_combOB
+  #  dir: jets
+  #  max: J_Num$1
+  #  binning: [30, -1, 1]
+  #  axis labels: ["$0 jet CSV", Events]
+  #  replace:
+    #  - [Clean, CleanInclusive]
+    #  - [Tagged, CleanCSVM]
+    #  - [Untagged, CleanNonCSVM]
 
 #  $0J_MatchIndex:
-    #  values: [CleanJ_PartonId]
-    #  translate jet match id: true
-    #  dir: jets
-    #  max: J_Num$1
-    #  binning: [13, 0, 13]
-    #  bin labels: ["null", other, d, u, s, c, b, t, e, "#mu", "#tau", g, W]
-    #  axis labels: ["$0 jet match", Events]
-    #  replace:
-      #  - [Clean, CleanInclusive]
-      #  - [Tagged, CleanCSVM]
-      #  - [Untagged, CleanNonCSVM]
+  #  values: [CleanJ_PartonId]
+  #  translate jet match id: true
+  #  dir: jets
+  #  max: J_Num$1
+  #  binning: [13, 0, 13]
+  #  bin labels: ["null", other, d, u, s, c, b, t, e, "#mu", "#tau", g, W]
+  #  axis labels: ["$0 jet match", Events]
+  #  replace:
+    #  - [Clean, CleanInclusive]
+    #  - [Tagged, CleanCSVM]
+    #  - [Untagged, CleanNonCSVM]
 
 #  CleanJ_ParentMatchIndex:
-    #  values: [CleanJ_PartonGoodParentId]
-    #  translate jet match id: true
-    #  dir: jets
-    #  max: J_NumCleanInclusive
-    #  binning: [13, 0, 13]
-    #  bin labels: ["null", other, d, u, s, c, b, t, e, "#mu", "#tau", g, W]
-    #  axis labels: ["Clean jet parent match", Events]
+  #  values: [CleanJ_PartonGoodParentId]
+  #  translate jet match id: true
+  #  dir: jets
+  #  max: J_NumCleanInclusive
+  #  binning: [13, 0, 13]
+  #  bin labels: ["null", other, d, u, s, c, b, t, e, "#mu", "#tau", g, W]
+  #  axis labels: ["Clean jet parent match", Events]
 
 #  CleanJ_MotherMatchIndex:
-    #  values: [CleanJ_PartonMother0Id]
-    #  translate jet match id: true
-    #  dir: jets
-    #  max: J_NumCleanInclusive
-    #  binning: [13, 0, 13]
-    #  bin labels: ["null", other, d, u, s, c, b, t, e, "#mu", "#tau", g, W]
-    #  axis labels: ["Clean jet parent match", Events]
+  #  values: [CleanJ_PartonMother0Id]
+  #  translate jet match id: true
+  #  dir: jets
+  #  max: J_NumCleanInclusive
+  #  binning: [13, 0, 13]
+  #  bin labels: ["null", other, d, u, s, c, b, t, e, "#mu", "#tau", g, W]
+  #  axis labels: ["Clean jet parent match", Events]
 
 #  CleanJ_ParentMatchId:
-    #  values: [CleanJ_PartonMother0Id]
-    #  dir: jets
-    #  max: J_NumCleanInclusive
-    #  binning: [120, -600, 600]
-    #  axis labels: ["Clean jet parent id", Events]
+  #  values: [CleanJ_PartonMother0Id]
+  #  dir: jets
+  #  max: J_NumCleanInclusive
+  #  binning: [120, -600, 600]
+  #  axis labels: ["Clean jet parent id", Events]

@@ -48,10 +48,18 @@ class Loader(yaml.Loader):
                 fns = glob(os.path.join(os.environ["LOCALRT"], "src", "ttH", "TauRoast", "data", fn))
             filenames += fns
 
-        values = {}
+        values = None
         for fn in filenames:
             with open(fn, 'r') as f:
-                values.update(yaml.load(f, Loader))
+                to_add = yaml.load(f, Loader)
+                if isinstance(to_add, list):
+                    if values is None:
+                        values = []
+                    values += to_add
+                elif isinstance(to_add, dict):
+                    if values is None:
+                        values = {}
+                    values.update(to_add)
         return values
 
 def extract_info(config, cut, label):
@@ -458,7 +466,7 @@ def deep_replace(obj, s, r):
     This method tries to preserve the type of the replacement, if possible:
 
     >>> deep_replace('foo', 'foo', 10)
-    10
+    '10'
     """
     if isinstance(obj, list) or isinstance(obj, tuple):
         obj = map(lambda o: deep_replace(o, s, r), obj)
@@ -473,28 +481,29 @@ def deep_replace(obj, s, r):
         obj = deepcopy(obj)
     return obj
 
-def expand_histogram_config(config, channel=None):
+def expand_histogram_configs(configs, channel=None):
     """Looks for a key 'replace'  with a nested list of replacements and
     applies them to the contents.
 
-    >>> expand_histogram_config({r'$0_Label': {'replace': [['T', 't'], ['L', 'l']], 'axis labels': ['$1 this', 'Num']}})
-    {'L_Label': {'axis labels': ['l this', 'Num']}, 'T_Label': {'axis labels': ['t this', 'Num']}}
+    >>> expand_histogram_configs({'replace': [['T', 't'], ['L', 'l']], 'axis labels': ['$1 this', 'Num']})
+    [{'axis labels': ['l this', 'Num']}, {'axis labels': ['t this', 'Num']}]
     """
-    res = {}
-    for (key, cfg) in config.items():
+    res = []
+    for cfg in configs:
         if not 'replace' in cfg:
-            res[key] = cfg
+            if channel in cfg.get('channels', [channel]):
+                res.append(cfg)
             continue
 
         for replacements in cfg['replace']:
-            (newkey, newcfg) = (key, cfg)
+            newcfg = deepcopy(cfg)
             for (n, repl) in enumerate(replacements):
-                (newkey, newcfg) = deep_replace((newkey, newcfg), '${0}'.format(n), repl)
+                newcfg = deep_replace(newcfg, '${0}'.format(n), repl)
             del newcfg['replace']
 
-            if 'channels' in newcfg and channel not in newcfg['channels']:
+            if channel not in cfg.get('channels', [channel]):
                 continue
-            res[newkey] = newcfg
+            res.append(newcfg)
     return res
 
 def load_config(filename, basedir, overrides):
@@ -519,12 +528,7 @@ def load_config(filename, basedir, overrides):
 
     channel = config['analysis']['channel']
 
-    histcfg = expand_histogram_config(config['histograms'], channel)
-    for (name, cfg) in histcfg.items():
-        if 'channels' in cfg and channel not in cfg['channels']:
-            del histcfg[name]
-    config['histograms'] = histcfg
-
+    config['histograms'] = expand_histogram_configs(config['histograms'], channel)
     config['processes']['Collisions'] = config['processes']['Collisions'][channel]
 
     if 'root' in config['paths']:

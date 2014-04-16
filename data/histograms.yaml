@@ -1,261 +1,261 @@
 # vim: set sw=4 sta et :
-Events:
-    dir: general
-    binning: [1, 0, 1]
-    axis labels: ["", Events]
-    visible: [0, 1]
-    showOF: false
-    logy: 1
+- filename: Events
+  dir: general
+  binning: [1, 0, 1]
+  axis labels: ["", Events]
+  visible: [0, 1]
+  showOF: false
+  logy: 1
 
-Weights:
-    dir: general
-    binning: [30, 0, 2]
-    axis labels: [Weight, Events]
+- filename: Weights
+  dir: general
+  binning: [30, 0, 2]
+  axis labels: [Weight, Events]
 
-Weights_unweighed:
-    cancel weight: all
-    dir: general
-    binning: [30, 0, 2]
-    axis labels: [Weight, Events]
+- filename: Weights_unweighed
+  cancel weight: all
+  dir: general
+  binning: [30, 0, 2]
+  axis labels: [Weight, Events]
 
-Weights_CSV:
-    plot weight: CSVeventWeight
-    cancel weight: CSVeventWeight
-    dir: general
-    binning: [30, 0.4, 2]
-    axis labels: [CSV Event Weight, Events]
+- filename: Weights_CSV
+  plot weight: CSVeventWeight
+  cancel weight: CSVeventWeight
+  dir: general
+  binning: [30, 0.4, 2]
+  axis labels: [CSV Event Weight, Events]
 
-Weights_CSV_unweighed:
-    plot weight: CSVeventWeight
-    cancel weight: all
-    dir: general
-    binning: [30, 0.4, 2]
-    axis labels: [CSV Event Weight, Events]
+- filename: Weights_CSV_unweighed
+  plot weight: CSVeventWeight
+  cancel weight: all
+  dir: general
+  binning: [30, 0.4, 2]
+  axis labels: [CSV Event Weight, Events]
 
-Weights_PU:
-    plot weight: PUcorr
-    cancel weight: PUcorr
-    dir: general
-    binning: [30, 0, 1.5]
-    axis labels: [PU Weight, Events]
+- filename: Weights_PU
+  plot weight: PUcorr
+  cancel weight: PUcorr
+  dir: general
+  binning: [30, 0, 1.5]
+  axis labels: [PU Weight, Events]
 
-Weights_PU_unweighed:
-    plot weight: PUcorr
-    cancel weight: all
-    dir: general
-    binning: [30, 0, 1.5]
-    axis labels: [PU Weight, Events]
+- filename: Weights_PU_unweighed
+  plot weight: PUcorr
+  cancel weight: all
+  dir: general
+  binning: [30, 0, 1.5]
+  axis labels: [PU Weight, Events]
 
-Weights_TopPt:
-    plot weight: topPt
-    cancel weight: topPt
-    dir: general
-    binning: [30, 0.6, 1.3]
-    axis labels: ["Top p_{T} Weight", Events]
+- filename: Weights_TopPt
+  plot weight: topPt
+  cancel weight: topPt
+  dir: general
+  binning: [30, 0.6, 1.3]
+  axis labels: ["Top p_{T} Weight", Events]
 
-Weights_TopPt_unweighed:
-    plot weight: topPt
-    cancel weight: all
-    dir: general
-    binning: [30, 0.6, 1.3]
-    axis labels: ["Top p_{T} Weight", Events]
+- filename: Weights_TopPt_unweighed
+  plot weight: topPt
+  cancel weight: all
+  dir: general
+  binning: [30, 0.6, 1.3]
+  axis labels: ["Top p_{T} Weight", Events]
 
-Weights_Trigger:
-    plot weight: trigger
-    cancel weight: trigger
-    dir: general
-    channels: [tll]
-    binning: [30, 0.8, 1.2]
-    axis labels: ["Trigger Weight", Events]
+- filename: Weights_Trigger
+  plot weight: trigger
+  cancel weight: trigger
+  dir: general
+  channels: [tll]
+  binning: [30, 0.8, 1.2]
+  axis labels: ["Trigger Weight", Events]
 
-Weights_Trigger_unweighed:
-    plot weight: trigger
-    cancel weight: all
-    dir: general
-    channels: [tll]
-    binning: [30, 0.8, 1.2]
-    axis labels: ["Trigger Weight", Events]
+- filename: Weights_Trigger_unweighed
+  plot weight: trigger
+  cancel weight: all
+  dir: general
+  channels: [tll]
+  binning: [30, 0.8, 1.2]
+  axis labels: ["Trigger Weight", Events]
 
-Weights_Lepton$0SF:
-    plot weight: lepton$0
-    cancel weight: lepton$0
-    dir: general
-    channels: [$1]
-    binning: [30, 0.8, 1.2]
-    axis labels: ["Lepton $0 Scale Factor", Events]
-    replace:
-      - ["", ttl]
-      - [1, tll]
-      - [2, tll]
+- filename: Weights_Lepton$0SF
+  plot weight: lepton$0
+  cancel weight: lepton$0
+  dir: general
+  channels: [$1]
+  binning: [30, 0.8, 1.2]
+  axis labels: ["Lepton $0 Scale Factor", Events]
+  replace:
+  - ["", ttl]
+  - [1, tll]
+  - [2, tll]
 
-Weights_Lepton$0SF_unweighed:
-    plot weight: lepton$0
-    cancel weight: all
-    dir: general
-    channels: [$1]
-    binning: [30, 0.8, 1.2]
-    axis labels: ["Lepton $0 Scale Factor", Events]
-    replace:
-      - ["", ttl]
-      - [1, tll]
-      - [2, tll]
+- filename: Weights_Lepton$0SF_unweighed
+  plot weight: lepton$0
+  cancel weight: all
+  dir: general
+  channels: [$1]
+  binning: [30, 0.8, 1.2]
+  axis labels: ["Lepton $0 Scale Factor", Events]
+  replace:
+  - ["", ttl]
+  - [1, tll]
+  - [2, tll]
 
 #  Combos:
-    #  dir: general
-    #  binning: [20, 1, 21]
-    #  axis labels: [Combos, Events]
-    #  visible: [1, 21]
-    #  showOF: false
-    #  logy: 1
+  #  dir: general
+  #  binning: [20, 1, 21]
+  #  axis labels: [Combos, Events]
+  #  visible: [1, 21]
+  #  showOF: false
+  #  logy: 1
 
-MomentumRank:
-    channels: [tl, tll, ttl]
-    dir: general
-    binning: [10, 0, 10]
-    axis labels: [Momentum Rank, Events]
-    visible: [0, 5.99]
-    showOF: false
-    logy: 1
+- filename: MomentumRank
+  channels: [tl, tll, ttl]
+  dir: general
+  binning: [10, 0, 10]
+  axis labels: [Momentum Rank, Events]
+  visible: [0, 5.99]
+  showOF: false
+  logy: 1
 
-MET:
-    dir: general
-    binning: [20, 0, 300]
-    visible: [0, 200]
-    axis labels: [MET, Events]
+- filename: MET
+  dir: general
+  binning: [20, 0, 300]
+  visible: [0, 200]
+  axis labels: [MET, Events]
 
-L_JetsVisibleMass:
-    dir: general
-    binning: [20, 0, 1000]
-    channels: [tll]
-    axis labels: ['Visible mass of non-#tau_{h} jets, lepton', Events]
-    showOF: true
-    logy: 1
+- filename: L_JetsVisibleMass
+  dir: general
+  binning: [20, 0, 1000]
+  channels: [tll]
+  axis labels: ['Visible mass of non-#tau_{h} jets, lepton', Events]
+  showOF: true
+  logy: 1
 
-JetsVisibleMass:
-    dir: general
-    binning: [20, 0, 1000]
-    channels: [tll]
-    axis labels: ['Visible mass of non-#tau_{h} jets', Events]
-    showOF: true
-    logy: 1
+- filename: JetsVisibleMass
+  dir: general
+  binning: [20, 0, 1000]
+  channels: [tll]
+  axis labels: ['Visible mass of non-#tau_{h} jets', Events]
+  showOF: true
+  logy: 1
 
-HT:
-    dir: general
-    binning: [20, 0, 1500]
-    channels: [ll, tl, tll, ttl]
-    axis labels: ['H_{T}', Events]
-    visible: [200, 1000]
-    showOF: true
-    logy: 1
+- filename: HT
+  dir: general
+  binning: [20, 0, 1500]
+  channels: [ll, tl, tll, ttl]
+  axis labels: ['H_{T}', Events]
+  visible: [200, 1000]
+  showOF: true
+  logy: 1
 
-MHT:
-    dir: general
-    binning: [20, 0, 200]
-    axis labels: [MHT, Events]
+- filename: MHT
+  dir: general
+  binning: [20, 0, 200]
+  axis labels: [MHT, Events]
 
-FinalBDTG:
-    dir: general
-    binning: [10, -1, 1]
-    axis labels: [BDT output, Events]
-    visible: [-1, 1]
-    showOF: false
-    logy: 1
+- filename: FinalBDTG
+  dir: general
+  binning: [10, -1, 1]
+  axis labels: [BDT output, Events]
+  visible: [-1, 1]
+  showOF: false
+  logy: 1
 
 #  FinalCFMlpANN:
-    #  dir: general
-    #  binning: [30, -1, 1]
-    #  axis labels: [CFMlpANN response, Events]
-    #  visible: [0, 1]
-    #  showOF: false
-    #  logy: 1
+  #  dir: general
+  #  binning: [30, -1, 1]
+  #  axis labels: [CFMlpANN response, Events]
+  #  visible: [0, 1]
+  #  showOF: false
+  #  logy: 1
 
 #  ComboBDT:
-    #  dir: general
-    #  binning: [30, -1, 1]
-    #  axis labels: [Combo selector response, Events]
-    #  visible: [-1, 1]
-    #  showOF: false
-    #  logy: 1
+  #  dir: general
+  #  binning: [30, -1, 1]
+  #  axis labels: [Combo selector response, Events]
+  #  visible: [-1, 1]
+  #  showOF: false
+  #  logy: 1
 
 #  SelectedComboRank:
-    #  dir: general
-    #  binning: [20, 0, 20]
-    #  axis labels: [Selected combo rank, Events]
-    #  visible: [0, 20]
-    #  showOF: false
-    #  logy: 1
+  #  dir: general
+  #  binning: [20, 0, 20]
+  #  axis labels: [Selected combo rank, Events]
+  #  visible: [0, 20]
+  #  showOF: false
+  #  logy: 1
 
-V_NumVertices_noPURW:
-    values: [V_NumVertices]
-    cancel weight: PUcorr
-    dir: pileup
-    binning: [20, 0, 40]
-    axis labels: ["Number PV, no PURW", Events]
+- filename: V_NumVertices_noPURW
+  values: [V_NumVertices]
+  cancel weight: PUcorr
+  dir: pileup
+  binning: [20, 0, 40]
+  axis labels: ["Number PV, no PURW", Events]
 
-V_NumInteractionsBX0_noPURW:
-    values: [V_NumInteractionsBX0]
-    cancel weight: PUcorr
-    dir: pileup
-    binning: [20, 0, 40]
-    axis labels: ["Number BX0, no PURW", Events]
+- filename: V_NumInteractionsBX0_noPURW
+  values: [V_NumInteractionsBX0]
+  cancel weight: PUcorr
+  dir: pileup
+  binning: [20, 0, 40]
+  axis labels: ["Number BX0, no PURW", Events]
 
-V_NumInteractionsBXm1_noPURW:
-    values: [V_NumInteractionsBX0m1]
-    cancel weight: PUcorr
-    dir: pileup
-    binning: [20, 0, 40]
-    axis labels: ["Number BXm1, no PURW", Events]
+- filename: V_NumInteractionsBXm1_noPURW
+  values: [V_NumInteractionsBX0m1]
+  cancel weight: PUcorr
+  dir: pileup
+  binning: [20, 0, 40]
+  axis labels: ["Number BXm1, no PURW", Events]
 
-V_NumInteractionsBXp1_noPURW:
-    values: [V_NumInteractionsBX0p1]
-    cancel weight: PUcorr
-    dir: pileup
-    binning: [20, 0, 40]
-    axis labels: ["Number BXp1, no PURW", Events]
+- filename: V_NumInteractionsBXp1_noPURW
+  values: [V_NumInteractionsBX0p1]
+  cancel weight: PUcorr
+  dir: pileup
+  binning: [20, 0, 40]
+  axis labels: ["Number BXp1, no PURW", Events]
 
-V_NumVertices:
-    dir: pileup
-    binning: [20, 0, 40]
-    axis labels: [Number PV, after PURW, Events]
+- filename: V_NumVertices
+  dir: pileup
+  binning: [20, 0, 40]
+  axis labels: [Number PV, after PURW, Events]
 
-V_NumInteractionsBX0:
-    dir: pileup
-    binning: [20, 0, 40]
-    axis labels: [Number BX0, after PURW, Events]
+- filename: V_NumInteractionsBX0
+  dir: pileup
+  binning: [20, 0, 40]
+  axis labels: [Number BX0, after PURW, Events]
 
-V_NumInteractionsBXm1:
-    dir: pileup
-    binning: [20, 0, 40]
-    axis labels: [Number BXm1, after PURW, Events]
+- filename: V_NumInteractionsBXm1
+  dir: pileup
+  binning: [20, 0, 40]
+  axis labels: [Number BXm1, after PURW, Events]
 
-V_NumInteractionsBXp1:
-    dir: pileup
-    binning: [20, 0, 40]
-    axis labels: [Number BXp1, after PURW, Events]
+- filename: V_NumInteractionsBXp1
+  dir: pileup
+  binning: [20, 0, 40]
+  axis labels: [Number BXp1, after PURW, Events]
 
-VertexZcoord:
-    dir: pileup
-    binning: [40, -20, 20]
-    axis labels: [Vertex Z coordinate, after PURW, Events]
+- filename: VertexZcoord
+  dir: pileup
+  binning: [40, -20, 20]
+  axis labels: [Vertex Z coordinate, after PURW, Events]
 
-$0_MatchMatrix:
-    values: [$0_GenMatchId, $0_GenMatchMother0Id]
-    additional info: {y: $0_GoodGrandParentId}
-    translate match id: true
-    dir: $2/generator
-    channels: [$3]
-    binning: [9, 0, 9, 11, 0, 11]
-    bin labels:
-      - ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W]
-      - ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W, W (t), W (H)]
-    axis labels: ["$1 match", "$1 parent match", Events]
-    showOF: false
-    replace:
-      - [T, "#tau", tau, tl]
-      - [T, "#tau", tau, tll]
-      - [T1, "#tau_{1}", tau, ttl]
-      - [T2, "#tau_{2}", tau, ttl]
-      - [L, "lepton", lepton, tl]
-      - [L, "lepton", lepton, ttl]
-      - [L1, "lepton 1", lepton, tll]
-      - [L2, "lepton 2", lepton, tll]
+- filename: $0_MatchMatrix
+  values: [$0_GenMatchId, $0_GenMatchMother0Id]
+  additional info: {y: $0_GoodGrandParentId}
+  translate match id: true
+  dir: $2/generator
+  channels: [$3]
+  binning: [9, 0, 9, 11, 0, 11]
+  bin labels:
+  - ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W]
+  - ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W, W (t), W (H)]
+  axis labels: ["$1 match", "$1 parent match", Events]
+  showOF: false
+  replace:
+  - [T, "#tau", tau, tl]
+  - [T, "#tau", tau, tll]
+  - [T1, "#tau_{1}", tau, ttl]
+  - [T2, "#tau_{2}", tau, ttl]
+  - [L, "lepton", lepton, tl]
+  - [L, "lepton", lepton, ttl]
+  - [L1, "lepton 1", lepton, tll]
+  - [L2, "lepton 2", lepton, tll]

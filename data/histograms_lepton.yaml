@@ -1,246 +1,246 @@
 # vim: set sw=4 sta et :
 
-$0_Pt:
-    dir: lepton/kinematic
-    channels: [$2]
-    binning: [60, 0, 200]
-    axis labels: ['lepton$1 p_{T}', Events]
-    visible: [$3, $4]
-    showOF: true
-    logy: 1
-    replace:
-      - [L, "", tl, 30, 100]
-      - [L, "", ttl, 30, 100]
-      - [L1, "_{1}", tll, 20, 150]
-      - [L2, "_{2}", tll, 10, 100]
-      - [osL, "^{os}", tll, 20, 150]
-      - [ssL, "^{ss}", tll, 20, 150]
+- filename: $0_Pt
+  dir: lepton/kinematic
+  channels: [$2]
+  binning: [60, 0, 200]
+  axis labels: ['lepton$1 p_{T}', Events]
+  visible: [$3, $4]
+  showOF: true
+  logy: 1
+  replace:
+    - [L, "", tl, 30, 100]
+    - [L, "", ttl, 30, 100]
+    - [L1, "_{1}", tll, 20, 150]
+    - [L2, "_{2}", tll, 10, 100]
+    - [osL, "^{os}", tll, 20, 150]
+    - [ssL, "^{ss}", tll, 20, 150]
 
-$0_Eta:
-    dir: lepton/kinematic
-    channels: [$2]
-    binning: [30, -3, 3]
-    axis labels: ["lepton$1 #eta", Events]
-    visible: [-2.1, 2.1]
-    showOF: false
-    logy: 1
-    replace:
-      - [L, "", tl]
-      - [L, "", ttl]
-      - [L1, "_{1}", tll]
-      - [L2, "_{2}", tll]
-      - [osL, "^{os}", tll]
-      - [ssL, "^{ss}", tll]
+- filename: $0_Eta
+  dir: lepton/kinematic
+  channels: [$2]
+  binning: [30, -3, 3]
+  axis labels: ["lepton$1 #eta", Events]
+  visible: [-2.1, 2.1]
+  showOF: false
+  logy: 1
+  replace:
+    - [L, "", tl]
+    - [L, "", ttl]
+    - [L1, "_{1}", tll]
+    - [L2, "_{2}", tll]
+    - [osL, "^{os}", tll]
+    - [ssL, "^{ss}", tll]
 
-$0_Phi:
-    dir: lepton/kinematic
-    channels: [$2]
-    binning: [40, -3.2, 3.2]
-    axis labels: ["l$1 #phi", Events]
-    visible: [-3.2, 3.2]
-    showOF: false
-    logy: 1
-    replace:
-      - [L, "", tl]
-      - [L, "", ttl]
-      - [L1, "_{1}", tll]
-      - [L2, "_{2}", tll]
-      - [osL, "^{os}", tll]
-      - [ssL, "^{ss}", tll]
+- filename: $0_Phi
+  dir: lepton/kinematic
+  channels: [$2]
+  binning: [40, -3.2, 3.2]
+  axis labels: ["l$1 #phi", Events]
+  visible: [-3.2, 3.2]
+  showOF: false
+  logy: 1
+  replace:
+    - [L, "", tl]
+    - [L, "", ttl]
+    - [L1, "_{1}", tll]
+    - [L2, "_{2}", tll]
+    - [osL, "^{os}", tll]
+    - [ssL, "^{ss}", tll]
 
-$0_Mt:
-    dir: lepton
-    channels: [$2]
-    binning: [20, 0, 200]
-    axis labels: ['lepton$1 m_{T}', Events]
-    showOF: true
-    logy: 1
-    replace:
-      - [L, "", tl]
-      - [L, "", ttl]
-      - [L1, "_{1}", tll]
-      - [L2, "_{2}", tll]
-      - [osL, "^{os}", tll]
-      - [ssL, "^{ss}", tll]
+- filename: $0_Mt
+  dir: lepton
+  channels: [$2]
+  binning: [20, 0, 200]
+  axis labels: ['lepton$1 m_{T}', Events]
+  showOF: true
+  logy: 1
+  replace:
+    - [L, "", tl]
+    - [L, "", ttl]
+    - [L1, "_{1}", tll]
+    - [L2, "_{2}", tll]
+    - [osL, "^{os}", tll]
+    - [ssL, "^{ss}", tll]
 
-$0_Mt2:
-    dir: lepton
-    channels: [$2]
-    binning: [20, 0, 200]
-    axis labels: ['lepton$1 m_{T}', Events]
-    showOF: true
-    logy: 1
-    replace:
-      - [L, "", tl]
-      - [L, "", ttl]
-      - [L1, "_{1}", tll]
-      - [L2, "_{2}", tll]
-      - [osL, "^{os}", tll]
-      - [ssL, "^{ss}", tll]
+- filename: $0_Mt2
+  dir: lepton
+  channels: [$2]
+  binning: [20, 0, 200]
+  axis labels: ['lepton$1 m_{T}', Events]
+  showOF: true
+  logy: 1
+  replace:
+    - [L, "", tl]
+    - [L, "", ttl]
+    - [L1, "_{1}", tll]
+    - [L2, "_{2}", tll]
+    - [osL, "^{os}", tll]
+    - [ssL, "^{ss}", tll]
 
-$0_Mt2_MET:
-    values: [$0_Mt2, MET]
-    dir: lepton/veto
-    visible: [[0, 150], [0, 160]]
-    channels: [$2]
-    binning: [15, 0, 225, 15, 0, 300]
-    axis labels: ['lepton$1 m_{T}', MET, Events]
-    showOF: true
-    logy: 1
-    replace:
-      - [L, "", tl]
-      - [L, "", ttl]
-      - [L1, "_{1}", tll]
-      - [L2, "_{2}", tll]
-      - [osL, "^{os}", tll]
-      - [ssL, "^{ss}", tll]
+- filename: $0_Mt2_MET
+  values: [$0_Mt2, MET]
+  dir: lepton/veto
+  visible: [[0, 150], [0, 160]]
+  channels: [$2]
+  binning: [15, 0, 225, 15, 0, 300]
+  axis labels: ['lepton$1 m_{T}', MET, Events]
+  showOF: true
+  logy: 1
+  replace:
+    - [L, "", tl]
+    - [L, "", ttl]
+    - [L1, "_{1}", tll]
+    - [L2, "_{2}", tll]
+    - [osL, "^{os}", tll]
+    - [ssL, "^{ss}", tll]
 
-L1L2_Pt:
-    values: [L1_Pt, L2_Pt]
-    dir: lepton/kinematic
-    channels: [tll]
-    binning: [40, 0, 200, 40, 0, 200]
-    axis labels: ['lepton1 p_{T}', 'lepton2 p_{T}']
+- filename: L1L2_Pt
+  values: [L1_Pt, L2_Pt]
+  dir: lepton/kinematic
+  channels: [tll]
+  binning: [40, 0, 200, 40, 0, 200]
+  axis labels: ['lepton1 p_{T}', 'lepton2 p_{T}']
 
-T$0L$2_Pt:
-    values: [T$0_Pt, L$2_Pt]
-    dir: lepton/kinematic
-    channels: [$4]
-    binning: [40, 0, 200, 40, 0, 200]
-    axis labels: ['tau$1 p_{T}', 'lepton$3 p_{T}']
-    replace:
-      - [1, "_{1}", "", "", ttl]
-      - [2, "_{2}", "", "", ttl]
-      - ["", "", 1, "_{1}", tll]
-      - ["", "", 2, "_{2}", tll]
+- filename: T$0L$2_Pt
+  values: [T$0_Pt, L$2_Pt]
+  dir: lepton/kinematic
+  channels: [$4]
+  binning: [40, 0, 200, 40, 0, 200]
+  axis labels: ['tau$1 p_{T}', 'lepton$3 p_{T}']
+  replace:
+    - [1, "_{1}", "", "", ttl]
+    - [2, "_{2}", "", "", ttl]
+    - ["", "", 1, "_{1}", tll]
+    - ["", "", 2, "_{2}", tll]
 
-L1L2_DeltaR:
-    dir: lepton/geometric
-    channels: [tll]
-    binning: [15, 0, 6.28]
-    axis labels: ['#Delta R(lepton 1,2)', Events]
+- filename: L1L2_DeltaR
+  dir: lepton/geometric
+  channels: [tll]
+  binning: [15, 0, 6.28]
+  axis labels: ['#Delta R(lepton 1,2)', Events]
 
-L1L2_Mt:
-    values: [L1_Mt2, L2_Mt2]
-    dir: lepton/debug
-    channels: [tll]
-    binning: [10, 0, 150, 10, 0, 150]
-    axis labels: ['lepton1 m_{T}', 'lepton2 m_{T}']
+- filename: L1L2_Mt
+  values: [L1_Mt2, L2_Mt2]
+  dir: lepton/debug
+  channels: [tll]
+  binning: [10, 0, 150, 10, 0, 150]
+  axis labels: ['lepton1 m_{T}', 'lepton2 m_{T}']
 
-L$0_RelIso:
-    dir: lepton
-    channels: [$2]
-    binning: [30, 0, .25]
-    axis labels: ["l$1 RelIso", Events]
-    replace:
-      - ["", "", tl]
-      - ["", "", ttl]
-      - [1, "_{1}", tll]
-      - [2, "_{2}", tll]
+- filename: L$0_RelIso
+  dir: lepton
+  channels: [$2]
+  binning: [30, 0, .25]
+  axis labels: ["l$1 RelIso", Events]
+  replace:
+    - ["", "", tl]
+    - ["", "", ttl]
+    - [1, "_{1}", tll]
+    - [2, "_{2}", tll]
 
-L$0_MatchIndex:
-    values: [L$0_GenMatchId]
-    translate match id: true
-    dir: lepton/generator
-    channels: [$1]
-    binning: [9, 0, 9]
-    bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W]
-    axis labels: ["lepton $0 match", Events]
-    replace:
-      - ["", tl]
-      - ["", ttl]
-      - [1, tll]
-      - [2, tll]
+- filename: L$0_MatchIndex
+  values: [L$0_GenMatchId]
+  translate match id: true
+  dir: lepton/generator
+  channels: [$1]
+  binning: [9, 0, 9]
+  bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W]
+  axis labels: ["lepton $0 match", Events]
+  replace:
+    - ["", tl]
+    - ["", ttl]
+    - [1, tll]
+    - [2, tll]
 
-L$0_ParentMatchIndex:
-    values: [L$0_GoodParentId]
-    additional info: [L$0_GoodGrandParentId]
-    translate match id: true
-    dir: lepton/generator
-    channels: [$2]
-    binning: [11, 0, 11]
-    bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W, W (t), W (H)]
-    axis labels: ["lepton$1 Parent", Events]
-    showOF: false
-    logy: 1
-    replace:
-      - ["", tl]
-      - ["", "", ttl]
-      - [1, "_{1}", tll]
-      - [2, "_{2}", tll]
+- filename: L$0_ParentMatchIndex
+  values: [L$0_GoodParentId]
+  additional info: [L$0_GoodGrandParentId]
+  translate match id: true
+  dir: lepton/generator
+  channels: [$2]
+  binning: [11, 0, 11]
+  bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W, W (t), W (H)]
+  axis labels: ["lepton$1 Parent", Events]
+  showOF: false
+  logy: 1
+  replace:
+    - ["", tl]
+    - ["", "", ttl]
+    - [1, "_{1}", tll]
+    - [2, "_{2}", tll]
 
-$0_ImpactParameter:
-    dir: lepton
-    channels: [$2]
-    binning: [50, -0.04, 0.04]
-    axis labels: ["l$1 Impact parameter", Events]
-    replace:
-      - [L, "", tl]
-      - [L, "", ttl]
-      - [L1, "_{1}", tll]
-      - [L2, "_{2}", tll]
-      - [osL, "^{os}", tll]
-      - [ssL, "^{ss}", tll]
+- filename: $0_ImpactParameter
+  dir: lepton
+  channels: [$2]
+  binning: [50, -0.04, 0.04]
+  axis labels: ["l$1 Impact parameter", Events]
+  replace:
+    - [L, "", tl]
+    - [L, "", ttl]
+    - [L1, "_{1}", tll]
+    - [L2, "_{2}", tll]
+    - [osL, "^{os}", tll]
+    - [ssL, "^{ss}", tll]
 
-$0_CorrectedDZ:
-    dir: lepton
-    channels: [$2]
-    binning: [50, -0.04, 0.04]
-    axis labels: ["l$1 corrected #Delta z", Events]
-    replace:
-      - [L, "", tl]
-      - [L, "", ttl]
-      - [L1, "_{1}", tll]
-      - [L2, "_{2}", tll]
-      - [osL, "^{os}", tll]
-      - [ssL, "^{ss}", tll]
+- filename: $0_CorrectedDZ
+  dir: lepton
+  channels: [$2]
+  binning: [50, -0.04, 0.04]
+  axis labels: ["l$1 corrected #Delta z", Events]
+  replace:
+    - [L, "", tl]
+    - [L, "", ttl]
+    - [L1, "_{1}", tll]
+    - [L2, "_{2}", tll]
+    - [osL, "^{os}", tll]
+    - [ssL, "^{ss}", tll]
 
-L1L2_VisibleMass_zoom:
-    values: [L1L2_VisibleMass]
-    dir: lepton
-    channels: [tll]
-    binning: [300, 0, 200]
-    axis labels: ["Dilepton Visible Mass", Events]
-    visible: [76, 106]
+- filename: L1L2_VisibleMass_zoom
+  values: [L1L2_VisibleMass]
+  dir: lepton
+  channels: [tll]
+  binning: [300, 0, 200]
+  axis labels: ["Dilepton Visible Mass", Events]
+  visible: [76, 106]
 
-L1L2_VisibleMass:
-    dir: lepton
-    channels: [tll]
-    binning: [20, 0, 200]
-    axis labels: ["Dilepton Visible Mass", Events]
+- filename: L1L2_VisibleMass
+  dir: lepton
+  channels: [tll]
+  binning: [20, 0, 200]
+  axis labels: ["Dilepton Visible Mass", Events]
 
-L1L2_VisibleMass_$0:
-    values: [L1L2_VisibleMass, $0]
-    dir: lepton/veto
-    channels: [tll]
-    binning: [20, 0, 200, 50, 0, 300]
-    axis labels: ["Dilepton Visible Mass", $0]
-    replace:
-      - [MET]
-      - [MHT]
+- filename: L1L2_VisibleMass_$0
+  values: [L1L2_VisibleMass, $0]
+  dir: lepton/veto
+  channels: [tll]
+  binning: [20, 0, 200, 50, 0, 300]
+  axis labels: ["Dilepton Visible Mass", $0]
+  replace:
+    - [MET]
+    - [MHT]
 
-L1L2_VisibleMass_$0_zoom:
-    values: [L1L2_VisibleMass, $0]
-    dir: lepton/veto
-    channels: [tll]
-    binning: [30, 70, 110, 30, 0, 100]
-    axis labels: ["Dilepton Visible Mass", $0]
-    replace:
-      - [MET]
-      - [MHT]
+- filename: L1L2_VisibleMass_$0_zoom
+  values: [L1L2_VisibleMass, $0]
+  dir: lepton/veto
+  channels: [tll]
+  binning: [30, 70, 110, 30, 0, 100]
+  axis labels: ["Dilepton Visible Mass", $0]
+  replace:
+    - [MET]
+    - [MHT]
 
-Num$2$0:
-    dir: counts
-    binning: [20, 0, 20]
-    axis labels: [Number of $1 ($3), Events]
-    visible: [0, 19.99]
-    showOF: true
-    logy: 1
-    replace:
-      - [Electrons, electrons, Loose, loose]
-      - [Electrons, electrons, Tight, tight]
-      - [Leptons, leptons, Loose, loose]
-      - [Leptons, leptons, Tight, tight]
-      - [Muons, muons, Loose, loose]
-      - [Muons, muons, Tight, tight]
+- filename: Num$2$0
+  dir: counts
+  binning: [20, 0, 20]
+  axis labels: [Number of $1 ($3), Events]
+  visible: [0, 19.99]
+  showOF: true
+  logy: 1
+  replace:
+    - [Electrons, electrons, Loose, loose]
+    - [Electrons, electrons, Tight, tight]
+    - [Leptons, leptons, Loose, loose]
+    - [Leptons, leptons, Tight, tight]
+    - [Muons, muons, Loose, loose]
+    - [Muons, muons, Tight, tight]
 

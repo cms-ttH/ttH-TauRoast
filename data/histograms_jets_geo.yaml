@@ -1,107 +1,107 @@
 # vim: set sw=4 sta et :
 
-$0J$3_DeltaR:
-    dir: jets/geometric
-    binning: [15, 0, 6.28]
-    channels: [$5]
-    axis labels: ['#Delta R($2, $4)', Events]
-    max: J_NumClean$1
-    replace:
-      - [Clean, Inclusive, Jet, T, '#tau', tll]
-      - [Tagged, CSVM, Tagged jet, T, '#tau', tll]
-      - [Untagged, NonCSVM, Untagged Jet, T, '#tau', tll]
-      - [Clean, Inclusive, Jet, L1, 'lepton_{1}', tll]
-      - [Tagged, CSVM, Tagged jet, L1, 'lepton_{1}', tll]
-      - [Untagged, NonCSVM, Untagged Jet, L1, 'lepton_{1}', tll]
-      - [Clean, Inclusive, Jet, L2, 'lepton_{2}', tll]
-      - [Tagged, CSVM, Tagged jet, L2, 'lepton_{2}', tll]
-      - [Untagged, NonCSVM, Untagged Jet, L2, 'lepton_{2}', tll]
+- filename: $0J$3_DeltaR
+  dir: jets/geometric
+  binning: [15, 0, 6.28]
+  channels: [$5]
+  axis labels: ['#Delta R($2, $4)', Events]
+  max: J_NumClean$1
+  replace:
+    - [Clean, Inclusive, Jet, T, '#tau', tll]
+    - [Tagged, CSVM, Tagged jet, T, '#tau', tll]
+    - [Untagged, NonCSVM, Untagged Jet, T, '#tau', tll]
+    - [Clean, Inclusive, Jet, L1, 'lepton_{1}', tll]
+    - [Tagged, CSVM, Tagged jet, L1, 'lepton_{1}', tll]
+    - [Untagged, NonCSVM, Untagged Jet, L1, 'lepton_{1}', tll]
+    - [Clean, Inclusive, Jet, L2, 'lepton_{2}', tll]
+    - [Tagged, CSVM, Tagged jet, L2, 'lepton_{2}', tll]
+    - [Untagged, NonCSVM, Untagged Jet, L2, 'lepton_{2}', tll]
 
-$0J$3_AvgDeltaR:
-    values: [$0J$3_DeltaR]
-    dir: jets/geometric
-    binning: [15, 0, 6.28]
-    channels: [$5]
-    axis labels: ['Average #Delta R($2, $4)', Events]
-    max: J_NumClean$1
-    mode: average
-    replace:
-      - [Clean, Inclusive, Jet, T, '#tau', tll]
-      - [Tagged, CSVM, Tagged jet, T, '#tau', tll]
-      - [Untagged, NonCSVM, Untagged Jet, T, '#tau', tll]
-      - [Clean, Inclusive, Jet, L1, 'lepton_{1}', tll]
-      - [Tagged, CSVM, Tagged jet, L1, 'lepton_{1}', tll]
-      - [Untagged, NonCSVM, Untagged Jet, L1, 'lepton_{1}', tll]
-      - [Clean, Inclusive, Jet, L2, 'lepton_{2}', tll]
-      - [Tagged, CSVM, Tagged jet, L2, 'lepton_{2}', tll]
-      - [Untagged, NonCSVM, Untagged Jet, L2, 'lepton_{2}', tll]
+- filename: $0J$3_AvgDeltaR
+  values: [$0J$3_DeltaR]
+  dir: jets/geometric
+  binning: [15, 0, 6.28]
+  channels: [$5]
+  axis labels: ['Average #Delta R($2, $4)', Events]
+  max: J_NumClean$1
+  mode: average
+  replace:
+    - [Clean, Inclusive, Jet, T, '#tau', tll]
+    - [Tagged, CSVM, Tagged jet, T, '#tau', tll]
+    - [Untagged, NonCSVM, Untagged Jet, T, '#tau', tll]
+    - [Clean, Inclusive, Jet, L1, 'lepton_{1}', tll]
+    - [Tagged, CSVM, Tagged jet, L1, 'lepton_{1}', tll]
+    - [Untagged, NonCSVM, Untagged Jet, L1, 'lepton_{1}', tll]
+    - [Clean, Inclusive, Jet, L2, 'lepton_{2}', tll]
+    - [Tagged, CSVM, Tagged jet, L2, 'lepton_{2}', tll]
+    - [Untagged, NonCSVM, Untagged Jet, L2, 'lepton_{2}', tll]
 
-$0J$3_MaxDeltaR:
-    values: [$0J$3_DeltaR]
-    dir: jets/geometric
-    binning: [15, 0, 6.28]
-    channels: [$5]
-    axis labels: ['Max #Delta R($2, $4)', Events]
-    max: J_NumClean$1
-    mode: max
-    replace:
-      - [Clean, Inclusive, Jet, T, '#tau', tll]
-      - [Tagged, CSVM, Tagged jet, T, '#tau', tll]
-      - [Untagged, NonCSVM, Untagged Jet, T, '#tau', tll]
-      - [Clean, Inclusive, Jet, L1, 'lepton_{1}', tll]
-      - [Tagged, CSVM, Tagged jet, L1, 'lepton_{1}', tll]
-      - [Untagged, NonCSVM, Untagged Jet, L1, 'lepton_{1}', tll]
-      - [Clean, Inclusive, Jet, L2, 'lepton_{2}', tll]
-      - [Tagged, CSVM, Tagged jet, L2, 'lepton_{2}', tll]
-      - [Untagged, NonCSVM, Untagged Jet, L2, 'lepton_{2}', tll]
+- filename: $0J$3_MaxDeltaR
+  values: [$0J$3_DeltaR]
+  dir: jets/geometric
+  binning: [15, 0, 6.28]
+  channels: [$5]
+  axis labels: ['Max #Delta R($2, $4)', Events]
+  max: J_NumClean$1
+  mode: max
+  replace:
+    - [Clean, Inclusive, Jet, T, '#tau', tll]
+    - [Tagged, CSVM, Tagged jet, T, '#tau', tll]
+    - [Untagged, NonCSVM, Untagged Jet, T, '#tau', tll]
+    - [Clean, Inclusive, Jet, L1, 'lepton_{1}', tll]
+    - [Tagged, CSVM, Tagged jet, L1, 'lepton_{1}', tll]
+    - [Untagged, NonCSVM, Untagged Jet, L1, 'lepton_{1}', tll]
+    - [Clean, Inclusive, Jet, L2, 'lepton_{2}', tll]
+    - [Tagged, CSVM, Tagged jet, L2, 'lepton_{2}', tll]
+    - [Untagged, NonCSVM, Untagged Jet, L2, 'lepton_{2}', tll]
 
-$0J$3_MinDeltaR:
-    values: [$0J$3_DeltaR]
-    dir: jets/geometric
-    binning: [15, 0, 6.28]
-    channels: [$5]
-    axis labels: ['Min #Delta R($2, $4)', Events]
-    max: J_NumClean$1
-    mode: min
-    replace:
-      - [Clean, Inclusive, Jet, T, '#tau', tll]
-      - [Tagged, CSVM, Tagged jet, T, '#tau', tll]
-      - [Untagged, NonCSVM, Untagged Jet, T, '#tau', tll]
-      - [Clean, Inclusive, Jet, L1, 'lepton_{1}', tll]
-      - [Tagged, CSVM, Tagged jet, L1, 'lepton_{1}', tll]
-      - [Untagged, NonCSVM, Untagged Jet, L1, 'lepton_{1}', tll]
-      - [Clean, Inclusive, Jet, L2, 'lepton_{2}', tll]
-      - [Tagged, CSVM, Tagged jet, L2, 'lepton_{2}', tll]
-      - [Untagged, NonCSVM, Untagged Jet, L2, 'lepton_{2}', tll]
+- filename: $0J$3_MinDeltaR
+  values: [$0J$3_DeltaR]
+  dir: jets/geometric
+  binning: [15, 0, 6.28]
+  channels: [$5]
+  axis labels: ['Min #Delta R($2, $4)', Events]
+  max: J_NumClean$1
+  mode: min
+  replace:
+    - [Clean, Inclusive, Jet, T, '#tau', tll]
+    - [Tagged, CSVM, Tagged jet, T, '#tau', tll]
+    - [Untagged, NonCSVM, Untagged Jet, T, '#tau', tll]
+    - [Clean, Inclusive, Jet, L1, 'lepton_{1}', tll]
+    - [Tagged, CSVM, Tagged jet, L1, 'lepton_{1}', tll]
+    - [Untagged, NonCSVM, Untagged Jet, L1, 'lepton_{1}', tll]
+    - [Clean, Inclusive, Jet, L2, 'lepton_{2}', tll]
+    - [Tagged, CSVM, Tagged jet, L2, 'lepton_{2}', tll]
+    - [Untagged, NonCSVM, Untagged Jet, L2, 'lepton_{2}', tll]
 
-$0LJ$3_DeltaR:
-    dir: jets/geometric
-    binning: [15, 0, 6.28]
-    channels: [$5]
-    axis labels: ['#Delta R($2, $4)', Events]
-    replace:
-      - [Clean, Inclusive, Jet, T, '#tau', tll]
-      - [Tagged, CSVM, Tagged jet, T, '#tau', tll]
-      - [Untagged, NonCSVM, Untagged Jet, T, '#tau', tll]
-      - [Clean, Inclusive, Jet, L1, 'lepton_{1}', tll]
-      - [Tagged, CSVM, Tagged jet, L1, 'lepton_{1}', tll]
-      - [Untagged, NonCSVM, Untagged Jet, L1, 'lepton_{1}', tll]
-      - [Clean, Inclusive, Jet, L2, 'lepton_{2}', tll]
-      - [Tagged, CSVM, Tagged jet, L2, 'lepton_{2}', tll]
-      - [Untagged, NonCSVM, Untagged Jet, L2, 'lepton_{2}', tll]
+- filename: $0LJ$3_DeltaR
+  dir: jets/geometric
+  binning: [15, 0, 6.28]
+  channels: [$5]
+  axis labels: ['#Delta R($2, $4)', Events]
+  replace:
+    - [Clean, Inclusive, Jet, T, '#tau', tll]
+    - [Tagged, CSVM, Tagged jet, T, '#tau', tll]
+    - [Untagged, NonCSVM, Untagged Jet, T, '#tau', tll]
+    - [Clean, Inclusive, Jet, L1, 'lepton_{1}', tll]
+    - [Tagged, CSVM, Tagged jet, L1, 'lepton_{1}', tll]
+    - [Untagged, NonCSVM, Untagged Jet, L1, 'lepton_{1}', tll]
+    - [Clean, Inclusive, Jet, L2, 'lepton_{2}', tll]
+    - [Tagged, CSVM, Tagged jet, L2, 'lepton_{2}', tll]
+    - [Untagged, NonCSVM, Untagged Jet, L2, 'lepton_{2}', tll]
 
-$0SubLJ$3_DeltaR:
-    dir: jets/geometric
-    binning: [15, 0, 6.28]
-    channels: [$5]
-    axis labels: ['#Delta R($2, $4)', Events]
-    replace:
-      - [Clean, Inclusive, Jet, T, '#tau', tll]
-      - [Tagged, CSVM, Tagged jet, T, '#tau', tll]
-      - [Untagged, NonCSVM, Untagged Jet, T, '#tau', tll]
-      - [Clean, Inclusive, Jet, L1, 'lepton_{1}', tll]
-      - [Tagged, CSVM, Tagged jet, L1, 'lepton_{1}', tll]
-      - [Untagged, NonCSVM, Untagged Jet, L1, 'lepton_{1}', tll]
-      - [Clean, Inclusive, Jet, L2, 'lepton_{2}', tll]
-      - [Tagged, CSVM, Tagged jet, L2, 'lepton_{2}', tll]
-      - [Untagged, NonCSVM, Untagged Jet, L2, 'lepton_{2}', tll]
+- filename: $0SubLJ$3_DeltaR
+  dir: jets/geometric
+  binning: [15, 0, 6.28]
+  channels: [$5]
+  axis labels: ['#Delta R($2, $4)', Events]
+  replace:
+    - [Clean, Inclusive, Jet, T, '#tau', tll]
+    - [Tagged, CSVM, Tagged jet, T, '#tau', tll]
+    - [Untagged, NonCSVM, Untagged Jet, T, '#tau', tll]
+    - [Clean, Inclusive, Jet, L1, 'lepton_{1}', tll]
+    - [Tagged, CSVM, Tagged jet, L1, 'lepton_{1}', tll]
+    - [Untagged, NonCSVM, Untagged Jet, L1, 'lepton_{1}', tll]
+    - [Clean, Inclusive, Jet, L2, 'lepton_{2}', tll]
+    - [Tagged, CSVM, Tagged jet, L2, 'lepton_{2}', tll]
+    - [Untagged, NonCSVM, Untagged Jet, L2, 'lepton_{2}', tll]

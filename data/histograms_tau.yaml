@@ -1,472 +1,472 @@
 # vim: set sw=4 sta et :
 
-TT_DeltaR:
-    dir: tau
-    channels: [ttl]
-    binning: [15, 0, 6.28]
-    axis labels: ["#DeltaR #tau_{1, 2}", Events]
-    visible: [0, 6.28]
-    showOF: true
-    logy: 1
+- filename: TT_DeltaR
+  dir: tau
+  channels: [ttl]
+  binning: [15, 0, 6.28]
+  axis labels: ["#DeltaR #tau_{1, 2}", Events]
+  visible: [0, 6.28]
+  showOF: true
+  logy: 1
 
-T$0_MatchIndex:
-    values: [T$0_GenMatchId]
-    translate match id: true
-    dir: tau/generator
-    channels: [$2]
-    binning: [9, 0, 9]
-    bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W]
-    axis labels: ["#tau$1 match", Events]
-    replace:
-      - ["", "", tl]
-      - ["", "", tll]
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
+- filename: T$0_MatchIndex
+  values: [T$0_GenMatchId]
+  translate match id: true
+  dir: tau/generator
+  channels: [$2]
+  binning: [9, 0, 9]
+  bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W]
+  axis labels: ["#tau$1 match", Events]
+  replace:
+    - ["", "", tl]
+    - ["", "", tll]
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
 
-T$0_ParentMatchIndex:
-    values: [T$0_GoodParentId]
-    additional info: [T$0_GoodGrandParentId]
-    translate match id: true
-    dir: tau/generator
-    channels: [$2]
-    binning: [11, 0, 11]
-    bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W, W (t), W (H)]
-    axis labels: ["#tau$1 Parent", Events]
-    showOF: false
-    logy: 1
-    replace:
-      - ["", "", tl]
-      - ["", "", tll]
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
+- filename: T$0_ParentMatchIndex
+  values: [T$0_GoodParentId]
+  additional info: [T$0_GoodGrandParentId]
+  translate match id: true
+  dir: tau/generator
+  channels: [$2]
+  binning: [11, 0, 11]
+  bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W, W (t), W (H)]
+  axis labels: ["#tau$1 Parent", Events]
+  showOF: false
+  logy: 1
+  replace:
+    - ["", "", tl]
+    - ["", "", tll]
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
 
-T$0_CombinedIsolationDeltaBetaCorrRaw:
-    dir: tau
-    channels: [$2]
-    binning: [50, 0, 300]
-    axis labels: ["#tau$1 Raw Isolation ", Events]
-    visible: [0, 200]
-    showOF: false
-    logy: 1
-    replace:
-      - ["", "", tl]
-      - ["", "", tll]
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
+- filename: T$0_CombinedIsolationDeltaBetaCorrRaw
+  dir: tau
+  channels: [$2]
+  binning: [50, 0, 300]
+  axis labels: ["#tau$1 Raw Isolation ", Events]
+  visible: [0, 200]
+  showOF: false
+  logy: 1
+  replace:
+    - ["", "", tl]
+    - ["", "", tll]
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
 
-T$0_CombinedIsolationDeltaBetaCorrRaw3Hits:
-    dir: tau
-    channels: [$2]
-    binning: [50, 0, 300]
-    axis labels: ["#tau$1 Raw Isolation (3 hits)", Events]
-    visible: [0, 200]
-    showOF: false
-    logy: 1
-    replace:
-      - ["", "", tl]
-      - ["", "", tll]
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
+- filename: T$0_CombinedIsolationDeltaBetaCorrRaw3Hits
+  dir: tau
+  channels: [$2]
+  binning: [50, 0, 300]
+  axis labels: ["#tau$1 Raw Isolation (3 hits)", Events]
+  visible: [0, 200]
+  showOF: false
+  logy: 1
+  replace:
+    - ["", "", tl]
+    - ["", "", tll]
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
 
-T$0_CombinedIsolationDeltaBetaCorrRaw3Hits_zoom:
-    values: [T$0_CombinedIsolationDeltaBetaCorrRaw3Hits]
-    dir: tau
-    channels: [$2]
-    binning: [30, 0, 2]
-    axis labels: ["#tau$1 Raw Isolation (3 hits)", Events]
-    replace:
-      - ["", "", tl]
-      - ["", "", tll]
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
+- filename: T$0_CombinedIsolationDeltaBetaCorrRaw3Hits_zoom
+  values: [T$0_CombinedIsolationDeltaBetaCorrRaw3Hits]
+  dir: tau
+  channels: [$2]
+  binning: [30, 0, 2]
+  axis labels: ["#tau$1 Raw Isolation (3 hits)", Events]
+  replace:
+    - ["", "", tl]
+    - ["", "", tll]
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
 
-T$0_IsolationMVARaw:
-    dir: tau
-    channels: [$2]
-    binning: [50, -1, 1]
-    axis labels: ["#tau$1 Isolation MVA", Events]
-    visible: [0, 1]
-    showOF: false
-    logy: 1
-    replace:
-      - [1, '_{1}', ttl]
-      - [2, '_{2}', ttl]
-      - ['', '', tll]
-      - ['', '', tl]
+- filename: T$0_IsolationMVARaw
+  dir: tau
+  channels: [$2]
+  binning: [50, -1, 1]
+  axis labels: ["#tau$1 Isolation MVA", Events]
+  visible: [0, 1]
+  showOF: false
+  logy: 1
+  replace:
+    - [1, '_{1}', ttl]
+    - [2, '_{2}', ttl]
+    - ['', '', tll]
+    - ['', '', tl]
 
-T$0_IsolationMVA2Raw:
-    dir: tau
-    channels: [$2]
-    binning: [50, -1, 1]
-    axis labels: ["#tau$1 Isolation MVA(2)", Events]
-    visible: [0, 1]
-    showOF: false
-    logy: 1
-    replace:
-      - [1, '_{1}', ttl]
-      - [2, '_{2}', ttl]
-      - ['', '', tll]
-      - ['', '', tl]
+- filename: T$0_IsolationMVA2Raw
+  dir: tau
+  channels: [$2]
+  binning: [50, -1, 1]
+  axis labels: ["#tau$1 Isolation MVA(2)", Events]
+  visible: [0, 1]
+  showOF: false
+  logy: 1
+  replace:
+    - [1, '_{1}', ttl]
+    - [2, '_{2}', ttl]
+    - ['', '', tll]
+    - ['', '', tl]
 
-T$0_IsolationMVA2Raw_zoom:
-    values: [T$0_IsolationMVA2Raw]
-    dir: tau
-    channels: [$2]
-    binning: [50, .5, 1]
-    axis labels: ["#tau$1 Isolation MVA(2)", Events]
-    visible: [.75, 1]
-    showOF: false
-    logy: 1
-    replace:
-      - [1, '_{1}', ttl]
-      - [2, '_{2}', ttl]
-      - ['', '', tll]
-      - ['', '', tl]
+- filename: T$0_IsolationMVA2Raw_zoom
+  values: [T$0_IsolationMVA2Raw]
+  dir: tau
+  channels: [$2]
+  binning: [50, .5, 1]
+  axis labels: ["#tau$1 Isolation MVA(2)", Events]
+  visible: [.75, 1]
+  showOF: false
+  logy: 1
+  replace:
+    - [1, '_{1}', ttl]
+    - [2, '_{2}', ttl]
+    - ['', '', tll]
+    - ['', '', tl]
 
-T$0_AntiElectronMVA:
-    dir: tau
-    channels: [$2]
-    binning: [2, 0, 1]
-    axis labels: ["#tau$1 anti-elec MVA", Events]
-    visible: [0, 1]
-    showOF: false
-    logy: 1
-    replace:
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
-      - ["", "", tll]
-      - ["", "", tl]
+- filename: T$0_AntiElectronMVA
+  dir: tau
+  channels: [$2]
+  binning: [2, 0, 1]
+  axis labels: ["#tau$1 anti-elec MVA", Events]
+  visible: [0, 1]
+  showOF: false
+  logy: 1
+  replace:
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
+    - ["", "", tll]
+    - ["", "", tl]
 
-T$0_AntiElectronMVA$3Raw:
-    dir: tau
-    channels: [$2]
-    binning: [50, -1, 1]
-    axis labels: ["#tau$1 anti-elec MVA($3)", Events]
-    visible: [-1, 1]
-    showOF: false
-    logy: 1
-    replace:
-      - [1, "_{1}", ttl, 2]
-      - [1, "_{1}", ttl, 3]
-      - [2, "_{2}", ttl, 2]
-      - [2, "_{2}", ttl, 3]
-      - ["", "", tll, 2]
-      - ["", "", tll, 3]
-      - ["", "", tl, 2]
-      - ["", "", tl, 3]
+- filename: T$0_AntiElectronMVA$3Raw
+  dir: tau
+  channels: [$2]
+  binning: [50, -1, 1]
+  axis labels: ["#tau$1 anti-elec MVA($3)", Events]
+  visible: [-1, 1]
+  showOF: false
+  logy: 1
+  replace:
+    - [1, "_{1}", ttl, 2]
+    - [1, "_{1}", ttl, 3]
+    - [2, "_{2}", ttl, 2]
+    - [2, "_{2}", ttl, 3]
+    - ["", "", tll, 2]
+    - ["", "", tll, 3]
+    - ["", "", tl, 2]
+    - ["", "", tl, 3]
 
-T$0_AntiElectronDeadECAL:
-    dir: tau
-    channels: [$2]
-    binning: [2, 0, 1]
-    axis labels: ["#tau$1 anti-elec (dead crystals)", Events]
-    visible: [0, 1]
-    showOF: false
-    logy: 1
-    replace:
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
-      - ["", "", tll]
-      - ["", "", tl]
+- filename: T$0_AntiElectronDeadECAL
+  dir: tau
+  channels: [$2]
+  binning: [2, 0, 1]
+  axis labels: ["#tau$1 anti-elec (dead crystals)", Events]
+  visible: [0, 1]
+  showOF: false
+  logy: 1
+  replace:
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
+    - ["", "", tll]
+    - ["", "", tl]
 
-T$0_Pt:
-    dir: tau/kinematic
-    channels: [$2]
-    binning: [15, 0, 150]
-    axis labels: ["#tau$1 p_{T} (GeV/c)", Events]
-    visible: [20, 100]
-    showOF: true
-    logy: 1
-    replace:
-      - [1, "_{1}", ttl, false]
-      - [2, "_{2}", ttl, false]
-      - ["", "", tll, false]
-      - ["", "", tl, true]
+- filename: T$0_Pt
+  dir: tau/kinematic
+  channels: [$2]
+  binning: [15, 0, 150]
+  axis labels: ["#tau$1 p_{T} (GeV/c)", Events]
+  visible: [20, 100]
+  showOF: true
+  logy: 1
+  replace:
+    - [1, "_{1}", ttl, false]
+    - [2, "_{2}", ttl, false]
+    - ["", "", tll, false]
+    - ["", "", tl, true]
 
-T$0_Pt_rebin:
-    values: [T$0_Pt]
-    dir: tau/kinematic
-    channels: [$2]
-    binning: [0, 10, 20, 30, 40, 55, 75, 100, 150, 500]
-    custom binning: true
-    axis labels: ["#tau$1 p_{T} (GeV/c)", Events]
-    visible: [20, 100]
-    dump: $3
-    showOF: true
-    logy: 1
-    replace:
-      - [1, "_{1}", ttl, false]
-      - [2, "_{2}", ttl, false]
-      - ["", "", tll, false]
-      - ["", "", tl, true]
+- filename: T$0_Pt_rebin
+  values: [T$0_Pt]
+  dir: tau/kinematic
+  channels: [$2]
+  binning: [0, 10, 20, 30, 40, 55, 75, 100, 150, 500]
+  custom binning: true
+  axis labels: ["#tau$1 p_{T} (GeV/c)", Events]
+  visible: [20, 100]
+  dump: $3
+  showOF: true
+  logy: 1
+  replace:
+    - [1, "_{1}", ttl, false]
+    - [2, "_{2}", ttl, false]
+    - ["", "", tll, false]
+    - ["", "", tl, true]
 
-T$0_Pt_NumVertices:
-    values: [T$0_Pt, V_NumVertices]
-    axis labels: ["#tau$1 p_{T}", Number PV, Events]
-    binning: [20, 0, 150, 20, 0, 40]
-    channels: [$2]
-    dir: tau/debug
-    replace:
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
-      - ["", "", tll]
-      - ["", "", tl]
+- filename: T$0_Pt_NumVertices
+  values: [T$0_Pt, V_NumVertices]
+  axis labels: ["#tau$1 p_{T}", Number PV, Events]
+  binning: [20, 0, 150, 20, 0, 40]
+  channels: [$2]
+  dir: tau/debug
+  replace:
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
+    - ["", "", tll]
+    - ["", "", tl]
 
-T$0_Eta:
-    dir: tau/kinematic
-    channels: [$2]
-    binning: [20, -3, 3]
-    axis labels: ["#tau$1 #eta", Events]
-    visible: [-3, 3]
-    showOF: false
-    logy: 1
-    replace:
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
-      - ["", "", tll]
-      - ["", "", tl]
+- filename: T$0_Eta
+  dir: tau/kinematic
+  channels: [$2]
+  binning: [20, -3, 3]
+  axis labels: ["#tau$1 #eta", Events]
+  visible: [-3, 3]
+  showOF: false
+  logy: 1
+  replace:
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
+    - ["", "", tll]
+    - ["", "", tl]
 
-T$0_Phi:
-    dir: tau/kinematic
-    channels: [$2]
-    binning: [20, -3.2, 3.2]
-    axis labels: ["#tau$1 #phi", Events]
-    replace:
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
-      - ["", "", tll]
-      - ["", "", tl]
+- filename: T$0_Phi
+  dir: tau/kinematic
+  channels: [$2]
+  binning: [20, -3.2, 3.2]
+  axis labels: ["#tau$1 #phi", Events]
+  replace:
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
+    - ["", "", tll]
+    - ["", "", tl]
 
-T$0_LTPt:
-    dir: tau
-    channels: [$3]
-    binning: [20, 0, 150]
-    axis labels: ["#tau$1 LT p_{T}", Events]
-    visible: [0, $2]
-    replace:
-      - [1, "_{1}", 100, ttl]
-      - [2, "_{2}", 50, ttl]
-      - ["", "", 100, tll]
-      - ["", "", 100, tl]
+- filename: T$0_LTPt
+  dir: tau
+  channels: [$3]
+  binning: [20, 0, 150]
+  axis labels: ["#tau$1 LT p_{T}", Events]
+  visible: [0, $2]
+  replace:
+    - [1, "_{1}", 100, ttl]
+    - [2, "_{2}", 50, ttl]
+    - ["", "", 100, tll]
+    - ["", "", 100, tl]
 
-T_LTIpVtdxy:
-    dir: tau
-    channels: [tll]
-    binning: [50, -0.03, 0.03]
-    axis labels: ["#tau LT #Delta xy", Events]
-    showOF: true
-    logy: 1
+- filename: T_LTIpVtdxy
+  dir: tau
+  channels: [tll]
+  binning: [50, -0.03, 0.03]
+  axis labels: ["#tau LT #Delta xy", Events]
+  showOF: true
+  logy: 1
 
-T_LTIpVtdz:
-    dir: tau
-    channels: [tll]
-    binning: [60, -0.15, 0.15]
-    axis labels: ["#tau LT #Delta z", Events]
-    showOF: true
-    logy: 1
+- filename: T_LTIpVtdz
+  dir: tau
+  channels: [tll]
+  binning: [60, -0.15, 0.15]
+  axis labels: ["#tau LT #Delta z", Events]
+  showOF: true
+  logy: 1
 
-T$0_DecayMode:
-    dir: tau
-    channels: [$2]
-    binning: [20, 0, 20]
-    axis labels: ["#tau$1 Decay Mode", Events]
-    visible: [0, 6]
-    replace:
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
-      - ["", "", tll]
-      - ["", "", tl]
+- filename: T$0_DecayMode
+  dir: tau
+  channels: [$2]
+  binning: [20, 0, 20]
+  axis labels: ["#tau$1 Decay Mode", Events]
+  visible: [0, 6]
+  replace:
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
+    - ["", "", tll]
+    - ["", "", tl]
 
-T$0_NumProngs:
-    dir: tau
-    channels: [$2]
-    binning: [10, 0, 10]
-    axis labels: ["#tau$1 Num Prongs", Events]
-    visible: [0, 5.99]
-    replace:
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
-      - ["", "", tll]
-      - ["", "", tl]
+- filename: T$0_NumProngs
+  dir: tau
+  channels: [$2]
+  binning: [10, 0, 10]
+  axis labels: ["#tau$1 Num Prongs", Events]
+  visible: [0, 5.99]
+  replace:
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
+    - ["", "", tll]
+    - ["", "", tl]
 
 
-T$0_AntiElectronIndex:
-    dir: tau
-    channels: [$2]
-    binning: [10, 0, 10]
-    axis labels: ["#tau$1 anti-e index", Events]
-    visible: [0, 5.99]
-    showOF: false
-    logy: 1
-    replace:
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
-      - ["", "", tll]
-      - ["", "", tl]
+- filename: T$0_AntiElectronIndex
+  dir: tau
+  channels: [$2]
+  binning: [10, 0, 10]
+  axis labels: ["#tau$1 anti-e index", Events]
+  visible: [0, 5.99]
+  showOF: false
+  logy: 1
+  replace:
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
+    - ["", "", tll]
+    - ["", "", tl]
 
-T$0_AntiElectronIndexMVA2:
-    dir: tau
-    channels: [$2]
-    binning: [10, 0, 10]
-    axis labels: ["#tau$1 anti-e index (MVA2)", Events]
-    visible: [0, 5.99]
-    replace:
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
-      - ["", "", tll]
-      - ["", "", tl]
+- filename: T$0_AntiElectronIndexMVA2
+  dir: tau
+  channels: [$2]
+  binning: [10, 0, 10]
+  axis labels: ["#tau$1 anti-e index (MVA2)", Events]
+  visible: [0, 5.99]
+  replace:
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
+    - ["", "", tll]
+    - ["", "", tl]
 
-T$0_AntiElectronIndexMVA3:
-    dir: tau
-    channels: [$2]
-    binning: [10, 0, 10]
-    axis labels: ["#tau$1 anti-e index (MVA3)", Events]
-    visible: [0, 5.99]
-    replace:
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
-      - ["", "", tll]
-      - ["", "", tl]
+- filename: T$0_AntiElectronIndexMVA3
+  dir: tau
+  channels: [$2]
+  binning: [10, 0, 10]
+  axis labels: ["#tau$1 anti-e index (MVA3)", Events]
+  visible: [0, 5.99]
+  replace:
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
+    - ["", "", tll]
+    - ["", "", tl]
 
-T$0_AntiMuonIndex:
-    dir: tau
-    channels: [$2]
-    binning: [10, 0, 10]
-    axis labels: ["#tau$1 anti-#mu index", Events]
-    visible: [0, 5.99]
-    replace:
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
-      - ["", "", tll]
-      - ["", "", tl]
+- filename: T$0_AntiMuonIndex
+  dir: tau
+  channels: [$2]
+  binning: [10, 0, 10]
+  axis labels: ["#tau$1 anti-#mu index", Events]
+  visible: [0, 5.99]
+  replace:
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
+    - ["", "", tll]
+    - ["", "", tl]
 
-T$0_AntiMuonIndex2:
-    dir: tau
-    channels: [$2]
-    binning: [10, 0, 10]
-    axis labels: ["#tau$1 anti-#mu index (2)", Events]
-    visible: [0, 5.99]
-    replace:
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
-      - ["", "", tll]
-      - ["", "", tl]
+- filename: T$0_AntiMuonIndex2
+  dir: tau
+  channels: [$2]
+  binning: [10, 0, 10]
+  axis labels: ["#tau$1 anti-#mu index (2)", Events]
+  visible: [0, 5.99]
+  replace:
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
+    - ["", "", tll]
+    - ["", "", tl]
 
-T$0_IsolationIndex:
-    dir: tau
-    channels: [$2]
-    binning: [10, 0, 10]
-    axis labels: ["#tau$1 isolation index", Events]
-    visible: [0, 5.99]
-    showOF: false
-    logy: 1
-    replace:
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
-      - ["", "", tll]
-      - ["", "", tl]
+- filename: T$0_IsolationIndex
+  dir: tau
+  channels: [$2]
+  binning: [10, 0, 10]
+  axis labels: ["#tau$1 isolation index", Events]
+  visible: [0, 5.99]
+  showOF: false
+  logy: 1
+  replace:
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
+    - ["", "", tll]
+    - ["", "", tl]
 
-T$0_IsolationIndex3Hits:
-    dir: tau
-    channels: [$2]
-    binning: [10, 0, 10]
-    axis labels: ["#tau$1 isolation index (3 hits)", Events]
-    visible: [0, 5.99]
-    showOF: false
-    logy: 1
-    replace:
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
-      - ["", "", tll]
-      - ["", "", tl]
+- filename: T$0_IsolationIndex3Hits
+  dir: tau
+  channels: [$2]
+  binning: [10, 0, 10]
+  axis labels: ["#tau$1 isolation index (3 hits)", Events]
+  visible: [0, 5.99]
+  showOF: false
+  logy: 1
+  replace:
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
+    - ["", "", tll]
+    - ["", "", tl]
 
-T$0_IsolationIndexMVA:
-    dir: tau
-    channels: [$2]
-    binning: [10, 0, 10]
-    axis labels: ["#tau$1 isolation index (MVA)", Events]
-    visible: [0, 5.99]
-    replace:
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
-      - ["", "", tll]
-      - ["", "", tl]
+- filename: T$0_IsolationIndexMVA
+  dir: tau
+  channels: [$2]
+  binning: [10, 0, 10]
+  axis labels: ["#tau$1 isolation index (MVA)", Events]
+  visible: [0, 5.99]
+  replace:
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
+    - ["", "", tll]
+    - ["", "", tl]
 
-T$0_IsolationIndexMVA2:
-    dir: tau
-    channels: [$2]
-    binning: [10, 0, 10]
-    axis labels: ["#tau$1 isolation index (MVA2)", Events]
-    visible: [0, 5.99]
-    replace:
-      - [1, "_{1}", ttl]
-      - [2, "_{2}", ttl]
-      - ["", "", tll]
-      - ["", "", tl]
+- filename: T$0_IsolationIndexMVA2
+  dir: tau
+  channels: [$2]
+  binning: [10, 0, 10]
+  axis labels: ["#tau$1 isolation index (MVA2)", Events]
+  visible: [0, 5.99]
+  replace:
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
+    - ["", "", tll]
+    - ["", "", tl]
 
-NumTaus:
-    dir: counts
-    channels: [tl, tll, ttl]
-    binning: [20, 0, 20]
-    axis labels: [Number of taus, Events]
-    visible: [0, 19.99]
-    showOF: true
-    logy: 1
+- filename: NumTaus
+  dir: counts
+  channels: [tl, tll, ttl]
+  binning: [20, 0, 20]
+  axis labels: [Number of taus, Events]
+  visible: [0, 19.99]
+  showOF: true
+  logy: 1
 
-DitauVisibleMass:
-    dir: tau
-    channels: [ttl]
-    binning: [30, 0, 200]
-    axis labels: ["Visible Mass #tau_{1, 2}", Events]
-    visible: [0, 200]
-    showOF: true
-    logy: 1
+- filename: DitauVisibleMass
+  dir: tau
+  channels: [ttl]
+  binning: [30, 0, 200]
+  axis labels: ["Visible Mass #tau_{1, 2}", Events]
+  visible: [0, 200]
+  showOF: true
+  logy: 1
 
 #  TL_Mass:
-    #  dir: tau
-    #  channels: [tl]
-    #  binning: [50, 0, 300]
-    #  axis labels: ["Mass tau, lepton, from SVfit", Events]
+  #  dir: tau
+  #  channels: [tl]
+  #  binning: [50, 0, 300]
+  #  axis labels: ["Mass tau, lepton, from SVfit", Events]
 
-TL_VisibleMass:
-    dir: tau
-    channels: [tl]
-    binning: [50, 0, 300]
-    axis labels: ["Visible Mass tau, lepton", Events]
+- filename: TL_VisibleMass
+  dir: tau
+  channels: [tl]
+  binning: [50, 0, 300]
+  axis labels: ["Visible Mass tau, lepton", Events]
 
-T$0$1_DeltaR:
-    dir: tau/geometric
-    channels: [$4]
-    binning: [15, 0, 6.28]
-    axis labels: ["#Delta R(#tau$2, lepton$3)", Events]
-    showOF: true
-    logy: 1
-    replace:
-      - ["", L1, "", "_{1}", tll]
-      - ["", L2, "", "_{2}", tll]
-      - ["", osL, "", "^{os}", tll]
-      - ["", ssL, "", "^{ss}", tll]
-      - [1, L, "_{1}", "", ttl]
-      - [2, L, "_{2}", "", ttl]
-      - ["", L, "", "", tl]
+- filename: T$0$1_DeltaR
+  dir: tau/geometric
+  channels: [$4]
+  binning: [15, 0, 6.28]
+  axis labels: ["#Delta R(#tau$2, lepton$3)", Events]
+  showOF: true
+  logy: 1
+  replace:
+    - ["", L1, "", "_{1}", tll]
+    - ["", L2, "", "_{2}", tll]
+    - ["", osL, "", "^{os}", tll]
+    - ["", ssL, "", "^{ss}", tll]
+    - [1, L, "_{1}", "", ttl]
+    - [2, L, "_{2}", "", ttl]
+    - ["", L, "", "", tl]
 
-TosL_VisibleMass:
-    dir: tau
-    channels: [tll]
-    binning: [20, 0, 200]
-    axis labels: ["Visible Mass #tau^{#pm} l^{os}", Events]
+- filename: TosL_VisibleMass
+  dir: tau
+  channels: [tll]
+  binning: [20, 0, 200]
+  axis labels: ["Visible Mass #tau^{#pm} l^{os}", Events]
 
-TosL_METMass:
-    dir: tau
-    channels: [tll]
-    binning: [30, 0, 500]
-    axis labels: ["Mass #tau^{#pm}, l^{#mp}, MET", Events]
+- filename: TosL_METMass
+  dir: tau
+  channels: [tll]
+  binning: [30, 0, 500]
+  axis labels: ["Mass #tau^{#pm}, l^{#mp}, MET", Events]
 
 #  ZcoordDiff_TT:
-    #  dir: tau
-    #  binning: [50, 0, 2]
-    #  axis labels: ["#DeltaVZ #tau_{1, 2}", Events]
-    #  visible: [0, 2]
-    #  showOF: false
-    #  logy: 1
+  #  dir: tau
+  #  binning: [50, 0, 2]
+  #  axis labels: ["#DeltaVZ #tau_{1, 2}", Events]
+  #  visible: [0, 2]
+  #  showOF: false
+  #  logy: 1
 

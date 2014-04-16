@@ -251,7 +251,10 @@ class Legend:
         self.advance()
 
 @contextmanager
-def create_plot(config, histname, plot_ratio, is2d=False, procname="", hist=None, max=None, scale=None):
+def create_plot(config, histcfg, plot_ratio, is2d=False, procname="", hist=None, max=None, scale=None):
+    histname = histcfg['filename']
+    subdir = histcfg['dir']
+
     small_number = 1e-5
 
     if plot_ratio:
@@ -295,7 +298,6 @@ def create_plot(config, histname, plot_ratio, is2d=False, procname="", hist=None
     if procname != "":
         procname = "_" + procname
 
-    subdir = config['histograms'][histname]['dir']
     for t in ("png", "pdf"):
         filename = config['paths']['stack format'].format(t=t,
                 d=subdir, n=histname, m="", p=procname)
@@ -351,7 +353,8 @@ def stack(config, processes):
 
     plot_ratio = True
 
-    for (histname, cfg) in config['histograms'].items():
+    for cfg in config['histograms']:
+        histname = cfg['filename']
         try:
             if all(map(lambda v: v <= 0, get_integrals(histname, procs))):
                 logging.warn("empty histogram: %s", histname)
@@ -375,7 +378,7 @@ def stack(config, processes):
                 ratio.SetMarkerColor(r.kWhite)
                 ratio.SetMarkerSize(1.5)
                 ratio.SetMarkerSize(0.8)
-                with create_plot(config, histname, is2d=True, plot_ratio=False, procname="Data-MC") as (scale, pad1,):
+                with create_plot(config, cfg, is2d=True, plot_ratio=False, procname="Data-MC") as (scale, pad1,):
                     pad1.cd()
                     style.setup_upper_axis(ratio, scale=False, is2d=True)
                     r.gStyle.SetPaintTextFormat("4.2f");
@@ -391,7 +394,7 @@ def stack(config, processes):
                 raise
                 pass
 
-            with create_plot(config, histname, is2d=True, plot_ratio=False, procname="Background") as (scale, pad1,):
+            with create_plot(config, cfg, is2d=True, plot_ratio=False, procname="Background") as (scale, pad1,):
                 pad1.cd()
                 h = bkg_sum.GetHisto()
 
@@ -408,7 +411,7 @@ def stack(config, processes):
                 h.Draw("COLZ")
 
             for p in procs:
-                with create_plot(config, histname, is2d=True, plot_ratio=False, procname=p.GetShortName()) as (scale, pad1,):
+                with create_plot(config, cfg, is2d=True, plot_ratio=False, procname=p.GetShortName()) as (scale, pad1,):
                     pad1.cd()
                     h = p.GetHistogram(histname).GetHisto()
 
@@ -438,7 +441,7 @@ def stack(config, processes):
                     get_maximum(histname, procs, True),
                     bkg_stack.GetMaximum())
 
-            with create_plot(config, histname, plot_ratio, hist=base_histo, max=max_y, scale=scale) as (scale, pad1, pad2):
+            with create_plot(config, cfg, plot_ratio, hist=base_histo, max=max_y, scale=scale) as (scale, pad1, pad2):
                 pad1.cd()
 
                 bkg_stack.Draw("hist")
