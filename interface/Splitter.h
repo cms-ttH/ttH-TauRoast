@@ -17,7 +17,7 @@ namespace roast {
             FakeSplitter(bool real) : _real(real) {};
             virtual bool Use(Branches *b, int idx) {
                 if (tl::Branches *e = dynamic_cast<tl::Branches*>(b)) {
-                    bool genmatch = abs(e->TL_TauGenMatchId->at(idx)) == 15;
+                    bool genmatch = abs(e->T_GenMatchId->at(idx)) == 15;
                     return genmatch == _real;
                 }
                 return false;
@@ -30,7 +30,7 @@ namespace roast {
     class InclusiveSignalSplitter : Splitter {
         public:
             InclusiveSignalSplitter(int mode) : _mode(mode) {};
-            virtual bool Use(Branches *b, int idx) { return (b->Ev_higgsDecayMode == _mode); };
+            virtual bool Use(Branches *b, int idx) { return (b->higgsDecayMode == _mode); };
         private:
             int _mode;
             ClassDef(InclusiveSignalSplitter, 1);
@@ -40,11 +40,11 @@ namespace roast {
         public:
             TTbarSplitter(int mode) : _mode(mode) {};
             virtual bool Use(Branches *b, int idx) {
-                if (b->Ev_bQuarkCount >= 2)
+                if (b->bQuarkCount >= 2)
                     return 3;
-                if (b->Ev_bQuarkCount == 1)
+                if (b->bQuarkCount == 1)
                     return 2;
-                if (b->Ev_cQuarkCount == 2)
+                if (b->cQuarkCount == 2)
                     return 1;
                 return 0;
             };

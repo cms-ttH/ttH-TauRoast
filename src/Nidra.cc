@@ -82,7 +82,7 @@ namespace roast {
 
             event->GetEntry(jentry);
 
-            info i(event->Ev_runNumber, event->Ev_lumiBlock, event->Ev_eventNumber);
+            info i(event->run, event->lumi, event->event);
             if (infos.find(i) != infos.end())
                 continue;
             infos.insert(i);
@@ -105,7 +105,7 @@ namespace roast {
 
             // Fill good event vectors for signal analysis
             if (combos.size() > 0) {
-                events.push_back(Process::Event(jentry, event->Ev_runNumber, event->Ev_lumiBlock, event->Ev_eventNumber, combos));
+                events.push_back(Process::Event(jentry, event->run, event->lumi, event->event, combos));
             }
 
             NOEanalyzed++;
@@ -154,9 +154,9 @@ namespace roast {
             int idx = p->Pick(branches, e.combos);
 
             std::cout << branches->GetCurrentFilename() << ","
-                << long(branches->Ev_runNumber) << ","
-                << long(branches->Ev_lumiBlock) << ","
-                << long(branches->Ev_eventNumber);
+                << long(branches->run) << ","
+                << long(branches->lumi) << ","
+                << long(branches->event);
 
             for (auto& pair: vals) {
                 std::cout << ",";

@@ -28,142 +28,142 @@ ttl::Branches::~Branches()
 
 bool
 ttl::Branches::IsGoodGenMatch(const int& idx) const {
-    return (abs((*TTL_Tau1GenMatchId)[idx]) == 15 &&
-            abs((*TTL_Tau2GenMatchId)[idx]) == 15 &&
-            abs((*TTL_Tau1GenMatchMother0Id)[idx]) == 25 &&
-            abs((*TTL_Tau2GenMatchMother0Id)[idx]) == 25);
+    return (abs((*T1_GenMatchId)[idx]) == 15 &&
+            abs((*T2_GenMatchId)[idx]) == 15 &&
+            abs((*T1_GenMatchMother0Id)[idx]) == 25 &&
+            abs((*T2_GenMatchMother0Id)[idx]) == 25);
 }
 
 unsigned int ttl::Branches::GetTau1IsolationIndex(const unsigned int iCombo) const {
-	if((*TTL_Tau1HPSbyTightCombinedIsolationDeltaBetaCorr)[iCombo]){	return 4; }
-	if((*TTL_Tau1HPSbyMediumCombinedIsolationDeltaBetaCorr)[iCombo]){	return 3; }
-	if((*TTL_Tau1HPSbyLooseCombinedIsolationDeltaBetaCorr)[iCombo]){	return 2; }
-	if((*TTL_Tau1HPSbyVLooseCombinedIsolationDeltaBetaCorr)[iCombo]){	return 1; }
+	if((*T1_HPSbyTightCombinedIsolationDeltaBetaCorr)[iCombo]){	return 4; }
+	if((*T1_HPSbyMediumCombinedIsolationDeltaBetaCorr)[iCombo]){	return 3; }
+	if((*T1_HPSbyLooseCombinedIsolationDeltaBetaCorr)[iCombo]){	return 2; }
+	if((*T1_HPSbyVLooseCombinedIsolationDeltaBetaCorr)[iCombo]){	return 1; }
 	return 0;
 }
 
 unsigned int ttl::Branches::GetTau2IsolationIndex(const unsigned int iCombo) const {
-	if((*TTL_Tau2HPSbyTightCombinedIsolationDeltaBetaCorr)[iCombo]){	return 4; }
-	if((*TTL_Tau2HPSbyMediumCombinedIsolationDeltaBetaCorr)[iCombo]){	return 3; }
-	if((*TTL_Tau2HPSbyLooseCombinedIsolationDeltaBetaCorr)[iCombo]){	return 2; }
-	if((*TTL_Tau2HPSbyVLooseCombinedIsolationDeltaBetaCorr)[iCombo]){	return 1; }
+	if((*T2_HPSbyTightCombinedIsolationDeltaBetaCorr)[iCombo]){	return 4; }
+	if((*T2_HPSbyMediumCombinedIsolationDeltaBetaCorr)[iCombo]){	return 3; }
+	if((*T2_HPSbyLooseCombinedIsolationDeltaBetaCorr)[iCombo]){	return 2; }
+	if((*T2_HPSbyVLooseCombinedIsolationDeltaBetaCorr)[iCombo]){	return 1; }
 	return 0;
 }
 
 unsigned int ttl::Branches::GetTau1IsolationIndex3Hits(const unsigned int iCombo) const {
-	if((*TTL_Tau1HPSbyTightCombinedIsolationDeltaBetaCorr3Hits)[iCombo]){	return 3; }
-	if((*TTL_Tau1HPSbyMediumCombinedIsolationDeltaBetaCorr3Hits)[iCombo]){	return 2; }
-	if((*TTL_Tau1HPSbyLooseCombinedIsolationDeltaBetaCorr3Hits)[iCombo]){	return 1; }
+	if((*T1_HPSbyTightCombinedIsolationDeltaBetaCorr3Hits)[iCombo]){	return 3; }
+	if((*T1_HPSbyMediumCombinedIsolationDeltaBetaCorr3Hits)[iCombo]){	return 2; }
+	if((*T1_HPSbyLooseCombinedIsolationDeltaBetaCorr3Hits)[iCombo]){	return 1; }
 	return 0;
 }
 
 unsigned int ttl::Branches::GetTau2IsolationIndex3Hits(const unsigned int iCombo) const {
-	if((*TTL_Tau2HPSbyTightCombinedIsolationDeltaBetaCorr3Hits)[iCombo]){	return 3; }
-	if((*TTL_Tau2HPSbyMediumCombinedIsolationDeltaBetaCorr3Hits)[iCombo]){	return 2; }
-	if((*TTL_Tau2HPSbyLooseCombinedIsolationDeltaBetaCorr3Hits)[iCombo]){	return 1; }
+	if((*T2_HPSbyTightCombinedIsolationDeltaBetaCorr3Hits)[iCombo]){	return 3; }
+	if((*T2_HPSbyMediumCombinedIsolationDeltaBetaCorr3Hits)[iCombo]){	return 2; }
+	if((*T2_HPSbyLooseCombinedIsolationDeltaBetaCorr3Hits)[iCombo]){	return 1; }
 	return 0;
 }
 
 unsigned int ttl::Branches::GetTau1IsolationIndexMVA(const unsigned int iCombo) const {
-	if((*TTL_Tau1HPSbyTightIsolationMVA)[iCombo]){	return 3; }
-	if((*TTL_Tau1HPSbyMediumIsolationMVA)[iCombo]){	return 2; }
-	if((*TTL_Tau1HPSbyLooseIsolationMVA)[iCombo]){	return 1; }
+	if((*T1_HPSbyTightIsolationMVA)[iCombo]){	return 3; }
+	if((*T1_HPSbyMediumIsolationMVA)[iCombo]){	return 2; }
+	if((*T1_HPSbyLooseIsolationMVA)[iCombo]){	return 1; }
 	return 0;
 }
 
 unsigned int ttl::Branches::GetTau2IsolationIndexMVA(const unsigned int iCombo) const {
-	if((*TTL_Tau2HPSbyTightIsolationMVA)[iCombo]){	return 3; }
-	if((*TTL_Tau2HPSbyMediumIsolationMVA)[iCombo]){	return 2; }
-	if((*TTL_Tau2HPSbyLooseIsolationMVA)[iCombo]){	return 1; }
+	if((*T2_HPSbyTightIsolationMVA)[iCombo]){	return 3; }
+	if((*T2_HPSbyMediumIsolationMVA)[iCombo]){	return 2; }
+	if((*T2_HPSbyLooseIsolationMVA)[iCombo]){	return 1; }
 	return 0;
 }
 
 unsigned int ttl::Branches::GetTau1IsolationIndexMVA2(const unsigned int iCombo) const {
-	if((*TTL_Tau1HPSbyTightIsolationMVA2)[iCombo]){	return 3; }
-	if((*TTL_Tau1HPSbyMediumIsolationMVA2)[iCombo]){	return 2; }
-	if((*TTL_Tau1HPSbyLooseIsolationMVA2)[iCombo]){	return 1; }
+	if((*T1_HPSbyTightIsolationMVA2)[iCombo]){	return 3; }
+	if((*T1_HPSbyMediumIsolationMVA2)[iCombo]){	return 2; }
+	if((*T1_HPSbyLooseIsolationMVA2)[iCombo]){	return 1; }
 	return 0;
 }
 
 unsigned int ttl::Branches::GetTau2IsolationIndexMVA2(const unsigned int iCombo) const {
-	if((*TTL_Tau2HPSbyTightIsolationMVA2)[iCombo]){	return 3; }
-	if((*TTL_Tau2HPSbyMediumIsolationMVA2)[iCombo]){	return 2; }
-	if((*TTL_Tau2HPSbyLooseIsolationMVA2)[iCombo]){	return 1; }
+	if((*T2_HPSbyTightIsolationMVA2)[iCombo]){	return 3; }
+	if((*T2_HPSbyMediumIsolationMVA2)[iCombo]){	return 2; }
+	if((*T2_HPSbyLooseIsolationMVA2)[iCombo]){	return 1; }
 	return 0;
 }
 
 
 unsigned int ttl::Branches::GetTau1AntiElectronIndex(const unsigned int iCombo) const {
-	if((*TTL_Tau1HPSagainstElectronTight)[iCombo]){	return 3; }
-	if((*TTL_Tau1HPSagainstElectronMedium)[iCombo]){	return 2; }
-	if((*TTL_Tau1HPSagainstElectronLoose)[iCombo]){	return 1; }
+	if((*T1_HPSagainstElectronTight)[iCombo]){	return 3; }
+	if((*T1_HPSagainstElectronMedium)[iCombo]){	return 2; }
+	if((*T1_HPSagainstElectronLoose)[iCombo]){	return 1; }
 	return 0;
 }
 
 unsigned int ttl::Branches::GetTau2AntiElectronIndex(const unsigned int iCombo) const {
-	if((*TTL_Tau2HPSagainstElectronTight)[iCombo]){	return 3; }
-	if((*TTL_Tau2HPSagainstElectronMedium)[iCombo]){	return 2; }
-	if((*TTL_Tau2HPSagainstElectronLoose)[iCombo]){	return 1; }
+	if((*T2_HPSagainstElectronTight)[iCombo]){	return 3; }
+	if((*T2_HPSagainstElectronMedium)[iCombo]){	return 2; }
+	if((*T2_HPSagainstElectronLoose)[iCombo]){	return 1; }
 	return 0;
 }
 
 unsigned int ttl::Branches::GetTau1AntiElectronIndexMVA2(const unsigned int iCombo) const {
-	if((*TTL_Tau1HPSagainstElectronTightMVA2)[iCombo]){	return 4; }
-	if((*TTL_Tau1HPSagainstElectronMediumMVA2)[iCombo]){	return 3; }
-	if((*TTL_Tau1HPSagainstElectronLooseMVA2)[iCombo]){	return 2; }
-	if((*TTL_Tau1HPSagainstElectronVLooseMVA2)[iCombo]){	return 1; }
+	if((*T1_HPSagainstElectronTightMVA2)[iCombo]){	return 4; }
+	if((*T1_HPSagainstElectronMediumMVA2)[iCombo]){	return 3; }
+	if((*T1_HPSagainstElectronLooseMVA2)[iCombo]){	return 2; }
+	if((*T1_HPSagainstElectronVLooseMVA2)[iCombo]){	return 1; }
 	return 0;
 }
 
 unsigned int ttl::Branches::GetTau2AntiElectronIndexMVA2(const unsigned int iCombo) const {
-	if((*TTL_Tau2HPSagainstElectronTightMVA2)[iCombo]){	return 4; }
-	if((*TTL_Tau2HPSagainstElectronMediumMVA2)[iCombo]){	return 3; }
-	if((*TTL_Tau2HPSagainstElectronLooseMVA2)[iCombo]){	return 2; }
-	if((*TTL_Tau2HPSagainstElectronVLooseMVA2)[iCombo]){	return 1; }
+	if((*T2_HPSagainstElectronTightMVA2)[iCombo]){	return 4; }
+	if((*T2_HPSagainstElectronMediumMVA2)[iCombo]){	return 3; }
+	if((*T2_HPSagainstElectronLooseMVA2)[iCombo]){	return 2; }
+	if((*T2_HPSagainstElectronVLooseMVA2)[iCombo]){	return 1; }
 	return 0;
 }
 
 unsigned int ttl::Branches::GetTau1AntiElectronIndexMVA3(const unsigned int iCombo) const {
-	if((*TTL_Tau1HPSagainstElectronVTightMVA3)[iCombo]){	return 4; }
-	if((*TTL_Tau1HPSagainstElectronTightMVA3)[iCombo]){	return 3; }
-	if((*TTL_Tau1HPSagainstElectronMediumMVA3)[iCombo]){	return 2; }
-	if((*TTL_Tau1HPSagainstElectronLooseMVA3)[iCombo]){	return 1; }
+	if((*T1_HPSagainstElectronVTightMVA3)[iCombo]){	return 4; }
+	if((*T1_HPSagainstElectronTightMVA3)[iCombo]){	return 3; }
+	if((*T1_HPSagainstElectronMediumMVA3)[iCombo]){	return 2; }
+	if((*T1_HPSagainstElectronLooseMVA3)[iCombo]){	return 1; }
 	return 0;
 }
 
 unsigned int ttl::Branches::GetTau2AntiElectronIndexMVA3(const unsigned int iCombo) const {
-	if((*TTL_Tau2HPSagainstElectronVTightMVA3)[iCombo]){	return 4; }
-	if((*TTL_Tau2HPSagainstElectronTightMVA3)[iCombo]){	return 3; }
-	if((*TTL_Tau2HPSagainstElectronMediumMVA3)[iCombo]){	return 2; }
-	if((*TTL_Tau2HPSagainstElectronLooseMVA3)[iCombo]){	return 1; }
+	if((*T2_HPSagainstElectronVTightMVA3)[iCombo]){	return 4; }
+	if((*T2_HPSagainstElectronTightMVA3)[iCombo]){	return 3; }
+	if((*T2_HPSagainstElectronMediumMVA3)[iCombo]){	return 2; }
+	if((*T2_HPSagainstElectronLooseMVA3)[iCombo]){	return 1; }
 	return 0;
 }
 
 unsigned int ttl::Branches::GetTau1AntiMuonIndex(const unsigned int iCombo) const {
-	if((*TTL_Tau1HPSagainstMuonTight)[iCombo]){	return 3; }
-	if((*TTL_Tau1HPSagainstMuonMedium)[iCombo]){	return 2; }
-	if((*TTL_Tau1HPSagainstMuonLoose)[iCombo]){	return 1; }
+	if((*T1_HPSagainstMuonTight)[iCombo]){	return 3; }
+	if((*T1_HPSagainstMuonMedium)[iCombo]){	return 2; }
+	if((*T1_HPSagainstMuonLoose)[iCombo]){	return 1; }
 	return 0;
 }
 
 unsigned int ttl::Branches::GetTau2AntiMuonIndex(const unsigned int iCombo) const {
-	if((*TTL_Tau2HPSagainstMuonTight)[iCombo]){	return 3; }
-	if((*TTL_Tau2HPSagainstMuonMedium)[iCombo]){	return 2; }
-	if((*TTL_Tau2HPSagainstMuonLoose)[iCombo]){	return 1; }
+	if((*T2_HPSagainstMuonTight)[iCombo]){	return 3; }
+	if((*T2_HPSagainstMuonMedium)[iCombo]){	return 2; }
+	if((*T2_HPSagainstMuonLoose)[iCombo]){	return 1; }
 	return 0;
 }
 
 unsigned int ttl::Branches::GetTau1AntiMuonIndex2(const unsigned int iCombo) const {
-	if((*TTL_Tau1HPSagainstMuonTight2)[iCombo]){	return 3; }
-	if((*TTL_Tau1HPSagainstMuonMedium2)[iCombo]){	return 2; }
-	if((*TTL_Tau1HPSagainstMuonLoose2)[iCombo]){	return 1; }
+	if((*T1_HPSagainstMuonTight2)[iCombo]){	return 3; }
+	if((*T1_HPSagainstMuonMedium2)[iCombo]){	return 2; }
+	if((*T1_HPSagainstMuonLoose2)[iCombo]){	return 1; }
 	return 0;
 }
 
 unsigned int ttl::Branches::GetTau2AntiMuonIndex2(const unsigned int iCombo) const {
-	if((*TTL_Tau2HPSagainstMuonTight2)[iCombo]){	return 3; }
-	if((*TTL_Tau2HPSagainstMuonMedium2)[iCombo]){	return 2; }
-	if((*TTL_Tau2HPSagainstMuonLoose2)[iCombo]){	return 1; }
+	if((*T2_HPSagainstMuonTight2)[iCombo]){	return 3; }
+	if((*T2_HPSagainstMuonMedium2)[iCombo]){	return 2; }
+	if((*T2_HPSagainstMuonLoose2)[iCombo]){	return 1; }
 	return 0;
 }
 

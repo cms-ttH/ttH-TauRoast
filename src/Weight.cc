@@ -49,13 +49,13 @@ namespace roast {
                 varname = "L2_Event";
             } else if (name == "topPt") {
                 label = "Top Pt SF";
-                varname = "TopPt";
+                varname = "topPt";
             }
 
             varname += "Weight";
 
             if (name.find("PUcorr") == 0)
-                varname += name.substr(6);
+                varname = "puWeight";
 
             switch (kind) {
                 case kUp:
@@ -110,9 +110,9 @@ namespace roast {
                     fct = [](roast::Branches *b, int idx, int n) -> float {
                         auto e = dynamic_cast<roast::ttl::Branches*>(b);
                         unsigned int matches = 0;
-                        if (abs((*e->TTL_Tau1GenMatchId)[idx]) == 11)
+                        if (abs((*e->T1_GenMatchId)[idx]) == 11)
                             ++matches;
-                        if (abs((*e->TTL_Tau1GenMatchId)[idx]) == 11)
+                        if (abs((*e->T1_GenMatchId)[idx]) == 11)
                             ++matches;
                         return matches;
                     };
@@ -144,12 +144,12 @@ namespace roast {
                         }
 
                         if (auto e = dynamic_cast<roast::tl::Branches*>(b)) {
-                            if (e->TranslateMatchIndex((*e->TL_TauGenMatchId)[idx]) == 1) {
-                                return tau_fake_scale->GetBinContent(tau_fake_scale->FindBin((*e->TL_TauPt)[idx]));
+                            if (e->TranslateMatchIndex((*e->T_GenMatchId)[idx]) == 1) {
+                                return tau_fake_scale->GetBinContent(tau_fake_scale->FindBin((*e->T_P)[idx].pt()));
                             }
                         } else if (auto e = dynamic_cast<roast::tll::Branches*>(b)) {
-                            if (e->TranslateMatchIndex((*e->TLL_TauGenMatchId)[idx]) == 1) {
-                                return tau_fake_scale->GetBinContent(tau_fake_scale->FindBin((*e->TLL_TauPt)[idx]));
+                            if (e->TranslateMatchIndex((*e->T_GenMatchId)[idx]) == 1) {
+                                return tau_fake_scale->GetBinContent(tau_fake_scale->FindBin((*e->T_P)[idx].pt()));
                             }
                         }
                         return 1.;
@@ -169,9 +169,9 @@ namespace roast {
                     fct = [](roast::Branches *b, int idx, int n) -> float {
                         auto e = dynamic_cast<roast::ttl::Branches*>(b);
                         unsigned int matches = 0;
-                        if (e->TranslateMatchIndex((*e->TTL_Tau1GenMatchId)[idx]) == 1)
+                        if (e->TranslateMatchIndex((*e->T1_GenMatchId)[idx]) == 1)
                             ++matches;
-                        if (e->TranslateMatchIndex((*e->TTL_Tau2GenMatchId)[idx]) == 1)
+                        if (e->TranslateMatchIndex((*e->T2_GenMatchId)[idx]) == 1)
                             ++matches;
                         return matches;
                     };
@@ -187,9 +187,9 @@ namespace roast {
                     fct = [](roast::Branches *b, int idx, int n) -> float {
                         auto e = dynamic_cast<roast::ttl::Branches*>(b);
                         unsigned int matches = 0;
-                        if (abs((*e->TTL_Tau1GenMatchId)[idx]) == 15)
+                        if (abs((*e->T1_GenMatchId)[idx]) == 15)
                             ++matches;
-                        if (abs((*e->TTL_Tau2GenMatchId)[idx]) == 15)
+                        if (abs((*e->T2_GenMatchId)[idx]) == 15)
                             ++matches;
                         return matches;
                     };

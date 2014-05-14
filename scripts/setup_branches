@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
-from collections import namedtuple
+from collections import namedtuple, defaultdict
+from functools import partial
+from itertools import combinations
 import glob
 import os
 import re
@@ -24,7 +26,7 @@ def gather_function_info(filename):
     return names
 
 def gather_type_info(filename, channel):
-    """Returns a list containing channel, prefix, name, class, and bool
+    """Returns a list containing channel, name, class, and bool
     indicating a pointer."""
     results = []
 
@@ -36,60 +38,16 @@ def gather_type_info(filename, channel):
         cls = bn.GetClassName()
         ptr = False
 
-        (start, end) = name.split("_", 1)
-
         if cls.startswith("vector"):
             cls = cls.replace("vector", "std::vector") + "*"
             ptr = True
         elif cls == "":
             cls = tpl.GetLeaf(name).GetTypeName()
 
-        results.append((channel, start, end, cls, ptr))
+        results.append((channel, name, cls, ptr))
     return results
 
-def generate_accessor_info(vars, common_vars):
-    attrs = {}
-    for (chan, pre, stem, type, ptr) in vars:
-        # capitalize first letter
-        name = stem[0].upper() + stem[1:]
-
-        # skip single tau info for now
-        # FIXME including this yields a conflict with TLL
-        if pre == 'T':
-            continue
-
-        # TTL, TLL, and event variables are not prefixed
-        if pre not in channels and pre != 'Ev':
-            name = pre + '_' + name
-
-        # lepton1 => L1, tau1 => t1, etc...
-        if c in channels:
-            m = re.match('(?:(?:Lepton|Tau)\d?)+', name)
-
-            if m:
-                full_lep = m.group(0)
-                lep = ""
-                for (particle, num) in re.findall('(Lepton|Tau)(\d)?', full_lep):
-                    lep += particle[0]
-                    if num:
-                        lep += num
-
-                name = name.replace(m.group(0), lep + '_')
-
-        if stem in common_vars:
-            varname = stem
-        else:
-            varname = pre + '_' + stem
-
-        if name in attrs:
-            if chan in attrs[name].channels:
-                continue
-            attrs[name].channels[chan] = (varname, type, ptr)
-        else:
-            attrs[name] = Attr(pre, stem, {chan: (varname, type, ptr)})
-    return attrs
-
-def generate_type_info(channel, vars, common_vars, indent=16):
+def generate_type_info(channel, vars, indent=16):
     """Generates definition, address setting, clearing, and deleting info for
     variables for a given channel, and updates corresponding files."""
     address_lines = []
@@ -98,34 +56,25 @@ def generate_type_info(channel, vars, common_vars, indent=16):
     delete_lines = []
     null_lines = []
 
-    for (c, n, t, p) in vars:
-        if not channel and c in channels and n in common_vars:
-            varname = n
-            declare_lines.append(' ' * indent + t + ' ' + varname + ';\n')
-        elif not (channel and n in common_vars):
-            varname = "_".join([c, n])
-            declare_lines.append(' ' * indent + t + ' ' + varname + ';\n')
-        elif c == 'J':
-            varname = "_".join([c, n])
+    names = sorted(vars.keys())
+
+    for name in names:
+        (chans, cls, ptr) = vars[name]
+
+        declare_lines.append(' ' * indent + cls + ' ' + name + ';\n')
+        address_lines.append("    fChain->SetBranchAddress(\"{0}\", &{0});\n".format(name))
+
+        if ptr:
+            clear_lines.append("    {0}->clear();\n".format(name))
+            delete_lines.append("    delete {0};\n".format(name))
         else:
-            varname = n
+            clear_lines.append("    {0} = 0;\n".format(name))
 
-        if not (not channel and c in channels and n in common_vars):
-            address_lines.append("    fChain->SetBranchAddress(\"{0}\", &{1});\n".format("_".join([c, n]), varname))
-        if channel and c in channels and n in common_vars:
-            continue
+        null_lines.append("    {0} = 0;\n".format(name))
 
-        if p:
-            clear_lines.append("    {0}->clear();\n".format(varname))
-            delete_lines.append("    delete {0};\n".format(varname))
-        else:
-            clear_lines.append("    {0} = 0;\n".format(varname))
-
-        null_lines.append("    {0} = 0;\n".format(varname))
-    if not channel:
-        channel = ""
     header = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'interface', channel + 'Branches.h')
     source = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'src', channel + 'Branches_generated.cc')
+
     inject_lines(header, "declarations", declare_lines)
     inject_lines(source, "address", address_lines)
     inject_lines(source, "clear", clear_lines)
@@ -155,64 +104,36 @@ channels = set(["TTL", "TLL", "TL", "LL"])
 
 # extract type information from ROOT files passed as arguments, only
 # process each unique branch name once
-type_info = []
+processed_channels = set()
+type_info = {}
 for fn in sys.argv[1:]:
-    file_channels = filter(lambda c: '/' + c.lower() + '_' in fn, channels)
-    if len(file_channels) != 1:
-        sys.stderr.write("unable to determine channel of file '{0}'\n".format(fn))
-        raise KeyError
+    chan = filter(lambda c: '/' + c.lower() + '_' in fn, channels)
+    if len(chan) != 1:
+        raise KeyError, "unable to determine channel of file '{0}'".format(fn)
 
-    for tpl in gather_type_info(fn, file_channels[0]):
-        type_info.append(tpl)
-
-vars = sorted(type_info, key=lambda tpl: "_".join(tpl[1:3]))
-
-single_var_names = {}
-for (chan, pre, name, type, ptr) in vars:
-    if pre in channels:
+    if chan[0] in processed_channels:
         continue
-    try:
-        var = pre + '_' + name
-        single_var_names[var].append(chan)
-        if len(single_var_names[var]) == len(channels):
-            del single_var_names[var]
-    except KeyError:
-        single_var_names[var] = [chan]
 
-for (k, v) in list(single_var_names.items()):
-    if len(v) == len(channels):
-        del single_var_names[k]
+    processed_channels.add(chan[0])
 
-# Variables with different branch names in the channels, but same variable
-# name stem.
-channel_var_info = [set([tpl[2:] for tpl in vars if tpl[1] == c]) for c in channels]
-common_var_info = reduce(lambda a, b: a & b, channel_var_info[1:], channel_var_info[0])
-common_vars = [tpl[0] for tpl in common_var_info]
+    for (channel, name, cls, ptr) in gather_type_info(fn, chan[0]):
+        if name in type_info:
+            if cls != type_info[name][1] and ptr != type_info[name][2]:
+                raise TypeError, "incompatible branches for {0}".format(name)
+            type_info[name][0].add(channel)
+        else:
+            type_info[name] = [set([channel]), cls, ptr]
 
-# Variables shared between the different channels.  This includes the common
-# variables.
-shared_var_names = set()
-shared_vars = []
-tmp_vars = filter(lambda (chan, pre, name, type, ptr): pre not in channels or name in common_vars, vars)
-for (chan, pre, name, type, ptr) in tmp_vars:
-    if pre in channels and name in common_vars:
-        varname = name
-    else:
-        varname = pre + '_' + name
+shared_vars = dict(filter(lambda (k, vals): len(vals[0]) == len(channels), type_info.items()))
 
-    if varname in shared_var_names or varname in single_var_names:
-        continue
-    shared_var_names.add(varname)
-    shared_vars.append((pre, name, type, ptr))
-
-generate_type_info(None, shared_vars, common_vars, 12)
+generate_type_info("", shared_vars, 12)
 
 for channel in channels:
-    unique_var_names = [k for (k, v) in single_var_names.items() if channel in v]
-    channel_vars = sorted(set([(pre, name, type, ptr) for (chan, pre, name, type, ptr) in vars if chan == channel and (pre == channel or pre + '_' + name in unique_var_names)]), key=lambda tpl: '_'.join(tpl[:2]))
-    print "{0} variables for {1}, unique: {2}".format(len(channel_vars), channel, ", ".join(unique_var_names))
+    def is_channel((k, vals)):
+        return len(vals[0]) != len(channels) and channel in vals[0]
+    channel_vars = dict(filter(is_channel, type_info.items()))
     if len(channel_vars) > 0:
-        generate_type_info(channel, channel_vars, common_vars)
+        generate_type_info(channel, channel_vars)
 
 #----------------\
 # accessor setup  >----------------------------------------------------
@@ -224,9 +145,8 @@ lines = []
 cast = '{0}::Branches* e = dynamic_cast<{0}::Branches*>(b)'
 declare = 'accessors["{0}"] = [](Branches *b, int idx, int n) -> float {{\n'
 reindex = [
-        ('Clean', 'int i = (*b->CleanJetIndices)[idx][{0}];\n'),
-        ('Tagged', 'int i = (*b->CleanJetCSVMIndices)[idx].at({0});\n'),
-        ('Untagged', 'int i = (*b->CleanJetNonCSVMIndices)[idx].at({0});\n')
+        ('Tagged', 'int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], {0});\n'),
+        ('Untagged', 'int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], {0});\n'),
         ]
 returns = {
         0: 'return {0}->{1};',
@@ -310,11 +230,8 @@ for fn in sorted(fct_names.keys()):
                 raise ValueError(p)
 
             chan = p.lower()
-            if var not in shared_var_names:
-                varname = p + "_" + var
-            else:
-                varname = var
             lines.append(indent * 3 + cond + cast.format(chan) + ') {\n')
+
             if combo_var:
                 lines.append(indent * 4 + 'return {0}->{1}(idx);\n'.format(var, fn))
             else:
@@ -326,65 +243,84 @@ for fn in sorted(fct_names.keys()):
         # lines.append(indent * 3 + 'return -1. / 0.;\n')
         lines.append(indent * 2 + '};\n')
 
-attrs = generate_accessor_info(vars, common_vars)
-
 # Now turn to branches
-def generate_return_line(obj, typeinfo, reindex=False, safe=False):
-    types = set(typeinfo.values())
+def generate_return_line(name, chans, cls, method=None, reindex=False, safe=False):
     idx = 'idx'
     subidx = 'n'
-    if len(types) == 1 and len(typeinfo.keys()) == len(channels):
-        (varname, type, ptr) = list(types)[0]
-        cnt = type.count('vector')
+    cnt = cls.count('vector')
 
-        if cnt not in returns:
-            raise TypeError
+    if cnt not in returns:
+        raise TypeError
 
-        if reindex:
-            if cnt == 1:
-                idx = 'i'
-            elif cnt == 2:
-                subidx = 'i'
+    if reindex:
+        if cnt == 1:
+            idx = 'i'
+        elif cnt == 2:
+            subidx = 'i'
+
+    if len(chans) == len(channels):
+        res = returns[cnt].format('b', name, idx, subidx)
 
         if safe:
-            return returns[cnt].replace("[{2}]", ".at({2})").replace("[{3}]", ".at({3})").format('b', varname, idx, subidx)
-        return returns[cnt].format('b', varname, idx, subidx)
+            res = res.replace("[{2}]", ".at({2})").replace("[{3}]", ".at({3})")
+        if method:
+            res = res.replace(';', '.{0}();'.format(method))
+
+        return res
     else:
         lines = []
-        for (chan, (varname, type, ptr)) in typeinfo.items():
-            cnt = type.count('vector')
-            ret_line = returns[cnt]
-
-            parts = varname.split('_', 1)
-            if parts[0] in channels:
-                varname = chan + '_' + parts[1]
-
-            nidx = idx
-            nsubidx = subidx
-            if reindex:
-                if cnt == 1:
-                    nidx = 'i'
-                elif cnt == 2:
-                    nsubidx = 'i'
+        for chan in sorted(chans):
+            res = returns[cnt]
 
             if safe:
-                ret_line = ret_line.replace("[{2}]", ".at({2})").replace("[{3}]", ".at({3})")
-            lines.append(cast_template.format(chan.lower(), ret_line.format('e', varname, nidx, nsubidx)))
+                res = res.replace("[{2}]", ".at({2})").replace("[{3}]", ".at({3})")
+            if method:
+                res = res.replace(';', '.{0}();'.format(method))
+
+            lines.append(cast_template.format(chan.lower(), res.format('e', name, idx, subidx)))
         return " else ".join(lines) + throw_template
 
 jets = 'LJ SubLJ SubSubLJ SubSubSubLJ'.split()
 
-for accessor in sorted(attrs.keys()):
-    (pre, var, chans) = attrs[accessor]
+p4s = []
+for fun in map(partial(partial, re.match), ('T\d*_P$', 'L\d*_P$', 'J_P$', 'MET_P$')):
+    p4s += sorted([(var, type_info[var][0]) for var in type_info if fun(var)], key=lambda xs: xs[0])
 
-    # consolidate type information
-    types = set([type for (varname, type, ptr) in chans.values()])
-    if len(types) == 1 and 'LorentzVector' in list(types)[0]:
-        # cannot do anything with a LorentzVector at the moment
+for ((p1, cs1), (p2, cs2)) in combinations(p4s, 2):
+    chans = cs1.intersection(cs2)
+
+    if len(chans) == 0:
         continue
 
-    # manipulate variable names to get "historic" naming scheme
-    # FIXME rename branches in ntuplizer
+    if p1 == 'J_P' or p2 == 'J_P':
+        continue
+
+    if p1 != 'MET_P' and p2 != 'MET_P':
+        if p1[0] == p2[0]:
+            accessor = p1[0] + p2[0]
+        else:
+            accessor = p1[:-2] + p2[:-2]
+
+        if len(chans) == len(channels):
+            lines.append(indent * 2 + declare.format(accessor + '_DeltaR'))
+            lines.append(indent * 3
+                    + 'return reco::deltaR((*b->{0})[idx], (*b->{1})[idx]);'.format(p1, p2)
+                    + '\n')
+            lines.append(indent * 2 + '};\n')
+        else:
+            lines.append(indent * 2 + declare.format(accessor + '_DeltaR'))
+            statements = []
+            for chan in sorted(chans):
+                statements.append(cast_template.format(chan.lower(), 'return reco::deltaR((*e->{0})[idx], (*e->{1})[idx]);'.format(p1, p2)))
+            lines.append(indent * 3
+                    + " else ".join(statements)
+                    + throw_template + '\n')
+            lines.append(indent * 2 + '};\n')
+
+for accessor in sorted(type_info.keys()):
+    (chans, cls, ptr) = type_info[accessor]
+
+    var = accessor
 
     # no mention of HPS anywhere
     rm = re.search(r'HPS(?:by)?(.)', accessor)
@@ -404,29 +340,48 @@ for accessor in sorted(attrs.keys()):
     # camel case correctly
     accessor = accessor.replace("raw", "Raw")
 
-    # convert convention for jet variables
-    if pre == 'J':
-        for (particle, count) in re.findall('(Tau|Lepton)(\d)?', accessor):
-            accessor = accessor.replace('_', particle[0] + count + '_', 1).replace(particle + count, '', 1)
+    # consolidate type information
+    # if 'LorentzVector' in cls:
+        # cannot do anything with a LorentzVector at the moment
+        # continue
 
     try:
         tmp_lines = []
 
-        # For OS TLL, we can fix the tau + tau->lepton system
-        if 'TLL' in chans:
-            varname = chans['TLL'][0]
-            if chans['TLL'][1].count('vector') == 1 \
-                    and 'Lepton1' in varname and 'Lepton2' not in varname:
-                lines += tll_template.format("<", accessor.replace('L1', 'osL'), varname, varname.replace('Lepton1', 'Lepton2'))
-                lines += tll_template.format(">", accessor.replace('L1', 'ssL'), varname, varname.replace('Lepton1', 'Lepton2'))
+        if not accessor.startswith("J_"):
+            if 'LorentzVector' in cls:
+                for q in ('Pt', 'Eta', 'Phi'):
+                    lines.append(indent * 2 + declare.format(accessor[:-1] + q))
+                    lines.append(indent * 3
+                        + generate_return_line(var, chans, cls, method=q.lower())
+                        + '\n')
+                    lines.append(indent * 2 + '};\n')
+                continue
+            else:
+                tmp_lines.append(indent * 2 + declare.format(accessor))
+                tmp_lines.append(indent * 3 + generate_return_line(var, chans, cls) + '\n')
+        elif 'LorentzVector' in cls:
+            for q in ('Pt', 'Eta', 'Phi'):
+                lines.append(indent * 2 + declare.format(accessor[:-1] + q))
+                lines.append(indent * 3
+                    + generate_return_line(var, chans, cls, method=q.lower())
+                    + '\n')
+                lines.append(indent * 2 + '};\n')
 
-        if pre != 'J':
-            tmp_lines.append(indent * 2 + declare.format(accessor))
-            if pre not in channels and pre != 'Ev':
-                if 'Num' not in accessor:
-                    continue
-            print accessor
-            tmp_lines.append(indent * 3 + generate_return_line('b', chans) + '\n')
+                for (label, index_statement) in reindex:
+                    lines.append(indent * 2 + declare.format(label + accessor[:-1] + q))
+                    lines.append(indent * 3 + index_statement.format('n'))
+                    lines.append(indent * 3 + generate_return_line(var, chans, cls, method=q.lower(), reindex=True, safe=True) + '\n')
+                    lines.append(indent * 2 + '};\n')
+
+                    # leading jet etc.
+                    for (n, j) in enumerate(jets):
+                        new_key = label + accessor.replace('J', j)[:-1] + q
+                        lines.append(indent * 2 + declare.format(new_key))
+                        lines.append(indent * 3 + index_statement.format(n))
+                        lines.append(indent * 3 + generate_return_line(var, chans, cls, method=q.lower(), reindex=True, safe=True) + '\n')
+                        lines.append(indent * 2 + '};\n')
+            continue
         else:
             if var == 'combSecVtxBTag':
                 accessor = accessor.replace('CombSecVtxBTag', 'CSV')
@@ -436,13 +391,13 @@ for accessor in sorted(attrs.keys()):
             jet_lines = []
 
             tmp_lines.append(indent * 2 + declare.format(accessor))
-            tmp_lines.append(indent * 3 + generate_return_line('b', chans) + '\n')
+            tmp_lines.append(indent * 3 + generate_return_line(var, chans, cls) + '\n')
 
             if 'Num' not in var:
                 for (label, index_statement) in reindex:
                     jet_lines.append(indent * 2 + declare.format(label + accessor))
                     jet_lines.append(indent * 3 + index_statement.format('n'))
-                    jet_lines.append(indent * 3 + generate_return_line('b', chans, reindex=True, safe=True) + '\n')
+                    jet_lines.append(indent * 3 + generate_return_line(var, chans, cls, reindex=True, safe=True) + '\n')
                     jet_lines.append(indent * 2 + '};\n')
 
                     # leading jet etc.
@@ -450,7 +405,7 @@ for accessor in sorted(attrs.keys()):
                         new_key = label + accessor.replace('J', j)
                         jet_lines.append(indent * 2 + declare.format(new_key))
                         jet_lines.append(indent * 3 + index_statement.format(n))
-                        jet_lines.append(indent * 3 + generate_return_line('b', chans, reindex=True, safe=True) + '\n')
+                        jet_lines.append(indent * 3 + generate_return_line(var, chans, cls, reindex=True, safe=True) + '\n')
                         jet_lines.append(indent * 2 + '};\n')
                 lines += jet_lines
 
@@ -459,8 +414,10 @@ for accessor in sorted(attrs.keys()):
         lines += tmp_lines
     except ValueError as e:
         print 'cannot associate {0} with a valid channel: {1}'.format(accessor, e)
+        raise
     except TypeError as e:
         print '{0} is of unprocessable type'.format(accessor)
+        raise
 
 source = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'src', 'Accessor.cc')
 inject_lines(source, "attr", lines)

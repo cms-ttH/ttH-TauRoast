@@ -27,73 +27,73 @@ tll::Branches::~Branches()
 
 bool
 tll::Branches::IsGoodGenMatch(const int& idx) const {
-    return (abs((*TLL_TauGenMatchId)[idx]) == 15 &&
-            abs((*TLL_TauGenMatchMother0Id)[idx]) == 25);
+    return (abs((*T_GenMatchId)[idx]) == 15 &&
+            abs((*T_GenMatchMother0Id)[idx]) == 25);
 }
 
 unsigned int tll::Branches::GetTauIsolationIndex(const unsigned int iCombo) const {
-    if((*TLL_TauHPSbyTightCombinedIsolationDeltaBetaCorr)[iCombo]){ return 4; }
-    if((*TLL_TauHPSbyMediumCombinedIsolationDeltaBetaCorr)[iCombo]){ return 3; }
-    if((*TLL_TauHPSbyLooseCombinedIsolationDeltaBetaCorr)[iCombo]){ return 2; }
-    if((*TLL_TauHPSbyVLooseCombinedIsolationDeltaBetaCorr)[iCombo]){ return 1; }
+    if((*T_HPSbyTightCombinedIsolationDeltaBetaCorr)[iCombo]){ return 4; }
+    if((*T_HPSbyMediumCombinedIsolationDeltaBetaCorr)[iCombo]){ return 3; }
+    if((*T_HPSbyLooseCombinedIsolationDeltaBetaCorr)[iCombo]){ return 2; }
+    if((*T_HPSbyVLooseCombinedIsolationDeltaBetaCorr)[iCombo]){ return 1; }
     return 0;
 }
 
 unsigned int tll::Branches::GetTauIsolationIndex3Hits(const unsigned int iCombo) const {
-    if((*TLL_TauHPSbyTightCombinedIsolationDeltaBetaCorr3Hits)[iCombo]){ return 3; }
-    if((*TLL_TauHPSbyMediumCombinedIsolationDeltaBetaCorr3Hits)[iCombo]){ return 2; }
-    if((*TLL_TauHPSbyLooseCombinedIsolationDeltaBetaCorr3Hits)[iCombo]){ return 1; }
+    if((*T_HPSbyTightCombinedIsolationDeltaBetaCorr3Hits)[iCombo]){ return 3; }
+    if((*T_HPSbyMediumCombinedIsolationDeltaBetaCorr3Hits)[iCombo]){ return 2; }
+    if((*T_HPSbyLooseCombinedIsolationDeltaBetaCorr3Hits)[iCombo]){ return 1; }
     return 0;
 }
 
 unsigned int tll::Branches::GetTauIsolationIndexMVA(const unsigned int iCombo) const {
-    if((*TLL_TauHPSbyTightIsolationMVA)[iCombo]){ return 3; }
-    if((*TLL_TauHPSbyMediumIsolationMVA)[iCombo]){ return 2; }
-    if((*TLL_TauHPSbyLooseIsolationMVA)[iCombo]){ return 1; }
+    if((*T_HPSbyTightIsolationMVA)[iCombo]){ return 3; }
+    if((*T_HPSbyMediumIsolationMVA)[iCombo]){ return 2; }
+    if((*T_HPSbyLooseIsolationMVA)[iCombo]){ return 1; }
     return 0;
 }
 
 unsigned int tll::Branches::GetTauIsolationIndexMVA2(const unsigned int iCombo) const {
-    if((*TLL_TauHPSbyTightIsolationMVA2)[iCombo]){ return 3; }
-    if((*TLL_TauHPSbyMediumIsolationMVA2)[iCombo]){ return 2; }
-    if((*TLL_TauHPSbyLooseIsolationMVA2)[iCombo]){ return 1; }
+    if((*T_HPSbyTightIsolationMVA2)[iCombo]){ return 3; }
+    if((*T_HPSbyMediumIsolationMVA2)[iCombo]){ return 2; }
+    if((*T_HPSbyLooseIsolationMVA2)[iCombo]){ return 1; }
     return 0;
 }
 
 unsigned int tll::Branches::GetTauAntiElectronIndex(const unsigned int iCombo) const {
-    if((*TLL_TauHPSagainstElectronTight)[iCombo]){ return 3; }
-    if((*TLL_TauHPSagainstElectronMedium)[iCombo]){ return 2; }
-    if((*TLL_TauHPSagainstElectronLoose)[iCombo]){ return 1; }
+    if((*T_HPSagainstElectronTight)[iCombo]){ return 3; }
+    if((*T_HPSagainstElectronMedium)[iCombo]){ return 2; }
+    if((*T_HPSagainstElectronLoose)[iCombo]){ return 1; }
     return 0;
 }
 
 unsigned int tll::Branches::GetTauAntiElectronIndexMVA2(const unsigned int iCombo) const {
-    if((*TLL_TauHPSagainstElectronTightMVA2)[iCombo]){ return 4; }
-    if((*TLL_TauHPSagainstElectronMediumMVA2)[iCombo]){ return 3; }
-    if((*TLL_TauHPSagainstElectronLooseMVA2)[iCombo]){ return 2; }
-    if((*TLL_TauHPSagainstElectronVLooseMVA2)[iCombo]){ return 1; }
+    if((*T_HPSagainstElectronTightMVA2)[iCombo]){ return 4; }
+    if((*T_HPSagainstElectronMediumMVA2)[iCombo]){ return 3; }
+    if((*T_HPSagainstElectronLooseMVA2)[iCombo]){ return 2; }
+    if((*T_HPSagainstElectronVLooseMVA2)[iCombo]){ return 1; }
     return 0;
 }
 
 unsigned int tll::Branches::GetTauAntiElectronIndexMVA3(const unsigned int iCombo) const {
-    if((*TLL_TauHPSagainstElectronVTightMVA3)[iCombo]){ return 4; }
-    if((*TLL_TauHPSagainstElectronTightMVA3)[iCombo]){ return 3; }
-    if((*TLL_TauHPSagainstElectronMediumMVA3)[iCombo]){ return 2; }
-    if((*TLL_TauHPSagainstElectronLooseMVA3)[iCombo]){ return 1; }
+    if((*T_HPSagainstElectronVTightMVA3)[iCombo]){ return 4; }
+    if((*T_HPSagainstElectronTightMVA3)[iCombo]){ return 3; }
+    if((*T_HPSagainstElectronMediumMVA3)[iCombo]){ return 2; }
+    if((*T_HPSagainstElectronLooseMVA3)[iCombo]){ return 1; }
     return 0;
 }
 
 unsigned int tll::Branches::GetTauAntiMuonIndex(const unsigned int iCombo) const {
-    if((*TLL_TauHPSagainstMuonTight)[iCombo]){ return 3; }
-    if((*TLL_TauHPSagainstMuonMedium)[iCombo]){ return 2; }
-    if((*TLL_TauHPSagainstMuonLoose)[iCombo]){ return 1; }
+    if((*T_HPSagainstMuonTight)[iCombo]){ return 3; }
+    if((*T_HPSagainstMuonMedium)[iCombo]){ return 2; }
+    if((*T_HPSagainstMuonLoose)[iCombo]){ return 1; }
     return 0;
 }
 
 unsigned int tll::Branches::GetTauAntiMuonIndex2(const unsigned int iCombo) const {
-    if((*TLL_TauHPSagainstMuonTight2)[iCombo]){ return 3; }
-    if((*TLL_TauHPSagainstMuonMedium2)[iCombo]){ return 2; }
-    if((*TLL_TauHPSagainstMuonLoose2)[iCombo]){ return 1; }
+    if((*T_HPSagainstMuonTight2)[iCombo]){ return 3; }
+    if((*T_HPSagainstMuonMedium2)[iCombo]){ return 2; }
+    if((*T_HPSagainstMuonLoose2)[iCombo]){ return 1; }
     return 0;
 }
 

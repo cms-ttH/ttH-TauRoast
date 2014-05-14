@@ -10,22 +10,22 @@
 inline double
 tau_iso(roast::tll::Branches *b, int idx)
 {
-    return (*b->TLL_TauHPSbyIsolationMVA2raw)[idx];
+    return (*b->T_HPSbyIsolationMVA2raw)[idx];
 }
 
 inline double
 tau_iso2(roast::tl::Branches *b, int idx)
 {
-    return (*b->TL_TauHPSbyIsolationMVA2raw)[idx];
+    return (*b->T_HPSbyIsolationMVA2raw)[idx];
 }
 
 inline double
 ditau_iso(roast::ttl::Branches *b, int idx)
 {
-    return ((*b->TTL_Tau1HPSbyIsolationMVA2raw)[idx] + 1.) *
-        ((*b->TTL_Tau1HPSbyIsolationMVA2raw)[idx] + 1.) +
-        ((*b->TTL_Tau2HPSbyIsolationMVA2raw)[idx] + 1.) *
-        ((*b->TTL_Tau2HPSbyIsolationMVA2raw)[idx] + 1.);
+    return ((*b->T1_HPSbyIsolationMVA2raw)[idx] + 1.) *
+        ((*b->T1_HPSbyIsolationMVA2raw)[idx] + 1.) +
+        ((*b->T2_HPSbyIsolationMVA2raw)[idx] + 1.) *
+        ((*b->T2_HPSbyIsolationMVA2raw)[idx] + 1.);
 }
 
 int
