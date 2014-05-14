@@ -529,7 +529,8 @@ def load_config(filename, basedir, overrides):
     channel = config['analysis']['channel']
 
     config['histograms'] = expand_histogram_configs(config['histograms'], channel)
-    config['processes']['Collisions'] = config['processes']['Collisions'][channel]
+    if 'Collisions' in config['processes']:
+        config['processes']['Collisions'] = config['processes']['Collisions'][channel]
 
     if 'root' in config['paths']:
         basedir = config['paths']['root']
