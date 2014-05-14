@@ -391,7 +391,6 @@ def stack(config, processes):
                     ratio.GetZaxis().SetTitle("Data/MC")
                     ratio.Draw("COLZ TEXT")
             except:
-                raise
                 pass
 
             with create_plot(config, cfg, is2d=True, plot_ratio=False, procname="Background") as (scale, pad1,):
