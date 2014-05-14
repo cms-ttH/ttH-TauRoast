@@ -501,7 +501,7 @@ def expand_histogram_configs(configs, channel=None):
                 newcfg = deep_replace(newcfg, '${0}'.format(n), repl)
             del newcfg['replace']
 
-            if channel not in cfg.get('channels', [channel]):
+            if channel not in newcfg.get('channels', [channel]):
                 continue
             res.append(newcfg)
     return res
