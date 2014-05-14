@@ -59,13 +59,16 @@ def get_integrals(histname, processes):
             vals.append(p.GetHistogram(histname).GetHisto().Integral())
     return vals
 
-def get_maximum(histname, processes, inc_error=False):
+def get_maximum(histname, processes, inc_error=False, sig_scale=1.0):
     vals = []
     for p in processes:
         if inc_error:
             vals.append(p.GetHistogram(histname).GetMaximumWithError())
         else:
             vals.append(p.GetHistogram(histname).GetMaximum())
+
+        if p.IsSignal():
+            vals[-1] *= sig_scale
     return max(vals)
 
 class SysErrors:
@@ -432,12 +435,13 @@ def stack(config, processes):
             bkg_stack = get_bkg_stack(histname, bkg_procs)
             bkg_stack.Draw("hist")
 
+            sig_scale = config['display']['signal scale factor']
             scale = 1.15
             if config['display']['legend']:
                 scale = 1.45
 
             max_y = scale * max(
-                    get_maximum(histname, procs, True),
+                    get_maximum(histname, procs, True, sig_scale),
                     bkg_stack.GetMaximum())
 
             with create_plot(config, cfg, plot_ratio, hist=base_histo, max=max_y, scale=scale) as (scale, pad1, pad2):
@@ -514,7 +518,6 @@ def stack(config, processes):
                         l.draw_marker(20, r.kBlack, coll.GetLabelForLegend())
                     l.new_row()
                     for p in sig_procs:
-                        sig_scale = config['display']['signal scale factor']
                         suffix = "" if sig_scale == 1 else " (#times {0})".format(sig_scale)
                         l.draw_line(2, p.GetColor(), p.GetLabelForLegend() + suffix)
 
