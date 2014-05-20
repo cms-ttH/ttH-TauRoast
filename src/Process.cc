@@ -34,7 +34,6 @@ Process::Process(const Process& iProcess)
 	type							= iProcess.GetType();
 	checkReality					= iProcess.CheckReality();
 	ntuplePaths						= iProcess.GetNtuplePaths();
-	color							= iProcess.GetColor();
 
 	crossSection					= iProcess.GetCrossSection();
 	branchingRatio					= iProcess.GetBranchingRatio();
@@ -52,7 +51,7 @@ Process::Process(const Process& iProcess)
 }
 
 Process::Process(const std::string& name, const std::string& alias, const std::string& title,
-      const std::string& type, const std::vector<std::string>& paths, int color,
+      const std::string& type, const std::vector<std::string>& paths,
       int ds_count, int nut_count, double xsec, double branch, bool genmatch):
    events(),
    shortName(name),
@@ -61,7 +60,6 @@ Process::Process(const std::string& name, const std::string& alias, const std::s
    type(type),
    checkReality(genmatch),
    ntuplePaths(paths),
-   color(color),
    analyzed(false),
    plot(false),
    crossSection(xsec),
@@ -88,7 +86,6 @@ void Process::Update(Process const * iProcess){
 	labelForLegend					= iProcess->GetLabelForLegend();
 	type							= iProcess->GetType();
 	checkReality					= iProcess->CheckReality();
-	color							= iProcess->GetColor();
 
 	crossSection					= iProcess->GetCrossSection();
 	branchingRatio					= iProcess->GetBranchingRatio();
@@ -108,7 +105,6 @@ void Process::SetNormalizedCutFlow(CutFlow const & iCutFlow){ normalizedCutFlow	
 void Process::SetNOEanalyzed(double const iEvents){ NOEanalyzed = iEvents; }
 void Process::SetNOEinNtuple(double const iEvents){ NOEinNtuple = iEvents; }
 void Process::SetRelSysUncertainty(double const iError){ relSysUncertainty = iError; }
-void Process::SetColor(int const iColor){ color = iColor; }
 CutFlow* Process::GetCutFlow() { return &cutFlow; }
 CutFlow const * Process::GetConstCutFlow() const { return &cutFlow; }
 CutFlow* Process::GetNormalizedCutFlow() { return &normalizedCutFlow; }
@@ -126,7 +122,6 @@ bool const Process::IsBackground() const { return ((type.compare("mcBackground")
 bool const Process::IsSignal() const { return ((type.compare("signal")==0)); }
 bool const Process::CheckReality() const { return checkReality; }
 vector<string> const Process::GetNtuplePaths() const { return ntuplePaths; }
-int const Process::GetColor() const { return color; }
 int const Process::GetNOEinDS() const {			return NOEinDS;		}
 int const Process::GetNoEreadByNUTter() const {	return NoEreadByNUTter;}
 int const Process::GetNOEinNtuple() const {		return NOEinNtuple; }

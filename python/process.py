@@ -38,7 +38,6 @@ def analyze(config, module):
             cfg['labelForLegend'],
             cfg['type'],
             vpaths,
-            cfg['color'],
             cfg['NOEinDS'],
             cfg['NoEreadByNUTter'],
             cfg['crossSection'],

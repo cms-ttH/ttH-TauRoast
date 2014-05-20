@@ -40,7 +40,6 @@ namespace roast {
             std::string type;
             bool checkReality;
             std::vector<std::string> ntuplePaths;
-            int color;
             bool analyzed;
             bool plot;
 
@@ -62,7 +61,7 @@ namespace roast {
             Process();
             Process(const roast::Process&);
             Process(const std::string&, const std::string&, const std::string&,
-                    const std::string&, const std::vector<std::string>&, int, int, int,
+                    const std::string&, const std::vector<std::string>&, int, int,
                     double, double, bool genmatch=false);
             virtual ~Process();
             void Update(roast::Process const *);
@@ -76,7 +75,6 @@ namespace roast {
             void SetShortName(std::string const);
             void SetNiceName(std::string const);
             void SetLabelForLegend(std::string const);
-            void SetColor(int const);
             void SetNOEanalyzed(double const);
             void SetNOEinNtuple(double const);
             void SetNtuplePaths(std::vector<std::string> const);
@@ -95,7 +93,6 @@ namespace roast {
             CutFlow* GetNormalizedCutFlow();
             CutFlow const* GetNormalizedCutFlow() const;
 
-            int const GetColor() const;
             std::string const GetShortName() const;
             std::string const GetNiceName() const;
             std::string const GetLabelForLegend() const;
@@ -129,7 +126,7 @@ namespace roast {
             void SetEvents(const std::vector<roast::Process::Event>& evs) { events = evs; };
             void Add(roast::Process*, bool same=false);
 
-            ClassDef(Process, 1);
+            ClassDef(Process, 2);
     };
 }
 

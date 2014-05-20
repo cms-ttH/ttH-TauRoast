@@ -20,6 +20,31 @@ except:
     sys.stderr.write("Failed to import 'roast'!\n")
     sys.exit(1)
 
+class Config(dict):
+    def __init__(self, dictionary):
+        for (k, v) in dictionary.items():
+            if isinstance(v, dict):
+                self[k] = Config(v)
+            else:
+                self[k] = v
+
+    def __getattr__(self, attr):
+        return self[attr]
+
+    def __getitem__(self, attr):
+        if isinstance(attr, roast.Process):
+            attr = attr.GetShortName()
+        return self.get(attr)
+
+    def dict(self):
+        res = {}
+        for (k, v) in self.items():
+            if isinstance(v, Config):
+                res[k] = v.dict()
+            else:
+                res[k] = v
+        return res
+
 class Loader(yaml.Loader):
     """Allow to nest yaml files inside each other.  Use `!include` to
     reference a file (or list thereof) to be loaded and put in place.
@@ -288,8 +313,6 @@ def get_collisions(ps):
     if len(res) != 1:
         if len(res) > 1:
             logging.critical("more than one collision process found")
-        else:
-            logging.critical("no collisions present")
         raise LookupError
     return res[0]
 
@@ -538,7 +561,7 @@ def load_config(filename, basedir, overrides):
             if k == 'root':
                 continue
             config['paths'][k] = v.replace('{root}', basedir)
-    return config
+    return Config(config)
 
 def backup_config(configfile, config, outdir):
     if not os.path.exists(outdir):
@@ -547,7 +570,7 @@ def backup_config(configfile, config, outdir):
             os.path.normpath(os.path.join(os.environ['PWD'], configfile)):
         shutil.copy(configfile, os.path.join(outdir, 'config_original.yaml'))
     with open(os.path.join(outdir, 'config_expanded.yaml'), 'w') as f:
-        f.write(yaml.dump(config))
+        f.write(yaml.dump(config.dict()))
 
 def load(name, file):
     """Load an object with key `name` from `file`, which can either be a

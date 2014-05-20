@@ -20,19 +20,19 @@ except:
 from ttH.TauRoast.helper import *
 from ttH.TauRoast import style
 
-def get_bkg_stack(histname, processes):
+def get_bkg_stack(config, histname, processes):
     res = r.THStack(histname + "_stack", histname + "_stack")
 
     for p in reversed(processes):
         h = p.GetHistogram(histname).GetHisto()
-        h.SetFillColor(p.GetColor())
+        h.SetFillColor(config.processes[p].color)
         if 'fake' in p.GetShortName():
             h.SetFillStyle(3244)
         elif 'real' in p.GetShortName():
             h.SetFillStyle(3010)
         else:
             h.SetFillStyle(1001)
-        h.SetLineColor(p.GetColor())
+        h.SetLineColor(config.processes[p].color)
         h.SetLineWidth(0)
         res.Add(h)
 
@@ -432,7 +432,7 @@ def stack(config, processes):
             base_histo = roast.HWrapper(procs[0].GetHistogram(histname))
 
             bkg_procs = get_backgrounds(procs)
-            bkg_stack = get_bkg_stack(histname, bkg_procs)
+            bkg_stack = get_bkg_stack(config, histname, bkg_procs)
             bkg_stack.Draw("hist")
 
             sig_scale = config['display']['signal scale factor']
@@ -487,7 +487,7 @@ def stack(config, processes):
                     h.Scale(config['display']['signal scale factor'])
                     h.SetFillStyle(0)
                     h.SetLineWidth(4)
-                    h.SetLineColor(p.GetColor())
+                    h.SetLineColor(config.processes[p.GetShortName()].color)
                     h.GetYaxis().SetRangeUser(0.002, max_y)
 
                     # FIXME implement stacking signals on top of bkg
@@ -512,14 +512,14 @@ def stack(config, processes):
                     pad1.cd()
                     l = Legend(0.05, 3, 0.08)
                     for p in bkg_procs:
-                        l.draw_box(1001, p.GetColor(), p.GetLabelForLegend())
+                        l.draw_box(1001, config.processes[p].color, p.GetLabelForLegend())
                     l.draw_box(3654, r.kBlack, "Bkg. err.", True)
                     if coll:
                         l.draw_marker(20, r.kBlack, coll.GetLabelForLegend())
                     l.new_row()
                     for p in sig_procs:
                         suffix = "" if sig_scale == 1 else " (#times {0})".format(sig_scale)
-                        l.draw_line(2, p.GetColor(), p.GetLabelForLegend() + suffix)
+                        l.draw_line(2, config.processes[p].color, p.GetLabelForLegend() + suffix)
 
                 base_histo.GetHisto().Draw("axis same")
 
