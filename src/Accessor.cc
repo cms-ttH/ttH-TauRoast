@@ -276,11 +276,6 @@ namespace roast {
             return (*b->NumExLooseMuons)[idx] + (*b->NumExLooseElectrons)[idx];
         };
 
-        accessors["LL_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            return reco::deltaR((*e->L1_P)[idx], (*e->L2_P)[idx]);
-        };
-
         accessors["LL_ChargeProduct"] = [](roast::Branches *b, int idx, int n) -> float {
             if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return (*e->L1_Charge)[idx] * (*e->L2_Charge)[idx];
@@ -678,7 +673,6 @@ namespace roast {
         };
         accessors["HT"] = [](Branches *b, int idx, int n) -> float {
             return 0.;
-            return (*b->HT)[idx];
         };
         accessors["IsTauEvent"] = [](Branches *b, int idx, int n) -> float {
             return b->IsTauEvent;
@@ -1589,6 +1583,49 @@ namespace roast {
         accessors["J_PartonStatus"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_PartonStatus)[idx][n];
         };
+        accessors["TaggedJ_CSV"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            return (*b->J_combSecVtxBTag)[idx][i];
+        };
+        accessors["TaggedLJ_CSV"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            return (*b->J_combSecVtxBTag)[idx][i];
+        };
+        accessors["TaggedSubLJ_CSV"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            return (*b->J_combSecVtxBTag)[idx][i];
+        };
+        accessors["TaggedSubSubLJ_CSV"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            return (*b->J_combSecVtxBTag)[idx][i];
+        };
+        accessors["TaggedSubSubSubLJ_CSV"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
+            return (*b->J_combSecVtxBTag)[idx][i];
+        };
+        accessors["UntaggedJ_CSV"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            return (*b->J_combSecVtxBTag)[idx][i];
+        };
+        accessors["UntaggedLJ_CSV"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            return (*b->J_combSecVtxBTag)[idx][i];
+        };
+        accessors["UntaggedSubLJ_CSV"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            return (*b->J_combSecVtxBTag)[idx][i];
+        };
+        accessors["UntaggedSubSubLJ_CSV"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            return (*b->J_combSecVtxBTag)[idx][i];
+        };
+        accessors["UntaggedSubSubSubLJ_CSV"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
+            return (*b->J_combSecVtxBTag)[idx][i];
+        };
+        accessors["J_CSV"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_combSecVtxBTag)[idx][n];
+        };
         accessors["L1_Charge"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return (*e->L1_Charge)[idx];
@@ -2344,7 +2381,6 @@ namespace roast {
         };
         accessors["MHT"] = [](Branches *b, int idx, int n) -> float {
             return 0.;
-            return (*b->MHT)[idx];
         };
         accessors["MomentumRank"] = [](Branches *b, int idx, int n) -> float {
             return (*b->MomentumRank)[idx];

@@ -6,13 +6,13 @@
   axis labels: ['$2 CSV', Events]
   max: J_NumClean$1
   replace:
-    - [Clean    , Inclusive , Jet         ]
+    - [""       , Inclusive , Jet         ]
     - [Tagged   , CSVM      , Tagged jet  ]
     - [Untagged , NonCSVM   , Untagged Jet]
-    - [Clean    , Inclusive , Jet         ]
+    - [""       , Inclusive , Jet         ]
     - [Tagged   , CSVM      , Tagged jet  ]
     - [Untagged , NonCSVM   , Untagged Jet]
-    - [Clean    , Inclusive , Jet         ]
+    - [""       , Inclusive , Jet         ]
     - [Tagged   , CSVM      , Tagged jet  ]
     - [Untagged , NonCSVM   , Untagged Jet]
 
@@ -24,13 +24,13 @@
   axis labels: ['$2 CSV', Events]
   max: J_NumClean$1
   replace:
-    - [Clean    , Inclusive , Jet         ]
+    - [""       , Inclusive , Jet         ]
     - [Tagged   , CSVM      , Tagged jet  ]
     - [Untagged , NonCSVM   , Untagged Jet]
-    - [Clean    , Inclusive , Jet         ]
+    - [""       , Inclusive , Jet         ]
     - [Tagged   , CSVM      , Tagged jet  ]
     - [Untagged , NonCSVM   , Untagged Jet]
-    - [Clean    , Inclusive , Jet         ]
+    - [""       , Inclusive , Jet         ]
     - [Tagged   , CSVM      , Tagged jet  ]
     - [Untagged , NonCSVM   , Untagged Jet]
 
@@ -42,13 +42,13 @@
   axis labels: ['$2 CSV', Events]
   max: J_NumClean$1
   replace:
-    - [Clean    , Inclusive , Jet         ]
+    - [""       , Inclusive , Jet         ]
     - [Tagged   , CSVM      , Tagged jet  ]
     - [Untagged , NonCSVM   , Untagged Jet]
-    - [Clean    , Inclusive , Jet         ]
+    - [""       , Inclusive , Jet         ]
     - [Tagged   , CSVM      , Tagged jet  ]
     - [Untagged , NonCSVM   , Untagged Jet]
-    - [Clean    , Inclusive , Jet         ]
+    - [""       , Inclusive , Jet         ]
     - [Tagged   , CSVM      , Tagged jet  ]
     - [Untagged , NonCSVM   , Untagged Jet]
 
@@ -60,12 +60,12 @@
   axis labels: ['$2 CSV', Events]
   max: J_NumClean$1
   replace:
-    - [Clean    , Inclusive , Jet         ]
+    - [""       , Inclusive , Jet         ]
     - [Tagged   , CSVM      , Tagged jet  ]
     - [Untagged , NonCSVM   , Untagged Jet]
-    - [Clean    , Inclusive , Jet         ]
+    - [""       , Inclusive , Jet         ]
     - [Tagged   , CSVM      , Tagged jet  ]
     - [Untagged , NonCSVM   , Untagged Jet]
-    - [Clean    , Inclusive , Jet         ]
+    - [""       , Inclusive , Jet         ]
     - [Tagged   , CSVM      , Tagged jet  ]
     - [Untagged , NonCSVM   , Untagged Jet]

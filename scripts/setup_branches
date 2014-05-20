@@ -383,8 +383,8 @@ for accessor in sorted(type_info.keys()):
                         lines.append(indent * 2 + '};\n')
             continue
         else:
-            if var == 'combSecVtxBTag':
-                accessor = accessor.replace('CombSecVtxBTag', 'CSV')
+            if var == 'J_combSecVtxBTag':
+                accessor = 'J_CSV'
             elif var == 'CSV' or 'BTag' in var or var == 'MomentumRank':
                 continue
 
