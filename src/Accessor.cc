@@ -677,6 +677,21 @@ namespace roast {
         accessors["IsTauEvent"] = [](Branches *b, int idx, int n) -> float {
             return b->IsTauEvent;
         };
+        accessors["J_Charge"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_Charge)[idx][n];
+        };
+        accessors["LJ_Charge"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_Charge)[idx][0];
+        };
+        accessors["SubLJ_Charge"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_Charge)[idx][1];
+        };
+        accessors["SubSubLJ_Charge"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_Charge)[idx][2];
+        };
+        accessors["SubSubSubLJ_Charge"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_Charge)[idx][3];
+        };
         accessors["TaggedJ_Charge"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
             return (*b->J_Charge)[idx][i];
@@ -719,6 +734,21 @@ namespace roast {
         };
         accessors["J_Charge"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_Charge)[idx][n];
+        };
+        accessors["J_MomentumRank"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_MomentumRank)[idx][n];
+        };
+        accessors["LJ_MomentumRank"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_MomentumRank)[idx][0];
+        };
+        accessors["SubLJ_MomentumRank"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_MomentumRank)[idx][1];
+        };
+        accessors["SubSubLJ_MomentumRank"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_MomentumRank)[idx][2];
+        };
+        accessors["SubSubSubLJ_MomentumRank"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_MomentumRank)[idx][3];
         };
         accessors["TaggedJ_MomentumRank"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
@@ -769,6 +799,18 @@ namespace roast {
         accessors["J_Pt"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_P)[idx][n].pt();
         };
+        accessors["LJ_Pt"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_P)[idx][0].pt();
+        };
+        accessors["SubLJ_Pt"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_P)[idx][1].pt();
+        };
+        accessors["SubSubLJ_Pt"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_P)[idx][2].pt();
+        };
+        accessors["SubSubSubLJ_Pt"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_P)[idx][3].pt();
+        };
         accessors["TaggedJ_Pt"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
             return (*b->J_P)[idx][i].pt();
@@ -811,6 +853,18 @@ namespace roast {
         };
         accessors["J_Eta"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_P)[idx][n].eta();
+        };
+        accessors["LJ_Eta"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_P)[idx][0].eta();
+        };
+        accessors["SubLJ_Eta"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_P)[idx][1].eta();
+        };
+        accessors["SubSubLJ_Eta"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_P)[idx][2].eta();
+        };
+        accessors["SubSubSubLJ_Eta"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_P)[idx][3].eta();
         };
         accessors["TaggedJ_Eta"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
@@ -855,6 +909,18 @@ namespace roast {
         accessors["J_Phi"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_P)[idx][n].phi();
         };
+        accessors["LJ_Phi"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_P)[idx][0].phi();
+        };
+        accessors["SubLJ_Phi"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_P)[idx][1].phi();
+        };
+        accessors["SubSubLJ_Phi"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_P)[idx][2].phi();
+        };
+        accessors["SubSubSubLJ_Phi"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_P)[idx][3].phi();
+        };
         accessors["TaggedJ_Phi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
             return (*b->J_P)[idx][i].phi();
@@ -894,6 +960,21 @@ namespace roast {
         accessors["UntaggedSubSubSubLJ_Phi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
             return (*b->J_P)[idx][i].phi();
+        };
+        accessors["J_PartonGrandParentId"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandParentId)[idx][n];
+        };
+        accessors["LJ_PartonGrandParentId"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandParentId)[idx][0];
+        };
+        accessors["SubLJ_PartonGrandParentId"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandParentId)[idx][1];
+        };
+        accessors["SubSubLJ_PartonGrandParentId"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandParentId)[idx][2];
+        };
+        accessors["SubSubSubLJ_PartonGrandParentId"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandParentId)[idx][3];
         };
         accessors["TaggedJ_PartonGrandParentId"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
@@ -938,6 +1019,21 @@ namespace roast {
         accessors["J_PartonGrandParentId"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_PartonGrandParentId)[idx][n];
         };
+        accessors["J_PartonGrandmother00Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother00Id)[idx][n];
+        };
+        accessors["LJ_PartonGrandmother00Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother00Id)[idx][0];
+        };
+        accessors["SubLJ_PartonGrandmother00Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother00Id)[idx][1];
+        };
+        accessors["SubSubLJ_PartonGrandmother00Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother00Id)[idx][2];
+        };
+        accessors["SubSubSubLJ_PartonGrandmother00Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother00Id)[idx][3];
+        };
         accessors["TaggedJ_PartonGrandmother00Id"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
             return (*b->J_PartonGrandmother00Id)[idx][i];
@@ -980,6 +1076,21 @@ namespace roast {
         };
         accessors["J_PartonGrandmother00Id"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_PartonGrandmother00Id)[idx][n];
+        };
+        accessors["J_PartonGrandmother00Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother00Status)[idx][n];
+        };
+        accessors["LJ_PartonGrandmother00Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother00Status)[idx][0];
+        };
+        accessors["SubLJ_PartonGrandmother00Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother00Status)[idx][1];
+        };
+        accessors["SubSubLJ_PartonGrandmother00Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother00Status)[idx][2];
+        };
+        accessors["SubSubSubLJ_PartonGrandmother00Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother00Status)[idx][3];
         };
         accessors["TaggedJ_PartonGrandmother00Status"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
@@ -1024,6 +1135,21 @@ namespace roast {
         accessors["J_PartonGrandmother00Status"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_PartonGrandmother00Status)[idx][n];
         };
+        accessors["J_PartonGrandmother01Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother01Id)[idx][n];
+        };
+        accessors["LJ_PartonGrandmother01Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother01Id)[idx][0];
+        };
+        accessors["SubLJ_PartonGrandmother01Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother01Id)[idx][1];
+        };
+        accessors["SubSubLJ_PartonGrandmother01Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother01Id)[idx][2];
+        };
+        accessors["SubSubSubLJ_PartonGrandmother01Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother01Id)[idx][3];
+        };
         accessors["TaggedJ_PartonGrandmother01Id"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
             return (*b->J_PartonGrandmother01Id)[idx][i];
@@ -1066,6 +1192,21 @@ namespace roast {
         };
         accessors["J_PartonGrandmother01Id"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_PartonGrandmother01Id)[idx][n];
+        };
+        accessors["J_PartonGrandmother01Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother01Status)[idx][n];
+        };
+        accessors["LJ_PartonGrandmother01Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother01Status)[idx][0];
+        };
+        accessors["SubLJ_PartonGrandmother01Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother01Status)[idx][1];
+        };
+        accessors["SubSubLJ_PartonGrandmother01Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother01Status)[idx][2];
+        };
+        accessors["SubSubSubLJ_PartonGrandmother01Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother01Status)[idx][3];
         };
         accessors["TaggedJ_PartonGrandmother01Status"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
@@ -1110,6 +1251,21 @@ namespace roast {
         accessors["J_PartonGrandmother01Status"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_PartonGrandmother01Status)[idx][n];
         };
+        accessors["J_PartonGrandmother10Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother10Id)[idx][n];
+        };
+        accessors["LJ_PartonGrandmother10Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother10Id)[idx][0];
+        };
+        accessors["SubLJ_PartonGrandmother10Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother10Id)[idx][1];
+        };
+        accessors["SubSubLJ_PartonGrandmother10Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother10Id)[idx][2];
+        };
+        accessors["SubSubSubLJ_PartonGrandmother10Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother10Id)[idx][3];
+        };
         accessors["TaggedJ_PartonGrandmother10Id"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
             return (*b->J_PartonGrandmother10Id)[idx][i];
@@ -1152,6 +1308,21 @@ namespace roast {
         };
         accessors["J_PartonGrandmother10Id"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_PartonGrandmother10Id)[idx][n];
+        };
+        accessors["J_PartonGrandmother10Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother10Status)[idx][n];
+        };
+        accessors["LJ_PartonGrandmother10Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother10Status)[idx][0];
+        };
+        accessors["SubLJ_PartonGrandmother10Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother10Status)[idx][1];
+        };
+        accessors["SubSubLJ_PartonGrandmother10Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother10Status)[idx][2];
+        };
+        accessors["SubSubSubLJ_PartonGrandmother10Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother10Status)[idx][3];
         };
         accessors["TaggedJ_PartonGrandmother10Status"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
@@ -1196,6 +1367,21 @@ namespace roast {
         accessors["J_PartonGrandmother10Status"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_PartonGrandmother10Status)[idx][n];
         };
+        accessors["J_PartonGrandmother11Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother11Id)[idx][n];
+        };
+        accessors["LJ_PartonGrandmother11Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother11Id)[idx][0];
+        };
+        accessors["SubLJ_PartonGrandmother11Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother11Id)[idx][1];
+        };
+        accessors["SubSubLJ_PartonGrandmother11Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother11Id)[idx][2];
+        };
+        accessors["SubSubSubLJ_PartonGrandmother11Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother11Id)[idx][3];
+        };
         accessors["TaggedJ_PartonGrandmother11Id"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
             return (*b->J_PartonGrandmother11Id)[idx][i];
@@ -1238,6 +1424,21 @@ namespace roast {
         };
         accessors["J_PartonGrandmother11Id"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_PartonGrandmother11Id)[idx][n];
+        };
+        accessors["J_PartonGrandmother11Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother11Status)[idx][n];
+        };
+        accessors["LJ_PartonGrandmother11Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother11Status)[idx][0];
+        };
+        accessors["SubLJ_PartonGrandmother11Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother11Status)[idx][1];
+        };
+        accessors["SubSubLJ_PartonGrandmother11Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother11Status)[idx][2];
+        };
+        accessors["SubSubSubLJ_PartonGrandmother11Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonGrandmother11Status)[idx][3];
         };
         accessors["TaggedJ_PartonGrandmother11Status"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
@@ -1282,6 +1483,21 @@ namespace roast {
         accessors["J_PartonGrandmother11Status"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_PartonGrandmother11Status)[idx][n];
         };
+        accessors["J_PartonId"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonId)[idx][n];
+        };
+        accessors["LJ_PartonId"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonId)[idx][0];
+        };
+        accessors["SubLJ_PartonId"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonId)[idx][1];
+        };
+        accessors["SubSubLJ_PartonId"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonId)[idx][2];
+        };
+        accessors["SubSubSubLJ_PartonId"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonId)[idx][3];
+        };
         accessors["TaggedJ_PartonId"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
             return (*b->J_PartonId)[idx][i];
@@ -1324,6 +1540,21 @@ namespace roast {
         };
         accessors["J_PartonId"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_PartonId)[idx][n];
+        };
+        accessors["J_PartonMother0Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother0Id)[idx][n];
+        };
+        accessors["LJ_PartonMother0Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother0Id)[idx][0];
+        };
+        accessors["SubLJ_PartonMother0Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother0Id)[idx][1];
+        };
+        accessors["SubSubLJ_PartonMother0Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother0Id)[idx][2];
+        };
+        accessors["SubSubSubLJ_PartonMother0Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother0Id)[idx][3];
         };
         accessors["TaggedJ_PartonMother0Id"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
@@ -1368,6 +1599,21 @@ namespace roast {
         accessors["J_PartonMother0Id"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_PartonMother0Id)[idx][n];
         };
+        accessors["J_PartonMother0Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother0Status)[idx][n];
+        };
+        accessors["LJ_PartonMother0Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother0Status)[idx][0];
+        };
+        accessors["SubLJ_PartonMother0Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother0Status)[idx][1];
+        };
+        accessors["SubSubLJ_PartonMother0Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother0Status)[idx][2];
+        };
+        accessors["SubSubSubLJ_PartonMother0Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother0Status)[idx][3];
+        };
         accessors["TaggedJ_PartonMother0Status"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
             return (*b->J_PartonMother0Status)[idx][i];
@@ -1410,6 +1656,21 @@ namespace roast {
         };
         accessors["J_PartonMother0Status"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_PartonMother0Status)[idx][n];
+        };
+        accessors["J_PartonMother1Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother1Id)[idx][n];
+        };
+        accessors["LJ_PartonMother1Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother1Id)[idx][0];
+        };
+        accessors["SubLJ_PartonMother1Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother1Id)[idx][1];
+        };
+        accessors["SubSubLJ_PartonMother1Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother1Id)[idx][2];
+        };
+        accessors["SubSubSubLJ_PartonMother1Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother1Id)[idx][3];
         };
         accessors["TaggedJ_PartonMother1Id"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
@@ -1454,6 +1715,21 @@ namespace roast {
         accessors["J_PartonMother1Id"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_PartonMother1Id)[idx][n];
         };
+        accessors["J_PartonMother1Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother1Status)[idx][n];
+        };
+        accessors["LJ_PartonMother1Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother1Status)[idx][0];
+        };
+        accessors["SubLJ_PartonMother1Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother1Status)[idx][1];
+        };
+        accessors["SubSubLJ_PartonMother1Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother1Status)[idx][2];
+        };
+        accessors["SubSubSubLJ_PartonMother1Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonMother1Status)[idx][3];
+        };
         accessors["TaggedJ_PartonMother1Status"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
             return (*b->J_PartonMother1Status)[idx][i];
@@ -1496,6 +1772,21 @@ namespace roast {
         };
         accessors["J_PartonMother1Status"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_PartonMother1Status)[idx][n];
+        };
+        accessors["J_PartonParentId"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonParentId)[idx][n];
+        };
+        accessors["LJ_PartonParentId"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonParentId)[idx][0];
+        };
+        accessors["SubLJ_PartonParentId"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonParentId)[idx][1];
+        };
+        accessors["SubSubLJ_PartonParentId"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonParentId)[idx][2];
+        };
+        accessors["SubSubSubLJ_PartonParentId"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonParentId)[idx][3];
         };
         accessors["TaggedJ_PartonParentId"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
@@ -1540,6 +1831,21 @@ namespace roast {
         accessors["J_PartonParentId"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_PartonParentId)[idx][n];
         };
+        accessors["J_PartonStatus"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonStatus)[idx][n];
+        };
+        accessors["LJ_PartonStatus"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonStatus)[idx][0];
+        };
+        accessors["SubLJ_PartonStatus"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonStatus)[idx][1];
+        };
+        accessors["SubSubLJ_PartonStatus"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonStatus)[idx][2];
+        };
+        accessors["SubSubSubLJ_PartonStatus"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_PartonStatus)[idx][3];
+        };
         accessors["TaggedJ_PartonStatus"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
             return (*b->J_PartonStatus)[idx][i];
@@ -1582,6 +1888,21 @@ namespace roast {
         };
         accessors["J_PartonStatus"] = [](Branches *b, int idx, int n) -> float {
             return (*b->J_PartonStatus)[idx][n];
+        };
+        accessors["J_CSV"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_combSecVtxBTag)[idx][n];
+        };
+        accessors["LJ_CSV"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_combSecVtxBTag)[idx][0];
+        };
+        accessors["SubLJ_CSV"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_combSecVtxBTag)[idx][1];
+        };
+        accessors["SubSubLJ_CSV"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_combSecVtxBTag)[idx][2];
+        };
+        accessors["SubSubSubLJ_CSV"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->J_combSecVtxBTag)[idx][3];
         };
         accessors["TaggedJ_CSV"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);

@@ -145,6 +145,7 @@ lines = []
 cast = '{0}::Branches* e = dynamic_cast<{0}::Branches*>(b)'
 declare = 'accessors["{0}"] = [](Branches *b, int idx, int n) -> float {{\n'
 reindex = [
+        ('', None),
         ('Tagged', 'int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], {0});\n'),
         ('Untagged', 'int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], {0});\n'),
         ]
@@ -244,19 +245,11 @@ for fn in sorted(fct_names.keys()):
         lines.append(indent * 2 + '};\n')
 
 # Now turn to branches
-def generate_return_line(name, chans, cls, method=None, reindex=False, safe=False):
-    idx = 'idx'
-    subidx = 'n'
+def generate_return_line(name, chans, cls, method=None, safe=False, subidx='n', idx='idx'):
     cnt = cls.count('vector')
 
     if cnt not in returns:
         raise TypeError
-
-    if reindex:
-        if cnt == 1:
-            idx = 'i'
-        elif cnt == 2:
-            subidx = 'i'
 
     if len(chans) == len(channels):
         res = returns[cnt].format('b', name, idx, subidx)
@@ -362,24 +355,39 @@ for accessor in sorted(type_info.keys()):
                 tmp_lines.append(indent * 3 + generate_return_line(var, chans, cls) + '\n')
         elif 'LorentzVector' in cls:
             for q in ('Pt', 'Eta', 'Phi'):
-                lines.append(indent * 2 + declare.format(accessor[:-1] + q))
-                lines.append(indent * 3
-                    + generate_return_line(var, chans, cls, method=q.lower())
-                    + '\n')
-                lines.append(indent * 2 + '};\n')
-
                 for (label, index_statement) in reindex:
                     lines.append(indent * 2 + declare.format(label + accessor[:-1] + q))
-                    lines.append(indent * 3 + index_statement.format('n'))
-                    lines.append(indent * 3 + generate_return_line(var, chans, cls, method=q.lower(), reindex=True, safe=True) + '\n')
+
+                    if index_statement:
+                        lines.append(indent * 3 + index_statement.format('n'))
+                        subidx = 'i'
+                    else:
+                        subidx = 'n'
+
+                    lines.append(indent * 3
+                            + generate_return_line(
+                                var, chans, cls, method=q.lower(),
+                                subidx=subidx, safe=True)
+                            + '\n')
                     lines.append(indent * 2 + '};\n')
 
                     # leading jet etc.
                     for (n, j) in enumerate(jets):
                         new_key = label + accessor.replace('J', j)[:-1] + q
+                        print new_key
                         lines.append(indent * 2 + declare.format(new_key))
-                        lines.append(indent * 3 + index_statement.format(n))
-                        lines.append(indent * 3 + generate_return_line(var, chans, cls, method=q.lower(), reindex=True, safe=True) + '\n')
+
+                        if index_statement:
+                            lines.append(indent * 3 + index_statement.format(n))
+                            subidx = 'i'
+                        else:
+                            subidx = str(n)
+
+                        lines.append(indent * 3
+                                + generate_return_line(
+                                    var, chans, cls, method=q.lower(),
+                                    subidx=subidx, safe=True)
+                                + '\n')
                         lines.append(indent * 2 + '};\n')
             continue
         else:
@@ -396,16 +404,28 @@ for accessor in sorted(type_info.keys()):
             if 'Num' not in var:
                 for (label, index_statement) in reindex:
                     jet_lines.append(indent * 2 + declare.format(label + accessor))
-                    jet_lines.append(indent * 3 + index_statement.format('n'))
-                    jet_lines.append(indent * 3 + generate_return_line(var, chans, cls, reindex=True, safe=True) + '\n')
+
+                    if index_statement:
+                        jet_lines.append(indent * 3 + index_statement.format('n'))
+                        subidx = 'i'
+                    else:
+                        subidx = 'n'
+
+                    jet_lines.append(indent * 3 + generate_return_line(var, chans, cls, subidx=subidx, safe=True) + '\n')
                     jet_lines.append(indent * 2 + '};\n')
 
                     # leading jet etc.
                     for (n, j) in enumerate(jets):
                         new_key = label + accessor.replace('J', j)
                         jet_lines.append(indent * 2 + declare.format(new_key))
-                        jet_lines.append(indent * 3 + index_statement.format(n))
-                        jet_lines.append(indent * 3 + generate_return_line(var, chans, cls, reindex=True, safe=True) + '\n')
+
+                        if index_statement:
+                            jet_lines.append(indent * 3 + index_statement.format(n))
+                            subidx = 'i'
+                        else:
+                            subidx = str(n)
+
+                        jet_lines.append(indent * 3 + generate_return_line(var, chans, cls, subidx=subidx, safe=True) + '\n')
                         jet_lines.append(indent * 2 + '};\n')
                 lines += jet_lines
 
