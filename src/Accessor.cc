@@ -1,4 +1,4 @@
-// vim: ts=4:sw=4:et:sta
+// vim: ts=4:sw=4:et:sta:foldmethod=marker
 
 #include <map>
 
@@ -368,6 +368,7 @@ namespace roast {
             return !zpeak;
         };
 
+        // generated accessors {{{1
         // >>> Begin attr <<<
         accessors["T1_AntiElectronIndex"] = [](Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
@@ -6848,6 +6849,7 @@ namespace roast {
             return b->topPtWeightUp;
         };
         // >>> End attr <<<
+        // }}}1
 
         setup = true;
     }
