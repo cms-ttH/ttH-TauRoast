@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# vim: foldmethod=marker
 
 from collections import namedtuple, defaultdict
 from functools import partial
@@ -245,14 +246,14 @@ for fn in sorted(fct_names.keys()):
         lines.append(indent * 2 + '};\n')
 
 # Now turn to branches
-def generate_return_line(name, chans, cls, method=None, safe=False, subidx='n', idx='idx'):
+def generate_return_line(name, chans, cls="", method=None, expr=False, safe=False, subidx='n', idx='idx'):
     cnt = cls.count('vector')
 
     if cnt not in returns:
         raise TypeError
 
     if len(chans) == len(channels):
-        res = returns[cnt].format('b', name, idx, subidx)
+        res = (name if expr else returns[cnt]).format('b', name, idx, subidx)
 
         if safe:
             res = res.replace("[{2}]", ".at({2})").replace("[{3}]", ".at({3})")
@@ -263,7 +264,7 @@ def generate_return_line(name, chans, cls, method=None, safe=False, subidx='n', 
     else:
         lines = []
         for chan in sorted(chans):
-            res = returns[cnt]
+            res = name if expr else returns[cnt]
 
             if safe:
                 res = res.replace("[{2}]", ".at({2})").replace("[{3}]", ".at({3})")
@@ -276,8 +277,19 @@ def generate_return_line(name, chans, cls, method=None, safe=False, subidx='n', 
 jets = 'LJ SubLJ SubSubLJ SubSubSubLJ'.split()
 
 p4s = []
-for fun in map(partial(partial, re.match), ('T\d*_P$', 'L\d*_P$', 'J_P$', 'MET_P$')):
+# order matters!  MET and jets have to be at the end!
+for fun in map(partial(partial, re.match), ('T\d*_P$', 'L\d*_P$', 'MET_P$', 'J_P$')):
     p4s += sorted([(var, type_info[var][0]) for var in type_info if fun(var)], key=lambda xs: xs[0])
+
+for (p4, chans) in filter(lambda (p, cs): p.startswith('L'), p4s):
+    lines.append(indent * 2 + declare.format(p4[:-2] + '_Mt'))
+    lines.append(indent * 3
+            + generate_return_line(
+                ('return sqrt(2 * (*{{0}}->{0})[idx].pt() * (*{{0}}->MET_P)[idx].pt() * '
+                    + '(1 - cos((*{{0}}->{0})[idx].phi() - (*{{0}}->MET_P)[idx].phi())));').format(p4),
+                chans, expr=True)
+            + '\n')
+    lines.append(indent * 2 + '};\n')
 
 for ((p1, cs1), (p2, cs2)) in combinations(p4s, 2):
     chans = cs1.intersection(cs2)
@@ -285,29 +297,115 @@ for ((p1, cs1), (p2, cs2)) in combinations(p4s, 2):
     if len(chans) == 0:
         continue
 
-    if p1 == 'J_P' or p2 == 'J_P':
-        continue
+    if p2 == 'J_P':
+        # jets {{{1
+        for (label, index_statement) in reindex:
+            accessor = p1[:-2] + label + p2[:-2]
 
-    if p1 != 'MET_P' and p2 != 'MET_P':
+            if index_statement:
+                addlines = [indent * 3 + index_statement.format('n')]
+                subidx = 'i'
+            else:
+                addlines = []
+                subidx = 'n'
+
+            lines.append(indent * 2 + declare.format(accessor + '_CosDeltaPhi'))
+            lines += addlines
+            lines.append(indent * 3
+                    + generate_return_line(
+                        'return cos((*{{0}}->{0})[idx].phi() - (*{{0}}->{1})[idx].at({2}).phi());'.format(p1, p2, subidx),
+                        chans, expr=True)
+                    + '\n')
+            lines.append(indent * 2 + '};\n')
+
+            if p1 != 'MET_P':
+                lines.append(indent * 2 + declare.format(accessor + '_DeltaR'))
+                lines += addlines
+                lines.append(indent * 3
+                        + generate_return_line(
+                            'return reco::deltaR((*{{0}}->{0})[idx], (*{{0}}->{1})[idx].at({2}));'.format(p1, p2, subidx),
+                            chans, expr=True)
+                        + '\n')
+                lines.append(indent * 2 + '};\n')
+
+                lines.append(indent * 2 + declare.format(accessor + '_VisibleMass'))
+                lines += addlines
+                lines.append(indent * 3
+                        + generate_return_line(
+                            'return ((*{{0}}->{0})[idx] + (*{{0}}->{1})[idx].at({2})).M();'.format(p1, p2, subidx),
+                            chans, expr=True)
+                        + '\n')
+                lines.append(indent * 2 + '};\n')
+
+            # leading jet etc {{{2
+            for (n, j) in enumerate(jets):
+                new_key = accessor.replace('J', j)
+
+                if index_statement:
+                    addlines = [indent * 3 + index_statement.format(n)]
+                    subidx = 'i'
+                else:
+                    addlines = []
+                    subidx = str(n)
+
+                lines.append(indent * 2 + declare.format(new_key + '_CosDeltaPhi'))
+                lines += addlines
+                lines.append(indent * 3
+                        + generate_return_line(
+                            'return cos((*{{0}}->{0})[idx].phi() - (*{{0}}->{1})[idx].at({2}).phi());'.format(p1, p2, subidx),
+                            chans, expr=True)
+                        + '\n')
+                lines.append(indent * 2 + '};\n')
+
+                if p1 != 'MET_P':
+                    lines.append(indent * 2 + declare.format(new_key + '_DeltaR'))
+                    lines += addlines
+                    lines.append(indent * 3
+                            + generate_return_line(
+                                'return reco::deltaR((*{{0}}->{0})[idx], (*{{0}}->{1})[idx].at({2}));'.format(p1, p2, subidx),
+                                chans, expr=True)
+                            + '\n')
+                    lines.append(indent * 2 + '};\n')
+
+                    lines.append(indent * 2 + declare.format(new_key + '_VisibleMass'))
+                    lines += addlines
+                    lines.append(indent * 3
+                            + generate_return_line(
+                                'return ((*{{0}}->{0})[idx] + (*{{0}}->{1})[idx].at({2})).M();'.format(p1, p2, subidx),
+                                chans, expr=True)
+                            + '\n')
+                    lines.append(indent * 2 + '};\n')
+            # }}}2
+        # }}}1
+    else:
         if p1[0] == p2[0]:
             accessor = p1[0] + p2[0]
         else:
             accessor = p1[:-2] + p2[:-2]
 
-        if len(chans) == len(channels):
+        lines.append(indent * 2 + declare.format(accessor + '_CosDeltaPhi'))
+        lines.append(indent * 3
+                + generate_return_line(
+                    'return cos((*{{0}}->{0})[idx].phi() - (*{{0}}->{1})[idx].phi());'.format(p1, p2),
+                    chans, expr=True)
+                + '\n')
+        lines.append(indent * 2 + '};\n')
+
+        if p2 != 'MET_P':
             lines.append(indent * 2 + declare.format(accessor + '_DeltaR'))
             lines.append(indent * 3
-                    + 'return reco::deltaR((*b->{0})[idx], (*b->{1})[idx]);'.format(p1, p2)
+                    + generate_return_line(
+                        'return reco::deltaR((*{{0}}->{0})[idx], (*{{0}}->{1})[idx]);'.format(p1, p2),
+                        chans, expr=True)
                     + '\n')
             lines.append(indent * 2 + '};\n')
-        else:
-            lines.append(indent * 2 + declare.format(accessor + '_DeltaR'))
-            statements = []
-            for chan in sorted(chans):
-                statements.append(cast_template.format(chan.lower(), 'return reco::deltaR((*e->{0})[idx], (*e->{1})[idx]);'.format(p1, p2)))
+
+            lines.append(indent * 2 + declare.format(accessor + '_VisibleMass'))
             lines.append(indent * 3
-                    + " else ".join(statements)
-                    + throw_template + '\n')
+                    + generate_return_line(
+                        'return ((*{{0}}->{0})[idx] + (*{{0}}->{1})[idx]).M();'.format(p1, p2),
+                        chans, expr=True)
+                    + '\n')
             lines.append(indent * 2 + '};\n')
 
 for accessor in sorted(type_info.keys()):
@@ -374,7 +472,6 @@ for accessor in sorted(type_info.keys()):
                     # leading jet etc.
                     for (n, j) in enumerate(jets):
                         new_key = label + accessor.replace('J', j)[:-1] + q
-                        print new_key
                         lines.append(indent * 2 + declare.format(new_key))
 
                         if index_statement:
