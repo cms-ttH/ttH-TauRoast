@@ -284,6 +284,7 @@ namespace roast {
             }
             throw;
         };
+
         // FIXME
         // accessors["LL_ZPeakVeto"] = [](roast::Branches *b, int idx, int n) -> float {
             // tll::Branches* e = dynamic_cast<tll::Branches*>(b);
@@ -345,10 +346,6 @@ namespace roast {
             // ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             // return (*e->T1_Eta)[idx] - (*e->T2_Eta)[idx];
         // };
-        // accessors["TT_CosDeltaPhi"] = [](roast::Branches *b, int idx, int n) -> float {
-            // ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
-            // return (*e->TTL_DitauCosDeltaPhi)[idx];
-        // };
 
         accessors["FinalBDTG"] = [](Branches *b, int idx, int n) -> float {
             return MVABase::gMVA["FinalBDTG"] ? MVABase::gMVA["FinalBDTG"]->Evaluate(b, idx) : 0.;
@@ -361,15 +358,15 @@ namespace roast {
             // return (met > 50) || (mt > 50);
         // };
 
-        // accessors["PassZMask3"] = [](Branches *b, int idx, int n) -> float {
-            // tll::Branches* e = dynamic_cast<tll::Branches*>(b);
-            // auto dilmass = (*e->TLL_Lepton1Lepton2VisibleMass)[idx];
-            // auto met = e->Ev_MET;
-            // bool zpeak = dilmass > 82 && dilmass < 100 &&
-                    // met - 40 < 30 / 9. * (dilmass - 82) &&
-                    // met - 40 < 30 - 30 / 9. * (dilmass - 91);
-            // return !zpeak;
-        // };
+        accessors["PassZMask3"] = [](Branches *b, int idx, int n) -> float {
+            tll::Branches* e = dynamic_cast<tll::Branches*>(b);
+            auto dilmass = ((*e->L1_P)[idx] + (*e->L2_P)[idx]).M();
+            auto met = (*e->MET_P)[idx].pt();
+            bool zpeak = dilmass > 82 && dilmass < 100 &&
+                    met - 40 < 30 / 9. * (dilmass - 82) &&
+                    met - 40 < 30 - 30 / 9. * (dilmass - 91);
+            return !zpeak;
+        };
 
         // >>> Begin attr <<<
         accessors["T1_AntiElectronIndex"] = [](Branches *b, int idx, int n) -> float {
