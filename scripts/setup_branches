@@ -253,21 +253,21 @@ def generate_return_line(name, chans, cls="", method=None, expr=False, safe=Fals
         raise TypeError
 
     if len(chans) == len(channels):
-        res = (name if expr else returns[cnt]).format('b', name, idx, subidx)
+        res = (name if expr else returns[cnt])
 
         if safe:
-            res = res.replace("[{2}]", ".at({2})").replace("[{3}]", ".at({3})")
+            res = res.replace("[{3}]", ".at({3})")
         if method:
             res = res.replace(';', '.{0}();'.format(method))
 
-        return res
+        return res.format('b', name, idx, subidx)
     else:
         lines = []
         for chan in sorted(chans):
             res = name if expr else returns[cnt]
 
             if safe:
-                res = res.replace("[{2}]", ".at({2})").replace("[{3}]", ".at({3})")
+                res = res.replace("[{3}]", ".at({3})")
             if method:
                 res = res.replace(';', '.{0}();'.format(method))
 
