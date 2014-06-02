@@ -1,0 +1,164 @@
+# vim: set sw=4 sta et :
+
+analysis:
+    channel: ttl
+
+    max events: -1
+
+    final mva:
+        methods:
+            BDTG: "!H:!V:NTrees=1000:BoostType=Grad:Shrinkage=0.10:UseBaggedGrad:GradBaggingFraction=0.5:nCuts=20:NNodesMax=5"
+        signal: TTHTauTau_125_real
+        background: [TTbar_Hadronic, TTbar_SemiLept, TTbar_FullLept]
+        variables:
+          - [T1_Pt, F]
+          - [T1_Eta, F, True]
+          - [T2_Pt, F]
+          - [T1_DecayMode, I]
+          - [T2_DecayMode, I]
+          - [T1_IsolationMVA2Raw, F]
+          - [T2_IsolationMVA2Raw, F]
+          - [T1L_DeltaR, F]
+          - [CleanLJ_Pt, F]
+          - [DitauVisibleMass, F]
+
+    process:
+      - TTbar_SemiLept
+      - TTbar_SemiLept_chPrj
+      - TTH_125
+      - TTH_125_chPrj
+
+    plot:
+      - TTbar_SemiLept
+      - TTbar_SemiLept_chPrj
+      - TTH_125
+      - TTH_125_chPrj
+
+display:
+    legend: True
+    legend columns: 3
+    signal scale factor: 100
+
+physics:
+    lumi: 19400
+    flags:
+      - [topPt, nominal]
+      - [lepton, nominal]
+      - [PUcorr, nominal]
+      - [CSVeventWeight, nominal]
+      - [brSF, nominal]
+    cuts:
+      # reality
+      - T1_MatchAbsId = 15
+      - T2_MatchAbsId = 15
+      - T1_ParentAbsId = 25
+      - T2_ParentAbsId = 25
+      # tops
+      - 1 ≤ J_NumCleanCSVM ≤ 2
+      - J_NumCleanNonCSVM ≥ 0
+      - J_NumCleanInclusive ≥ 2
+      # lepton
+      - NumTightLeptons = 1
+      - NumExLooseLeptons = 0
+      - L_Pt ≥ 30
+      # taus
+      # kinematic
+      - T1_Pt ≥ 20
+      - T2_Pt ≥ 20
+      - -2.1 ≤ T1_Eta ≤ 2.1
+      - -2.1 ≤ T2_Eta ≤ 2.1
+      - TT_DeltaR ≥ 0.5
+      # topological
+      - T1L_DeltaR ≥ 0.25
+      - T2L_DeltaR ≥ 0.25
+      # optimization
+      - T1_DecayModeFinding = 1
+      - T2_DecayModeFinding = 1
+      - T1_LTPt ≥ 5
+      - T2_LTPt ≥ 5
+      - T1_NumProngs = 1
+      - T2_NumProngs = 1
+      - T1_AntiElectronIndex ≥ 1
+      - T2_AntiElectronIndex ≥ 1
+      - T1_AntiMuonIndex ≥ 1
+      - T2_AntiMuonIndex ≥ 1
+      - T1_IsolationMVA2Raw ≥ 0.25
+      - T2_IsolationMVA2Raw ≥ 0
+      # topological
+      - TT_ChargeProduct = -1
+    pair selection: iso
+    systematics:
+        eTauFake: 1.05
+        jetTauFake: 1.2
+        tauIdEff: 1.06
+
+paths:
+    # root path, referenced by {root}
+    root: /afs/crc.nd.edu/user/m/mwolf3/www/ttH/v63/ttl_chPrj
+    # for analyzed processes
+    input: "{root}/roast_processed.root"
+    # {s} is replaced with systematic shifts
+    systematics input: "{root}_{s}/roast_filled.root"
+    # for processes with filled histograms
+    output: "{root}/roast_filled.root"
+    # for further processing with `mk_datcard` and `combine`
+    limit output: "{root}/roast_limit.root"
+    mva output: "{root}/{m}"
+    # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
+    # name; {m} = mode (_log)
+    stack format: "{root}/{t}/{d}/{n}{p}{m}.{t}"
+    ntuples: "/hadoop/users/matze/ttH/v63/2012/ttl_{p}/*_ntuple.root"
+
+processes:
+    TTbar_SemiLept:
+        sampleNumber: 2563
+        niceName: t + tbar SL
+        labelForLegend: "t #bar{t} SL"
+        type: mcBackground
+        ntuplePath: [TTbar_SemiLept_Summer12]
+        color: 66
+        crossSection: 107.66
+        branchingRatio: 1
+        otherScaleFactor: 1
+        NOEinDS: 25424818
+        NoEreadByNUTter: 382402
+    TTbar_SemiLept_chPrj:
+        sampleNumber: 2563
+        niceName: t + tbar SL (chPrj)
+        labelForLegend: "t #bar{t} SL (chPrj)"
+        type: mcBackground
+        ntuplePath: [TTbar_SemiLept_Summer12_chPrj]
+        color: 67
+        crossSection: 107.66
+        branchingRatio: 1
+        otherScaleFactor: 1
+        NOEinDS: 25424818
+        NoEreadByNUTter: 382402
+    TTH_125:
+        sampleNumber: 9125
+        niceName: ttH(125)
+        labelForLegend: "t#bar{t}H(125) "
+        limit alias: ttH125
+        type: signal
+        ntuplePath: [TTH_125]
+        color: 600
+        crossSection: 0.1302
+        branchingRatio: 1
+        otherScaleFactor: 1
+        NOEinDS: 995697
+        NoEreadByNUTter: 19299
+    TTH_125_chPrj:
+        sampleNumber: 9125
+        niceName: ttH(125) (chPrj)
+        labelForLegend: "t#bar{t}H(125) (chPrj)"
+        limit alias: ttH125
+        type: signal
+        ntuplePath: [TTH_125_chPrj]
+        color: 595
+        crossSection: 0.1302
+        branchingRatio: 1
+        otherScaleFactor: 1
+        NOEinDS: 995697
+        NoEreadByNUTter: 19299
+
+histograms: !include histograms*.yaml
