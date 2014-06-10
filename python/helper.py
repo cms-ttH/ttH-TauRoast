@@ -193,7 +193,7 @@ def save_limit_histograms(config, ps):
         try:
             process.append((alias, get_process(name, ps)))
         except LookupError:
-            pass
+            continue
 
         if 'split' in cfg:
             for split in cfg['split'].keys():
@@ -202,10 +202,12 @@ def save_limit_histograms(config, ps):
                 try:
                     process.append((newalias, get_process(newname, ps)))
                 except LookupError:
-                    pass
+                    continue
 
         for (alias, proc) in process:
-            file.WriteObject(proc.GetHistogram(var).GetHisto(), histname.format(p=alias))
+            if proc.GetHistogram(var):
+                logging.info("saving limit histogram for {0}".format(alias))
+                file.WriteObject(proc.GetHistogram(var).GetHisto(), histname.format(p=alias))
 
 def combine_processes(config, ps):
     cfgs = filter(lambda (k, v): 'combine' in v, config['processes'].items())
