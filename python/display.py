@@ -1,4 +1,4 @@
-# vim: ts=4:sw=4:et:sta
+# vim: ts=4:sw=4:et:sta:foldmethod=marker
 from contextlib import contextmanager
 from glob import glob
 import logging
@@ -357,7 +357,7 @@ def stack(config, processes):
 
     err = SysErrors(config)
 
-    plot_ratio = True
+    plot_ratio = config['display'].get('ratio', 'data') != 'off'
 
     for cfg in config['histograms']:
         histname = cfg['filename']
@@ -372,6 +372,7 @@ def stack(config, processes):
         logging.info("plotting %s", histname)
 
         if procs[0].GetHistogram(histname).ClassName().startswith("TH2"):
+            # {{{
             bkg_sum = get_bkg_sum(histname, procs)
             zmax = bkg_sum.GetMaximum()
             axes = [r.TH1.GetXaxis, r.TH1.GetYaxis]
@@ -431,7 +432,9 @@ def stack(config, processes):
                     style.setup_upper_axis(h, scale=False, is2d=True)
                     h.GetZaxis().SetRangeUser(0., zmax)
                     h.Draw("COLZ")
+            # }}}
         else:
+            # {{{
             base_histo = roast.HWrapper(procs[0].GetHistogram(histname))
 
             bkg_procs = get_backgrounds(procs)
@@ -536,16 +539,23 @@ def stack(config, processes):
                 if plot_ratio:
                     pad2.cd()
 
-                    try:
-                        ratio = coll.GetHistogram(histname).GetHisto().Clone()
-                        ratio.Divide(bkg_sum.GetHisto())
-                    except:
-                        ratio = base_histo.GetHisto().Clone()
+                    use_data = config['display'].get('ratio', 'data') == 'data'
 
-                    # ratio.GetXaxis().SetRangeUser(
-                            # bkg_sum.GetMinXVis(), bkg_sum.GetMaxXVis())
-                    ratio.SetTitle(";{0};{1}".format(*cfg['axis labels']))
-                    style.setup_lower_axis(ratio)
+                    if use_data:
+                        try:
+                            ratio = coll.GetHistogram(histname).GetHisto().Clone()
+                            ratio.Divide(bkg_sum.GetHisto())
+                        except:
+                            ratio = base_histo.GetHisto().Clone()
+
+                        ratio.SetTitle(";{0};{1}".format(*cfg['axis labels']))
+                        style.setup_lower_axis(ratio)
+                    else:
+                        ratio = get_signals(procs)[0].GetHistogram(histname).GetHisto().Clone()
+                        ratio.Divide(bkg_sum.GetHisto())
+                        ratio.SetTitle(";{0};{1}".format(*cfg['axis labels']))
+                        style.setup_lower_axis(ratio)
+                        ratio.GetYaxis().SetTitle("Ratio")
 
                     if 'visible' in cfg:
                         ratio.GetXaxis().SetRangeUser(*map(float, cfg['visible']))
@@ -584,14 +594,18 @@ def stack(config, processes):
                         # bkg_err.Draw("E2")
                         rel_err.Draw("2")
 
-                    if coll:
+                    if coll or not use_data:
                         ratio_err = r.TGraphAsymmErrors(ratio)
                         for i in range(ratio_err.GetN()):
                             x_coord = ratio.GetBinCenter(i + 1)
                             width = ratio.GetBinWidth(i + 1)
                             y_ratio = ratio.GetBinContent(i + 1)
-                            y_data = coll.GetHistogram(histname).GetHisto().GetBinContent(i + 1)
-                            y_data_err = coll.GetHistogram(histname).GetHisto().GetBinError(i + 1)
+                            if coll:
+                                y_data = coll.GetHistogram(histname).GetHisto().GetBinContent(i + 1)
+                                y_data_err = coll.GetHistogram(histname).GetHisto().GetBinError(i + 1)
+                            else:
+                                y_data = get_signals(procs)[0].GetHistogram(histname).GetHisto().GetBinContent(i + 1)
+                                y_data_err = get_signals(procs)[0].GetHistogram(histname).GetHisto().GetBinError(i + 1)
                             y_bkg = bkg_sum.GetHisto().GetBinContent(i + 1)
 
                             if y_ratio > style.small_number and y_ratio < style.ratio_plot_max * 0.99:
@@ -612,6 +626,10 @@ def stack(config, processes):
                         ratio_err.SetMarkerSize(1.)
                         ratio_err.SetMarkerStyle(0)
                         ratio_err.SetLineWidth(4)
-                        ratio_err.SetLineColor(r.kBlack)
+                        if coll:
+                            ratio_err.SetLineColor(r.kBlack)
+                        else:
+                            ratio_err.SetLineColor(config.processes[get_signals(procs)[0]].color)
                         ratio_err.Draw("P same")
                         ratio.Draw("axis same")
+            # }}}
