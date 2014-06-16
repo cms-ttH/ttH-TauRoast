@@ -1,5 +1,23 @@
 # vim: set sw=4 sta et :
 
+- filename: DeltaPzeta
+  dir: tau
+  channels: [ttl]
+  binning: [20, 0, 400]
+  axis labels: ["P_{#zeta}", Events]
+
+- filename: Pzeta
+  dir: tau
+  channels: [ttl]
+  binning: [20, 0, 200]
+  axis labels: ["P_{#zeta}", Events]
+
+- filename: PzetaVis
+  dir: tau
+  channels: [ttl]
+  binning: [20, 0, 150]
+  axis labels: ["Visible P_{#zeta}", Events]
+
 - filename: TT_DeltaR
   dir: tau
   channels: [ttl]

@@ -368,6 +368,38 @@ namespace roast {
             return !zpeak;
         };
 
+        accessors["DeltaPzeta"] = [](Branches *b, int idx, int n) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            auto t1 = (*e->T1_P)[idx];
+            auto t2 = (*e->T2_P)[idx];
+            auto met = (*e->MET_P)[idx];
+
+            auto dir = .5 * (t1.Phi() + t2.Phi());
+
+            return ((1 + 1.78) * t1.Pt() * cos(t1.Phi() - dir) + (1 + 1.78) * t2.Pt() * cos(t2.Phi() - dir) + met.Pt() * cos(met.Phi() - dir));
+        };
+
+        accessors["Pzeta"] = [](Branches *b, int idx, int n) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            auto t1 = (*e->T1_P)[idx];
+            auto t2 = (*e->T2_P)[idx];
+            auto met = (*e->MET_P)[idx];
+
+            auto dir = .5 * (t1.Phi() + t2.Phi());
+
+            return (t1.Pt() * cos(t1.Phi() - dir) + t2.Pt() * cos(t2.Phi() - dir) + met.Pt() * cos(met.Phi() - dir));
+        };
+
+        accessors["PzetaVis"] = [](Branches *b, int idx, int n) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            auto t1 = (*e->T1_P)[idx];
+            auto t2 = (*e->T2_P)[idx];
+
+            auto dir = .5 * (t1.Phi() + t2.Phi());
+
+            return (t1.Pt() * cos(t1.Phi() - dir) + t2.Pt() * cos(t2.Phi() - dir));
+        };
+
         // generated accessors {{{1
         // >>> Begin attr <<<
         accessors["T1_AntiElectronIndex"] = [](Branches *b, int idx, int n) -> float {
