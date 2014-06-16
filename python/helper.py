@@ -302,7 +302,6 @@ def combine_processes(config, ps, collisions=False):
             res.SetShortName(alias)
             res.SetNiceName(cfg['niceName'])
             res.SetLabelForLegend(cfg['labelForLegend'])
-            res.SetColor(cfg['color'])
 
             ps.append(res)
 
