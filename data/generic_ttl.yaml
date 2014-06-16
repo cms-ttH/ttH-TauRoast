@@ -29,13 +29,13 @@ analysis:
       - SingleTop
       - ttWZ
       - TTHTauTau_125_real
-      - TTH_110
-      - TTH_115
-      - TTH_120
+      #  - TTH_110
+      #  - TTH_115
+      #  - TTH_120
       - TTH_125
-      - TTH_130
-      - TTH_135
-      - TTH_140
+      #  - TTH_130
+      #  - TTH_135
+      #  - TTH_140
 
     plot:
       - Collisions
@@ -66,38 +66,23 @@ physics:
       - T2_ParentAbsId = 25
       # tops
       - 1 ≤ J_NumCleanCSVM ≤ 2
-      - J_NumCleanNonCSVM ≥ 0
       - J_NumCleanInclusive ≥ 2
       # lepton
       - NumTightLeptons = 1
       - NumExLooseLeptons = 0
       - L_Pt ≥ 30
       # taus
-      # kinematic
-      - T1_Pt ≥ 20
-      - T2_Pt ≥ 20
-      - -2.1 ≤ T1_Eta ≤ 2.1
-      - -2.1 ≤ T2_Eta ≤ 2.1
       - TT_DeltaR ≥ 0.5
       # topological
       - T1L_DeltaR ≥ 0.25
       - T2L_DeltaR ≥ 0.25
       # optimization
-      - T1_DecayModeFinding = 1
-      - T2_DecayModeFinding = 1
-      - T1_LTPt ≥ 5
-      - T2_LTPt ≥ 5
       - T1_NumProngs = 1
       - T2_NumProngs = 1
-      - T1_AntiElectronIndex ≥ 1
-      - T2_AntiElectronIndex ≥ 1
-      - T1_AntiMuonIndex ≥ 1
-      - T2_AntiMuonIndex ≥ 1
-      - T1_IsolationMVA2Raw ≥ 0.25
-      - T2_IsolationMVA2Raw ≥ 0
+      - T1_IsolationIndex3Hits ≥ 1
       # topological
       - TT_ChargeProduct = -1
-    pair selection: iso
+    pair selection: pt
     systematics:
         eTauFake: 1.05
         jetTauFake: 1.2
@@ -105,7 +90,7 @@ physics:
 
 paths:
     # root path, referenced by {root}
-    root: /afs/crc.nd.edu/user/m/mwolf3/www/ttH/v60.2/ttl
+    root: /afs/crc.nd.edu/user/m/mwolf3/www/ttH/v64/ttl
     # for analyzed processes
     input: "{root}/roast_processed.root"
     # {s} is replaced with systematic shifts
@@ -118,7 +103,7 @@ paths:
     # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
     # name; {m} = mode (_log)
     stack format: "{root}/{t}/{d}/{n}{p}{m}.{t}"
-    ntuples: "/hadoop/users/matze/ttH/v60.2/2012/ttl_{p}/*_ntuple.root"
+    ntuples: "/hadoop/users/matze/ttH/v64/2012/ttl_{p}/*_ntuple.root"
 
 processes: !include processes.yaml
 histograms: !include histograms*.yaml
