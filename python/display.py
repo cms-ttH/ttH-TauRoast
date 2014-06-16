@@ -68,7 +68,10 @@ def get_maximum(histname, processes, inc_error=False, sig_scale=1.0):
             vals.append(p.GetHistogram(histname).GetMaximum())
 
         if p.IsSignal():
-            vals[-1] *= sig_scale
+            if sig_scale == 'auto':
+                vals[-1] *= 0
+            else:
+                vals[-1] *= sig_scale
     return max(vals)
 
 class SysErrors:
@@ -435,10 +438,17 @@ def stack(config, processes):
             bkg_stack = get_bkg_stack(config, histname, bkg_procs)
             bkg_stack.Draw("hist")
 
-            sig_scale = config['display']['signal scale factor']
             scale = 1.15
             if config['display']['legend']:
                 scale = 1.45
+
+            sig_scale = config['display']['signal scale factor']
+            if sig_scale == 'auto':
+                def get_integral(p):
+                    return p.GetHistogram(histname).Integral()
+                bkg_integral = sum(map(get_integral, bkg_procs))
+                sig_scale = bkg_integral / max(map(get_integral, get_signals(procs)))
+                logging.info("using signal scale {0}".format(sig_scale))
 
             max_y = scale * max(
                     get_maximum(histname, procs, True, sig_scale),
@@ -484,7 +494,7 @@ def stack(config, processes):
                 sig_procs = get_signals(procs)
                 for p in sig_procs:
                     h = p.GetHistogram(histname).GetHisto().Clone()
-                    h.Scale(config['display']['signal scale factor'])
+                    h.Scale(sig_scale)
                     h.SetFillStyle(0)
                     h.SetLineWidth(4)
                     h.SetLineColor(config.processes[p.GetShortName()].color)
@@ -518,7 +528,7 @@ def stack(config, processes):
                         l.draw_marker(20, r.kBlack, coll.GetLabelForLegend())
                     l.new_row()
                     for p in sig_procs:
-                        suffix = "" if sig_scale == 1 else " (#times {0})".format(sig_scale)
+                        suffix = "" if sig_scale == 1 else " (#times {0:.1f})".format(sig_scale)
                         l.draw_line(2, config.processes[p].color, p.GetLabelForLegend() + suffix)
 
                 base_histo.GetHisto().Draw("axis same")
