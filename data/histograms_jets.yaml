@@ -37,7 +37,7 @@
   binning: [30, 30, 250]
   axis labels: ['$2 p_{T}', Events]
   replace:
-    - [Clean, Inclusive, Jet]
+    - ["", Inclusive, Jet]
     - [Tagged, CSVM, Tagged jet]
     - [Untagged, NonCSVM, Untagged jet]
 
@@ -47,7 +47,7 @@
   binning: [40, -3, 3]
   axis labels: ["$2 #eta", Events]
   replace:
-    - [Clean, Inclusive, Jet]
+    - ["", Inclusive, Jet]
     - [Tagged, CSVM, Tagged jet]
     - [Untagged, NonCSVM, Untagged jet]
 
@@ -86,17 +86,6 @@
     - [UntaggedSubLJ, Untagged Sub-leading jet]
     - [UntaggedSubSubLJ, Untagged Jet 3]
     - [UntaggedSubSubSubLJ, Untagged Jet 4]
-
-#  $0J_CSV:
-  #  value: $0J_combOB
-  #  dir: jets
-  #  max: J_Num$1
-  #  binning: [30, -1, 1]
-  #  axis labels: ["$0 jet CSV", Events]
-  #  replace:
-    #  - [Clean, CleanInclusive]
-    #  - [Tagged, CleanCSVM]
-    #  - [Untagged, CleanNonCSVM]
 
 #  $0J_MatchIndex:
   #  values: [CleanJ_PartonId]

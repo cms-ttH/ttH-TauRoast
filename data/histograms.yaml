@@ -118,6 +118,7 @@
   logy: 1
 
 - filename: MET
+  values: [MET_Pt]
   dir: general
   binning: [20, 0, 300]
   visible: [0, 200]
@@ -185,50 +186,50 @@
   #  showOF: false
   #  logy: 1
 
-- filename: V_NumVertices_noPURW
-  values: [V_NumVertices]
+- filename: NumVertices_noPURW
+  values: [NumVertices]
   cancel weight: PUcorr
   dir: pileup
   binning: [20, 0, 40]
   axis labels: ["Number PV, no PURW", Events]
 
-- filename: V_NumInteractionsBX0_noPURW
-  values: [V_NumInteractionsBX0]
+- filename: NumInteractionsBX0_noPURW
+  values: [NumInteractionsBX0]
   cancel weight: PUcorr
   dir: pileup
   binning: [20, 0, 40]
   axis labels: ["Number BX0, no PURW", Events]
 
-- filename: V_NumInteractionsBXm1_noPURW
-  values: [V_NumInteractionsBX0m1]
+- filename: NumInteractionsBXm1_noPURW
+  values: [NumInteractionsBXm1]
   cancel weight: PUcorr
   dir: pileup
   binning: [20, 0, 40]
   axis labels: ["Number BXm1, no PURW", Events]
 
-- filename: V_NumInteractionsBXp1_noPURW
-  values: [V_NumInteractionsBX0p1]
+- filename: NumInteractionsBXp1_noPURW
+  values: [NumInteractionsBXp1]
   cancel weight: PUcorr
   dir: pileup
   binning: [20, 0, 40]
   axis labels: ["Number BXp1, no PURW", Events]
 
-- filename: V_NumVertices
+- filename: NumVertices
   dir: pileup
   binning: [20, 0, 40]
   axis labels: [Number PV, after PURW, Events]
 
-- filename: V_NumInteractionsBX0
+- filename: NumInteractionsBX0
   dir: pileup
   binning: [20, 0, 40]
   axis labels: [Number BX0, after PURW, Events]
 
-- filename: V_NumInteractionsBXm1
+- filename: NumInteractionsBXm1
   dir: pileup
   binning: [20, 0, 40]
   axis labels: [Number BXm1, after PURW, Events]
 
-- filename: V_NumInteractionsBXp1
+- filename: NumInteractionsBXp1
   dir: pileup
   binning: [20, 0, 40]
   axis labels: [Number BXp1, after PURW, Events]
