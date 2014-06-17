@@ -257,7 +257,12 @@ class Legend:
         self.advance()
 
 @contextmanager
-def create_plot(config, histcfg, plot_ratio, is2d=False, procname="", hist=None, max=None, scale=None):
+def create_plot(
+        config, histcfg, plot_ratio, is2d=False, procname="",
+        displayname=None, hist=None, max=None, scale=None):
+    if not displayname:
+        displayname = procname
+
     histname = histcfg['filename']
     subdir = histcfg['dir']
 
@@ -288,7 +293,7 @@ def create_plot(config, histcfg, plot_ratio, is2d=False, procname="", hist=None,
     if plot_ratio:
         canvas.cd(1)
 
-    style.draw_channel_info(config, plot_ratio, proc=procname, is2d=True)
+    style.draw_channel_info(config, plot_ratio, proc=displayname, is2d=True)
 
     if plot_ratio:
         canvas.cd(2)
@@ -371,6 +376,15 @@ def stack(config, processes):
 
         logging.info("plotting %s", histname)
 
+        bkg_procs = get_backgrounds(procs)
+        sig_scale = config['display']['signal scale factor']
+        if sig_scale == 'auto':
+            def get_integral(p):
+                return p.GetHistogram(histname).Integral()
+            bkg_integral = sum(map(get_integral, bkg_procs))
+            sig_scale = bkg_integral / max(map(get_integral, get_signals(procs)))
+            logging.info("using signal scale {0}".format(sig_scale))
+
         if procs[0].GetHistogram(histname).ClassName().startswith("TH2"):
             # {{{
             bkg_sum = get_bkg_sum(histname, procs)
@@ -417,7 +431,14 @@ def stack(config, processes):
                 h.Draw("COLZ")
 
             for p in procs:
-                with create_plot(config, cfg, is2d=True, plot_ratio=False, procname=p.GetShortName()) as (scale, pad1,):
+                if p.IsSignal():
+                    suffix = "" if sig_scale == 1 else " (#times {0:.1f})".format(sig_scale)
+                else:
+                    suffix = ""
+
+                with create_plot(config, cfg, is2d=True, plot_ratio=False,
+                        procname=p.GetShortName(),
+                        displayname=p.GetShortName() + suffix) as (scale, pad1,):
                     pad1.cd()
                     h = p.GetHistogram(histname).GetHisto()
 
@@ -431,27 +452,22 @@ def stack(config, processes):
                         h.SetTitle(";{0};{1}".format(*cfg['axis labels']))
                     style.setup_upper_axis(h, scale=False, is2d=True)
                     h.GetZaxis().SetRangeUser(0., zmax)
+
+                    if p.IsSignal():
+                        h.Scale(sig_scale)
+
                     h.Draw("COLZ")
             # }}}
         else:
             # {{{
             base_histo = roast.HWrapper(procs[0].GetHistogram(histname))
 
-            bkg_procs = get_backgrounds(procs)
             bkg_stack = get_bkg_stack(config, histname, bkg_procs)
             bkg_stack.Draw("hist")
 
             scale = 1.15
             if config['display']['legend']:
                 scale = 1.45
-
-            sig_scale = config['display']['signal scale factor']
-            if sig_scale == 'auto':
-                def get_integral(p):
-                    return p.GetHistogram(histname).Integral()
-                bkg_integral = sum(map(get_integral, bkg_procs))
-                sig_scale = bkg_integral / max(map(get_integral, get_signals(procs)))
-                logging.info("using signal scale {0}".format(sig_scale))
 
             max_y = scale * max(
                     get_maximum(histname, procs, True, sig_scale),
