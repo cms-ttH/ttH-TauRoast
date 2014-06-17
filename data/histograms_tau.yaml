@@ -431,7 +431,7 @@
   showOF: true
   logy: 1
 
-- filename: DitauVisibleMass
+- filename: TT_VisibleMass
   dir: tau
   channels: [ttl]
   binning: [30, 0, 200]
