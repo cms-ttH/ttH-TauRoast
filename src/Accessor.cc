@@ -546,6 +546,26 @@ namespace roast {
             }
             throw "";
         };
+        accessors["T1_Mt"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return sqrt(2 * (*e->T1_P)[idx].pt() * (*e->MET_P)[idx].pt() * (1 - cos((*e->T1_P)[idx].phi() - (*e->MET_P)[idx].phi())));
+            }
+            throw;
+        };
+        accessors["T2_Mt"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return sqrt(2 * (*e->T2_P)[idx].pt() * (*e->MET_P)[idx].pt() * (1 - cos((*e->T2_P)[idx].phi() - (*e->MET_P)[idx].phi())));
+            }
+            throw;
+        };
+        accessors["T_Mt"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return sqrt(2 * (*e->T_P)[idx].pt() * (*e->MET_P)[idx].pt() * (1 - cos((*e->T_P)[idx].phi() - (*e->MET_P)[idx].phi())));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return sqrt(2 * (*e->T_P)[idx].pt() * (*e->MET_P)[idx].pt() * (1 - cos((*e->T_P)[idx].phi() - (*e->MET_P)[idx].phi())));
+            }
+            throw;
+        };
         accessors["L1_Mt"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return sqrt(2 * (*e->L1_P)[idx].pt() * (*e->MET_P)[idx].pt() * (1 - cos((*e->L1_P)[idx].phi() - (*e->MET_P)[idx].phi())));

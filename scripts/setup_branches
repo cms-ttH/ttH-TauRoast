@@ -281,7 +281,7 @@ p4s = []
 for fun in map(partial(partial, re.match), ('T\d*_P$', 'L\d*_P$', 'MET_P$', 'J_P$')):
     p4s += sorted([(var, type_info[var][0]) for var in type_info if fun(var)], key=lambda xs: xs[0])
 
-for (p4, chans) in filter(lambda (p, cs): p.startswith('L'), p4s):
+for (p4, chans) in filter(lambda (p, cs): p.startswith('L') or p.startswith('T'), p4s):
     lines.append(indent * 2 + declare.format(p4[:-2] + '_Mt'))
     lines.append(indent * 3
             + generate_return_line(
