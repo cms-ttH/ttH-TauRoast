@@ -487,6 +487,15 @@ TTH_125:
     NoEreadByNUTter: 19299
     split: {hbb: 0, hcc: 1, hww: 2, hzz: 3, htt: 4, hgg: 5, hgluglu: 6, hzg: 7}
 
+TTH_125_htt:
+    color: 610
+
+TTH_125_hbb:
+    color: 620
+
+TTH_125_hww:
+    color: 630
+
 TTH_130:
     sampleNumber: 9130
     niceName: ttH(130)
