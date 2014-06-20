@@ -13,9 +13,9 @@ using namespace std;
 using namespace roast;
 
 bool
-CutFlow::Cut::Check(Branches *b, const int idx, const bool bypass)
+CutFlow::Cut::Check(Branches *b, const int idx)
 {
-    if (RealCheck(b, idx, bypass)) {
+    if (RealCheck(b, idx)) {
         if (!current_passed && !immutable) {
             ++events_passed;
             current_passed = true;
@@ -25,30 +25,25 @@ CutFlow::Cut::Check(Branches *b, const int idx, const bool bypass)
     return false;
 }
 
-CutFlow::ValueCut::ValueCut(const std::string& n, float mn, float mx, bool skp, bool neg) :
-    CutFlow::Cut(n), negate(neg), skip(skp), min(mn), max(mx)
+CutFlow::ValueCut::ValueCut(const std::string& n, float mn, float mx, bool neg) :
+    CutFlow::Cut(n), negate(neg), min(mn), max(mx)
 {
-    if (n.find("AbsId") != std::string::npos)
-        skip = true;
-
     GetVal = roast::get_accessor(n);
 }
 
 bool
-CutFlow::ValueCut::RealCheck(Branches *b, int idx, bool bypass)
+CutFlow::ValueCut::RealCheck(Branches *b, int idx)
 {
-    if (skip && bypass)
-        return true;
     float val = GetVal(b, idx, -1);
     bool res = (min <= val) && (val <= max);
     return negate ? !res : res;
 }
 
 bool
-CutFlow::ComposedCut::RealCheck(Branches *b, int idx, bool bypass)
+CutFlow::ComposedCut::RealCheck(Branches *b, int idx)
 {
-    bool v1 = op1->RealCheck(b, idx, bypass);
-    bool v2 = op2->RealCheck(b, idx, bypass);
+    bool v1 = op1->RealCheck(b, idx);
+    bool v2 = op2->RealCheck(b, idx);
 
     bool res = v1 && v2;
     if (kind == kOr)
@@ -120,13 +115,13 @@ CutFlow::SetCutCounts(string const iName, double const iEvents)
 }
 
 bool
-CutFlow::CheckCuts(Branches *b, const int& idx, const bool bypass, bool debug)
+CutFlow::CheckCuts(Branches *b, const int& idx, bool debug)
 {
     for (auto& c: cuts) {
         if (debug)
             std::cout << c->name;
 
-        if (!c->Check(b, idx, bypass)) {
+        if (!c->Check(b, idx)) {
             if (debug) {
                 if (auto vc = dynamic_cast<roast::CutFlow::ValueCut*>(c))
                     std::cout << " failed with value: " << vc->GetVal(b, idx, -1) << std::endl;
@@ -180,10 +175,14 @@ string const CutFlow::GetLastCut() const{
 void
 CutFlow::RemoveCut(const std::string& name)
 {
-    auto it = find_if(cuts.begin(), cuts.end(), [&](Cut* c) { return c->name == name; });
-    if (it != cuts.end()) {
-        delete *it;
-        cuts.erase(it);
+    for (;;) {
+        auto it = find_if(cuts.begin(), cuts.end(), [&](Cut* c) { return c->name == name; });
+        if (it != cuts.end()) {
+            delete *it;
+            cuts.erase(it);
+        } else {
+            break;
+        }
     }
 }
 

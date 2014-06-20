@@ -15,6 +15,27 @@ except:
 from ttH.TauRoast.helper import *
 from ttH.TauRoast import cut
 
+def get_cuts(cutlist):
+    err = False
+    parser = cut.Parser()
+    cuts = []
+    for cutstr in cutlist:
+        if isinstance(cutstr, dict):
+            (name, cutstr) = cutstr.items()[0]
+        else:
+            name = None
+        try:
+            c = parser.process(cutstr)
+            if name:
+                c.name = name
+            cuts.append(c)
+        except:
+            logging.error(u"can't parse cut '{0}'".format(cutstr))
+            err = True
+    if err:
+        sys.exit(1)
+    return cuts
+
 def analyze(config, module):
     """Create a list of processes, as defined in `process_vXX.yaml`, and
     specified in the process/analysis section of the configuration.  Return
@@ -41,39 +62,21 @@ def analyze(config, module):
             cfg['NOEinDS'],
             cfg['NoEreadByNUTter'],
             cfg['crossSection'],
-            cfg['branchingRatio'],
-            cfg['checkReality'] if 'checkReality' in cfg else False)
+            cfg['branchingRatio'])
 
         processes.push_back(p)
 
-    err = False
-    parser = cut.Parser()
-    cuts = []
-    for cutstr in config['physics']['cuts']:
-        if isinstance(cutstr, dict):
-            (name, cutstr) = cutstr.items()[0]
-        else:
-            name = None
-        try:
-            c = parser.process(cutstr)
-            if name:
-                c.name = name
-            cuts.append(c)
-        except:
-            logging.error(u"can't parse cut '{0}'".format(cutstr))
-            err = True
-    if err:
-        sys.exit(1)
+    cuts = get_cuts(config['physics']['cuts'])
 
     processed = []
     for p in processes:
         cfg = config['processes'][p.GetShortName()]
-        if 'add cut' in cfg:
-            c = parser.process(cfg['add cut'])
+
+        add_cuts = get_cuts(cfg.get('add cuts', []))
+        for c in add_cuts:
             c.name = "REMOVE ME"
-            use_cuts = [c] + cuts
-        else:
-            use_cuts = cuts
+        use_cuts = add_cuts + cuts
+
         n = module.analyze(p,
                 vectorize(use_cuts, 'roast::CutFlow::Cut*'),
                 config['analysis']['offset'],

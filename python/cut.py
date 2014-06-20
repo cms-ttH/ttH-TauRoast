@@ -93,7 +93,6 @@ class ValueCut(object):
                 name,
                 self._min if self._min else float("-inf"),
                 self._max if self._max else float("inf"),
-                False,
                 self._negate)
 
 class Parser(object):

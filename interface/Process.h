@@ -38,7 +38,6 @@ namespace roast {
             std::string niceName;
             std::string labelForLegend;
             std::string type;
-            bool checkReality;
             std::vector<std::string> ntuplePaths;
             bool analyzed;
             bool plot;
@@ -62,7 +61,7 @@ namespace roast {
             Process(const roast::Process&);
             Process(const std::string&, const std::string&, const std::string&,
                     const std::string&, const std::vector<std::string>&, int, int,
-                    double, double, bool genmatch=false);
+                    double, double);
             virtual ~Process();
             void Update(roast::Process const *);
 
@@ -98,7 +97,6 @@ namespace roast {
             std::string const GetLabelForLegend() const;
             std::vector<std::string> const GetNtuplePaths() const;
             std::string const GetType() const;
-            bool const CheckReality() const;
             bool const IsCollisions() const;
             bool const IsBackground() const;
             bool const IsSignal() const;
@@ -126,7 +124,7 @@ namespace roast {
             void SetEvents(const std::vector<roast::Process::Event>& evs) { events = evs; };
             void Add(roast::Process*, bool same=false);
 
-            ClassDef(Process, 2);
+            ClassDef(Process, 3);
     };
 }
 

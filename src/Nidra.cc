@@ -50,8 +50,6 @@ namespace roast {
 
         T *event = new T(proc.GetNtuplePaths());
 
-        bool checkReality = proc.CheckReality();
-
         cflow.RegisterCut("Read from DS", 0);
         // cflow.RegisterCut("skimming + PAT", 0);
         cflow.RegisterCut("nTuple making", 0);
@@ -99,7 +97,7 @@ namespace roast {
 
             std::vector<int> combos;
             for (unsigned int i = 0; i < event->GetNumCombos(); ++i) {
-                if (cflow.CheckCuts(event, i, !checkReality, debug))
+                if (cflow.CheckCuts(event, i, debug))
                     combos.push_back(i);
             }
 

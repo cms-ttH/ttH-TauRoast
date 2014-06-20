@@ -80,6 +80,15 @@ namespace roast {
             return 0;
         };
 
+        accessors["L_MatchAbsId"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return abs((*e->L_GenMatchId)[idx]);
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return abs((*e->L_GenMatchId)[idx]);
+            }
+            throw "";
+        };
+
         accessors["T_MatchAbsId"] = [](Branches *b, int idx, int n) -> float {
             if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
                 return abs((*e->T_GenMatchId)[idx]);
@@ -95,6 +104,15 @@ namespace roast {
         accessors["T2_MatchAbsId"] = [](roast::Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             return abs((*e->T2_GenMatchId)[idx]);
+        };
+
+        accessors["L_ParentAbsId"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return abs((*e->L_GenMatchMother0Id)[idx]);
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return abs((*e->L_GenMatchMother0Id)[idx]);
+            }
+            throw "";
         };
 
         accessors["T_ParentAbsId"] = [](Branches *b, int idx, int n) -> float {

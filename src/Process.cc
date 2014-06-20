@@ -32,7 +32,6 @@ Process::Process(const Process& iProcess)
 	niceName						= iProcess.GetNiceName();
 	labelForLegend					= iProcess.GetLabelForLegend();
 	type							= iProcess.GetType();
-	checkReality					= iProcess.CheckReality();
 	ntuplePaths						= iProcess.GetNtuplePaths();
 
 	crossSection					= iProcess.GetCrossSection();
@@ -52,13 +51,12 @@ Process::Process(const Process& iProcess)
 
 Process::Process(const std::string& name, const std::string& alias, const std::string& title,
       const std::string& type, const std::vector<std::string>& paths,
-      int ds_count, int nut_count, double xsec, double branch, bool genmatch):
+      int ds_count, int nut_count, double xsec, double branch):
    events(),
    shortName(name),
    niceName(alias),
    labelForLegend(title),
    type(type),
-   checkReality(genmatch),
    ntuplePaths(paths),
    analyzed(false),
    plot(false),
@@ -85,7 +83,6 @@ void Process::Update(Process const * iProcess){
 	niceName						= iProcess->GetNiceName();
 	labelForLegend					= iProcess->GetLabelForLegend();
 	type							= iProcess->GetType();
-	checkReality					= iProcess->CheckReality();
 
 	crossSection					= iProcess->GetCrossSection();
 	branchingRatio					= iProcess->GetBranchingRatio();
@@ -120,7 +117,6 @@ void Process::SetNtuplePaths(vector<string> const iPath){ ntuplePaths = iPath; }
 bool const Process::IsCollisions() const { return ((type.compare("collisions")==0)); }
 bool const Process::IsBackground() const { return ((type.compare("mcBackground")==0)); }
 bool const Process::IsSignal() const { return ((type.compare("signal")==0)); }
-bool const Process::CheckReality() const { return checkReality; }
 vector<string> const Process::GetNtuplePaths() const { return ntuplePaths; }
 int const Process::GetNOEinDS() const {			return NOEinDS;		}
 int const Process::GetNoEreadByNUTter() const {	return NoEreadByNUTter;}

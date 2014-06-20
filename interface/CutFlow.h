@@ -30,15 +30,15 @@ namespace roast {
                 bool current_passed;
                 bool immutable;
 
-                bool Check(Branches*, const int, const bool bypass=false);
+                bool Check(Branches*, const int);
 
                 Cut(const std::string& n="", double ev=0.) : name(n), events_passed(ev), current_passed(false), immutable(false) {};
 
                 virtual Cut* Clone() { return new Cut(*this); };
                 virtual bool IsRelative() { return false; };
-                virtual bool RealCheck(Branches*, int, bool) { return true; };
+                virtual bool RealCheck(Branches*, int) { return true; };
 
-                ClassDef(roast::CutFlow::Cut, 2);
+                ClassDef(roast::CutFlow::Cut, 3);
             };
 
             struct RelativeCut : public Cut {
@@ -47,23 +47,22 @@ namespace roast {
                 virtual Cut* Clone() { return new RelativeCut(*this); };
                 virtual bool IsRelative() { return true; };
 
-                ClassDef(roast::CutFlow::RelativeCut, 1);
+                ClassDef(roast::CutFlow::RelativeCut, 2);
             };
 
             struct ValueCut : public Cut {
                 bool negate;
-                bool skip;
                 float min;
                 float max;
                 GetValue_t GetVal;
 
-                ValueCut() : Cut(""), negate(false), skip(false), min(0), max(0), GetVal(0) {};
-                ValueCut(const std::string&, float, float, bool=false, bool=false);
+                ValueCut() : Cut(""), negate(false), min(0), max(0), GetVal(0) {};
+                ValueCut(const std::string&, float, float, bool=false);
 
                 virtual Cut* Clone() { return new ValueCut(*this); };
-                virtual bool RealCheck(Branches*, int, bool);
+                virtual bool RealCheck(Branches*, int);
 
-                ClassDef(roast::CutFlow::ValueCut, 1);
+                ClassDef(roast::CutFlow::ValueCut, 2);
             };
 
             struct ComposedCut : public Cut {
@@ -77,9 +76,9 @@ namespace roast {
                 ComposedCut(const std::string& n, Cut* c1, Cut* c2, kind_t k, bool neg) : Cut(n), kind(k), negate(neg), op1(c1), op2(c2) {};
 
                 virtual Cut* Clone() { return new ComposedCut(*this); };
-                virtual bool RealCheck(Branches*, int, bool);
+                virtual bool RealCheck(Branches*, int);
 
-                ClassDef(roast::CutFlow::ComposedCut, 1);
+                ClassDef(roast::CutFlow::ComposedCut, 2);
             };
 
             typedef std::vector<roast::CutFlow::Cut*> Cuts;
@@ -98,7 +97,7 @@ namespace roast {
             void RegisterCutFromLast(const std::string&, double);
             void SetCutCounts(std::string const, double const);
 
-            bool CheckCuts(Branches*, const int&, const bool bypass=false, bool debug=false);
+            bool CheckCuts(Branches*, const int&, bool debug=false);
             void StartOfEvent();
 
             inline float GetPassedEvents(const std::string& n) const { return cuts[name2idx.find(n)->second]->events_passed; };

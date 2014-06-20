@@ -1,6 +1,7 @@
 # vim: set sw=4 ts=4 sta et :
 Collisions_DoubleElectron:
-    add cut: NumLooseElectrons = 2
+    add cuts:
+      - NumLooseElectrons = 2
     sampleNumber: -1
     niceName: Collisions
     labelForLegend: Collisions
@@ -15,7 +16,8 @@ Collisions_DoubleElectron:
     NoEreadByNUTter: 75220
 
 Collisions_DoubleMuon:
-    add cut: NumLooseMuons = 2
+    add cuts:
+      - NumLooseMuons = 2
     sampleNumber: -1
     niceName: Collisions
     labelForLegend: Collisions
@@ -30,7 +32,8 @@ Collisions_DoubleMuon:
     NoEreadByNUTter: 75220
 
 Collisions_ElectronMuon:
-    add cut: NumLooseElectrons = 1 and NumLooseMuons = 1
+    add cuts:
+      - NumLooseElectrons = 1 and NumLooseMuons = 1
     sampleNumber: -1
     niceName: Collisions
     labelForLegend: Collisions
@@ -45,7 +48,8 @@ Collisions_ElectronMuon:
     NoEreadByNUTter: 75220
 
 Collisions_SingleElectron:
-    add cut: NumLooseElectrons = 1
+    add cuts:
+      - NumLooseElectrons = 1
     sampleNumber: -1
     niceName: Collisions
     labelForLegend: Collisions
@@ -60,7 +64,8 @@ Collisions_SingleElectron:
     NoEreadByNUTter: 75220
 
 Collisions_SingleMuon:
-    add cut: NumLooseMuons = 1
+    add cuts:
+      - NumLooseMuons = 1
     sampleNumber: -1
     niceName: Collisions
     labelForLegend: Collisions
@@ -554,20 +559,6 @@ TTHTauTau_110:
     NOEinDS: 992800
     NoEreadByNUTter: 88035
 
-TTHTauTau_110_real:
-    sampleNumber: 7110
-    niceName: ttHtautau(110)*
-    labelForLegend: "t#bar{t}H(110)* #rightarrow #tau_{h} #tau_{h}"
-    type: signal
-    checkReality: true
-    ntuplePath: [TTHTauTau_110]
-    color: 820
-    crossSection: 0.1887
-    branchingRatio: 0.0795
-    otherScaleFactor: 1
-    NOEinDS: 992800
-    NoEreadByNUTter: 88035
-
 TTHTauTau_115:
     sampleNumber: 7115
     niceName: ttHtautau(115)
@@ -575,20 +566,6 @@ TTHTauTau_115:
     type: signal
     ntuplePath: [TTHTauTau_115]
     color: 632
-    crossSection: 0.1663
-    branchingRatio: 0.0758
-    otherScaleFactor: 1
-    NOEinDS: 997885
-    NoEreadByNUTter: 91596
-
-TTHTauTau_115_real:
-    sampleNumber: 7115
-    niceName: ttHtautau(115)*
-    labelForLegend: "t#bar{t}H(115)* #rightarrow #tau_{h} #tau_{h}"
-    type: signal
-    checkReality: true
-    ntuplePath: [TTHTauTau_115]
-    color: 820
     crossSection: 0.1663
     branchingRatio: 0.0758
     otherScaleFactor: 1
@@ -608,20 +585,6 @@ TTHTauTau_120:
     NOEinDS: 990172
     NoEreadByNUTter: 91596
 
-TTHTauTau_120_real:
-    sampleNumber: 7120
-    niceName: ttHtautau(120)*
-    labelForLegend: "t#bar{t}H(120)* #rightarrow #tau_{h} #tau_{h}"
-    type: signal
-    checkReality: true
-    ntuplePath: [TTHTauTau_120]
-    color: 820
-    crossSection: 0.1470
-    branchingRatio: 0.0704
-    otherScaleFactor: 1
-    NOEinDS: 990172
-    NoEreadByNUTter: 91596
-
 TTHTauTau_125:
     sampleNumber: 7125
     niceName: ttHtautau(125)
@@ -635,19 +598,41 @@ TTHTauTau_125:
     NOEinDS: 1000000
     NoEreadByNUTter: 96805
 
-TTHTauTau_125_real:
+TTHTauTau_125_Hadronic:
+    add cuts:
+      - T1_MatchAbsId = 15
+      - T2_MatchAbsId = 15
+      - T1_ParentAbsId = 25
+      - T2_ParentAbsId = 25
     sampleNumber: 7125
-    niceName: ttHtautau(125)*
+    niceName: ttHtautau(125) Had
     labelForLegend: "t#bar{t}H(125)* #rightarrow #tau_{h} #tau_{h}"
     type: signal
-    checkReality: true
     ntuplePath: [TTHTauTau_125]
     color: 820
-    crossSection: 0.1302
-    branchingRatio: 0.0632
+    crossSection: 0.09207
+    branchingRatio: 0.0352
     otherScaleFactor: 1
-    NOEinDS: 1000000
-    NoEreadByNUTter: 96805
+    NOEinDS: 982801
+    NoEreadByNUTter: 102664
+
+TTHTauTau_125_SemiLept:
+    add cuts:
+      - (T1_MatchAbsId = 15 and T1_ParentAbsId = 25) or (T2_MatchAbsId = 15 and T2_ParentAbsId = 25)
+      - L_MatchAbsId = 15
+      - L_ParentAbsId = 25
+    sampleNumber: 7125
+    niceName: ttHtautau(125) SL
+    labelForLegend: "t#bar{t}H(125) #rightarrow #tau_{h} #ell"
+    type: signal
+    ntuplePath: [TTHTauTau_125]
+    color: 840
+    crossSection: 0.09207
+    branchingRatio: 0.0352
+    otherScaleFactor: 1
+    NOEinDS: 982801
+    NoEreadByNUTter: 102664
+
 
 TTHTauTau_130:
     sampleNumber: 7130
@@ -656,20 +641,6 @@ TTHTauTau_130:
     type: signal
     ntuplePath: [TTHTauTau_130]
     color: 632
-    crossSection: 0.1157
-    branchingRatio: 0.0545
-    otherScaleFactor: 1
-    NOEinDS: 812456
-    NoEreadByNUTter: 80747
-
-TTHTauTau_130_real:
-    sampleNumber: 7130
-    niceName: ttHtautau(130)*
-    labelForLegend: "t#bar{t}H(130)* #rightarrow #tau_{h} #tau_{h}"
-    type: signal
-    checkReality: true
-    ntuplePath: [TTHTauTau_130]
-    color: 820
     crossSection: 0.1157
     branchingRatio: 0.0545
     otherScaleFactor: 1
@@ -689,20 +660,6 @@ TTHTauTau_135:
     NOEinDS: 997996
     NoEreadByNUTter: 101565
 
-TTHTauTau_135_real:
-    sampleNumber: 7135
-    niceName: ttHtautau(135)*
-    labelForLegend: "t#bar{t}H(135)* #rightarrow #tau_{h} #tau_{h}"
-    type: signal
-    checkReality: true
-    ntuplePath: [TTHTauTau_135]
-    color: 820
-    crossSection: 0.1031
-    branchingRatio: 0.0449
-    otherScaleFactor: 1
-    NOEinDS: 997996
-    NoEreadByNUTter: 101565
-
 TTHTauTau_140:
     sampleNumber: 7140
     niceName: ttHtautau(140)
@@ -710,20 +667,6 @@ TTHTauTau_140:
     type: signal
     ntuplePath: [TTHTauTau_140]
     color: 632
-    crossSection: 0.09207
-    branchingRatio: 0.0352
-    otherScaleFactor: 1
-    NOEinDS: 982801
-    NoEreadByNUTter: 102664
-
-TTHTauTau_140_real:
-    sampleNumber: 7140
-    niceName: ttHtautau(140)*
-    labelForLegend: "t#bar{t}H(140)* #rightarrow #tau_{h} #tau_{h}"
-    type: signal
-    checkReality: true
-    ntuplePath: [TTHTauTau_140]
-    color: 820
     crossSection: 0.09207
     branchingRatio: 0.0352
     otherScaleFactor: 1
