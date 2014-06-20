@@ -62,14 +62,6 @@ def analyze(config, module):
         except:
             logging.error(u"can't parse cut '{0}'".format(cutstr))
             err = True
-            raise
-        # min = cutcfg['min'] if 'min' in cutcfg else -float('inf')
-        # max = cutcfg['max'] if 'max' in cutcfg else float('inf')
-        # try:
-            # cuts.append(roast.CutFlow.ValueCut(cutcfg['name'], min, max))
-        # except:
-            # logging.error("undefined variable %s", cutcfg['name'])
-            # err = True
     if err:
         sys.exit(1)
 
