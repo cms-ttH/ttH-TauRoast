@@ -25,14 +25,14 @@ namespace roast {
             std::map<std::string,std::string>		params;
             TChain* fChain;
 
-            bool caches_dirty;
-            std::vector<std::vector<int> > clean_btag_cache;
-            std::vector<std::vector<int> > clean_nonbtag_cache;
-
         public:
             Branches();
             Branches(const std::vector<std::string>&);
             ~Branches();
+
+            bool IsCached(const std::string&) const;
+            float GetCached(const std::string&) const;
+            void SetCached(const std::string&, const float);
 
             void GetEntry(double);
             Long64_t GetEntries();

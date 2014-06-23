@@ -7,6 +7,8 @@
 
 */
 
+#include <unordered_map>
+
 #include "TFile.h"
 
 #include "../interface/Branches.h"
@@ -14,15 +16,16 @@
 using namespace std;
 using namespace roast;
 
+static std::unordered_map<std::string, float> cache;
+
 // Default constructor
-Branches::Branches() : fChain(0), caches_dirty(true)
+Branches::Branches() : fChain(0)
 {
     Null();
     SetBranchAddresses();
 }
 
-Branches::Branches(vector<string> const & iPath) :
-    caches_dirty(true)
+Branches::Branches(vector<string> const & iPath)
 {
     fChain = new TChain("TTbarHTauTau");
     for (const auto& p: iPath)
@@ -50,13 +53,31 @@ void Branches::SetChain(TChain* iChain){ fChain = iChain; }
 void
 Branches::GetEntry(double iEntry)
 {
-    caches_dirty = true;
+    cache.clear();
     fChain->GetEntry(iEntry);
 }
 
 Long64_t Branches::GetEntries(){
 	if(fChain == NULL){ cerr << "ERROR: Trying to GetEntries() from a NULL TChain." << endl; exit(1); }
 	return fChain->GetEntries();
+}
+
+bool
+Branches::IsCached(const std::string& s) const
+{
+    return cache.find(s) != cache.end();
+}
+
+float
+Branches::GetCached(const std::string& s) const
+{
+    return cache[s];
+}
+
+void
+Branches::SetCached(const std::string& s, const float v)
+{
+    cache[s] = v;
 }
 
 unsigned int
