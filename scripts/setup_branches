@@ -22,7 +22,7 @@ def gather_function_info(filename):
     with open(filename) as f:
         for l in f.readlines():
             m = re.match(r'\s*(?:\w+\s+)*(Get\w*)\(.*', l)
-            if m:
+            if m and m.group(1) != 'GetCached':
                 names.append(m.group(1))
     return names
 
@@ -255,7 +255,9 @@ def generate_return_line(name, chans, cls="", method=None, expr=False, safe=Fals
     if len(chans) == len(channels):
         res = (name if expr else returns[cnt])
 
-        if safe:
+        if safe and idx != 'idx':
+            res = res.replace("[{2}]", ".at({2})")
+        elif safe:
             res = res.replace("[{3}]", ".at({3})")
         if method:
             res = res.replace(';', '.{0}();'.format(method))
@@ -408,6 +410,14 @@ for ((p1, cs1), (p2, cs2)) in combinations(p4s, 2):
                     + '\n')
             lines.append(indent * 2 + '};\n')
 
+            lines.append(indent * 2 + declare.format(accessor + '_Pt'))
+            lines.append(indent * 3
+                    + generate_return_line(
+                        'return ((*{{0}}->{0})[idx] + (*{{0}}->{1})[idx]).Pt();'.format(p1, p2),
+                        chans, expr=True)
+                    + '\n')
+            lines.append(indent * 2 + '};\n')
+
 for accessor in sorted(type_info.keys()):
     (chans, cls, ptr) = type_info[accessor]
 
@@ -439,7 +449,8 @@ for accessor in sorted(type_info.keys()):
     try:
         tmp_lines = []
 
-        if not accessor.startswith("J_"):
+        if not accessor.startswith("J_") and not accessor.startswith("G"):
+            # combo variables
             if 'LorentzVector' in cls:
                 for q in ('Pt', 'Eta', 'Phi'):
                     lines.append(indent * 2 + declare.format(accessor[:-1] + q))
@@ -451,6 +462,19 @@ for accessor in sorted(type_info.keys()):
             else:
                 tmp_lines.append(indent * 2 + declare.format(accessor))
                 tmp_lines.append(indent * 3 + generate_return_line(var, chans, cls) + '\n')
+        elif not accessor.startswith("J_"):
+            # gen-info variables
+            if 'LorentzVector' in cls:
+                for q in ('Pt', 'Eta', 'Phi'):
+                    lines.append(indent * 2 + declare.format(accessor[:-1] + q))
+                    lines.append(indent * 3
+                        + generate_return_line(var, chans, cls, idx='n', safe='True', method=q.lower())
+                        + '\n')
+                    lines.append(indent * 2 + '};\n')
+                continue
+            else:
+                tmp_lines.append(indent * 2 + declare.format(accessor))
+                tmp_lines.append(indent * 3 + generate_return_line(var, chans, cls, idx='n', safe=True) + '\n')
         elif 'LorentzVector' in cls:
             for q in ('Pt', 'Eta', 'Phi'):
                 for (label, index_statement) in reindex:

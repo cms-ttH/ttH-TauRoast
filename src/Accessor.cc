@@ -2,6 +2,9 @@
 
 #include <map>
 
+#include "Minuit2/Minuit2Minimizer.h"
+#include "Math/Functor.h"
+
 #include "DataFormats/Math/interface/deltaR.h"
 #include "TauAnalysis/SVfitStandalone/interface/SVfitStandaloneAlgorithm.h"
 
@@ -15,6 +18,31 @@
 namespace roast {
     std::map<std::string, GetValue_t> accessors;
     bool setup = false;
+
+    class HiggsMass {
+        public:
+            HiggsMass(const LorentzVector& j1, const LorentzVector& j2) : j1_(j1), j2_(j2) {};
+            double operator()(const double *x) const { return Eval(x); };
+            double Eval(const double *x) const {
+                auto nu1 = j1_ / j1_.P() * x[0];
+                nu1.SetE(fabs(x[0]));
+                auto nu2 = j2_ / j2_.P() * x[1];
+                nu2.SetE(fabs(x[1]));
+                double tmp = 125.6 - (j1_ + j2_ + nu1 + nu2).M();
+                // double tmp = j1_.M2() + j2_.M2() - 125.6 * 125.6
+                    // + 2 * (j1_.Dot(j2_) + j1_.Dot(nu1) + j1_.Dot(nu2)
+                            // + j2_.Dot(nu1) + j2_.Dot(nu2) + nu1.Dot(nu2));
+                // double tmp = nu1 * (j1_.E() + j2_.E()) + nu2 * (j1_.E() + j2_.E())
+                             // + nu1 * nu2 - 2 * (j1_.P() * nu1 + j2_.P() * nu2)
+                             // - 2 * angle * (
+                                     // j1_.P() * j2_.P() + j1_.P() * nu2 + nu1 * j2_.P() + nu1 * nu2)
+                             // - 125.6 * 125.6 + j1_.M2() + j2_.M2();
+                return tmp * tmp;
+            };
+        private:
+            const LorentzVector j1_;
+            const LorentzVector j2_;
+    };
 
     inline
     unsigned int
@@ -386,6 +414,83 @@ namespace roast {
             return !zpeak;
         };
 
+        accessors["H_Pt"] = [](Branches *b, int idx, int n) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            auto t1 = (*e->T1_P)[idx];
+            auto t2 = (*e->T2_P)[idx];
+
+            float p_nu1 = (1.777 * 1.777 - t1.M2()) / (t1.E() - 2 * t1.P());
+            float p_nu2 = (1.777 * 1.777 - t2.M2()) / (t2.E() - 2 * t2.P());
+
+            auto nu1 = t1 / t1.P() * p_nu1;
+            nu1.SetE(p_nu1);
+
+            auto nu2 = t2 / t2.P() * p_nu2;
+            nu1.SetE(p_nu2);
+
+            auto h = t1 + t2 + nu1 + nu2;
+            return h.Pt();
+        };
+
+        accessors["H_M"] = [](Branches *b, int idx, int n) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            auto t1 = (*e->T1_P)[idx];
+            auto t2 = (*e->T2_P)[idx];
+
+            float p_nu1 = (1.777 * 1.777 - t1.M2()) / (t1.E() - 2 * t1.P());
+            float p_nu2 = (1.777 * 1.777 - t2.M2()) / (t2.E() - 2 * t2.P());
+
+            auto nu1 = t1 / t1.P() * p_nu1;
+            nu1.SetE(p_nu1);
+
+            auto nu2 = t2 / t2.P() * p_nu2;
+            nu1.SetE(p_nu2);
+
+            auto h = t1 + t2 + nu1 + nu2;
+
+            return h.M();
+        };
+
+        accessors["H_MET"] = [](Branches *b, int idx, int n) -> float {
+            ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
+            auto t1 = (*e->T1_P)[idx];
+            auto t2 = (*e->T2_P)[idx];
+
+            if (e->IsCached("H_MET")) {
+                return e->GetCached("H_MET");
+            } else {
+                const float p_nu1 = (1.777 * 1.777 - t1.M2()) / (t1.E() - 2 * t1.P());
+                const float p_nu2 = (1.777 * 1.777 - t2.M2()) / (t2.E() - 2 * t2.P());
+
+                double step[2] = {.5, .5};
+                double variable[2] = {p_nu1, p_nu2};
+
+                HiggsMass h(t1, t2);
+                ROOT::Math::Functor fct(h, 2);
+
+                ROOT::Minuit2::Minuit2Minimizer min(ROOT::Minuit2::kCombined);
+                min.SetFunction(fct);
+                min.SetVariable(0, "nu1", variable[0], step[0]);
+                min.SetVariable(1, "nu2", variable[1], step[1]);
+                min.Minimize();
+                min.PrintResults();
+
+                const double *ps = min.X();
+
+                auto nu1 = t1 / t1.P() * ps[0];
+                nu1.SetE(fabs(ps[0]));
+                auto nu2 = t2 / t2.P() * ps[1];
+                nu2.SetE(fabs(ps[1]));
+
+                std::cout << "m_H " << (nu1 + nu2 + t1 + t2).M() << std::endl;
+                std::cout << "p_T " << (nu1 + nu2 + t1 + t2).Pt() << std::endl;
+                std::cout << (nu1 + nu2).Pt() << std::endl;
+                std::cout << "------" << std::endl;
+
+                return (nu1 + nu2).Pt();
+            }
+        };
+
         accessors["DeltaPzeta"] = [](Branches *b, int idx, int n) -> float {
             ttl::Branches* e = dynamic_cast<ttl::Branches*>(b);
             auto t1 = (*e->T1_P)[idx];
@@ -626,6 +731,12 @@ namespace roast {
             }
             throw;
         };
+        accessors["TT_Pt"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T1_P)[idx] + (*e->T2_P)[idx]).Pt();
+            }
+            throw;
+        };
         accessors["T1L_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->T1_P)[idx].phi() - (*e->L_P)[idx].phi());
@@ -641,6 +752,12 @@ namespace roast {
         accessors["T1L_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return ((*e->T1_P)[idx] + (*e->L_P)[idx]).M();
+            }
+            throw;
+        };
+        accessors["T1L_Pt"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T1_P)[idx] + (*e->L_P)[idx]).Pt();
             }
             throw;
         };
@@ -968,6 +1085,12 @@ namespace roast {
             }
             throw;
         };
+        accessors["T2L_Pt"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T2_P)[idx] + (*e->L_P)[idx]).Pt();
+            }
+            throw;
+        };
         accessors["T2MET_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->T2_P)[idx].phi() - (*e->MET_P)[idx].phi());
@@ -1292,6 +1415,12 @@ namespace roast {
             }
             throw;
         };
+        accessors["TL1_Pt"] = [](Branches *b, int idx, int n) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->L1_P)[idx]).Pt();
+            }
+            throw;
+        };
         accessors["TL2_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return cos((*e->T_P)[idx].phi() - (*e->L2_P)[idx].phi());
@@ -1310,6 +1439,12 @@ namespace roast {
             }
             throw;
         };
+        accessors["TL2_Pt"] = [](Branches *b, int idx, int n) -> float {
+            if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->L2_P)[idx]).Pt();
+            }
+            throw;
+        };
         accessors["TL_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
                 return cos((*e->T_P)[idx].phi() - (*e->L_P)[idx].phi());
@@ -1325,6 +1460,12 @@ namespace roast {
         accessors["TL_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
             if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
                 return ((*e->T_P)[idx] + (*e->L_P)[idx]).M();
+            }
+            throw;
+        };
+        accessors["TL_Pt"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->L_P)[idx]).Pt();
             }
             throw;
         };
@@ -1747,6 +1888,14 @@ namespace roast {
                 return ((*e->L1_P)[idx] + (*e->L2_P)[idx]).M();
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return ((*e->L1_P)[idx] + (*e->L2_P)[idx]).M();
+            }
+            throw;
+        };
+        accessors["LL_Pt"] = [](Branches *b, int idx, int n) -> float {
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->L2_P)[idx]).Pt();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->L2_P)[idx]).Pt();
             }
             throw;
         };
@@ -3051,64 +3200,64 @@ namespace roast {
             return (*b->CSVeventWeightLFup)[idx];
         };
         accessors["GJ_Eta"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->GJ_Eta)[idx];
+            return (*b->GJ_Eta).at(n);
         };
         accessors["GJ_IsBjet"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->GJ_IsBjet)[idx];
+            return (*b->GJ_IsBjet).at(n);
         };
         accessors["GJ_MomentumRank"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->GJ_MomentumRank)[idx];
+            return (*b->GJ_MomentumRank).at(n);
         };
         accessors["GJ_Phi"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->GJ_Phi)[idx];
+            return (*b->GJ_Phi).at(n);
         };
         accessors["GJ_Pt"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->GJ_Pt)[idx];
+            return (*b->GJ_Pt).at(n);
         };
         accessors["GT_Eta"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->GT_Eta)[idx];
+            return (*b->GT_Eta).at(n);
         };
         accessors["GT_MomentumRank"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->GT_MomentumRank)[idx];
+            return (*b->GT_MomentumRank).at(n);
         };
         accessors["GT_ParentEta"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->GT_ParentEta)[idx];
+            return (*b->GT_ParentEta).at(n);
         };
         accessors["GT_ParentId"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->GT_ParentId)[idx];
+            return (*b->GT_ParentId).at(n);
         };
         accessors["GT_ParentP"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->GT_ParentP)[idx];
+            return (*b->GT_ParentP).at(n);
         };
         accessors["GT_ParentPhi"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->GT_ParentPhi)[idx];
+            return (*b->GT_ParentPhi).at(n);
         };
         accessors["GT_ParentPt"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->GT_ParentPt)[idx];
+            return (*b->GT_ParentPt).at(n);
         };
         accessors["GT_Phi"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->GT_Phi)[idx];
+            return (*b->GT_Phi).at(n);
         };
         accessors["GT_Pt"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->GT_Pt)[idx];
+            return (*b->GT_Pt).at(n);
         };
         accessors["GT_ToElectron"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->GT_ToElectron)[idx];
+            return (*b->GT_ToElectron).at(n);
         };
         accessors["GT_ToHadrons"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->GT_ToHadrons)[idx];
+            return (*b->GT_ToHadrons).at(n);
         };
         accessors["GT_ToMuon"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->GT_ToMuon)[idx];
+            return (*b->GT_ToMuon).at(n);
         };
         accessors["GT_VisEta"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->GT_VisEta)[idx];
+            return (*b->GT_VisEta).at(n);
         };
         accessors["GT_VisPhi"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->GT_VisPhi)[idx];
+            return (*b->GT_VisPhi).at(n);
         };
         accessors["GT_VisPt"] = [](Branches *b, int idx, int n) -> float {
-            return (*b->GT_VisPt)[idx];
+            return (*b->GT_VisPt).at(n);
         };
         accessors["HT"] = [](Branches *b, int idx, int n) -> float {
             return (*b->HT)[idx];
