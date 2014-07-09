@@ -32,8 +32,8 @@
   translate match id: true
   dir: tau/generator
   channels: [$2]
-  binning: [9, 0, 9]
-  bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W]
+  binning: [10, 0, 10]
+  bin labels: ["null", light, heavy, "#tau", "#mu", e, "#gamma", Z, H, W]
   axis labels: ["#tau$1 match", Events]
   replace:
     - ["", "", tl]
@@ -47,8 +47,8 @@
   translate match id: true
   dir: tau/generator
   channels: [$2]
-  binning: [11, 0, 11]
-  bin labels: ["null", had, "#tau", "#mu", e, "#gamma", Z, H, W, W (t), W (H)]
+  binning: [12, 0, 12]
+  bin labels: ["null", light, heavy, "#tau", "#mu", e, "#gamma", Z, H, W, W (t), W (H)]
   axis labels: ["#tau$1 Parent", Events]
   showOF: false
   logy: 1

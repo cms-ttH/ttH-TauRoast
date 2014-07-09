@@ -87,25 +87,27 @@ Branches::TranslateMatchIndex(int idx, int pidx) const
         return 0; // no match
 
     switch (abs(idx)) {
+        case 5:
+            return 2;
         case 15:
-            return 2; // tau
+            return 3; // tau
         case 13:
-            return 3; // muon
+            return 4; // muon
         case 11:
-            return 4; // electron
+            return 5; // electron
         case 22:
-            return 5; // photon
+            return 6; // photon
         case 23:
-            return 6; // Z
+            return 7; // Z
         case 24:
             if (abs(pidx) == 25)
-                return 10; // W from H
+                return 11; // W from H
             else if (abs(pidx) == 6)
-                return 9; // W from t
+                return 10; // W from t
             else
-                return 8; // other W
+                return 9; // other W
         case 25:
-            return 7; // Higgs
+            return 8; // Higgs
         default:
             return 1; // hadronic
     }
