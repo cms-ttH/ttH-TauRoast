@@ -218,18 +218,6 @@
     - ["", "", tll, false]
     - ["", "", tl, true]
 
-- filename: T$0_Pt_NumVertices
-  values: [T$0_Pt, V_NumVertices]
-  axis labels: ["#tau$1 p_{T}", Number PV, Events]
-  binning: [20, 0, 150, 20, 0, 40]
-  channels: [$2]
-  dir: tau/debug
-  replace:
-    - [1, "_{1}", ttl]
-    - [2, "_{2}", ttl]
-    - ["", "", tll]
-    - ["", "", tl]
-
 - filename: T$0_Eta
   dir: tau/kinematic
   channels: [$2]

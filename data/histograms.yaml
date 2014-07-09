@@ -234,7 +234,7 @@
   binning: [20, 0, 40]
   axis labels: [Number BXp1, after PURW, Events]
 
-- filename: VertexZcoord
+- filename: V_Zcoord
   dir: pileup
   binning: [40, -20, 20]
   axis labels: [Vertex Z coordinate, after PURW, Events]

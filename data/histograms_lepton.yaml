@@ -63,38 +63,6 @@
     - [osL, "^{os}", tll]
     - [ssL, "^{ss}", tll]
 
-- filename: $0_Mt2
-  dir: lepton
-  channels: [$2]
-  binning: [20, 0, 200]
-  axis labels: ['lepton$1 m_{T}', Events]
-  showOF: true
-  logy: 1
-  replace:
-    - [L, "", tl]
-    - [L, "", ttl]
-    - [L1, "_{1}", tll]
-    - [L2, "_{2}", tll]
-    - [osL, "^{os}", tll]
-    - [ssL, "^{ss}", tll]
-
-- filename: $0_Mt2_MET
-  values: [$0_Mt2, MET]
-  dir: lepton/veto
-  visible: [[0, 150], [0, 160]]
-  channels: [$2]
-  binning: [15, 0, 225, 15, 0, 300]
-  axis labels: ['lepton$1 m_{T}', MET, Events]
-  showOF: true
-  logy: 1
-  replace:
-    - [L, "", tl]
-    - [L, "", ttl]
-    - [L1, "_{1}", tll]
-    - [L2, "_{2}", tll]
-    - [osL, "^{os}", tll]
-    - [ssL, "^{ss}", tll]
-
 - filename: L1L2_Pt
   values: [L1_Pt, L2_Pt]
   dir: lepton/kinematic
