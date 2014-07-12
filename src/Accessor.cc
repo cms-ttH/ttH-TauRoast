@@ -5753,6 +5753,12 @@ namespace roast {
             }
             throw;
         };
+        accessors["T1_JetCSV"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->T1_JetCSV)[idx];
+            }
+            throw;
+        };
         accessors["T1_LTIpVtdxy"] = [](Branches *b, int idx, int n) -> float {
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return (*e->T1_LTIpVtdxy)[idx];
@@ -6236,6 +6242,12 @@ namespace roast {
         accessors["T2_IsInTheCracks"] = [](Branches *b, int idx, int n) -> float {
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return (*e->T2_IsInTheCracks)[idx];
+            }
+            throw;
+        };
+        accessors["T2_JetCSV"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return (*e->T2_JetCSV)[idx];
             }
             throw;
         };
@@ -6848,6 +6860,14 @@ namespace roast {
                 return (*e->T_IsInTheCracks)[idx];
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return (*e->T_IsInTheCracks)[idx];
+            }
+            throw;
+        };
+        accessors["T_JetCSV"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return (*e->T_JetCSV)[idx];
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return (*e->T_JetCSV)[idx];
             }
             throw;
         };

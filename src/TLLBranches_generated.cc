@@ -130,6 +130,7 @@ tll::Branches::Clear()
     T_HPSbyVLooseCombinedIsolationDeltaBetaCorr->clear();
     T_HPSdecayModeFinding->clear();
     T_IsInTheCracks->clear();
+    T_JetCSV->clear();
     T_LTIpVtdxy->clear();
     T_LTIpVtdxyError->clear();
     T_LTIpVtdz->clear();
@@ -276,6 +277,7 @@ tll::Branches::Delete()
     delete T_HPSbyVLooseCombinedIsolationDeltaBetaCorr;
     delete T_HPSdecayModeFinding;
     delete T_IsInTheCracks;
+    delete T_JetCSV;
     delete T_LTIpVtdxy;
     delete T_LTIpVtdxyError;
     delete T_LTIpVtdz;
@@ -422,6 +424,7 @@ tll::Branches::Null()
     T_HPSbyVLooseCombinedIsolationDeltaBetaCorr = 0;
     T_HPSdecayModeFinding = 0;
     T_IsInTheCracks = 0;
+    T_JetCSV = 0;
     T_LTIpVtdxy = 0;
     T_LTIpVtdxyError = 0;
     T_LTIpVtdz = 0;
@@ -568,6 +571,7 @@ tll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("T_HPSbyVLooseCombinedIsolationDeltaBetaCorr", &T_HPSbyVLooseCombinedIsolationDeltaBetaCorr);
     fChain->SetBranchAddress("T_HPSdecayModeFinding", &T_HPSdecayModeFinding);
     fChain->SetBranchAddress("T_IsInTheCracks", &T_IsInTheCracks);
+    fChain->SetBranchAddress("T_JetCSV", &T_JetCSV);
     fChain->SetBranchAddress("T_LTIpVtdxy", &T_LTIpVtdxy);
     fChain->SetBranchAddress("T_LTIpVtdxyError", &T_LTIpVtdxyError);
     fChain->SetBranchAddress("T_LTIpVtdz", &T_LTIpVtdz);

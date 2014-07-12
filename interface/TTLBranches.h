@@ -134,6 +134,7 @@ namespace roast {
                 std::vector<bool>* T1_HPSbyVLooseCombinedIsolationDeltaBetaCorr;
                 std::vector<bool>* T1_HPSdecayModeFinding;
                 std::vector<bool>* T1_IsInTheCracks;
+                std::vector<float>* T1_JetCSV;
                 std::vector<float>* T1_LTIpVtdxy;
                 std::vector<float>* T1_LTIpVtdxyError;
                 std::vector<float>* T1_LTIpVtdz;
@@ -213,6 +214,7 @@ namespace roast {
                 std::vector<bool>* T2_HPSbyVLooseCombinedIsolationDeltaBetaCorr;
                 std::vector<bool>* T2_HPSdecayModeFinding;
                 std::vector<bool>* T2_IsInTheCracks;
+                std::vector<float>* T2_JetCSV;
                 std::vector<float>* T2_LTIpVtdxy;
                 std::vector<float>* T2_LTIpVtdxyError;
                 std::vector<float>* T2_LTIpVtdz;

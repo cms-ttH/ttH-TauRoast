@@ -101,6 +101,7 @@ ttl::Branches::Clear()
     T1_HPSbyVLooseCombinedIsolationDeltaBetaCorr->clear();
     T1_HPSdecayModeFinding->clear();
     T1_IsInTheCracks->clear();
+    T1_JetCSV->clear();
     T1_LTIpVtdxy->clear();
     T1_LTIpVtdxyError->clear();
     T1_LTIpVtdz->clear();
@@ -180,6 +181,7 @@ ttl::Branches::Clear()
     T2_HPSbyVLooseCombinedIsolationDeltaBetaCorr->clear();
     T2_HPSdecayModeFinding->clear();
     T2_IsInTheCracks->clear();
+    T2_JetCSV->clear();
     T2_LTIpVtdxy->clear();
     T2_LTIpVtdxyError->clear();
     T2_LTIpVtdz->clear();
@@ -297,6 +299,7 @@ ttl::Branches::Delete()
     delete T1_HPSbyVLooseCombinedIsolationDeltaBetaCorr;
     delete T1_HPSdecayModeFinding;
     delete T1_IsInTheCracks;
+    delete T1_JetCSV;
     delete T1_LTIpVtdxy;
     delete T1_LTIpVtdxyError;
     delete T1_LTIpVtdz;
@@ -376,6 +379,7 @@ ttl::Branches::Delete()
     delete T2_HPSbyVLooseCombinedIsolationDeltaBetaCorr;
     delete T2_HPSdecayModeFinding;
     delete T2_IsInTheCracks;
+    delete T2_JetCSV;
     delete T2_LTIpVtdxy;
     delete T2_LTIpVtdxyError;
     delete T2_LTIpVtdz;
@@ -493,6 +497,7 @@ ttl::Branches::Null()
     T1_HPSbyVLooseCombinedIsolationDeltaBetaCorr = 0;
     T1_HPSdecayModeFinding = 0;
     T1_IsInTheCracks = 0;
+    T1_JetCSV = 0;
     T1_LTIpVtdxy = 0;
     T1_LTIpVtdxyError = 0;
     T1_LTIpVtdz = 0;
@@ -572,6 +577,7 @@ ttl::Branches::Null()
     T2_HPSbyVLooseCombinedIsolationDeltaBetaCorr = 0;
     T2_HPSdecayModeFinding = 0;
     T2_IsInTheCracks = 0;
+    T2_JetCSV = 0;
     T2_LTIpVtdxy = 0;
     T2_LTIpVtdxyError = 0;
     T2_LTIpVtdz = 0;
@@ -689,6 +695,7 @@ ttl::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("T1_HPSbyVLooseCombinedIsolationDeltaBetaCorr", &T1_HPSbyVLooseCombinedIsolationDeltaBetaCorr);
     fChain->SetBranchAddress("T1_HPSdecayModeFinding", &T1_HPSdecayModeFinding);
     fChain->SetBranchAddress("T1_IsInTheCracks", &T1_IsInTheCracks);
+    fChain->SetBranchAddress("T1_JetCSV", &T1_JetCSV);
     fChain->SetBranchAddress("T1_LTIpVtdxy", &T1_LTIpVtdxy);
     fChain->SetBranchAddress("T1_LTIpVtdxyError", &T1_LTIpVtdxyError);
     fChain->SetBranchAddress("T1_LTIpVtdz", &T1_LTIpVtdz);
@@ -768,6 +775,7 @@ ttl::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("T2_HPSbyVLooseCombinedIsolationDeltaBetaCorr", &T2_HPSbyVLooseCombinedIsolationDeltaBetaCorr);
     fChain->SetBranchAddress("T2_HPSdecayModeFinding", &T2_HPSdecayModeFinding);
     fChain->SetBranchAddress("T2_IsInTheCracks", &T2_IsInTheCracks);
+    fChain->SetBranchAddress("T2_JetCSV", &T2_JetCSV);
     fChain->SetBranchAddress("T2_LTIpVtdxy", &T2_LTIpVtdxy);
     fChain->SetBranchAddress("T2_LTIpVtdxyError", &T2_LTIpVtdxyError);
     fChain->SetBranchAddress("T2_LTIpVtdz", &T2_LTIpVtdz);

@@ -255,6 +255,17 @@
     - ["", "", 100, tll]
     - ["", "", 100, tl]
 
+- filename: T$0_JetCSV
+  dir: tau
+  channels: [$2]
+  binning: [15, 0, 1]
+  axis labels: ["#tau$1 CSV", Events]
+  replace:
+    - [1, "_{1}", ttl, false]
+    - [2, "_{2}", ttl, false]
+    - ["", "", tll, false]
+    - ["", "", tl, true]
+
 - filename: T_LTIpVtdxy
   dir: tau
   channels: [tll]
