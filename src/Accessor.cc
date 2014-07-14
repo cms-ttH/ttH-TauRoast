@@ -5363,6 +5363,9 @@ namespace roast {
         accessors["J_NumNonCSVT"] = [](Branches *b, int idx, int n) -> float {
             return (*b->NumNonCSVTbtagJets)[idx];
         };
+        accessors["NumRecoTaus"] = [](Branches *b, int idx, int n) -> float {
+            return b->NumRecoTaus;
+        };
         accessors["NumTaus"] = [](Branches *b, int idx, int n) -> float {
             return b->NumTaus;
         };
@@ -5374,6 +5377,252 @@ namespace roast {
         };
         accessors["NumVertices"] = [](Branches *b, int idx, int n) -> float {
             return b->NumVertices;
+        };
+        accessors["RT_Charge"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_Charge).at(n);
+        };
+        accessors["RT_DecayMode"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_DecayMode).at(n);
+        };
+        accessors["RT_EmFraction"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_EmFraction).at(n);
+        };
+        accessors["RT_GenMatchDaughter0Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_GenMatchDaughter0Id).at(n);
+        };
+        accessors["RT_GenMatchDaughter0Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_GenMatchDaughter0Status).at(n);
+        };
+        accessors["RT_GenMatchDaughter1Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_GenMatchDaughter1Id).at(n);
+        };
+        accessors["RT_GenMatchDaughter1Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_GenMatchDaughter1Status).at(n);
+        };
+        accessors["RT_GenMatchGrandmother00Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_GenMatchGrandmother00Id).at(n);
+        };
+        accessors["RT_GenMatchGrandmother00Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_GenMatchGrandmother00Status).at(n);
+        };
+        accessors["RT_GenMatchGrandmother01Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_GenMatchGrandmother01Id).at(n);
+        };
+        accessors["RT_GenMatchGrandmother01Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_GenMatchGrandmother01Status).at(n);
+        };
+        accessors["RT_GenMatchGrandmother10Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_GenMatchGrandmother10Id).at(n);
+        };
+        accessors["RT_GenMatchGrandmother10Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_GenMatchGrandmother10Status).at(n);
+        };
+        accessors["RT_GenMatchGrandmother11Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_GenMatchGrandmother11Id).at(n);
+        };
+        accessors["RT_GenMatchGrandmother11Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_GenMatchGrandmother11Status).at(n);
+        };
+        accessors["RT_GenMatchId"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_GenMatchId).at(n);
+        };
+        accessors["RT_GenMatchMother0Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_GenMatchMother0Id).at(n);
+        };
+        accessors["RT_GenMatchMother0Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_GenMatchMother0Status).at(n);
+        };
+        accessors["RT_GenMatchMother1Id"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_GenMatchMother1Id).at(n);
+        };
+        accessors["RT_GenMatchMother1Status"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_GenMatchMother1Status).at(n);
+        };
+        accessors["RT_GenMatchStatus"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_GenMatchStatus).at(n);
+        };
+        accessors["RT_AntiElectronDeadECAL"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstElectronDeadECAL).at(n);
+        };
+        accessors["RT_AntiElectronLoose"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstElectronLoose).at(n);
+        };
+        accessors["RT_AntiElectronLooseMVA2"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstElectronLooseMVA2).at(n);
+        };
+        accessors["RT_AntiElectronLooseMVA3"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstElectronLooseMVA3).at(n);
+        };
+        accessors["RT_AntiElectronMVA"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstElectronMVA).at(n);
+        };
+        accessors["RT_AntiElectronMVA2category"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstElectronMVA2category).at(n);
+        };
+        accessors["RT_AntiElectronMVA2Raw"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstElectronMVA2raw).at(n);
+        };
+        accessors["RT_AntiElectronMVA3category"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstElectronMVA3category).at(n);
+        };
+        accessors["RT_AntiElectronMVA3Raw"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstElectronMVA3raw).at(n);
+        };
+        accessors["RT_AntiElectronMedium"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstElectronMedium).at(n);
+        };
+        accessors["RT_AntiElectronMediumMVA2"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstElectronMediumMVA2).at(n);
+        };
+        accessors["RT_AntiElectronMediumMVA3"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstElectronMediumMVA3).at(n);
+        };
+        accessors["RT_AntiElectronTight"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstElectronTight).at(n);
+        };
+        accessors["RT_AntiElectronTightMVA2"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstElectronTightMVA2).at(n);
+        };
+        accessors["RT_AntiElectronTightMVA3"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstElectronTightMVA3).at(n);
+        };
+        accessors["RT_AntiElectronVLooseMVA2"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstElectronVLooseMVA2).at(n);
+        };
+        accessors["RT_AntiElectronVTightMVA3"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstElectronVTightMVA3).at(n);
+        };
+        accessors["RT_AntiMuonLoose"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstMuonLoose).at(n);
+        };
+        accessors["RT_AntiMuonLoose2"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstMuonLoose2).at(n);
+        };
+        accessors["RT_AntiMuonMedium"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstMuonMedium).at(n);
+        };
+        accessors["RT_AntiMuonMedium2"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstMuonMedium2).at(n);
+        };
+        accessors["RT_AntiMuonTight"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstMuonTight).at(n);
+        };
+        accessors["RT_AntiMuonTight2"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSagainstMuonTight2).at(n);
+        };
+        accessors["RT_CombinedIsolationDeltaBetaCorrRaw"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSbyCombinedIsolationDeltaBetaCorrRaw).at(n);
+        };
+        accessors["RT_CombinedIsolationDeltaBetaCorrRaw3Hits"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSbyCombinedIsolationDeltaBetaCorrRaw3Hits).at(n);
+        };
+        accessors["RT_IsolationMVA2Raw"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSbyIsolationMVA2raw).at(n);
+        };
+        accessors["RT_IsolationMVARaw"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSbyIsolationMVAraw).at(n);
+        };
+        accessors["RT_LooseCombinedIsolationDeltaBetaCorr"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSbyLooseCombinedIsolationDeltaBetaCorr).at(n);
+        };
+        accessors["RT_LooseCombinedIsolationDeltaBetaCorr3Hits"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSbyLooseCombinedIsolationDeltaBetaCorr3Hits).at(n);
+        };
+        accessors["RT_LooseIsolationMVA"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSbyLooseIsolationMVA).at(n);
+        };
+        accessors["RT_LooseIsolationMVA2"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSbyLooseIsolationMVA2).at(n);
+        };
+        accessors["RT_MediumCombinedIsolationDeltaBetaCorr"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSbyMediumCombinedIsolationDeltaBetaCorr).at(n);
+        };
+        accessors["RT_MediumCombinedIsolationDeltaBetaCorr3Hits"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSbyMediumCombinedIsolationDeltaBetaCorr3Hits).at(n);
+        };
+        accessors["RT_MediumIsolationMVA"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSbyMediumIsolationMVA).at(n);
+        };
+        accessors["RT_MediumIsolationMVA2"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSbyMediumIsolationMVA2).at(n);
+        };
+        accessors["RT_TightCombinedIsolationDeltaBetaCorr"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSbyTightCombinedIsolationDeltaBetaCorr).at(n);
+        };
+        accessors["RT_TightCombinedIsolationDeltaBetaCorr3Hits"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSbyTightCombinedIsolationDeltaBetaCorr3Hits).at(n);
+        };
+        accessors["RT_TightIsolationMVA"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSbyTightIsolationMVA).at(n);
+        };
+        accessors["RT_TightIsolationMVA2"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSbyTightIsolationMVA2).at(n);
+        };
+        accessors["RT_VLooseCombinedIsolationDeltaBetaCorr"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSbyVLooseCombinedIsolationDeltaBetaCorr).at(n);
+        };
+        accessors["RT_DecayModeFinding"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_HPSdecayModeFinding).at(n);
+        };
+        accessors["RT_IsInTheCracks"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_IsInTheCracks).at(n);
+        };
+        accessors["RT_JetCSV"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_JetCSV).at(n);
+        };
+        accessors["RT_LTIpVtdxy"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_LTIpVtdxy).at(n);
+        };
+        accessors["RT_LTIpVtdxyError"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_LTIpVtdxyError).at(n);
+        };
+        accessors["RT_LTIpVtdz"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_LTIpVtdz).at(n);
+        };
+        accessors["RT_LTIpVtdzError"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_LTIpVtdzError).at(n);
+        };
+        accessors["RT_LTNormChiSqrd"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_LTNormChiSqrd).at(n);
+        };
+        accessors["RT_LTPt"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_LTPt).at(n);
+        };
+        accessors["RT_LTValidHits"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_LTValidHits).at(n);
+        };
+        accessors["RT_LTvalid"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_LTvalid).at(n);
+        };
+        accessors["RT_LTvx"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_LTvx).at(n);
+        };
+        accessors["RT_LTvy"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_LTvy).at(n);
+        };
+        accessors["RT_LTvz"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_LTvz).at(n);
+        };
+        accessors["RT_MomentumRank"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_MomentumRank).at(n);
+        };
+        accessors["RT_NumProngs"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_NProngs).at(n);
+        };
+        accessors["RT_NumSignalGammas"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_NSignalGammas).at(n);
+        };
+        accessors["RT_NumSignalNeutrals"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_NSignalNeutrals).at(n);
+        };
+        accessors["RT_Pt"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_P).at(n).pt();
+        };
+        accessors["RT_Eta"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_P).at(n).eta();
+        };
+        accessors["RT_Phi"] = [](Branches *b, int idx, int n) -> float {
+            return (*b->RT_P).at(n).phi();
         };
         accessors["T1_Charge"] = [](Branches *b, int idx, int n) -> float {
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {

@@ -449,7 +449,7 @@ for accessor in sorted(type_info.keys()):
     try:
         tmp_lines = []
 
-        if not accessor.startswith("J_") and not accessor.startswith("G"):
+        if not accessor.startswith("J_") and not accessor.startswith("G") and not accessor.startswith("R"):
             # combo variables
             if 'LorentzVector' in cls:
                 for q in ('Pt', 'Eta', 'Phi'):
