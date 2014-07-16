@@ -773,33 +773,9 @@ namespace roast {
             }
             throw;
         };
-        accessors["T1J_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(n));
-            }
-            throw;
-        };
-        accessors["T1J_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(n)).M();
-            }
-            throw;
-        };
         accessors["T1LJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->T1_P)[idx].phi() - (*e->J_P)[idx].at(0).phi());
-            }
-            throw;
-        };
-        accessors["T1LJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(0));
-            }
-            throw;
-        };
-        accessors["T1LJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(0)).M();
             }
             throw;
         };
@@ -809,51 +785,15 @@ namespace roast {
             }
             throw;
         };
-        accessors["T1SubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(1));
-            }
-            throw;
-        };
-        accessors["T1SubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(1)).M();
-            }
-            throw;
-        };
         accessors["T1SubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->T1_P)[idx].phi() - (*e->J_P)[idx].at(2).phi());
             }
             throw;
         };
-        accessors["T1SubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(2));
-            }
-            throw;
-        };
-        accessors["T1SubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(2)).M();
-            }
-            throw;
-        };
         accessors["T1SubSubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->T1_P)[idx].phi() - (*e->J_P)[idx].at(3).phi());
-            }
-            throw;
-        };
-        accessors["T1SubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(3));
-            }
-            throw;
-        };
-        accessors["T1SubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(3)).M();
             }
             throw;
         };
@@ -864,38 +804,10 @@ namespace roast {
             }
             throw;
         };
-        accessors["T1TaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["T1TaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["T1TaggedLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->T1_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["T1TaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["T1TaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -906,38 +818,10 @@ namespace roast {
             }
             throw;
         };
-        accessors["T1TaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["T1TaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["T1TaggedSubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->T1_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["T1TaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["T1TaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -948,38 +832,10 @@ namespace roast {
             }
             throw;
         };
-        accessors["T1TaggedSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["T1TaggedSubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["T1UntaggedJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->T1_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["T1UntaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["T1UntaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -990,38 +846,10 @@ namespace roast {
             }
             throw;
         };
-        accessors["T1UntaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["T1UntaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["T1UntaggedSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->T1_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["T1UntaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["T1UntaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -1032,20 +860,6 @@ namespace roast {
             }
             throw;
         };
-        accessors["T1UntaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["T1UntaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["T1UntaggedSubSubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
@@ -1053,10 +867,196 @@ namespace roast {
             }
             throw;
         };
+        accessors["T1J_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(n));
+            }
+            throw;
+        };
+        accessors["T1LJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(0));
+            }
+            throw;
+        };
+        accessors["T1SubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(1));
+            }
+            throw;
+        };
+        accessors["T1SubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(2));
+            }
+            throw;
+        };
+        accessors["T1SubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(3));
+            }
+            throw;
+        };
+        accessors["T1TaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["T1TaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["T1TaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["T1TaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["T1TaggedSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["T1UntaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["T1UntaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["T1UntaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["T1UntaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
         accessors["T1UntaggedSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return reco::deltaR((*e->T1_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["T1J_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(n)).M();
+            }
+            throw;
+        };
+        accessors["T1LJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(0)).M();
+            }
+            throw;
+        };
+        accessors["T1SubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(1)).M();
+            }
+            throw;
+        };
+        accessors["T1SubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(2)).M();
+            }
+            throw;
+        };
+        accessors["T1SubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(3)).M();
+            }
+            throw;
+        };
+        accessors["T1TaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["T1TaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["T1TaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["T1TaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["T1TaggedSubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["T1UntaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["T1UntaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["T1UntaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["T1UntaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T1_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -1103,33 +1103,9 @@ namespace roast {
             }
             throw;
         };
-        accessors["T2J_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(n));
-            }
-            throw;
-        };
-        accessors["T2J_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(n)).M();
-            }
-            throw;
-        };
         accessors["T2LJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->T2_P)[idx].phi() - (*e->J_P)[idx].at(0).phi());
-            }
-            throw;
-        };
-        accessors["T2LJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(0));
-            }
-            throw;
-        };
-        accessors["T2LJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(0)).M();
             }
             throw;
         };
@@ -1139,51 +1115,15 @@ namespace roast {
             }
             throw;
         };
-        accessors["T2SubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(1));
-            }
-            throw;
-        };
-        accessors["T2SubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(1)).M();
-            }
-            throw;
-        };
         accessors["T2SubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->T2_P)[idx].phi() - (*e->J_P)[idx].at(2).phi());
             }
             throw;
         };
-        accessors["T2SubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(2));
-            }
-            throw;
-        };
-        accessors["T2SubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(2)).M();
-            }
-            throw;
-        };
         accessors["T2SubSubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->T2_P)[idx].phi() - (*e->J_P)[idx].at(3).phi());
-            }
-            throw;
-        };
-        accessors["T2SubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(3));
-            }
-            throw;
-        };
-        accessors["T2SubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(3)).M();
             }
             throw;
         };
@@ -1194,38 +1134,10 @@ namespace roast {
             }
             throw;
         };
-        accessors["T2TaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["T2TaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["T2TaggedLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->T2_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["T2TaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["T2TaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -1236,38 +1148,10 @@ namespace roast {
             }
             throw;
         };
-        accessors["T2TaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["T2TaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["T2TaggedSubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->T2_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["T2TaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["T2TaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -1278,38 +1162,10 @@ namespace roast {
             }
             throw;
         };
-        accessors["T2TaggedSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["T2TaggedSubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["T2UntaggedJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->T2_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["T2UntaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["T2UntaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -1320,38 +1176,10 @@ namespace roast {
             }
             throw;
         };
-        accessors["T2UntaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["T2UntaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["T2UntaggedSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->T2_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["T2UntaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["T2UntaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -1362,20 +1190,6 @@ namespace roast {
             }
             throw;
         };
-        accessors["T2UntaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["T2UntaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["T2UntaggedSubSubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
@@ -1383,10 +1197,196 @@ namespace roast {
             }
             throw;
         };
+        accessors["T2J_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(n));
+            }
+            throw;
+        };
+        accessors["T2LJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(0));
+            }
+            throw;
+        };
+        accessors["T2SubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(1));
+            }
+            throw;
+        };
+        accessors["T2SubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(2));
+            }
+            throw;
+        };
+        accessors["T2SubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(3));
+            }
+            throw;
+        };
+        accessors["T2TaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["T2TaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["T2TaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["T2TaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["T2TaggedSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["T2UntaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["T2UntaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["T2UntaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["T2UntaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
         accessors["T2UntaggedSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
             if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return reco::deltaR((*e->T2_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["T2J_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(n)).M();
+            }
+            throw;
+        };
+        accessors["T2LJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(0)).M();
+            }
+            throw;
+        };
+        accessors["T2SubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(1)).M();
+            }
+            throw;
+        };
+        accessors["T2SubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(2)).M();
+            }
+            throw;
+        };
+        accessors["T2SubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(3)).M();
+            }
+            throw;
+        };
+        accessors["T2TaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["T2TaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["T2TaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["T2TaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["T2TaggedSubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["T2UntaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["T2UntaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["T2UntaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["T2UntaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->T2_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -1485,43 +1485,11 @@ namespace roast {
             }
             throw;
         };
-        accessors["TJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(n));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(n));
-            }
-            throw;
-        };
-        accessors["TJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(n)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(n)).M();
-            }
-            throw;
-        };
         accessors["TLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
                 return cos((*e->T_P)[idx].phi() - (*e->J_P)[idx].at(0).phi());
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return cos((*e->T_P)[idx].phi() - (*e->J_P)[idx].at(0).phi());
-            }
-            throw;
-        };
-        accessors["TLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(0));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(0));
-            }
-            throw;
-        };
-        accessors["TLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(0)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(0)).M();
             }
             throw;
         };
@@ -1533,22 +1501,6 @@ namespace roast {
             }
             throw;
         };
-        accessors["TSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(1));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(1));
-            }
-            throw;
-        };
-        accessors["TSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(1)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(1)).M();
-            }
-            throw;
-        };
         accessors["TSubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
                 return cos((*e->T_P)[idx].phi() - (*e->J_P)[idx].at(2).phi());
@@ -1557,43 +1509,11 @@ namespace roast {
             }
             throw;
         };
-        accessors["TSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(2));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(2));
-            }
-            throw;
-        };
-        accessors["TSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(2)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(2)).M();
-            }
-            throw;
-        };
         accessors["TSubSubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
                 return cos((*e->T_P)[idx].phi() - (*e->J_P)[idx].at(3).phi());
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return cos((*e->T_P)[idx].phi() - (*e->J_P)[idx].at(3).phi());
-            }
-            throw;
-        };
-        accessors["TSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(3));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(3));
-            }
-            throw;
-        };
-        accessors["TSubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(3)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(3)).M();
             }
             throw;
         };
@@ -1606,48 +1526,12 @@ namespace roast {
             }
             throw;
         };
-        accessors["TTaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["TTaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["TTaggedLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
             if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
                 return cos((*e->T_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return cos((*e->T_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["TTaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["TTaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -1660,48 +1544,12 @@ namespace roast {
             }
             throw;
         };
-        accessors["TTaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["TTaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["TTaggedSubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
             if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
                 return cos((*e->T_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return cos((*e->T_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["TTaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["TTaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -1714,48 +1562,12 @@ namespace roast {
             }
             throw;
         };
-        accessors["TTaggedSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["TTaggedSubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["TUntaggedJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
             if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
                 return cos((*e->T_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return cos((*e->T_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["TUntaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["TUntaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -1768,48 +1580,12 @@ namespace roast {
             }
             throw;
         };
-        accessors["TUntaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["TUntaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["TUntaggedSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
             if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
                 return cos((*e->T_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return cos((*e->T_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["TUntaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["TUntaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -1822,24 +1598,6 @@ namespace roast {
             }
             throw;
         };
-        accessors["TUntaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["TUntaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["TUntaggedSubSubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
             if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
@@ -1849,12 +1607,254 @@ namespace roast {
             }
             throw;
         };
+        accessors["TJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(n));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(n));
+            }
+            throw;
+        };
+        accessors["TLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(0));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(0));
+            }
+            throw;
+        };
+        accessors["TSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(1));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(1));
+            }
+            throw;
+        };
+        accessors["TSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(2));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(2));
+            }
+            throw;
+        };
+        accessors["TSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(3));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(3));
+            }
+            throw;
+        };
+        accessors["TTaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["TTaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["TTaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["TTaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["TTaggedSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["TUntaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["TUntaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["TUntaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["TUntaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
         accessors["TUntaggedSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
             if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
                 return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return reco::deltaR((*e->T_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["TJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(n)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(n)).M();
+            }
+            throw;
+        };
+        accessors["TLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(0)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(0)).M();
+            }
+            throw;
+        };
+        accessors["TSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(1)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(1)).M();
+            }
+            throw;
+        };
+        accessors["TSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(2)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(2)).M();
+            }
+            throw;
+        };
+        accessors["TSubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(3)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(3)).M();
+            }
+            throw;
+        };
+        accessors["TTaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["TTaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["TTaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["TTaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["TTaggedSubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["TUntaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["TUntaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["TUntaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["TUntaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->T_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -1915,43 +1915,11 @@ namespace roast {
             }
             throw;
         };
-        accessors["L1J_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(n));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(n));
-            }
-            throw;
-        };
-        accessors["L1J_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(n)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(n)).M();
-            }
-            throw;
-        };
         accessors["L1LJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return cos((*e->L1_P)[idx].phi() - (*e->J_P)[idx].at(0).phi());
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return cos((*e->L1_P)[idx].phi() - (*e->J_P)[idx].at(0).phi());
-            }
-            throw;
-        };
-        accessors["L1LJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(0));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(0));
-            }
-            throw;
-        };
-        accessors["L1LJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(0)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(0)).M();
             }
             throw;
         };
@@ -1963,22 +1931,6 @@ namespace roast {
             }
             throw;
         };
-        accessors["L1SubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(1));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(1));
-            }
-            throw;
-        };
-        accessors["L1SubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(1)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(1)).M();
-            }
-            throw;
-        };
         accessors["L1SubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return cos((*e->L1_P)[idx].phi() - (*e->J_P)[idx].at(2).phi());
@@ -1987,43 +1939,11 @@ namespace roast {
             }
             throw;
         };
-        accessors["L1SubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(2));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(2));
-            }
-            throw;
-        };
-        accessors["L1SubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(2)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(2)).M();
-            }
-            throw;
-        };
         accessors["L1SubSubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return cos((*e->L1_P)[idx].phi() - (*e->J_P)[idx].at(3).phi());
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return cos((*e->L1_P)[idx].phi() - (*e->J_P)[idx].at(3).phi());
-            }
-            throw;
-        };
-        accessors["L1SubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(3));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(3));
-            }
-            throw;
-        };
-        accessors["L1SubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(3)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(3)).M();
             }
             throw;
         };
@@ -2036,48 +1956,12 @@ namespace roast {
             }
             throw;
         };
-        accessors["L1TaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["L1TaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["L1TaggedLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return cos((*e->L1_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return cos((*e->L1_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["L1TaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["L1TaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -2090,48 +1974,12 @@ namespace roast {
             }
             throw;
         };
-        accessors["L1TaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["L1TaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["L1TaggedSubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return cos((*e->L1_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return cos((*e->L1_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["L1TaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["L1TaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -2144,48 +1992,12 @@ namespace roast {
             }
             throw;
         };
-        accessors["L1TaggedSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["L1TaggedSubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["L1UntaggedJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return cos((*e->L1_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return cos((*e->L1_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["L1UntaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["L1UntaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -2198,48 +2010,12 @@ namespace roast {
             }
             throw;
         };
-        accessors["L1UntaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["L1UntaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["L1UntaggedSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return cos((*e->L1_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return cos((*e->L1_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["L1UntaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["L1UntaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -2252,24 +2028,6 @@ namespace roast {
             }
             throw;
         };
-        accessors["L1UntaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["L1UntaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["L1UntaggedSubSubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
@@ -2279,12 +2037,254 @@ namespace roast {
             }
             throw;
         };
+        accessors["L1J_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(n));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(n));
+            }
+            throw;
+        };
+        accessors["L1LJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(0));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(0));
+            }
+            throw;
+        };
+        accessors["L1SubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(1));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(1));
+            }
+            throw;
+        };
+        accessors["L1SubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(2));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(2));
+            }
+            throw;
+        };
+        accessors["L1SubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(3));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(3));
+            }
+            throw;
+        };
+        accessors["L1TaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["L1TaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["L1TaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["L1TaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["L1TaggedSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["L1UntaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["L1UntaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["L1UntaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["L1UntaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
         accessors["L1UntaggedSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return reco::deltaR((*e->L1_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["L1J_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(n)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(n)).M();
+            }
+            throw;
+        };
+        accessors["L1LJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(0)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(0)).M();
+            }
+            throw;
+        };
+        accessors["L1SubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(1)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(1)).M();
+            }
+            throw;
+        };
+        accessors["L1SubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(2)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(2)).M();
+            }
+            throw;
+        };
+        accessors["L1SubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(3)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(3)).M();
+            }
+            throw;
+        };
+        accessors["L1TaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["L1TaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["L1TaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["L1TaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["L1TaggedSubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["L1UntaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["L1UntaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["L1UntaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["L1UntaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L1_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -2313,43 +2313,11 @@ namespace roast {
             }
             throw;
         };
-        accessors["L2J_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(n));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(n));
-            }
-            throw;
-        };
-        accessors["L2J_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(n)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(n)).M();
-            }
-            throw;
-        };
         accessors["L2LJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return cos((*e->L2_P)[idx].phi() - (*e->J_P)[idx].at(0).phi());
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return cos((*e->L2_P)[idx].phi() - (*e->J_P)[idx].at(0).phi());
-            }
-            throw;
-        };
-        accessors["L2LJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(0));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(0));
-            }
-            throw;
-        };
-        accessors["L2LJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(0)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(0)).M();
             }
             throw;
         };
@@ -2361,22 +2329,6 @@ namespace roast {
             }
             throw;
         };
-        accessors["L2SubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(1));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(1));
-            }
-            throw;
-        };
-        accessors["L2SubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(1)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(1)).M();
-            }
-            throw;
-        };
         accessors["L2SubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return cos((*e->L2_P)[idx].phi() - (*e->J_P)[idx].at(2).phi());
@@ -2385,43 +2337,11 @@ namespace roast {
             }
             throw;
         };
-        accessors["L2SubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(2));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(2));
-            }
-            throw;
-        };
-        accessors["L2SubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(2)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(2)).M();
-            }
-            throw;
-        };
         accessors["L2SubSubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return cos((*e->L2_P)[idx].phi() - (*e->J_P)[idx].at(3).phi());
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return cos((*e->L2_P)[idx].phi() - (*e->J_P)[idx].at(3).phi());
-            }
-            throw;
-        };
-        accessors["L2SubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(3));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(3));
-            }
-            throw;
-        };
-        accessors["L2SubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(3)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(3)).M();
             }
             throw;
         };
@@ -2434,48 +2354,12 @@ namespace roast {
             }
             throw;
         };
-        accessors["L2TaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["L2TaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["L2TaggedLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return cos((*e->L2_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return cos((*e->L2_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["L2TaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["L2TaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -2488,48 +2372,12 @@ namespace roast {
             }
             throw;
         };
-        accessors["L2TaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["L2TaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["L2TaggedSubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return cos((*e->L2_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return cos((*e->L2_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["L2TaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["L2TaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -2542,48 +2390,12 @@ namespace roast {
             }
             throw;
         };
-        accessors["L2TaggedSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["L2TaggedSubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["L2UntaggedJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return cos((*e->L2_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return cos((*e->L2_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["L2UntaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["L2UntaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -2596,48 +2408,12 @@ namespace roast {
             }
             throw;
         };
-        accessors["L2UntaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["L2UntaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["L2UntaggedSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return cos((*e->L2_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return cos((*e->L2_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["L2UntaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["L2UntaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -2650,24 +2426,6 @@ namespace roast {
             }
             throw;
         };
-        accessors["L2UntaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["L2UntaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
-                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["L2UntaggedSubSubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
@@ -2677,12 +2435,254 @@ namespace roast {
             }
             throw;
         };
+        accessors["L2J_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(n));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(n));
+            }
+            throw;
+        };
+        accessors["L2LJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(0));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(0));
+            }
+            throw;
+        };
+        accessors["L2SubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(1));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(1));
+            }
+            throw;
+        };
+        accessors["L2SubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(2));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(2));
+            }
+            throw;
+        };
+        accessors["L2SubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(3));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(3));
+            }
+            throw;
+        };
+        accessors["L2TaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["L2TaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["L2TaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["L2TaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["L2TaggedSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["L2UntaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["L2UntaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["L2UntaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["L2UntaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
         accessors["L2UntaggedSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
             if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
                 return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
             } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
                 return reco::deltaR((*e->L2_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["L2J_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(n)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(n)).M();
+            }
+            throw;
+        };
+        accessors["L2LJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(0)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(0)).M();
+            }
+            throw;
+        };
+        accessors["L2SubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(1)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(1)).M();
+            }
+            throw;
+        };
+        accessors["L2SubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(2)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(2)).M();
+            }
+            throw;
+        };
+        accessors["L2SubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(3)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(3)).M();
+            }
+            throw;
+        };
+        accessors["L2TaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["L2TaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["L2TaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["L2TaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["L2TaggedSubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["L2UntaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["L2UntaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["L2UntaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["L2UntaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (ll::Branches* e = dynamic_cast<ll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (tll::Branches* e = dynamic_cast<tll::Branches*>(b)) {
+                return ((*e->L2_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -2711,43 +2711,11 @@ namespace roast {
             }
             throw;
         };
-        accessors["LJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(n));
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(n));
-            }
-            throw;
-        };
-        accessors["LJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(n)).M();
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(n)).M();
-            }
-            throw;
-        };
         accessors["LLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
                 return cos((*e->L_P)[idx].phi() - (*e->J_P)[idx].at(0).phi());
             } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->L_P)[idx].phi() - (*e->J_P)[idx].at(0).phi());
-            }
-            throw;
-        };
-        accessors["LLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(0));
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(0));
-            }
-            throw;
-        };
-        accessors["LLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(0)).M();
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(0)).M();
             }
             throw;
         };
@@ -2759,22 +2727,6 @@ namespace roast {
             }
             throw;
         };
-        accessors["LSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(1));
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(1));
-            }
-            throw;
-        };
-        accessors["LSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(1)).M();
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(1)).M();
-            }
-            throw;
-        };
         accessors["LSubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
                 return cos((*e->L_P)[idx].phi() - (*e->J_P)[idx].at(2).phi());
@@ -2783,43 +2735,11 @@ namespace roast {
             }
             throw;
         };
-        accessors["LSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(2));
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(2));
-            }
-            throw;
-        };
-        accessors["LSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(2)).M();
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(2)).M();
-            }
-            throw;
-        };
         accessors["LSubSubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
                 return cos((*e->L_P)[idx].phi() - (*e->J_P)[idx].at(3).phi());
             } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->L_P)[idx].phi() - (*e->J_P)[idx].at(3).phi());
-            }
-            throw;
-        };
-        accessors["LSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(3));
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(3));
-            }
-            throw;
-        };
-        accessors["LSubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(3)).M();
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(3)).M();
             }
             throw;
         };
@@ -2832,48 +2752,12 @@ namespace roast {
             }
             throw;
         };
-        accessors["LTaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["LTaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["LTaggedLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
             if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
                 return cos((*e->L_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
             } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->L_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["LTaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["LTaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -2886,48 +2770,12 @@ namespace roast {
             }
             throw;
         };
-        accessors["LTaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["LTaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["LTaggedSubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
             if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
                 return cos((*e->L_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
             } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->L_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["LTaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["LTaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -2940,48 +2788,12 @@ namespace roast {
             }
             throw;
         };
-        accessors["LTaggedSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["LTaggedSubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["LUntaggedJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
             if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
                 return cos((*e->L_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
             } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->L_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["LUntaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["LUntaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -2994,48 +2806,12 @@ namespace roast {
             }
             throw;
         };
-        accessors["LUntaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["LUntaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["LUntaggedSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
             if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
                 return cos((*e->L_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
             } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return cos((*e->L_P)[idx].phi() - (*e->J_P)[idx].at(i).phi());
-            }
-            throw;
-        };
-        accessors["LUntaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["LUntaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };
@@ -3048,24 +2824,6 @@ namespace roast {
             }
             throw;
         };
-        accessors["LUntaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
-            }
-            throw;
-        };
-        accessors["LUntaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
-            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
-            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
-                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
-            }
-            throw;
-        };
         accessors["LUntaggedSubSubSubLJ_CosDeltaPhi"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
             if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
@@ -3075,12 +2833,254 @@ namespace roast {
             }
             throw;
         };
+        accessors["LJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(n));
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(n));
+            }
+            throw;
+        };
+        accessors["LLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(0));
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(0));
+            }
+            throw;
+        };
+        accessors["LSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(1));
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(1));
+            }
+            throw;
+        };
+        accessors["LSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(2));
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(2));
+            }
+            throw;
+        };
+        accessors["LSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(3));
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(3));
+            }
+            throw;
+        };
+        accessors["LTaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["LTaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["LTaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["LTaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["LTaggedSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["LUntaggedJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["LUntaggedLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["LUntaggedSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["LUntaggedSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
         accessors["LUntaggedSubSubSubLJ_DeltaR"] = [](Branches *b, int idx, int n) -> float {
             int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
             if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
                 return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
             } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
                 return reco::deltaR((*e->L_P)[idx], (*e->J_P)[idx].at(i));
+            }
+            throw;
+        };
+        accessors["LJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(n)).M();
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(n)).M();
+            }
+            throw;
+        };
+        accessors["LLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(0)).M();
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(0)).M();
+            }
+            throw;
+        };
+        accessors["LSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(1)).M();
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(1)).M();
+            }
+            throw;
+        };
+        accessors["LSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(2)).M();
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(2)).M();
+            }
+            throw;
+        };
+        accessors["LSubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(3)).M();
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(3)).M();
+            }
+            throw;
+        };
+        accessors["LTaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["LTaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["LTaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["LTaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["LTaggedSubSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_tag_index((*b->J_combSecVtxMediumBTag)[idx], 3);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["LUntaggedJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], n);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["LUntaggedLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 0);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["LUntaggedSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 1);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            }
+            throw;
+        };
+        accessors["LUntaggedSubSubLJ_VisibleMass"] = [](Branches *b, int idx, int n) -> float {
+            int i = get_untag_index((*b->J_combSecVtxMediumBTag)[idx], 2);
+            if (tl::Branches* e = dynamic_cast<tl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
+            } else if (ttl::Branches* e = dynamic_cast<ttl::Branches*>(b)) {
+                return ((*e->L_P)[idx] + (*e->J_P)[idx].at(i)).M();
             }
             throw;
         };

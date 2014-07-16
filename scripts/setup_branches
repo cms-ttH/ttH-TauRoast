@@ -247,6 +247,8 @@ for fn in sorted(fct_names.keys()):
 
 # Now turn to branches
 def generate_return_line(name, chans, cls="", method=None, expr=False, safe=False, subidx='n', idx='idx'):
+    if name.endswith('Id'):
+        print name
     cnt = cls.count('vector')
 
     if cnt not in returns:
@@ -276,7 +278,51 @@ def generate_return_line(name, chans, cls="", method=None, expr=False, safe=Fals
             lines.append(cast_template.format(chan.lower(), res.format('e', name, idx, subidx)))
         return " else ".join(lines) + throw_template
 
+def generate_accessor(accessor, varname, chans, cls="", **kwargs):
+    lines = []
+    lines.append(indent * 2 + declare.format(accessor))
+    lines.append(indent * 3
+        + generate_return_line(varname, chans, cls, **kwargs)
+        + '\n')
+    lines.append(indent * 2 + '};\n')
+    return lines
+
 jets = 'LJ SubLJ SubSubLJ SubSubSubLJ'.split()
+def generate_jet_accessors(accessor, varname, chans, cls="", trafo=lambda l, a: l + a, **kwargs):
+    lines = []
+
+    for (label, index_statement) in reindex:
+        lines.append(indent * 2 + declare.format(trafo(label, accessor)))
+
+        if index_statement:
+            lines.append(indent * 3 + index_statement.format('n'))
+            subidx = 'i'
+        else:
+            subidx = 'n'
+
+        lines.append(indent * 3
+                + generate_return_line(
+                    varname, chans, cls, subidx=subidx, safe=True, **kwargs)
+                + '\n')
+        lines.append(indent * 2 + '};\n')
+
+        # leading jet etc.
+        for (n, j) in enumerate(jets):
+            new_key = trafo(label, accessor.replace('J', j))
+            lines.append(indent * 2 + declare.format(new_key))
+
+            if index_statement:
+                lines.append(indent * 3 + index_statement.format(n))
+                subidx = 'i'
+            else:
+                subidx = str(n)
+
+            lines.append(indent * 3
+                    + generate_return_line(
+                        varname, chans, cls, subidx=subidx, safe=True, **kwargs)
+                    + '\n')
+            lines.append(indent * 2 + '};\n')
+    return lines
 
 p4s = []
 # order matters!  MET and jets have to be at the end!
@@ -284,14 +330,10 @@ for fun in map(partial(partial, re.match), ('T\d*_P$', 'L\d*_P$', 'MET_P$', 'J_P
     p4s += sorted([(var, type_info[var][0]) for var in type_info if fun(var)], key=lambda xs: xs[0])
 
 for (p4, chans) in filter(lambda (p, cs): p.startswith('L') or p.startswith('T'), p4s):
-    lines.append(indent * 2 + declare.format(p4[:-2] + '_Mt'))
-    lines.append(indent * 3
-            + generate_return_line(
-                ('return sqrt(2 * (*{{0}}->{0})[idx].pt() * (*{{0}}->MET_P)[idx].pt() * '
-                    + '(1 - cos((*{{0}}->{0})[idx].phi() - (*{{0}}->MET_P)[idx].phi())));').format(p4),
-                chans, expr=True)
-            + '\n')
-    lines.append(indent * 2 + '};\n')
+    lines += generate_accessor(p4[:-2] + '_Mt',
+            ('return sqrt(2 * (*{{0}}->{0})[idx].pt() * (*{{0}}->MET_P)[idx].pt() * '
+                + '(1 - cos((*{{0}}->{0})[idx].phi() - (*{{0}}->MET_P)[idx].phi())));').format(p4),
+            chans, expr=True)
 
 for ((p1, cs1), (p2, cs2)) in combinations(p4s, 2):
     chans = cs1.intersection(cs2)
@@ -300,123 +342,40 @@ for ((p1, cs1), (p2, cs2)) in combinations(p4s, 2):
         continue
 
     if p2 == 'J_P':
-        # jets {{{1
-        for (label, index_statement) in reindex:
-            accessor = p1[:-2] + label + p2[:-2]
+        lines += generate_jet_accessors(p2[:-2] + '_CosDeltaPhi',
+                'return cos((*{{0}}->{0})[idx].phi() - (*{{0}}->{1})[idx].at({{3}}).phi());'.format(p1, p2),
+                chans, expr=True, trafo=lambda l, a: p1[:-2] + l + a)
 
-            if index_statement:
-                addlines = [indent * 3 + index_statement.format('n')]
-                subidx = 'i'
-            else:
-                addlines = []
-                subidx = 'n'
+        if p1 != 'MET_P':
+            lines += generate_jet_accessors(p2[:-2] + '_DeltaR',
+                    'return reco::deltaR((*{{0}}->{0})[idx], (*{{0}}->{1})[idx].at({{3}}));'.format(p1, p2),
+                    chans, expr=True, trafo=lambda l, a: p1[:-2] + l + a)
 
-            lines.append(indent * 2 + declare.format(accessor + '_CosDeltaPhi'))
-            lines += addlines
-            lines.append(indent * 3
-                    + generate_return_line(
-                        'return cos((*{{0}}->{0})[idx].phi() - (*{{0}}->{1})[idx].at({2}).phi());'.format(p1, p2, subidx),
-                        chans, expr=True)
-                    + '\n')
-            lines.append(indent * 2 + '};\n')
-
-            if p1 != 'MET_P':
-                lines.append(indent * 2 + declare.format(accessor + '_DeltaR'))
-                lines += addlines
-                lines.append(indent * 3
-                        + generate_return_line(
-                            'return reco::deltaR((*{{0}}->{0})[idx], (*{{0}}->{1})[idx].at({2}));'.format(p1, p2, subidx),
-                            chans, expr=True)
-                        + '\n')
-                lines.append(indent * 2 + '};\n')
-
-                lines.append(indent * 2 + declare.format(accessor + '_VisibleMass'))
-                lines += addlines
-                lines.append(indent * 3
-                        + generate_return_line(
-                            'return ((*{{0}}->{0})[idx] + (*{{0}}->{1})[idx].at({2})).M();'.format(p1, p2, subidx),
-                            chans, expr=True)
-                        + '\n')
-                lines.append(indent * 2 + '};\n')
-
-            # leading jet etc {{{2
-            for (n, j) in enumerate(jets):
-                new_key = accessor.replace('J', j)
-
-                if index_statement:
-                    addlines = [indent * 3 + index_statement.format(n)]
-                    subidx = 'i'
-                else:
-                    addlines = []
-                    subidx = str(n)
-
-                lines.append(indent * 2 + declare.format(new_key + '_CosDeltaPhi'))
-                lines += addlines
-                lines.append(indent * 3
-                        + generate_return_line(
-                            'return cos((*{{0}}->{0})[idx].phi() - (*{{0}}->{1})[idx].at({2}).phi());'.format(p1, p2, subidx),
-                            chans, expr=True)
-                        + '\n')
-                lines.append(indent * 2 + '};\n')
-
-                if p1 != 'MET_P':
-                    lines.append(indent * 2 + declare.format(new_key + '_DeltaR'))
-                    lines += addlines
-                    lines.append(indent * 3
-                            + generate_return_line(
-                                'return reco::deltaR((*{{0}}->{0})[idx], (*{{0}}->{1})[idx].at({2}));'.format(p1, p2, subidx),
-                                chans, expr=True)
-                            + '\n')
-                    lines.append(indent * 2 + '};\n')
-
-                    lines.append(indent * 2 + declare.format(new_key + '_VisibleMass'))
-                    lines += addlines
-                    lines.append(indent * 3
-                            + generate_return_line(
-                                'return ((*{{0}}->{0})[idx] + (*{{0}}->{1})[idx].at({2})).M();'.format(p1, p2, subidx),
-                                chans, expr=True)
-                            + '\n')
-                    lines.append(indent * 2 + '};\n')
-            # }}}2
-        # }}}1
+            lines += generate_jet_accessors(p2[:-2] + '_VisibleMass',
+                    'return ((*{{0}}->{0})[idx] + (*{{0}}->{1})[idx].at({{3}})).M();'.format(p1, p2),
+                    chans, expr=True, trafo=lambda l, a: p1[:-2] + l + a)
     else:
         if p1[0] == p2[0]:
             accessor = p1[0] + p2[0]
         else:
             accessor = p1[:-2] + p2[:-2]
 
-        lines.append(indent * 2 + declare.format(accessor + '_CosDeltaPhi'))
-        lines.append(indent * 3
-                + generate_return_line(
-                    'return cos((*{{0}}->{0})[idx].phi() - (*{{0}}->{1})[idx].phi());'.format(p1, p2),
-                    chans, expr=True)
-                + '\n')
-        lines.append(indent * 2 + '};\n')
+        lines += generate_accessor(accessor + '_CosDeltaPhi',
+                'return cos((*{{0}}->{0})[idx].phi() - (*{{0}}->{1})[idx].phi());'.format(p1, p2),
+                chans, expr=True)
 
         if p2 != 'MET_P':
-            lines.append(indent * 2 + declare.format(accessor + '_DeltaR'))
-            lines.append(indent * 3
-                    + generate_return_line(
-                        'return reco::deltaR((*{{0}}->{0})[idx], (*{{0}}->{1})[idx]);'.format(p1, p2),
-                        chans, expr=True)
-                    + '\n')
-            lines.append(indent * 2 + '};\n')
+            lines += generate_accessor(accessor + '_DeltaR',
+                    'return reco::deltaR((*{{0}}->{0})[idx], (*{{0}}->{1})[idx]);'.format(p1, p2),
+                    chans, expr=True)
 
-            lines.append(indent * 2 + declare.format(accessor + '_VisibleMass'))
-            lines.append(indent * 3
-                    + generate_return_line(
-                        'return ((*{{0}}->{0})[idx] + (*{{0}}->{1})[idx]).M();'.format(p1, p2),
-                        chans, expr=True)
-                    + '\n')
-            lines.append(indent * 2 + '};\n')
+            lines += generate_accessor(accessor + '_VisibleMass',
+                    'return ((*{{0}}->{0})[idx] + (*{{0}}->{1})[idx]).M();'.format(p1, p2),
+                    chans, expr=True)
 
-            lines.append(indent * 2 + declare.format(accessor + '_Pt'))
-            lines.append(indent * 3
-                    + generate_return_line(
-                        'return ((*{{0}}->{0})[idx] + (*{{0}}->{1})[idx]).Pt();'.format(p1, p2),
-                        chans, expr=True)
-                    + '\n')
-            lines.append(indent * 2 + '};\n')
+            lines += generate_accessor(accessor + '_Pt',
+                    'return ((*{{0}}->{0})[idx] + (*{{0}}->{1})[idx]).Pt();'.format(p1, p2),
+                    chans, expr=True)
 
 for accessor in sorted(type_info.keys()):
     (chans, cls, ptr) = type_info[accessor]
@@ -447,112 +406,34 @@ for accessor in sorted(type_info.keys()):
         # continue
 
     try:
-        tmp_lines = []
-
         if not accessor.startswith("J_") and not accessor.startswith("G") and not accessor.startswith("R"):
             # combo variables
             if 'LorentzVector' in cls:
                 for q in ('Pt', 'Eta', 'Phi'):
-                    lines.append(indent * 2 + declare.format(accessor[:-1] + q))
-                    lines.append(indent * 3
-                        + generate_return_line(var, chans, cls, method=q.lower())
-                        + '\n')
-                    lines.append(indent * 2 + '};\n')
-                continue
+                    lines += generate_accessor(accessor[:-1] + q, var, chans, cls, method=q.lower())
             else:
-                tmp_lines.append(indent * 2 + declare.format(accessor))
-                tmp_lines.append(indent * 3 + generate_return_line(var, chans, cls) + '\n')
+                lines += generate_accessor(accessor, var, chans, cls)
         elif not accessor.startswith("J_"):
             # gen-info variables
             if 'LorentzVector' in cls:
                 for q in ('Pt', 'Eta', 'Phi'):
-                    lines.append(indent * 2 + declare.format(accessor[:-1] + q))
-                    lines.append(indent * 3
-                        + generate_return_line(var, chans, cls, idx='n', safe='True', method=q.lower())
-                        + '\n')
-                    lines.append(indent * 2 + '};\n')
-                continue
+                    lines += generate_accessor(accessor[:-1] + q, var, chans, cls, idx='n', safe=True, method=q.lower())
             else:
-                tmp_lines.append(indent * 2 + declare.format(accessor))
-                tmp_lines.append(indent * 3 + generate_return_line(var, chans, cls, idx='n', safe=True) + '\n')
+                lines += generate_accessor(accessor, var, chans, cls, idx='n', safe=True)
         elif 'LorentzVector' in cls:
             for q in ('Pt', 'Eta', 'Phi'):
-                for (label, index_statement) in reindex:
-                    lines.append(indent * 2 + declare.format(label + accessor[:-1] + q))
-
-                    if index_statement:
-                        lines.append(indent * 3 + index_statement.format('n'))
-                        subidx = 'i'
-                    else:
-                        subidx = 'n'
-
-                    lines.append(indent * 3
-                            + generate_return_line(
-                                var, chans, cls, method=q.lower(),
-                                subidx=subidx, safe=True)
-                            + '\n')
-                    lines.append(indent * 2 + '};\n')
-
-                    # leading jet etc.
-                    for (n, j) in enumerate(jets):
-                        new_key = label + accessor.replace('J', j)[:-1] + q
-                        lines.append(indent * 2 + declare.format(new_key))
-
-                        if index_statement:
-                            lines.append(indent * 3 + index_statement.format(n))
-                            subidx = 'i'
-                        else:
-                            subidx = str(n)
-
-                        lines.append(indent * 3
-                                + generate_return_line(
-                                    var, chans, cls, method=q.lower(),
-                                    subidx=subidx, safe=True)
-                                + '\n')
-                        lines.append(indent * 2 + '};\n')
-            continue
+                lines += generate_jet_accessors(
+                        accessor[:-1] + q, var, chans, cls, method=q.lower())
         else:
             if var == 'J_combSecVtxBTag':
                 accessor = 'J_CSV'
             elif var == 'CSV' or 'BTag' in var or var == 'MomentumRank':
                 continue
 
-            jet_lines = []
-
-            tmp_lines.append(indent * 2 + declare.format(accessor))
-            tmp_lines.append(indent * 3 + generate_return_line(var, chans, cls) + '\n')
-
             if 'Num' not in var:
-                for (label, index_statement) in reindex:
-                    jet_lines.append(indent * 2 + declare.format(label + accessor))
+                lines += generate_jet_accessors(accessor, var, chans, cls)
 
-                    if index_statement:
-                        jet_lines.append(indent * 3 + index_statement.format('n'))
-                        subidx = 'i'
-                    else:
-                        subidx = 'n'
-
-                    jet_lines.append(indent * 3 + generate_return_line(var, chans, cls, subidx=subidx, safe=True) + '\n')
-                    jet_lines.append(indent * 2 + '};\n')
-
-                    # leading jet etc.
-                    for (n, j) in enumerate(jets):
-                        new_key = label + accessor.replace('J', j)
-                        jet_lines.append(indent * 2 + declare.format(new_key))
-
-                        if index_statement:
-                            jet_lines.append(indent * 3 + index_statement.format(n))
-                            subidx = 'i'
-                        else:
-                            subidx = str(n)
-
-                        jet_lines.append(indent * 3 + generate_return_line(var, chans, cls, subidx=subidx, safe=True) + '\n')
-                        jet_lines.append(indent * 2 + '};\n')
-                lines += jet_lines
-
-        tmp_lines.append(indent * 2 + '};\n')
-
-        lines += tmp_lines
+            lines += generate_accessor(accessor, var, chans, cls)
     except ValueError as e:
         print 'cannot associate {0} with a valid channel: {1}'.format(accessor, e)
         raise
