@@ -45,6 +45,10 @@ def analyze(config, module):
     for proc in config['analysis']['process']:
         cfg = config['processes'][proc]
 
+        if not cfg:
+            logging.error("cannot find configuration for '{0}'".format(proc))
+            continue
+
         # deal with non-physical processes later (combine them)
         if not 'ntuplePath' in cfg:
             continue
