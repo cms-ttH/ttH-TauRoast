@@ -154,7 +154,6 @@ namespace roast {
                 std::vector<bool>* T_HPSbyVLooseCombinedIsolationDeltaBetaCorr;
                 std::vector<bool>* T_HPSdecayModeFinding;
                 std::vector<bool>* T_IsInTheCracks;
-                std::vector<float>* T_JetCSV;
                 std::vector<float>* T_LTIpVtdxy;
                 std::vector<float>* T_LTIpVtdxyError;
                 std::vector<float>* T_LTIpVtdz;
