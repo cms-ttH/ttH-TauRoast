@@ -34,11 +34,12 @@ namespace roast {
             static std::map<std::string, MVABase*> gComboMVA;
 
             struct Get {
+                virtual ~Get() {};
                 virtual roast::Branches* Branches(const roast::Process*) = 0;
             };
 
             MVABase(const std::string&, const std::vector<roast::MVABase::Var>&, Get*, const int rnk=1);
-            ~MVABase();
+            virtual ~MVABase();
 
             void CreateTrainingSample(roast::Process*, const std::vector<roast::Process*>&);
             void CreateTrainingSample(roast::Process*);

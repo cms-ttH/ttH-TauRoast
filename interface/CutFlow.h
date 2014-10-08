@@ -33,6 +33,7 @@ namespace roast {
                 bool Check(Branches*, const int);
 
                 Cut(const std::string& n="", double ev=0.) : name(n), events_passed(ev), current_passed(false), immutable(false) {};
+                virtual ~Cut() {};
 
                 virtual Cut* Clone() { return new Cut(*this); };
                 virtual bool IsRelative() { return false; };
@@ -87,6 +88,7 @@ namespace roast {
 
             CutFlow() {};
             CutFlow(roast::CutFlow const &);
+            virtual ~CutFlow() {};
 
             void Reset();
             void RemoveCut(const std::string&);

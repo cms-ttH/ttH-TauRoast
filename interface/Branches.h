@@ -28,7 +28,7 @@ namespace roast {
         public:
             Branches();
             Branches(const std::vector<std::string>&);
-            ~Branches();
+            virtual ~Branches();
 
             bool IsCached(const std::string&) const;
             float GetCached(const std::string&) const;

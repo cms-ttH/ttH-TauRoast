@@ -7,6 +7,7 @@
 namespace roast {
     class Picker {
         public:
+            virtual ~Picker() {};
             virtual int Pick(Branches *, const std::vector<int>&) = 0;
             ClassDef(Picker, 1);
     };

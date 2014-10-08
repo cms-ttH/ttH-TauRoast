@@ -8,6 +8,7 @@
 namespace roast {
     class Splitter {
         public:
+            virtual ~Splitter() {};
             virtual bool Use(Branches*, int) = 0;
             ClassDef(Splitter, 1);
     };

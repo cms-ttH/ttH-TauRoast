@@ -18,6 +18,7 @@ namespace roast {
                 Event(const int& n, long r, long l, long e, const std::vector<int>& cs) : entry(n), run(r), lumi(l), event(e), combos(cs) {};
                 Event(const Event& e) : entry(e.entry), run(e.run), lumi(e.lumi), event(e.event), combos(e.combos) {};
                 Event() : entry(-1), run(-1), lumi(-1), event(-1), combos() {};
+                virtual ~Event() {};
 
                 int entry;
                 long run;
