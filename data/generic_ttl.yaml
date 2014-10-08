@@ -8,7 +8,7 @@ analysis:
     final mva:
         methods:
             BDTG: "!H:!V:NTrees=1000:BoostType=Grad:Shrinkage=0.10:UseBaggedGrad:GradBaggingFraction=0.5:nCuts=20:NNodesMax=5"
-        signal: TTHTauTau_125_real
+        signal: TTHTauTau_125_Hadronic
         background: [TTbar_Hadronic, TTbar_SemiLept, TTbar_FullLept]
         variables:
           - [T1_Pt, F]
@@ -19,8 +19,8 @@ analysis:
           - [T1_IsolationMVA2Raw, F]
           - [T2_IsolationMVA2Raw, F]
           - [T1L_DeltaR, F]
-          - [CleanLJ_Pt, F]
-          - [DitauVisibleMass, F]
+          - [LJ_Pt, F]
+          - [TT_VisibleMass, F]
 
     process:
       - Collisions
@@ -28,7 +28,7 @@ analysis:
       - EWK
       - SingleTop
       - ttWZ
-      - TTHTauTau_125_real
+      - TTHTauTau_125_Hadronic
       #  - TTH_110
       #  - TTH_115
       #  - TTH_120
@@ -59,11 +59,6 @@ physics:
       - [CSVeventWeight, nominal]
       - [brSF, nominal]
     cuts:
-      # reality
-      - T1_MatchAbsId = 15
-      - T2_MatchAbsId = 15
-      - T1_ParentAbsId = 25
-      - T2_ParentAbsId = 25
       # tops
       - 1 ≤ J_NumCleanCSVM ≤ 2
       - J_NumCleanInclusive ≥ 2
@@ -90,7 +85,7 @@ physics:
 
 paths:
     # root path, referenced by {root}
-    root: /afs/crc.nd.edu/user/m/mwolf3/www/ttH/v64/ttl
+    root: /afs/crc.nd.edu/user/m/mwolf3/www/ttH/test/ttl
     # for analyzed processes
     input: "{root}/roast_processed.root"
     # {s} is replaced with systematic shifts
@@ -103,7 +98,7 @@ paths:
     # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
     # name; {m} = mode (_log)
     stack format: "{root}/{t}/{d}/{n}{p}{m}.{t}"
-    ntuples: "/hadoop/users/matze/ttH/v64/2012/ttl_{p}/*_ntuple.root"
+    ntuples: "/hadoop/users/matze/ttH/v64.2/2012/ttl_{p}/*_ntuple.root"
 
 processes: !include processes.yaml
 histograms: !include histograms*.yaml
