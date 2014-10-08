@@ -2,26 +2,33 @@
 
 ## Installation
 
+First, create a CMSSW release and source the software environment:
+
+    export SCRAM_ARCH=slc6_amd64_gcc472
+    cmsrel CMSSW_5_3_21
+    cd CMSSW_5_3_21/src
+    cmsenv
+
 [PyYaml](http://pyyaml.org/wiki/PyYAML) and [pyparsing]() are pre-requisites.
-Install them locally after executing `cmsenv`:
+Install them locally after executing `cmsenv` using the python setuptools:
 
-    cd /tmp
-    wget -O - http://pyyaml.org/download/pyyaml/PyYAML-3.10.tar.gz|tar xzf -
-    cd PyYAML-3.10/
-    python setup.py install --user
-    cd ..
-    rm -rf PyYAML-3.10/
+    wget https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py -O - | python - --user
+    export PATH=$PATH:$HOME/.local/bin
+    easy_install --prefix ~/.local PyYAML pyparsing
 
-    wget -O - "http://downloads.sourceforge.net/project/pyparsing/pyparsing/pyparsing-2.0.1/pyparsing-2.0.1.tar.gz?r=&ts=1384527918&use_mirror=hivelocity"|tar xzf -
-    cd pyparsing-2.0.1/
-    python setup.py install --user
-    cd ..
-    rm -rf pyparsing-2.0.1/
+In case the last command fails, additional directories may have to be
+created with `mkdir -p`.
 
 Afterwards, clone this repository in the CMSSW source area:
 
-    mkdir -p ttH
     git clone https://github.com/cms-ttH/ttH-TauRoast.git ttH/TauRoast
+
+and add some CMS dependencies:
+
+    git clone git@github.com:veelken/SVfit_standalone.git TauAnalysis/SVfitStandalone
+
+then compile:
+
     scram b -j32
 
 ## Basic usage
@@ -30,9 +37,60 @@ Configuration files are stored in `ttH/TauRoast/data`,
 with `generic.yaml` being the main configuration file.
 Start a test analysis with:
 
-    roaster -atfpv -n 12345 $LOCALRT/src/ttH/TauRoast/data/generic.yaml
+    roaster -atfpvy -n 12345 $LOCALRT/src/ttH/TauRoast/data/generic_ttl.yaml
+
+**after changing relevant paths in the configuration file**.
+
+### Configuration
+
+All relevant setup is performed in `ttH/TauRoast/data/generic.yaml`.  A
+short rundown of the sections:
+
+#### Analysis
+
+Contains the analysis parameters.  Relevant are the sections `process` (a
+list of physics processes to analyze), `plot` (which processes to plot),
+`final mva` (contains the MVA used for limit setting).
+
+Available processes with their cross-section and other options can be found
+in `data/processes.yaml`.  Plots are defined in the files starting with
+`data/histograms`.
+
+#### Physics
+
+More parameters: `flags` is a list of weights to be used to make MC and
+data match up, while `cuts` specifies the requirements on an event to be
+considered.
+
+#### Paths
+
+Where things come from and go to.  The `root` is used to store all
+information about the analysis, including output plots.  The latter are
+specified by `stack format`.  Incoming data is found in `ntuples`.
+
+### Options
 
 See the full list of options with `roaster -h`.
+
+* `-a`: analyze the input data.  This saves pointers to which events
+  satisfy all requirements listed in `physics: cuts`.
+
+* `-t`: train the MVA for limit output histograms
+
+* `-f`: fill histograms of events passing `physics: cuts`
+
+* `-p`: save output histograms to disk
+
+* `-v`: be verbose.  Print more about the status of the analysis.
+
+* `-y`: give an overview of how many events passed each requirement in
+  `physics: cuts` and how the weights in `physics: flags` affects the event
+  yield.
+
+* `-n`: limit the analysis to at most the number of events specified.
+
+* `--list-vars`: list all variables that can be used in `physics: cuts` and
+  for plotting.
 
 ## Extending
 
