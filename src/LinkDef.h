@@ -13,6 +13,8 @@
 #include "../interface/TTLBranches.h"
 #include "../interface/Weight.h"
 
+#include "ttH/TauRoast/interface/SuperSlim.h"
+
 #ifdef __CINT__
 
 #pragma link off all globals;
@@ -80,5 +82,16 @@
 #pragma link C++ function roast::tl::fill(roast::Process&,  const std::vector<roast::Weight>&, void *, std::vector<roast::Splitter*>, roast::Picker*);
 #pragma link C++ function roast::tll::fill(roast::Process&,  const std::vector<roast::Weight>&, void *, std::vector<roast::Splitter*>, roast::Picker*);
 #pragma link C++ function roast::ttl::fill(roast::Process&, const std::vector<roast::Weight>&, void *, std::vector<roast::Splitter*>, roast::Picker*);
+
+#pragma link C++ namespace superslim;
+#pragma link C++ class superslim::PhysObject+;
+#pragma link C++ class superslim::Jet+;
+#pragma link C++ class superslim::Lepton+;
+#pragma link C++ class superslim::Tau+;
+#pragma link C++ class superslim::Combination+;
+#pragma link C++ class std::vector<superslim::Jet>+;
+#pragma link C++ class std::vector<superslim::Lepton>+;
+#pragma link C++ class std::vector<superslim::Tau>+;
+#pragma link C++ class std::vector<superslim::Combination>+;
 
 #endif
