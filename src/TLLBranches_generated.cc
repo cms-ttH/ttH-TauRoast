@@ -1,3 +1,4 @@
+#ifdef FOOBARBAD
 // vim: ts=4:sw=4:et:sta
 #include "../interface/TLLBranches.h"
 
@@ -586,3 +587,4 @@ tll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("T_P", &T_P);
     // >>> End address <<<
 }
+#endif

@@ -1,3 +1,4 @@
+#ifdef FOOBARBAD
 // vim: ts=4:sw=4:et:sta
 #include <iomanip>
 
@@ -218,3 +219,4 @@ Process::Add(Process* iProcess, bool same)
 
 ClassImp(roast::Process)
 ClassImp(roast::Process::Event)
+#endif

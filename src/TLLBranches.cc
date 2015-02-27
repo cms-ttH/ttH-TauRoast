@@ -1,3 +1,4 @@
+#ifdef FOOBARBAD
 // vim: ts=4:sw=4:et:sta
 #include "TFile.h"
 
@@ -98,3 +99,4 @@ unsigned int tll::Branches::GetTauAntiMuonIndex2(const unsigned int iCombo) cons
 }
 
 ClassImp(roast::tll::Branches)
+#endif

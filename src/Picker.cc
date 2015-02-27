@@ -1,3 +1,4 @@
+#ifdef FOOBARBAD
 // vim: ts=4:sw=4:et:sta
 
 #include <algorithm>
@@ -58,3 +59,4 @@ roast::tll::IsoPicker::Pick(roast::Branches *b, const std::vector<int>& idxs)
 ClassImp(roast::tl::IsoPicker)
 ClassImp(roast::tll::IsoPicker)
 ClassImp(roast::ttl::IsoPicker)
+#endif

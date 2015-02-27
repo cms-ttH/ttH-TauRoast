@@ -1,3 +1,4 @@
+#ifdef FOOBARBAD
 // vim: ts=4:sw=4:et:sta
 /*
     Author:			Nil Valls <nil.valls@cern.ch>, Matthias Wolf <matthias.wolf@cern.ch>
@@ -246,3 +247,4 @@ namespace roast {
 }
 
 ClassImp(roast::MVABase)
+#endif

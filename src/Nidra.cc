@@ -1,3 +1,4 @@
+#ifdef FOOBARBAD
 // vim: ts=4:sw=4:et:sta
 #include <fstream>
 #include <unordered_set>
@@ -311,3 +312,4 @@ namespace roast {
 }
 
 NamespaceImp(roast)
+#endif

@@ -1,3 +1,4 @@
+#ifdef FOOBARBAD
 // vim: ts=4:sw=4:et:sta
 #include "../interface/Branches.h"
 
@@ -474,3 +475,4 @@ Branches::SetBranchAddresses()
     fChain->SetBranchAddress("topPtWeightUp", &topPtWeightUp);
     // >>> End address <<<
 }
+#endif

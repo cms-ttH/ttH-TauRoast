@@ -1,3 +1,4 @@
+#ifdef FOOBARBAD
 // vim: ts=4:sw=4:et:sta
 #include "../interface/LLBranches.h"
 
@@ -270,3 +271,4 @@ ll::Branches::SetBranchAddresses()
     fChain->SetBranchAddress("L2_RelIso", &L2_RelIso);
     // >>> End address <<<
 }
+#endif

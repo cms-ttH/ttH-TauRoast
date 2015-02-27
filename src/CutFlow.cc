@@ -1,3 +1,4 @@
+#ifdef FOOBARBAD
 // vim: ts=4:sw=4:et:sta
 #include <limits>
 
@@ -251,3 +252,4 @@ ClassImp(roast::CutFlow::Cut)
 ClassImp(roast::CutFlow::RelativeCut)
 ClassImp(roast::CutFlow::ValueCut)
 ClassImp(roast::CutFlow::ComposedCut)
+#endif

@@ -1,3 +1,4 @@
+#ifdef FOOBARBAD
 // vim: ts=4:sw=4:et:sta
 /*
     Author:			Nil Valls <nil.valls@cern.ch>
@@ -149,3 +150,4 @@ Branches::GetCurrentFilename()
 }
 
 ClassImp(roast::Branches)
+#endif

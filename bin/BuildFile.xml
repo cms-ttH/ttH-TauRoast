@@ -1,4 +1,0 @@
-<bin name="radd" file="radd.cc">
-  <use name="root"/>
-  <use name="ttH/TauRoast"/>
-</bin>

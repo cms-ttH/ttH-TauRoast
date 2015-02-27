@@ -1,3 +1,4 @@
+#ifdef FOOBARBAD
 // vim: ts=4:sw=4:et:sta:foldmethod=marker
 
 #include <map>
@@ -6793,3 +6794,4 @@ namespace roast {
 }
 
 NamespaceImp(roast)
+#endif

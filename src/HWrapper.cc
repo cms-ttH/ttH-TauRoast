@@ -1,3 +1,4 @@
+#ifdef FOOBARBAD
 // vim: ts=4:sw=4:et:sta
 #include <iostream>
 
@@ -329,3 +330,4 @@ HWrapper::GetMaximumWithError() const
 }
 
 ClassImp(roast::HWrapper)
+#endif

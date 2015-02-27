@@ -1,3 +1,4 @@
+#ifdef FOOBARBAD
 // vim: ts=4:sw=4:et:sta
 #include <cmath>
 
@@ -215,3 +216,4 @@ namespace roast {
 }
 
 ClassImp(roast::Weight)
+#endif
