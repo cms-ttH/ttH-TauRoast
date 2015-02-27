@@ -104,6 +104,7 @@ class TauProcessor : public edm::EDAnalyzer {
 
       unsigned int min_jets_;
       unsigned int min_tags_;
+      unsigned int max_tags_;
       unsigned int min_leptons_;
       unsigned int min_tight_leptons_;
       unsigned int min_taus_;
@@ -124,6 +125,7 @@ class TauProcessor : public edm::EDAnalyzer {
 TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    min_jets_(config.getParameter<unsigned int>("minJets")),
    min_tags_(config.getParameter<unsigned int>("minTags")),
+   max_tags_(config.getParameter<unsigned int>("maxTags")),
    min_leptons_(config.getParameter<unsigned int>("minLeptons")),
    min_tight_leptons_(config.getParameter<unsigned int>("minTightLeptons")),
    min_taus_(config.getParameter<unsigned int>("minTaus")),
@@ -259,6 +261,9 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       auto selected_tags = helper_.GetSelectedJets(jets_no_taus, 30., 2.4, jetID::jetLoose, 'M');
 
       if (selected_jets.size() < min_jets_ or selected_tags.size() < min_tags_)
+         continue;
+
+      if (selected_tags.size() > max_tags_)
          continue;
 
       // ===============
