@@ -97,11 +97,20 @@ namespace superslim {
    class Event {
       public:
          Event() {};
-         Event(const std::vector<superslim::Combination>& cs, int npv, int ntv) : combos_(cs), npv_(npv), ntv_(ntv) {};
+         Event(const std::vector<superslim::Combination>& cs,
+               long run, long lumi, long event,
+               int npv, int ntv) :
+            combos_(cs),
+            run_(run), lumi_(lumi), event_(event),
+            npv_(npv), ntv_(ntv) {};
          virtual ~Event() {};
 
          const std::vector<superslim::Combination> combos() const { return combos_; };
          const std::map<std::string, float> weights() const { return weights_; };
+
+         long run() const { return run_; };
+         long lumi() const { return lumi_; };
+         long event() const { return event_; };
 
          // primary vertices
          int npv() const { return npv_; };
@@ -110,6 +119,10 @@ namespace superslim {
       private:
          std::vector<superslim::Combination> combos_;
          std::map<std::string, float> weights_;
+
+         long run_;
+         long lumi_;
+         long event_;
 
          int npv_;
          int ntv_;

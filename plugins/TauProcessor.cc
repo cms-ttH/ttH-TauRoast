@@ -316,7 +316,8 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
          }
       }
 
-      std::auto_ptr<superslim::Event> ptr(new superslim::Event(combos, npv, ntv));
+      std::auto_ptr<superslim::Event> ptr(new superslim::Event(
+               combos, event.id().run(), event.id().luminosityBlock(), event.id().event(), npv, ntv));
       event_ = ptr.get();
       tree_->Fill();
    }
