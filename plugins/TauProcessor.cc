@@ -33,6 +33,8 @@
 
 #include "FWCore/ServiceRegistry/interface/Service.h"
 
+#include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
+
 #include "MiniAOD/MiniAODHelper/interface/MiniAODHelper.h"
 #include "ttH/TauRoast/interface/SuperSlim.h"
 
@@ -111,16 +113,17 @@ class TauProcessor : public edm::EDAnalyzer {
       unsigned int min_tight_taus_;
 
       edm::EDGetTokenT<double> rho_token_;
+      edm::EDGetTokenT<std::vector<PileupSummaryInfo>> pu_token_;
       edm::EDGetTokenT<reco::VertexCollection> vertices_token_;
       edm::EDGetTokenT<pat::ElectronCollection> electrons_token_;
       edm::EDGetTokenT<pat::MuonCollection> muons_token_;
       edm::EDGetTokenT<pat::TauCollection> taus_token_;
       edm::EDGetTokenT<pat::JetCollection> ak4jets_token_;
-      edm::EDGetTokenT<reco::GenParticle> gen_token_;
+      edm::EDGetTokenT<reco::GenParticleCollection> gen_token_;
 
       TTree *tree_;
 
-      std::vector<superslim::Combination> combos_;
+      superslim::Event *event_;
 };
 
 TauProcessor::TauProcessor(const edm::ParameterSet& config) :
@@ -133,19 +136,20 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    min_tight_taus_(config.getParameter<unsigned int>("minTightTaus"))
 {
    rho_token_ = consumes<double>(edm::InputTag("fixedGridRhoFastjetAll"));
+   pu_token_ = consumes<std::vector<PileupSummaryInfo>>(edm::InputTag("addPileupInfo"));
    vertices_token_ = consumes<reco::VertexCollection>(edm::InputTag("offlineSlimmedPrimaryVertices"));
    electrons_token_ = consumes<pat::ElectronCollection>(edm::InputTag("slimmedElectrons"));
    muons_token_ = consumes<pat::MuonCollection>(edm::InputTag("slimmedMuons"));
    taus_token_ = consumes<pat::TauCollection>(edm::InputTag("slimmedTaus"));
    ak4jets_token_ = consumes<pat::JetCollection>(edm::InputTag("slimmedJets"));
-   gen_token_ = consumes<reco::GenParticle>(edm::InputTag("prunedGenParticles"));
+   gen_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("prunedGenParticles"));
 
    helper_.SetUp("2012_53x", 9120, analysisType::TauLJ, false);
    helper_.SetFactorizedJetCorrector();
 
    edm::Service<TFileService> fs;
    tree_ = fs->make<TTree>("events", "Event data");
-   tree_->Branch("Combinations", &combos_);
+   tree_->Branch("Event", &event_);
 }
 
 
@@ -175,9 +179,6 @@ void
 TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 {
    using namespace edm;
-
-   // don't overfill the tree
-   combos_.clear();
 
    auto vertices = get_collection(event, vertices_token_);
 
@@ -226,6 +227,8 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    // =========================
    // Tau combination selection
    // =========================
+
+   std::vector<superslim::Combination> combos;
 
    for (const std::vector<pat::Tau>& combo: build_permutations(raw_tau, min_taus_)) {
       auto loose_tau = helper_.GetSelectedTaus(combo, 20., tau::loose);
@@ -299,11 +302,24 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
          sjets.push_back(j);
       }
 
-      combos_.push_back(superslim::Combination(staus, sleptons, sjets));
+      combos.push_back(superslim::Combination(staus, sleptons, sjets));
    }
 
-   if (combos_.size() > 0)
+   if (combos.size() > 0) {
+      auto infos = get_collection(event, pu_token_);
+      int ntv = -1;
+
+      for (const auto& info: *infos) {
+         if (info.getBunchCrossing() == 0) {
+            ntv = info.getTrueNumInteractions();
+            break;
+         }
+      }
+
+      std::auto_ptr<superslim::Event> ptr(new superslim::Event(combos, npv, ntv));
+      event_ = ptr.get();
       tree_->Fill();
+   }
 }
 
 void 

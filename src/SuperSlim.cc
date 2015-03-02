@@ -89,3 +89,4 @@ ClassImp(superslim::Jet);
 ClassImp(superslim::Lepton);
 ClassImp(superslim::Tau);
 ClassImp(superslim::Combination);
+ClassImp(superslim::Event);

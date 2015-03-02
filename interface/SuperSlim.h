@@ -1,3 +1,4 @@
+#include <map>
 #include <vector>
 
 #include "Math/LorentzVector.h"
@@ -88,6 +89,31 @@ namespace superslim {
          std::vector<superslim::Lepton> leptons_;
          std::vector<superslim::Tau> taus_;
 
+         std::map<std::string, float> weights_;
+
          ClassDef(Combination, 1);
+   };
+
+   class Event {
+      public:
+         Event() {};
+         Event(const std::vector<superslim::Combination>& cs, int npv, int ntv) : combos_(cs), npv_(npv), ntv_(ntv) {};
+         virtual ~Event() {};
+
+         const std::vector<superslim::Combination> combos() const { return combos_; };
+         const std::map<std::string, float> weights() const { return weights_; };
+
+         // primary vertices
+         int npv() const { return npv_; };
+         // true vertices
+         int ntv() const { return ntv_; };
+      private:
+         std::vector<superslim::Combination> combos_;
+         std::map<std::string, float> weights_;
+
+         int npv_;
+         int ntv_;
+
+         ClassDef(Event, 1);
    };
 }
