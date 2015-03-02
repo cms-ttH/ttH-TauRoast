@@ -3,18 +3,40 @@
 #include "Math/LorentzVector.h"
 #include "TObject.h"
 
+namespace reco {
+   class Candidate;
+   class GenParticle;
+}
+
 namespace superslim {
    typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > LorentzVector;
 
    class PhysObject {
       public:
          PhysObject() {};
-         PhysObject(const LorentzVector& l) : p_(l) {};
+         PhysObject(const reco::Candidate*);
          virtual ~PhysObject() {};
 
-         LorentzVector p4() const { return p_; };
+         LorentzVector
+            p4() const { return p_; };
+         const std::vector<superslim::PhysObject>
+            parents() const { return parents_; };
+         int
+            parentId() const;
+         int
+            grandParentId() const;
+         int
+            charge() const { return charge_; };
+         int
+            pdgId() const { return pdg_id_; };
+         void
+            setGenInfo(const reco::Candidate* p, int level=2);
       private:
          LorentzVector p_;
+         std::vector<superslim::PhysObject> parents_;
+
+         int charge_;
+         int pdg_id_;
 
          ClassDef(PhysObject, 1);
    };
@@ -22,7 +44,7 @@ namespace superslim {
    class Jet : public PhysObject {
       public:
          Jet() {};
-         Jet(const LorentzVector& l, float csv) : PhysObject(l), csv_(csv) {};
+         Jet(const reco::Candidate* c, float csv) : PhysObject(c), csv_(csv) {};
          virtual ~Jet() {};
 
          float csv() const { return csv_; };
@@ -34,7 +56,7 @@ namespace superslim {
    class Lepton : public PhysObject {
       public:
          Lepton() {};
-         Lepton(const LorentzVector& l) : PhysObject(l) {};
+         Lepton(const reco::Candidate* c) : PhysObject(c) {};
          virtual ~Lepton() {};
       private:
          ClassDef(Lepton, 1);
@@ -43,7 +65,7 @@ namespace superslim {
    class Tau : public PhysObject {
       public:
          Tau() {};
-         Tau(const LorentzVector& l) : PhysObject(l) {};
+         Tau(const reco::Candidate* c) : PhysObject(c) {};
          virtual ~Tau() {};
       private:
          ClassDef(Tau, 1);

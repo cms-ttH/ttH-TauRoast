@@ -116,6 +116,7 @@ class TauProcessor : public edm::EDAnalyzer {
       edm::EDGetTokenT<pat::MuonCollection> muons_token_;
       edm::EDGetTokenT<pat::TauCollection> taus_token_;
       edm::EDGetTokenT<pat::JetCollection> ak4jets_token_;
+      edm::EDGetTokenT<reco::GenParticle> gen_token_;
 
       TTree *tree_;
 
@@ -137,6 +138,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    muons_token_ = consumes<pat::MuonCollection>(edm::InputTag("slimmedMuons"));
    taus_token_ = consumes<pat::TauCollection>(edm::InputTag("slimmedTaus"));
    ak4jets_token_ = consumes<pat::JetCollection>(edm::InputTag("slimmedJets"));
+   gen_token_ = consumes<reco::GenParticle>(edm::InputTag("prunedGenParticles"));
 
    helper_.SetUp("2012_53x", 9120, analysisType::TauLJ, false);
    helper_.SetFactorizedJetCorrector();
@@ -274,22 +276,26 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       std::vector<superslim::Jet> sjets;
 
       for (const auto& tau: loose_tau) {
-         superslim::Tau t(tau.p4());
+         superslim::Tau t(&tau);
+         t.setGenInfo(tau.genParticle());
          staus.push_back(t);
       }
 
       for (const auto& lep: loose_e) {
-         superslim::Lepton l(lep.p4());
+         superslim::Lepton l(&lep);
+         l.setGenInfo(lep.genParticle());
          sleptons.push_back(l);
       }
 
       for (const auto& lep: loose_mu) {
-         superslim::Lepton l(lep.p4());
+         superslim::Lepton l(&lep);
+         l.setGenInfo(lep.genParticle());
          sleptons.push_back(l);
       }
 
       for (const auto& jet: selected_jets) {
-         superslim::Jet j(jet.p4());
+         superslim::Jet j(&jet, jet.bDiscriminator("combinedInclusiveSecondaryVertexV2BJetTags"));
+         j.setGenInfo(jet.genParton());
          sjets.push_back(j);
       }
 
