@@ -99,10 +99,12 @@ namespace superslim {
          Event() {};
          Event(const std::vector<superslim::Combination>& cs,
                long run, long lumi, long event,
-               int npv, int ntv) :
+               int npv, int ntv,
+               const LorentzVector& met) :
             combos_(cs),
             run_(run), lumi_(lumi), event_(event),
-            npv_(npv), ntv_(ntv) {};
+            npv_(npv), ntv_(ntv),
+            met_(met) {};
          virtual ~Event() {};
 
          const std::vector<superslim::Combination> combos() const { return combos_; };
@@ -116,6 +118,8 @@ namespace superslim {
          int npv() const { return npv_; };
          // true vertices
          int ntv() const { return ntv_; };
+
+         LorentzVector met() const { return met_; };
       private:
          std::vector<superslim::Combination> combos_;
          std::map<std::string, float> weights_;
@@ -126,6 +130,8 @@ namespace superslim {
 
          int npv_;
          int ntv_;
+
+         LorentzVector met_;
 
          ClassDef(Event, 1);
    };

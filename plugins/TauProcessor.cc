@@ -120,6 +120,7 @@ class TauProcessor : public edm::EDAnalyzer {
       edm::EDGetTokenT<pat::TauCollection> taus_token_;
       edm::EDGetTokenT<pat::JetCollection> ak4jets_token_;
       edm::EDGetTokenT<reco::GenParticleCollection> gen_token_;
+      edm::EDGetTokenT<pat::METCollection> met_token_;
 
       TTree *tree_;
 
@@ -143,6 +144,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    taus_token_ = consumes<pat::TauCollection>(edm::InputTag("slimmedTaus"));
    ak4jets_token_ = consumes<pat::JetCollection>(edm::InputTag("slimmedJets"));
    gen_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("prunedGenParticles"));
+   met_token_ = consumes<pat::METCollection>(edm::InputTag("slimmedMETs"));
 
    helper_.SetUp("2012_53x", 9120, analysisType::TauLJ, false);
    helper_.SetFactorizedJetCorrector();
@@ -261,9 +263,11 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       auto corrected_jets = helper_.GetCorrectedJets(jets_wo_lep);
 
       // Jet selection
-      auto jets_no_taus = removeOverlap(corrected_jets, loose_tau, 0.25);
+      auto jets_no_taus = removeOverlap(corrected_jets, loose_tau, .25);
       auto selected_jets = helper_.GetSelectedJets(jets_no_taus, 30., 2.4, jetID::jetLoose, '-');
       auto selected_tags = helper_.GetSelectedJets(jets_no_taus, 30., 2.4, jetID::jetLoose, 'M');
+
+      auto uncorrected_jets = removeOverlap(jets_wo_lep, loose_tau, .25);
 
       if (selected_jets.size() < min_jets_ or selected_tags.size() < min_tags_)
          continue;
@@ -316,8 +320,13 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
          }
       }
 
+      auto mets = get_collection(event, met_token_);
+
       std::auto_ptr<superslim::Event> ptr(new superslim::Event(
-               combos, event.id().run(), event.id().luminosityBlock(), event.id().event(), npv, ntv));
+               combos,
+               event.id().run(), event.id().luminosityBlock(), event.id().event(),
+               npv, ntv,
+               mets->at(0).p4()));
       event_ = ptr.get();
       tree_->Fill();
    }
