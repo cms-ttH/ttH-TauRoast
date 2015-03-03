@@ -34,7 +34,7 @@ namespace roast {
             auto varname = name;
             if (name == "qSquared") {
                 label = "Q^2 shift";
-                varname = "Q2";
+                varname = "q2";
             } else if (name.find("PUcorr") == 0) {
                 label = "PU reweighing";
                 varname = "Pu";
