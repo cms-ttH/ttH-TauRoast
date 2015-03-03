@@ -258,7 +258,7 @@ class Legend:
 
 @contextmanager
 def create_plot(
-        config, histcfg, plot_ratio, is2d=False, procname="",
+        config, histcfg, divide, is2d=False, procname="",
         displayname=None, hist=None, max=None, scale=None):
     if not displayname:
         displayname = procname
@@ -268,7 +268,7 @@ def create_plot(
 
     small_number = 1e-5
 
-    if plot_ratio:
+    if divide:
         min_y = 0.002
         canvas = r.TCanvas(histname, histname, 600, 700)
         canvas.Divide(1, 2)
@@ -290,12 +290,12 @@ def create_plot(
 
     yield pads
 
-    if plot_ratio:
+    if divide:
         canvas.cd(1)
 
-    style.draw_channel_info(config, plot_ratio, proc=displayname, is2d=True)
+    style.draw_channel_info(config, divide, proc=displayname, is2d=True)
 
-    if plot_ratio:
+    if divide:
         canvas.cd(2)
         line = r.TLine()
         line.SetLineColor(1)
@@ -324,7 +324,7 @@ def create_plot(
 
         canvas.SaveAs(filename)
 
-    if plot_ratio:
+    if divide:
         canvas.cd(1)
     else:
         canvas.cd()
@@ -362,7 +362,7 @@ def stack(config, processes):
 
     err = SysErrors(config)
 
-    plot_ratio = config['display'].get('ratio', 'data') != 'off'
+    divide = config['display'].get('divide', 'data') != 'off'
 
     for cfg in config['histograms']:
         histname = cfg['filename']
@@ -399,7 +399,7 @@ def stack(config, processes):
                 ratio.SetMarkerColor(r.kWhite)
                 ratio.SetMarkerSize(1.5)
                 ratio.SetMarkerSize(0.8)
-                with create_plot(config, cfg, is2d=True, plot_ratio=False, procname="Data-MC") as (scale, pad1,):
+                with create_plot(config, cfg, is2d=True, divide=False, procname="Data-MC") as (scale, pad1,):
                     pad1.cd()
                     style.setup_upper_axis(ratio, scale=False, is2d=True)
                     r.gStyle.SetPaintTextFormat("4.2f");
@@ -414,7 +414,7 @@ def stack(config, processes):
             except:
                 pass
 
-            with create_plot(config, cfg, is2d=True, plot_ratio=False, procname="Background") as (scale, pad1,):
+            with create_plot(config, cfg, is2d=True, divide=False, procname="Background") as (scale, pad1,):
                 pad1.cd()
                 h = bkg_sum.GetHisto()
 
@@ -436,7 +436,7 @@ def stack(config, processes):
                 else:
                     suffix = ""
 
-                with create_plot(config, cfg, is2d=True, plot_ratio=False,
+                with create_plot(config, cfg, is2d=True, divide=False,
                         procname=p.GetShortName(),
                         displayname=p.GetShortName() + suffix) as (scale, pad1,):
                     pad1.cd()
@@ -473,7 +473,7 @@ def stack(config, processes):
                     get_maximum(histname, procs, True, sig_scale),
                     bkg_stack.GetMaximum())
 
-            with create_plot(config, cfg, plot_ratio, hist=base_histo, max=max_y, scale=scale) as (scale, pad1, pad2):
+            with create_plot(config, cfg, divide, hist=base_histo, max=max_y, scale=scale) as (scale, pad1, pad2):
                 pad1.cd()
 
                 bkg_stack.Draw("hist")
@@ -552,9 +552,15 @@ def stack(config, processes):
 
                 base_histo.GetHisto().Draw("axis same")
 
-                if plot_ratio:
-                    pad2.cd()
+                if not divide:
+                    continue
 
+                pad2.cd()
+
+                use_significance = config['display']['divide'] == 'significance'
+                use_ratio = config['display']['divide'] == 'ratio'
+
+                if use_ratio:
                     use_data = config['display'].get('ratio', 'data') == 'data'
 
                     if use_data:
@@ -648,4 +654,52 @@ def stack(config, processes):
                             ratio_err.SetLineColor(config.processes[get_signals(procs)[0]].color)
                         ratio_err.Draw("P same")
                         ratio.Draw("axis same")
+                elif use_significance:
+                    signal = config.display.significance.signal
+                    background = config.display.significance.background
+
+                    upper_significance = base_histo.Clone()
+                    style.setup_lower_axis(upper_significance)
+                    lower_significance = base_histo.Clone()
+
+                    sig = get_process(signal, procs).GetHistogram(histname).GetHisto()
+
+                    if background == 'all':
+                        bkg = bkg_sum.GetHisto()
+                    else:
+                        bkg = get_process(background, procs).GetHistogram(histname).GetHisto()
+
+                    nbins = sig.GetNbinsX()
+
+                    for i in range(1, nbins + 1):
+                        upper_s = sig.Integral(i, nbins + 1)
+                        upper_b = bkg.Integral(i, nbins + 1)
+                        if upper_s + upper_b > 0:
+                            upper_significance.SetBinContent(i, upper_s / math.sqrt(upper_s + upper_b))
+                        else:
+                            upper_significance.SetBinContent(i, 0)
+                        lower_s = sig.Integral(0, i)
+                        lower_b = bkg.Integral(0, i)
+                        if lower_s + lower_b > 0:
+                            lower_significance.SetBinContent(i, lower_s / math.sqrt(lower_s + lower_b))
+                        else:
+                            lower_significance.SetBinContent(i, 0)
+
+                    upper_significance.SetLineColor(r.kBlue)
+                    upper_significance.SetFillStyle(0)
+                    upper_significance.SetLineWidth(4)
+                    upper_significance.SetTitle(";{0};{1}".format(*cfg['axis labels']))
+                    upper_significance.GetYaxis().SetTitle("s / #sqrt{s + b}")
+                    upper_significance.GetYaxis().SetRangeUser(
+                            0, 1.2 * max(
+                                upper_significance.GetBinContent(upper_significance.GetMaximumBin()),
+                                lower_significance.GetMaximum()))
+                    upper_significance.GetYaxis().SetRangeUser(0, 0.2)
+                    upper_significance.DrawCopy("hist")
+                    lower_significance.SetLineColor(r.kRed)
+                    lower_significance.SetFillStyle(0)
+                    lower_significance.SetLineWidth(4)
+                    lower_significance.DrawCopy("hist same")
+                else:
+                    raise
             # }}}
