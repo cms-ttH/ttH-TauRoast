@@ -199,6 +199,7 @@ for (bmin, bmax, jmin, jmax, active_mva) in categories:
                     fill.write(os.path.join(dir, "roast_configuration.yaml") + "\n")
                     plot.write(os.path.join(dir, "roast_configuration.yaml") + "\n")
 
+                data['paths']['root'] = dir
                 data['paths']['input'] = os.path.join(basedir, "roast_processed.root")
                 data['paths']['systematics input'] = os.path.join(basedir + "_{s}", "roast_filled.root")
                 data['paths']['output'] = os.path.join(dir, "roast_filled.root")
