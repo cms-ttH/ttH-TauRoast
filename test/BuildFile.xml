@@ -1,9 +1,0 @@
-<bin name="ttl" file="fake.cc">
-  <flags TEST_RUNNER_CMD="cd $(LOCALRT)/src/ttH/TauRoast; test/verify.sh ttl"/>
-</bin>
-<bin name="tll_os" file="fake.cc">
-  <flags TEST_RUNNER_CMD="cd $(LOCALRT)/src/ttH/TauRoast; test/verify.sh tll_os"/>
-</bin>
-<bin name="tll_ss" file="fake.cc">
-  <flags TEST_RUNNER_CMD="cd $(LOCALRT)/src/ttH/TauRoast; test/verify.sh tll_ss"/>
-</bin>
