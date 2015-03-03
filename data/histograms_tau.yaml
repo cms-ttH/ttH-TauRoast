@@ -41,6 +41,20 @@
     - [1, "_{1}", ttl]
     - [2, "_{2}", ttl]
 
+- filename: T$0_MatchIndex
+  values: [T$0_GenMatchId]
+  translate match id: true
+  dir: tau/generator
+  channels: [$2]
+  binning: [10, 0, 10]
+  bin labels: ["null", light, heavy, "#tau", "#mu", e, "#gamma", Z, H, W]
+  axis labels: ["#tau$1 match", Events]
+  replace:
+    - ["", "", tl]
+    - ["", "", tll]
+    - [1, "_{1}", ttl]
+    - [2, "_{2}", ttl]
+
 - filename: T$0_ParentMatchIndex
   values: [T$0_GoodParentId]
   additional info: [T$0_GoodGrandParentId]
@@ -438,6 +452,19 @@
   visible: [0, 200]
   showOF: true
   logy: 1
+
+- filename: $0_Pt
+  dir: tau/kinematic
+  channels: [$2]
+  binning: [30, 0, 200]
+  axis labels: ["p_{T} $1", Events]
+  replace:
+    - [TT, "#tau_{1, 2}", ttl]
+    - [T1L, "#tau_{1}, l", ttl]
+    - [T2L, "#tau_{2}, l", ttl]
+    - [TL1, "#tau, l_{1}", tll]
+    - [TL2, "#tau, l_{2}", tll]
+    - [TL, "#tau, l", tl]
 
 #  TL_Mass:
   #  dir: tau

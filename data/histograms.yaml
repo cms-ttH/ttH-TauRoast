@@ -13,6 +13,7 @@
   axis labels: [Weight, Events]
 
 - filename: Weights_unweighed
+  values: [Weights]
   cancel weight: all
   dir: general
   binning: [30, 0, 2]
@@ -139,6 +140,24 @@
   axis labels: ['Visible mass of non-#tau_{h} jets', Events]
   showOF: true
   logy: 1
+
+#  - filename: H_M
+  #  dir: general
+  #  binning: [20, 0, 300]
+  #  channels: [ttl]
+  #  axis labels: ['m_{H}', Events]
+
+#  - filename: H_MET
+  #  dir: general
+  #  binning: [20, 0, 75]
+  #  channels: [ttl]
+  #  axis labels: ['MET for m_{H} = 125.6', Events]
+
+#  - filename: H_Pt
+  #  dir: general
+  #  binning: [20, 0, 300]
+  #  channels: [ttl]
+  #  axis labels: ['Higgs p_{T}', Events]
 
 - filename: HT
   dir: general

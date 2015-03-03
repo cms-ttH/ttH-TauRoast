@@ -490,7 +490,8 @@ TTH_125:
     otherScaleFactor: 1
     NOEinDS: 995697
     NoEreadByNUTter: 19299
-    split: {hbb: 0, hcc: 1, hww: 2, hzz: 3, htt: 4, hgg: 5, hgluglu: 6, hzg: 7}
+    #  split: {hbb: 0, hcc: 1, hww: 2, hzz: 3, htt: 4, hgg: 5, hgluglu: 6, hzg: 7}
+    split: {htt: 4}
 
 TTH_125_htt:
     color: 610
