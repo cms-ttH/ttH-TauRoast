@@ -31,13 +31,14 @@ analysis:
     plot:
       - TTbar_SemiLept
       - TTbar_SemiLept_chPrj
-      - TTH_125
-      - TTH_125_chPrj
+      #  - TTH_125
+      #  - TTH_125_chPrj
 
 display:
     legend: True
     legend columns: 3
-    signal scale factor: 100
+    ratio: signal
+    signal scale factor: auto
 
 physics:
     lumi: 19400
@@ -78,12 +79,12 @@ physics:
       - T2_LTPt ≥ 5
       - T1_NumProngs = 1
       - T2_NumProngs = 1
-      - T1_AntiElectronIndex ≥ 1
-      - T2_AntiElectronIndex ≥ 1
-      - T1_AntiMuonIndex ≥ 1
-      - T2_AntiMuonIndex ≥ 1
-      - T1_IsolationMVA2Raw ≥ 0.25
-      - T2_IsolationMVA2Raw ≥ 0
+      - T1_AntiElectronIndexMVA3 ≥ 1
+      - T2_AntiElectronIndexMVA3 ≥ 1
+      - T1_AntiMuonIndex2 ≥ 1
+      - T2_AntiMuonIndex2 ≥ 1
+      - T1_IsolationIndex3Hits ≥ 1
+      - T2_IsolationIndex3Hits ≥ 0
       # topological
       - TT_ChargeProduct = -1
     pair selection: iso
@@ -126,9 +127,9 @@ processes:
         sampleNumber: 2563
         niceName: t + tbar SL (chPrj)
         labelForLegend: "t #bar{t} SL (chPrj)"
-        type: mcBackground
+        type: signal
         ntuplePath: [TTbar_SemiLept_Summer12_chPrj]
-        color: 67
+        color: 60
         crossSection: 107.66
         branchingRatio: 1
         otherScaleFactor: 1
@@ -139,7 +140,7 @@ processes:
         niceName: ttH(125)
         labelForLegend: "t#bar{t}H(125) "
         limit alias: ttH125
-        type: signal
+        type: mcBackground
         ntuplePath: [TTH_125]
         color: 600
         crossSection: 0.1302

@@ -70,9 +70,9 @@ physics:
       - T_MatchAbsId = 15
       - T_ParentAbsId = 25
       # tops
-      - J_NumCleanCSVM ≤ 2
-      - J_NumCleanCSVM ≥ 1 or J_NumCleanCSVL ≥ 2
-      - J_NumCleanNonCSVM ≥ 0
+      - 1 ≤ J_NumCleanCSVM ≤ 2
+      #  - J_NumCleanCSVM ≥ 1 or J_NumCleanCSVL ≥ 2
+      # - J_NumCleanNonCSVM ≥ 0
       - J_NumCleanInclusive ≥ 2
       # lepton
       - 1 ≤ NumTightLeptons ≤ 2
@@ -92,8 +92,8 @@ physics:
       - T_DecayModeFinding = 1
       - T_LTPt ≥ 5
       - T_NumProngs = 1
-      - T_AntiElectronIndex ≥ 1
-      - T_AntiMuonIndex ≥ 1
+      - T_AntiElectronIndexMVA3 ≥ 1
+      - T_AntiMuonIndex2 ≥ 1
       - T_IsolationIndex3Hits ≥ 1
       #  - T_IsolationMVA2Raw ≥ 0
       # topological
@@ -107,7 +107,7 @@ physics:
 
 paths:
     # root path, referenced by {root}
-    root: /afs/crc.nd.edu/user/m/mwolf3/www/ttH/v61/tll_os
+    root: /afs/crc.nd.edu/user/m/mwolf3/www/ttH/v62/tll_os
     # for analyzed processes
     input: "{root}/roast_processed.root"
     # {s} is replaced with systematic shifts
@@ -120,7 +120,7 @@ paths:
     # allowed wildcards: {t} = type (pdf, png); {d} = directory; {n} =
     # name; {m} = mode (_log)
     stack format: "{root}/{t}/{d}/{n}{p}{m}.{t}"
-    ntuples: "/hadoop/users/matze/ttH/v61/2012/tll_{p}/*_ntuple.root"
+    ntuples: "/hadoop/users/matze/ttH/v62/2012/tll_{p}/*_ntuple.root"
 
 processes: !include processes.yaml
 histograms: !include histograms*.yaml

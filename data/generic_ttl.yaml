@@ -1,6 +1,11 @@
 # vim: set sw=4 sta et :
 
 analysis:
+    dump variables:
+      - T1_Pt
+      - '*J_Pt'
+      - '*GT_Pt'
+      - '*GT_ParentId'
     channel: ttl
 
     max events: -1
@@ -44,11 +49,18 @@ analysis:
       - SingleTop
       - ttWZ
       - TTH_125
+      - TTH_125_htt
+      - TTHTauTau_125_Hadronic
+      #  - TTHTauTau_125_SemiLept
 
 display:
-    legend: False
+    divide: significance
+    significance:
+        signal:  TTH_125
+        background: all
+    legend: True
     legend columns: 3
-    signal scale factor: 100
+    signal scale factor: auto
 
 physics:
     lumi: 19400
@@ -71,6 +83,8 @@ physics:
       # topological
       - T1L_DeltaR ≥ 0.25
       - T2L_DeltaR ≥ 0.25
+      - T1_JetCSV ≤ 0.679
+      - T2_JetCSV ≤ 0.679
       # optimization
       - T1_NumProngs = 1
       - T2_NumProngs = 1
