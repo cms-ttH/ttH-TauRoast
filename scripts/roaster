@@ -114,8 +114,11 @@ if opts.nums and opts.nums_rel:
 if opts.nums_norm and not (opts.nums or opts.nums_rel):
     parser.error("can't specifiy normalized yields without printing yields")
 
-import ROOT as r
 import sys
+
+sys.argv = []
+
+import ROOT as r
 
 r.gROOT.SetBatch()
 r.gErrorIgnoreLevel = 1001

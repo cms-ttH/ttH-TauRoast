@@ -173,6 +173,17 @@
   binning: [20, 0, 200]
   axis labels: [MHT, Events]
 
+- filename: FinalBDTG_rebin
+  values: [FinalBDTG]
+  dir: general
+  # binning: [10, -1, 1]
+  binning: [-1., -0.99, -0.95, -0.9, -0.8, -0.6, -0.2, 0.3, 1.]
+  custom binning: true
+  axis labels: [BDT output, Events]
+  visible: [-1, 1]
+  showOF: false
+  logy: 1
+
 - filename: FinalBDTG
   dir: general
   binning: [10, -1, 1]
