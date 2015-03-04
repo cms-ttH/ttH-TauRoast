@@ -1,13 +1,13 @@
 import ROOT as r
 
-from ttH.TauRoast.utils import *
+from ttH.TauRoast.utils import Snippet
 
-class Plot(object):
+class Plot(Snippet):
     __plots__ = []
 
     def __init__(self, code, name, labels, binning, dim=1, draw=""):
+        super(Plot, self).__init__(code)
         self.__name = name
-        self.__code = code
         self.__opt = draw
 
         self.__args = [name, ";".join([""] + labels)] + binning
@@ -32,15 +32,7 @@ class Plot(object):
             self.__hists[process] = self.__class(*args)
             hist = self.__hists[process]
 
-        locals = {'histo': hist}
-        globals = {
-                'event': event,
-                'btag': btag,
-                'taus': combo.taus(),
-                'leptons': combo.leptons(),
-                'jets': combo.jets()
-        }
-        exec self.__code in locals, globals
+        self._execute(event, combo, locals={'histo': hist})
 
     @property
     def name(self):

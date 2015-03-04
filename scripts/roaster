@@ -28,7 +28,9 @@ r.gROOT.SetBatch()
 r.gErrorIgnoreLevel = 1001
 r.gSystem.Load("libttHTauRoast")
 
+from ttH.TauRoast.cutting import Cut
 from ttH.TauRoast.plotting import Plot
+from ttH.TauRoast.processing import Process
 
 import imp
 import os
@@ -41,32 +43,35 @@ magic = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data', 'p
 for n, file in enumerate(glob(magic)):
     imp.load_source("procs{0}".format(n), file)
 
+cuts = [
+        Cut("True"),
+        Cut("leptons.size() == 1"),
+        Cut("taus[0].charge() * taus[1].charge() < 0")
+]
+
 f = r.TFile("test.root")
 t = f.Get("taus/events")
 
 event = r.superslim.Event()
 t.SetBranchAddress('Event', r.AddressOf(event))
 
-# combos = r.std.vector('superslim::Combination')()
-# t.SetBranchAddress('Combinations', r.AddressOf(combos))
-
-# print [combos[0].jets().size() for x in t][:6]
-
 for i in range(t.GetEntries()):
     t.GetEntry(i)
-    # combos = event.combos()
-    # print "---"
-    # cmbs.Fill(combos.size())
     for combo in event.combos():
-        if combo.leptons().size() != 1:
-            continue
-        for plot in Plot.plots():
-            try:
-                plot.fill("ttH", event, combo)
-            except Exception, e:
-                print "error in", plot.name
-                print e
+        for cut in cuts:
+            if not cut("ttH", event, combo):
+                break
+        else:
+            for plot in Plot.plots():
+                try:
+                    plot.fill("ttH", event, combo)
+                except Exception, e:
+                    print "error in", plot.name
+                    print e
         break
+
+for cut in cuts:
+    print cut, cut["ttH"]
 
 c = r.TCanvas("c", "c", 700, 600)
 # cmbs.Draw()
