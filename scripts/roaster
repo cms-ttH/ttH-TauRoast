@@ -1,122 +1,15 @@
 #!/usr/bin/env python
 # vim: ts=4:sw=4:et:sta
 
+import argparse
 import logging
-import math
-import os
 
 # Logging setup
 logging.basicConfig(
         datefmt="%Y-%m-%d %H:%M:%S",
         format="%(asctime)s [%(levelname)s] - %(filename)s %(lineno)d: %(message)s")
 
-from optparse import OptionParser
-
-parser = OptionParser(usage="%prog [options] configuration")
-parser.add_option("-a", "--analyze",
-        action="store_true",
-        dest="analyze",
-        help="analyze processes")
-parser.add_option("--dump-file",
-        action="store",
-        dest="dump_file",
-        default=None,
-        metavar="FILE",
-        help="store dumped histograms in FILE")
-parser.add_option("--dump",
-        action="store_true",
-        dest="dump",
-        help="dump variables for analyzed processes")
-parser.add_option("-f", "--fill",
-        action="store_true",
-        dest="fill",
-        help="fill histograms for analyzed processes")
-parser.add_option("-l", "--limit-file",
-        action="store_true",
-        dest="limit_file",
-        help="produce a file with histograms for limits")
-parser.add_option("--list-vars",
-        action="store_true",
-        dest="list_vars",
-        help="list variables for cuts, MVA, etc.")
-parser.add_option("-n", "--max-events",
-        action="store",
-        dest="max",
-        type="int",
-        metavar="NUM",
-        default=None,
-        help="process NUM events (default: configuration)")
-parser.add_option("-s", "--skip-events",
-        action="store",
-        dest="skip",
-        type="int",
-        metavar="NUM",
-        default=None,
-        help="skip the NUM first events when processing")
-parser.add_option("--no-backup",
-        action="store_true",
-        dest="nobackup",
-        help="do not make a backup copy of the configuration")
-parser.add_option("-o", "--override",
-        action="append",
-        dest="overrides",
-        metavar="OPT",
-        help="override configuration file options, where OPT is formatted "
-        "as path.subpath.key=value.")
-parser.add_option("-p", "--plot",
-        action="store_true",
-        dest="plot",
-        help="save plots")
-parser.add_option("-t", "--train",
-        action="store_true",
-        dest="train",
-        help="train MVAs")
-parser.add_option("-v", "--verbose",
-        action="count",
-        dest="verbosity",
-        default=0,
-        help="make output more verbose (allowed multiple times)")
-parser.add_option("-q", "--quiet",
-        action="count",
-        dest="quietness",
-        default=3,
-        help="make output less verbose (allowed multiple times)")
-parser.add_option("-y", "--yields",
-        action="store_true",
-        dest="nums",
-        help="print event yield information")
-parser.add_option("--yield-summary",
-        action="store_true",
-        dest="nums_summary",
-        help="print condensed event yield information")
-parser.add_option("-Y", "--relative-yields",
-        action="store_true",
-        dest="nums_rel",
-        help="print relative event yield information")
-parser.add_option("--normalized",
-        action="store_true",
-        dest="nums_norm",
-        help="print relative event yield information")
-parser.add_option("-r", "--ranking",
-        action="store_true",
-        dest="ranking",
-        help="print MVA variable rankings")
-opts, args = parser.parse_args()
-
-logging.__dict__['root'].level = (opts.quietness - opts.verbosity) * 10
-
-if len(args) != 1 and not opts.list_vars:
-    parser.error('wrong number of arguments')
-
-if opts.nums and opts.nums_rel:
-    parser.error('both relative and absolute event yields requested')
-
-if opts.nums_norm and not (opts.nums or opts.nums_rel):
-    parser.error("can't specifiy normalized yields without printing yields")
-
-import sys
-
-sys.argv = []
+# logging.__dict__['root'].level = (opts.quietness - opts.verbosity) * 10
 
 import ROOT as r
 
@@ -124,124 +17,49 @@ r.gROOT.SetBatch()
 r.gErrorIgnoreLevel = 1001
 r.gSystem.Load("libttHTauRoast")
 
-try:
-    from ROOT import roast
-except:
-    sys.stderr.write("Failed to import 'roast'!\n")
-    sys.exit(1)
+from ttH.TauRoast.plotting import Plot
 
-import yaml
+import imp
+import os
+from glob import glob
+magic = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data', 'plots', '*.py')
+for n, file in enumerate(glob(magic)):
+    imp.load_source("plots{0}".format(n), file)
 
-from ttH.TauRoast.display import stack
-from ttH.TauRoast.helper import *
-from ttH.TauRoast.process import analyze, dump_info, fill_histos
-from ttH.TauRoast import style
+f = r.TFile("test.root")
+t = f.Get("taus/events")
 
-if opts.list_vars:
-    for v in roast.get_accessor_names():
-        print v
-    sys.exit(0)
+event = r.superslim.Event()
+t.SetBranchAddress('Event', r.AddressOf(event))
 
-(configfile,) = args
+# combos = r.std.vector('superslim::Combination')()
+# t.SetBranchAddress('Combinations', r.AddressOf(combos))
 
-logging.info("reading configuration from %s", configfile)
+# print [combos[0].jets().size() for x in t][:6]
 
-basedir = os.path.join(os.environ['LOCALRT'], 'src/ttH/TauRoast/data')
-baseconfig = load_config(configfile, basedir, opts.overrides)
+for i in range(t.GetEntries()):
+    t.GetEntry(i)
+    # combos = event.combos()
+    # print "---"
+    # cmbs.Fill(combos.size())
+    for combo in event.combos():
+        if combo.leptons().size() != 1:
+            continue
+        for plot in Plot.plots():
+            try:
+                plot.fill("ttH", event, combo)
+            except Exception, e:
+                print "error in", plot.name
+                print e
+        break
 
-if opts.nobackup:
-    logging.debug("using base path %s", baseconfig['paths']['root'])
-else:
-    logging.debug("backing up config in base path %s", baseconfig['paths']['root'])
-    backup_config(configfile, baseconfig, baseconfig['paths']['root'])
-
-channel = baseconfig['analysis']['channel']
-if channel == 'll':
-    module = roast.ll
-elif channel == 'tl':
-    module = roast.tl
-elif channel == 'tll':
-    module = roast.tll
-elif channel == 'ttl':
-    module = roast.ttl
-else:
-    logging.critical('invalid channel "{0}"'.format(channel))
-    sys.exit(1)
-
-if opts.dump_file:
-    baseconfig['paths']['dump file'] = opts.dump_file
-
-if opts.max:
-    baseconfig['analysis']['max events'] = opts.max
-if opts.skip:
-    baseconfig['analysis']['offset'] = opts.skip
-elif 'offset' not in baseconfig['analysis']:
-    baseconfig['analysis']['offset'] = 0
-
-logging.info("analyzing a maximum of {0} events per process.".format(baseconfig['analysis']['max events']))
-
-to_combine = dict(filter(
-    lambda (k, v): 'combine' in v,
-    baseconfig['processes'].items()))
-to_process = []
-for p in baseconfig['analysis']['process']:
-    if p in to_combine:
-        logging.debug("adding {0} to be processed".format(to_combine[p]['combine']))
-        to_process += to_combine[p]['combine']
-    else:
-        to_process.append(p)
-baseconfig['analysis']['process'] = to_process
-
-if opts.analyze:
-    procs = analyze(baseconfig, module)
-    save(procs, "Roast", baseconfig['paths']['input'])
-else:
-    procs = None
-
-if opts.train:
-    if not procs:
-        procs = load("Roast", baseconfig['paths']['input'])
-    train_mva(baseconfig, procs, module)
-
-if opts.fill:
-    if not procs:
-        procs = load("Roast", baseconfig['paths']['input'])
-    book_mva(baseconfig, procs, module)
-    split_processes(baseconfig, procs)
-    fill_histos(baseconfig, procs, module)
-    save(procs, "Roast", baseconfig['paths']['output'])
-
-if opts.dump:
-    if not procs:
-        procs = load("Roast", baseconfig['paths']['input'])
-        book_mva(baseconfig, procs, module)
-    dump_info(baseconfig, procs, module)
-
-if not any([opts.plot, opts.limit_file, opts.nums, opts.nums_rel, opts.nums_summary, opts.ranking]):
-    sys.exit(0)
-
-if not procs:
-    procs = load("Roast", baseconfig['paths']['output'])
-
-combine_processes(baseconfig, procs, collisions=True)
-normalize_processes(baseconfig, procs)
-split_combined_processes(baseconfig, procs)
-combine_processes(baseconfig, procs)
-
-if opts.plot:
-    style.setup()
-    stack(baseconfig, procs)
-
-if opts.limit_file:
-    save_limit_histograms(baseconfig, procs)
-
-if opts.nums:
-    print_cutflow(baseconfig, procs, normalized=opts.nums_norm)
-elif opts.nums_rel:
-    print_cutflow(baseconfig, procs, True, normalized=opts.nums_norm)
-
-if opts.nums_summary:
-    print_yields(baseconfig, procs)
-
-if opts.ranking:
-    print_mva_ranking(baseconfig)
+c = r.TCanvas("c", "c", 700, 600)
+# cmbs.Draw()
+for n, plot in enumerate(Plot.plots()):
+    end = ""
+    if n == 0:
+        end = "("
+    elif n == len(Plot.plots()) - 1:
+        end = ")"
+    plot.draw()
+    c.SaveAs("test.pdf" + end)
