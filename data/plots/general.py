@@ -34,19 +34,7 @@ Plot(
 )
 Plot(
         name="tau1pt",
-        code="""
-histo.Fill(taus[0].p4().Pt())
-print taus[0].p4().Pt()
-print taus.at(0).p4().Pt()
-print taus[1].p4().Pt()
-print taus[0].p4().Eta()
-print taus[0].p4().Pt()
-for tau in taus:
-  print "t", tau.p4().Pt()
-for lep in leptons:
-  print "l", lep.p4().Pt()
-  break
-print '---'""",
+        code="histo.Fill(taus[0].p4().Pt())",
         labels=["P_{T}", "count"],
         binning=[40, 0, 160]
 )
