@@ -37,6 +37,10 @@ magic = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data', 'p
 for n, file in enumerate(glob(magic)):
     imp.load_source("plots{0}".format(n), file)
 
+magic = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data', 'procs', '*.py')
+for n, file in enumerate(glob(magic)):
+    imp.load_source("procs{0}".format(n), file)
+
 f = r.TFile("test.root")
 t = f.Get("taus/events")
 
