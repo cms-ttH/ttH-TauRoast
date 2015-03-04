@@ -239,7 +239,7 @@ CombinedProcess(
 CombinedProcess(
         name="EWK",
         fullname="EWK",
-        subprocesses=["ZplusJets_LowMass", "ZplusJets_HighMass", "ZplusOneJet", "ZplusTwoJets", "ZplusThreeJets", "ZplusFourJets", "WplusJets", "WplusOneJet", "WplusTwoJets", "WplusThreeJets", "WplusFourJets", "WW", "WZ", "ZZ"]
+        subprocesses=["Zjets", "Wjets", "DiBoson"]
 )
 
 CombinedProcess(
