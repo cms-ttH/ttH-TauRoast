@@ -3,7 +3,7 @@ import ROOT as r
 from ttH.TauRoast.utils import *
 
 class Plot(object):
-    __plots = []
+    __plots__ = []
 
     def __init__(self, code, name, labels, binning, dim=1, draw=""):
         self.__name = name
@@ -18,7 +18,7 @@ class Plot(object):
         elif dim == 2:
             self.__class = r.TH2F
 
-        Plot.__plots.append(self)
+        Plot.__plots__.append(self)
 
     def draw(self, *args):
         self.__hists.values()[0].Draw(self.__opt, *args)
@@ -48,4 +48,4 @@ class Plot(object):
 
     @classmethod
     def plots(cls):
-        return cls.__plots
+        return cls.__plots__
