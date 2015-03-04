@@ -2,6 +2,8 @@
 # vim: ts=4:sw=4:et:sta
 
 import argparse
+import logging
+import yaml
 
 parser = argparse.ArgumentParser(description='Grill some taus.')
 parser.add_argument('config', metavar='config', type=str, nargs=1,
@@ -13,14 +15,15 @@ parser.add_argument('-q', '--quiet', action="count", default=0,
 
 args = parser.parse_args()
 
-import logging
-
 # Logging setup
 logging.basicConfig(
         datefmt="%Y-%m-%d %H:%M:%S",
         format="%(asctime)s [%(levelname)s] - %(filename)s %(lineno)d: %(message)s")
 
 logging.__dict__['root'].level = (2 + args.quiet - args.verbose) * 10
+
+with open(args.config[0]) as f:
+    config = yaml.load(f)
 
 import ROOT as r
 
@@ -43,11 +46,9 @@ magic = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data', 'p
 for n, file in enumerate(glob(magic)):
     imp.load_source("procs{0}".format(n), file)
 
-cuts = [
-        Cut("True"),
-        Cut("leptons.size() == 1"),
-        Cut("taus[0].charge() * taus[1].charge() < 0")
-]
+cuts = []
+for hash in config["cuts"]:
+    cuts.append(Cut(*hash.items()[0]))
 
 f = r.TFile("test.root")
 t = f.Get("taus/events")

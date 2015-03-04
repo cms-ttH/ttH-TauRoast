@@ -20,5 +20,8 @@ class Cut(Snippet):
     def __getitem__(self, key):
         return self.__counts[key]
 
-    def __str__(self):
+    def __unicode__(self):
         return self.__name
+
+    def __str__(self):
+        return unicode(self).encode('utf-8')

@@ -1,0 +1,9 @@
+# vim: set sw=4 sta et :
+
+plot:
+  - TTH_125
+
+cuts:
+  - Ntuple: "True"
+  - "# leptons = 1": "leptons.size() == 1"
+  - "Opposite charge for τ": "taus[0].charge() * taus[1].charge() < 0"
