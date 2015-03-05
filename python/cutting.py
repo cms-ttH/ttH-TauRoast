@@ -1,3 +1,6 @@
+import sys
+
+from ttH.TauRoast.processing import Process
 from ttH.TauRoast.utils import Snippet
 
 class Cut(Snippet):
@@ -25,3 +28,17 @@ class Cut(Snippet):
 
     def __str__(self):
         return unicode(self).encode('utf-8')
+
+def cutflow(cuts, procs, f=sys.stdout):
+    expanded_proc = [Process.processes()[proc].process() for proc in procs]
+
+    namelength = len(max(unicode(cut) for cut in cuts))
+    fieldlength = max(len(p) for p in procs)
+    for ps in expanded_proc:
+        fieldlength = max(len(str(sum(cuts[0][p] for p in ps))), fieldlength)
+
+    format = "{{:{0}}}".format(namelength) + "   {{:{0}}}".format(fieldlength) * len(procs) + "\n"
+    f.write(format.format("Cut", *procs))
+    f.write("-" * namelength + ("   " + "-" * fieldlength) * len(procs) + "\n")
+    for cut in cuts:
+        f.write(format.format(cut, *[sum(cut[p] for p in ps) for ps in expanded_proc]))

@@ -31,7 +31,7 @@ r.gROOT.SetBatch()
 r.gErrorIgnoreLevel = 1001
 r.gSystem.Load("libttHTauRoast")
 
-from ttH.TauRoast.cutting import Cut
+from ttH.TauRoast.cutting import Cut, cutflow
 from ttH.TauRoast.plotting import Plot
 from ttH.TauRoast.processing import Process
 
@@ -60,19 +60,18 @@ for i in range(t.GetEntries()):
     t.GetEntry(i)
     for combo in event.combos():
         for cut in cuts:
-            if not cut("ttH", event, combo):
+            if not cut("ttH_125", event, combo):
                 break
         else:
             for plot in Plot.plots():
                 try:
-                    plot.fill("ttH", event, combo)
+                    plot.fill("ttH_125", event, combo)
                 except Exception, e:
                     print "error in", plot.name
                     print e
         break
 
-for cut in cuts:
-    print cut, cut["ttH"]
+cutflow(cuts, ["ttH_125"])
 
 c = r.TCanvas("c", "c", 700, 600)
 # cmbs.Draw()
