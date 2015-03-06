@@ -16,16 +16,20 @@ class Process(object):
         return cls.__processes__
 
 class BasicProcess(Process):
-    def __init__(self, name, path, events, fullname=None, limitname=None, sample=-1, cross_section=1):
+    def __init__(self, name, paths, events, fullname=None, limitname=None, sample=-1, cross_section=1):
         super(BasicProcess, self).__init__(name, fullname, limitname)
 
-        self.__path = path
+        self.__paths = paths
         self.__events = events
         self.__sample = sample
         self.__cross_section = cross_section
 
     def process(self):
         return [self._name]
+
+    @property
+    def paths(self):
+        return self.__path
 
 class CombinedProcess(Process):
     def __init__(self, name, subprocesses, limitname=None, fullname=None):
