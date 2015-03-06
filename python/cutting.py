@@ -30,7 +30,7 @@ class Cut(Snippet):
         return unicode(self).encode('utf-8')
 
 def cutflow(cuts, procs, f=sys.stdout):
-    expanded_proc = [Process.processes()[proc].process() for proc in procs]
+    expanded_proc = [Process.expand(proc) for proc in procs]
 
     namelength = len(max(unicode(cut) for cut in cuts))
     fieldlength = max(len(p) for p in procs)

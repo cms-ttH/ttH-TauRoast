@@ -50,28 +50,31 @@ cuts = []
 for hash in config["cuts"]:
     cuts.append(Cut(*hash.items()[0]))
 
-f = r.TFile("test.root")
-t = f.Get("taus/events")
+for proc in sum(map(Process.expand, config['plot']), []):
+    logging.info("processing {}".format(proc))
+    t = r.TChain("taus/events")
+    for p in proc.paths:
+        t.Add(os.path.join(config['ntupledir'], p, '*.root'))
 
-event = r.superslim.Event()
-t.SetBranchAddress('Event', r.AddressOf(event))
+    event = r.superslim.Event()
+    t.SetBranchAddress('Event', r.AddressOf(event))
 
-for i in range(t.GetEntries()):
-    t.GetEntry(i)
-    for combo in event.combos():
-        for cut in cuts:
-            if not cut("ttH_125", event, combo):
-                break
-        else:
-            for plot in Plot.plots():
-                try:
-                    plot.fill("ttH_125", event, combo)
-                except Exception, e:
-                    print "error in", plot.name
-                    print e
-        break
+    for i in range(t.GetEntries()):
+        t.GetEntry(i)
+        for combo in event.combos():
+            for cut in cuts:
+                if not cut(proc, event, combo):
+                    break
+            else:
+                for plot in Plot.plots():
+                    try:
+                        plot.fill(proc, event, combo)
+                    except Exception, e:
+                        print "error in", plot.name
+                        print e
+            break
 
-cutflow(cuts, ["ttH_125"])
+cutflow(cuts, config["plot"])
 
 c = r.TCanvas("c", "c", 700, 600)
 # cmbs.Draw()

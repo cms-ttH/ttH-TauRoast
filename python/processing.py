@@ -8,12 +8,22 @@ class Process(object):
 
         Process.__processes__[name] = self
 
+    def __unicode__(self):
+        return self._name
+
+    def __str__(self):
+        return unicode(self).encode('utf-8')
+
     def process(self):
         raise NotImplementedError
 
     @classmethod
-    def processes(cls):
-        return cls.__processes__
+    def get(cls, name):
+        return cls.__processes__[name]
+
+    @classmethod
+    def expand(cls, name):
+        return map(cls.get, cls.__processes__[name].process())
 
 class BasicProcess(Process):
     def __init__(self, name, paths, events, fullname=None, limitname=None, sample=-1, cross_section=1):
@@ -29,7 +39,7 @@ class BasicProcess(Process):
 
     @property
     def paths(self):
-        return self.__path
+        return self.__paths
 
 class CombinedProcess(Process):
     def __init__(self, name, subprocesses, limitname=None, fullname=None):

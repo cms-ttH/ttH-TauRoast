@@ -1,7 +1,9 @@
 # vim: set sw=4 sta et :
 
+ntupledir: test
+
 plot:
-  - TTH_125
+  - ttH_125
 
 cuts:
   - Ntuple: "True"
