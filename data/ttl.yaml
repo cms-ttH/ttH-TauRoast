@@ -1,6 +1,7 @@
 # vim: set sw=4 sta et :
 
 ntupledir: test
+outdir: delete_me
 
 plot:
   - ttjets

@@ -1,8 +1,6 @@
 # vim: ts=4:sw=4:et:sta
 import ROOT as r
 
-from ttH.TauRoast.helper import extract_info
-
 ratio_plot_max = 2.3
 small_number = 1e-5
 y_divide = 0.3

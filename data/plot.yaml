@@ -1,0 +1,5 @@
+legend: true
+backgrounds:
+  - ttjets: r.kRed
+signals:
+  - ttH_125: r.kBlue

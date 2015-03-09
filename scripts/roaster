@@ -3,6 +3,7 @@
 
 import argparse
 import logging
+import os
 import yaml
 
 parser = argparse.ArgumentParser(description='Grill some taus.')
@@ -25,24 +26,31 @@ logging.__dict__['root'].level = (2 + args.quiet - args.verbose) * 10
 with open(args.config[0]) as f:
     config = yaml.load(f)
 
+datadir = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data')
+
+with open(os.path.join(datadir, 'plot.yaml')) as f:
+    plotconfig = yaml.load(f)
+
 import ROOT as r
 
 r.gROOT.SetBatch()
 r.gErrorIgnoreLevel = 1001
 r.gSystem.Load("libttHTauRoast")
 
+from ttH.TauRoast import stylish
 from ttH.TauRoast.cutting import Cut, cutflow
 from ttH.TauRoast.plotting import Plot
 from ttH.TauRoast.processing import Process
 
+stylish.setup()
+
 import imp
-import os
 from glob import glob
-magic = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data', 'plots', '*.py')
+magic = os.path.join(datadir, 'plots', '*.py')
 for n, file in enumerate(glob(magic)):
     imp.load_source("plots{0}".format(n), file)
 
-magic = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data', 'procs', '*.py')
+magic = os.path.join(datadir, 'procs', '*.py')
 for n, file in enumerate(glob(magic)):
     imp.load_source("procs{0}".format(n), file)
 
@@ -76,13 +84,5 @@ for proc in sum(map(Process.expand, config['plot']), []):
 
 cutflow(cuts, config["plot"])
 
-c = r.TCanvas("c", "c", 700, 600)
-# cmbs.Draw()
-for n, plot in enumerate(Plot.plots()):
-    end = ""
-    if n == 0:
-        end = "("
-    elif n == len(Plot.plots()) - 1:
-        end = ")"
-    plot.draw()
-    c.SaveAs("test.pdf" + end)
+for p in Plot.plots():
+    p.save(plotconfig, config["outdir"])
