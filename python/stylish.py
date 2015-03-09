@@ -44,7 +44,7 @@ def draw_channel_info(config, plot_ratio, is2d=False, proc=None):
 
 def setup_upper_axis(histo, scale=True, is2d=False):
     if scale:
-        histo.ScaleBy(0)
+        histo.Scale(0)
     histo.SetTitle("")
 
     histo.GetXaxis().SetLabelFont(62)

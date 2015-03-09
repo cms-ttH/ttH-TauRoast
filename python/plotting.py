@@ -32,6 +32,20 @@ class Plot(Snippet):
             h.Add(self__hists[proc])
         return h
 
+    def _get_background_sum(self, config):
+        res = None
+        for cfg in config['backgrounds']:
+            background, color = cfg.items()[0]
+            h = self._get_histogram(background)
+            if res is None:
+                res = h
+            else:
+                res.Add(h)
+        res.SetFillStyle(3654)
+        res.SetFillColor(r.kBlack)
+        res.SetMarkerStyle(0)
+        return res
+
     def _get_backgrounds(self, config):
         res = r.THStack(self.__name + "_stack", self.__args[1])
         for cfg in config['backgrounds']:
@@ -64,6 +78,7 @@ class Plot(Snippet):
     def save(self, config, outdir):
         min_y = 0.002
         max_y = min_y
+        scale = 1.15
 
         # TODO move to somewhere else!
         self._normalize(10000)
@@ -77,24 +92,37 @@ class Plot(Snippet):
         args = list(self.__args)
         args[0] += "_base"
         base_histo = self.__class(*args)
+        stylish.setup_upper_axis(base_histo)
 
         canvas.cd(1)
 
+        bkg_sum = self._get_background_sum(config)
         bkg_stack = self._get_backgrounds(config)
         bkg_stack.Draw()
 
         signals = self._get_signals(config)
-        max_y = max(h.GetMaximum() for h in [bkg_stack] + signals)
+        max_y = scale * max(h.GetMaximum() for h in [bkg_stack] + signals)
+
+        base_histo.GetYaxis().SetRangeUser(min_y, max_y)
+        base_histo.Draw("hist")
 
         bkg_stack.SetMinimum(min_y)
         bkg_stack.SetMaximum(max_y)
+        bkg_stack.Draw("hist same")
 
         for sig in signals:
             sig.DrawCopy("hist same")
 
-        bkg_stack.Draw("axis same")
+        bkg_sum.Draw("E2 same")
+
+        base_histo.Draw("axis same")
 
         canvas.cd(2)
+
+        ratio = base_histo.Clone()
+        stylish.setup_lower_axis(ratio)
+
+        ratio.Draw("axis")
 
         line = r.TLine()
         line.SetLineColor(1)
