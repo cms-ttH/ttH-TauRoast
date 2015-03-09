@@ -3,6 +3,7 @@
 ntupledir: test
 
 plot:
+  - ttjets
   - ttH_125
 
 cuts:

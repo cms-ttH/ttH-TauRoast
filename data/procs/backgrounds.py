@@ -1,6 +1,14 @@
 from ttH.TauRoast.processing import BasicProcess, CombinedProcess
 
 BasicProcess(
+    name="ttjets",
+    sample=2500,
+    fullname="t #bar{t} H",
+    paths=["ttjets"],
+    events=31223821
+)
+
+BasicProcess(
     name="ttbar_hadronic",
     sample=2566,
     fullname="t #bar{t} H",
