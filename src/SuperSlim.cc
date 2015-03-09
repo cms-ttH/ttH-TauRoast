@@ -57,7 +57,7 @@ namespace superslim {
       for (unsigned int i = 0; i < p->numberOfMothers(); ++i) {
          auto mother = p->mother(i);
 
-         while (mother->pdgId() == p->pdgId()) {
+         while (mother and mother->pdgId() == p->pdgId()) {
             if (mother->numberOfMothers() > 0)
                mother = mother->mother(i);
             else
