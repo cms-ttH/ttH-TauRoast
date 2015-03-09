@@ -38,6 +38,14 @@ class BasicProcess(Process):
         return [self._name]
 
     @property
+    def cross_section(self):
+        return self.__cross_section
+
+    @property
+    def events(self):
+        return self.__events
+
+    @property
     def paths(self):
         return self.__paths
 

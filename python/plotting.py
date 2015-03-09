@@ -53,12 +53,20 @@ class Plot(Snippet):
             res.append(h)
         return res
 
+    def _normalize(self, lumi):
+        for proc, hist in self.__hists.items():
+            factor = lumi * proc.cross_section / float(proc.events)
+            hist.Scale(factor)
+
     def draw(self, *args):
         self.__hists.values()[0].Draw(self.__opt, *args)
 
     def save(self, config, outdir):
         min_y = 0.002
         max_y = min_y
+
+        # TODO move to somewhere else!
+        self._normalize(10000)
 
         canvas = r.TCanvas(self.__name, self.__name, 600, 700)
         canvas.Divide(1, 2)
