@@ -10,10 +10,17 @@ class Cut(Snippet):
         super(Cut, self).__init__(code)
         self.__name = name
         self.__counts = {}
+        self.__last = None
 
     def __call__(self, process, event, combo):
         passed = self._execute(event, combo, use_exec=False)
+
         if passed:
+            id = (event.run(), event.lumi(), event.event())
+            if id == self.__last:
+                return passed
+            self.__last = id
+
             try:
                 self.__counts[process] += 1
             except KeyError:
