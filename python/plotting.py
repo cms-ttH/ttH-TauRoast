@@ -1,3 +1,4 @@
+import math
 import os
 
 import ROOT as r
@@ -25,6 +26,24 @@ class Plot(Snippet):
 
         Plot.__plots__.append(self)
 
+    def _add_legend(self, config, factor):
+        l = Legend(0.05, 3, 0.08)
+        for cfg in config['backgrounds']:
+            bkg, color = cfg.items()[0]
+            l.draw_box(1001, self._eval(color), Process.get(bkg).fullname)
+        l.draw_box(3654, r.kBlack, "Bkg. err.", True)
+        l.new_row()
+        for cfg in config['signals']:
+            sig, color = cfg.items()[0]
+            label = Process.get(sig).fullname
+            if factor != 1:
+                label += " (#times {0:.1f})".format(factor)
+            l.draw_line(2, self._eval(color), label)
+        return l
+
+    def _eval(self, color):
+        return eval(color, {}, {'r': r})
+
     def _get_histogram(self, process):
         procs = Process.expand(process)
         h = self.__hists[procs[0]].Clone()
@@ -51,7 +70,7 @@ class Plot(Snippet):
         for cfg in config['backgrounds']:
             background, color = cfg.items()[0]
             h = self._get_histogram(background)
-            h.SetFillColor(eval(color, {}, {'r': r}))
+            h.SetFillColor(self._eval(color))
             h.SetFillStyle(1001)
             h.SetLineWidth(0)
             res.Add(h)
@@ -62,7 +81,7 @@ class Plot(Snippet):
         for cfg in config['signals']:
             signal, color = cfg.items()[0]
             h = self._get_histogram(signal)
-            h.SetLineColor(eval(color, {}, {'r': r}))
+            h.SetLineColor(self._eval(color))
             h.SetLineWidth(4)
             res.append(h)
         return res
@@ -112,6 +131,11 @@ class Plot(Snippet):
         if factor == "auto":
             factor = self._get_scale_factor(bkg_sum, signals)
 
+        if config.get("legend", True):
+            scale = 1.175 + 0.05 * (
+                    math.ceil(len(config['backgrounds'] + config.get('data', [])) / 3. + 1)
+                    + math.ceil(len(config['signals']) / 3.))
+
         max_y = scale * max([bkg_stack.GetMaximum()] + [factor * h.GetMaximum() for h in signals])
 
         base_histo.GetYaxis().SetRangeUser(min_y, max_y)
@@ -128,6 +152,12 @@ class Plot(Snippet):
         bkg_sum.Draw("E2 same")
 
         base_histo.Draw("axis same")
+
+        # need to keep legend in memory, otherwise legend boxes are not
+        # drawn (thank you, ROOT)
+        legend = None
+        if config.get("legend", True):
+            legend = self._add_legend(config, factor)
 
         canvas.cd(2)
 

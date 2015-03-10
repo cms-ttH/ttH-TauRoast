@@ -17,6 +17,10 @@ class Process(object):
     def process(self):
         raise NotImplementedError
 
+    @property
+    def fullname(self):
+        return self._fullname
+
     @classmethod
     def get(cls, name):
         return cls.__processes__[name]
