@@ -59,13 +59,21 @@ def normalize(cuts, lumi):
 def cutflow(cuts, procs, f=sys.stdout):
     expanded_proc = [Process.expand(proc) for proc in procs]
 
-    namelength = len(max(unicode(cut) for cut in cuts))
-    fieldlength = max(len(p) for p in procs)
-    for ps in expanded_proc:
-        fieldlength = max(len(str(sum(cuts[0][p] for p in ps))), fieldlength)
+    namelength = max(len(unicode(cut)) for cut in cuts)
+    fieldlengths = []
+    for proc, subprocs in zip(proc, expanded_proc):
+        val = sum(cuts[0][p] for p in subprocs)
+        length = max(len(proc), len("{:.2f}".format(float(val))))
+        fieldlengths.append(length)
 
-    format = "{{:{0}}}".format(namelength) + "   {{:{0}}}".format(fieldlength) * len(procs) + "\n"
-    f.write(format.format("Cut", *procs))
-    f.write("-" * namelength + ("   " + "-" * fieldlength) * len(procs) + "\n")
+    header = "{{:{0}}}".format(namelength) \
+            + "".join("   {{:{0}}}".format(fl) for fl in fieldlengths) \
+            + "\n"
+    format = "{{:{0}}}".format(namelength) \
+            + "".join("   {{:{0}.2f}}".format(fl) for fl in fieldlengths) \
+            + "\n"
+
+    f.write(header.format("Cut", *procs))
+    f.write("-" * namelength + "".join("   " + "-" * fl for fl in fieldlengths) + "\n")
     for cut in cuts:
-        f.write(format.format(cut, *[sum(cut[p] for p in ps) for ps in expanded_proc]))
+        f.write(format.format(cut, *[sum(float(cut[p]) for p in ps) for ps in expanded_proc]))
