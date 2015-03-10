@@ -32,6 +32,7 @@ class Plot(Snippet):
             bkg, color = cfg.items()[0]
             l.draw_box(1001, self._eval(color), Process.get(bkg).fullname)
         l.draw_box(3654, r.kBlack, "Bkg. err.", True)
+        # TODO add collisions
         l.new_row()
         for cfg in config['signals']:
             sig, color = cfg.items()[0]
@@ -100,14 +101,13 @@ class Plot(Snippet):
     def draw(self, *args):
         self.__hists.values()[0].Draw(self.__opt, *args)
 
-    def save(self, config, outdir):
+    def save(self, lumi, config, outdir):
         min_y = 0.002
         max_y = min_y
         scale = 1.15
         factor = config.get("scale factor", "auto")
 
-        # TODO move to somewhere else!
-        self._normalize(10000)
+        self._normalize(lumi)
 
         canvas = r.TCanvas(self.__name, self.__name, 600, 700)
         canvas.Divide(1, 2)

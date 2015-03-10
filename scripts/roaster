@@ -38,7 +38,7 @@ r.gErrorIgnoreLevel = 1001
 r.gSystem.Load("libttHTauRoast")
 
 from ttH.TauRoast import stylish
-from ttH.TauRoast.cutting import Cut, cutflow
+from ttH.TauRoast.cutting import StaticCut, Cut, cutflow, normalize
 from ttH.TauRoast.plotting import Plot
 from ttH.TauRoast.processing import Process
 
@@ -54,12 +54,18 @@ magic = os.path.join(datadir, 'procs', '*.py')
 for n, file in enumerate(glob(magic)):
     imp.load_source("procs{0}".format(n), file)
 
-cuts = []
+cuts = [
+        StaticCut("Dataset"),
+        Cut("Ntuple", "True")
+]
 for hash in config["cuts"]:
     cuts.append(Cut(*hash.items()[0]))
 
 for proc in sum(map(Process.expand, config['plot']), []):
     logging.info("processing {}".format(proc))
+
+    cuts[0][proc] = proc.events
+
     t = r.TChain("taus/events")
     for p in proc.paths:
         t.Add(os.path.join(config['ntupledir'], p, '*.root'))
@@ -82,7 +88,8 @@ for proc in sum(map(Process.expand, config['plot']), []):
                         print e
             break
 
+normalize(cuts, config["lumi"])
 cutflow(cuts, config["plot"])
 
 for p in Plot.plots():
-    p.save(plotconfig, config["outdir"])
+    p.save(config['lumi'], plotconfig, config["outdir"])
