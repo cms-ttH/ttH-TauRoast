@@ -67,6 +67,12 @@ class Plot(Snippet):
             res.append(h)
         return res
 
+    def _get_scale_factor(self, background, signals):
+        bsum = background.Integral()
+        ssum = max(sig.Integral() for sig in signals)
+
+        return bsum / float(ssum)
+
     def _normalize(self, lumi):
         for proc, hist in self.__hists.items():
             factor = lumi * proc.cross_section / float(proc.events)
@@ -79,6 +85,7 @@ class Plot(Snippet):
         min_y = 0.002
         max_y = min_y
         scale = 1.15
+        factor = config.get("scale factor", "auto")
 
         # TODO move to somewhere else!
         self._normalize(10000)
@@ -101,7 +108,11 @@ class Plot(Snippet):
         bkg_stack.Draw()
 
         signals = self._get_signals(config)
-        max_y = scale * max(h.GetMaximum() for h in [bkg_stack] + signals)
+
+        if factor == "auto":
+            factor = self._get_scale_factor(bkg_sum, signals)
+
+        max_y = scale * max([bkg_stack.GetMaximum()] + [factor * h.GetMaximum() for h in signals])
 
         base_histo.GetYaxis().SetRangeUser(min_y, max_y)
         base_histo.Draw("hist")
@@ -111,6 +122,7 @@ class Plot(Snippet):
         bkg_stack.Draw("hist same")
 
         for sig in signals:
+            sig.Scale(factor)
             sig.DrawCopy("hist same")
 
         bkg_sum.Draw("E2 same")

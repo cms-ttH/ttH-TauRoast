@@ -1,4 +1,5 @@
 legend: true
+scale factor: auto
 backgrounds:
   - ttjets: r.kRed
 signals:
