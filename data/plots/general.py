@@ -1,97 +1,62 @@
 from ttH.TauRoast.plotting import Plot
 
 Plot(
-        name="njets",
+        name="general/Events",
+        code="histo.Fill(0)",
+        labels=["", "Events"],
+        binning=[1, 0, 1]
+)
+
+Plot(
+        name="general/NumInclusiveJets",
         code="histo.Fill(jets.size())",
-        labels=["jet multiplicity", "count"],
-        binning=[30, 0, 30]
+        labels=["Number of inclusive jets", "Events"],
+        binning=[10, 0, 10]
 )
 Plot(
-        name="ntags",
+        name="general/NumJets",
+        code="histo.Fill(len([1 for jet in jets if not btag(jet)]))",
+        labels=["Number of jets", "Events"],
+        binning=[10, 0, 10]
+)
+Plot(
+        name="general/NumTags",
         code="histo.Fill(len(filter(btag, jets)))",
-        labels=["tag multiplicity", "count"],
-        binning=[31, 0, 30]
+        labels=["Number of tags", "Events"],
+        binning=[10, 0, 10]
 )
 Plot(
-        name="tags_vs_jets",
+        name="general/NumVertices",
+        code="histo.Fill(event.npv())",
+        labels=["Number PV", "Events"],
+        binning=[40, 0, 40]
+)
+Plot(
+        name="general/NumJetsOverview",
         code="histo.Fill(jets.size(), len(filter(btag, jets)))",
-        labels=["jets", "tags"],
-        binning=[10, 0, 10, 5, 0, 5],
+        labels=["Inclusive jets", "Tagged jets"],
+        binning=[10, 0, 10, 5, 0, 4],
         dim=2,
         draw="COLZ"
 )
+
+
 Plot(
-        name="jetpt",
-        code="for j in jets: histo.Fill(j.p4().Pt())",
-        labels=["P_{T}", "count"],
-        binning=[40, 0, 160]
+        name="general/MET",
+        code="histo.Fill(event.met().Pt())",
+        labels=["MET", "Events"],
+        binning=[20, 0, 300]
 )
-Plot(
-        name="leppt",
-        code="for l in leptons: histo.Fill(l.p4().Pt())",
-        labels=["P_{T}", "count"],
-        binning=[40, 0, 160]
-)
-Plot(
-        name="tau1pt",
-        code="histo.Fill(taus[0].p4().Pt())",
-        labels=["P_{T}", "count"],
-        binning=[40, 0, 160]
-)
-Plot(
-        name="tau2pt",
-        code="histo.Fill(taus[1].p4().Pt())",
-        labels=["P_{T}", "count"],
-        binning=[40, 0, 160]
-)
-Plot(
-        name="jj_m",
-        code="""
-masses = []
-for n, j in enumerate(jets):
-    for k in jets[n + 1:]:
-        if btag(j) or btag(k):
-            continue
-        masses.append((j.p4() + k.p4()).M())
-if len(masses) > 0:
-    histo.Fill(min(masses, key=lambda m: abs(m - 80)))
-""",
-        labels=["mass", "count"],
-        binning=[40, 0, 400]
-)
-Plot(
-        name="tau1id",
-        code="histo.Fill(abs(taus[0].pdgId()))",
-        labels=["id", "count"],
-        binning=[30, 0, 30]
-)
-Plot(
-        name="tau2id",
-        code="histo.Fill(abs(taus[1].pdgId()))",
-        labels=["id", "count"],
-        binning=[30, 0, 30]
-)
-Plot(
-        name="tau1pid",
-        code="histo.Fill(abs(taus[0].parentId()))",
-        labels=["id", "count"],
-        binning=[60, -29.5, 29.5]
-)
-Plot(
-        name="tau2pid",
-        code="histo.Fill(abs(taus[1].parentId()))",
-        labels=["id", "count"],
-        binning=[60, -29.5, 29.5]
-)
-Plot(
-        name="npv",
-        code="histo.Fill(event.npv())",
-        labels=["npv", "count"],
-        binning=[60, 0, 60]
-)
-Plot(
-        name="combos",
-        code="histo.Fill(event.combos().size())",
-        labels=["combos", "count"],
-        binning=[10, 0, 10]
-)
+
+# Plot(
+#         name="leppt",
+#         code="for l in leptons: histo.Fill(l.p4().Pt())",
+#         labels=["P_{T}", "count"],
+#         binning=[40, 0, 160]
+# )
+# Plot(
+#         name="combos",
+#         code="histo.Fill(event.combos().size())",
+#         labels=["combos", "count"],
+#         binning=[10, 0, 10]
+# )
