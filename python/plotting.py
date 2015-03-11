@@ -61,6 +61,10 @@ class Plot(Snippet):
                 res = h
             else:
                 res.Add(h)
+        if not res:
+            args = list(self.__args)
+            args[0] += "_bkg_sum"
+            res = self.__class(*args)
         res.SetFillStyle(3654)
         res.SetFillColor(r.kBlack)
         res.SetMarkerStyle(0)
@@ -91,7 +95,7 @@ class Plot(Snippet):
         bsum = background.Integral()
         ssum = max(sig.Integral() for sig in signals)
 
-        return bsum / float(ssum)
+        return (bsum / float(ssum) if bsum > 0 else 1)
 
     def _normalize(self, lumi):
         for proc, hist in self.__hists.items():
