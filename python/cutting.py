@@ -1,7 +1,7 @@
 import sys
 
 from ttH.TauRoast.processing import Process
-from ttH.TauRoast.utils import Snippet
+from ttH.TauRoast.useful import Snippet
 
 class Cut(Snippet):
     def __init__(self, name, code=None):

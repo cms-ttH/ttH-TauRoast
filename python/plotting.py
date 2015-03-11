@@ -6,7 +6,7 @@ import ROOT as r
 from ttH.TauRoast import stylish
 from ttH.TauRoast.legendary import Legend
 from ttH.TauRoast.processing import Process
-from ttH.TauRoast.utils import Snippet
+from ttH.TauRoast.useful import Snippet
 
 class Plot(Snippet):
     __plots__ = []
