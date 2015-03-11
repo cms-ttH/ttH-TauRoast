@@ -162,4 +162,6 @@ namespace superslim {
 
          ClassDef(Event, 1);
    };
+
+   bool operator<(const PhysObject& lhs, const PhysObject& rhs);
 }

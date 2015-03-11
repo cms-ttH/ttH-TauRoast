@@ -144,6 +144,12 @@ namespace superslim {
       taus_(taus)
    {
    }
+
+   bool
+   operator<(const PhysObject& lhs, const PhysObject& rhs)
+   {
+      return rhs.p4().Pt() < lhs.p4().Pt();
+   }
 }
 
 ClassImp(superslim::PhysObject);
