@@ -1,5 +1,9 @@
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
+#include "DataFormats/PatCandidates/interface/Electron.h"
+#include "DataFormats/PatCandidates/interface/Muon.h"
+#include "DataFormats/PatCandidates/interface/Jet.h"
+#include "DataFormats/PatCandidates/interface/Tau.h"
 
 #include "ttH/TauRoast/interface/SuperSlim.h"
 
@@ -71,6 +75,31 @@ namespace superslim {
          o.setGenInfo(mother, level - 1);
          parents_.push_back(o);
       }
+   }
+
+   Jet::Jet(const pat::Jet& j) :
+      PhysObject(&j),
+      csv_(j.bDiscriminator("combinedInclusiveSecondaryVertexV2BJetTags"))
+   {
+      setGenInfo(j.genParton());
+   }
+
+   Lepton::Lepton(const pat::Electron& e) :
+      PhysObject(&e)
+   {
+      setGenInfo(e.genParticle());
+   }
+
+   Lepton::Lepton(const pat::Muon& m) :
+      PhysObject(&m)
+   {
+      setGenInfo(m.genParticle());
+   }
+
+   Tau::Tau(const pat::Tau& t) :
+      PhysObject(&t)
+   {
+      setGenInfo(t.genParticle());
    }
 
    Combination::Combination(

@@ -282,29 +282,17 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       std::vector<superslim::Lepton> sleptons;
       std::vector<superslim::Jet> sjets;
 
-      for (const auto& tau: loose_tau) {
-         superslim::Tau t(&tau);
-         t.setGenInfo(tau.genParticle());
-         staus.push_back(t);
-      }
+      for (const auto& tau: loose_tau)
+         staus.push_back(superslim::Tau(tau));
 
-      for (const auto& lep: loose_e) {
-         superslim::Lepton l(&lep);
-         l.setGenInfo(lep.genParticle());
-         sleptons.push_back(l);
-      }
+      for (const auto& lep: loose_e)
+         sleptons.push_back(superslim::Lepton(lep));
 
-      for (const auto& lep: loose_mu) {
-         superslim::Lepton l(&lep);
-         l.setGenInfo(lep.genParticle());
-         sleptons.push_back(l);
-      }
+      for (const auto& lep: loose_mu)
+         sleptons.push_back(superslim::Lepton(lep));
 
-      for (const auto& jet: selected_jets) {
-         superslim::Jet j(&jet, jet.bDiscriminator("combinedInclusiveSecondaryVertexV2BJetTags"));
-         j.setGenInfo(jet.genParton());
-         sjets.push_back(j);
-      }
+      for (const auto& jet: selected_jets)
+         sjets.push_back(superslim::Jet(jet));
 
       combos.push_back(superslim::Combination(staus, sleptons, sjets));
    }

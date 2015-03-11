@@ -4,6 +4,13 @@
 #include "Math/LorentzVector.h"
 #include "TObject.h"
 
+namespace pat {
+   class Electron;
+   class Jet;
+   class Muon;
+   class Tau;
+}
+
 namespace reco {
    class Candidate;
    class GenParticle;
@@ -45,7 +52,7 @@ namespace superslim {
    class Jet : public PhysObject {
       public:
          Jet() {};
-         Jet(const reco::Candidate* c, float csv) : PhysObject(c), csv_(csv) {};
+         Jet(const pat::Jet& j);
          virtual ~Jet() {};
 
          float csv() const { return csv_; };
@@ -57,7 +64,8 @@ namespace superslim {
    class Lepton : public PhysObject {
       public:
          Lepton() {};
-         Lepton(const reco::Candidate* c) : PhysObject(c) {};
+         Lepton(const pat::Electron& e);
+         Lepton(const pat::Muon& m);
          virtual ~Lepton() {};
       private:
          ClassDef(Lepton, 1);
@@ -66,7 +74,7 @@ namespace superslim {
    class Tau : public PhysObject {
       public:
          Tau() {};
-         Tau(const reco::Candidate* c) : PhysObject(c) {};
+         Tau(const pat::Tau& t);
          virtual ~Tau() {};
       private:
          ClassDef(Tau, 1);
