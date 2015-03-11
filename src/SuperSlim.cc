@@ -99,14 +99,14 @@ namespace superslim {
    Tau::Tau(const pat::Tau& t) :
       PhysObject(&t),
       decay_mode_(t.decayMode()),
-      prongs_(t.signalPFChargedHadrCands().size()),
+      prongs_(t.signalChargedHadrCands().size()),
       leading_track_pt_(-1.0)
    {
       setGenInfo(t.genParticle());
 
-      if (t.leadPFChargedHadrCand().isNonnull()) {
-         leading_track_pt_ = t.leadPFChargedHadrCand()->pt();
-         charge_ = t.leadPFChargedHadrCand()->charge();
+      if (t.leadChargedHadrCand().isNonnull()) {
+         leading_track_pt_ = t.leadChargedHadrCand()->pt();
+         charge_ = t.leadChargedHadrCand()->charge();
       }
 
       if (t.tauID("byTightCombinedIsolationDeltaBetaCorr3Hits") > .5)
