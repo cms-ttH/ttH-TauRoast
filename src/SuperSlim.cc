@@ -108,6 +108,31 @@ namespace superslim {
          leading_track_pt_ = t.leadPFChargedHadrCand()->pt();
          charge_ = t.leadPFChargedHadrCand()->charge();
       }
+
+      if (t.tauID("byTightCombinedIsolationDeltaBetaCorr3Hits") > .5)
+         isolation_index_3hits_ = 3;
+      else if (t.tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits") > .5)
+         isolation_index_3hits_ = 2;
+      else if (t.tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits") > .5)
+         isolation_index_3hits_ = 1;
+      else
+         isolation_index_3hits_ = 0;
+
+      if (t.tauID("againstMuonTight3") > .5)
+         veto_muon_ = 2;
+      else if (t.tauID("againstMuonLoose3") > .5)
+         veto_muon_ = 1;
+      else
+         veto_muon_ = 0;
+
+      if (t.tauID("againstElectronMediumMVA5") > .5)
+         veto_electron_ = 3;
+      if (t.tauID("againstElectronLooseMVA5") > .5)
+         veto_electron_ = 2;
+      if (t.tauID("againstElectronVLooseMVA5") > .5)
+         veto_electron_ = 1;
+      else
+         veto_electron_ = 0;
    }
 
    Combination::Combination(

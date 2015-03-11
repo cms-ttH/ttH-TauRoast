@@ -81,11 +81,19 @@ namespace superslim {
          virtual ~Tau() {};
 
          int decayMode() const { return decay_mode_; };
+         int isolationIndex3Hits() const { return isolation_index_3hits_; };
          int prongs() const { return prongs_; };
+         int vetoElectron() const { return veto_electron_; };
+         int vetoMuon() const { return veto_muon_; };
+
          float leadingTrackPt() const { return leading_track_pt_; };
       private:
          int decay_mode_;
+         int isolation_index_3hits_;
          int prongs_;
+         int veto_electron_;
+         int veto_muon_;
+
          float leading_track_pt_;
 
          ClassDef(Tau, 1);
