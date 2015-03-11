@@ -42,6 +42,12 @@ for mode, fltr in pspace:
             labels=["{0} jet #eta".format(mode), "Events"],
             binning=[40, -3, 3]
     )
+    Plot(
+            name="jets/id/{0}J_CSV".format(mode),
+            code="for j in {0}: histo.Fill(j.csv())".format(fltr),
+            labels=["{0} jet CSV".format(mode), "Events"],
+            binning=[30, 0, 1]
+    )
     for n, (short, long) in enumerate(jspace):
         Plot(
                 name="jets/kinematic/{0}{1}J_Pt".format(mode, short),
@@ -54,4 +60,10 @@ for mode, fltr in pspace:
                 code="if len({0}) > {1}: histo.Fill({0}[{1}].p4().Eta())".format(fltr, n),
                 labels=["{0} {1} jet #eta".format(mode, long), "Events"],
                 binning=[40, 0, 160]
+        )
+        Plot(
+                name="jets/id/{0}{1}J_CSV".format(mode, short),
+                code="if len({0}) > {1}: histo.Fill({0}[{1}].csv())".format(fltr, n),
+                labels=["{0} {1} jet CSV".format(mode, long), "Events"],
+                binning=[30, 0, 1]
         )
