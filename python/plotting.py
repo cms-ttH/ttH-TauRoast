@@ -179,6 +179,9 @@ class Plot(Snippet):
                     (1 / stylish.ratio_plot_max) *
                     (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin()))
 
+        subdir = os.path.dirname(os.path.join(outdir, self.__name))
+        if not os.path.exists(subdir) and subdir != '':
+            os.makedirs(subdir)
         canvas.SaveAs(os.path.join(outdir, self.__name + ".pdf"))
 
     def fill(self, process, event, combo):
