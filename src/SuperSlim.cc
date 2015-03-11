@@ -110,13 +110,13 @@ namespace superslim {
       }
 
       if (t.tauID("byTightCombinedIsolationDeltaBetaCorr3Hits") > .5)
-         isolation_index_3hits_ = 3;
+         isolation_3hits_ = 3;
       else if (t.tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits") > .5)
-         isolation_index_3hits_ = 2;
+         isolation_3hits_ = 2;
       else if (t.tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits") > .5)
-         isolation_index_3hits_ = 1;
+         isolation_3hits_ = 1;
       else
-         isolation_index_3hits_ = 0;
+         isolation_3hits_ = 0;
 
       if (t.tauID("againstMuonTight3") > .5)
          veto_muon_ = 2;
