@@ -142,6 +142,9 @@ class Plot(Snippet):
 
         max_y = scale * max([bkg_stack.GetMaximum()] + [factor * h.GetMaximum() for h in signals])
 
+        if max_y == 0:
+            return
+
         base_histo.GetYaxis().SetRangeUser(min_y, max_y)
         base_histo.Draw("hist")
 
