@@ -9,8 +9,8 @@
 
 namespace superslim {
    PhysObject::PhysObject(const reco::Candidate* c) :
-      p_(c->p4()),
       charge_(c->charge()),
+      p_(c->p4()),
       pdg_id_(0)
    {
    }
@@ -97,9 +97,17 @@ namespace superslim {
    }
 
    Tau::Tau(const pat::Tau& t) :
-      PhysObject(&t)
+      PhysObject(&t),
+      decay_mode_(t.decayMode()),
+      prongs_(t.signalPFChargedHadrCands().size()),
+      leading_track_pt_(-1.0)
    {
       setGenInfo(t.genParticle());
+
+      if (t.leadPFChargedHadrCand().isNonnull()) {
+         leading_track_pt_ = t.leadPFChargedHadrCand()->pt();
+         charge_ = t.leadPFChargedHadrCand()->charge();
+      }
    }
 
    Combination::Combination(

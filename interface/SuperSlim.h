@@ -39,11 +39,14 @@ namespace superslim {
             pdgId() const { return pdg_id_; };
          void
             setGenInfo(const reco::Candidate* p, int level=2);
+
+      protected:
+         int charge_;
+
       private:
          LorentzVector p_;
          std::vector<superslim::PhysObject> parents_;
 
-         int charge_;
          int pdg_id_;
 
          ClassDef(PhysObject, 1);
@@ -76,7 +79,15 @@ namespace superslim {
          Tau() {};
          Tau(const pat::Tau& t);
          virtual ~Tau() {};
+
+         int decayMode() const { return decay_mode_; };
+         int prongs() const { return prongs_; };
+         float leadingTrackPt() const { return leading_track_pt_; };
       private:
+         int decay_mode_;
+         int prongs_;
+         float leading_track_pt_;
+
          ClassDef(Tau, 1);
    };
 
