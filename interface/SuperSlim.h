@@ -105,8 +105,13 @@ namespace superslim {
          Lepton(const pat::Electron& e);
          Lepton(const pat::Muon& m);
          virtual ~Lepton() {};
+
+         bool electron() const { return type_ == e; };
+         bool muon() const { return type_ == mu; };
       private:
-         ClassDef(Lepton, 1);
+         enum kind { e, mu } type_;
+
+         ClassDef(Lepton, 2);
    };
 
    class Tau : public PhysObject {

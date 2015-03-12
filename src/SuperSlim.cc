@@ -99,13 +99,15 @@ namespace superslim {
    }
 
    Lepton::Lepton(const pat::Electron& e) :
-      PhysObject(&e)
+      PhysObject(&e),
+      type_(Lepton::e)
    {
       setGenInfo(e.genParticle());
    }
 
    Lepton::Lepton(const pat::Muon& m) :
-      PhysObject(&m)
+      PhysObject(&m),
+      type_(Lepton::mu)
    {
       setGenInfo(m.genParticle());
    }

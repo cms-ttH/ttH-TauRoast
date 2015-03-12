@@ -39,6 +39,18 @@ Plot(
         dim=2,
         draw="COLZ"
 )
+Plot(
+        name="general/NumElectrons",
+        code="histo.Fill(len([l for l in leptons if l.electron()]))",
+        labels=["Number of e", "Events"],
+        binning=[3, 0, 3]
+)
+Plot(
+        name="general/NumMuons",
+        code="histo.Fill(len([l for l in leptons if l.muon()]))",
+        labels=["Number of #mu", "Events"],
+        binning=[3, 0, 3]
+)
 
 Plot(
         name="vertex/ZCoord",
