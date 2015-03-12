@@ -34,6 +34,10 @@ namespace superslim {
          float yError() const { return y_error_; };
          float zError() const { return z_error_; };
 
+         float rho() const { return rho_; };
+         float normalizedChi2() const { return normalized_chi2_; };
+         int ndof() const { return ndof_; };
+
       private:
          float x_;
          float y_;
@@ -43,7 +47,11 @@ namespace superslim {
          float y_error_;
          float z_error_;
 
-         ClassDef(Vertex, 1);
+         float rho_;
+         float normalized_chi2_;
+         int ndof_;
+
+         ClassDef(Vertex, 2);
    };
 
    class PhysObject {

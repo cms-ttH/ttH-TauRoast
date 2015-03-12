@@ -15,7 +15,10 @@ namespace superslim {
       z_(v.z()),
       x_error_(v.xError()),
       y_error_(v.yError()),
-      z_error_(v.zError())
+      z_error_(v.zError()),
+      rho_(v.position().rho()),
+      normalized_chi2_(v.normalizedChi2()),
+      ndof_(v.ndof())
    {
    }
 
