@@ -19,7 +19,9 @@ class Snippet(object):
                 'dR': dR,
                 'taus': combo.taus(),
                 'leptons': combo.leptons(),
-                'jets': combo.jets()
+                'jets': combo.jets(),
+                'pv': event.pv(),
+                'met': event.met()
         }
 
         if locals:
