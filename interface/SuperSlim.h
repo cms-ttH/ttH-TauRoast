@@ -14,10 +14,37 @@ namespace pat {
 namespace reco {
    class Candidate;
    class GenParticle;
+   class Vertex;
 }
 
 namespace superslim {
    typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > LorentzVector;
+
+   class Vertex {
+      public:
+         Vertex() {};
+         Vertex(const reco::Vertex&);
+         virtual ~Vertex() {};
+
+         float x() const { return x_; };
+         float y() const { return y_; };
+         float z() const { return z_; };
+
+         float xError() const { return x_error_; };
+         float yError() const { return y_error_; };
+         float zError() const { return z_error_; };
+
+      private:
+         float x_;
+         float y_;
+         float z_;
+
+         float x_error_;
+         float y_error_;
+         float z_error_;
+
+         ClassDef(Vertex, 1);
+   };
 
    class PhysObject {
       public:
@@ -127,11 +154,12 @@ namespace superslim {
          Event(const std::vector<superslim::Combination>& cs,
                long run, long lumi, long event,
                int npv, int ntv,
-               const LorentzVector& met) :
+               const LorentzVector& met,
+               const std::vector<superslim::Vertex>& pv) :
             combos_(cs),
             run_(run), lumi_(lumi), event_(event),
             npv_(npv), ntv_(ntv),
-            met_(met) {};
+            met_(met), pv_(pv) {};
          virtual ~Event() {};
 
          const std::vector<superslim::Combination> combos() const { return combos_; };
@@ -147,6 +175,7 @@ namespace superslim {
          int ntv() const { return ntv_; };
 
          LorentzVector met() const { return met_; };
+         std::vector<superslim::Vertex> pv() const { return pv_; };
       private:
          std::vector<superslim::Combination> combos_;
          std::map<std::string, float> weights_;
@@ -159,8 +188,9 @@ namespace superslim {
          int ntv_;
 
          LorentzVector met_;
+         std::vector<superslim::Vertex> pv_;
 
-         ClassDef(Event, 1);
+         ClassDef(Event, 2);
    };
 
    bool operator<(const PhysObject& lhs, const PhysObject& rhs);

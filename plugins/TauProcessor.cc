@@ -184,11 +184,13 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
    auto vertices = get_collection(event, vertices_token_);
 
+   std::vector<superslim::Vertex> pv;
    int npv = 0;
    for (const auto& v: *vertices) {
       if (!v.isFake() && v.ndof() >= 4 && abs(v.z()) <= 24. && abs(v.position().Rho()) <= 2.) {
          if (npv++ == 0)
             helper_.SetVertex(v);
+         pv.push_back(v);
       }
    }
 
@@ -317,7 +319,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
                combos,
                event.id().run(), event.id().luminosityBlock(), event.id().event(),
                npv, ntv,
-               mets->at(0).p4()));
+               mets->at(0).p4(), pv));
       event_ = ptr.get();
       tree_->Fill();
    }

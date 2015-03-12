@@ -4,10 +4,21 @@
 #include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/PatCandidates/interface/Jet.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
+#include "DataFormats/VertexReco/interface/Vertex.h"
 
 #include "ttH/TauRoast/interface/SuperSlim.h"
 
 namespace superslim {
+   Vertex::Vertex(const reco::Vertex& v) :
+      x_(v.x()),
+      y_(v.y()),
+      z_(v.z()),
+      x_error_(v.xError()),
+      y_error_(v.yError()),
+      z_error_(v.zError())
+   {
+   }
+
    PhysObject::PhysObject(const reco::Candidate* c) :
       charge_(c->charge()),
       p_(c->p4()),
@@ -152,6 +163,7 @@ namespace superslim {
    }
 }
 
+ClassImp(superslim::Vertex);
 ClassImp(superslim::PhysObject);
 ClassImp(superslim::Jet);
 ClassImp(superslim::Lepton);
