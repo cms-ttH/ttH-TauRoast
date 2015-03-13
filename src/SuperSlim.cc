@@ -1,3 +1,4 @@
+#include "DataFormats/BeamSpot/interface/BeamSpot.h"
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 #include "DataFormats/PatCandidates/interface/Electron.h"
@@ -98,18 +99,34 @@ namespace superslim {
       setGenInfo(j.genParton());
    }
 
-   Lepton::Lepton(const pat::Electron& e) :
+   Lepton::Lepton(const pat::Electron& e, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs) :
       PhysObject(&e),
-      type_(Lepton::e)
+      type_(Lepton::e),
+      impact_parameter_(e.dB(pat::Electron::PV3D)),
+      impact_parameter_error_(e.edB(pat::Electron::PV3D)),
+      rel_iso_(rel_iso)
    {
       setGenInfo(e.genParticle());
+
+      if (e.gsfTrack().isAvailable()) {
+         corrected_d0_ = e.gsfTrack()->dxy(bs.position());
+         corrected_dz_ = e.gsfTrack()->dz(pv.position());
+      }
    }
 
-   Lepton::Lepton(const pat::Muon& m) :
+   Lepton::Lepton(const pat::Muon& m, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs) :
       PhysObject(&m),
-      type_(Lepton::mu)
+      type_(Lepton::mu),
+      impact_parameter_(m.dB(pat::Muon::PV3D)),
+      impact_parameter_error_(m.edB(pat::Muon::PV3D)),
+      rel_iso_(rel_iso)
    {
       setGenInfo(m.genParticle());
+
+      if (m.innerTrack().isAvailable()) {
+         corrected_d0_ = m.innerTrack()->dxy(bs.position());
+         corrected_dz_ = m.innerTrack()->dz(pv.position());
+      }
    }
 
    Tau::Tau(const pat::Tau& t) :

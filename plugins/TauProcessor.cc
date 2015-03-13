@@ -113,6 +113,7 @@ class TauProcessor : public edm::EDAnalyzer {
       unsigned int min_tight_taus_;
 
       edm::EDGetTokenT<double> rho_token_;
+      edm::EDGetTokenT<reco::BeamSpot> bs_token_;
       edm::EDGetTokenT<std::vector<PileupSummaryInfo>> pu_token_;
       edm::EDGetTokenT<reco::VertexCollection> vertices_token_;
       edm::EDGetTokenT<pat::ElectronCollection> electrons_token_;
@@ -137,6 +138,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    min_tight_taus_(config.getParameter<unsigned int>("minTightTaus"))
 {
    rho_token_ = consumes<double>(edm::InputTag("fixedGridRhoFastjetAll"));
+   bs_token_ = consumes<reco::BeamSpot>(edm::InputTag("offlineBeamSpot"));
    pu_token_ = consumes<std::vector<PileupSummaryInfo>>(edm::InputTag("addPileupInfo"));
    vertices_token_ = consumes<reco::VertexCollection>(edm::InputTag("offlineSlimmedPrimaryVertices"));
    electrons_token_ = consumes<pat::ElectronCollection>(edm::InputTag("slimmedElectrons"));
@@ -185,14 +187,22 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    auto vertices = get_collection(event, vertices_token_);
 
    std::vector<superslim::Vertex> pv;
+   reco::Vertex rpv;
    int npv = 0;
    for (const auto& v: *vertices) {
       if (!v.isFake() && v.ndof() >= 4 && abs(v.z()) <= 24. && abs(v.position().Rho()) <= 2.) {
-         if (npv++ == 0)
+         if (npv++ == 0) {
             helper_.SetVertex(v);
+            rpv = v;
+         }
          pv.push_back(v);
       }
    }
+
+   if (npv == 0)
+      return;
+
+   auto bs = get_collection(event, bs_token_);
 
    auto rho = get_collection(event, rho_token_);
    helper_.SetRho(*rho);
@@ -288,10 +298,10 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
          staus.push_back(superslim::Tau(tau));
 
       for (const auto& lep: loose_e)
-         sleptons.push_back(superslim::Lepton(lep));
+         sleptons.push_back(superslim::Lepton(lep, helper_.GetElectronRelIso(lep), rpv, *bs));
 
       for (const auto& lep: loose_mu)
-         sleptons.push_back(superslim::Lepton(lep));
+         sleptons.push_back(superslim::Lepton(lep, helper_.GetMuonRelIso(lep), rpv, *bs));
 
       std::sort(sleptons.begin(), sleptons.end());
       std::reverse(sleptons.begin(), sleptons.end());

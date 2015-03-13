@@ -12,6 +12,7 @@ namespace pat {
 }
 
 namespace reco {
+   class BeamSpot;
    class Candidate;
    class GenParticle;
    class Vertex;
@@ -102,16 +103,28 @@ namespace superslim {
    class Lepton : public PhysObject {
       public:
          Lepton() {};
-         Lepton(const pat::Electron& e);
-         Lepton(const pat::Muon& m);
+         Lepton(const pat::Electron& e, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs);
+         Lepton(const pat::Muon& m, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs);
          virtual ~Lepton() {};
 
          bool electron() const { return type_ == e; };
          bool muon() const { return type_ == mu; };
+
+         float correctedD0() const { return corrected_d0_; };
+         float correctedDZ() const { return corrected_dz_; };
+         float impactParameter() const { return impact_parameter_; };
+         float impactParameterError() const { return impact_parameter_error_; };
+         float relativeIsolation() const { return rel_iso_; };
       private:
          enum kind { e, mu } type_;
 
-         ClassDef(Lepton, 2);
+         float corrected_d0_ = 0.;
+         float corrected_dz_ = 0.;
+         float impact_parameter_;
+         float impact_parameter_error_;
+         float rel_iso_;
+
+         ClassDef(Lepton, 3);
    };
 
    class Tau : public PhysObject {
