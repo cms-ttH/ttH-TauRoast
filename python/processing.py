@@ -21,6 +21,10 @@ class Process(object):
     def fullname(self):
         return self._fullname
 
+    @property
+    def limitname(self):
+        return self._limitname
+
     @classmethod
     def get(cls, name):
         return cls.__processes__[name]

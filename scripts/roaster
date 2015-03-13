@@ -91,5 +91,11 @@ for proc in sum(map(Process.expand, config['plot']), []):
 normalize(cuts, config["lumi"])
 cutflow(cuts, config["plot"])
 
+f = r.TFile(os.path.join(config["outdir"], "plots.root"), "RECREATE")
+
 for p in Plot.plots():
     p.save(config['lumi'], plotconfig, config["outdir"])
+    p.write(f)
+
+f.Write()
+f.Close()

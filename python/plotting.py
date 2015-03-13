@@ -1,3 +1,4 @@
+import logging
 import math
 import os
 
@@ -10,10 +11,12 @@ from ttH.TauRoast.useful import Snippet
 
 class Plot(Snippet):
     __plots__ = []
+    __names__ = set()
 
-    def __init__(self, code, name, labels, binning, dim=1, draw=""):
+    def __init__(self, code, name, labels, binning, dim=1, draw="", limitname=None):
         super(Plot, self).__init__(code)
         self.__name = name
+        self.__limitname = limitname if limitname else os.path.basename(name)
         self.__opt = draw
 
         self.__args = [name, ";".join([""] + labels)] + binning
@@ -24,7 +27,10 @@ class Plot(Snippet):
         elif dim == 2:
             self.__class = r.TH2F
 
+        if self.__limitname in Plot.__names__:
+            raise KeyError("Plot {0} defined twice".format(self.__limitname))
         Plot.__plots__.append(self)
+        Plot.__names__.add(self.__limitname)
 
     def _add_legend(self, config, factor):
         l = Legend(0.05, 3, 0.08)
@@ -102,8 +108,10 @@ class Plot(Snippet):
             factor = lumi * proc.cross_section / float(proc.events)
             hist.Scale(factor)
 
-    def draw(self, *args):
-        self.__hists.values()[0].Draw(self.__opt, *args)
+    def write(self, file, fmt="{p}_{v}"):
+        for proc, hist in self.__hists.items():
+            logging.debug("writing histogram {0}".format(fmt.format(p=proc.limitname, v=self.__limitname)))
+            file.WriteObject(hist, fmt.format(p=proc.limitname, v=self.__limitname))
 
     def save(self, lumi, config, outdir):
         min_y = 0.002
