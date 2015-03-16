@@ -71,31 +71,8 @@ if args.fill:
         cuts.append(Cut(*hash.items()[0]))
 
     for proc in sum(map(Process.expand, config['plot']), []):
-        logging.info("processing {}".format(proc))
+        proc.analyze(cuts, Plot.plots(), config['ntupledir'])
 
-        cuts[0][proc] = proc.events
-
-        t = r.TChain("taus/events")
-        for p in proc.paths:
-            t.Add(os.path.join(config['ntupledir'], p, '*.root'))
-
-        event = r.superslim.Event()
-        t.SetBranchAddress('Event', r.AddressOf(event))
-
-        for i in range(t.GetEntries()):
-            t.GetEntry(i)
-            for combo in event.combos():
-                for cut in cuts:
-                    if not cut(proc, event, combo):
-                        break
-                else:
-                    for plot in Plot.plots():
-                        try:
-                            plot.fill(proc, event, combo)
-                        except Exception, e:
-                            print "error in", plot.name
-                            print e
-                break
     normalize(cuts, config["lumi"])
     cutflow(cuts, config["plot"])
 

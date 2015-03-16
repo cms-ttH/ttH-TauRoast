@@ -1,3 +1,8 @@
+import logging
+import os
+
+import ROOT as r
+
 class Process(object):
     __processes__ = {}
 
@@ -41,6 +46,36 @@ class BasicProcess(Process):
         self.__events = events
         self.__sample = sample
         self.__cross_section = cross_section
+
+    def analyze(self, cuts, plots, basedir):
+        logging.info("processing {}".format(self))
+
+        cuts[0][self] = self.__events
+
+        t = r.TChain("taus/events")
+        for p in self.__paths:
+            t.Add(os.path.join(basedir, p, '*.root'))
+
+        event = r.superslim.Event()
+        t.SetBranchAddress('Event', r.AddressOf(event))
+
+        for i in range(t.GetEntries()):
+            if i % 1000 == 1:
+                logging.info("processing event {0}".format(i))
+
+            t.GetEntry(i)
+            for combo in event.combos():
+                for cut in cuts:
+                    if not cut(self, event, combo):
+                        break
+                else:
+                    for plot in plots:
+                        try:
+                            plot.fill(self, event, combo)
+                        except Exception, e:
+                            print "error in", plot.name
+                            print e
+                break
 
     def process(self):
         return [self._name]
