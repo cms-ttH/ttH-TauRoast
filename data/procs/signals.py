@@ -24,6 +24,20 @@ BasicProcess(
 )
 
 BasicProcess(
+    name="ttH_125_real",
+    sample=9125,
+    fullname="t#bar{t}H(125) ",
+    limitname="ttH125",
+    paths=["ttH_125"],
+    cross_section=0.8696,
+    events=199700,
+    additional_cuts=[('parentage', 'abs(taus[0].parentId()) == 25 and abs(taus[1].parentId()) == 25')]
+    # split: {hbb: 0, hcc: 1, hww: 2, hzz: 3, htt: 4, hgg: 5, hgluglu: 6, hzg: 7}
+    # split: {htt: 4}
+)
+
+
+BasicProcess(
     name="ttH_130",
     sample=9130,
     fullname="t#bar{t}H(130) ",

@@ -8,6 +8,7 @@ lumi: 10000
 plot:
   - ttjets
   - ttH_125
+  - ttH_125_real
 
 cuts:
   - "# leptons = 1": "leptons.size() == 1"

@@ -39,13 +39,14 @@ class Process(object):
         return map(cls.get, cls.__processes__[name].process())
 
 class BasicProcess(Process):
-    def __init__(self, name, paths, events, fullname=None, limitname=None, sample=-1, cross_section=1):
+    def __init__(self, name, paths, events, fullname=None, limitname=None, sample=-1, cross_section=1, additional_cuts=None):
         super(BasicProcess, self).__init__(name, fullname, limitname)
 
         self.__paths = paths
         self.__events = events
         self.__sample = sample
         self.__cross_section = cross_section
+        self.__add_cuts = additional_cuts if additional_cuts else []
 
     def analyze(self, cuts, plots, basedir):
         logging.info("processing {}".format(self))
@@ -79,6 +80,10 @@ class BasicProcess(Process):
 
     def process(self):
         return [self._name]
+
+    @property
+    def additional_cuts(self):
+        return self.__add_cuts
 
     @property
     def cross_section(self):

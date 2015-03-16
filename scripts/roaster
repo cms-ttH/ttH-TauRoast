@@ -71,7 +71,10 @@ if args.fill:
         cuts.append(Cut(*hash.items()[0]))
 
     for proc in sum(map(Process.expand, config['plot']), []):
-        proc.analyze(cuts, Plot.plots(), config['ntupledir'])
+        local_cuts = list(cuts)
+        for cfg in proc.additional_cuts:
+            local_cuts.insert(2, Cut(*cfg))
+        proc.analyze(local_cuts, Plot.plots(), config['ntupledir'])
 
     normalize(cuts, config["lumi"])
     cutflow(cuts, config["plot"])
