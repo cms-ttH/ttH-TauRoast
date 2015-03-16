@@ -6,10 +6,11 @@ outdir: delete_me
 lumi: 10000
 
 plot:
-  - ttjets
+  # - ttjets
   - ttH_125
   - ttH_125_real
 
 cuts:
   - "# leptons = 1": "leptons.size() == 1"
+  - "ΔR(ττ)": "dR(taus[0], taus[1]) > 0.5"
   - "Opposite charge for τ": "taus[0].charge() * taus[1].charge() < 0"
