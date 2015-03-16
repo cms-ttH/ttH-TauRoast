@@ -98,7 +98,7 @@ if args.fill:
     f = r.TFile(os.path.join(config["outdir"], "plots.root"), "RECREATE")
 
     for p in Plot.plots():
-        p.write(f)
+        p.write(f, config["lumi"])
 
     f.Write()
     f.Close()
@@ -113,4 +113,4 @@ else:
 
 if args.plot:
     for p in Plot.plots():
-        p.save(config['lumi'], plotconfig, config["outdir"])
+        p.save(plotconfig, config["outdir"])

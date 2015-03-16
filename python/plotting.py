@@ -121,20 +121,20 @@ class Plot(Snippet):
             else:
                 self.__hists[proc] = h
 
-    def write(self, file, fmt="{p}_{v}"):
+    def write(self, file, lumi, fmt="{p}_{v}"):
+        self._normalize(lumi)
+
         for proc, hist in self.__hists.items():
             logging.debug("writing histogram {0}".format(fmt.format(p=proc.limitname, v=self.__limitname)))
             file.WriteObject(hist, fmt.format(p=proc.limitname, v=self.__limitname))
 
-    def save(self, lumi, config, outdir):
+    def save(self, config, outdir):
         logging.debug("saving histogram {0}".format(self.__name))
 
         min_y = 0.002
         max_y = min_y
         scale = 1.15
         factor = config.get("scale factor", "auto")
-
-        self._normalize(lumi)
 
         canvas = r.TCanvas(self.__name, self.__name, 600, 700)
         canvas.Divide(1, 2)
