@@ -114,11 +114,11 @@ class Plot(Snippet):
         for proc in procs:
             logging.debug("reading histogram {0}".format(fmt.format(p=proc.limitname, v=self.__limitname)))
             h = file.Get(fmt.format(p=proc.limitname, v=self.__limitname))
-            h.SetDirectory(0)
             if h is None:
                 logging.warning("histogram {0} not found in file".format(
                     fmt.format(p=proc.limitname, v=self.__limitname)))
             else:
+                h.SetDirectory(0)
                 self.__hists[proc] = h
 
     def write(self, file, lumi, fmt="{p}_{v}"):
