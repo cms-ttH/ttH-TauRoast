@@ -13,18 +13,17 @@ class Plot(Snippet):
     __plots__ = []
     __names__ = set()
 
-    def __init__(self, code, name, labels, binning, dim=1, draw="", limitname=None):
+    def __init__(self, code, name, labels, binning, dimensions=1, limitname=None):
         super(Plot, self).__init__(code)
         self.__name = name
         self.__limitname = limitname if limitname else os.path.basename(name)
-        self.__opt = draw
 
         self.__args = [name, ";".join([""] + labels)] + binning
         self.__hists = {}
 
-        if dim == 1:
+        if dimensions == 1:
             self.__class = r.TH1F
-        elif dim == 2:
+        elif dimensions == 2:
             self.__class = r.TH2F
 
         if self.__limitname in Plot.__names__:
@@ -131,6 +130,31 @@ class Plot(Snippet):
     def save(self, config, outdir):
         logging.debug("saving histogram {0}".format(self.__name))
 
+        if self.__class == r.TH1F:
+            self._save1d(config, outdir)
+        else:
+            self._save2d(config, outdir)
+
+    def _save2d(self, config, outdir):
+        bkg_sum = self._get_background_sum(config)
+        signals = zip((cfg.keys()[0] for cfg in config['signals']), self._get_signals(config))
+
+        for label, hist in signals + [('background', bkg_sum)]:
+            canvas = r.TCanvas(self.__name + label, self.__name, 600, 600)
+
+            canvas.SetTopMargin(.18)
+            canvas.SetLeftMargin(0.13)
+            canvas.SetRightMargin(0.14)
+
+            stylish.setup_upper_axis(hist, scale=False, is2d=True)
+            hist.Draw("COLZ")
+
+            subdir = os.path.dirname(os.path.join(outdir, self.__name))
+            if not os.path.exists(subdir) and subdir != '':
+                os.makedirs(subdir)
+            canvas.SaveAs(os.path.join(outdir, "{0}_{1}.pdf".format(self.__name, label)))
+
+    def _save1d(self, config, outdir):
         min_y = 0.002
         max_y = min_y
         scale = 1.15

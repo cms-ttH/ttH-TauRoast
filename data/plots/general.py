@@ -36,8 +36,7 @@ Plot(
         code="histo.Fill(jets.size(), len(filter(btag, jets)))",
         labels=["Inclusive jets", "Tagged jets"],
         binning=[10, 0, 10, 5, 0, 4],
-        dim=2,
-        draw="COLZ"
+        dimensions=2
 )
 Plot(
         name="general/NumElectrons",
