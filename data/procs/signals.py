@@ -26,8 +26,7 @@ BasicProcess(
 BasicProcess(
     name="ttH_125_real",
     sample=9125,
-    fullname="t#bar{t}H(125) ",
-    limitname="ttH125",
+    fullname="t#bar{t}H(125) gen-match",
     paths=["ttH_125"],
     cross_section=0.8696,
     events=199700,

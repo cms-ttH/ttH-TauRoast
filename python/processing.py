@@ -5,12 +5,19 @@ import ROOT as r
 
 class Process(object):
     __processes__ = {}
+    __limitnames__ = set()
 
     def __init__(self, name, fullname, limitname):
         self._name = name
         self._fullname = fullname
         self._limitname = limitname
 
+        if name in Process.__processes__:
+            raise KeyError("Plot with name {0} defined twice".format(name))
+        if limitname in Process.__limitnames__ and limitname:
+            raise KeyError("Plot with limit name {0} defined twice".format(limitname))
+        elif limitname:
+            Process.__limitnames__.add(limitname)
         Process.__processes__[name] = self
 
     def __unicode__(self):
