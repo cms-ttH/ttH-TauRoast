@@ -13,12 +13,16 @@ parser.add_argument('-v', '--verbose', action="count", default=0,
         help="increase verbosity")
 parser.add_argument('-q', '--quiet', action="count", default=0,
         help="decrease verbosity")
-parser.add_argument('-f', '--fill', action='store_true', default=False,
+ag = parser.add_argument_group('analysis options')
+ag.add_argument('-f', '--fill', action='store_true', default=False,
         help="fill histograms")
-parser.add_argument('-p', '--plot', action='store_true', default=False,
+ag.add_argument('-p', '--plot', action='store_true', default=False,
         help="save histograms")
 
 args = parser.parse_args()
+
+if not any([args.fill, args.plot]):
+    parser.error("need to either fill or plot")
 
 # Logging setup
 logging.basicConfig(
