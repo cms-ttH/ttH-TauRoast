@@ -11,7 +11,7 @@ config.JobType.psetName    = 'ntuplize.py'
 config.section_("Data")
 config.Data.inputDataset = '/TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM'
 config.Data.splitting = 'EventAwareLumiBased'
-config.Data.unitsPerJob = 1000000
+config.Data.unitsPerJob = 250000
 
 config.section_("Site")
 config.Site.storageSite = 'T3_US_NotreDame'
