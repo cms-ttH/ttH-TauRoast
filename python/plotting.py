@@ -105,8 +105,21 @@ class Plot(Snippet):
 
     def _normalize(self, lumi):
         for proc, hist in self.__hists.items():
+            logging.debug("normalizing histogram {0}, process {1}".format(
+                self.__name, proc))
             factor = lumi * proc.cross_section / float(proc.events)
             hist.Scale(factor)
+
+    def read(self, file, procs, fmt="{p}_{v}"):
+        for proc in procs:
+            logging.debug("reading histogram {0}".format(fmt.format(p=proc.limitname, v=self.__limitname)))
+            h = file.Get(fmt.format(p=proc.limitname, v=self.__limitname))
+            h.SetDirectory(0)
+            if h is None:
+                logging.warning("histogram {0} not found in file".format(
+                    fmt.format(p=proc.limitname, v=self.__limitname)))
+            else:
+                self.__hists[proc] = h
 
     def write(self, file, fmt="{p}_{v}"):
         for proc, hist in self.__hists.items():
@@ -114,6 +127,8 @@ class Plot(Snippet):
             file.WriteObject(hist, fmt.format(p=proc.limitname, v=self.__limitname))
 
     def save(self, lumi, config, outdir):
+        logging.debug("saving histogram {0}".format(self.__name))
+
         min_y = 0.002
         max_y = min_y
         scale = 1.15
