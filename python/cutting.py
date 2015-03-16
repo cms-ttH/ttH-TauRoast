@@ -66,10 +66,10 @@ def cutflow(cuts, procs, f=sys.stdout):
         length = max(len(proc), len("{:.2f}".format(float(val))))
         fieldlengths.append(length)
 
-    header = "{{:{0}}}".format(namelength) \
-            + "".join("   {{:{0}}}".format(fl) for fl in fieldlengths) \
-            + "\n"
-    format = "{{:{0}}}".format(namelength) \
+    header = u"{{:{0}}}".format(namelength) \
+            + u"".join(u"   {{:{0}}}".format(fl) for fl in fieldlengths) \
+            + u"\n"
+    format = u"{{:{0}}}".format(namelength) \
             + "".join("   {{:{0}.2f}}".format(fl) for fl in fieldlengths) \
             + "\n"
 
