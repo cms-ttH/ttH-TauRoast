@@ -3,7 +3,7 @@ from ttH.TauRoast.processing import BasicProcess, CombinedProcess
 BasicProcess(
     name="ttjets",
     sample=2500,
-    fullname="t #bar{t} H",
+    fullname="t#bar{t}",
     paths=["ttjets"],
     cross_section=831.76,
     events=25446993
