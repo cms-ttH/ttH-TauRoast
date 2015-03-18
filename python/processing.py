@@ -1,3 +1,4 @@
+import glob
 import logging
 import os
 
@@ -55,10 +56,36 @@ class BasicProcess(Process):
         self.__cross_section = cross_section
         self.__add_cuts = additional_cuts if additional_cuts else []
 
-    def analyze(self, cuts, plots, basedir):
+    def analyze(self, counts, cuts, plots, basedir):
         logging.info("processing {}".format(self))
 
-        cuts[0][self] = self.__events
+        from ttH.TauRoast.cutting import StaticCut
+
+        hist = None
+        for p in self.__paths:
+            for fn in glob.glob(os.path.join(basedir, p, '*.root')):
+                f = r.TFile(fn)
+                h = f.Get("taus/cuts")
+                h.SetDirectory(0)
+                f.Close()
+                if hist is None:
+                    hist = h
+                else:
+                    hist.Add(h)
+
+        if len(counts) == 0:
+            counts.append(StaticCut("Dataset"))
+
+            for i in range(hist.GetNbinsX()):
+                label = hist.GetXaxis().GetBinLabel(i+1)
+                if label == "":
+                    break
+                counts.append(StaticCut(label))
+
+        for n, cut in enumerate(counts[1:], 1):
+            cut[self] = hist.GetBinContent(n)
+
+        counts[0][self] = self.__events
 
         t = r.TChain("taus/events")
         for p in self.__paths:

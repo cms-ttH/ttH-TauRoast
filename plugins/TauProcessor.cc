@@ -104,7 +104,8 @@ class TauProcessor : public edm::EDAnalyzer {
       std::vector<T1>
       removeOverlap(const std::vector<T1>& v1, const std::vector<T2>& v2, double dR = 0.02);
 
-      void passCut(int event_cut, int combo_cut, int& passed);
+      void passCut(unsigned int cut, const std::string& name);
+      void passComboCut(unsigned int event_cut, unsigned int combo_cut, int& passed, const std::string& name);
 
       MiniAODHelper helper_;
 
@@ -129,6 +130,8 @@ class TauProcessor : public edm::EDAnalyzer {
 
       TTree *tree_;
       TH1F *cuts_;
+
+      std::vector<std::string> cutnames_;
 
       superslim::Event *event_;
 };
@@ -187,11 +190,23 @@ TauProcessor::removeOverlap(const std::vector<T1>& v1, const std::vector<T2>& v2
 
 
 void
-TauProcessor::passCut(int event_cut, int combo_cut, int& passed)
+TauProcessor::passCut(unsigned int cut, const std::string& name)
 {
-   if (not passed & (1 << combo_cut)) {
-      cuts_->Fill(event_cut + combo_cut);
+   cuts_->Fill(cut);
+
+   if (cutnames_.size() == cut) {
+      cutnames_.push_back(name);
+      cuts_->GetXaxis()->SetBinLabel(cut + 1, name.c_str());
+   }
+}
+
+
+void
+TauProcessor::passComboCut(unsigned int event_cut, unsigned int combo_cut, int& passed, const std::string& name)
+{
+   if (not (passed & (1 << combo_cut))) {
       passed |= 1 << combo_cut;
+      passCut(event_cut + combo_cut, name);
    }
 }
 
@@ -203,8 +218,8 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
    int event_cut = 0;
 
-   // events run over count (0)
-   cuts_->Fill(event_cut++);
+   // events run over count
+   passCut(event_cut++, "Dataset processed");
 
    auto vertices = get_collection(event, vertices_token_);
 
@@ -224,8 +239,8 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    if (npv == 0)
       return;
 
-   // passed valid pv cut (1)
-   cuts_->Fill(event_cut++);
+   // passed valid pv cut
+   passCut(event_cut++, "Valid primary vertex");
 
    auto bs = get_collection(event, bs_token_);
 
@@ -255,14 +270,14 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    if (raw_tight_mu.size() + raw_tight_e.size() < min_tight_leptons_)
       return;
 
-   // passed sufficient leptons cut (2)
-   cuts_->Fill(event_cut++);
+   // passed sufficient leptons cut
+   passCut(event_cut++, "Lepton requirement");
 
    if (raw_tau.size() < min_taus_)
       return;
 
-   // passed sufficient taus cut (3)
-   cuts_->Fill(event_cut++);
+   // passed sufficient taus cut
+   passCut(event_cut++, "Tau requirement");
 
    auto raw_tight_tau = helper_.GetSelectedTaus(raw_tau, 20., tau::tight);
 
@@ -287,7 +302,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       if (tight_tau.size() < min_tight_taus_)
          continue;
 
-      passCut(event_cut, combo_cut++, passed); // (4)
+      passComboCut(event_cut, combo_cut++, passed, "Tight tau in combo");
 
       auto loose_e = removeOverlap(raw_e, loose_tau, 0.15);
       auto loose_mu = removeOverlap(raw_mu, loose_tau, 0.15);
@@ -301,12 +316,10 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       if (loose_e.size() + loose_mu.size() < min_leptons_)
          continue;
 
-      passCut(event_cut, combo_cut++, passed); // (5)
-
       if (tight_e.size() + tight_mu.size() < min_tight_leptons_)
          continue;
 
-      passCut(event_cut, combo_cut++, passed); // (6)
+      passComboCut(event_cut, combo_cut++, passed, "Leptons in combo");
 
       // TODO check trigger
 
@@ -329,7 +342,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       if (selected_tags.size() > max_tags_)
          continue;
 
-      passCut(event_cut, combo_cut++, passed); // (7)
+      passComboCut(event_cut, combo_cut++, passed, "Ntuple");
 
       // ===============
       // Conversion part
