@@ -73,7 +73,7 @@ if args.fill:
     for proc in sum(map(Process.expand, config['plot']), []):
         local_cuts = list(cuts)
         for cfg in proc.additional_cuts:
-            local_cuts.insert(2, Cut(*cfg))
+            local_cuts.insert(0, Cut(*cfg))
         proc.analyze(counts, local_cuts, Plot.plots(), config['ntupledir'])
 
     cuts = counts + cuts
