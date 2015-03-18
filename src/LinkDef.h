@@ -7,6 +7,8 @@
 #pragma link off all structs;
 #pragma link off all functions;
 
+#pragma link C++ nestedclasses;
+
 #pragma link C++ namespace superslim;
 #pragma link C++ class superslim::Vertex+;
 #pragma link C++ class superslim::PhysObject+;
