@@ -114,6 +114,8 @@ class TauProcessor : public edm::EDAnalyzer {
       unsigned int max_tags_;
       unsigned int min_leptons_;
       unsigned int min_tight_leptons_;
+      unsigned int max_leptons_;
+      unsigned int max_tight_leptons_;
       unsigned int min_taus_;
       unsigned int min_tight_taus_;
 
@@ -142,6 +144,8 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    max_tags_(config.getParameter<unsigned int>("maxTags")),
    min_leptons_(config.getParameter<unsigned int>("minLeptons")),
    min_tight_leptons_(config.getParameter<unsigned int>("minTightLeptons")),
+   max_leptons_(config.getParameter<unsigned int>("maxLeptons")),
+   max_tight_leptons_(config.getParameter<unsigned int>("maxTightLeptons")),
    min_taus_(config.getParameter<unsigned int>("minTaus")),
    min_tight_taus_(config.getParameter<unsigned int>("minTightTaus"))
 {
@@ -319,6 +323,12 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       if (tight_e.size() + tight_mu.size() < min_tight_leptons_)
          continue;
 
+      if (loose_e.size() + loose_mu.size() > max_leptons_)
+         continue;
+
+      if (tight_e.size() + tight_mu.size() > max_tight_leptons_)
+         continue;
+
       passComboCut(event_cut, combo_cut++, passed, "Leptons in combo");
 
       // TODO check trigger
@@ -342,6 +352,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       if (selected_tags.size() > max_tags_)
          continue;
 
+      passComboCut(event_cut, combo_cut++, passed, "Jet requirements");
       passComboCut(event_cut, combo_cut++, passed, "Ntuple");
 
       // ===============
