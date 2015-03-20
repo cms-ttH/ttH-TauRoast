@@ -4,6 +4,7 @@
 #include "Math/LorentzVector.h"
 #include "TObject.h"
 
+#ifndef __CINT__
 namespace pat {
    class Electron;
    class Jet;
@@ -17,6 +18,7 @@ namespace reco {
    class GenParticle;
    class Vertex;
 }
+#endif
 
 namespace superslim {
    typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > LorentzVector;
@@ -24,7 +26,9 @@ namespace superslim {
    class Vertex {
       public:
          Vertex() {};
+#ifndef __CINT__
          Vertex(const reco::Vertex&);
+#endif
          virtual ~Vertex() {};
 
          float x() const { return x_; };
@@ -58,7 +62,9 @@ namespace superslim {
    class PhysObject {
       public:
          PhysObject() {};
+#ifndef __CINT__
          PhysObject(const reco::Candidate*);
+#endif
          virtual ~PhysObject() {};
 
          LorentzVector
@@ -73,8 +79,10 @@ namespace superslim {
             charge() const { return charge_; };
          int
             pdgId() const { return pdg_id_; };
+#ifndef __CINT__
          void
             setGenInfo(const reco::Candidate* p, int level=2);
+#endif
 
       protected:
          int charge_;
@@ -91,7 +99,9 @@ namespace superslim {
    class Jet : public PhysObject {
       public:
          Jet() {};
+#ifndef __CINT__
          Jet(const pat::Jet& j);
+#endif
          virtual ~Jet() {};
 
          float csv() const { return csv_; };
@@ -103,8 +113,10 @@ namespace superslim {
    class Lepton : public PhysObject {
       public:
          Lepton() {};
+#ifndef __CINT__
          Lepton(const pat::Electron& e, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs);
          Lepton(const pat::Muon& m, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs);
+#endif
          virtual ~Lepton() {};
 
          bool electron() const { return type_ == e; };
@@ -130,7 +142,9 @@ namespace superslim {
    class Tau : public PhysObject {
       public:
          Tau() {};
+#ifndef __CINT__
          Tau(const pat::Tau& t);
+#endif
          virtual ~Tau() {};
 
          int decayMode() const { return decay_mode_; };
