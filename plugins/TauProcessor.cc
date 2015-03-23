@@ -165,7 +165,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
 
    edm::Service<TFileService> fs;
    tree_ = fs->make<TTree>("events", "Event data");
-   tree_->Branch("Event", &event_);
+   tree_->Branch("Event", "superslim::Event", &event_, 32000, 0);
 
    cuts_ = fs->make<TH1F>("cuts", "Cut counts", 64, -0.5, 63.5);
 }
