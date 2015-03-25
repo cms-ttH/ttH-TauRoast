@@ -11,6 +11,7 @@
 #pragma link C++ nestedtypedefs;
 
 #pragma link C++ namespace superslim;
+#pragma link C++ typedef superslim::LorentzVector;
 #pragma link C++ class superslim::PhysObject+;
 #pragma link C++ class std::vector<superslim::PhysObject>+;
 #pragma link C++ class superslim::Jet+;
