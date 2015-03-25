@@ -147,7 +147,8 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    max_leptons_(config.getParameter<unsigned int>("maxLeptons")),
    max_tight_leptons_(config.getParameter<unsigned int>("maxTightLeptons")),
    min_taus_(config.getParameter<unsigned int>("minTaus")),
-   min_tight_taus_(config.getParameter<unsigned int>("minTightTaus"))
+   min_tight_taus_(config.getParameter<unsigned int>("minTightTaus")),
+   event_(0)
 {
    rho_token_ = consumes<double>(edm::InputTag("fixedGridRhoFastjetAll"));
    bs_token_ = consumes<reco::BeamSpot>(edm::InputTag("offlineBeamSpot"));
