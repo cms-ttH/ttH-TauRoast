@@ -99,18 +99,24 @@ class BasicProcess(Process):
                 logging.info("processing event {0}".format(i))
 
             t.GetEntry(i)
-            for combo in event.combos():
+            passed = []
+            combos = event.combos()
+            for combo in combos:
                 for cut in cuts:
                     if not cut(self, event, combo):
                         break
                 else:
-                    for plot in plots:
-                        try:
-                            plot.fill(self, event, combo)
-                        except Exception, e:
-                            print "error in", plot.name
-                            print e
-                break
+                    passed.append(combo)
+
+            if len(passed) == 0:
+                continue
+
+            for plot in plots:
+                try:
+                    plot.fill(self, event, passed)
+                except Exception, e:
+                    print "error in", plot.name
+                    print e
 
     def process(self):
         return [self._name]

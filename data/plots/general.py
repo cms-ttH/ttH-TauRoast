@@ -8,6 +8,19 @@ Plot(
 )
 
 Plot(
+        name="general/Combos",
+        code="histo.Fill(len(combos))",
+        labels=["Number of passed #tau combinations", "Events"],
+        binning=[5, 0, 5]
+)
+Plot(
+        name="general/AllCombos",
+        code="histo.Fill(event.combos().size())",
+        labels=["Number of all #tau combinations", "Events"],
+        binning=[5, 0, 5]
+)
+
+Plot(
         name="general/NumInclusiveJets",
         code="histo.Fill(jets.size())",
         labels=["Number of inclusive jets", "Events"],

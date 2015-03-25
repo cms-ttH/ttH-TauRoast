@@ -238,7 +238,7 @@ class Plot(Snippet):
             os.makedirs(subdir)
         canvas.SaveAs(os.path.join(outdir, self.__name + ".pdf"))
 
-    def fill(self, process, event, combo):
+    def fill(self, process, event, combos):
         try:
             hist = self.__hists[process]
         except KeyError:
@@ -247,7 +247,10 @@ class Plot(Snippet):
             self.__hists[process] = self.__class(*args)
             hist = self.__hists[process]
 
-        self._execute(event, combo, locals={'histo': hist})
+        self._execute(event, combos[0], locals={
+            'histo': hist,
+            'combos': combos
+        })
 
     @property
     def name(self):
