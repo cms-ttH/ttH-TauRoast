@@ -11,7 +11,7 @@ class Process(object):
     def __init__(self, name, fullname, limitname):
         self._name = name
         self._fullname = fullname
-        self._limitname = limitname
+        self._limitname = limitname if limitname else name
 
         if name in Process.__processes__:
             raise KeyError("Plot with name {0} defined twice".format(name))
