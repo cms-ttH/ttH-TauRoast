@@ -61,7 +61,7 @@ namespace superslim {
 
    class PhysObject {
       public:
-         PhysObject() {};
+         PhysObject() : p_() {};
 #ifndef __CINT__
          PhysObject(const reco::Candidate*);
 #endif
