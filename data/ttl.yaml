@@ -6,7 +6,8 @@ outdir: delete_me
 lumi: 10000
 
 plot:
-  # - ttjets
+  - fake_data
+  - ttjets
   - ttH_125
   - ttH_125_real
 

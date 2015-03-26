@@ -50,9 +50,17 @@ BasicProcess(
     events=262813074
 )
 
-CombinedProcess(
-    name="Collisions",
-    fullname="Collisions",
+BasicProcess(
+    name="fake_data",
     limitname="data_obs",
-    subprocesses=["Collisions_SingleElectron", "Collisions_SingleMuon"]
+    paths=["ttjets"],
+    cross_section=831.76,
+    events=25446993
 )
+
+# CombinedProcess(
+#     name="Collisions",
+#     fullname="Collisions",
+#     limitname="data_obs",
+#     subprocesses=["Collisions_SingleElectron", "Collisions_SingleMuon"]
+# )
