@@ -86,6 +86,18 @@ class Plot(Snippet):
             res.Add(h)
         return res
 
+    def _get_data(self, config):
+        res = []
+        for cfg in config['data']:
+            data, color = cfg.items()[0]
+            h = self._get_histogram(data)
+            h.SetLineColor(self._eval(color))
+            h.SetLineWidth(4)
+            h.SetMarkerStyle(20)
+            h.SetMarkerSize(1)
+            res.append(h)
+        return res
+
     def _get_signals(self, config):
         res = []
         for cfg in config['signals']:
@@ -178,6 +190,7 @@ class Plot(Snippet):
         bkg_stack.Draw()
 
         signals = self._get_signals(config)
+        collisions = self._get_data(config)
 
         if factor == "auto":
             factor = self._get_scale_factor(bkg_sum, signals)
@@ -202,6 +215,9 @@ class Plot(Snippet):
         for sig in signals:
             sig.Scale(factor)
             sig.DrawCopy("hist same")
+
+        for data in collisions:
+            data.DrawCopy("E1 P same")
 
         bkg_sum.Draw("E2 same")
 

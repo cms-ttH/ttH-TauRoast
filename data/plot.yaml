@@ -1,6 +1,9 @@
 legend: true
 scale factor: auto
+data:
+  - fake_data: r.kBlack
 backgrounds:
   - ttjets: r.kRed
 signals:
   - ttH_125: r.kBlue
+  - ttH_125_real: r.kBlue + 3
