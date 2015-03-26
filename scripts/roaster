@@ -83,7 +83,7 @@ if args.fill:
     f = r.TFile(os.path.join(config["outdir"], "plots.root"), "RECREATE")
 
     for p in Plot.plots():
-        p.write(f, config["lumi"])
+        p.write(f, config["lumi"], fmt="{p}_{v}_TTL")
 
     f.Write()
     f.Close()
@@ -92,7 +92,7 @@ else:
     f = r.TFile(os.path.join(config["outdir"], "plots.root"), "READ")
 
     for p in Plot.plots():
-        p.read(f, processes)
+        p.read(f, processes, fmt="{p}_{v}_TTL")
 
     f.Close()
 
