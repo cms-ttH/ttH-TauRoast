@@ -41,6 +41,8 @@ Start a test analysis with:
 
     roaster -fpv data/ttl.yaml
 
+**after changing relevant paths in the configuration file**.
+
 ### Options
 
 Always use `-h` to find a comprehensive overview.
@@ -49,5 +51,3 @@ Always use `-h` to find a comprehensive overview.
 | ---    | ---                                                                       |
 | `-f`   | analyze dataset and fill histograms (produces `combine` compatible output |
 | `-p`   | save plots                                                                |
-
-**after changing relevant paths in the configuration file**.
