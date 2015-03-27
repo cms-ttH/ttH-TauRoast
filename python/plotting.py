@@ -166,6 +166,95 @@ class Plot(Snippet):
                 os.makedirs(subdir)
             canvas.SaveAs(os.path.join(outdir, "{0}_{1}.pdf".format(self.__name, label)))
 
+    def _build_background_errors(self, background):
+        abs_err = r.TGraphAsymmErrors(background)
+        rel_err = r.TGraphAsymmErrors(background)
+
+        # err_up = self.get_squared_bkg_shifts(self.__up, histname, histo)
+        # err_down = self.get_squared_bkg_shifts(self.__down, histname, histo)
+        err_up = [0] * background.GetNbinsX()
+        err_down = [0] * background.GetNbinsX()
+
+        for i in range(background.GetNbinsX()):
+            bin_center = background.GetBinCenter(i + 1)
+            bin_content = background.GetBinContent(i + 1)
+            bin_error = background.GetBinError(i + 1)
+            bin_width = background.GetBinWidth(i + 1)
+
+            if bin_content > 0.001:
+                rel_up = math.sqrt(err_up[i] + bin_error**2) / bin_content
+                rel_down = math.sqrt(err_down[i] + bin_error**2) / bin_content
+            else:
+                rel_up = 0
+                rel_down = 0
+
+            abs_err.SetPoint(i, bin_center, bin_content)
+            abs_err.SetPointEXlow(i, bin_width / 2)
+            abs_err.SetPointEXhigh(i, bin_width / 2)
+            abs_err.SetPointEYlow(i, math.sqrt(err_down[i]))
+            abs_err.SetPointEYhigh(i, math.sqrt(err_up[i]))
+
+            rel_err.SetPoint(i, bin_center, 1)
+            rel_err.SetPointEXlow(i, bin_width / 2)
+            rel_err.SetPointEXhigh(i, bin_width / 2)
+            rel_err.SetPointEYlow(i, rel_down)
+            rel_err.SetPointEYhigh(i, rel_up)
+
+        return (abs_err, rel_err)
+
+    def _build_ratio_errors(self, ratio, nom, div):
+        graph = r.TGraphAsymmErrors(ratio)
+
+        for i in range(graph.GetN()):
+            x_coord = ratio.GetBinCenter(i + 1)
+            width = ratio.GetBinWidth(i + 1)
+            y_ratio = ratio.GetBinContent(i + 1)
+            y_data = nom.GetBinContent(i + 1)
+            y_data_err = nom.GetBinError(i + 1)
+            y_bkg = div.GetBinContent(i + 1)
+
+            if y_ratio > stylish.small_number and y_ratio < stylish.ratio_plot_max * 0.99:
+                if y_bkg > stylish.small_number:
+                    y_up = (y_data + y_data_err) / y_bkg
+                    y_down = (y_data - y_data_err) / y_bkg
+                else:
+                    y_up = 0
+                    y_down = 0
+                graph.SetPoint(i, x_coord, y_ratio)
+                graph.SetPointEYhigh(i, y_up - y_ratio)
+                graph.SetPointEYlow(i, y_ratio - y_down)
+                graph.SetPointEXhigh(i, width / 2)
+                graph.SetPointEXlow(i, width / 2)
+            else:
+                graph.SetPoint(i, x_coord, 999)
+
+        graph.SetMarkerSize(1.)
+        graph.SetMarkerStyle(0)
+        graph.SetLineWidth(4)
+        graph.SetLineColor(r.kBlack)
+
+        return graph
+
+    def _draw_ratio(self, config):
+        background = self._get_background_sum(config)
+        collisions = self._get_data(config)
+
+        (_, rel_err) = self._build_background_errors(background)
+        rel_err.SetMarkerSize(0)
+        rel_err.SetFillColor(r.kGreen)
+        rel_err.SetFillStyle(1001)
+        rel_err.Draw("2 same")
+
+        if len(collisions) > 0:
+            ratio = collisions[0].Clone()
+            ratio.Divide(background)
+            err = self._build_ratio_errors(ratio, collisions[0], background)
+            err.Draw("P same")
+        else:
+            err = None
+
+        return err, rel_err
+
     def _save1d(self, config, outdir):
         min_y = 0.002
         max_y = min_y
@@ -231,10 +320,14 @@ class Plot(Snippet):
 
         canvas.cd(2)
 
-        ratio = base_histo.Clone()
-        stylish.setup_lower_axis(ratio)
+        lower = base_histo.Clone()
+        stylish.setup_lower_axis(lower)
 
-        ratio.Draw("axis")
+        lower.Draw("axis")
+
+        err = self._draw_ratio(config)
+
+        lower.Draw("axis same")
 
         line = r.TLine()
         line.SetLineColor(1)
