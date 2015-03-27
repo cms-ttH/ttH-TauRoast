@@ -47,7 +47,7 @@ Start a test analysis with:
 
 Always use `-h` to find a comprehensive overview.
 
-| Option | Effect                                                                    |
-| ---    | ---                                                                       |
-| `-f`   | analyze dataset and fill histograms (produces `combine` compatible output |
-| `-p`   | save plots                                                                |
+| Option | Effect                                                                     |
+| ---    | ---                                                                        |
+| `-f`   | analyze dataset and fill histograms (produces `combine` compatible output) |
+| `-p`   | save plots                                                                 |
