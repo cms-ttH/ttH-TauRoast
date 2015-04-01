@@ -34,6 +34,8 @@
 #include "FWCore/ServiceRegistry/interface/Service.h"
 
 #include "DataFormats/PatCandidates/interface/GenericParticle.h"
+#include "DataFormats/PatCandidates/interface/Electron.h"
+#include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
 
 #include "TTree.h"
@@ -63,6 +65,8 @@ class TauGeneratorStudy : public edm::EDAnalyzer {
 
       edm::EDGetTokenT<reco::GenParticleCollection> gen_token_;
       edm::EDGetTokenT<pat::TauCollection> taus_token_;
+      edm::EDGetTokenT<pat::ElectronCollection> electrons_token_;
+      edm::EDGetTokenT<pat::MuonCollection> muons_token_;
 
       TTree *tree_;
 
@@ -80,12 +84,23 @@ class TauGeneratorStudy : public edm::EDAnalyzer {
       float rgt1_eta_;
       float rgt2_pt_;
       float rgt2_eta_;
+
+      float gl_pt_;
+      float gl_eta_;
+
+      float rl_pt_;
+      float rl_eta_;
+
+      float rgl_pt_;
+      float rgl_eta_;
 };
 
 TauGeneratorStudy::TauGeneratorStudy(const edm::ParameterSet& config)
 {
    gen_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("prunedGenParticles"));
    taus_token_ = consumes<pat::TauCollection>(edm::InputTag("slimmedTaus"));
+   electrons_token_ = consumes<pat::ElectronCollection>(edm::InputTag("slimmedElectrons"));
+   muons_token_ = consumes<pat::MuonCollection>(edm::InputTag("slimmedMuons"));
 
    edm::Service<TFileService> fs;
    tree_ = fs->make<TTree>("events", "Event data");
@@ -103,6 +118,9 @@ TauGeneratorStudy::TauGeneratorStudy(const edm::ParameterSet& config)
    tree_->Branch("recogentau1eta", &rgt1_eta_);
    tree_->Branch("recogentau2pt", &rgt2_pt_);
    tree_->Branch("recogentau2eta", &rgt2_eta_);
+
+   tree_->Branch("genleppt", &gl_pt_);
+   tree_->Branch("genlepeta", &gl_eta_);
 }
 
 
@@ -117,6 +135,31 @@ TauGeneratorStudy::analyze(const edm::Event& event, const edm::EventSetup& setup
    using namespace edm;
 
    bool good_event = false;
+   // bool good_leptons = false;
+
+   gt1_pt_  = -99;
+   gt1_eta_ = -99;
+   gt2_pt_  = -99;
+   gt2_eta_ = -99;
+
+   rt1_pt_  = -99;
+   rt1_eta_ = -99;
+   rt2_pt_  = -99;
+   rt2_eta_ = -99;
+
+   rgt1_pt_  = -99;
+   rgt1_eta_ = -99;
+   rgt2_pt_  = -99;
+   rgt2_eta_ = -99;
+
+   gl_pt_ = -99.;
+   gl_eta_ = -99.;
+
+   rl_pt_ = -99.;
+   rl_eta_ = -99.;
+
+   rgl_pt_ = -99.;
+   rgl_eta_ = -99.;
 
    auto gen_particles = get_collection(event, gen_token_);
    for (const auto& particle: *gen_particles) {
@@ -141,6 +184,50 @@ TauGeneratorStudy::analyze(const edm::Event& event, const edm::EventSetup& setup
       break;
    }
 
+   const reco::GenParticle* w = 0;
+   for (const auto& particle: *gen_particles) {
+      if (abs(particle.pdgId()) != 24)
+         continue;
+      if (particle.numberOfMothers() < 1)
+         continue;
+
+      auto mom = particle.mother(0);
+      while (mom->pdgId() == particle.pdgId() and
+            mom->numberOfMothers() > 0)
+         mom = mom->mother(0);
+
+      if (abs(particle.mother(0)->pdgId()) != 6)
+         continue;
+
+      if (particle.numberOfDaughters() != 2)
+         continue;
+
+      auto p1 = particle.daughter(0);
+      auto p2 = particle.daughter(1);
+
+      if (not (abs(p1->pdgId()) == 11 or abs(p1->pdgId()) == 13 or
+            abs(p2->pdgId()) == 11 or abs(p2->pdgId()) == 13))
+         continue;
+
+      if (w != 0) {
+         w = 0;
+         break;
+      } else {
+         w = &particle;
+      }
+   }
+
+   if (w) {
+      auto p1 = w->daughter(0);
+      auto p2 = w->daughter(1);
+
+      if (p1->pdgId() % 2 == 0)
+         p1 = p2;
+
+      gl_pt_ = p1->pt();
+      gl_eta_ = p1->eta();
+   }
+
    std::vector<pat::Tau> mytaus;
    auto taus = get_collection(event, taus_token_);
    for (const auto& tau: *taus) {
@@ -152,16 +239,6 @@ TauGeneratorStudy::analyze(const edm::Event& event, const edm::EventSetup& setup
       if (abs(gen->pdgId()) == 15 and gen->numberOfMothers() == 1 and gen->mother(0)->pdgId() == 25)
          mytaus.push_back(tau);
    }
-
-   rt1_pt_  = -99;
-   rt1_eta_ = -99;
-   rt2_pt_  = -99;
-   rt2_eta_ = -99;
-
-   rgt1_pt_  = -99;
-   rgt1_eta_ = -99;
-   rgt2_pt_  = -99;
-   rgt2_eta_ = -99;
 
    switch (mytaus.size()) {
       case 2:
@@ -176,7 +253,7 @@ TauGeneratorStudy::analyze(const edm::Event& event, const edm::EventSetup& setup
          rgt1_eta_ = mytaus[0].genParticle()->eta();
    }
 
-   if (good_event)
+   if (good_event or w)
       tree_->Fill();
 }
 
