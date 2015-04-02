@@ -15,6 +15,14 @@ Plot(
 
 for n in range(2):
     lbl = "#tau_{{{0}}} ".format(n + 1)
+
+    Plot(
+        name="taus/T{0}L_DeltaR".format(n + 1),
+        code="histo.Fill(dR(leptons[0], taus[{0}]), weight)".format(n),
+        labels=["#DeltaR " + lbl + ", l", "Events"],
+        binning=[15, 0, 6.28]
+    )
+
     # Kinematics
     Plot(
         name="taus/kinematic/T{0}_Pt".format(n + 1),
