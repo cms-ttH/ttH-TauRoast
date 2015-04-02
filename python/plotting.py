@@ -112,7 +112,7 @@ class Plot(Snippet):
         bsum = background.Integral()
         ssum = max(sig.Integral() for sig in signals)
 
-        return (bsum / float(ssum) if bsum > 0 else 1)
+        return (bsum / float(ssum) if ssum > 0 else 1)
 
     def _normalize(self, lumi):
         for proc, hist in self.__hists.items():
