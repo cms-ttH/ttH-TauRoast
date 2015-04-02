@@ -56,7 +56,7 @@ class BasicProcess(Process):
         self.__cross_section = cross_section
         self.__add_cuts = additional_cuts if additional_cuts else []
 
-    def analyze(self, counts, cuts, plots, basedir):
+    def analyze(self, counts, cuts, weights, plots, basedir):
         logging.info("processing {}".format(self))
 
         from ttH.TauRoast.cutting import StaticCut
@@ -87,6 +87,9 @@ class BasicProcess(Process):
 
         counts[0][self] = self.__events
 
+        for w in weights:
+            w[self] = 0
+
         t = r.TChain("taus/events")
         for p in self.__paths:
             t.Add(os.path.join(basedir, p, '*.root'))
@@ -111,9 +114,17 @@ class BasicProcess(Process):
             if len(passed) == 0:
                 continue
 
+            weight = 1
+            ws = {}
+            ws.update(event.weights())
+            ws.update(passed[0].weights())
+            for n, w in enumerate(str(w).lower() for w in weights):
+                weight *= ws[w]
+                weights[n][self] += weight
+
             for plot in plots:
                 try:
-                    plot.fill(self, event, passed)
+                    plot.fill(self, event, passed, weight)
                 except Exception, e:
                     print "error in", plot.name
                     print e

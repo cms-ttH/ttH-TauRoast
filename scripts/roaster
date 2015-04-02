@@ -46,7 +46,7 @@ r.gErrorIgnoreLevel = 1001
 r.gSystem.Load("libttHTauRoast")
 
 from ttH.TauRoast import stylish
-from ttH.TauRoast.cutting import Cut, cutflow, normalize
+from ttH.TauRoast.cutting import StaticCut, Cut, cutflow, normalize
 from ttH.TauRoast.plotting import Plot
 from ttH.TauRoast.processing import Process
 
@@ -65,25 +65,30 @@ for n, file in enumerate(glob(magic)):
 if args.fill:
     counts = []
     cuts = [
-            Cut("Analyzed", "True")
+            Cut("Ntuple analyzed", "True")
     ]
+    weights = []
+
     for hash in config["cuts"]:
         cuts.append(Cut(*hash.items()[0]))
+
+    for weight in config["weights"]:
+        weights.append(StaticCut(weight))
 
     for proc in sum(map(Process.expand, config['plot']), []):
         local_cuts = list(cuts)
         for cfg in proc.additional_cuts:
             local_cuts.insert(0, Cut(*cfg))
-        proc.analyze(counts, local_cuts, Plot.plots(), config['ntupledir'])
+        proc.analyze(counts, local_cuts, weights, Plot.plots(), config['ntupledir'])
 
-    cuts = counts + cuts
+    cuts = counts + cuts + weights
     normalize(cuts, config["lumi"])
     cutflow(cuts, config["plot"])
 
     f = r.TFile(os.path.join(config["outdir"], "plots.root"), "RECREATE")
 
     for p in Plot.plots():
-        p.write(f, config["lumi"], fmt="{p}_{v}_TTL")
+        p.write(f, cuts, fmt="{p}_{v}_TTL")
 
     f.Write()
     f.Close()

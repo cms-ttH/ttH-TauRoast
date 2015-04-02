@@ -114,11 +114,11 @@ class Plot(Snippet):
 
         return (bsum / float(ssum) if ssum > 0 else 1)
 
-    def _normalize(self, lumi):
+    def _normalize(self, cuts):
         for proc, hist in self.__hists.items():
             logging.debug("normalizing histogram {0}, process {1}".format(
                 self.__name, proc))
-            factor = lumi * proc.cross_section / float(proc.events)
+            factor = cuts[-1][proc] / float(cuts[-3][proc])
             hist.Scale(factor)
 
     def read(self, file, procs, fmt="{p}_{v}"):
@@ -132,8 +132,8 @@ class Plot(Snippet):
                 h.SetDirectory(0)
                 self.__hists[proc] = h
 
-    def write(self, file, lumi, fmt="{p}_{v}"):
-        self._normalize(lumi)
+    def write(self, file, cuts, fmt="{p}_{v}"):
+        self._normalize(cuts)
 
         for proc, hist in self.__hists.items():
             logging.debug("writing histogram {0}".format(fmt.format(p=proc.limitname, v=self.__limitname)))
@@ -347,7 +347,7 @@ class Plot(Snippet):
             os.makedirs(subdir)
         canvas.SaveAs(os.path.join(outdir, self.__name + ".pdf"))
 
-    def fill(self, process, event, combos):
+    def fill(self, process, event, combos, weight):
         try:
             hist = self.__hists[process]
         except KeyError:
@@ -358,7 +358,8 @@ class Plot(Snippet):
 
         self._execute(event, combos[0], locals={
             'histo': hist,
-            'combos': combos
+            'combos': combos,
+            'weight': weight
         })
 
     @property

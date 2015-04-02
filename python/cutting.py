@@ -47,14 +47,32 @@ class StaticCut(Cut):
     def __call__(self, process, event, combo):
         return True
 
+    def __getitem__(self, key):
+        return self._counts[key]
+
     def __setitem__(self, key, value):
         self._counts[key] = value
 
 def normalize(cuts, lumi):
-    norm = StaticCut("Luminosity norm")
+    weights = None
+    processed = None
+
+    for cut in cuts:
+        if str(cut).lower() == "dataset processed":
+            processed = cut
+        elif str(cut).lower() == "dataset event weights":
+            weights = cut
+        elif processed and cut:
+            break
+
+    dsetnorm = StaticCut("Dataset norm")
+    luminorm = StaticCut("Luminosity norm")
     for proc in cuts[-1].processes():
-        norm[proc] = cuts[-1][proc] * lumi * proc.cross_section / float(proc.events)
-    cuts.append(norm)
+        scale = processed[proc] / float(weights[proc])
+        dsetnorm[proc] = cuts[-1][proc] * scale
+        luminorm[proc] = cuts[-1][proc] * scale * lumi * proc.cross_section / float(proc.events)
+    cuts.append(dsetnorm)
+    cuts.append(luminorm)
 
 def cutflow(cuts, procs, f=sys.stdout):
     expanded_proc = [Process.expand(proc) for proc in procs]

@@ -178,6 +178,9 @@ namespace superslim {
          const std::vector<superslim::Jet> jets() const { return jets_; };
          const std::vector<superslim::Lepton> leptons() const { return leptons_; };
          const std::vector<superslim::Tau> taus() const { return taus_; };
+         const std::map<std::string, float> weights() const { return weights_; };
+
+         void setWeight(const std::string& s, float f) { weights_[s] = f; };
       private:
          std::vector<superslim::Jet> jets_;
          std::vector<superslim::Lepton> leptons_;
@@ -216,6 +219,8 @@ namespace superslim {
 
          LorentzVector met() const { return met_; };
          std::vector<superslim::Vertex> pv() const { return pv_; };
+
+         void setWeight(const std::string& s, float f) { weights_[s] = f; };
       private:
          std::vector<superslim::Combination> combos_;
          std::map<std::string, float> weights_;

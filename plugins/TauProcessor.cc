@@ -34,6 +34,7 @@
 #include "FWCore/ServiceRegistry/interface/Service.h"
 
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
+#include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 
 #include "TH1F.h"
 
@@ -104,7 +105,7 @@ class TauProcessor : public edm::EDAnalyzer {
       std::vector<T1>
       removeOverlap(const std::vector<T1>& v1, const std::vector<T2>& v2, double dR = 0.02);
 
-      void passCut(unsigned int cut, const std::string& name);
+      void passCut(unsigned int cut, const std::string& name, float w = 1.0);
       void passComboCut(unsigned int event_cut, unsigned int combo_cut, int& passed, const std::string& name);
 
       MiniAODHelper helper_;
@@ -120,6 +121,7 @@ class TauProcessor : public edm::EDAnalyzer {
       unsigned int min_tight_taus_;
 
       edm::EDGetTokenT<double> rho_token_;
+      edm::EDGetTokenT<GenEventInfoProduct> geninfo_token_;
       edm::EDGetTokenT<reco::BeamSpot> bs_token_;
       edm::EDGetTokenT<std::vector<PileupSummaryInfo>> pu_token_;
       edm::EDGetTokenT<reco::VertexCollection> vertices_token_;
@@ -151,6 +153,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    event_(0)
 {
    rho_token_ = consumes<double>(edm::InputTag("fixedGridRhoFastjetAll"));
+   geninfo_token_ = consumes<GenEventInfoProduct>(edm::InputTag("generator"));
    bs_token_ = consumes<reco::BeamSpot>(edm::InputTag("offlineBeamSpot"));
    pu_token_ = consumes<std::vector<PileupSummaryInfo>>(edm::InputTag("addPileupInfo"));
    vertices_token_ = consumes<reco::VertexCollection>(edm::InputTag("offlineSlimmedPrimaryVertices"));
@@ -195,9 +198,9 @@ TauProcessor::removeOverlap(const std::vector<T1>& v1, const std::vector<T2>& v2
 
 
 void
-TauProcessor::passCut(unsigned int cut, const std::string& name)
+TauProcessor::passCut(unsigned int cut, const std::string& name, float w)
 {
-   cuts_->Fill(cut);
+   cuts_->Fill(cut, w);
 
    if (cutnames_.size() == cut) {
       cutnames_.push_back(name);
@@ -225,6 +228,11 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
    // events run over count
    passCut(event_cut++, "Dataset processed");
+
+   auto geninfo = get_collection(event, geninfo_token_);
+
+   // dataset sum of the event weights
+   passCut(event_cut++, "Dataset event weights", geninfo->weight());
 
    auto vertices = get_collection(event, vertices_token_);
 
@@ -399,6 +407,10 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
                event.id().run(), event.id().luminosityBlock(), event.id().event(),
                npv, ntv,
                mets->at(0).p4(), pv));
+
+      auto geninfo = get_collection(event, geninfo_token_);
+      ptr->setWeight("generator", geninfo->weight());
+
       event_ = ptr.get();
       tree_->Fill();
    }
