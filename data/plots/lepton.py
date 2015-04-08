@@ -7,7 +7,7 @@ for n in range(1):
         name="leptons/kinematic/L{0}_Pt".format(n + 1),
         code="histo.Fill(leptons[{0}].p4().Pt(), weight)".format(n),
         labels=[lbl + "P_{T}", "Events"],
-        binning=[40, 0, 160]
+        binning=[20, 0, 100]
     )
     Plot(
         name="leptons/kinematic/L{0}_Eta".format(n + 1),

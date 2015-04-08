@@ -12,6 +12,12 @@ Plot(
     labels=["Visible Mass #tau_{1,2}", "Events"],
     binning=[30, 0, 200]
 )
+Plot(
+    name="taus/TT_VisibleMass_coarse",
+    code="histo.Fill((taus[0].p4() + taus[1].p4()).M(), weight)",
+    labels=["Visible Mass #tau_{1,2}", "Events"],
+    binning=[5, 0, 200]
+)
 
 for n in range(2):
     lbl = "#tau_{{{0}}} ".format(n + 1)
@@ -27,8 +33,14 @@ for n in range(2):
     Plot(
         name="taus/kinematic/T{0}_Pt".format(n + 1),
         code="histo.Fill(taus[{0}].p4().Pt(), weight)".format(n),
-        labels=[lbl + "P_{{T}}", "Events"],
-        binning=[40, 0, 160]
+        labels=[lbl + "P_{T}", "Events"],
+        binning=[10, 20, 100 if n == 0 else 60]
+    )
+    Plot(
+        name="taus/kinematic/T{0}_LTPt".format(n + 1),
+        code="histo.Fill(taus[{0}].leadingTrackPt(), weight)".format(n),
+        labels=[lbl + " leading track P_{T}", "Events"],
+        binning=[40, 0, 120]
     )
     Plot(
         name="taus/kinematic/T{0}_Eta".format(n + 1),

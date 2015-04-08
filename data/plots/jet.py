@@ -34,7 +34,7 @@ for mode, fltr in pspace:
             name="jets/kinematic/{0}J_Pt".format(mode),
             code="for j in {0}: histo.Fill(j.p4().Pt(), weight)".format(fltr),
             labels=["{0} jet P_{{T}}".format(mode), "Events"],
-            binning=[40, 0, 160]
+            binning=[20, 30, 250]
     )
     Plot(
             name="jets/kinematic/{0}J_Eta".format(mode),
@@ -53,13 +53,13 @@ for mode, fltr in pspace:
                 name="jets/kinematic/{0}{1}J_Pt".format(mode, short),
                 code="if len({0}) > {1}: histo.Fill({0}[{1}].p4().Pt(), weight)".format(fltr, n),
                 labels=["{0} {1} jet P_{{T}}".format(mode, long), "Events"],
-                binning=[40, 0, 160]
+                binning=[20, 30, 250]
         )
         Plot(
                 name="jets/kinematic/{0}{1}J_Eta".format(mode, short),
                 code="if len({0}) > {1}: histo.Fill({0}[{1}].p4().Eta(), weight)".format(fltr, n),
                 labels=["{0} {1} jet #eta".format(mode, long), "Events"],
-                binning=[40, 0, 160]
+                binning=[40, -3, 3]
         )
         Plot(
                 name="jets/id/{0}{1}J_CSV".format(mode, short),
