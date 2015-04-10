@@ -186,12 +186,16 @@ TauGeneratorValidation::analyze(const edm::Event& event, const edm::EventSetup& 
       }
    }
 
-   assert(tops.size() == 2);
-
-   top1_pt_  = tops[0].pt();
-   top1_eta_ = tops[0].eta();
-   top2_pt_  = tops[1].pt();
-   top2_eta_ = tops[1].eta();
+   switch (tops.size()) {
+      case 2:
+         top2_pt_  = tops[1].pt();
+         top2_eta_ = tops[1].eta();
+      case 1:
+         top1_pt_  = tops[0].pt();
+         top1_eta_ = tops[0].eta();
+      default:
+         break;
+   }
 
    for (const auto& particle: *gen_particles) {
       if (particle.pdgId() != 25)
