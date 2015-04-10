@@ -1,0 +1,19 @@
+id: validity
+type: cmssw
+
+workdir: /tmpscratch/users/matze/validate_2015-04-10
+plotdir: /afs/crc.nd.edu/user/m/mwolf3/www/lobster/validate_2015-04-10
+
+stageout location: /hadoop/store/user/matze/validate_2015-04-10
+
+xrootd server: "ndcms.crc.nd.edu"
+xrootd root: /hadoop
+
+task defaults:
+    cmssw config: validate.py
+    outputs: [validate.root]
+    events per job: 8000
+
+tasks:
+  - label: ttH
+    dataset: /ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIIWinter15GS-MCRUN2_71_V1-v1/GEN-SIM
