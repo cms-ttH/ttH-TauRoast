@@ -36,6 +36,8 @@
 #include "DataFormats/JetReco/interface/GenJetCollection.h"
 #include "DataFormats/PatCandidates/interface/GenericParticle.h"
 
+#include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
+
 #include "TTree.h"
 
 template<typename T>
@@ -63,6 +65,7 @@ class TauGeneratorValidation : public edm::EDAnalyzer {
 
       edm::EDGetTokenT<reco::GenParticleCollection> gen_token_;
       edm::EDGetTokenT<reco::GenJetCollection> jet_token_;
+      edm::EDGetTokenT<GenEventInfoProduct> geninfo_token_;
 
       TTree *tree_;
 
@@ -89,12 +92,15 @@ class TauGeneratorValidation : public edm::EDAnalyzer {
       float jpt_;
       float jeta_;
       float jphi_;
+
+      float w_;
 };
 
 TauGeneratorValidation::TauGeneratorValidation(const edm::ParameterSet& config)
 {
    gen_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("genParticles"));
    jet_token_ = consumes<reco::GenJetCollection>(edm::InputTag("ak5GenJets"));
+   geninfo_token_ = consumes<GenEventInfoProduct>(edm::InputTag("generator"));
 
    edm::Service<TFileService> fs;
    tree_ = fs->make<TTree>("events", "Event data");
@@ -116,10 +122,14 @@ TauGeneratorValidation::TauGeneratorValidation(const edm::ParameterSet& config)
    tree_->Branch("top2pt", &top2_pt_);
    tree_->Branch("top2eta", &top2_eta_);
 
+   tree_->Branch("w", &w_);
+
    tjet_ = fs->make<TTree>("jets", "Jet data");
    tjet_->Branch("pt", &jpt_);
    tjet_->Branch("eta", &jeta_);
    tjet_->Branch("phi", &jphi_);
+
+   tjet_->Branch("w", &w_);
 }
 
 
@@ -132,6 +142,9 @@ void
 TauGeneratorValidation::analyze(const edm::Event& event, const edm::EventSetup& setup)
 {
    using namespace edm;
+
+   auto geninfo = get_collection(event, geninfo_token_);
+   w_ = geninfo->weight();
 
    t1_pt_  = -99;
    t1_eta_ = -99;
