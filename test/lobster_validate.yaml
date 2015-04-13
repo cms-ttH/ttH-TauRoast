@@ -1,10 +1,10 @@
 id: validity
 type: cmssw
 
-workdir: /tmpscratch/users/matze/validate_2015-04-10.3
-plotdir: /afs/crc.nd.edu/user/m/mwolf3/www/lobster/validate_2015-04-10.3
+workdir: /tmpscratch/users/matze/validate_2015-04-13
+plotdir: /afs/crc.nd.edu/user/m/mwolf3/www/lobster/validate_2015-04-13
 
-stageout location: /hadoop/store/user/matze/validate_2015-04-10.3
+stageout location: /hadoop/store/user/matze/validate_2015-04-13
 
 xrootd server: "ndcms.crc.nd.edu"
 xrootd root: /hadoop

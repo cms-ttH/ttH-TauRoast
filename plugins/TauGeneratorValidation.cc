@@ -201,11 +201,14 @@ TauGeneratorValidation::analyze(const edm::Event& event, const edm::EventSetup& 
       if (particle.pdgId() != 25)
          continue;
 
-      if (particle.numberOfDaughters() != 2)
+      if (particle.numberOfDaughters() != 2 and particle.numberOfDaughters() != 3)
          continue;
 
       auto p1 = particle.daughter(0);
       auto p2 = particle.daughter(1);
+
+      if (!p1 or !p2)
+         continue;
 
       if (abs(p1->pdgId()) != 15 or abs(p2->pdgId()) != 15)
          continue;
