@@ -61,11 +61,14 @@ class Plot(Snippet):
         res = None
         for cfg in config['backgrounds']:
             background, color = cfg.items()[0]
-            h = self._get_histogram(background)
-            if res is None:
-                res = h
-            else:
-                res.Add(h)
+            try:
+                h = self._get_histogram(background)
+                if res is None:
+                    res = h
+                else:
+                    res.Add(h)
+            except KeyError:
+                pass
         if not res:
             args = list(self.__args)
             args[0] += "_bkg_sum"
@@ -79,33 +82,42 @@ class Plot(Snippet):
         res = r.THStack(self.__name + "_stack", self.__args[1])
         for cfg in config['backgrounds']:
             background, color = cfg.items()[0]
-            h = self._get_histogram(background)
-            h.SetFillColor(self._eval(color))
-            h.SetFillStyle(1001)
-            h.SetLineWidth(0)
-            res.Add(h)
+            try:
+                h = self._get_histogram(background)
+                h.SetFillColor(self._eval(color))
+                h.SetFillStyle(1001)
+                h.SetLineWidth(0)
+                res.Add(h)
+            except KeyError:
+                pass
         return res
 
     def _get_data(self, config):
         res = []
         for cfg in config['data']:
             data, color = cfg.items()[0]
-            h = self._get_histogram(data)
-            h.SetLineColor(self._eval(color))
-            h.SetLineWidth(4)
-            h.SetMarkerStyle(20)
-            h.SetMarkerSize(1)
-            res.append(h)
+            try:
+                h = self._get_histogram(data)
+                h.SetLineColor(self._eval(color))
+                h.SetLineWidth(4)
+                h.SetMarkerStyle(20)
+                h.SetMarkerSize(1)
+                res.append(h)
+            except KeyError:
+                pass
         return res
 
     def _get_signals(self, config):
         res = []
         for cfg in config['signals']:
             signal, color = cfg.items()[0]
-            h = self._get_histogram(signal)
-            h.SetLineColor(self._eval(color))
-            h.SetLineWidth(4)
-            res.append(h)
+            try:
+                h = self._get_histogram(signal)
+                h.SetLineColor(self._eval(color))
+                h.SetLineWidth(4)
+                res.append(h)
+            except KeyError:
+                pass
         return res
 
     def _get_scale_factor(self, background, signals):
