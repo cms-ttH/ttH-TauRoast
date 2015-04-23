@@ -85,6 +85,8 @@ if args.fill:
     normalize(cuts, config["lumi"])
     cutflow(cuts, config["plot"])
 
+    if not os.path.exists(config["outdir"]):
+        os.makedirs(config["outdir"])
     f = r.TFile(os.path.join(config["outdir"], "plots.root"), "RECREATE")
 
     for p in Plot.plots():
