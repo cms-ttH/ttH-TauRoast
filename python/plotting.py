@@ -1,6 +1,7 @@
 import logging
 import math
 import os
+import random
 
 import ROOT as r
 
@@ -71,7 +72,7 @@ class Plot(Snippet):
                 pass
         if not res:
             args = list(self.__args)
-            args[0] += "_bkg_sum"
+            args[0] += "_bkg_sum_{0}".format(random.randint(0, 100000))
             res = self.__class(*args)
         res.SetFillStyle(3654)
         res.SetFillColor(r.kBlack)
