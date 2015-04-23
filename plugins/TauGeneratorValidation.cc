@@ -51,6 +51,15 @@ get_collection(const edm::Event& event, const edm::EDGetTokenT<T>& token)
    return handle;
 }
 
+const reco::Candidate *
+get_final(const reco::Candidate * c)
+{
+   while (c->numberOfDaughters() > 0 and c->daughter(0) and c->daughter(0)->pdgId() == c->pdgId())
+      c = c->daughter(0);
+
+   return c;
+}
+
 class TauGeneratorValidation : public edm::EDAnalyzer {
    public:
       explicit TauGeneratorValidation(const edm::ParameterSet&);
@@ -72,20 +81,8 @@ class TauGeneratorValidation : public edm::EDAnalyzer {
       int njets_;
       int njets30_;
 
-      float t1_pt_;
-      float t1_eta_;
-      float t2_pt_;
-      float t2_eta_;
-
-      int t1_decay_;
-      int t2_decay_;
       float tt_mass_;
       float tt_pt_;
-
-      float top1_pt_;
-      float top1_eta_;
-      float top2_pt_;
-      float top2_eta_;
 
       TTree *tjet_;
 
@@ -94,6 +91,29 @@ class TauGeneratorValidation : public edm::EDAnalyzer {
       float jphi_;
 
       float w_;
+
+      TTree *tdecays_;
+
+      float m_id_;
+      float m_pt_;
+      float m_eta_;
+      float m_phi_;
+
+      float d1_id_;
+      float d1_pt_;
+      float d1_eta_;
+      float d1_phi_;
+      float d1_decay_;
+      float d1_vispt_;
+
+      float d2_id_;
+      float d2_pt_;
+      float d2_eta_;
+      float d2_phi_;
+      float d2_decay_;
+      float d2_vispt_;
+
+      std::vector<int> potential_mothers_ = {6, 23, 24, 25};
 };
 
 TauGeneratorValidation::TauGeneratorValidation(const edm::ParameterSet& config)
@@ -107,20 +127,8 @@ TauGeneratorValidation::TauGeneratorValidation(const edm::ParameterSet& config)
    tree_->Branch("njets", &njets_);
    tree_->Branch("njets30", &njets30_);
 
-   tree_->Branch("tau1pt", &t1_pt_);
-   tree_->Branch("tau1eta", &t1_eta_);
-   tree_->Branch("tau2pt", &t2_pt_);
-   tree_->Branch("tau2eta", &t2_eta_);
-
-   tree_->Branch("tau1decay", &t1_decay_);
-   tree_->Branch("tau2decay", &t2_decay_);
    tree_->Branch("ditaumass", &tt_mass_);
    tree_->Branch("ditaupt", &tt_pt_);
-
-   tree_->Branch("top1pt", &top1_pt_);
-   tree_->Branch("top1eta", &top1_eta_);
-   tree_->Branch("top2pt", &top2_pt_);
-   tree_->Branch("top2eta", &top2_eta_);
 
    tree_->Branch("w", &w_);
 
@@ -130,6 +138,26 @@ TauGeneratorValidation::TauGeneratorValidation(const edm::ParameterSet& config)
    tjet_->Branch("phi", &jphi_);
 
    tjet_->Branch("w", &w_);
+
+   tdecays_ = fs->make<TTree>("decays", "Boson decays");
+   tdecays_->Branch("mother_id", &m_id_);
+   tdecays_->Branch("mother_pt", &m_pt_);
+   tdecays_->Branch("mother_eta", &m_eta_);
+   tdecays_->Branch("mother_phi", &m_phi_);
+
+   tdecays_->Branch("daughter1_id", &d1_id_);
+   tdecays_->Branch("daughter1_pt", &d1_pt_);
+   tdecays_->Branch("daughter1_eta", &d1_eta_);
+   tdecays_->Branch("daughter1_phi", &d1_phi_);
+   tdecays_->Branch("daughter1_decay", &d1_decay_);
+   tdecays_->Branch("daughter1_visible_pt", &d1_vispt_);
+
+   tdecays_->Branch("daughter2_id", &d2_id_);
+   tdecays_->Branch("daughter2_pt", &d2_pt_);
+   tdecays_->Branch("daughter2_eta", &d2_eta_);
+   tdecays_->Branch("daughter2_phi", &d2_phi_);
+   tdecays_->Branch("daughter2_decay", &d2_decay_);
+   tdecays_->Branch("daughter2_visible_pt", &d2_vispt_);
 }
 
 
@@ -146,20 +174,27 @@ TauGeneratorValidation::analyze(const edm::Event& event, const edm::EventSetup& 
    auto geninfo = get_collection(event, geninfo_token_);
    w_ = geninfo->weight();
 
-   t1_pt_  = -99;
-   t1_eta_ = -99;
-   t2_pt_  = -99;
-   t2_eta_ = -99;
-
-   t1_decay_ = -99;
-   t2_decay_ = -99;
    tt_mass_  = -99;
    tt_pt_    = -99;
 
-   top1_pt_  = -99;
-   top1_eta_ = -99;
-   top2_pt_  = -99;
-   top2_eta_ = -99;
+   m_id_  = -99;
+   m_pt_  = -99;
+   m_eta_ = -99;
+   m_phi_ = -99;
+
+   d1_id_  = -99;
+   d1_pt_  = -99;
+   d1_eta_ = -99;
+   d1_phi_ = -99;
+   d1_decay_ = -99;
+   d1_vispt_ = -99;
+
+   d2_id_  = -99;
+   d2_pt_  = -99;
+   d2_eta_ = -99;
+   d2_phi_ = -99;
+   d2_decay_ = -99;
+   d2_vispt_ = -99;
 
    njets30_ = 0;
    auto gen_jets = get_collection(event, jet_token_);
@@ -178,108 +213,50 @@ TauGeneratorValidation::analyze(const edm::Event& event, const edm::EventSetup& 
    njets_ = gen_jets->size();
 
    auto gen_particles = get_collection(event, gen_token_);
-
-   std::vector<reco::GenParticle> tops;
    for (const auto& particle: *gen_particles) {
-      if (abs(particle.pdgId()) == 6 && particle.status() == 62) {
-         tops.push_back(particle);
+      if (std::find(potential_mothers_.begin(), potential_mothers_.end(), abs(particle.pdgId())) == potential_mothers_.end())
+         continue;
+
+      if (particle.numberOfDaughters() != 2 or particle.daughter(0)->pdgId() == particle.pdgId())
+         continue;
+
+      auto d1 = get_final(particle.daughter(0));
+      auto d2 = get_final(particle.daughter(1));
+
+      m_id_ = particle.pdgId();
+      m_pt_ = particle.pt();
+      m_eta_ = particle.eta();
+      m_phi_ = particle.phi();
+
+      d1_id_ = d1->pdgId();
+      d1_pt_ = d1->pt();
+      d1_eta_ = d1->eta();
+      d1_phi_ = d1->phi();
+
+      d2_id_ = d2->pdgId();
+      d2_pt_ = d2->pt();
+      d2_eta_ = d2->eta();
+      d2_phi_ = d2->phi();
+
+      if (m_id_ == 25 and abs(d1_id_) == 15) {
+         auto gd = d1->daughter(0);
+         if (gd->pdgId() % 2 == 0 and gd->pdgId() > 10 and gd->pdgId() < 20)
+            gd = d1->daughter(1);
+
+         d1_decay_ = gd->pdgId();
+         d1_vispt_ = gd->pt();
       }
-   }
 
-   switch (tops.size()) {
-      case 2:
-         top2_pt_  = tops[1].pt();
-         top2_eta_ = tops[1].eta();
-      case 1:
-         top1_pt_  = tops[0].pt();
-         top1_eta_ = tops[0].eta();
-      default:
-         break;
-   }
+      if (m_id_ == 25 and abs(d2_id_) == 15) {
+         auto gd = d2->daughter(0);
+         if (gd->pdgId() % 2 == 0 and abs(gd->pdgId()) > 10 and abs(gd->pdgId()) < 20)
+            gd = d2->daughter(1);
 
-   for (const auto& particle: *gen_particles) {
-      if (particle.pdgId() != 25)
-         continue;
-
-      if (particle.numberOfDaughters() != 2 and particle.numberOfDaughters() != 3)
-         continue;
-
-      auto p1 = particle.daughter(0);
-      auto p2 = particle.daughter(1);
-
-      if (!p1 or !p2)
-         continue;
-
-      if (abs(p1->pdgId()) != 15 or abs(p2->pdgId()) != 15)
-         continue;
-
-      t1_pt_  = p1->pt();
-      t1_eta_ = p1->eta();
-      t2_pt_  = p2->pt();
-      t2_eta_ = p2->eta();
-
-      tt_mass_ = (p1->p4() + p2->p4()).M();
-      tt_pt_   = (p1->p4() + p2->p4()).pt();
-
-      for (int n = 0; n < 5; ++n) {
-         unsigned int i;
-         for (i = 0; i < p1->numberOfDaughters(); ++i) {
-            if (abs(p1->daughter(i)->pdgId()) == 11) {
-               t1_decay_ = 11;
-               break;
-            } else if (abs(p1->daughter(i)->pdgId()) == 13) {
-               t1_decay_ = 13;
-               break;
-            } else if (abs(p1->daughter(i)->pdgId()) == 15) {
-               t1_decay_ = -15;
-               break;
-            }
-         }
-
-         if (t1_decay_ == -15) {
-            t1_decay_ = -99;
-            p1 = p1->daughter(i);
-            if (!p1) {
-               t1_decay_ = 100;
-               break;
-            }
-         } else {
-            break;
-         }
+         d2_decay_ = gd->pdgId();
+         d2_vispt_ = gd->pt();
       }
-      if (t1_decay_ < 0)
-         t1_decay_ = 0;
 
-      for (int n = 0; n < 5; ++n) {
-         unsigned int i;
-         for (i = 0; i < p2->numberOfDaughters(); ++i) {
-            if (abs(p2->daughter(i)->pdgId()) == 11) {
-               t2_decay_ = 11;
-               break;
-            } else if (abs(p2->daughter(i)->pdgId()) == 13) {
-               t2_decay_ = 13;
-               break;
-            } else if (abs(p2->daughter(i)->pdgId()) == 15) {
-               t2_decay_ = -15;
-               break;
-            }
-         }
-
-         if (t2_decay_ == -15) {
-            t2_decay_ = -99;
-            p2 = p2->daughter(i);
-            if (!p2) {
-               t2_decay_ = 100;
-               break;
-            }
-         } else {
-            break;
-         }
-      }
-      if (t2_decay_ < 0)
-         t2_decay_ = 0;
-
-      break;
+      tdecays_->Fill();
    }
 
    tree_->Fill();
