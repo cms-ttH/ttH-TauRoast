@@ -4,6 +4,9 @@ import os
 
 import ROOT as r
 
+header = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'interface', 'SuperSlim.h')
+r.gInterpreter.ProcessLine('#include "{0}"'.format(header))
+
 class Process(object):
     __processes__ = {}
     __limitnames__ = set()
