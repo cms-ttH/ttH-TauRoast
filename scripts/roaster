@@ -87,7 +87,11 @@ if args.fill:
 
     if not os.path.exists(config["outdir"]):
         os.makedirs(config["outdir"])
-    f = r.TFile(os.path.join(config["outdir"], "plots.root"), "RECREATE")
+    fn = os.path.join(config["outdir"], "plots.root")
+    f = r.TFile(fn, "RECREATE")
+
+    if not f.IsOpen():
+        raise IOError("Can't read file '{0}'".format(fn))
 
     for p in Plot.plots():
         p.write(f, cuts, fmt="{p}_{v}_TTL")
@@ -96,7 +100,11 @@ if args.fill:
     f.Close()
 else:
     processes = sum(map(Process.expand, config['plot']), [])
-    f = r.TFile(os.path.join(config["outdir"], "plots.root"), "READ")
+    fn = os.path.join(config["outdir"], "plots.root")
+    f = r.TFile(fn, "READ")
+
+    if not f.IsOpen():
+        raise IOError("Can't read file '{0}'".format(fn))
 
     for p in Plot.plots():
         p.read(f, processes, fmt="{p}_{v}_TTL")

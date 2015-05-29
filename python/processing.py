@@ -73,6 +73,9 @@ class BasicProcess(Process):
                 else:
                     hist.Add(h)
 
+        if hist == None:
+            raise IOError("No files found in '{0}'".format(os.path.join(basedir, p)))
+
         if len(counts) == 0:
             counts.append(StaticCut("Dataset"))
 
