@@ -1,15 +1,18 @@
 id: tau
 type: cmssw
 
-workdir: /tmpscratch/users/matze/tau_2015-03-25
-plotdir: /afs/crc.nd.edu/user/m/mwolf3/www/lobster/tau_2015-03-25
+workdir: /tmpscratch/users/matze/tau_v2.2
+plotdir: /afs/crc.nd.edu/user/m/mwolf3/www/lobster/tau_v2.2
 
-stageout location: /hadoop/store/user/matze/v1
+stageout location: /hadoop/store/user/matze/v2.2
 
 xrootd server: "ndcms.crc.nd.edu"
 xrootd root: /hadoop
 
-merge size: 500M
+srm url: "srm://ndcms.crc.nd.edu:8443/srm/v2/server?SFN="
+srm root: ""
+
+# merge size: 500M
 
 task defaults:
     cmssw config: ntuplize.py
@@ -17,5 +20,7 @@ task defaults:
     events per job: 25000
 
 tasks:
-  - label: ttjets
-    dataset: /TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM
+  # - label: ttjets
+  #   dataset: /TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM
+  - label: ttH
+    dataset: /ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM
