@@ -28,7 +28,10 @@ class Cut(Snippet):
         return passed
 
     def __getitem__(self, key):
-        return self._counts[key]
+        try:
+            return self._counts[key]
+        except KeyError:
+            return 0
 
     def __unicode__(self):
         return self._name
