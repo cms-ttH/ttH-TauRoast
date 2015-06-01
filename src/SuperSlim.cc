@@ -94,7 +94,7 @@ namespace superslim {
 
    Jet::Jet(const pat::Jet& j) :
       PhysObject(&j),
-      csv_(j.bDiscriminator("combinedInclusiveSecondaryVertexV2BJetTags"))
+      csv_(j.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags"))
    {
       setGenInfo(j.genParton());
    }
