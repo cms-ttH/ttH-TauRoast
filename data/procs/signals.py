@@ -18,7 +18,7 @@ BasicProcess(
     limitname="ttH125",
     paths=["ttH_125"],
     cross_section=0.8696,
-    events=199700
+    events=846069
     # split: {hbb: 0, hcc: 1, hww: 2, hzz: 3, htt: 4, hgg: 5, hgluglu: 6, hzg: 7}
     # split: {htt: 4}
 )
