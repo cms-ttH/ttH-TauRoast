@@ -22,11 +22,11 @@ created with `mkdir -p`.
 
 Afterwards, clone this repository in the CMSSW source area:
 
-    git clone https://github.com/cms-ttH/ttH-TauRoast.git ttH/TauRoast
+    git clone git@github.com:cms-ttH/ttH-TauRoast.git ttH/TauRoast
 
 and add some CMS dependencies:
 
-    git clone https://github.com/cms-ttH/MiniAOD.git
+    git clone git@github.com:cms-ttH/MiniAOD.git
     git clone git@github.com:veelken/SVfit_standalone.git TauAnalysis/SVfitStandalone
 
 then compile:
