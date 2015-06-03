@@ -175,10 +175,10 @@ namespace superslim {
                const std::vector<superslim::Jet>&);
          virtual ~Combination() {};
 
-         const std::vector<superslim::Jet> jets() const { return jets_; };
-         const std::vector<superslim::Lepton> leptons() const { return leptons_; };
-         const std::vector<superslim::Tau> taus() const { return taus_; };
-         const std::map<std::string, float> weights() const { return weights_; };
+         const std::vector<superslim::Jet>& jets() const { return jets_; };
+         const std::vector<superslim::Lepton>& leptons() const { return leptons_; };
+         const std::vector<superslim::Tau>& taus() const { return taus_; };
+         const std::map<std::string, float>& weights() const { return weights_; };
 
          void setWeight(const std::string& s, float f) { weights_[s] = f; };
       private:
@@ -205,8 +205,8 @@ namespace superslim {
             met_(met), pv_(pv) {};
          virtual ~Event() {};
 
-         const std::vector<superslim::Combination> combos() const { return combos_; };
-         const std::map<std::string, float> weights() const { return weights_; };
+         const std::vector<superslim::Combination>& combos() const { return combos_; };
+         const std::map<std::string, float>& weights() const { return weights_; };
 
          long run() const { return run_; };
          long lumi() const { return lumi_; };
