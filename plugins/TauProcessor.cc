@@ -273,26 +273,10 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    auto all_loose_e = helper_.GetSelectedElectrons(*electrons, 5., electronID::electronLoose);
    auto raw_e = removeOverlap(all_loose_e, raw_mu);
    auto raw_tau = helper_.GetSelectedTaus(*taus, 20., tau::loose);
-
-   if (raw_mu.size() + raw_e.size() < min_leptons_)
-      return;
-
-   auto raw_tight_e = helper_.GetSelectedElectrons(raw_e, 10., electronID::electronTight);
-   auto raw_tight_mu = helper_.GetSelectedMuons(raw_mu, 10., muonID::muonTight);
-
-   if (raw_tight_mu.size() + raw_tight_e.size() < min_tight_leptons_)
-      return;
-
-   // passed sufficient leptons cut
-   passCut(event_cut++, "Lepton requirement");
+   auto raw_tight_tau = helper_.GetSelectedTaus(raw_tau, 20., tau::tight);
 
    if (raw_tau.size() < min_taus_)
       return;
-
-   // passed sufficient taus cut
-   passCut(event_cut++, "Tau requirement");
-
-   auto raw_tight_tau = helper_.GetSelectedTaus(raw_tau, 20., tau::tight);
 
    if (raw_tight_tau.size() < min_tight_taus_)
       return;
@@ -315,7 +299,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       if (tight_tau.size() < min_tight_taus_)
          continue;
 
-      passComboCut(event_cut, combo_cut++, passed, "Tight tau in combo");
+      passComboCut(event_cut, combo_cut++, passed, "Taus in combo");
 
       auto loose_e = removeOverlap(raw_e, loose_tau, 0.15);
       auto loose_mu = removeOverlap(raw_mu, loose_tau, 0.15);

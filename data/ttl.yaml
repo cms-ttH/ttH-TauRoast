@@ -1,13 +1,13 @@
 # vim: set sw=4 sta et :
 
-ntupledir: test
-outdir: delete_me
+ntupledir: /hadoop/store/user/matze/ttH/v4
+outdir: ~/www/ttH/v4
 
 lumi: 10000
 
 plot:
-  - fake_data
-  - ttjets
+  # - fake_data
+  # - ttjets
   - ttH_125
   - ttH_125_real
 

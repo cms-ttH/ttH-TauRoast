@@ -1,10 +1,10 @@
 id: tau
 type: cmssw
 
-workdir: /tmpscratch/users/matze/tau_v2.3
-plotdir: /afs/crc.nd.edu/user/m/mwolf3/www/lobster/tau_v2.3
+workdir: /tmpscratch/users/matze/tau_v4
+plotdir: /afs/crc.nd.edu/user/m/mwolf3/www/lobster/tau_v4
 
-stageout location: /hadoop/store/user/matze/v2.3
+stageout location: /hadoop/store/user/matze/ttH/v4
 
 xrootd server: "ndcms.crc.nd.edu"
 xrootd root: /hadoop
@@ -17,7 +17,7 @@ srm root: ""
 task defaults:
     cmssw config: ntuplize.py
     outputs: [test.root]
-    events per job: 25000
+    events per job: 10000
 
 tasks:
   # - label: ttjets
