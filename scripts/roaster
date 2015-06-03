@@ -34,6 +34,9 @@ logging.__dict__['root'].level = (2 + args.quiet - args.verbose) * 10
 with open(args.config[0]) as f:
     config = yaml.load(f)
 
+for k in ('outdir', 'ntupledir'):
+    config[k] = os.path.expanduser(os.path.expandvars(config[k]))
+
 datadir = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data')
 
 with open(os.path.join(datadir, 'plot.yaml')) as f:
