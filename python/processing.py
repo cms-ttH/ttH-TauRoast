@@ -145,8 +145,8 @@ class BasicProcess(Process):
 
             filltime += time.clock() - start
 
-        logging.info("time spent in cutflow: {0}".format(cuttime))
-        logging.info("time spent filling plots: {0}".format(filltime))
+        logging.debug("time spent in cutflow: {0}".format(cuttime))
+        logging.debug("time spent filling plots: {0}".format(filltime))
 
     def process(self):
         return [self._name]

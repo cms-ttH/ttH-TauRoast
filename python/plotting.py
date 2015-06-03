@@ -6,6 +6,7 @@ import random
 import ROOT as r
 
 from ttH.TauRoast import stylish
+from ttH.TauRoast.decorative import savetime
 from ttH.TauRoast.legendary import Legend
 from ttH.TauRoast.processing import Process
 from ttH.TauRoast.useful import Snippet
@@ -31,6 +32,9 @@ class Plot(Snippet):
             raise KeyError("Plot {0} defined twice".format(self.__limitname))
         Plot.__plots__.append(self)
         Plot.__names__.add(self.__limitname)
+
+    def __str__(self):
+        return self.__name
 
     def _add_legend(self, config, factor):
         l = Legend(0.05, 3, 0.08)
@@ -360,6 +364,7 @@ class Plot(Snippet):
             os.makedirs(subdir)
         canvas.SaveAs(os.path.join(outdir, self.__name + ".pdf"))
 
+    @savetime
     def fill(self, process, event, combos, weight):
         try:
             hist = self.__hists[process]

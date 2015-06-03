@@ -103,6 +103,10 @@ if args.fill:
     for p in Plot.plots():
         p.write(f, cuts, fmt="{p}_{v}_TTL")
 
+    timing = sorted(Plot.plots(), key=lambda p: p._time)
+    for p in timing[:10] + timing[-10:]:
+        logging.debug("plot filling time for {0}: {1}".format(p, p._time))
+
     f.Write()
     f.Close()
 else:
