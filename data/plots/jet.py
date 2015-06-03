@@ -18,8 +18,8 @@ if len(masses) > 0:
 
 pspace = [
         ("", "jets"),
-        ("Untagged", "[j for j in jets if not btag(j)]"),
-        ("Tagged", "filter(btag, jets)")
+        ("Untagged", "notags"),
+        ("Tagged", "tags")
 ]
 
 jspace = [

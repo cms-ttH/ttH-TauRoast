@@ -5,6 +5,8 @@ import time
 
 import ROOT as r
 
+from ttH.TauRoast.useful import Snippet
+
 class Process(object):
     __processes__ = {}
     __limitnames__ = set()
@@ -128,17 +130,22 @@ class BasicProcess(Process):
 
             start = time.clock()
 
+            selected = passed[0]
+
             weight = 1
             ws = {}
             ws.update(event.weights())
-            ws.update(passed[0].weights())
+            ws.update(selected.weights())
             for n, w in enumerate(str(w).lower() for w in weights):
                 weight *= ws[w]
                 weights[n][self] += weight
 
+            globals = {}
+            Snippet.prepare_globals(globals, event, selected, tagging=True)
+
             for plot in plots:
                 try:
-                    plot.fill(self, event, passed, weight)
+                    plot.fill(self, event, selected, passed, weight, globals)
                 except Exception, e:
                     print "error in", plot.name
                     print e

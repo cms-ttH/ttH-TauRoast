@@ -365,7 +365,7 @@ class Plot(Snippet):
         canvas.SaveAs(os.path.join(outdir, self.__name + ".pdf"))
 
     @savetime
-    def fill(self, process, event, combos, weight):
+    def fill(self, process, event, selected, passed, weight, globals=None):
         try:
             hist = self.__hists[process]
         except KeyError:
@@ -374,9 +374,9 @@ class Plot(Snippet):
             self.__hists[process] = self.__class(*args)
             hist = self.__hists[process]
 
-        self._execute(event, combos[0], locals={
+        self._execute(event, selected, globals=globals, locals={
             'histo': hist,
-            'combos': combos,
+            'combos': passed,
             'weight': weight
         })
 

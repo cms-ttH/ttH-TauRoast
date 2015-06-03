@@ -12,23 +12,27 @@ class Snippet(object):
         self.__code = code
 
     def _execute(self, event, combo, locals=None, globals=None, use_exec=True):
-        mylocals = {}
-        myglobals = {
+        if not locals:
+            locals = {}
+        if not globals:
+            globals = {}
+            Snippet.prepare_globals(globals, event, combo)
+        if use_exec:
+            exec self.__code in locals, globals
+        else:
+            return eval(self.__code, globals, locals)
+
+    @classmethod
+    def prepare_globals(cls, globals, event, combo, tagging=False):
+        globals.update({
                 'event': event,
                 'btag': btag,
                 'dR': dR,
                 'taus': combo.taus(),
                 'leptons': combo.leptons(),
                 'jets': combo.jets(),
+                'tags': filter(btag, combo.jets()) if tagging else [],
+                'notags': [j for j in combo.jets() if not btag(j)] if tagging else [],
                 'pv': event.pv(),
                 'met': event.met()
-        }
-
-        if locals:
-            mylocals.update(locals)
-        if globals:
-            myglobals.update(globals)
-        if use_exec:
-            exec self.__code in mylocals, myglobals
-        else:
-            return eval(self.__code, myglobals, mylocals)
+        })
