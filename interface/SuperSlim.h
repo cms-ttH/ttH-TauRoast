@@ -67,9 +67,9 @@ namespace superslim {
 #endif
          virtual ~PhysObject() {};
 
-         LorentzVector
+         const LorentzVector&
             p4() const { return p_; };
-         const std::vector<superslim::PhysObject>
+         const std::vector<superslim::PhysObject>&
             parents() const { return parents_; };
          int
             parentId() const;
@@ -217,8 +217,8 @@ namespace superslim {
          // true vertices
          int ntv() const { return ntv_; };
 
-         LorentzVector met() const { return met_; };
-         std::vector<superslim::Vertex> pv() const { return pv_; };
+         const LorentzVector& met() const { return met_; };
+         const std::vector<superslim::Vertex>& pv() const { return pv_; };
 
          void setWeight(const std::string& s, float f) { weights_[s] = f; };
       private:
