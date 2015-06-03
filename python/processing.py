@@ -1,6 +1,7 @@
 import glob
 import logging
 import os
+import time
 
 import ROOT as r
 
@@ -100,11 +101,17 @@ class BasicProcess(Process):
         event = r.superslim.Event()
         t.SetBranchAddress('Event', r.AddressOf(event))
 
+        cuttime = 0.
+        filltime = 0.
+
         for i in range(t.GetEntries()):
             if i % 1000 == 1:
                 logging.info("processing event {0}".format(i))
 
             t.GetEntry(i)
+
+            start = time.clock()
+
             passed = []
             combos = event.combos()
             for combo in combos:
@@ -114,8 +121,12 @@ class BasicProcess(Process):
                 else:
                     passed.append(combo)
 
+            cuttime += time.clock() - start
+
             if len(passed) == 0:
                 continue
+
+            start = time.clock()
 
             weight = 1
             ws = {}
@@ -131,6 +142,11 @@ class BasicProcess(Process):
                 except Exception, e:
                     print "error in", plot.name
                     print e
+
+            filltime += time.clock() - start
+
+        logging.info("time spent in cutflow: {0}".format(cuttime))
+        logging.info("time spent filling plots: {0}".format(filltime))
 
     def process(self):
         return [self._name]
