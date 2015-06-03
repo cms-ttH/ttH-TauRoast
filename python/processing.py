@@ -4,9 +4,6 @@ import os
 
 import ROOT as r
 
-header = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'interface', 'SuperSlim.h')
-r.gInterpreter.ProcessLine('#include "{0}"'.format(header))
-
 class Process(object):
     __processes__ = {}
     __limitnames__ = set()
@@ -76,7 +73,7 @@ class BasicProcess(Process):
                 else:
                     hist.Add(h)
 
-        if hist == None:
+        if hist is None:
             raise IOError("No files found in '{0}'".format(os.path.join(basedir, p)))
 
         if len(counts) == 0:
