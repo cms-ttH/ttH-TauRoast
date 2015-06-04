@@ -4,21 +4,17 @@
 
 First, create a CMSSW release and source the software environment:
 
-    cmsrel CMSSW_7_2_4
-    cd CMSSW_7_2_4/src
+    cmsrel CMSSW_7_4_3_patch1
+    cd CMSSW_7_4_3_patch1/src
     cmsenv
 
 [PyYaml](http://pyyaml.org/wiki/PyYAML) is a pre-requisite.
 Install it locally after executing `cmsenv` using the python setuptools:
 
-    # if not installed system-wide
-    wget https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py -O - | python - --user
+    wget https://bootstrap.pypa.io/get-pip.py; python get-pip.py --user
     export PATH=$PATH:$HOME/.local/bin
     # actual yaml installation
-    easy_install --prefix ~/.local PyYAML
-
-In case the last command fails, additional directories may have to be
-created with `mkdir -p`.
+    pip install --user PyYAML
 
 Afterwards, clone this repository in the CMSSW source area:
 
