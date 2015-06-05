@@ -77,8 +77,14 @@ def normalize(cuts, lumi):
     cuts.append(dsetnorm)
     cuts.append(luminorm)
 
-def cutflow(cuts, procs, f=sys.stdout):
+def cutflow(cuts, procs, relative=False, f=sys.stdout):
     expanded_proc = [Process.expand(proc) for proc in procs]
+
+    cutdata = [[sum(float(cut[p]) for p in ps) for ps in expanded_proc] for cut in cuts]
+
+    if relative:
+        for i in xrange(1, len(cutdata)):
+            cutdata[-i] = [float(b) / a for a, b in zip(cutdata[-(i + 1)], cutdata[-i])]
 
     namelength = max(len(unicode(cut)) for cut in cuts)
     fieldlengths = []
@@ -96,5 +102,5 @@ def cutflow(cuts, procs, f=sys.stdout):
 
     f.write(header.format("Cut", *procs))
     f.write("-" * namelength + "".join("   " + "-" * fl for fl in fieldlengths) + "\n")
-    for cut in cuts:
-        f.write(format.format(cut, *[sum(float(cut[p]) for p in ps) for ps in expanded_proc]))
+    for cut, data in zip(cuts, cutdata):
+        f.write(format.format(cut, *data))

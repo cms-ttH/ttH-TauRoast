@@ -2,6 +2,7 @@
 # vim: ts=4:sw=4:et:sta
 
 import argparse
+import codecs
 import logging
 import os
 import yaml
@@ -91,6 +92,11 @@ if args.fill:
     cuts = counts + cuts + weights
     normalize(cuts, config["lumi"])
     cutflow(cuts, config["plot"])
+
+    with codecs.open(os.path.join(config["outdir"], "cuts.txt"), "w", encoding="utf8") as fd:
+        cutflow(cuts, config["plot"], f=fd)
+    with codecs.open(os.path.join(config["outdir"], "cuts_rel.txt"), "w", encoding="utf8") as fd:
+        cutflow(cuts, config["plot"], f=fd, relative=True)
 
     if not os.path.exists(config["outdir"]):
         os.makedirs(config["outdir"])
