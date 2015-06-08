@@ -83,7 +83,11 @@ if args.fill:
     for weight in config["weights"]:
         weights.append(StaticCut(weight))
 
+    processed = set()
     for proc in sum(map(Process.expand, config['plot']), []):
+        if proc in processed:
+            continue
+        processed.add(proc)
         local_cuts = list(cuts)
         for cfg in proc.additional_cuts:
             local_cuts.insert(0, Cut(*cfg))
