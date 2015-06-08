@@ -5,7 +5,7 @@ def dR(one, two):
     return math.sqrt(diff.Eta()**2 + diff.Phi()**2)
 
 def btag(jet):
-    return jet.csv() > 0.679
+    return jet.csv() > 0.814
 
 class Snippet(object):
     def __init__(self, code):
