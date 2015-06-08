@@ -6,7 +6,7 @@ BasicProcess(
     fullname="t#bar{t}",
     paths=["ttjets"],
     cross_section=831.76,
-    events=25446993
+    events=11339232
 )
 
 BasicProcess(
