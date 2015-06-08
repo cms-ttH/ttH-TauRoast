@@ -59,7 +59,7 @@ class Plot(Snippet):
         procs = Process.expand(process)
         h = self.__hists[procs[0]].Clone()
         for proc in procs[1:]:
-            h.Add(self__hists[proc])
+            h.Add(self.__hists[proc])
         return h
 
     def _get_background_sum(self, config):
