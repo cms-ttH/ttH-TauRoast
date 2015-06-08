@@ -74,6 +74,13 @@ class BasicProcess(Process):
                 if hist is None:
                     hist = h
                 else:
+                    for n in range(hist.GetNbinsX()):
+                        oldlabel = hist.GetXaxis().GetBinLabel(n+1)
+                        newlabel = h.GetXaxis().GetBinLabel(n+1)
+                        if oldlabel == "" and newlabel != "":
+                            hist.GetXaxis().SetBinLabel(n+1, newlabel)
+                        if oldlabel != "" and newlabel == "":
+                            h.GetXaxis().SetBinLabel(n+1, oldlabel)
                     hist.Add(h)
 
         if hist is None:
