@@ -181,5 +181,4 @@ class CombinedProcess(Process):
         self.__subprocesses = subprocesses
 
     def process(self):
-        procs = Process.processes()
-        return sum((procs[n].process() for n in self.__subprocesses), [])
+        return sum((Process.get(n).process() for n in self.__subprocesses), [])
