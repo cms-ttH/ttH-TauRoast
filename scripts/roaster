@@ -93,13 +93,14 @@ if args.fill:
     normalize(cuts, config["lumi"])
     cutflow(cuts, config["plot"])
 
+    if not os.path.exists(config["outdir"]):
+        os.makedirs(config["outdir"])
+
     with codecs.open(os.path.join(config["outdir"], "cuts.txt"), "w", encoding="utf8") as fd:
         cutflow(cuts, config["plot"], f=fd)
     with codecs.open(os.path.join(config["outdir"], "cuts_rel.txt"), "w", encoding="utf8") as fd:
         cutflow(cuts, config["plot"], f=fd, relative=True)
 
-    if not os.path.exists(config["outdir"]):
-        os.makedirs(config["outdir"])
     fn = os.path.join(config["outdir"], "plots.root")
     f = r.TFile(fn, "RECREATE")
 
