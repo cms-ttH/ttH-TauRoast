@@ -48,7 +48,7 @@ Plot(
         name="general/NumJetsOverview",
         code="histo.Fill(jets.size(), len(filter(btag, jets)), weight)",
         labels=["Inclusive jets", "Tagged jets"],
-        binning=[10, 0, 10, 5, 0, 4],
+        binning=[10, 0, 10, 5, 0, 5],
         dimensions=2
 )
 Plot(
