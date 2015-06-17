@@ -112,11 +112,11 @@ class TauProcessor : public edm::EDAnalyzer {
 
       unsigned int min_jets_;
       unsigned int min_tags_;
-      unsigned int max_tags_;
+      int max_tags_;
       unsigned int min_leptons_;
       unsigned int min_tight_leptons_;
-      unsigned int max_leptons_;
-      unsigned int max_tight_leptons_;
+      int max_leptons_;
+      int max_tight_leptons_;
       unsigned int min_taus_;
       unsigned int min_tight_taus_;
 
@@ -143,11 +143,11 @@ class TauProcessor : public edm::EDAnalyzer {
 TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    min_jets_(config.getParameter<unsigned int>("minJets")),
    min_tags_(config.getParameter<unsigned int>("minTags")),
-   max_tags_(config.getParameter<unsigned int>("maxTags")),
+   max_tags_(config.getParameter<int>("maxTags")),
    min_leptons_(config.getParameter<unsigned int>("minLeptons")),
    min_tight_leptons_(config.getParameter<unsigned int>("minTightLeptons")),
-   max_leptons_(config.getParameter<unsigned int>("maxLeptons")),
-   max_tight_leptons_(config.getParameter<unsigned int>("maxTightLeptons")),
+   max_leptons_(config.getParameter<int>("maxLeptons")),
+   max_tight_leptons_(config.getParameter<int>("maxTightLeptons")),
    min_taus_(config.getParameter<unsigned int>("minTaus")),
    min_tight_taus_(config.getParameter<unsigned int>("minTightTaus")),
    event_(0)
@@ -316,10 +316,10 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       if (tight_e.size() + tight_mu.size() < min_tight_leptons_)
          continue;
 
-      if (loose_e.size() + loose_mu.size() > max_leptons_)
+      if (max_leptons_ >= 0 && loose_e.size() + loose_mu.size() > (unsigned int) max_leptons_)
          continue;
 
-      if (tight_e.size() + tight_mu.size() > max_tight_leptons_)
+      if (max_tight_leptons_ >= 0 && tight_e.size() + tight_mu.size() > (unsigned int) max_tight_leptons_)
          continue;
 
       passComboCut(event_cut, combo_cut++, passed, "Leptons in combo");
@@ -342,7 +342,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       if (selected_jets.size() < min_jets_ or selected_tags.size() < min_tags_)
          continue;
 
-      if (selected_tags.size() > max_tags_)
+      if (max_tags_ >= 0 && selected_tags.size() > (unsigned int) max_tags_)
          continue;
 
       passComboCut(event_cut, combo_cut++, passed, "Jet requirements");
