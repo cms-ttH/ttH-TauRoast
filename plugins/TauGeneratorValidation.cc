@@ -35,6 +35,7 @@
 
 #include "DataFormats/JetReco/interface/GenJetCollection.h"
 #include "DataFormats/PatCandidates/interface/GenericParticle.h"
+#include "DataFormats/PatCandidates/interface/Tau.h"
 
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 
@@ -75,6 +76,7 @@ class TauGeneratorValidation : public edm::EDAnalyzer {
       edm::EDGetTokenT<reco::GenParticleCollection> gen_token_;
       edm::EDGetTokenT<reco::GenJetCollection> jet_token_;
       edm::EDGetTokenT<GenEventInfoProduct> geninfo_token_;
+      edm::EDGetTokenT<pat::TauCollection> tau_token_;
 
       TTree *tree_;
 
@@ -105,6 +107,11 @@ class TauGeneratorValidation : public edm::EDAnalyzer {
       float d1_phi_;
       float d1_decay_;
       float d1_vispt_;
+      float d1_recopt_;
+      float d1_iso3hits_;
+      float d1_mvaid_;
+      float d1_dR_nearest_;
+      float d1_dR_hardest_;
 
       float d2_id_;
       float d2_pt_;
@@ -112,14 +119,22 @@ class TauGeneratorValidation : public edm::EDAnalyzer {
       float d2_phi_;
       float d2_decay_;
       float d2_vispt_;
+      float d2_recopt_;
+      float d2_iso3hits_;
+      float d2_mvaid_;
+      float d2_dR_nearest_;
+      float d2_dR_hardest_;
 
       std::vector<int> potential_mothers_ = {6, 23, 24, 25};
 };
 
 TauGeneratorValidation::TauGeneratorValidation(const edm::ParameterSet& config)
 {
-   gen_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("genParticles"));
-   jet_token_ = consumes<reco::GenJetCollection>(edm::InputTag("ak5GenJets"));
+   // gen_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("genParticles"));
+   gen_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("prunedGenParticles"));
+   // jet_token_ = consumes<reco::GenJetCollection>(edm::InputTag("ak5GenJets"));
+   jet_token_ = consumes<reco::GenJetCollection>(edm::InputTag("slimmedGenJets"));
+   tau_token_ = consumes<pat::TauCollection>(edm::InputTag("slimmedTaus"));
    geninfo_token_ = consumes<GenEventInfoProduct>(edm::InputTag("generator"));
 
    edm::Service<TFileService> fs;
@@ -151,6 +166,11 @@ TauGeneratorValidation::TauGeneratorValidation(const edm::ParameterSet& config)
    tdecays_->Branch("daughter1_phi", &d1_phi_);
    tdecays_->Branch("daughter1_decay", &d1_decay_);
    tdecays_->Branch("daughter1_visible_pt", &d1_vispt_);
+   tdecays_->Branch("daughter1_reco_pt", &d1_recopt_);
+   tdecays_->Branch("daughter1_iso_3hits", &d1_iso3hits_);
+   tdecays_->Branch("daughter1_iso_mva", &d1_mvaid_);
+   tdecays_->Branch("daughter1_dR_nearest", &d1_dR_nearest_);
+   tdecays_->Branch("daughter1_dR_hardest", &d1_dR_hardest_);
 
    tdecays_->Branch("daughter2_id", &d2_id_);
    tdecays_->Branch("daughter2_pt", &d2_pt_);
@@ -158,6 +178,11 @@ TauGeneratorValidation::TauGeneratorValidation(const edm::ParameterSet& config)
    tdecays_->Branch("daughter2_phi", &d2_phi_);
    tdecays_->Branch("daughter2_decay", &d2_decay_);
    tdecays_->Branch("daughter2_visible_pt", &d2_vispt_);
+   tdecays_->Branch("daughter2_reco_pt", &d2_recopt_);
+   tdecays_->Branch("daughter2_iso_3hits", &d2_iso3hits_);
+   tdecays_->Branch("daughter2_iso_mva", &d2_mvaid_);
+   tdecays_->Branch("daughter2_dR_nearest", &d2_dR_nearest_);
+   tdecays_->Branch("daughter2_dR_hardest", &d2_dR_hardest_);
 }
 
 
@@ -182,20 +207,6 @@ TauGeneratorValidation::analyze(const edm::Event& event, const edm::EventSetup& 
    m_eta_ = -99;
    m_phi_ = -99;
 
-   d1_id_  = -99;
-   d1_pt_  = -99;
-   d1_eta_ = -99;
-   d1_phi_ = -99;
-   d1_decay_ = -99;
-   d1_vispt_ = -99;
-
-   d2_id_  = -99;
-   d2_pt_  = -99;
-   d2_eta_ = -99;
-   d2_phi_ = -99;
-   d2_decay_ = -99;
-   d2_vispt_ = -99;
-
    njets30_ = 0;
    auto gen_jets = get_collection(event, jet_token_);
    for (const auto& jet: *gen_jets) {
@@ -212,12 +223,13 @@ TauGeneratorValidation::analyze(const edm::Event& event, const edm::EventSetup& 
 
    njets_ = gen_jets->size();
 
+   auto taus = get_collection(event, tau_token_);
    auto gen_particles = get_collection(event, gen_token_);
    for (const auto& particle: *gen_particles) {
       if (std::find(potential_mothers_.begin(), potential_mothers_.end(), abs(particle.pdgId())) == potential_mothers_.end())
          continue;
 
-      if (particle.numberOfDaughters() != 2 or particle.daughter(0)->pdgId() == particle.pdgId())
+      if (particle.numberOfDaughters() != 2 or !particle.daughter(0) or particle.daughter(0)->pdgId() == particle.pdgId())
          continue;
 
       auto d1 = get_final(particle.daughter(0));
@@ -238,22 +250,149 @@ TauGeneratorValidation::analyze(const edm::Event& event, const edm::EventSetup& 
       d2_eta_ = d2->eta();
       d2_phi_ = d2->phi();
 
+      d1_decay_ = -99;
+      d1_vispt_ = -99;
+      d1_recopt_ = -99;
+      d1_iso3hits_ = -99;
+      d1_mvaid_ = -99;
+      d1_dR_hardest_ = -99;
+      d1_dR_nearest_ = -99;
+
+      d2_decay_ = -99;
+      d2_vispt_ = -99;
+      d2_recopt_ = -99;
+      d2_iso3hits_ = -99;
+      d2_mvaid_ = -99;
+      d2_dR_hardest_ = -99;
+      d2_dR_nearest_ = -99;
+
+      for (const auto& j: *gen_jets) {
+         if (j.pt() < 30)
+            continue;
+         auto dR_d1 = deltaR(d1->p4(), j.p4());
+         auto dR_d2 = deltaR(d2->p4(), j.p4());
+
+         if (d1_dR_hardest_ < 0.)
+            d1_dR_hardest_ = dR_d1;
+         if ((d1_dR_nearest_ < 0. or dR_d1 < d1_dR_nearest_) and dR_d1 > .1)
+            d1_dR_nearest_ = dR_d1;
+
+         if (d2_dR_hardest_ < 0.)
+            d2_dR_hardest_ = dR_d2;
+         if ((d2_dR_nearest_ < 0. or dR_d2 < d2_dR_nearest_) and dR_d2 > .1)
+            d2_dR_nearest_ = dR_d2;
+      }
+
       if (m_id_ == 25 and abs(d1_id_) == 15) {
-         auto gd = d1->daughter(0);
-         if (gd->pdgId() % 2 == 0 and gd->pdgId() > 10 and gd->pdgId() < 20)
-            gd = d1->daughter(1);
+         const reco::Candidate* gd = 0;
+         for (unsigned int i = 0; i < d1->numberOfDaughters(); ++i) {
+            gd = get_final(d1->daughter(i));
+            if (abs(gd->pdgId()) == 16)
+               continue;
+            if (gd->pdgId() % 2 == 0 and abs(gd->pdgId()) > 10 and abs(gd->pdgId()) < 20)
+               continue;
+            break;
+         }
 
          d1_decay_ = gd->pdgId();
-         d1_vispt_ = gd->pt();
+         d1_vispt_ = 0;
+         for (unsigned int i = 0; i < d1->numberOfDaughters(); ++i) {
+            auto p = get_final(d1->daughter(i));
+            if (p->pdgId() % 2 == 0 and abs(p->pdgId()) > 10 and abs(p->pdgId()) < 20)
+               continue;
+            d1_vispt_ += p->pt();
+         }
+
+         for (const auto& t: *taus) {
+            if (t.genParticle() == d1) {
+               if (t.tauID("decayModeFindingNewDMs") < .5)
+                  continue;
+
+               d1_recopt_ = t.pt();
+
+               if (t.tauID("byTightCombinedIsolationDeltaBetaCorr3Hits") > .5)
+                  d1_iso3hits_ = 3;
+               else if (t.tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits") > .5)
+                  d1_iso3hits_ = 2;
+               else if (t.tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits") > .5)
+                  d1_iso3hits_ = 1;
+               else
+                  d1_iso3hits_ = 0;
+
+               if (t.tauID("byVVTightIsolationMVA3newDMwLT") > .5)
+                  d1_mvaid_ = 6;
+               else if (t.tauID("byVTightIsolationMVA3newDMwLT") > .5)
+                  d1_mvaid_ = 5;
+               else if (t.tauID("byTightIsolationMVA3newDMwLT") > .5)
+                  d1_mvaid_ = 4;
+               else if (t.tauID("byMediumIsolationMVA3newDMwLT") > .5)
+                  d1_mvaid_ = 3;
+               else if (t.tauID("byLooseIsolationMVA3newDMwLT") > .5)
+                  d1_mvaid_ = 2;
+               else if (t.tauID("byVLooseIsolationMVA3newDMwLT") > .5)
+                  d1_mvaid_ = 1;
+               else
+                  d1_mvaid_ = 0;
+
+               break;
+            }
+         }
       }
 
       if (m_id_ == 25 and abs(d2_id_) == 15) {
-         auto gd = d2->daughter(0);
-         if (gd->pdgId() % 2 == 0 and abs(gd->pdgId()) > 10 and abs(gd->pdgId()) < 20)
-            gd = d2->daughter(1);
+         const reco::Candidate* gd = 0;
+         for (unsigned int i = 0; i < d2->numberOfDaughters(); ++i) {
+            gd = get_final(d2->daughter(i));
+            if (abs(gd->pdgId()) == 16)
+               continue;
+            if (gd->pdgId() % 2 == 0 and abs(gd->pdgId()) > 10 and abs(gd->pdgId()) < 20)
+               continue;
+            break;
+         }
 
          d2_decay_ = gd->pdgId();
-         d2_vispt_ = gd->pt();
+         d2_vispt_ = 0;
+         for (unsigned int i = 0; i < d2->numberOfDaughters(); ++i) {
+            auto p = get_final(d2->daughter(i));
+            if (p->pdgId() % 2 == 0 and abs(p->pdgId()) > 10 and abs(p->pdgId()) < 20)
+               continue;
+            d2_vispt_ += p->pt();
+         }
+
+         for (const auto& t: *taus) {
+            if (t.genParticle() == d2) {
+               if (t.tauID("decayModeFindingNewDMs") < .5)
+                  continue;
+
+               d2_recopt_ = t.pt();
+
+               if (t.tauID("byTightCombinedIsolationDeltaBetaCorr3Hits") > .5)
+                  d2_iso3hits_ = 3;
+               else if (t.tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits") > .5)
+                  d2_iso3hits_ = 2;
+               else if (t.tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits") > .5)
+                  d2_iso3hits_ = 1;
+               else
+                  d2_iso3hits_ = 0;
+
+               if (t.tauID("byVVTightIsolationMVA3newDMwLT") > .5)
+                  d2_mvaid_ = 6;
+               else if (t.tauID("byVTightIsolationMVA3newDMwLT") > .5)
+                  d2_mvaid_ = 5;
+               else if (t.tauID("byTightIsolationMVA3newDMwLT") > .5)
+                  d2_mvaid_ = 4;
+               else if (t.tauID("byMediumIsolationMVA3newDMwLT") > .5)
+                  d2_mvaid_ = 3;
+               else if (t.tauID("byLooseIsolationMVA3newDMwLT") > .5)
+                  d2_mvaid_ = 2;
+               else if (t.tauID("byVLooseIsolationMVA3newDMwLT") > .5)
+                  d2_mvaid_ = 1;
+               else
+                  d2_mvaid_ = 0;
+
+               break;
+            }
+         }
       }
 
       tdecays_->Fill();
