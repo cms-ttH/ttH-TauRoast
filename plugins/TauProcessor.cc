@@ -46,7 +46,7 @@ std::vector<std::vector<T>>
 build_permutations(const std::vector<T>& things, const unsigned int num)
 {
     if (num == 0)
-        return {};
+        return {{}};
     if (num > things.size())
         return {};
 
