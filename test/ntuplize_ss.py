@@ -49,7 +49,8 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         maxLeptons = cms.int32(2),
         maxTightLeptons = cms.int32(1),
         minTaus = cms.uint32(0),
-        minTightTaus = cms.uint32(0)
+        minTightTaus = cms.uint32(0),
+        ssLeptons = cms.bool(True)
 )
 
 process.p = cms.Path(process.taus)
