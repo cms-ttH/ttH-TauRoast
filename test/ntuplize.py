@@ -44,7 +44,34 @@ process.TFileService = cms.Service("TFileService",
         fileName = cms.string("test.root")
 )
 
+from RecoJets.Configuration.RecoJets_cff import *
+from RecoJets.Configuration.RecoPFJets_cff import *
+from JetMETCorrections.Configuration.JetCorrectionProducersAllAlgos_cff import *
+from JetMETCorrections.Configuration.JetCorrectionServicesAllAlgos_cff import *
+from JetMETCorrections.Configuration.JetCorrectionServices_cff import *
+
+process.ak4PFCHSL1Fastjet = cms.ESProducer(
+        'L1FastjetCorrectionESProducer',
+        level       = cms.string('L1FastJet'),
+        algorithm   = cms.string('AK4PFchs'),
+        srcRho      = cms.InputTag( 'fixedGridRhoFastjetAll' ),
+        useCondDB = cms.untracked.bool(True)
+        )
+process.ak4PFchsL2Relative   =  ak5PFL2Relative.clone( algorithm = 'AK4PFchs' )
+process.ak4PFchsL3Absolute   =  ak5PFL3Absolute.clone( algorithm = 'AK4PFchs' )
+process.ak4PFchsL1L2L3 = cms.ESProducer("JetCorrectionESChain",
+        correctors = cms.vstring(
+            'ak4PFCHSL1Fastjet',
+            'ak4PFchsL2Relative',
+            'ak4PFchsL3Absolute'),
+        useCondDB = cms.untracked.bool(True)
+)
+
+process.load("ttH.LeptonID.ttHLeptons_cfi")
+
 process.taus = cms.EDAnalyzer("TauProcessor",
+        electrons = cms.InputTag("ttHLeptons"),
+        muons = cms.InputTag("ttHLeptons"),
         minJets = cms.uint32(2),
         minTags = cms.uint32(1),
         maxTags = cms.int32(2),
@@ -57,4 +84,4 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         ssLeptons = cms.bool(False)
 )
 
-process.p = cms.Path(process.taus)
+process.p = cms.Path(process.ttHLeptons * process.taus)

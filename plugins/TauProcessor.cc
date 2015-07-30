@@ -89,6 +89,19 @@ get_collection(const edm::Event& event, const edm::EDGetTokenT<T>& token)
    return handle;
 }
 
+template<typename T>
+std::vector<T>
+get_selection(const std::vector<T>& coll, const std::string& id, double pt)
+{
+   std::vector<T> res;
+   for (const auto& i: coll) {
+      if (i.userFloat(id) < .5 or i.pt() < pt)
+         continue;
+      res.push_back(i);
+   }
+   return res;
+}
+
 class TauProcessor : public edm::EDAnalyzer {
    public:
       explicit TauProcessor(const edm::ParameterSet&);
@@ -159,8 +172,8 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    bs_token_ = consumes<reco::BeamSpot>(edm::InputTag("offlineBeamSpot"));
    pu_token_ = consumes<std::vector<PileupSummaryInfo>>(edm::InputTag("addPileupInfo"));
    vertices_token_ = consumes<reco::VertexCollection>(edm::InputTag("offlineSlimmedPrimaryVertices"));
-   electrons_token_ = consumes<pat::ElectronCollection>(edm::InputTag("slimmedElectrons"));
-   muons_token_ = consumes<pat::MuonCollection>(edm::InputTag("slimmedMuons"));
+   electrons_token_ = consumes<pat::ElectronCollection>(config.getParameter<edm::InputTag>("electrons"));
+   muons_token_ = consumes<pat::MuonCollection>(config.getParameter<edm::InputTag>("muons"));
    taus_token_ = consumes<pat::TauCollection>(edm::InputTag("slimmedTaus"));
    ak4jets_token_ = consumes<pat::JetCollection>(edm::InputTag("slimmedJets"));
    gen_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("prunedGenParticles"));
@@ -271,8 +284,8 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    auto taus = get_collection(event, taus_token_);
    auto ak4jets = get_collection(event, ak4jets_token_);
 
-   auto raw_mu = helper_.GetSelectedMuons(*muons, 5., muonID::muonLoose);
-   auto all_loose_e = helper_.GetSelectedElectrons(*electrons, 5., electronID::electronLoose);
+   auto raw_mu = get_selection(*muons, "idPreselection", 5.);
+   auto all_loose_e = get_selection(*electrons, "idPreselection", 7.);
    auto raw_e = removeOverlap(all_loose_e, raw_mu);
    auto raw_tau = helper_.GetSelectedTaus(*taus, 20., tau::loose);
    auto raw_tight_tau = helper_.GetSelectedTaus(raw_tau, 20., tau::tight);
