@@ -23,8 +23,13 @@ process.source = cms.Source("PoolSource",
 
 process.TFileService = cms.Service("TFileService",
         closeFileFast = cms.untracked.bool(True),
-        fileName = cms.string("test.root")
+        fileName = cms.string("test/multilepton/ttH2Nonbbgg_125/test.root")
 )
+
+import os
+dirname = os.path.split(str(process.TFileService.fileName))[0]
+if not os.path.isdir(dirname):
+    os.makedirs(dirname)
 
 from RecoJets.Configuration.RecoJets_cff import *
 from RecoJets.Configuration.RecoPFJets_cff import *

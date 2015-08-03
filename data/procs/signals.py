@@ -44,6 +44,16 @@ BasicProcess(
     events=2576712
 )
 
+BasicProcess(
+    name="ttH2Nonbbgg_125",
+    sample=9125,
+    fullname="t#bar{t}H(125) w/o b#bar{b}, gg",
+    limitname="ttH2Nonbbgg125",
+    paths=["ttH2Nonbbgg_125"],
+    cross_section=0.5085 * (1 - (0.577 + 0.2)),
+    events=2576712
+)
+
 CombinedProcess(
         name="ttH_125",
         fullname="t#bar{t}H(125)",
