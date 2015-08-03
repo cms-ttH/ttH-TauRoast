@@ -112,6 +112,7 @@ class BasicProcess(Process):
 
         cuttime = 0.
         filltime = 0.
+        errors = 0
 
         for i in range(t.GetEntries()):
             if i % 1000 == 1:
@@ -154,10 +155,13 @@ class BasicProcess(Process):
                 try:
                     plot.fill(self, event, selected, passed, weight, globals)
                 except Exception, e:
-                    print "error in", plot.name
-                    print e
+                    logging.debug("error filling {0}: {1}".format(plot.name, e))
+                    errors += 1
 
             filltime += time.clock() - start
+
+        if errors > 0:
+            logging.info("encountered {0} error(s) while filling histograms".format(errors))
 
         logging.debug("time spent in cutflow: {0}".format(cuttime))
         logging.debug("time spent filling plots: {0}".format(filltime))
