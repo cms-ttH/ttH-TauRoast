@@ -6,6 +6,8 @@ options.parseArguments()
 
 process = cms.Process("Taus")
 
+process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
+
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = 2000
 
@@ -63,7 +65,7 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         minTags = cms.uint32(0),
         maxTags = cms.int32(-1),
         minPreselectedLeptons = cms.uint32(2),
-        minLooseLeptons = cms.uint32(2),
+        minLooseLeptons = cms.uint32(0),
         minTightLeptons = cms.uint32(0),
         maxLeptons = cms.int32(-1),
         maxTightLeptons = cms.int32(-1),

@@ -1,0 +1,16 @@
+# vim: set sw=4 sta et :
+
+ntupledir: test/multilepton
+outdir: test/sync_mm
+
+lumi: 10000
+
+plot:
+  - ttH2Nonbbgg_125
+
+cuts:
+  - "μμ SS": "leptons[0].muon() and leptons[1].muon() and leptons[0].charge() * leptons[1].charge() > 0"
+  - "pt > 20, 20": "leptons[0].p4().pt() > 20 and leptons[1].p4().pt() > 20"
+
+weights:
+  - Generator

@@ -1,7 +1,7 @@
 # vim: set sw=4 sta et :
 
 ntupledir: test/multilepton
-outdir: test/sync
+outdir: test/sync_ee
 
 lumi: 10000
 
