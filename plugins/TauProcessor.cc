@@ -133,7 +133,6 @@ class TauProcessor : public edm::EDAnalyzer {
       int max_tight_leptons_;
       unsigned int min_taus_;
       unsigned int min_tight_taus_;
-      bool ss_leptons_;
 
       edm::EDGetTokenT<double> rho_token_;
       edm::EDGetTokenT<GenEventInfoProduct> geninfo_token_;
@@ -166,7 +165,6 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    max_tight_leptons_(config.getParameter<int>("maxTightLeptons")),
    min_taus_(config.getParameter<unsigned int>("minTaus")),
    min_tight_taus_(config.getParameter<unsigned int>("minTightTaus")),
-   ss_leptons_(config.getParameter<bool>("ssLeptons")),
    event_(0)
 {
    rho_token_ = consumes<double>(edm::InputTag("fixedGridRhoFastjetAll"));
@@ -341,28 +339,6 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
          continue;
 
       passComboCut(event_cut, combo_cut++, passed, "Leptons in combo");
-
-      int neg = 0;
-      int pos = 0;
-      for (const auto& lep: loose_e) {
-         if (lep.charge() > 0) {
-            ++pos;
-         } else {
-            ++neg;
-         }
-      }
-      for (const auto& lep: loose_mu) {
-         if (lep.charge() > 0) {
-            ++pos;
-         } else {
-            ++neg;
-         }
-      }
-
-      if (ss_leptons_ and not (pos == 0 or neg == 0))
-         continue;
-
-      passComboCut(event_cut, combo_cut++, passed, "Same sign leptons");
 
       // TODO check trigger
 
