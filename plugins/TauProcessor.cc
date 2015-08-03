@@ -127,6 +127,7 @@ class TauProcessor : public edm::EDAnalyzer {
       unsigned int min_tags_;
       int max_tags_;
       unsigned int min_leptons_;
+      unsigned int min_loose_leptons_;
       unsigned int min_tight_leptons_;
       int max_leptons_;
       int max_tight_leptons_;
@@ -158,7 +159,8 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    min_jets_(config.getParameter<unsigned int>("minJets")),
    min_tags_(config.getParameter<unsigned int>("minTags")),
    max_tags_(config.getParameter<int>("maxTags")),
-   min_leptons_(config.getParameter<unsigned int>("minLeptons")),
+   min_leptons_(config.getParameter<unsigned int>("minPreselectedLeptons")),
+   min_loose_leptons_(config.getParameter<unsigned int>("minLooseLeptons")),
    min_tight_leptons_(config.getParameter<unsigned int>("minTightLeptons")),
    max_leptons_(config.getParameter<int>("maxLeptons")),
    max_tight_leptons_(config.getParameter<int>("maxTightLeptons")),
@@ -284,8 +286,8 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    auto taus = get_collection(event, taus_token_);
    auto ak4jets = get_collection(event, ak4jets_token_);
 
-   auto raw_mu = get_selection(*muons, "idPreselection", 5.);
-   auto all_loose_e = get_selection(*electrons, "idPreselection", 7.);
+   auto raw_mu = get_selection(*muons, "idLooseCut", 5.);
+   auto all_loose_e = get_selection(*electrons, "idLooseCut", 7.);
    auto raw_e = removeOverlap(all_loose_e, raw_mu);
    auto raw_tau = helper_.GetSelectedTaus(*taus, 20., tau::loose);
    auto raw_tight_tau = helper_.GetSelectedTaus(raw_tau, 20., tau::tight);
@@ -325,7 +327,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       auto tight_mu = helper_.GetSelectedMuons(loose_mu, 10., muonID::muonTight);
       auto tight_e = helper_.GetSelectedElectrons(loose_e, 10., electronID::electronTight);
 
-      if (loose_e.size() + loose_mu.size() < min_leptons_)
+      if (loose_e.size() + loose_mu.size() < min_loose_leptons_)
          continue;
 
       if (tight_e.size() + tight_mu.size() < min_tight_leptons_)
