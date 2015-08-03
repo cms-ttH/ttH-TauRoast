@@ -285,9 +285,9 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    auto ak4jets = get_collection(event, ak4jets_token_);
    auto genstuff = get_collection(event, gen_token_);
 
-   auto raw_mu = get_selection(*muons, "idLooseCut", 5.);
-   auto all_loose_e = get_selection(*electrons, "idLooseCut", 7.);
-   auto raw_e = removeOverlap(all_loose_e, raw_mu);
+   auto raw_mu = get_selection(*muons, "idPreselection", 5.);
+   auto all_preselected_e = get_selection(*electrons, "idPreselection", 7.);
+   auto raw_e = removeOverlap(all_preselected_e, raw_mu);
    auto raw_tau = helper_.GetSelectedTaus(*taus, 20., tau::loose);
    auto raw_tight_tau = helper_.GetSelectedTaus(raw_tau, 20., tau::tight);
 
@@ -317,14 +317,19 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
       passComboCut(event_cut, combo_cut++, passed, "Taus in combo");
 
-      auto loose_e = removeOverlap(raw_e, loose_tau, 0.15);
-      auto loose_mu = removeOverlap(raw_mu, loose_tau, 0.15);
+      auto preselected_e = removeOverlap(raw_e, loose_tau, 0.15);
+      auto preselected_mu = removeOverlap(raw_mu, loose_tau, 0.15);
 
       // TODO there might be tight electrons that overlap with loose muons,
       // but not tight muons?  Should these be considered when only dealing
       // with tight leptons?
-      auto tight_mu = helper_.GetSelectedMuons(loose_mu, 10., muonID::muonTight);
-      auto tight_e = helper_.GetSelectedElectrons(loose_e, 10., electronID::electronTight);
+      auto loose_e = get_selection(preselected_e, "idLooseCut", 5.);
+      auto loose_mu = get_selection(preselected_mu, "idLooseCut", 5.);
+      auto tight_e = get_selection(preselected_e, "idTightCut", 5.);
+      auto tight_mu = get_selection(preselected_mu, "idTightCut", 5.);
+
+      if (preselected_e.size() + preselected_mu.size() < min_leptons_)
+         continue;
 
       if (loose_e.size() + loose_mu.size() < min_loose_leptons_)
          continue;
@@ -374,10 +379,10 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       for (const auto& tau: loose_tau)
          staus.push_back(superslim::Tau(tau));
 
-      for (const auto& lep: loose_e)
+      for (const auto& lep: preselected_e)
          sleptons.push_back(superslim::Lepton(lep, helper_.GetElectronRelIso(lep), rpv, *bs));
 
-      for (const auto& lep: loose_mu)
+      for (const auto& lep: preselected_mu)
          sleptons.push_back(superslim::Lepton(lep, helper_.GetMuonRelIso(lep), rpv, *bs));
 
       std::sort(sleptons.begin(), sleptons.end());
