@@ -285,6 +285,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    auto muons = get_collection(event, muons_token_);
    auto taus = get_collection(event, taus_token_);
    auto ak4jets = get_collection(event, ak4jets_token_);
+   auto genstuff = get_collection(event, gen_token_);
 
    auto raw_mu = get_selection(*muons, "idLooseCut", 5.);
    auto all_loose_e = get_selection(*electrons, "idLooseCut", 7.);
@@ -429,7 +430,8 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
                combos,
                event.id().run(), event.id().luminosityBlock(), event.id().event(),
                npv, ntv,
-               mets->at(0).p4(), pv));
+               mets->at(0).p4(), pv,
+               *genstuff));
 
       auto geninfo = get_collection(event, geninfo_token_);
       ptr->setWeight("generator", geninfo->weight());

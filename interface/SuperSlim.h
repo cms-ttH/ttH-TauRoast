@@ -16,6 +16,7 @@ namespace reco {
    class BeamSpot;
    class Candidate;
    class GenParticle;
+   typedef std::vector<GenParticle> GenParticleCollection;
    class Vertex;
 }
 #endif
@@ -127,8 +128,13 @@ namespace superslim {
          float impactParameter() const { return impact_parameter_; };
          float impactParameterError() const { return impact_parameter_error_; };
          float relativeIsolation() const { return rel_iso_; };
+         int cut() const { return cut_; };
+         int mva() const { return mva_; };
       private:
          enum kind { e, mu } type_;
+
+         int cut_;
+         int mva_;
 
          float corrected_d0_ = 0.;
          float corrected_dz_ = 0.;
@@ -198,7 +204,8 @@ namespace superslim {
                long run, long lumi, long event,
                int npv, int ntv,
                const LorentzVector& met,
-               const std::vector<superslim::Vertex>& pv) :
+               const std::vector<superslim::Vertex>& pv,
+               const reco::GenParticleCollection& genparticles) :
             combos_(cs),
             run_(run), lumi_(lumi), event_(event),
             npv_(npv), ntv_(ntv),

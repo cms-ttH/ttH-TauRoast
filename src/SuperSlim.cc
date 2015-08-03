@@ -112,6 +112,9 @@ namespace superslim {
          corrected_d0_ = e.gsfTrack()->dxy(bs.position());
          corrected_dz_ = e.gsfTrack()->dz(pv.position());
       }
+
+      cut_ = (e.userFloat("idTightCut") > .5) + (e.userFloat("idLooseCut") > .5);
+      mva_ = (e.userFloat("idTightMva") > .5) + (e.userFloat("idLooseMva") > .5);
    }
 
    Lepton::Lepton(const pat::Muon& m, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs) :
@@ -127,6 +130,9 @@ namespace superslim {
          corrected_d0_ = m.innerTrack()->dxy(bs.position());
          corrected_dz_ = m.innerTrack()->dz(pv.position());
       }
+
+      cut_ = (m.userFloat("idTightCut") > .5) + (m.userFloat("idLooseCut") > .5);
+      mva_ = (m.userFloat("idTightMva") > .5) + (m.userFloat("idLooseMva") > .5);
    }
 
    Tau::Tau(const pat::Tau& t) :
