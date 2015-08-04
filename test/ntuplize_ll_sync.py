@@ -14,7 +14,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 2000
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( options.maxEvents ) )
 
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
-process.GlobalTag.globaltag = 'MCRUN2_74_V9::All'
+process.GlobalTag.globaltag = 'PHYS14_25_V2::All'
 process.prefer("GlobalTag")
 
 process.source = cms.Source("PoolSource",
