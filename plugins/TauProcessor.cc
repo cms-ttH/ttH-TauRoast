@@ -386,7 +386,6 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
          sleptons.push_back(superslim::Lepton(lep, helper_.GetMuonRelIso(lep), rpv, *bs));
 
       std::sort(sleptons.begin(), sleptons.end());
-      std::reverse(sleptons.begin(), sleptons.end());
 
       for (const auto& jet: selected_jets)
          sjets.push_back(superslim::Jet(jet));
