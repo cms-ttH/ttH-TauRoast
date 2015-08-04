@@ -29,7 +29,7 @@ process.TFileService = cms.Service("TFileService",
 )
 
 import os
-dirname = os.path.split(str(process.TFileService.fileName))[0]
+dirname = os.path.dirname(process.TFileService.fileName.pythonValue().strip("'"))
 if not os.path.isdir(dirname):
     os.makedirs(dirname)
 
