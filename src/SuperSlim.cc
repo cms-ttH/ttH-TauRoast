@@ -26,7 +26,7 @@ namespace superslim {
    PhysObject::PhysObject(const reco::Candidate* c) :
       charge_(c->charge()),
       p_(c->p4()),
-      pdg_id_(0)
+      pdg_id_(c->pdgId())
    {
    }
 
@@ -68,7 +68,7 @@ namespace superslim {
       if (!p)
          return;
 
-      pdg_id_ = p->pdgId();
+      gen_pdg_id_ = p->pdgId();
 
       if (level <= 0)
          return;

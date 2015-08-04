@@ -80,6 +80,8 @@ namespace superslim {
             charge() const { return charge_; };
          int
             pdgId() const { return pdg_id_; };
+         int
+            genPdgId() const { return pdg_id_; };
 #ifndef __CINT__
          void
             setGenInfo(const reco::Candidate* p, int level=2);
@@ -93,6 +95,7 @@ namespace superslim {
          std::vector<superslim::PhysObject> parents_;
 
          int pdg_id_;
+         int gen_pdg_id_;
 
          ClassDef(PhysObject, 1);
    };
