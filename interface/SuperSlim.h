@@ -203,6 +203,7 @@ namespace superslim {
    class Event {
       public:
          Event() {};
+#ifndef __CINT__
          Event(const std::vector<superslim::Combination>& cs,
                long run, long lumi, long event,
                int npv, int ntv,
@@ -213,6 +214,7 @@ namespace superslim {
             run_(run), lumi_(lumi), event_(event),
             npv_(npv), ntv_(ntv),
             met_(met), pv_(pv) {};
+#endif
          virtual ~Event() {};
 
          const std::vector<superslim::Combination>& combos() const { return combos_; };
