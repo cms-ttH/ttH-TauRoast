@@ -1,5 +1,9 @@
+import os
+
 class SyncSaver(object):
     def __init__(self, filename):
+        if not os.path.isdir(os.path.dirname(filename)):
+            os.makedirs(os.path.dirname(filename))
         self.__f = open(filename, 'w')
         self.__fmt = "%6d %6d %10d  " + \
                 "%+2d  %6.2f %+4.2f %+4.2f   " + \
