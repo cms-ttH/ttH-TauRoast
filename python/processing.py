@@ -59,10 +59,13 @@ class BasicProcess(Process):
         self.__cross_section = cross_section
         self.__add_cuts = additional_cuts if additional_cuts else []
 
-    def analyze(self, counts, cuts, weights, plots, basedir):
+    def analyze(self, counts, cuts, weights, plots, basedir, callbacks=None):
         logging.info("processing {}".format(self))
 
         from ttH.TauRoast.cutting import StaticCut
+
+        if callbacks is None:
+            callbacks = []
 
         hist = None
         for p in self.__paths:
@@ -124,17 +127,31 @@ class BasicProcess(Process):
 
             passed = []
             combos = event.combos()
+
+            lastcombo = None
+            lastcut = -1
+
             for combo in combos:
+                ncut = -1
                 for cut in cuts:
                     if not cut(self, event, combo):
+                        if ncut > lastcut:
+                            lastcombo = combo
+                            lastcut = ncut
                         break
+                    ncut += 1
                 else:
                     passed.append(combo)
 
             cuttime += time.clock() - start
 
             if len(passed) == 0:
+                for callback in callbacks[:lastcut + 1]:
+                    callback(event, lastcombo)
                 continue
+            else:
+                for callback in callbacks:
+                    callback(event, passed[0])
 
             start = time.clock()
 

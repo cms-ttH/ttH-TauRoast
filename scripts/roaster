@@ -19,6 +19,9 @@ ag.add_argument('-f', '--fill', action='store_true', default=False,
         help="fill histograms")
 ag.add_argument('-p', '--plot', action='store_true', default=False,
         help="save histograms")
+ag = parser.add_argument_group('debugging and syncronization options')
+ag.add_argument('--debug-cuts', action='store_true', default=False,
+        help="save event quantites after each cut")
 
 args = parser.parse_args()
 
@@ -57,6 +60,7 @@ from ttH.TauRoast import stylish
 from ttH.TauRoast.cutting import StaticCut, Cut, cutflow, normalize
 from ttH.TauRoast.plotting import Plot
 from ttH.TauRoast.processing import Process
+from ttH.TauRoast.printable import SyncSaver
 
 stylish.setup()
 
@@ -91,7 +95,14 @@ if args.fill:
         local_cuts = list(cuts)
         for cfg in proc.additional_cuts:
             local_cuts.insert(0, Cut(*cfg))
-        proc.analyze(counts, local_cuts, weights, Plot.plots(), config['ntupledir'])
+
+        callbacks = None
+        if args.debug_cuts:
+            callbacks = []
+            for i in range(len(local_cuts)):
+                callbacks.append(SyncSaver(os.path.join(config["outdir"], "cut_{0}.txt".format(i))))
+
+        proc.analyze(counts, local_cuts, weights, Plot.plots(), config['ntupledir'], callbacks=callbacks)
 
     cuts = counts + cuts + weights
     normalize(cuts, config["lumi"])
