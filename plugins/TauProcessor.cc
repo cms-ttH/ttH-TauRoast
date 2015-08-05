@@ -134,6 +134,9 @@ class TauProcessor : public edm::EDAnalyzer {
       unsigned int min_taus_;
       unsigned int min_tight_taus_;
 
+      bool subtract_leptons_;
+      double min_jet_pt_;
+
       edm::EDGetTokenT<double> rho_token_;
       edm::EDGetTokenT<GenEventInfoProduct> geninfo_token_;
       edm::EDGetTokenT<reco::BeamSpot> bs_token_;
@@ -165,6 +168,8 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    max_tight_leptons_(config.getParameter<int>("maxTightLeptons")),
    min_taus_(config.getParameter<unsigned int>("minTaus")),
    min_tight_taus_(config.getParameter<unsigned int>("minTightTaus")),
+   subtract_leptons_(config.getParameter<bool>("subtractLeptons")),
+   min_jet_pt_(config.getParameter<double>("minJetPt")),
    event_(0)
 {
    rho_token_ = consumes<double>(edm::InputTag("fixedGridRhoFastjetAll"));
@@ -349,14 +354,23 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
       // Get to corrected jets
       auto raw_jets = helper_.GetUncorrectedJets(*ak4jets);
-      auto jets_wo_mu = helper_.RemoveOverlaps(loose_mu, raw_jets);
-      auto jets_wo_lep = helper_.RemoveOverlaps(loose_e, jets_wo_mu);
-      auto corrected_jets = helper_.GetCorrectedJets(jets_wo_lep);
+      pat::JetCollection jets_wo_lep;
+      pat::JetCollection corrected_jets;
+
+      if (subtract_leptons_) {
+         auto jets_wo_mu = helper_.RemoveOverlaps(loose_mu, raw_jets);
+         jets_wo_lep = helper_.RemoveOverlaps(loose_e, jets_wo_mu);
+         corrected_jets = helper_.GetCorrectedJets(jets_wo_lep);
+      } else {
+         auto jets_wo_mu = removeOverlap(raw_jets, preselected_mu, .4);
+         jets_wo_lep = removeOverlap(raw_jets, preselected_e, .4);
+         corrected_jets = helper_.GetCorrectedJets(jets_wo_lep);
+      }
 
       // Jet selection
       auto jets_no_taus = removeOverlap(corrected_jets, loose_tau, .25);
-      auto selected_jets = helper_.GetSelectedJets(jets_no_taus, 30., 2.4, jetID::jetLoose, '-');
-      auto selected_tags = helper_.GetSelectedJets(jets_no_taus, 30., 2.4, jetID::jetLoose, 'M');
+      auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, 2.4, jetID::jetLoose, '-');
+      auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, 2.4, jetID::jetLoose, 'M');
 
       auto uncorrected_jets = removeOverlap(jets_wo_lep, loose_tau, .25);
 

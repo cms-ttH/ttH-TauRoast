@@ -70,7 +70,9 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         maxLeptons = cms.int32(-1),
         maxTightLeptons = cms.int32(-1),
         minTaus = cms.uint32(0),
-        minTightTaus = cms.uint32(0)
+        minTightTaus = cms.uint32(0),
+        subtractLeptons = cms.bool(False),
+        minJetPt = cms.double(10.)
 )
 
 process.filter = cms.EDFilter("HiggsDecayFilter",
