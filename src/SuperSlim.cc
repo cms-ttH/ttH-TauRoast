@@ -102,6 +102,7 @@ namespace superslim {
    Lepton::Lepton(const pat::Electron& e, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs) :
       PhysObject(&e),
       type_(Lepton::e),
+      charge_check_(e.isGsfCtfScPixChargeConsistent()),
       impact_parameter_(e.dB(pat::Electron::PV3D)),
       impact_parameter_error_(e.edB(pat::Electron::PV3D)),
       rel_iso_(rel_iso)
@@ -120,6 +121,7 @@ namespace superslim {
    Lepton::Lepton(const pat::Muon& m, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs) :
       PhysObject(&m),
       type_(Lepton::mu),
+      charge_check_(false),
       impact_parameter_(m.dB(pat::Muon::PV3D)),
       impact_parameter_error_(m.edB(pat::Muon::PV3D)),
       rel_iso_(rel_iso)
@@ -127,6 +129,7 @@ namespace superslim {
       setGenInfo(m.genParticle());
 
       if (m.innerTrack().isAvailable()) {
+         charge_check_ = m.innerTrack()->ptError() / m.innerTrack()->pt() < .2;
          corrected_d0_ = m.innerTrack()->dxy(bs.position());
          corrected_dz_ = m.innerTrack()->dz(pv.position());
       }

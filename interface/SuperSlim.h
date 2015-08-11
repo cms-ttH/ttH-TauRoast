@@ -126,6 +126,8 @@ namespace superslim {
          bool electron() const { return type_ == e; };
          bool muon() const { return type_ == mu; };
 
+         bool chargeConsistent() const { return charge_check_; };
+
          float correctedD0() const { return corrected_d0_; };
          float correctedDZ() const { return corrected_dz_; };
          float impactParameter() const { return impact_parameter_; };
@@ -135,6 +137,8 @@ namespace superslim {
          int mva() const { return mva_; };
       private:
          enum kind { e, mu } type_;
+
+         bool charge_check_;
 
          int cut_;
          int mva_;
