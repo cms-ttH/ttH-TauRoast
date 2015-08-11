@@ -135,6 +135,7 @@ class TauProcessor : public edm::EDAnalyzer {
       unsigned int min_tight_taus_;
 
       bool subtract_leptons_;
+      bool print_preselection_;
       double min_jet_pt_;
 
       edm::EDGetTokenT<double> rho_token_;
@@ -169,6 +170,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    min_taus_(config.getParameter<unsigned int>("minTaus")),
    min_tight_taus_(config.getParameter<unsigned int>("minTightTaus")),
    subtract_leptons_(config.getParameter<bool>("subtractLeptons")),
+   print_preselection_(config.getParameter<bool>("printPreselection")),
    min_jet_pt_(config.getParameter<double>("minJetPt")),
    event_(0)
 {
@@ -403,6 +405,31 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
       for (const auto& jet: selected_jets)
          sjets.push_back(superslim::Jet(jet));
+
+      if (print_preselection_) {
+         for (const auto& l: preselected_e) {
+            std::cout << "DEBUG "
+               << event.id().event() << ','
+               << l.pdgId() << ','
+               << l.pt() << ',' << l.eta() << ',' << l.phi() << ','
+               << std::abs(l.gsfTrack()->dxy(rpv.position())) << ','
+               << std::abs(l.gsfTrack()->dz(rpv.position())) << ','
+               << l.userFloat("relIso") << ','
+               << std::abs(l.dB(pat::Electron::PV3D) / l.edB(pat::Electron::PV3D)) << ','
+               << l.userFloat("leptonMVA") << '\n';
+         }
+         for (const auto& l: preselected_mu) {
+            std::cout << "DEBUG "
+               << event.id().event() << ','
+               << l.pdgId() << ','
+               << l.pt() << ',' << l.eta() << ',' << l.phi() << ','
+               << std::abs(l.innerTrack()->dxy(rpv.position())) << ','
+               << std::abs(l.innerTrack()->dz(rpv.position())) << ','
+               << l.userFloat("relIso") << ','
+               << std::abs(l.dB(pat::Muon::PV3D) / l.edB(pat::Muon::PV3D)) << ','
+               << l.userFloat("leptonMVA") << '\n';
+         }
+      }
 
       combos.push_back(superslim::Combination(staus, sleptons, sjets));
    }

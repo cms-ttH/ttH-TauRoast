@@ -2,6 +2,10 @@ import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 
 options = VarParsing.VarParsing('analysis')
+options.register("printPreselection", False,
+        VarParsing.VarParsing.multiplicity.singleton,
+        VarParsing.VarParsing.varType.bool,
+        "Print information about preselected leptons")
 options.parseArguments()
 
 process = cms.Process("Taus")
@@ -72,7 +76,8 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         minTaus = cms.uint32(0),
         minTightTaus = cms.uint32(0),
         subtractLeptons = cms.bool(False),
-        minJetPt = cms.double(25.)
+        minJetPt = cms.double(25.),
+        printPreselection = cms.bool(options.printPreselection)
 )
 
 process.filter = cms.EDFilter("HiggsDecayFilter",
