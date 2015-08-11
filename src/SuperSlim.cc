@@ -115,7 +115,7 @@ namespace superslim {
       }
 
       cut_ = (e.userFloat("idTightCut") > .5) + (e.userFloat("idLooseCut") > .5);
-      mva_ = (e.userFloat("idTightMva") > .5) + (e.userFloat("idLooseMva") > .5);
+      mva_ = (e.userFloat("idTightMVA") > .5) + (e.userFloat("idLooseMVA") > .5);
    }
 
    Lepton::Lepton(const pat::Muon& m, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs) :
@@ -135,7 +135,7 @@ namespace superslim {
       }
 
       cut_ = (m.userFloat("idTightCut") > .5) + (m.userFloat("idLooseCut") > .5);
-      mva_ = (m.userFloat("idTightMva") > .5) + (m.userFloat("idLooseMva") > .5);
+      mva_ = (m.userFloat("idTightMVA") > .5) + (m.userFloat("idLooseMVA") > .5);
    }
 
    Tau::Tau(const pat::Tau& t) :
