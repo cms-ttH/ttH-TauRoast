@@ -9,6 +9,7 @@ plot:
   - ttH2Nonbbgg_125
 
 cuts:
+  - "Higgs decays": "event.higgsDecay() in (15, 23, 24)"
   - "μμ SS": "leptons[0].muon() and leptons[1].muon() and leptons[0].charge() * leptons[1].charge() > 0"
   - "pt > 20, 20": "leptons[0].p4().pt() > 20 and leptons[1].p4().pt() > 20"
 
