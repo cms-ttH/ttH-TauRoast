@@ -9,6 +9,7 @@ plot:
   - ttH2Nonbbgg_125
 
 cuts:
+  - "Higgs decays": "event.higgsDecay() in (15, 23, 24)"
   - "ee SS": "samesign([l for l in leptons if l.electron()])"
   - "pt > 20, 20": "all(l.p4().pt() > 20 for l in samesign([l for l in leptons if l.electron()]))"
 

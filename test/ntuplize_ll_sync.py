@@ -72,11 +72,12 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         minTaus = cms.uint32(0),
         minTightTaus = cms.uint32(0),
         subtractLeptons = cms.bool(False),
-        minJetPt = cms.double(10.)
+        minJetPt = cms.double(25.)
 )
 
 process.filter = cms.EDFilter("HiggsDecayFilter",
         daughterIds = cms.vuint32(15, 23, 24)
 )
 
-process.p = cms.Path(process.filter * process.ttHLeptons * process.taus)
+# process.p = cms.Path(process.filter * process.ttHLeptons * process.taus)
+process.p = cms.Path(process.ttHLeptons * process.taus)

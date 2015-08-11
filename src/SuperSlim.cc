@@ -189,6 +189,39 @@ namespace superslim {
    {
       return rhs.p4().Pt() < lhs.p4().Pt();
    }
+
+
+   Event::Event(const std::vector<superslim::Combination>& cs,
+         long run, long lumi, long event,
+         int npv, int ntv,
+         const LorentzVector& met,
+         const std::vector<superslim::Vertex>& pv,
+         const reco::GenParticleCollection& genparticles) :
+      combos_(cs),
+      run_(run), lumi_(lumi), event_(event),
+      npv_(npv), ntv_(ntv),
+      hdecay_(-1),
+      met_(met), pv_(pv)
+   {
+      for (const auto& p: genparticles) {
+         if (abs(p.pdgId()) == 25) {
+            bool use = p.numberOfDaughters() >= 2;
+            int id = -1;
+            for (unsigned int i = 0; i < p.numberOfDaughters() and use; ++i) {
+               if (abs(p.daughter(i)->pdgId()) == 25) {
+                  use = false;
+               } else {
+                  id = abs(p.daughter(i)->pdgId());
+               }
+            }
+
+            if (id > 0 and use) {
+               hdecay_ = id;
+               break;
+            }
+         }
+      }
+   }
 }
 
 ClassImp(superslim::Vertex);

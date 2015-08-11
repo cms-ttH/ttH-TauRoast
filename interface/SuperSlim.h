@@ -209,11 +209,7 @@ namespace superslim {
                int npv, int ntv,
                const LorentzVector& met,
                const std::vector<superslim::Vertex>& pv,
-               const reco::GenParticleCollection& genparticles) :
-            combos_(cs),
-            run_(run), lumi_(lumi), event_(event),
-            npv_(npv), ntv_(ntv),
-            met_(met), pv_(pv) {};
+               const reco::GenParticleCollection& genparticles);
 #endif
          virtual ~Event() {};
 
@@ -228,6 +224,8 @@ namespace superslim {
          int npv() const { return npv_; };
          // true vertices
          int ntv() const { return ntv_; };
+
+         int higgsDecay() const { return hdecay_; };
 
          const LorentzVector& met() const { return met_; };
          const std::vector<superslim::Vertex>& pv() const { return pv_; };
@@ -244,10 +242,12 @@ namespace superslim {
          int npv_;
          int ntv_;
 
+         int hdecay_;
+
          LorentzVector met_;
          std::vector<superslim::Vertex> pv_;
 
-         ClassDef(Event, 2);
+         ClassDef(Event, 3);
    };
 
    bool operator<(const PhysObject& lhs, const PhysObject& rhs);
