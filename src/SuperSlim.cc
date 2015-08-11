@@ -205,13 +205,20 @@ namespace superslim {
    {
       for (const auto& p: genparticles) {
          if (abs(p.pdgId()) == 25) {
-            bool use = p.numberOfDaughters() >= 2;
+            bool use = true;
             int id = -1;
             for (unsigned int i = 0; i < p.numberOfDaughters() and use; ++i) {
-               if (abs(p.daughter(i)->pdgId()) == 25) {
+               int did = abs(p.daughter(i)->pdgId());
+               if (did == 25) {
                   use = false;
+               } else if (id > 0 and id != did) {
+                  if (did > id) {
+                     id = (id * 1000) + did;
+                  } else {
+                     id = (did * 1000) + id;
+                  }
                } else {
-                  id = abs(p.daughter(i)->pdgId());
+                  id = did;
                }
             }
 
