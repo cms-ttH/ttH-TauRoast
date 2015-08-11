@@ -7,6 +7,13 @@ def dR(one, two):
 def btag(jet):
     return jet.csv() > 0.814
 
+def samesign(leptons):
+    for n, one in enumerate(leptons):
+        for two in leptons[n + 1:]:
+            if one.charge() * two.charge() > 0:
+                return one, two
+    return tuple()
+
 class Snippet(object):
     def __init__(self, code):
         self.__code = code
@@ -27,6 +34,7 @@ class Snippet(object):
         globals.update({
                 'event': event,
                 'btag': btag,
+                'samesign': samesign,
                 'dR': dR,
                 'taus': combo.taus(),
                 'leptons': combo.leptons(),

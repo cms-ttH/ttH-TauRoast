@@ -9,8 +9,8 @@ plot:
   - ttH2Nonbbgg_125
 
 cuts:
-  - "ee SS": "leptons[0].electron() and leptons[1].electron() and leptons[0].charge() * leptons[1].charge() > 0"
-  - "pt > 20, 20": "leptons[0].p4().pt() > 20 and leptons[1].p4().pt() > 20"
+  - "ee SS": "samesign([l for l in leptons if l.electron()])"
+  - "pt > 20, 20": "all(l.p4().pt() > 20 for l in samesign([l for l in leptons if l.electron()]))"
 
 weights:
   - Generator
