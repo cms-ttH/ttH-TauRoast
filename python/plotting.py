@@ -6,32 +6,33 @@ import random
 import ROOT as r
 
 from ttH.TauRoast import stylish
+from ttH.TauRoast.botany import Forest
 from ttH.TauRoast.decorative import savetime
 from ttH.TauRoast.legendary import Legend
 from ttH.TauRoast.processing import Process
-from ttH.TauRoast.useful import Snippet
 
-class Plot(Snippet):
-    __plots__ = []
-    __names__ = set()
+class Plot(object):
+    __plots = {}
 
-    def __init__(self, code, name, labels, binning, dimensions=1, limitname=None):
-        super(Plot, self).__init__(code)
+    def __init__(self, name, values, labels, binning, limitname=None):
         self.__name = name
         self.__limitname = limitname if limitname else os.path.basename(name)
 
-        self.__args = [name, ";".join([""] + labels)] + binning
+        self.__values = values
+
+        self.__args = [self.__limitname, ";".join([""] + labels)] + binning
         self.__hists = {}
 
-        if dimensions == 1:
+        if len(values) == 1:
             self.__class = r.TH1F
-        elif dimensions == 2:
+        elif len(values) == 2:
             self.__class = r.TH2F
+        else:
+            raise ValueError("Need to provide 1 or 2 values to '{0}'!".format(self.__limitname))
 
-        if self.__limitname in Plot.__names__:
+        if self.__limitname in Plot.__plots:
             raise KeyError("Plot {0} defined twice".format(self.__limitname))
-        Plot.__plots__.append(self)
-        Plot.__names__.add(self.__limitname)
+        Plot.__plots[self.__limitname] = self
 
     def __str__(self):
         return self.__name
@@ -365,7 +366,7 @@ class Plot(Snippet):
         canvas.SaveAs(os.path.join(outdir, self.__name + ".pdf"))
 
     @savetime
-    def fill(self, process, event, selected, passed, weight, globals=None):
+    def fill(self, process):
         try:
             hist = self.__hists[process]
         except KeyError:
@@ -374,11 +375,13 @@ class Plot(Snippet):
             self.__hists[process] = self.__class(*args)
             hist = self.__hists[process]
 
-        self._execute(event, selected, globals=globals, locals={
-            'histo': hist,
-            'combos': passed,
-            'weight': weight
-        })
+        drw = '{0}>>{1}'.format(":".join(self.__values), hist.GetName())
+        sel = ''
+        opt = '' if len(self.__values) == 1 else 'COLZ'
+        Forest.draw(str(process), drw, sel, opt)
+        # has to happen after the draw, otherwise ROOT won't find the
+        # histo!
+        self.__hists[process].SetDirectory(0)
 
     @property
     def name(self):
@@ -386,4 +389,4 @@ class Plot(Snippet):
 
     @classmethod
     def plots(cls):
-        return cls.__plots__
+        return cls.__plots.values()

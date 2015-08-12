@@ -32,7 +32,7 @@ class Leaf(Snippet):
     def leaves(cls):
         return cls.__leaves.values()
 
-class Forest(object):
+class Tree(object):
     def __init__(self, filename, name):
         self.__f = r.TFile(filename, 'UPDATE')
         self.__t = r.TTree(str(name), 'ntuple')
@@ -47,3 +47,27 @@ class Forest(object):
     def __del__(self):
         self.__f.WriteObject(self.__t, self.__t.GetName())
         self.__f.Close()
+
+class Forest(object):
+    __instance = None
+
+    def __init__(self, filename):
+        if Forest.__instance:
+            raise ValueError("Forest already setup!")
+        self.__f = r.TFile(filename, 'READ')
+        Forest.__instance = self
+
+    def __del__(self):
+        self.__f.Close()
+        Forest.__instance = None
+
+    def _draw(self, name, *args):
+        try:
+            self.__f.Get(name).Draw(*args)
+        except ReferenceError:
+            self.__f.ls()
+            raise ValueError("Can't access tree for {0}.".format(name))
+
+    @classmethod
+    def draw(cls, name, *args):
+        cls.__instance._draw(name, *args)

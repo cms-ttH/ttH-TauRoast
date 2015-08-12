@@ -5,7 +5,7 @@ import time
 
 import ROOT as r
 
-from ttH.TauRoast.botany import Forest
+from ttH.TauRoast.botany import Tree
 from ttH.TauRoast.useful import Snippet
 
 class Process(object):
@@ -118,7 +118,7 @@ class BasicProcess(Process):
         filltime = 0.
         errors = 0
 
-        forest = Forest(filename, self)
+        tree = Tree(filename, self)
         for i in range(t.GetEntries()):
             if i % 1000 == 1:
                 logging.info("processing event {0}".format(i))
@@ -170,7 +170,7 @@ class BasicProcess(Process):
             globals = {}
             Snippet.prepare_globals(globals, event, selected, tagging=True)
 
-            forest.fill(event, selected, passed, globals)
+            tree.fill(event, selected, passed, globals)
 
             filltime += time.clock() - start
 

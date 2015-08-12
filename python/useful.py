@@ -19,6 +19,8 @@ class Snippet(object):
             Snippet.prepare_globals(globals, event, combo)
         if use_exec:
             exec self.__code in locals, globals
+            if 'result' in globals:
+                return globals['result']
         else:
             return eval(self.__code, globals, locals)
 

@@ -58,6 +58,7 @@ if r.gROOT.GetVersion().startswith('6'):
 r.gSystem.Load("libttHTauRoast")
 
 from ttH.TauRoast import stylish
+from ttH.TauRoast.botany import Forest
 from ttH.TauRoast.cutting import StaticCut, Cut, cutflow, normalize
 from ttH.TauRoast.plotting import Plot
 from ttH.TauRoast.processing import Process
@@ -121,6 +122,15 @@ if args.fill:
     with codecs.open(os.path.join(config["outdir"], "cuts_rel.txt"), "w", encoding="utf8") as fd:
         cutflow(cuts, config["plot"], f=fd, relative=True)
 
+    forest = Forest(fn)
+    processed = set()
+    for proc in sum(map(Process.expand, config['plot']), []):
+        if proc in processed:
+            continue
+        processed.add(proc)
+        for p in Plot.plots():
+            p.fill(proc)
+
     fn = os.path.join(config["outdir"], "plots.root")
     f = r.TFile(fn, "RECREATE")
 
@@ -136,6 +146,8 @@ if args.fill:
 
     f.Write()
     f.Close()
+
+    del forest
 else:
     processes = sum(map(Process.expand, config['plot']), [])
     fn = os.path.join(config["outdir"], "plots.root")
