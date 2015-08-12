@@ -5,6 +5,7 @@ import time
 
 import ROOT as r
 
+from ttH.TauRoast.botany import Forest
 from ttH.TauRoast.useful import Snippet
 
 class Process(object):
@@ -59,7 +60,7 @@ class BasicProcess(Process):
         self.__cross_section = cross_section
         self.__add_cuts = additional_cuts if additional_cuts else []
 
-    def analyze(self, counts, cuts, weights, plots, basedir, callbacks=None):
+    def analyze(self, filename, counts, cuts, weights, basedir, callbacks=None):
         logging.info("processing {}".format(self))
 
         from ttH.TauRoast.cutting import StaticCut
@@ -117,6 +118,7 @@ class BasicProcess(Process):
         filltime = 0.
         errors = 0
 
+        forest = Forest(filename, self)
         for i in range(t.GetEntries()):
             if i % 1000 == 1:
                 logging.info("processing event {0}".format(i))
@@ -168,12 +170,7 @@ class BasicProcess(Process):
             globals = {}
             Snippet.prepare_globals(globals, event, selected, tagging=True)
 
-            for plot in plots:
-                try:
-                    plot.fill(self, event, selected, passed, weight, globals)
-                except Exception, e:
-                    logging.debug("error filling {0}: {1}".format(plot.name, e))
-                    errors += 1
+            forest.fill(event, selected, passed, globals)
 
             filltime += time.clock() - start
 
@@ -181,7 +178,7 @@ class BasicProcess(Process):
             logging.info("encountered {0} error(s) while filling histograms".format(errors))
 
         logging.debug("time spent in cutflow: {0}".format(cuttime))
-        logging.debug("time spent filling plots: {0}".format(filltime))
+        logging.debug("time spent filling ntuple: {0}".format(filltime))
 
     def process(self):
         return [self._name]

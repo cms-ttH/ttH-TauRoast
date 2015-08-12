@@ -88,6 +88,13 @@ if args.fill:
     for weight in config["weights"]:
         weights.append(StaticCut(weight))
 
+    if not os.path.exists(config["outdir"]):
+        os.makedirs(config["outdir"])
+
+    fn = os.path.join(config["outdir"], "ntuple.root")
+    if os.path.exists(fn):
+        os.unlink(fn)
+
     processed = set()
     for proc in sum(map(Process.expand, config['plot']), []):
         if proc in processed:
@@ -103,14 +110,11 @@ if args.fill:
             for i in range(len(local_cuts)):
                 callbacks.append(SyncSaver(os.path.join(config["outdir"], "cut_{0}.txt".format(i))))
 
-        proc.analyze(counts, local_cuts, weights, Plot.plots(), config['ntupledir'], callbacks=callbacks)
+        proc.analyze(fn, counts, local_cuts, weights, config['ntupledir'], callbacks=callbacks)
 
     cuts = counts + cuts + weights
     normalize(cuts, config["lumi"])
     cutflow(cuts, config["plot"])
-
-    if not os.path.exists(config["outdir"]):
-        os.makedirs(config["outdir"])
 
     with codecs.open(os.path.join(config["outdir"], "cuts.txt"), "w", encoding="utf8") as fd:
         cutflow(cuts, config["plot"], f=fd)
