@@ -22,8 +22,12 @@ class Leaf(Snippet):
         self.__name = name
         self.__kind = kind
 
-    def pick(self, event, selected, passed, globals=None):
-        self.__val[0] = self._execute(event, selected, globals=globals, locals={'combos': passed})
+    def pick(self, event, selected, passed, weight, globals=None):
+        self.__val[0] = self._execute(event, selected, globals=globals,
+                locals={
+                    'combos': passed,
+                    'weight': weight
+        })
 
     def register(self, tree):
         tree.Branch(self.__name, self.__val, '{0}/{1}'.format(self.__name, self.__kind.upper()))
@@ -39,9 +43,9 @@ class Tree(object):
         for l in Leaf.leaves():
             l.register(self.__t)
 
-    def fill(self, event, selected, passed, globals=None):
+    def fill(self, event, selected, passed, weight, globals=None):
         for l in Leaf.leaves():
-            l.pick(event, selected, passed, globals)
+            l.pick(event, selected, passed, weight, globals)
         self.__t.Fill()
 
     def __del__(self):

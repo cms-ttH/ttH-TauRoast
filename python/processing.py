@@ -170,7 +170,7 @@ class BasicProcess(Process):
             globals = {}
             Snippet.prepare_globals(globals, event, selected, tagging=True)
 
-            tree.fill(event, selected, passed, globals)
+            tree.fill(event, selected, passed, weight, globals)
 
             filltime += time.clock() - start
 

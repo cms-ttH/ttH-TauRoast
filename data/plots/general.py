@@ -1,91 +1,96 @@
+from ttH.TauRoast.botany import Leaf
 from ttH.TauRoast.plotting import Plot
+
+Leaf('events', 'f', 'result = 1')
+Leaf('combos', 'f', 'result = len(combos)')
+Leaf('allcombos', 'f', 'result = event.combos().size()')
+Leaf('njets', 'f', 'result = len([1 for jet in jets if not btag(jet)])')
+Leaf('ntags', 'f', 'result = len([1 for jet in jets if btag(jet)])')
+Leaf('npv', 'f', 'result = event.npv()')
+Leaf('nelectrons', 'f', 'result = len([l for l in leptons if l.electron()])')
+Leaf('nmuons', 'f', 'result = len([l for l in leptons if l.muon()])')
 
 Plot(
         name="general/Events",
-        code="histo.Fill(0, weight)",
+        values=["events"],
         labels=["", "Events"],
         binning=[1, 0, 1]
 )
 
 Plot(
         name="general/Combos",
-        code="histo.Fill(len(combos), weight)",
+        values=["combos"],
         labels=["Number of passed #tau combinations", "Events"],
         binning=[5, 0, 5]
 )
 Plot(
         name="general/AllCombos",
-        code="histo.Fill(event.combos().size(), weight)",
+        values=['allcombos'],
         labels=["Number of all #tau combinations", "Events"],
         binning=[5, 0, 5]
 )
 
 Plot(
         name="general/NumInclusiveJets",
-        code="histo.Fill(jets.size(), weight)",
+        values=["njets+ntags"],
         labels=["Number of inclusive jets", "Events"],
         binning=[10, 0, 10]
 )
 Plot(
         name="general/NumJets",
-        code="histo.Fill(len([1 for jet in jets if not btag(jet)]), weight)",
+        values=["njets"],
         labels=["Number of jets", "Events"],
         binning=[10, 0, 10]
 )
 Plot(
         name="general/NumTags",
-        code="histo.Fill(len(filter(btag, jets)), weight)",
+        values=["ntags"],
         labels=["Number of tags", "Events"],
         binning=[10, 0, 10]
 )
 Plot(
         name="general/NumVertices",
-        code="histo.Fill(event.npv(), weight)",
+        values=['npv'],
         labels=["Number PV", "Events"],
         binning=[40, 0, 40]
 )
 Plot(
         name="general/NumJetsOverview",
-        code="histo.Fill(jets.size(), len(filter(btag, jets)), weight)",
+        values=["njets+ntags", "ntags"],
         labels=["Inclusive jets", "Tagged jets"],
-        binning=[10, 0, 10, 5, 0, 5],
-        dimensions=2
+        binning=[10, 0, 10, 5, 0, 5]
 )
 Plot(
         name="general/NumElectrons",
-        code="histo.Fill(len([l for l in leptons if l.electron()]), weight)",
+        values=["nelectrons"],
         labels=["Number of e", "Events"],
         binning=[3, 0, 3]
 )
 Plot(
         name="general/NumMuons",
-        code="histo.Fill(len([l for l in leptons if l.muon()]), weight)",
+        values=["nmuons"],
         labels=["Number of #mu", "Events"],
         binning=[3, 0, 3]
 )
 
+Leaf('vtx_z', 'f', 'result = pv[0].z()')
+Leaf('vtx_zerr', 'f', 'result = pv[0].zError() * 1000')
+
 Plot(
         name="vertex/ZCoord",
-        code="histo.Fill(pv[0].z(), weight)",
+        values=["vtx_z"],
         labels=["Vertex Z coordinate", "Events"],
         binning=[40, -20, 20]
 )
 Plot(
         name="vertex/ZCoordError",
-        code="histo.Fill(pv[0].zError() * 1000, weight)",
+        values=["vtx_zerr"],
         labels=["Vertex Z coordinate Error (#mum)", "Events"],
         binning=[40, 0, 2]
 )
 
-Plot(
-        name="general/MET",
-        code="histo.Fill(event.met().Pt(), weight)",
-        labels=["MET", "Events"],
-        binning=[20, 0, 300]
-)
-Plot(
-        name="general/HT",
-        code="""
+Leaf('met', 'f', 'result = event.met().Pt()')
+Leaf('ht', 'f', """
 ht = 0
 for j in jets:
     ht += j.p4().Pt()
@@ -93,14 +98,9 @@ for t in taus:
     ht += t.p4().Pt()
 for l in leptons:
     ht += l.p4().Pt()
-histo.Fill(ht, weight)
-        """,
-        labels=["HT", "Events"],
-        binning=[20, 200, 1000]
-)
-Plot(
-        name="general/MHT",
-        code="""
+result = ht
+""")
+Leaf('mht', 'f', """
 ht = None
 for j in jets:
     if ht is None:
@@ -111,18 +111,34 @@ for t in taus:
     ht += t.p4()
 for l in leptons:
     ht += l.p4()
-histo.Fill(ht.Pt(), weight)
-        """,
+result = ht.Pt()
+""")
+
+Plot(
+        name="general/MET",
+        values=["met"],
+        labels=["MET", "Events"],
+        binning=[20, 0, 300]
+)
+Plot(
+        name="general/HT",
+        values=["ht"],
+        labels=["HT", "Events"],
+        binning=[20, 200, 1000]
+)
+Plot(
+        name="general/MHT",
+        values=["mht"],
         labels=["MHT", "Events"],
         binning=[20, 0, 200]
 )
 
+Leaf('w_generator', 'f', 'result = event.weights()["generator"]')
+
 Plot(
         name="weights/Generator",
-        code="""
-ws = event.weights()
-histo.Fill(ws['generator'])
-        """,
+        values=["w_generator"],
+        weights=[],
         labels=["Generator weight (unweighted)", "Events"],
         binning=[20, -3, 5]
 )

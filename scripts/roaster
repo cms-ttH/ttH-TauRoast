@@ -129,7 +129,7 @@ if args.fill:
             continue
         processed.add(proc)
         for p in Plot.plots():
-            p.fill(proc)
+            p.fill(proc, config["weights"])
 
     fn = os.path.join(config["outdir"], "plots.root")
     f = r.TFile(fn, "RECREATE")

@@ -10,15 +10,39 @@ from ttH.TauRoast.botany import Forest
 from ttH.TauRoast.decorative import savetime
 from ttH.TauRoast.legendary import Legend
 from ttH.TauRoast.processing import Process
+from ttH.TauRoast.useful import Snippet
+
+class OldPlot(Snippet):
+    __plots__ = []
+    __names__ = set()
+
+    def __init__(self, code, name, labels, binning, dimensions=1, limitname=None):
+        super(OldPlot, self).__init__(code)
+        self.__name = name
+        self.__limitname = limitname if limitname else os.path.basename(name)
+
+        self.__args = [name, ";".join([""] + labels)] + binning
+        self.__hists = {}
+
+        if dimensions == 1:
+            self.__class = r.TH1F
+        elif dimensions == 2:
+            self.__class = r.TH2F
+
+        if self.__limitname in OldPlot.__names__:
+            raise KeyError("Plot {0} defined twice".format(self.__limitname))
+        OldPlot.__plots__.append(self)
+        OldPlot.__names__.add(self.__limitname)
 
 class Plot(object):
     __plots = {}
 
-    def __init__(self, name, values, labels, binning, limitname=None):
+    def __init__(self, name, values, labels, binning, limitname=None, weights=None):
         self.__name = name
         self.__limitname = limitname if limitname else os.path.basename(name)
 
         self.__values = values
+        self.__weights = weights
 
         self.__args = [self.__limitname, ";".join([""] + labels)] + binning
         self.__hists = {}
@@ -366,7 +390,7 @@ class Plot(object):
         canvas.SaveAs(os.path.join(outdir, self.__name + ".pdf"))
 
     @savetime
-    def fill(self, process):
+    def fill(self, process, weights):
         try:
             hist = self.__hists[process]
         except KeyError:
@@ -375,8 +399,10 @@ class Plot(object):
             self.__hists[process] = self.__class(*args)
             hist = self.__hists[process]
 
+        weights = ["w_" + w.lower() for w in weights]
+
         drw = '{0}>>{1}'.format(":".join(self.__values), hist.GetName())
-        sel = ''
+        sel = '*'.join(self.__weights if self.__weights else weights)
         opt = '' if len(self.__values) == 1 else 'COLZ'
         Forest.draw(str(process), drw, sel, opt)
         # has to happen after the draw, otherwise ROOT won't find the
