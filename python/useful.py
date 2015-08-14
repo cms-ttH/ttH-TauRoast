@@ -1,5 +1,14 @@
 import math
 
+from collections import namedtuple
+
+Config = namedtuple('Config', ['taus', 'leptons'])
+config = None
+
+def channel(s):
+    global config
+    config = Config(taus=s.lower().count("t"), leptons=s.lower().count("l"))
+
 def dR(one, two):
     diff = one.p4() - two.p4()
     return math.sqrt(diff.Eta()**2 + diff.Phi()**2)

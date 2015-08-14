@@ -57,13 +57,14 @@ if r.gROOT.GetVersion().startswith('6'):
 
 r.gSystem.Load("libttHTauRoast")
 
-from ttH.TauRoast import stylish
+from ttH.TauRoast import stylish, useful
 from ttH.TauRoast.botany import Forest
 from ttH.TauRoast.cutting import StaticCut, Cut, cutflow, normalize
 from ttH.TauRoast.plotting import Plot
 from ttH.TauRoast.processing import Process
 from ttH.TauRoast.printable import SyncSaver
 
+useful.channel(config['channel'])
 stylish.setup()
 
 import imp

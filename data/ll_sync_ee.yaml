@@ -1,5 +1,6 @@
 # vim: set sw=4 sta et :
 
+channel: ll
 ntupledir: test/multilepton
 outdir: test/sync_ee
 

@@ -1,29 +1,31 @@
 from ttH.TauRoast.botany import Leaf
 from ttH.TauRoast.plotting import Plot
+from ttH.TauRoast.useful import config
 
-Leaf('tt_deltaR', 'f', 'result = dR(taus[0], taus[1])')
-Leaf('tt_visiblemass', 'f', 'result = (taus[0].p4() + taus[1].p4()).M()')
+if config.taus >= 2:
+    Leaf('tt_deltaR', 'f', 'result = dR(taus[0], taus[1])')
+    Leaf('tt_visiblemass', 'f', 'result = (taus[0].p4() + taus[1].p4()).M()')
 
-Plot(
-    name="taus/TT_DeltaR",
-    values=["tt_deltaR"],
-    labels=["#DeltaR #tau_{1,2}", "Events"],
-    binning=[15, 0, 6.28]
-)
-Plot(
-    name="taus/TT_VisibleMass",
-    values=["tt_visiblemass"],
-    labels=["Visible Mass #tau_{1,2}", "Events"],
-    binning=[30, 0, 200]
-)
-Plot(
-    name="taus/TT_VisibleMass_coarse",
-    values=["tt_visiblemass"],
-    labels=["Visible Mass #tau_{1,2}", "Events"],
-    binning=[5, 0, 200]
-)
+    Plot(
+        name="taus/TT_DeltaR",
+        values=["tt_deltaR"],
+        labels=["#DeltaR #tau_{1,2}", "Events"],
+        binning=[15, 0, 6.28]
+    )
+    Plot(
+        name="taus/TT_VisibleMass",
+        values=["tt_visiblemass"],
+        labels=["Visible Mass #tau_{1,2}", "Events"],
+        binning=[30, 0, 200]
+    )
+    Plot(
+        name="taus/TT_VisibleMass_coarse",
+        values=["tt_visiblemass"],
+        labels=["Visible Mass #tau_{1,2}", "Events"],
+        binning=[5, 0, 200]
+    )
 
-for n in range(2):
+for n in range(config.taus):
     lbl = "#tau_{{{0}}} ".format(n + 1)
 
     Leaf('tau{0}lep{0}_deltaR'.format(n + 1, 1), 'f', 'result = dR(leptons[{0}], taus[{1}])'.format(0, n))

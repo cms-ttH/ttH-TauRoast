@@ -1,5 +1,6 @@
 # vim: set sw=4 sta et :
 
+channel: ttl
 ntupledir: /hadoop/store/user/matze/ttH/v5
 outdir: ~/www/ttH/v5
 

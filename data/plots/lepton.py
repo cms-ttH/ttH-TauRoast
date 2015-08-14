@@ -1,7 +1,8 @@
 from ttH.TauRoast.botany import Leaf
 from ttH.TauRoast.plotting import Plot
+from ttH.TauRoast.useful import config
 
-for n in range(1):
+for n in range(config.leptons):
     lbl = "l_{{{0}}} ".format(n + 1)
 
     Leaf('lep{0}_pt'.format(n + 1), 'f', 'result = leptons[{0}].p4().Pt()'.format(n))
