@@ -10,6 +10,7 @@ class Cut(Snippet):
         super(Cut, self).__init__(code)
         self._name = name
         self._counts = {}
+        self.__procs = set()
         self.__last = None
 
     def __call__(self, process, event, combo):
@@ -22,16 +23,20 @@ class Cut(Snippet):
             self.__last = id
 
             try:
-                self._counts[process] += 1
+                self[process] += 1
             except KeyError:
-                self._counts[process] = 1
+                self[process] = 1
         return passed
 
     def __getitem__(self, key):
         try:
-            return self._counts[key]
+            return self._counts[str(key)]
         except KeyError:
             return 0
+
+    def __setitem__(self, key, value):
+        self.__procs.add(key)
+        self._counts[str(key)] = value
 
     def __unicode__(self):
         return self._name
@@ -40,21 +45,17 @@ class Cut(Snippet):
         return unicode(self).encode('utf-8')
 
     def processes(self):
-        return self._counts.keys()
+        return self.__procs
 
 class StaticCut(Cut):
     def __init__(self, name):
-        self._name = name
-        self._counts = {}
+        super(StaticCut, self).__init__(name)
 
     def __call__(self, process, event, combo):
         return True
 
     def __getitem__(self, key):
-        return self._counts[key]
-
-    def __setitem__(self, key, value):
-        self._counts[key] = value
+        return self._counts[str(key)]
 
 def normalize(cuts, lumi):
     weights = None

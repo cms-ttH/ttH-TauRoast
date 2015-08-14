@@ -5,6 +5,7 @@ import argparse
 import codecs
 import logging
 import os
+import pickle
 import yaml
 
 parser = argparse.ArgumentParser(description='Grill some taus.')
@@ -15,6 +16,8 @@ parser.add_argument('-v', '--verbose', action="count", default=0,
 parser.add_argument('-q', '--quiet', action="count", default=0,
         help="decrease verbosity")
 ag = parser.add_argument_group('analysis options')
+ag.add_argument('-a', '--analyze', action='store_true', default=False,
+        help="analyze datasets")
 ag.add_argument('-f', '--fill', action='store_true', default=False,
         help="fill histograms")
 ag.add_argument('-p', '--plot', action='store_true', default=False,
@@ -25,8 +28,8 @@ ag.add_argument('--debug-cuts', action='store_true', default=False,
 
 args = parser.parse_args()
 
-if not any([args.fill, args.plot]):
-    parser.error("need to either fill or plot")
+if not any([args.analyze, args.fill, args.plot]):
+    parser.error("need to either analyze, fill, or plot")
 
 # Logging setup
 logging.basicConfig(
@@ -77,7 +80,7 @@ magic = os.path.join(datadir, 'procs', '*.py')
 for n, file in enumerate(glob(magic)):
     imp.load_source("procs{0}".format(n), file)
 
-if args.fill:
+if args.analyze:
     counts = []
     cuts = [
             Cut("Ntuple analyzed", "True")
@@ -123,6 +126,16 @@ if args.fill:
     with codecs.open(os.path.join(config["outdir"], "cuts_rel.txt"), "w", encoding="utf8") as fd:
         cutflow(cuts, config["plot"], f=fd, relative=True)
 
+    fn = os.path.join(config["outdir"], "cutflow.pkl")
+    with open(fn, 'wb') as f:
+        pickle.dump(cuts, f)
+elif args.fill:
+    fn = os.path.join(config["outdir"], "cutflow.pkl")
+    with open(fn, 'rb') as f:
+        cuts = pickle.load(f)
+
+if args.fill:
+    fn = os.path.join(config["outdir"], "ntuple.root")
     forest = Forest(fn)
     processed = set()
     for proc in sum(map(Process.expand, config['plot']), []):
@@ -149,7 +162,7 @@ if args.fill:
     f.Close()
 
     del forest
-else:
+elif args.plot:
     processes = sum(map(Process.expand, config['plot']), [])
     fn = os.path.join(config["outdir"], "plots.root")
     f = r.TFile(fn, "READ")

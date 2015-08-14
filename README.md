@@ -53,7 +53,7 @@ Configuration files are stored in `ttH/TauRoast/data`,
 with `ttl.yaml` being the main configuration file.
 Start a test analysis with:
 
-    roaster -fpv data/ttl.yaml
+    roaster -afpv data/ttl.yaml
 
 **after changing relevant paths in the configuration file**.
 
@@ -61,7 +61,8 @@ Start a test analysis with:
 
 Always use `-h` to find a comprehensive overview.
 
-| Option | Effect                                                                     |
-| ---    | ---                                                                        |
-| `-f`   | analyze dataset and fill histograms (produces `combine` compatible output) |
-| `-p`   | save plots                                                                 |
+| Option | Effect                                                 |
+| ---    | ---                                                    |
+| `-a`   | analyze datasets (produces `TMVA` compatible output)   |
+| `-f`   | fill histograms (produces `combine` compatible output) |
+| `-p`   | save plots                                             |
