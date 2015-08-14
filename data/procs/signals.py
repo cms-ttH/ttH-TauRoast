@@ -51,7 +51,7 @@ BasicProcess(
     limitname="ttH2Nonbbgg125",
     paths=["ttH2Nonbbgg_125"],
     cross_section=0.5085 * (1 - (0.577 + 0.2)),
-    events=2576712
+    events=36000
 )
 
 CombinedProcess(

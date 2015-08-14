@@ -8,7 +8,7 @@ class Leaf(Snippet):
     __leaves = {}
 
     def __init__(self, name, kind, code):
-        if kind.lower() not in ('i', 'f'):
+        if kind.lower() not in ('i', 'f', '[f]'):
             raise NotImplementedError
 
         if name in Leaf.__leaves:
@@ -18,23 +18,44 @@ class Leaf(Snippet):
 
         super(Leaf, self).__init__(code)
 
-        self.__val = array(kind.lower(), [0] if kind.lower() == 'i' else [0.])
         self.__name = name
         self.__kind = kind
+        if kind.lower() == 'i':
+            self.__val = array('i', [0])
+        elif kind.lower() == 'f':
+            self.__val = array('f', [0.])
+        else:
+            self.__kind = None
+            self.__val = r.vector('float')()
+
+    @property
+    def name(self):
+        return self.__name
 
     def pick(self, event, selected, passed, weight, globals=None):
-        self.__val[0] = self._execute(event, selected, globals=globals,
+        res = self._execute(event, selected, globals=globals,
                 locals={
                     'combos': passed,
                     'weight': weight
         })
 
+        if isinstance(res, list):
+            self.__val.clear()
+            for r in res:
+                self.__val.push_back(r)
+        else:
+            self.__val[0] = res
+
     def register(self, tree):
-        tree.Branch(self.__name, self.__val, '{0}/{1}'.format(self.__name, self.__kind.upper()))
+        if self.__kind:
+            tree.Branch(self.__name, self.__val, '{0}/{1}'.format(self.__name, self.__kind.upper()))
+        else:
+            tree.Branch(self.__name, self.__val)
 
     @classmethod
     def leaves(cls):
-        return cls.__leaves.values()
+        for k in sorted(cls.__leaves.keys()):
+            yield cls.__leaves[k]
 
 class Tree(object):
     def __init__(self, filename, name):

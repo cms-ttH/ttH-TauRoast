@@ -10,29 +10,6 @@ from ttH.TauRoast.botany import Forest
 from ttH.TauRoast.decorative import savetime
 from ttH.TauRoast.legendary import Legend
 from ttH.TauRoast.processing import Process
-from ttH.TauRoast.useful import Snippet
-
-class OldPlot(Snippet):
-    __plots__ = []
-    __names__ = set()
-
-    def __init__(self, code, name, labels, binning, dimensions=1, limitname=None):
-        super(OldPlot, self).__init__(code)
-        self.__name = name
-        self.__limitname = limitname if limitname else os.path.basename(name)
-
-        self.__args = [name, ";".join([""] + labels)] + binning
-        self.__hists = {}
-
-        if dimensions == 1:
-            self.__class = r.TH1F
-        elif dimensions == 2:
-            self.__class = r.TH2F
-
-        if self.__limitname in OldPlot.__names__:
-            raise KeyError("Plot {0} defined twice".format(self.__limitname))
-        OldPlot.__plots__.append(self)
-        OldPlot.__names__.add(self.__limitname)
 
 class Plot(object):
     __plots = {}
