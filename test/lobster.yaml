@@ -1,30 +1,32 @@
 id: tau
 type: cmssw
 
-workdir: /tmpscratch/users/matze/tau_v5
-plotdir: /afs/crc.nd.edu/user/m/mwolf3/www/lobster/tau_v5
+workdir: /tmpscratch/users/matze/tau_v6
+plotdir: /afs/crc.nd.edu/user/m/mwolf3/www/lobster/tau_v6
 
-stageout location: /hadoop/store/user/matze/ttH/v5
+storage:
+    output:
+      - hdfs:///store/user/matze/ttH/v6
+      - root://ndcms.crc.nd.edu//store/user/matze/ttH/v6
+      - srm://T3_US_NotreDame/store/user/matze/ttH/v6
 
-xrootd server: "ndcms.crc.nd.edu"
-xrootd root: /hadoop
-
-srm url: "srm://ndcms.crc.nd.edu:8443/srm/v2/server?SFN="
-srm root: ""
-
-# merge size: 500M
+merge size: 3.5G
 
 task defaults:
     cmssw config: ntuplize.py
-    outputs: [test.root]
-    events per job: 10000
+    events per job: 50000
+    edm output: false
 
 tasks:
-  - label: ttjets
-    dataset: /TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/MINIAODSIM
-  - label: ttH2TT_125
-    dataset: /ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9_ext1-v1/MINIAODSIM
-  - label: ttH2Nonbb_125
-    dataset: /ttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9_ext1-v3/MINIAODSIM
-  - label: ttH2bb_125
-    dataset: /ttHJetTobb_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9_ext1-v1/MINIAODSIM
+  - {label: ttjets             , dataset: /TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/MINIAODSIM}
+  - {label: ttH2TT_125         , dataset: /ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM}
+  - {label: ttH2TT_125_ext1    , dataset: /ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9_ext1-v1/MINIAODSIM}
+  - {label: ttH2TT_125_ext2    , dataset: /ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9_ext2-v2/MINIAODSIM}
+  - {label: ttH2TT_125_ext3    , dataset: /ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9_ext3-v1/MINIAODSIM}
+  - {label: ttH2Nonbb_125      , dataset: /ttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM}
+  - {label: ttH2Nonbb_125_ext1 , dataset: /ttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9_ext1-v1/MINIAODSIM}
+  - {label: ttH2bb_125         , dataset: /ttHJetTobb_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9_ext1-v1/MINIAODSIM}
+  - {label: ttH2bb_125         , dataset: /ttHJetTobb_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM}
+  - {label: ttH2bb_125_ext1    , dataset: /ttHJetTobb_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9_ext1-v1/MINIAODSIM}
+  - {label: ttH2bb_125_ext2    , dataset: /ttHJetTobb_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9_ext2-v2/MINIAODSIM}
+  - {label: ttH2bb_125_ext3    , dataset: /ttHJetTobb_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9_ext3-v1/MINIAODSIM}
