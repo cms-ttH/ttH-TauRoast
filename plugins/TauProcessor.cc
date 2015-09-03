@@ -102,6 +102,33 @@ get_selection(const std::vector<T>& coll, const std::string& id, double pt)
    return res;
 }
 
+pat::JetCollection
+get_non_pileup(const pat::JetCollection& jets)
+{
+   pat::JetCollection res;
+   for (const auto& j: jets) {
+      auto mva = j.userFloat("pileupJetId:fullDiscriminant");
+      if (std::abs(j.eta()) < 2.5) {
+         if (mva <= -0.63)
+            continue;
+      } else if (std::abs(j.eta()) < 2.7) {
+         if ( mva <= -0.60)
+            continue;
+      } else if (std::abs(j.eta()) < 3.0) {
+         if ( mva <= -0.55)
+            continue;
+      } else if (std::abs(j.eta()) < 5.2) {
+         if ( mva <= -0.45)
+            continue;
+      } else {
+         continue;
+      }
+      res.push_back(j);
+   }
+
+   return res;
+}
+
 class TauProcessor : public edm::EDAnalyzer {
    public:
       explicit TauProcessor(const edm::ParameterSet&);
@@ -294,7 +321,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
    auto raw_mu = get_selection(*muons, "idPreselection", 5.);
    auto all_preselected_e = get_selection(*electrons, "idPreselection", 7.);
-   auto raw_e = removeOverlap(all_preselected_e, raw_mu);
+   auto raw_e = removeOverlap(all_preselected_e, raw_mu, 0.05);
    auto raw_tau = helper_.GetSelectedTaus(*taus, 20., tau::loose);
    auto raw_tight_tau = helper_.GetSelectedTaus(raw_tau, 20., tau::tight);
 
@@ -371,7 +398,8 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
       // Jet selection
       auto jets_no_taus = removeOverlap(corrected_jets, loose_tau, .25);
-      auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, 2.4, jetID::jetLoose, '-');
+      auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, 2.4, jetID::none, '-');
+      selected_jets = get_non_pileup(selected_jets);
       auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, 2.4, jetID::jetLoose, 'M');
 
       auto uncorrected_jets = removeOverlap(jets_wo_lep, loose_tau, .25);
