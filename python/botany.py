@@ -32,6 +32,10 @@ class Leaf(Snippet):
     def name(self):
         return self.__name
 
+    @property
+    def kind(self):
+        return self.__kind
+
     def pick(self, event, selected, passed, weight, globals=None):
         res = self._execute(event, selected, globals=globals,
                 locals={
@@ -92,6 +96,9 @@ class Forest(object):
         except ReferenceError:
             self.__f.ls()
             raise ValueError("Can't access tree for {0}.".format(name))
+
+    def __getitem__(self, key):
+        return self.__f.Get(name)
 
     @classmethod
     def draw(cls, name, *args):

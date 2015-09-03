@@ -22,14 +22,16 @@ ag.add_argument('-f', '--fill', action='store_true', default=False,
         help="fill histograms")
 ag.add_argument('-p', '--plot', action='store_true', default=False,
         help="save histograms")
+ag.add_argument('-t', '--train', action='store_true', default=False,
+        help="train MVAs")
 ag = parser.add_argument_group('debugging and syncronization options')
 ag.add_argument('--debug-cuts', action='store_true', default=False,
         help="save event quantites after each cut")
 
 args = parser.parse_args()
 
-if not any([args.analyze, args.fill, args.plot]):
-    parser.error("need to either analyze, fill, or plot")
+if not any([args.analyze, args.fill, args.plot, args.train]):
+    parser.error("need to either analyze, fill, plot, or train")
 
 # Logging setup
 logging.basicConfig(
@@ -133,6 +135,9 @@ elif args.fill:
     fn = os.path.join(config["outdir"], "cutflow.pkl")
     with open(fn, 'rb') as f:
         cuts = pickle.load(f)
+
+if args.train:
+    raise NotImplementedError
 
 if args.fill:
     fn = os.path.join(config["outdir"], "ntuple.root")
