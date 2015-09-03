@@ -164,6 +164,7 @@ class TauProcessor : public edm::EDAnalyzer {
       bool subtract_leptons_;
       bool print_preselection_;
       double min_jet_pt_;
+      double min_tag_pt_;
 
       edm::EDGetTokenT<double> rho_token_;
       edm::EDGetTokenT<GenEventInfoProduct> geninfo_token_;
@@ -199,6 +200,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    subtract_leptons_(config.getParameter<bool>("subtractLeptons")),
    print_preselection_(config.getParameter<bool>("printPreselection")),
    min_jet_pt_(config.getParameter<double>("minJetPt")),
+   min_tag_pt_(config.getParameter<double>("minTagPt")),
    event_(0)
 {
    rho_token_ = consumes<double>(edm::InputTag("fixedGridRhoFastjetAll"));
@@ -398,9 +400,10 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
       // Jet selection
       auto jets_no_taus = removeOverlap(corrected_jets, loose_tau, .25);
-      auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, 2.4, jetID::none, '-');
+      auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, 2.5, jetID::jetLoose, '-');
       selected_jets = get_non_pileup(selected_jets);
-      auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, 2.4, jetID::jetLoose, 'M');
+      auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, 2.5, jetID::jetLoose, 'M');
+      selected_tags = get_non_pileup(selected_tags);
 
       auto uncorrected_jets = removeOverlap(jets_wo_lep, loose_tau, .25);
 

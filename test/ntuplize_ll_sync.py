@@ -77,6 +77,7 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         minTightTaus = cms.uint32(0),
         subtractLeptons = cms.bool(False),
         minJetPt = cms.double(25.),
+        minTagPt = cms.double(25.),
         printPreselection = cms.bool(options.printPreselection)
 )
 
