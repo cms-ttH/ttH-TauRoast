@@ -15,7 +15,6 @@ merge size: 3.5G
 task defaults:
     cmssw config: ntuplize.py
     events per job: 50000
-    edm output: false
 
 tasks:
   - {label: ttjets             , dataset: /TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/MINIAODSIM}
