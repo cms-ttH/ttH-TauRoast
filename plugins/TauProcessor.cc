@@ -373,13 +373,15 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       if (tight_e.size() + tight_mu.size() < min_tight_leptons_)
          continue;
 
+      passComboCut(event_cut, combo_cut++, passed, "Leptons in combo (min)");
+
       if (max_leptons_ >= 0 && loose_e.size() + loose_mu.size() > (unsigned int) max_leptons_)
          continue;
 
       if (max_tight_leptons_ >= 0 && tight_e.size() + tight_mu.size() > (unsigned int) max_tight_leptons_)
          continue;
 
-      passComboCut(event_cut, combo_cut++, passed, "Leptons in combo");
+      passComboCut(event_cut, combo_cut++, passed, "Leptons in combo (max)");
 
       // TODO check trigger
 
