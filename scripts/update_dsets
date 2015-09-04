@@ -1,0 +1,78 @@
+#!/usr/bin/env python
+
+# A script to update the dataset information used by roast from a lobster
+# configuration file (the only required argument.)  Strips any "ext*" from
+# the lobster task label and accumulates them under the remainder of the
+# label.
+
+import json
+import os
+import re
+import subprocess
+import sys
+import yaml
+
+from glob import glob
+
+if len(sys.argv) != 2:
+    print "usage: dset_info lobster_config"
+    sys.exit(1)
+
+with open(sys.argv[1]) as f:
+    config = yaml.load(f)
+
+dsets = {}
+
+for cfg in config['tasks']:
+    dir = cfg['label']
+    dset = cfg['dataset']
+
+    label = re.sub(r'_ext\d+', '', dir)
+
+    query = subprocess.check_output(['das_client.py', '--format=json', '--query=dataset={0}'.format(dset)])
+    data = json.loads(query)
+    assert len(data['data']) == 1
+    for ds in data['data'][0]['dataset']:
+        try:
+            events = ds['nevents']
+            break
+        except:
+            print "UNABLE TO DETERMINE EVENTS IN"
+            print ds.keys()
+            pass
+    else:
+        print "NO EVENTS FOUND FOR", label, dir
+        continue
+
+    try:
+        dsets[label][0].append(dir)
+        dsets[label][1] += events
+    except KeyError:
+        dsets[label] = [[dir], events]
+
+datadir = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data')
+magic = os.path.join(datadir, 'procs', '*.py')
+for file in glob(magic):
+    lines = []
+    with open(file, 'r') as f:
+        label = None
+        for line in f:
+            if len(line.strip()) == 0:
+                label = None
+            elif 'name' in line:
+                try:
+                    label = re.search(r'name=["\'](\w+)["\']', line).group(1)
+                except:
+                    pass
+            elif 'paths' in line and label in dsets:
+                line = re.sub(r'paths=[[^\[]*]', 'paths=' + repr(dsets[label][0]), line)
+            elif 'events' in line and label in dsets:
+                line = re.sub(r'events=\d*', 'events=' + str(dsets[label][1]), line)
+            lines.append(line)
+    with open(file, 'w') as f:
+        f.write(''.join(lines))
+
+for k, v in dsets.items():
+    print k
+    print '\t' + repr(v[0])
+    print '\t' + str(v[1])

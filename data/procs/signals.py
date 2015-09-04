@@ -5,9 +5,9 @@ BasicProcess(
     sample=9125,
     fullname="t#bar{t}H(125) #rightarrow #tau_{h} #tau_{h}",
     limitname="ttHTT125",
-    paths=["ttH2TT_125"],
+    paths=['ttH2TT_125', 'ttH2TT_125_ext1', 'ttH2TT_125_ext2', 'ttH2TT_125_ext3'],
     cross_section=0.5085 * 6.32e-2,
-    events=1427478
+    events=8378353
     # split: {hbb: 0, hcc: 1, hww: 2, hzz: 3, htt: 4, hgg: 5, hgluglu: 6, hzg: 7}
     # split: {htt: 4}
 )
@@ -29,9 +29,9 @@ BasicProcess(
     sample=9125,
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
     limitname="ttHbb125",
-    paths=["ttH2bb_125"],
+    paths=['ttH2bb_125', 'ttH2bb_125', 'ttH2bb_125_ext1', 'ttH2bb_125_ext2', 'ttH2bb_125_ext3'],
     cross_section=0.5085 * 0.577,
-    events=2588639
+    events=20605280
 )
 
 BasicProcess(
@@ -39,9 +39,9 @@ BasicProcess(
     sample=9125,
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
     limitname="ttH2Nonbb125",
-    paths=["ttH2Nonbb_125"],
+    paths=['ttH2Nonbb_125', 'ttH2Nonbb_125_ext1'],
     cross_section=0.5085 * (1 - 0.577),
-    events=2576712
+    events=17594172
 )
 
 BasicProcess(
