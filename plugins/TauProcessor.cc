@@ -163,6 +163,10 @@ class TauProcessor : public edm::EDAnalyzer {
 
       bool subtract_leptons_;
       bool print_preselection_;
+
+      double min_loose_lep_pt_;
+      double min_tight_lep_pt_;
+
       double min_jet_pt_;
       double min_tag_pt_;
 
@@ -199,6 +203,8 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    min_tight_taus_(config.getParameter<unsigned int>("minTightTaus")),
    subtract_leptons_(config.getParameter<bool>("subtractLeptons")),
    print_preselection_(config.getParameter<bool>("printPreselection")),
+   min_loose_lep_pt_(config.getParameter<double>("minLooseLeptonPt")),
+   min_tight_lep_pt_(config.getParameter<double>("minTightLeptonPt")),
    min_jet_pt_(config.getParameter<double>("minJetPt")),
    min_tag_pt_(config.getParameter<double>("minTagPt")),
    event_(0)
@@ -359,10 +365,10 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       // TODO there might be tight electrons that overlap with loose muons,
       // but not tight muons?  Should these be considered when only dealing
       // with tight leptons?
-      auto loose_e = get_selection(preselected_e, "idLooseCut", 5.);
-      auto loose_mu = get_selection(preselected_mu, "idLooseCut", 5.);
-      auto tight_e = get_selection(preselected_e, "idTightCut", 5.);
-      auto tight_mu = get_selection(preselected_mu, "idTightCut", 5.);
+      auto loose_e = get_selection(preselected_e, "idLooseCut", min_loose_lep_pt_);
+      auto loose_mu = get_selection(preselected_mu, "idLooseCut", min_loose_lep_pt_);
+      auto tight_e = get_selection(preselected_e, "idTightCut", min_tight_lep_pt_);
+      auto tight_mu = get_selection(preselected_mu, "idTightCut", min_tight_lep_pt_);
 
       if (preselected_e.size() + preselected_mu.size() < min_leptons_)
          continue;
@@ -395,8 +401,8 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
          jets_wo_lep = helper_.RemoveOverlaps(loose_e, jets_wo_mu);
          corrected_jets = helper_.GetCorrectedJets(jets_wo_lep);
       } else {
-         auto jets_wo_mu = removeOverlap(raw_jets, preselected_mu, .4);
-         jets_wo_lep = removeOverlap(raw_jets, preselected_e, .4);
+         auto jets_wo_mu = removeOverlap(raw_jets, loose_mu, .4);
+         jets_wo_lep = removeOverlap(raw_jets, loose_e, .4);
          corrected_jets = helper_.GetCorrectedJets(jets_wo_lep);
       }
 
