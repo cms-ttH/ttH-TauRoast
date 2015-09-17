@@ -156,7 +156,7 @@ class TauProcessor : public edm::EDAnalyzer {
       unsigned int min_leptons_;
       unsigned int min_loose_leptons_;
       unsigned int min_tight_leptons_;
-      int max_leptons_;
+      int max_loose_leptons_;
       int max_tight_leptons_;
       unsigned int min_taus_;
       unsigned int min_tight_taus_;
@@ -197,7 +197,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    min_leptons_(config.getParameter<unsigned int>("minPreselectedLeptons")),
    min_loose_leptons_(config.getParameter<unsigned int>("minLooseLeptons")),
    min_tight_leptons_(config.getParameter<unsigned int>("minTightLeptons")),
-   max_leptons_(config.getParameter<int>("maxLeptons")),
+   max_loose_leptons_(config.getParameter<int>("maxLooseLeptons")),
    max_tight_leptons_(config.getParameter<int>("maxTightLeptons")),
    min_taus_(config.getParameter<unsigned int>("minTaus")),
    min_tight_taus_(config.getParameter<unsigned int>("minTightTaus")),
@@ -381,7 +381,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
       passComboCut(event_cut, combo_cut++, passed, "Leptons in combo (min)");
 
-      if (max_leptons_ >= 0 && loose_e.size() + loose_mu.size() > (unsigned int) max_leptons_)
+      if (max_loose_leptons_ >= 0 && loose_e.size() + loose_mu.size() > (unsigned int) max_loose_leptons_)
          continue;
 
       if (max_tight_leptons_ >= 0 && tight_e.size() + tight_mu.size() > (unsigned int) max_tight_leptons_)
@@ -434,10 +434,10 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       for (const auto& tau: loose_tau)
          staus.push_back(superslim::Tau(tau));
 
-      for (const auto& lep: preselected_e)
+      for (const auto& lep: loose_e)
          sleptons.push_back(superslim::Lepton(lep, helper_.GetElectronRelIso(lep), rpv, *bs));
 
-      for (const auto& lep: preselected_mu)
+      for (const auto& lep: loose_mu)
          sleptons.push_back(superslim::Lepton(lep, helper_.GetMuonRelIso(lep), rpv, *bs));
 
       std::sort(sleptons.begin(), sleptons.end());
