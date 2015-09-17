@@ -61,6 +61,12 @@ Plot(
         binning=[10, 0, 10, 5, 0, 5]
 )
 Plot(
+        name="general/NumLeptons",
+        values=["nelectrons + nmuons"],
+        labels=["Number of leptons", "Events"],
+        binning=[10, 0, 10]
+)
+Plot(
         name="general/NumElectrons",
         values=["nelectrons"],
         labels=["Number of e", "Events"],
