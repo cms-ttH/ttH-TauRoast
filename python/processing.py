@@ -1,6 +1,7 @@
 import glob
 import logging
 import os
+import re
 import time
 
 import ROOT as r
@@ -79,12 +80,8 @@ class BasicProcess(Process):
                     hist = h
                 else:
                     for n in range(hist.GetNbinsX()):
-                        oldlabel = hist.GetXaxis().GetBinLabel(n+1)
-                        newlabel = h.GetXaxis().GetBinLabel(n+1)
-                        if oldlabel == "" and newlabel != "":
-                            hist.GetXaxis().SetBinLabel(n+1, newlabel)
-                        if oldlabel != "" and newlabel == "":
-                            h.GetXaxis().SetBinLabel(n+1, oldlabel)
+                        label = hist.GetXaxis().GetBinLabel(n+1)
+                        h.GetXaxis().SetBinLabel(n+1, label)
                     hist.Add(h)
 
         if hist is None:
@@ -92,12 +89,15 @@ class BasicProcess(Process):
 
         if len(counts) == 0:
             counts.append(StaticCut("Dataset"))
+            names = []
 
-            for i in range(hist.GetNbinsX()):
-                label = hist.GetXaxis().GetBinLabel(i+1)
-                if label == "":
-                    break
-                counts.append(StaticCut(label))
+            rx = re.compile(r'pass\w*Cut\(.*"(.*)"\)')
+            fn = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'plugins', 'TauProcessor.cc')
+            with open(fn) as f:
+                for line in f:
+                    m = rx.search(line)
+                    if m:
+                        counts.append(StaticCut(m.group(1)))
 
         for n, cut in enumerate(counts[1:], 1):
             cut[self] = hist.GetBinContent(n)
