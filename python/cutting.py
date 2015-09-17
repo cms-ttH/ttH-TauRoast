@@ -66,7 +66,7 @@ def normalize(cuts, lumi):
             processed = cut
         elif str(cut).lower() == "dataset event weights":
             weights = cut
-        elif processed and cut:
+        elif processed and weights:
             break
 
     dsetnorm = StaticCut("Dataset norm")

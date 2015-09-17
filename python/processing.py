@@ -91,7 +91,7 @@ class BasicProcess(Process):
             counts.append(StaticCut("Dataset"))
             names = []
 
-            rx = re.compile(r'pass\w*Cut\(.*"(.*)"\)')
+            rx = re.compile(r'pass\w*Cut\(.*"(.*)".*\)')
             fn = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'plugins', 'TauProcessor.cc')
             with open(fn) as f:
                 for line in f:
