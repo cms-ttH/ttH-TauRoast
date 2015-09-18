@@ -68,7 +68,7 @@ for n in range(config.taus):
         binning=[20, -3.2, 3.2]
     )
 
-    Leaf('tau{0}_genid'.format(n + 1), 'f', 'result = abs(taus[{0}].pdgId())'.format(n))
+    Leaf('tau{0}_genid'.format(n + 1), 'f', 'result = abs(taus[{0}].genPdgId())'.format(n))
     Leaf('tau{0}_genparentid'.format(n + 1), 'f', 'result = abs(taus[{0}].parentId())'.format(n))
 
     # Gen matching

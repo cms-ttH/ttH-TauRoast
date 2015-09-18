@@ -29,7 +29,7 @@ for n in range(config.leptons):
         binning=[20, -3.2, 3.2]
     )
 
-    Leaf('lep{0}_genid'.format(n + 1), 'f', 'result = abs(leptons[{0}].pdgId())'.format(n))
+    Leaf('lep{0}_genid'.format(n + 1), 'f', 'result = abs(leptons[{0}].genPdgId())'.format(n))
     Leaf('lep{0}_genparentid'.format(n + 1), 'f', 'result = abs(leptons[{0}].parentId())'.format(n))
 
     # Gen matching
