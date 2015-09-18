@@ -6,15 +6,20 @@ plotdir: /afs/crc.nd.edu/user/m/mwolf3/www/lobster/tau_v6
 
 storage:
     output:
+      - file:///hadoop/store/user/matze/ttH/v6
       - hdfs:///store/user/matze/ttH/v6
       - root://ndcms.crc.nd.edu//store/user/matze/ttH/v6
       - srm://T3_US_NotreDame/store/user/matze/ttH/v6
 
 merge size: 3.5G
+task runtime: 900
+
+advanced:
+    log level: 1
 
 task defaults:
     cmssw config: ntuplize.py
-    events per job: 50000
+    events per job: 30000
 
 tasks:
   - {label: ttjets             , dataset: /TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/MINIAODSIM}

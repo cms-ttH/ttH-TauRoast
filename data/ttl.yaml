@@ -1,8 +1,8 @@
 # vim: set sw=4 sta et :
 
 channel: ttl
-ntupledir: /hadoop/store/user/matze/ttH/v5
-outdir: ~/www/ttH/v5
+ntupledir: /hadoop/store/user/matze/ttH/v6
+outdir: ~/www/ttH/v6
 
 lumi: 10000
 
@@ -16,8 +16,6 @@ plot:
   - ttH2TT_125_real
 
 cuts:
-  - "τ₁ LT pt": "taus[0].leadingTrackPt() > 5"
-  - "τ₂ LT pt": "taus[1].leadingTrackPt() > 5"
   - "ΔR(ττ)  > 0.5": "dR(taus[0], taus[1]) > 0.5"
   - "ΔR(τ₁l) > 0.25": "dR(taus[0], leptons[0]) > 0.25"
   - "ΔR(τ₂l) > 0.25": "dR(taus[1], leptons[0]) > 0.25"
