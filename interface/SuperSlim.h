@@ -81,7 +81,7 @@ namespace superslim {
          int
             pdgId() const { return pdg_id_; };
          int
-            genPdgId() const { return pdg_id_; };
+            genPdgId() const { return gen_pdg_id_; };
 #ifndef __CINT__
          void
             setGenInfo(const reco::Candidate* p, int level=2);
