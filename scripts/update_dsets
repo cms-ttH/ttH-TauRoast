@@ -45,10 +45,10 @@ for cfg in config['tasks']:
         continue
 
     try:
-        dsets[label][0].append(dir)
+        dsets[label][0].add(dir)
         dsets[label][1] += events
     except KeyError:
-        dsets[label] = [[dir], events]
+        dsets[label] = [set([dir]), events]
 
 datadir = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data')
 magic = os.path.join(datadir, 'procs', '*.py')
@@ -65,7 +65,7 @@ for file in glob(magic):
                 except:
                     pass
             elif 'paths' in line and label in dsets:
-                line = re.sub(r'paths=[[^\[]*]', 'paths=' + repr(dsets[label][0]), line)
+                line = re.sub(r'paths=[[^\[]*]', 'paths=' + repr(sorted(dsets[label][0])), line)
             elif 'events' in line and label in dsets:
                 line = re.sub(r'events=\d*', 'events=' + str(dsets[label][1]), line)
             lines.append(line)
