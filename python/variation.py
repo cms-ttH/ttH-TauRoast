@@ -1,8 +1,11 @@
+import os
 import ROOT as r
 
 from ttH.TauRoast.botany import Forest, Leaf
 
-def train_mva(ntuple, signals, backgrouns, variables, outfilename, methods=None):
+def train(ntuple, signals, backgrounds, variables, outfilename, methods=None):
+    r.TMVA.gConfig().GetIONames().fWeightFileDir = os.path.join(os.path.dirname(outfilename), 'weights')
+
     if methods is None:
         methods = [(
             "BDTG",
@@ -12,7 +15,7 @@ def train_mva(ntuple, signals, backgrouns, variables, outfilename, methods=None)
     factory = r.TMVA.Factory("TMVAClassification", outfile,
                     "!V:!Silent:Transformations=I;D;P;G,D:AnalysisType=Classification")
 
-    leaves = dict(l.name, l.kind for l in Leaf.leaves())
+    leaves = dict((l.name, l.kind) for l in Leaf.leaves())
     for var in variables:
         factory.AddVariable(var, leaves[var])
 
@@ -22,7 +25,7 @@ def train_mva(ntuple, signals, backgrouns, variables, outfilename, methods=None)
     for bkg in backgrounds:
         factory.AddBackgroundTree(forest[bkg], 1.)
 
-    factory.PrepareTrainingAndTestTree("", "", "SplitMode=Random:NormMode=NumEvents:!V")
+    factory.PrepareTrainingAndTestTree(r.TCut(), "SplitMode=Random:NormMode=NumEvents:!V")
 
     for m, opt in methods:
         factory.BookMethod(r.TMVA.Types.kBDT, m, opt)

@@ -68,6 +68,7 @@ from ttH.TauRoast.cutting import StaticCut, Cut, cutflow, normalize
 from ttH.TauRoast.plotting import Plot
 from ttH.TauRoast.processing import Process
 from ttH.TauRoast.printable import SyncSaver
+from ttH.TauRoast.variation import train
 
 useful.channel(config['channel'])
 stylish.setup()
@@ -137,7 +138,10 @@ elif args.fill:
         cuts = pickle.load(f)
 
 if args.train:
-    raise NotImplementedError
+    fn = os.path.join(config["outdir"], "ntuple.root")
+    ofn = os.path.join(config["outdir"], "tmva.root")
+    cfg = config['mva']
+    train(fn, cfg['signals'], cfg['backgrounds'], cfg['variables'], ofn)
 
 if args.fill:
     fn = os.path.join(config["outdir"], "ntuple.root")

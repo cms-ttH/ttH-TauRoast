@@ -1,8 +1,8 @@
 # vim: set sw=4 sta et :
 
 channel: ttl
-ntupledir: /hadoop/store/user/matze/ttH/v6
-outdir: ~/www/ttH/v6
+ntupledir: /hadoop/store/user/matze/ttH/v7
+outdir: ~/www/ttH/v7
 
 lumi: 10000
 
@@ -23,3 +23,15 @@ cuts:
 
 weights:
   - Generator
+
+mva:
+    signals:
+      - ttH2TT_125_real
+    backgrounds:
+      - ttjets
+    variables:
+      - met
+      - ht
+      - tau1_pt
+      - tau2_pt
+      - lep1_pt
