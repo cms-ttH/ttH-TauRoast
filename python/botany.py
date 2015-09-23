@@ -98,7 +98,7 @@ class Forest(object):
             raise ValueError("Can't access tree for {0}.".format(name))
 
     def __getitem__(self, key):
-        return self.__f.Get(name)
+        return self.__f.Get(key)
 
     @classmethod
     def draw(cls, name, *args):
