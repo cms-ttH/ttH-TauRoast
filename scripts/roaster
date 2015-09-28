@@ -68,7 +68,7 @@ from ttH.TauRoast.cutting import StaticCut, Cut, cutflow, normalize
 from ttH.TauRoast.plotting import Plot
 from ttH.TauRoast.processing import Process
 from ttH.TauRoast.printable import SyncSaver
-from ttH.TauRoast.variation import train
+from ttH.TauRoast.variation import setup, train
 
 useful.channel(config['channel'])
 stylish.setup()
@@ -82,6 +82,10 @@ for n, file in enumerate(glob(magic)):
 magic = os.path.join(datadir, 'procs', '*.py')
 for n, file in enumerate(glob(magic)):
     imp.load_source("procs{0}".format(n), file)
+
+if 'mva' in config:
+    cfg = config['mva']
+    setup(config['outdir'], cfg['variables'])
 
 if args.analyze:
     counts = []

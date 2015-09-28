@@ -6,15 +6,19 @@ from ttH.TauRoast.useful import Snippet
 
 class Leaf(Snippet):
     __leaves = {}
+    __finals = {}
 
-    def __init__(self, name, kind, code):
+    def __init__(self, name, kind, code, final=False):
         if kind.lower() not in ('i', 'f', '[f]'):
             raise NotImplementedError
 
-        if name in Leaf.__leaves:
+        if name in Leaf.__leaves or name in Leaf.__finals:
             raise KeyError("Leaf {0} defined twice".format(name))
 
-        Leaf.__leaves[name] = self
+        if final:
+            Leaf.__finals[name] = self
+        else:
+            Leaf.__leaves[name] = self
 
         super(Leaf, self).__init__(code)
 
@@ -36,6 +40,12 @@ class Leaf(Snippet):
     def kind(self):
         return self.__kind
 
+    @property
+    def value(self):
+        if not self.__kind:
+            return self.__val[0]
+        return self.__val
+
     def pick(self, event, selected, passed, weight, globals=None):
         res = self._execute(event, selected, globals=globals,
                 locals={
@@ -50,6 +60,9 @@ class Leaf(Snippet):
         else:
             self.__val[0] = res
 
+    def attach(self, tree):
+        tree.SetBranchAddress(self.__name, self.__val)
+
     def register(self, tree):
         if self.__kind:
             tree.Branch(self.__name, self.__val, '{0}/{1}'.format(self.__name, self.__kind.upper()))
@@ -60,6 +73,8 @@ class Leaf(Snippet):
     def leaves(cls):
         for k in sorted(cls.__leaves.keys()):
             yield cls.__leaves[k]
+        for k in sorted(cls.__finals.keys()):
+            yield cls.__finals[k]
 
 class Tree(object):
     def __init__(self, filename, name):
@@ -90,9 +105,9 @@ class Forest(object):
         self.__f.Close()
         Forest.__instance = None
 
-    def _draw(self, name, *args):
+    def _draw(self, name, *args, **kwargs):
         try:
-            self.__f.Get(name).Draw(*args)
+            self.__f.Get(name).Draw(*args, **kwargs)
         except ReferenceError:
             self.__f.ls()
             raise ValueError("Can't access tree for {0}.".format(name))
@@ -101,5 +116,5 @@ class Forest(object):
         return self.__f.Get(key)
 
     @classmethod
-    def draw(cls, name, *args):
+    def draw(cls, name, *args, **kwargs):
         cls.__instance._draw(name, *args)

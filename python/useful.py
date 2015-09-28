@@ -16,6 +16,14 @@ def dR(one, two):
 def btag(jet):
     return jet.csv() > 0.814
 
+__mva = None
+def mva():
+    global __mva
+    if __mva is None:
+        from variation import principal
+        __mva = principal
+    return __mva.evaluate()
+
 class Snippet(object):
     def __init__(self, code):
         self.__code = code
@@ -39,6 +47,7 @@ class Snippet(object):
                 'event': event,
                 'btag': btag,
                 'dR': dR,
+                'mva': mva,
                 'taus': combo.taus(),
                 'leptons': combo.leptons(),
                 'jets': combo.jets(),

@@ -10,6 +10,14 @@ Leaf('npv', 'f', 'result = event.npv()')
 Leaf('nelectrons', 'f', 'result = len([l for l in leptons if l.electron()])')
 Leaf('nmuons', 'f', 'result = len([l for l in leptons if l.muon()])')
 
+Leaf('bdt', 'f', 'result = mva()', final=True)
+Plot(
+        name="general/BDT",
+        values=["bdt"],
+        labels=["BDT value", "Events"],
+        binning=[20, -1, 1]
+)
+
 Plot(
         name="general/Events",
         values=["events"],
