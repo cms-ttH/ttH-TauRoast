@@ -4,9 +4,9 @@ BasicProcess(
     name="ttjets",
     sample=2500,
     fullname="t#bar{t}",
-    paths=["ttjets"],
+    paths=["ttjets_amc"],
     cross_section=831.76,
-    events=11339232
+    events=42730273
 )
 
 BasicProcess(
