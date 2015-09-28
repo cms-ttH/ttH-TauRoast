@@ -9,6 +9,8 @@ lumi: 10000
 plot:
   # - fake_data
   - ttjets
+  - ttjets_semilept
+  - ttjets_fulllept
   - ttH_125
   - ttH2bb_125
   - ttH2Nonbb_125

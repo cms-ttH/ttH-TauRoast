@@ -1,5 +1,7 @@
 from ttH.TauRoast.processing import BasicProcess, CombinedProcess
 
+wleptonic = (10.71 + 10.63 + 11.38) * 0.01
+
 BasicProcess(
     name="ttjets",
     sample=2500,
@@ -18,20 +20,21 @@ BasicProcess(
 )
 
 BasicProcess(
-    name="ttbar_semilept",
+    name="ttjets_semilept",
     sample=2563,
     fullname="t #bar{t} SL",
-    paths=["ttbar_semilept"],
-    events=25424818
+    paths=["ttjets_slt_mad", "ttjets_slt_mad_ext", "ttjets_sltbar_mad", "ttjets_sltbar_mad_ext"],
+    cross_section=831.76 * wleptonic * (1 - wleptonic) * 2,
+    events=118357445
 )
 
 BasicProcess(
-    name="ttbar_fulllept",
+    name="ttjets_fulllept",
     sample=2533,
     fullname="t #bar{t} FL",
-    paths=["ttbar_fulllept"],
-    cross_section=25.81,
-    events=12119013
+    paths=["ttjets_dl_mad", "ttjets_dl_mad_ext"],
+    cross_section=831.76 * wleptonic**2,
+    events=30426583
 )
 
 BasicProcess(
