@@ -26,7 +26,8 @@ namespace superslim {
    PhysObject::PhysObject(const reco::Candidate* c) :
       charge_(c->charge()),
       p_(c->p4()),
-      pdg_id_(c->pdgId())
+      pdg_id_(c->pdgId()),
+      gen_pdg_id_(0)
    {
    }
 
@@ -63,7 +64,7 @@ namespace superslim {
    }
 
    void
-   PhysObject::setGenInfo(const reco::Candidate* p, int level)
+   PhysObject::setGenInfo(const reco::GenParticle* p, int level)
    {
       if (!p)
          return;
@@ -74,17 +75,19 @@ namespace superslim {
          return;
 
       for (unsigned int i = 0; i < p->numberOfMothers(); ++i) {
-         auto mother = p->mother(i);
+         auto mother = dynamic_cast<const reco::GenParticle*>(p->mother(i));
 
          while (mother and mother->pdgId() == p->pdgId()) {
-            if (mother->numberOfMothers() > 0)
-               mother = mother->mother(i);
-            else
+            if (mother->numberOfMothers() > 0) {
+               mother = dynamic_cast<const reco::GenParticle*>(mother->mother(0));
+            } else {
+               mother = 0;
                break;
+            }
          }
 
          if (!mother)
-            return;
+            continue;
 
          PhysObject o(mother);
          o.setGenInfo(mother, level - 1);

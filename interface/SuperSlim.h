@@ -84,7 +84,7 @@ namespace superslim {
             genPdgId() const { return gen_pdg_id_; };
 #ifndef __CINT__
          void
-            setGenInfo(const reco::Candidate* p, int level=2);
+            setGenInfo(const reco::GenParticle* p, int level=2);
 #endif
 
       protected:
