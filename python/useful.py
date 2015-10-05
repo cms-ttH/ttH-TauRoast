@@ -21,6 +21,8 @@ def mva():
     global __mva
     if __mva is None:
         from variation import principal
+        if principal is None:
+            return -666.
         __mva = principal
     return __mva.evaluate()
 
