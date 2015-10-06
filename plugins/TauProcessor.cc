@@ -296,6 +296,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    std::vector<superslim::Vertex> pv;
    reco::Vertex rpv;
    int npv = 0;
+   bool first = true;
    for (const auto& v: *vertices) {
       if (!v.isFake() && v.ndof() >= 4 && abs(v.z()) <= 24. && abs(v.position().Rho()) <= 2.) {
          if (npv++ == 0) {
@@ -303,7 +304,12 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
             rpv = v;
          }
          pv.push_back(v);
+      } else if (first) {
+         // first pv needs to pass cuts, otherwise RECO step is messed up
+         // https://hypernews.cern.ch/HyperNews/CMS/get/csa14/85/1.html
+         return;
       }
+      first = false;
    }
 
    if (npv == 0)
