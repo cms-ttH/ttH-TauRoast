@@ -89,19 +89,6 @@ get_collection(const edm::Event& event, const edm::EDGetTokenT<T>& token)
    return handle;
 }
 
-template<typename T>
-std::vector<T>
-get_selection(const std::vector<T>& coll, const std::string& id, double pt)
-{
-   std::vector<T> res;
-   for (const auto& i: coll) {
-      if (i.userFloat(id) < .5 or i.pt() < pt)
-         continue;
-      res.push_back(i);
-   }
-   return res;
-}
-
 pat::JetCollection
 get_non_pileup(const pat::JetCollection& jets)
 {
@@ -333,8 +320,8 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    auto ak4jets = get_collection(event, ak4jets_token_);
    auto genstuff = get_collection(event, gen_token_);
 
-   auto raw_mu = get_selection(*muons, "idPreselection", 5.);
-   auto all_preselected_e = get_selection(*electrons, "idPreselection", 7.);
+   auto raw_mu = helper_.GetSelectedMuons(*muons, 5., muonID::muonPreselection);
+   auto all_preselected_e = helper_.GetSelectedElectrons(*electrons, 7., electronID::electronPreselection);
    auto raw_e = removeOverlap(all_preselected_e, raw_mu, 0.05);
    auto raw_tau = helper_.GetSelectedTaus(*taus, 20., tau::loose);
    auto raw_tight_tau = helper_.GetSelectedTaus(raw_tau, 20., tau::tight);
@@ -371,10 +358,10 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       // TODO there might be tight electrons that overlap with loose muons,
       // but not tight muons?  Should these be considered when only dealing
       // with tight leptons?
-      auto loose_e = get_selection(preselected_e, "idLooseCut", min_loose_lep_pt_);
-      auto loose_mu = get_selection(preselected_mu, "idLooseCut", min_loose_lep_pt_);
-      auto tight_e = get_selection(preselected_e, "idTightCut", min_tight_lep_pt_);
-      auto tight_mu = get_selection(preselected_mu, "idTightCut", min_tight_lep_pt_);
+      auto loose_e = helper_.GetSelectedElectrons(preselected_e, min_loose_lep_pt_, electronID::electronLooseCutBased);
+      auto loose_mu = helper_.GetSelectedMuons(preselected_mu, min_loose_lep_pt_, muonID::muonLooseCutBased);
+      auto tight_e = helper_.GetSelectedElectrons(loose_e, min_loose_lep_pt_, electronID::electronTightCutBased);
+      auto tight_mu = helper_.GetSelectedMuons(loose_mu, min_loose_lep_pt_, muonID::muonTightCutBased);
 
       if (preselected_e.size() + preselected_mu.size() < min_leptons_)
          continue;
