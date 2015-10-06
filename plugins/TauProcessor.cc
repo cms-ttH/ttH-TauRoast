@@ -2,7 +2,7 @@
 //
 // Package:    ttH/TauProcessor
 // Class:      TauProcessor
-// 
+//
 /**\class TauProcessor TauProcessor.cc ttH/TauRoast/plugins/TauProcessor.cc
 
  Description: [one line class summary]
@@ -507,13 +507,13 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    }
 }
 
-void 
+void
 TauProcessor::beginJob()
 {
 }
 
-void 
-TauProcessor::endJob() 
+void
+TauProcessor::endJob()
 {
 }
 
