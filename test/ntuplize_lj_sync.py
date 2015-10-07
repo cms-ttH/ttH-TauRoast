@@ -1,3 +1,4 @@
+import os
 import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 
@@ -15,9 +16,13 @@ process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 process.GlobalTag.globaltag = 'MCRUN2_74_V9::All'
 process.prefer("GlobalTag")
 
+infile = 'root://xrootd-cms.infn.it:1094//store/user/shwillia/Spring15_HbbSync/ttbar_Spring15_HbbSync.root'
+if os.path.isfile(os.path.basename(infile)):
+    infile = 'file:' + os.path.basename(infile)
+
 process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring([
-            'root://xrootd-cms.infn.it//store/user/shwillia/Spring15_HbbSync/ttbar_Spring15_HbbSync.root'
+            infile
         ])
 )
 
