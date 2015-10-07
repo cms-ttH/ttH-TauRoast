@@ -24,6 +24,7 @@
 #pragma link C++ class superslim::Vertex+;
 #pragma link C++ class std::vector<superslim::Vertex>+;
 #pragma link C++ class std::vector<superslim::Combination>+;
+#pragma link C++ class superslim::Trigger+;
 #pragma link C++ class superslim::Event+;
 
 #endif

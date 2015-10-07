@@ -196,10 +196,34 @@ namespace superslim {
       return rhs.p4().Pt() < lhs.p4().Pt();
    }
 
+   Trigger::Trigger(const edm::TriggerResults& trig, const HLTConfigProvider& hlt) :
+      res_(trig),
+      hlt_(hlt),
+      single_e_(false),
+      single_mu_(false),
+      double_e_(false),
+      double_mu_(false),
+      mixed_(false)
+   {
+      single_e_ = fired({"HLT_Ele27_eta2p1_WP85_Gsf_HT200_v1"});
+      single_mu_ = fired({"HLT_IsoMu24_eta2p1_v1"});
+   }
+
+   bool
+   Trigger::fired(const std::vector<std::string>& paths)
+   {
+      for (const auto& path: paths) {
+         auto idx = hlt_.triggerIndex(path);
+         if (res_.accept(idx))
+            return true;
+      }
+      return false;
+   }
 
    Event::Event(const std::vector<superslim::Combination>& cs,
          long run, long lumi, long event,
          int npv, int ntv,
+         const superslim::Trigger& trigger,
          const LorentzVector& met,
          const std::vector<superslim::Vertex>& pv,
          const reco::GenParticleCollection& genparticles) :
@@ -207,7 +231,8 @@ namespace superslim {
       run_(run), lumi_(lumi), event_(event),
       npv_(npv), ntv_(ntv),
       hdecay_(-1),
-      met_(met), pv_(pv)
+      met_(met), pv_(pv),
+      trigger_(trigger)
    {
       for (const auto& p: genparticles) {
          if (abs(p.pdgId()) == 25) {
@@ -243,4 +268,5 @@ ClassImp(superslim::Jet);
 ClassImp(superslim::Lepton);
 ClassImp(superslim::Tau);
 ClassImp(superslim::Combination);
+ClassImp(superslim::Trigger);
 ClassImp(superslim::Event);

@@ -33,6 +33,8 @@
 
 #include "FWCore/ServiceRegistry/interface/Service.h"
 
+#include "HLTrigger/HLTcore/interface/HLTConfigProvider.h"
+
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 
@@ -125,6 +127,7 @@ class TauProcessor : public edm::EDAnalyzer {
 
    private:
       virtual void beginJob() override;
+      virtual void beginRun(const edm::Run&, const edm::EventSetup&) override;
       virtual void analyze(const edm::Event&, const edm::EventSetup&) override;
       virtual void endJob() override;
 
@@ -157,6 +160,8 @@ class TauProcessor : public edm::EDAnalyzer {
       double min_jet_pt_;
       double min_tag_pt_;
 
+      std::string sys_;
+
       edm::EDGetTokenT<double> rho_token_;
       edm::EDGetTokenT<GenEventInfoProduct> geninfo_token_;
       edm::EDGetTokenT<reco::BeamSpot> bs_token_;
@@ -168,6 +173,9 @@ class TauProcessor : public edm::EDAnalyzer {
       edm::EDGetTokenT<pat::JetCollection> ak4jets_token_;
       edm::EDGetTokenT<reco::GenParticleCollection> gen_token_;
       edm::EDGetTokenT<pat::METCollection> met_token_;
+      edm::EDGetTokenT<edm::TriggerResults> trig_token_;
+
+      HLTConfigProvider hlt_;
 
       TTree *tree_;
       TH1F *cuts_;
@@ -194,6 +202,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    min_tight_lep_pt_(config.getParameter<double>("minTightLeptonPt")),
    min_jet_pt_(config.getParameter<double>("minJetPt")),
    min_tag_pt_(config.getParameter<double>("minTagPt")),
+   /* sys_(config.getParameter<std::string>("sys")), */
    event_(0)
 {
    rho_token_ = consumes<double>(edm::InputTag("fixedGridRhoFastjetAll"));
@@ -207,6 +216,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    ak4jets_token_ = consumes<pat::JetCollection>(edm::InputTag("slimmedJets"));
    gen_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("prunedGenParticles"));
    met_token_ = consumes<pat::METCollection>(edm::InputTag("slimmedMETs"));
+   trig_token_ = consumes<edm::TriggerResults>(edm::InputTag("TriggerResults"));
 
    helper_.SetUp("2012_53x", 9120, analysisType::TauLJ, false);
    helper_.SetFactorizedJetCorrector();
@@ -496,11 +506,13 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       }
 
       auto mets = get_collection(event, met_token_);
+      auto trigger_results = get_collection(event, trig_token_);
 
       std::auto_ptr<superslim::Event> ptr(new superslim::Event(
                combos,
                event.id().run(), event.id().luminosityBlock(), event.id().event(),
                npv, ntv,
+               superslim::Trigger(*trigger_results, hlt_),
                mets->at(0).p4(), pv,
                *genstuff));
 
@@ -515,6 +527,14 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 void
 TauProcessor::beginJob()
 {
+}
+
+void
+TauProcessor::beginRun(const edm::Run& run, const edm::EventSetup& setup)
+{
+   bool update = true;
+   std::string tag = "HLT";
+   hlt_.init(run, setup, tag, update);
 }
 
 void

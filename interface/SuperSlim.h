@@ -5,6 +5,9 @@
 #include "TObject.h"
 
 #ifndef __CINT__
+#include "DataFormats/Common/interface/TriggerResults.h"
+#include "HLTrigger/HLTcore/interface/HLTConfigProvider.h"
+
 namespace pat {
    class Electron;
    class Jet;
@@ -204,6 +207,34 @@ namespace superslim {
          ClassDef(Combination, 1);
    };
 
+   class Trigger {
+      public:
+         Trigger() {};
+#ifndef __CINT__
+         Trigger(const edm::TriggerResults&, const HLTConfigProvider&);
+#endif
+         virtual ~Trigger() {};
+
+         const bool single_e() const { return single_e_; };
+         const bool single_mu() const { return single_mu_; };
+         const bool double_e() const { return double_e_; };
+         const bool double_mu() const { return double_mu_; };
+         const bool mixed() const { return mixed_; };
+      private:
+#ifndef __CINT__
+         bool fired(const std::vector<std::string>&);
+         edm::TriggerResults res_;
+         HLTConfigProvider hlt_;
+#endif
+         bool single_e_;
+         bool single_mu_;
+         bool double_e_;
+         bool double_mu_;
+         bool mixed_;
+
+         ClassDef(Trigger, 1);
+   };
+
    class Event {
       public:
          Event() {};
@@ -211,6 +242,7 @@ namespace superslim {
          Event(const std::vector<superslim::Combination>& cs,
                long run, long lumi, long event,
                int npv, int ntv,
+               const superslim::Trigger& trigger,
                const LorentzVector& met,
                const std::vector<superslim::Vertex>& pv,
                const reco::GenParticleCollection& genparticles);
@@ -233,6 +265,7 @@ namespace superslim {
 
          const LorentzVector& met() const { return met_; };
          const std::vector<superslim::Vertex>& pv() const { return pv_; };
+         const Trigger& trigger() const { return trigger_; };
 
          void setWeight(const std::string& s, float f) { weights_[s] = f; };
       private:
@@ -250,8 +283,9 @@ namespace superslim {
 
          LorentzVector met_;
          std::vector<superslim::Vertex> pv_;
+         superslim::Trigger trigger_;
 
-         ClassDef(Event, 3);
+         ClassDef(Event, 4);
    };
 
    bool operator<(const PhysObject& lhs, const PhysObject& rhs);
