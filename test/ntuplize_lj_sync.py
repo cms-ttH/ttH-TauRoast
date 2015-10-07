@@ -75,4 +75,4 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         printPreselection = cms.bool(False)
 )
 
-process.p = cms.Path(process.ttHLeptons * process.taus)
+process.p = cms.Path(process.taus)
