@@ -1,0 +1,15 @@
+# vim: set sw=4 sta et :
+
+channel: lj
+ntupledir: test/leptonplusjets
+outdir: test/sync_lj
+
+lumi: 10000
+
+plot:
+  - ttH2bb_125
+
+cuts: []
+
+weights:
+  - Generator
