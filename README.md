@@ -66,3 +66,13 @@ Always use `-h` to find a comprehensive overview.
 | `-a`   | analyze datasets (produces `TMVA` compatible output)   |
 | `-f`   | fill histograms (produces `combine` compatible output) |
 | `-p`   | save plots                                             |
+
+# Other ttH Groups
+
+Link to work from other ttH groups
+
+## Lepton+Jets
+
+* [Analysis Twiki](https://twiki.cern.ch/twiki/bin/viewauth/CMS/TTbarHiggsRun2LeptonPlusJets)
+
+## Multilepton
