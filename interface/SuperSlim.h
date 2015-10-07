@@ -5,8 +5,11 @@
 #include "TObject.h"
 
 #ifndef __CINT__
-#include "DataFormats/Common/interface/TriggerResults.h"
-#include "HLTrigger/HLTcore/interface/HLTConfigProvider.h"
+class HLTConfigProvider;
+
+namespace edm {
+   class TriggerResults;
+}
 
 namespace pat {
    class Electron;
@@ -222,9 +225,7 @@ namespace superslim {
          const bool mixed() const { return mixed_; };
       private:
 #ifndef __CINT__
-         bool fired(const std::vector<std::string>&);
-         edm::TriggerResults res_;
-         HLTConfigProvider hlt_;
+         bool fired(const edm::TriggerResults&, const HLTConfigProvider&, const std::vector<std::string>&);
 #endif
          bool single_e_;
          bool single_mu_;

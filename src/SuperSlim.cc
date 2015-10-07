@@ -1,3 +1,4 @@
+#include "DataFormats/Common/interface/TriggerResults.h"
 #include "DataFormats/BeamSpot/interface/BeamSpot.h"
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
@@ -6,6 +7,8 @@
 #include "DataFormats/PatCandidates/interface/Jet.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
 #include "DataFormats/VertexReco/interface/Vertex.h"
+
+#include "HLTrigger/HLTcore/interface/HLTConfigProvider.h"
 
 #include "ttH/TauRoast/interface/SuperSlim.h"
 
@@ -197,24 +200,22 @@ namespace superslim {
    }
 
    Trigger::Trigger(const edm::TriggerResults& trig, const HLTConfigProvider& hlt) :
-      res_(trig),
-      hlt_(hlt),
       single_e_(false),
       single_mu_(false),
       double_e_(false),
       double_mu_(false),
       mixed_(false)
    {
-      single_e_ = fired({"HLT_Ele27_eta2p1_WP85_Gsf_HT200_v1"});
-      single_mu_ = fired({"HLT_IsoMu24_eta2p1_v1"});
+      single_e_ = fired(trig, hlt, {"HLT_Ele27_eta2p1_WP85_Gsf_HT200_v1"});
+      single_mu_ = fired(trig, hlt, {"HLT_IsoMu24_eta2p1_v1"});
    }
 
    bool
-   Trigger::fired(const std::vector<std::string>& paths)
+   Trigger::fired(const edm::TriggerResults& res, const HLTConfigProvider& hlt, const std::vector<std::string>& paths)
    {
       for (const auto& path: paths) {
-         auto idx = hlt_.triggerIndex(path);
-         if (res_.accept(idx))
+         auto idx = hlt.triggerIndex(path);
+         if (idx < res.size() and res.accept(idx))
             return true;
       }
       return false;
