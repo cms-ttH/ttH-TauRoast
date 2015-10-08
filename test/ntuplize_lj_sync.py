@@ -77,7 +77,8 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         minTightLeptonPt = cms.double(30.),
         minJetPt = cms.double(25.),
         minTagPt = cms.double(25.),
-        printPreselection = cms.bool(False)
+        printPreselection = cms.bool(False),
+        triggerSelection = cms.string("HLT_Ele27_eta2p1_WP85_Gsf_HT200_v1")
 )
 
 process.p = cms.Path(process.taus)

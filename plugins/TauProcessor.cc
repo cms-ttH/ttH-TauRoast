@@ -35,6 +35,10 @@
 
 #include "FWCore/ServiceRegistry/interface/Service.h"
 
+#include "HLTrigger/HLTcore/interface/TriggerExpressionData.h"
+#include "HLTrigger/HLTcore/interface/TriggerExpressionEvaluator.h"
+#include "HLTrigger/HLTcore/interface/TriggerExpressionParser.h"
+
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 
@@ -180,6 +184,10 @@ class TauProcessor : public edm::EDAnalyzer {
       std::vector<std::string> cutnames_;
 
       superslim::Event *event_;
+
+      // see https://twiki.cern.ch/twiki/bin/view/CMS/TriggerResultsFilter#Use_as_a_Selector_AN1
+      triggerExpression::Data m_triggerCache;
+      std::unique_ptr<triggerExpression::Evaluator> m_triggerSelector;
 };
 
 TauProcessor::TauProcessor(const edm::ParameterSet& config) :
@@ -200,7 +208,14 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    min_jet_pt_(config.getParameter<double>("minJetPt")),
    min_tag_pt_(config.getParameter<double>("minTagPt")),
    /* sys_(config.getParameter<std::string>("sys")), */
-   event_(0)
+   event_(0),
+   m_triggerCache(
+         edm::InputTag("TriggerResults", "", "HLT"),
+         edm::InputTag("gtDigis"),
+         1, false, false, true,
+         edm::ConsumesCollector(consumesCollector())
+   ),
+   m_triggerSelector(triggerExpression::parse(config.getParameter<std::string>("triggerSelection")))
 {
    rho_token_ = consumes<double>(edm::InputTag("fixedGridRhoFastjetAll"));
    geninfo_token_ = consumes<GenEventInfoProduct>(edm::InputTag("generator"));
@@ -302,6 +317,20 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
    // dataset sum of the event weights
    passCut(event_cut++, "Dataset event weights", geninfo->weight());
+
+   // filter on HLT paths
+   if (m_triggerSelector and m_triggerCache.setEvent(event, setup)) {
+      if (m_triggerCache.configurationUpdated())
+         m_triggerSelector ->init(m_triggerCache);
+
+      if ((*m_triggerSelector)(m_triggerCache)) {
+         passCut(event_cut++, "HLT selection");
+      } else {
+         return;
+      }
+   } else {
+      return;
+   }
 
    auto vertices = get_collection(event, vertices_token_);
 
