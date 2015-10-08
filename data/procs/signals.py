@@ -29,7 +29,7 @@ BasicProcess(
     sample=9125,
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
     limitname="ttHbb125",
-    paths=['ttH2bb_125', 'ttH2bb_125', 'ttH2bb_125_ext1', 'ttH2bb_125_ext2', 'ttH2bb_125_ext3'],
+    paths=['ttH2bb_125', 'ttH2bb_125_ext1', 'ttH2bb_125_ext2', 'ttH2bb_125_ext3'],
     cross_section=0.5085 * 0.577,
     events=20605280
 )
