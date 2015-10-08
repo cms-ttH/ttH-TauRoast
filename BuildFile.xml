@@ -1,7 +1,6 @@
 <use name="DataFormats/Common"/>
 <use name="DataFormats/Math"/>
 <use name="DataFormats/PatCandidates"/>
-<use name="HLTrigger/HLTcore"/>
 <use name="TauAnalysis/SVfitStandalone"/>
 <use name="root"/>
 <use name="roottmva"/>

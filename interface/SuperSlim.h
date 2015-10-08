@@ -5,9 +5,8 @@
 #include "TObject.h"
 
 #ifndef __CINT__
-class HLTConfigProvider;
-
 namespace edm {
+   class TriggerNames;
    class TriggerResults;
 }
 
@@ -214,7 +213,7 @@ namespace superslim {
       public:
          Trigger() {};
 #ifndef __CINT__
-         Trigger(const edm::TriggerResults&, const HLTConfigProvider&);
+         Trigger(const edm::TriggerResults&, const edm::TriggerNames&);
 #endif
          virtual ~Trigger() {};
 
@@ -225,7 +224,7 @@ namespace superslim {
          const bool mixed() const { return mixed_; };
       private:
 #ifndef __CINT__
-         bool fired(const edm::TriggerResults&, const HLTConfigProvider&, const std::vector<std::string>&);
+         bool fired(const edm::TriggerResults&, const edm::TriggerNames&, const std::vector<std::string>&);
 #endif
          bool single_e_;
          bool single_mu_;
