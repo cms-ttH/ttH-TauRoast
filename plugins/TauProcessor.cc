@@ -414,8 +414,8 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       // with tight leptons?
       auto loose_e = helper_.GetSelectedElectrons(preselected_e, min_loose_lep_pt_, e_id_loose);
       auto loose_mu = helper_.GetSelectedMuons(preselected_mu, min_loose_lep_pt_, mu_id_loose);
-      auto tight_e = helper_.GetSelectedElectrons(loose_e, min_loose_lep_pt_, e_id_tight);
-      auto tight_mu = helper_.GetSelectedMuons(loose_mu, min_loose_lep_pt_, mu_id_tight);
+      auto tight_e = helper_.GetSelectedElectrons(loose_e, min_tight_lep_pt_, e_id_tight);
+      auto tight_mu = helper_.GetSelectedMuons(loose_mu, min_tight_lep_pt_, mu_id_tight);
 
       if (preselected_e.size() + preselected_mu.size() < min_leptons_)
          continue;
