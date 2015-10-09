@@ -120,7 +120,7 @@ if args.analyze:
         if args.debug_cuts:
             callbacks = []
             for i in range(len(local_cuts)):
-                callbacks.append(SyncSaver(os.path.join(config["outdir"], "cut_{0}.txt".format(i))))
+                callbacks.append(SyncSaver(config["channel"], os.path.join(config["outdir"], "cut_{0}.txt".format(i))))
 
         proc.analyze(fn, counts, local_cuts, weights, config['ntupledir'], callbacks=callbacks)
 
