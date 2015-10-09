@@ -469,8 +469,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
       // Jet selection
       auto jets_no_taus = removeOverlap(jets_wo_lep, loose_tau, .25);
-      auto selected_jets = jets_no_taus;
-      /* auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, max_jet_eta_, jetID::none, '-'); */
+      auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, max_jet_eta_, jetID::none, '-');
       auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'M');
       if (filter_pu_jets_) {
          selected_jets = get_non_pileup(selected_jets);
