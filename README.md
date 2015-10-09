@@ -73,6 +73,20 @@ Link to work from other ttH groups
 
 ## Lepton+Jets
 
+### Sync
+
+Run the following to test the sync status with the LJ analysis (for the TTL
+channel):
+
+    cmsRun test/ntuplize_lj_sync.py
+    roaster -a --debug-cuts data/lj_sync_e.yaml
+    roaster -a --debug-cuts data/lj_sync_mu.yaml
+
+Detailed event lists are present in the configured output directories for
+the last two steps.
+
+### Twiki
+
 * [Analysis Twiki](https://twiki.cern.ch/twiki/bin/viewauth/CMS/TTbarHiggsRun2LeptonPlusJets)
 
 ## Multilepton
