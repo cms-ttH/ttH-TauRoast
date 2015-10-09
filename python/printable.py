@@ -1,5 +1,7 @@
 import os
 
+from useful import btag
+
 class SyncSaver(object):
     def __init__(self, channel, filename):
         if not os.path.isdir(os.path.dirname(filename)):
@@ -9,8 +11,9 @@ class SyncSaver(object):
             self.__fmt = "%6d %8d %10d   " + \
                     "%6.2f %+4.2f %+4.2f   " + \
                     "%6.2f %6.2f %6.2f %6.2f   " + \
-                    "%3d\n"
-            # "%+7.3f %+7.3f %+7.3f %+7.3f   %+7.3f   %2d  %2d   %2d   %2d  %2d\n"
+                    "%+7.3f %+7.3f %+7.3f %+7.3f   " + \
+                    "%+7.3f   %2d  %2d   " + \
+                    "\n" # "%2d   %2d  %2d\n"
             self._fct = self._print_lepjets
         elif channel == 'll':
             self.__fmt = "%6d %6d %10d  " + \
@@ -35,10 +38,17 @@ class SyncSaver(object):
         jet2 = jets[1].p4().pt() if len(jets) > 1 else -99
         jet3 = jets[2].p4().pt() if len(jets) > 2 else -99
         jet4 = jets[3].p4().pt() if len(jets) > 3 else -99
+        csv1 = jets[0].csv() if len(jets) > 0 else -99
+        csv2 = jets[1].csv() if len(jets) > 1 else -99
+        csv3 = jets[2].csv() if len(jets) > 2 else -99
+        csv4 = jets[3].csv() if len(jets) > 3 else -99
         self.__f.write(self.__fmt % (
             event.run(), event.lumi(), event.event(),
             first.p4().pt(), first.p4().eta(), first.p4().phi(),
-            jet1, jet2, jet3, jet4, len(jets)))
+            jet1, jet2, jet3, jet4,
+            csv1, csv2, csv3, csv4,
+            combo.met().pt(),
+            len(jets), len(filter(btag, jets))))
 
           # printf("%6d %8d %10d   %6.2f %+4.2f %+4.2f   %6.2f %6.2f %6.2f %6.2f   %+7.3f %+7.3f %+7.3f %+7.3f   %+7.3f   %2d  %2d   %2d   %2d  %2d\n",
           #   run, lumi, event,
