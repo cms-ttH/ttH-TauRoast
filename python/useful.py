@@ -14,7 +14,7 @@ def dR(one, two):
     return math.sqrt(diff.Eta()**2 + diff.Phi()**2)
 
 def btag(jet):
-    return jet.csv() > 0.814
+    return jet.csv() > 0.89
 
 __mva = None
 def mva():
