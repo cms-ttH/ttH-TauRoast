@@ -53,8 +53,11 @@ class Snippet(object):
                 'taus': combo.taus(),
                 'leptons': combo.leptons(),
                 'jets': combo.jets(),
-                'tags': filter(btag, combo.jets()) if tagging else [],
-                'notags': [j for j in combo.jets() if not btag(j)] if tagging else [],
                 'pv': event.pv(),
                 'met': combo.met()
         })
+        if tagging:
+            globals.update({
+                'tags': filter(btag, combo.jets()),
+                'notags': [j for j in combo.jets() if not btag(j)]
+            })
