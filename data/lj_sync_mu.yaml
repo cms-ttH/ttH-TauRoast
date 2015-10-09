@@ -2,7 +2,7 @@
 
 channel: lj
 ntupledir: test/leptonplusjets
-outdir: test/sync_e
+outdir: test/sync_mu
 
 lumi: 10000
 
@@ -10,8 +10,8 @@ plot:
   - ttH2bb_125
 
 cuts:
-  - "Trigger": "event.trigger().single_e()"
-  - "Single e": "leptons[0].electron() and len(leptons) == 1"
+  - "Trigger": "event.trigger().single_mu()"
+  - "Single μ": "leptons[0].muon() and len(leptons) == 1"
   - "≥ 4 jets": "len(jets) >= 4"
   - "≥ 2 tags": "len(filter(btag, jets)) >= 2"
 
