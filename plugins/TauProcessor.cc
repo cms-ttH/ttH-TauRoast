@@ -531,7 +531,13 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
          }
       }
 
-      combos.push_back(superslim::Combination(staus, sleptons, sjets));
+      auto mets = get_collection(event, met_token_);
+      auto old_jets = helper_.GetSelectedJets(*ak4jets, 0., 666., jetID::jetMETcorrection, '-');
+      auto old_jets_uncorrected = helper_.GetUncorrectedJets(old_jets);
+      auto new_jets = helper_.GetCorrectedJets(old_jets_uncorrected, event, setup, sysType::NA);
+      auto corrected_mets = helper_.CorrectMET(old_jets, new_jets, *mets);
+
+      combos.push_back(superslim::Combination(staus, sleptons, sjets, corrected_mets[0].p4()));
    }
 
    if (combos.size() > 0) {
@@ -545,21 +551,14 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
          }
       }
 
-      auto mets = get_collection(event, met_token_);
-      auto old_jets = helper_.GetSelectedJets(*ak4jets, 0., 666., jetID::jetMETcorrection, '-');
-      auto old_jets_uncorrected = helper_.GetUncorrectedJets(old_jets);
-      auto new_jets = helper_.GetCorrectedJets(old_jets_uncorrected, event, setup, sysType::NA);
-      auto corrected_mets = helper_.CorrectMET(old_jets, new_jets, *mets);
-
       auto trigger_results = get_collection(event, trig_token_);
       auto trigger_names = event.triggerNames(*trigger_results);
 
       std::auto_ptr<superslim::Event> ptr(new superslim::Event(
                combos,
                event.id().run(), event.id().luminosityBlock(), event.id().event(),
-               npv, ntv,
+               npv, ntv, pv,
                superslim::Trigger(*trigger_results, trigger_names),
-               corrected_mets[0].p4(), pv,
                *genstuff));
 
       auto geninfo = get_collection(event, geninfo_token_);

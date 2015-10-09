@@ -190,12 +190,14 @@ namespace superslim {
          Combination(
                const std::vector<superslim::Tau>&,
                const std::vector<superslim::Lepton>&,
-               const std::vector<superslim::Jet>&);
+               const std::vector<superslim::Jet>&,
+               const LorentzVector& met);
          virtual ~Combination() {};
 
          const std::vector<superslim::Jet>& jets() const { return jets_; };
          const std::vector<superslim::Lepton>& leptons() const { return leptons_; };
          const std::vector<superslim::Tau>& taus() const { return taus_; };
+         const LorentzVector& met() const { return met_; };
          const std::map<std::string, float>& weights() const { return weights_; };
 
          void setWeight(const std::string& s, float f) { weights_[s] = f; };
@@ -203,10 +205,11 @@ namespace superslim {
          std::vector<superslim::Jet> jets_;
          std::vector<superslim::Lepton> leptons_;
          std::vector<superslim::Tau> taus_;
+         LorentzVector met_;
 
          std::map<std::string, float> weights_;
 
-         ClassDef(Combination, 1);
+         ClassDef(Combination, 2);
    };
 
    class Trigger {
@@ -242,9 +245,8 @@ namespace superslim {
          Event(const std::vector<superslim::Combination>& cs,
                long run, long lumi, long event,
                int npv, int ntv,
-               const superslim::Trigger& trigger,
-               const LorentzVector& met,
                const std::vector<superslim::Vertex>& pv,
+               const superslim::Trigger& trigger,
                const reco::GenParticleCollection& genparticles);
 #endif
          virtual ~Event() {};
@@ -263,7 +265,6 @@ namespace superslim {
 
          int higgsDecay() const { return hdecay_; };
 
-         const LorentzVector& met() const { return met_; };
          const std::vector<superslim::Vertex>& pv() const { return pv_; };
          const Trigger& trigger() const { return trigger_; };
 
@@ -281,11 +282,10 @@ namespace superslim {
 
          int hdecay_;
 
-         LorentzVector met_;
          std::vector<superslim::Vertex> pv_;
          superslim::Trigger trigger_;
 
-         ClassDef(Event, 4);
+         ClassDef(Event, 5);
    };
 
    bool operator<(const PhysObject& lhs, const PhysObject& rhs);

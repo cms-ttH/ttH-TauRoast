@@ -103,7 +103,7 @@ Plot(
         binning=[40, 0, 2]
 )
 
-Leaf('met', 'f', 'result = event.met().Pt()')
+Leaf('met', 'f', 'result = met.Pt()')
 Leaf('ht', 'f', """
 ht = 0
 for j in jets:

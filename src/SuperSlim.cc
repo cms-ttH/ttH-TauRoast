@@ -185,10 +185,12 @@ namespace superslim {
    Combination::Combination(
          const std::vector<Tau>& taus,
          const std::vector<Lepton>& leptons,
-         const std::vector<Jet>& jets) :
+         const std::vector<Jet>& jets,
+         const LorentzVector& met) :
       jets_(jets),
       leptons_(leptons),
-      taus_(taus)
+      taus_(taus),
+      met_(met)
    {
    }
 
@@ -223,15 +225,14 @@ namespace superslim {
    Event::Event(const std::vector<superslim::Combination>& cs,
          long run, long lumi, long event,
          int npv, int ntv,
-         const superslim::Trigger& trigger,
-         const LorentzVector& met,
          const std::vector<superslim::Vertex>& pv,
+         const superslim::Trigger& trigger,
          const reco::GenParticleCollection& genparticles) :
       combos_(cs),
       run_(run), lumi_(lumi), event_(event),
       npv_(npv), ntv_(ntv),
       hdecay_(-1),
-      met_(met), pv_(pv),
+      pv_(pv),
       trigger_(trigger)
    {
       for (const auto& p: genparticles) {

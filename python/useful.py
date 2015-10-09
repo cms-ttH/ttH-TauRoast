@@ -56,5 +56,5 @@ class Snippet(object):
                 'tags': filter(btag, combo.jets()) if tagging else [],
                 'notags': [j for j in combo.jets() if not btag(j)] if tagging else [],
                 'pv': event.pv(),
-                'met': event.met()
+                'met': combo.met()
         })
