@@ -546,6 +546,11 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       }
 
       auto mets = get_collection(event, met_token_);
+      auto old_jets = helper_.GetSelectedJets(*ak4jets, 0., 666., jetID::jetMETcorrection, '-');
+      auto old_jets_uncorrected = helper_.GetUncorrectedJets(old_jets);
+      auto new_jets = helper_.GetCorrectedJets(old_jets_uncorrected, event, setup, sysType::NA);
+      auto corrected_mets = helper_.CorrectMET(old_jets, new_jets, *mets);
+
       auto trigger_results = get_collection(event, trig_token_);
       auto trigger_names = event.triggerNames(*trigger_results);
 
@@ -554,7 +559,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
                event.id().run(), event.id().luminosityBlock(), event.id().event(),
                npv, ntv,
                superslim::Trigger(*trigger_results, trigger_names),
-               mets->at(0).p4(), pv,
+               corrected_mets[0].p4(), pv,
                *genstuff));
 
       auto geninfo = get_collection(event, geninfo_token_);
