@@ -14,7 +14,6 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( options.max
 
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 process.GlobalTag.globaltag = 'MCRUN2_74_V9::All'
-process.prefer("GlobalTag")
 
 infile = 'root://cmsxrootd.fnal.gov//store/user/shwillia/Spring15_Sync/ttHbb_spring15_25ns_plusboostedjets.root'
 if os.path.isfile(os.path.basename(infile)):
@@ -36,35 +35,29 @@ dirname = os.path.dirname(process.TFileService.fileName.pythonValue().strip("'")
 if not os.path.isdir(dirname):
     os.makedirs(dirname)
 
-from RecoJets.Configuration.RecoJets_cff import *
-from RecoJets.Configuration.RecoPFJets_cff import *
-from JetMETCorrections.Configuration.JetCorrectionProducersAllAlgos_cff import *
-from JetMETCorrections.Configuration.JetCorrectionServicesAllAlgos_cff import *
 from JetMETCorrections.Configuration.JetCorrectionServices_cff import *
 
 process.ak4PFCHSL1Fastjet = cms.ESProducer(
         'L1FastjetCorrectionESProducer',
         level       = cms.string('L1FastJet'),
         algorithm   = cms.string('AK4PFchs'),
-        srcRho      = cms.InputTag( 'fixedGridRhoFastjetAll' ),
-        useCondDB = cms.untracked.bool(True)
-        )
-process.ak4PFchsL2Relative   =  ak5PFL2Relative.clone( algorithm = 'AK4PFchs' )
-process.ak4PFchsL3Absolute   =  ak5PFL3Absolute.clone( algorithm = 'AK4PFchs' )
+        srcRho      = cms.InputTag('fixedGridRhoFastjetAll')
+)
+process.ak4PFchsL2Relative = ak4CaloL2Relative.clone(algorithm = 'AK4PFchs')
+process.ak4PFchsL3Absolute = ak4CaloL3Absolute.clone(algorithm = 'AK4PFchs')
 process.ak4PFchsL1L2L3 = cms.ESProducer("JetCorrectionESChain",
         correctors = cms.vstring(
             'ak4PFCHSL1Fastjet',
             'ak4PFchsL2Relative',
-            'ak4PFchsL3Absolute'),
-        useCondDB = cms.untracked.bool(True)
+            'ak4PFchsL3Absolute')
 )
 
 process.taus = cms.EDAnalyzer("TauProcessor",
         electrons = cms.InputTag("slimmedElectrons"),
         muons = cms.InputTag("slimmedMuons"),
-        minJets = cms.uint32(2),
-        minTags = cms.uint32(1),
-        maxTags = cms.int32(2),
+        minJets = cms.uint32(0),
+        minTags = cms.uint32(0),
+        maxTags = cms.int32(-1),
         minPreselectedLeptons = cms.uint32(1),
         minLooseLeptons = cms.uint32(1),
         minTightLeptons = cms.uint32(1),
@@ -75,10 +68,14 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         subtractLeptons = cms.bool(False),
         minLooseLeptonPt = cms.double(10.),
         minTightLeptonPt = cms.double(30.),
-        minJetPt = cms.double(25.),
-        minTagPt = cms.double(25.),
+        maxLooseLeptonEta = cms.double(2.4),
+        maxTightLeptonEta = cms.double(2.1),
+        minJetPt = cms.double(30.),
+        minTagPt = cms.double(30.),
+        maxJetEta = cms.double(2.4),
+        filterPUJets = cms.bool(False),
         printPreselection = cms.bool(False),
-        triggerSelection = cms.string("HLT_Ele27_eta2p1_WP85_Gsf_HT200_v1")
+        triggerSelection = cms.string("HLT_Ele27_eta2p1_WP85_Gsf_HT200_v1 OR HLT_IsoMu24_eta2p1_v1")
 )
 
 process.p = cms.Path(process.taus)

@@ -39,6 +39,8 @@
 #include "HLTrigger/HLTcore/interface/TriggerExpressionEvaluator.h"
 #include "HLTrigger/HLTcore/interface/TriggerExpressionParser.h"
 
+#include "JetMETCorrections/Objects/interface/JetCorrector.h"
+
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 
@@ -160,8 +162,14 @@ class TauProcessor : public edm::EDAnalyzer {
       double min_loose_lep_pt_;
       double min_tight_lep_pt_;
 
+      double max_loose_lep_eta_;
+      double max_tight_lep_eta_;
+
       double min_jet_pt_;
       double min_tag_pt_;
+      double max_jet_eta_;
+
+      bool filter_pu_jets_;
 
       std::string sys_;
 
@@ -205,8 +213,12 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    print_preselection_(config.getParameter<bool>("printPreselection")),
    min_loose_lep_pt_(config.getParameter<double>("minLooseLeptonPt")),
    min_tight_lep_pt_(config.getParameter<double>("minTightLeptonPt")),
+   max_loose_lep_eta_(config.getParameter<double>("maxLooseLeptonEta")),
+   max_tight_lep_eta_(config.getParameter<double>("maxTightLeptonEta")),
    min_jet_pt_(config.getParameter<double>("minJetPt")),
    min_tag_pt_(config.getParameter<double>("minTagPt")),
+   max_jet_eta_(config.getParameter<double>("maxJetEta")),
+   filter_pu_jets_(config.getParameter<bool>("filterPUJets")),
    /* sys_(config.getParameter<std::string>("sys")), */
    event_(0),
    m_triggerCache(
@@ -230,8 +242,9 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    met_token_ = consumes<pat::METCollection>(edm::InputTag("slimmedMETs"));
    trig_token_ = consumes<edm::TriggerResults>(edm::InputTag("TriggerResults", "", "HLT"));
 
-   helper_.SetUp("2012_53x", 9120, analysisType::TauLJ, false);
-   helper_.SetFactorizedJetCorrector();
+   helper_.SetUp("2012_53x", 2500, analysisType::LJ, false);
+   helper_.SetJetCorrectorUncertainty();
+   // helper_.SetFactorizedJetCorrector();
 
    edm::Service<TFileService> fs;
    tree_ = fs->make<TTree>("events", "Event data");
@@ -364,6 +377,9 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    auto rho = get_collection(event, rho_token_);
    helper_.SetRho(*rho);
 
+   auto corr = JetCorrector::getJetCorrector("ak4PFchsL1L2L3", setup);
+   helper_.SetJetCorrector(corr);
+
    // ===============
    // Basic selection
    // ===============
@@ -412,10 +428,10 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       // TODO there might be tight electrons that overlap with loose muons,
       // but not tight muons?  Should these be considered when only dealing
       // with tight leptons?
-      auto loose_e = helper_.GetSelectedElectrons(preselected_e, min_loose_lep_pt_, e_id_loose);
-      auto loose_mu = helper_.GetSelectedMuons(preselected_mu, min_loose_lep_pt_, mu_id_loose);
-      auto tight_e = helper_.GetSelectedElectrons(loose_e, min_tight_lep_pt_, e_id_tight);
-      auto tight_mu = helper_.GetSelectedMuons(loose_mu, min_tight_lep_pt_, mu_id_tight);
+      auto loose_e = helper_.GetSelectedElectrons(preselected_e, min_loose_lep_pt_, e_id_loose, max_loose_lep_eta_);
+      auto loose_mu = helper_.GetSelectedMuons(preselected_mu, min_loose_lep_pt_, mu_id_loose, coneSize::R04, corrType::deltaBeta, max_loose_lep_eta_);
+      auto tight_e = helper_.GetSelectedElectrons(loose_e, min_tight_lep_pt_, e_id_tight, max_tight_lep_eta_);
+      auto tight_mu = helper_.GetSelectedMuons(loose_mu, min_tight_lep_pt_, mu_id_tight, coneSize::R04, corrType::deltaBeta, max_tight_lep_eta_);
 
       if (preselected_e.size() + preselected_mu.size() < min_leptons_)
          continue;
@@ -436,31 +452,30 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
       passComboCut(event_cut, combo_cut++, passed, "Leptons in combo (max)");
 
-      // TODO check trigger
-
       // Get to corrected jets
-      auto raw_jets = helper_.GetUncorrectedJets(*ak4jets);
+      auto raw_jets = helper_.GetSelectedJets(*ak4jets, 0., 666., jetID::jetLoose, '-');
+      auto uncorrected_jets = helper_.GetUncorrectedJets(raw_jets);
+      auto corrected_jets = helper_.GetCorrectedJets(uncorrected_jets, event, setup, sysType::NA);
+      corrected_jets = helper_.GetSelectedJets(corrected_jets, std::min(min_jet_pt_, min_tag_pt_), max_jet_eta_, jetID::none, '-');
+      corrected_jets = helper_.GetSortedByPt(corrected_jets);
       pat::JetCollection jets_wo_lep;
-      pat::JetCollection corrected_jets;
 
       if (subtract_leptons_) {
-         auto jets_wo_mu = helper_.RemoveOverlaps(loose_mu, raw_jets);
+         auto jets_wo_mu = helper_.RemoveOverlaps(loose_mu, corrected_jets);
          jets_wo_lep = helper_.RemoveOverlaps(loose_e, jets_wo_mu);
-         corrected_jets = helper_.GetCorrectedJets(jets_wo_lep);
       } else {
-         auto jets_wo_mu = removeOverlap(raw_jets, loose_mu, .4);
-         jets_wo_lep = removeOverlap(raw_jets, loose_e, .4);
-         corrected_jets = helper_.GetCorrectedJets(jets_wo_lep);
+         jets_wo_lep = helper_.GetDeltaRCleanedJets(corrected_jets, loose_mu, loose_e, .4);
       }
 
       // Jet selection
-      auto jets_no_taus = removeOverlap(corrected_jets, loose_tau, .25);
-      auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, 2.5, jetID::jetLoose, '-');
-      selected_jets = get_non_pileup(selected_jets);
-      auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, 2.5, jetID::jetLoose, 'M');
-      selected_tags = get_non_pileup(selected_tags);
-
-      auto uncorrected_jets = removeOverlap(jets_wo_lep, loose_tau, .25);
+      auto jets_no_taus = removeOverlap(jets_wo_lep, loose_tau, .25);
+      auto selected_jets = jets_no_taus;
+      /* auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, max_jet_eta_, jetID::none, '-'); */
+      auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'M');
+      if (filter_pu_jets_) {
+         selected_jets = get_non_pileup(selected_jets);
+         selected_tags = get_non_pileup(selected_tags);
+      };
 
       if (selected_jets.size() < min_jets_ or selected_tags.size() < min_tags_)
          continue;

@@ -2,14 +2,18 @@
 
 channel: lj
 ntupledir: test/leptonplusjets
-outdir: test/sync_lj
+outdir: test/sync_e
 
 lumi: 10000
 
 plot:
   - ttH2bb_125
 
-cuts: []
+cuts:
+  - "Trigger": "event.trigger().single_e()"
+  - "Single e": "leptons[0].electron() and len(leptons) == 1"
+  - "≥ 4 jets": "len(jets) >= 4"
+  # - "≥ 2 tags": "len(tags) >= 2"
 
 weights:
   - Generator
