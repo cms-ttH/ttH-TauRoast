@@ -171,7 +171,7 @@ class TauProcessor : public edm::EDAnalyzer {
 
       bool filter_pu_jets_;
 
-      std::string sys_;
+      sysType::sysType sys_;
 
       edm::EDGetTokenT<double> rho_token_;
       edm::EDGetTokenT<GenEventInfoProduct> geninfo_token_;
@@ -219,7 +219,6 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    min_tag_pt_(config.getParameter<double>("minTagPt")),
    max_jet_eta_(config.getParameter<double>("maxJetEta")),
    filter_pu_jets_(config.getParameter<bool>("filterPUJets")),
-   /* sys_(config.getParameter<std::string>("sys")), */
    event_(0),
    m_triggerCache(
          edm::InputTag("TriggerResults", "", "HLT"),
@@ -241,6 +240,15 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    gen_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("prunedGenParticles"));
    met_token_ = consumes<pat::METCollection>(edm::InputTag("slimmedMETs"));
    trig_token_ = consumes<edm::TriggerResults>(edm::InputTag("TriggerResults", "", "HLT"));
+
+   std::map<std::string, sysType::sysType> systematics = {
+      {"", sysType::NA},
+      {"JERUp", sysType::JERup},
+      {"JERDown", sysType::JERdown},
+      {"JESUp", sysType::JESup},
+      {"JESDown", sysType::JESdown}
+   };
+   sys_ = systematics[config.getParameter<std::string>("sys")];
 
    helper_.SetUp("2012_53x", 2500, analysisType::LJ, false);
    helper_.SetJetCorrectorUncertainty();
@@ -455,7 +463,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       // Get to corrected jets
       auto raw_jets = helper_.GetSelectedJets(*ak4jets, 0., 666., jetID::jetLoose, '-');
       auto uncorrected_jets = helper_.GetUncorrectedJets(raw_jets);
-      auto corrected_jets = helper_.GetCorrectedJets(uncorrected_jets, event, setup, sysType::NA);
+      auto corrected_jets = helper_.GetCorrectedJets(uncorrected_jets, event, setup, sys_);
       corrected_jets = helper_.GetSelectedJets(corrected_jets, std::min(min_jet_pt_, min_tag_pt_), max_jet_eta_, jetID::none, '-');
       corrected_jets = helper_.GetSortedByPt(corrected_jets);
       pat::JetCollection jets_wo_lep;
@@ -534,7 +542,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       auto mets = get_collection(event, met_token_);
       auto old_jets = helper_.GetSelectedJets(*ak4jets, 0., 666., jetID::jetMETcorrection, '-');
       auto old_jets_uncorrected = helper_.GetUncorrectedJets(old_jets);
-      auto new_jets = helper_.GetCorrectedJets(old_jets_uncorrected, event, setup, sysType::NA);
+      auto new_jets = helper_.GetCorrectedJets(old_jets_uncorrected, event, setup, sys_);
       auto corrected_mets = helper_.CorrectMET(old_jets, new_jets, *mets);
 
       combos.push_back(superslim::Combination(staus, sleptons, sjets, corrected_mets[0].p4()));
