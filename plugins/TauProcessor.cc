@@ -171,8 +171,6 @@ class TauProcessor : public edm::EDAnalyzer {
 
       bool filter_pu_jets_;
 
-      sysType::sysType sys_;
-
       edm::EDGetTokenT<double> rho_token_;
       edm::EDGetTokenT<GenEventInfoProduct> geninfo_token_;
       edm::EDGetTokenT<reco::BeamSpot> bs_token_;
@@ -190,6 +188,7 @@ class TauProcessor : public edm::EDAnalyzer {
       TH1F *cuts_;
 
       std::vector<std::string> cutnames_;
+      std::map<std::string, sysType::sysType> systematics_;
 
       superslim::Event *event_;
 
@@ -241,14 +240,13 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    met_token_ = consumes<pat::METCollection>(edm::InputTag("slimmedMETs"));
    trig_token_ = consumes<edm::TriggerResults>(edm::InputTag("TriggerResults", "", "HLT"));
 
-   std::map<std::string, sysType::sysType> systematics = {
-      {"", sysType::NA},
+   systematics_ = {
+      {"NA", sysType::NA},
       {"JERUp", sysType::JERup},
       {"JERDown", sysType::JERdown},
       {"JESUp", sysType::JESup},
       {"JESDown", sysType::JESdown}
    };
-   sys_ = systematics[config.getParameter<std::string>("sys")];
 
    helper_.SetUp("2012_53x", 2500, analysisType::LJ, false);
    helper_.SetJetCorrectorUncertainty();
@@ -410,6 +408,16 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    if (raw_tight_tau.size() < min_tight_taus_)
       return;
 
+   // ================
+   // Jet preselection
+   // ================
+   auto raw_jets = helper_.GetSelectedJets(*ak4jets, 0., 666., jetID::jetLoose, '-');
+   auto uncorrected_jets = helper_.GetUncorrectedJets(raw_jets);
+
+   auto mets = get_collection(event, met_token_);
+   auto old_jets = helper_.GetSelectedJets(*ak4jets, 0., 666., jetID::jetMETcorrection, '-');
+   auto old_jets_uncorrected = helper_.GetUncorrectedJets(old_jets);
+
    // =========================
    // Tau combination selection
    // =========================
@@ -460,34 +468,48 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
       passComboCut(event_cut, combo_cut++, passed, "Leptons in combo (max)");
 
-      // Get to corrected jets
-      auto raw_jets = helper_.GetSelectedJets(*ak4jets, 0., 666., jetID::jetLoose, '-');
-      auto uncorrected_jets = helper_.GetUncorrectedJets(raw_jets);
-      auto corrected_jets = helper_.GetCorrectedJets(uncorrected_jets, event, setup, sys_);
-      corrected_jets = helper_.GetSelectedJets(corrected_jets, std::min(min_jet_pt_, min_tag_pt_), max_jet_eta_, jetID::none, '-');
-      corrected_jets = helper_.GetSortedByPt(corrected_jets);
-      pat::JetCollection jets_wo_lep;
+      bool pass_jets = false;
+      bool pass_tags = false;
+      std::map<std::string, std::vector<superslim::Jet>> sjets;
+      std::map<std::string, superslim::LorentzVector> smets;
+      for (auto& sys: systematics_) {
+         auto corrected_jets = helper_.GetCorrectedJets(uncorrected_jets, event, setup, sys.second);
+         corrected_jets = helper_.GetSelectedJets(corrected_jets, std::min(min_jet_pt_, min_tag_pt_), max_jet_eta_, jetID::none, '-');
+         corrected_jets = helper_.GetSortedByPt(corrected_jets);
+         pat::JetCollection jets_wo_lep;
 
-      if (subtract_leptons_) {
-         auto jets_wo_mu = helper_.RemoveOverlaps(loose_mu, corrected_jets);
-         jets_wo_lep = helper_.RemoveOverlaps(loose_e, jets_wo_mu);
-      } else {
-         jets_wo_lep = helper_.GetDeltaRCleanedJets(corrected_jets, loose_mu, loose_e, .4);
+         if (subtract_leptons_) {
+            auto jets_wo_mu = helper_.RemoveOverlaps(loose_mu, corrected_jets);
+            jets_wo_lep = helper_.RemoveOverlaps(loose_e, jets_wo_mu);
+         } else {
+            jets_wo_lep = helper_.GetDeltaRCleanedJets(corrected_jets, loose_mu, loose_e, .4);
+         }
+
+         // Jet selection
+         auto jets_no_taus = removeOverlap(jets_wo_lep, loose_tau, .25);
+         auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, max_jet_eta_, jetID::none, '-');
+         auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'M');
+         if (filter_pu_jets_) {
+            selected_jets = get_non_pileup(selected_jets);
+            selected_tags = get_non_pileup(selected_tags);
+         };
+
+         if (selected_jets.size() >= min_jets_ and selected_tags.size() >= min_tags_)
+            pass_jets = true;
+
+         if (max_tags_ < 0 or selected_tags.size() <= (unsigned int) max_tags_)
+            pass_tags = true;
+
+         auto new_jets = helper_.GetCorrectedJets(old_jets_uncorrected, event, setup, sys.second);
+         auto corrected_mets = helper_.CorrectMET(old_jets, new_jets, *mets);
+
+         for (const auto& jet: selected_jets)
+            sjets[sys.first].push_back(superslim::Jet(jet));
+
+         smets[sys.first] = corrected_mets[0].p4();
       }
 
-      // Jet selection
-      auto jets_no_taus = removeOverlap(jets_wo_lep, loose_tau, .25);
-      auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, max_jet_eta_, jetID::none, '-');
-      auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'M');
-      if (filter_pu_jets_) {
-         selected_jets = get_non_pileup(selected_jets);
-         selected_tags = get_non_pileup(selected_tags);
-      };
-
-      if (selected_jets.size() < min_jets_ or selected_tags.size() < min_tags_)
-         continue;
-
-      if (max_tags_ >= 0 && selected_tags.size() > (unsigned int) max_tags_)
+      if (not (pass_jets and pass_tags))
          continue;
 
       passComboCut(event_cut, combo_cut++, passed, "Jet requirements");
@@ -498,7 +520,6 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       // ===============
       std::vector<superslim::Tau> staus;
       std::vector<superslim::Lepton> sleptons;
-      std::vector<superslim::Jet> sjets;
 
       for (const auto& tau: loose_tau)
          staus.push_back(superslim::Tau(tau));
@@ -510,9 +531,6 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
          sleptons.push_back(superslim::Lepton(lep, helper_.GetMuonRelIso(lep), rpv, *bs));
 
       std::sort(sleptons.begin(), sleptons.end());
-
-      for (const auto& jet: selected_jets)
-         sjets.push_back(superslim::Jet(jet));
 
       if (print_preselection_) {
          for (const auto& l: preselected_e) {
@@ -539,13 +557,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
          }
       }
 
-      auto mets = get_collection(event, met_token_);
-      auto old_jets = helper_.GetSelectedJets(*ak4jets, 0., 666., jetID::jetMETcorrection, '-');
-      auto old_jets_uncorrected = helper_.GetUncorrectedJets(old_jets);
-      auto new_jets = helper_.GetCorrectedJets(old_jets_uncorrected, event, setup, sys_);
-      auto corrected_mets = helper_.CorrectMET(old_jets, new_jets, *mets);
-
-      combos.push_back(superslim::Combination(staus, sleptons, sjets, corrected_mets[0].p4()));
+      combos.push_back(superslim::Combination(staus, sleptons, sjets, smets));
    }
 
    if (combos.size() > 0) {

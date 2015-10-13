@@ -190,26 +190,26 @@ namespace superslim {
          Combination(
                const std::vector<superslim::Tau>&,
                const std::vector<superslim::Lepton>&,
-               const std::vector<superslim::Jet>&,
-               const LorentzVector& met);
+               const std::map<std::string, std::vector<superslim::Jet>>&,
+               const std::map<std::string, LorentzVector>& met);
          virtual ~Combination() {};
 
-         const std::vector<superslim::Jet>& jets() const { return jets_; };
+         const std::vector<superslim::Jet>& jets(const std::string& s="NA") const { return jets_.find(s)->second; };
          const std::vector<superslim::Lepton>& leptons() const { return leptons_; };
          const std::vector<superslim::Tau>& taus() const { return taus_; };
-         const LorentzVector& met() const { return met_; };
+         const LorentzVector& met(const std::string& s="NA") const { return met_.find(s)->second; };
          const std::map<std::string, float>& weights() const { return weights_; };
 
          void setWeight(const std::string& s, float f) { weights_[s] = f; };
       private:
-         std::vector<superslim::Jet> jets_;
+         std::map<std::string, std::vector<superslim::Jet>> jets_;
          std::vector<superslim::Lepton> leptons_;
          std::vector<superslim::Tau> taus_;
-         LorentzVector met_;
+         std::map<std::string, LorentzVector> met_;
 
          std::map<std::string, float> weights_;
 
-         ClassDef(Combination, 2);
+         ClassDef(Combination, 3);
    };
 
    class Trigger {

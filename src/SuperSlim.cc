@@ -190,8 +190,8 @@ namespace superslim {
    Combination::Combination(
          const std::vector<Tau>& taus,
          const std::vector<Lepton>& leptons,
-         const std::vector<Jet>& jets,
-         const LorentzVector& met) :
+         const std::map<std::string, std::vector<Jet>>& jets,
+         const std::map<std::string, LorentzVector>& met) :
       jets_(jets),
       leptons_(leptons),
       taus_(taus),

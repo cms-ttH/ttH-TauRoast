@@ -2,10 +2,6 @@ import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 
 options = VarParsing.VarParsing('analysis')
-options.register('sysType', '',
-        VarParsing.VarParsing.multiplicity.singleton,
-        VarParsing.VarParsing.varType.string,
-        "Systematics type")
 options.parseArguments()
 
 process = cms.Process("Taus")
@@ -73,8 +69,7 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         maxJetEta = cms.double(2.4),
         filterPUJets = cms.bool(False),
         printPreselection = cms.bool(False),
-        triggerSelection = cms.string("HLT_Ele27_eta2p1_WP85_Gsf_HT200_v1 OR HLT_IsoMu24_eta2p1_v1"),
-        sys_ = cms.string(options.sysType)
+        triggerSelection = cms.string("HLT_Ele27_eta2p1_WP85_Gsf_HT200_v1 OR HLT_IsoMu24_eta2p1_v1")
 )
 
 # process.p = cms.Path(process.ttHLeptons * process.taus)
