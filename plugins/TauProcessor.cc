@@ -88,12 +88,15 @@ build_permutations(const std::vector<T>& things, const unsigned int num)
 
 template<typename T>
 edm::Handle<T>
-get_collection(const edm::Event& event, const edm::EDGetTokenT<T>& token)
+get_collection(const edm::EDConsumerBase& base, const edm::Event& event, const edm::EDGetTokenT<T>& token)
 {
    edm::Handle<T> handle;
    event.getByToken(token, handle);
-   if (!handle.isValid())
-      throw edm::Exception(edm::errors::InvalidReference, "Can't find a collection.");
+   if (!handle.isValid()) {
+      edm::EDConsumerBase::Labels l;
+      base.labelsForToken(token, l);
+      throw edm::Exception(edm::errors::InvalidReference, "Can't find a collection " + std::string(l.module));
+   }
    return handle;
 }
 
@@ -332,7 +335,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    // events run over count
    passCut(event_cut++, "Dataset processed");
 
-   auto geninfo = get_collection(event, geninfo_token_);
+   auto geninfo = get_collection(*this, event, geninfo_token_);
 
    // dataset sum of the event weights
    passCut(event_cut++, "Dataset event weights", geninfo->weight());
@@ -351,7 +354,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       return;
    }
 
-   auto vertices = get_collection(event, vertices_token_);
+   auto vertices = get_collection(*this, event, vertices_token_);
 
    std::vector<superslim::Vertex> pv;
    reco::Vertex rpv;
@@ -378,9 +381,9 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    // passed valid pv cut
    passCut(event_cut++, "Valid primary vertex");
 
-   auto bs = get_collection(event, bs_token_);
+   auto bs = get_collection(*this, event, bs_token_);
 
-   auto rho = get_collection(event, rho_token_);
+   auto rho = get_collection(*this, event, rho_token_);
    helper_.SetRho(*rho);
 
    auto corr = JetCorrector::getJetCorrector("ak4PFchsL1L2L3", setup);
@@ -390,11 +393,11 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    // Basic selection
    // ===============
 
-   auto electrons = get_collection(event, electrons_token_);
-   auto muons = get_collection(event, muons_token_);
-   auto taus = get_collection(event, taus_token_);
-   auto ak4jets = get_collection(event, ak4jets_token_);
-   auto genstuff = get_collection(event, gen_token_);
+   auto electrons = get_collection(*this, event, electrons_token_);
+   auto muons = get_collection(*this, event, muons_token_);
+   auto taus = get_collection(*this, event, taus_token_);
+   auto ak4jets = get_collection(*this, event, ak4jets_token_);
+   auto genstuff = get_collection(*this, event, gen_token_);
 
    auto raw_mu = helper_.GetSelectedMuons(*muons, 5., mu_id_pre);
    auto all_preselected_e = helper_.GetSelectedElectrons(*electrons, 7., e_id_pre);
@@ -414,7 +417,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    auto raw_jets = helper_.GetSelectedJets(*ak4jets, 0., 666., jetID::jetLoose, '-');
    auto uncorrected_jets = helper_.GetUncorrectedJets(raw_jets);
 
-   auto mets = get_collection(event, met_token_);
+   auto mets = get_collection(*this, event, met_token_);
    auto old_jets = helper_.GetSelectedJets(*ak4jets, 0., 666., jetID::jetMETcorrection, '-');
    auto old_jets_uncorrected = helper_.GetUncorrectedJets(old_jets);
 
@@ -561,7 +564,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    }
 
    if (combos.size() > 0) {
-      auto infos = get_collection(event, pu_token_);
+      auto infos = get_collection(*this, event, pu_token_);
       int ntv = -1;
 
       for (const auto& info: *infos) {
@@ -571,7 +574,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
          }
       }
 
-      auto trigger_results = get_collection(event, trig_token_);
+      auto trigger_results = get_collection(*this, event, trig_token_);
       auto trigger_names = event.triggerNames(*trigger_results);
 
       std::auto_ptr<superslim::Event> ptr(new superslim::Event(
@@ -581,7 +584,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
                superslim::Trigger(*trigger_results, trigger_names),
                *genstuff));
 
-      auto geninfo = get_collection(event, geninfo_token_);
+      auto geninfo = get_collection(*this, event, geninfo_token_);
       ptr->setWeight("generator", geninfo->weight());
 
       event_ = ptr.get();
