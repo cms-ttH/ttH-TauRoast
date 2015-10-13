@@ -151,6 +151,11 @@ namespace superslim {
    {
       setGenInfo(t.genParticle());
 
+      // for (auto& pair: t.tauIDs()) {
+      //    std::cout << pair.first << std::endl;
+      // }
+      // std::cout << "=== THE END ===" << std::endl;
+
       if (t.leadChargedHadrCand().isNonnull()) {
          leading_track_pt_ = t.leadChargedHadrCand()->pt();
          charge_ = t.leadChargedHadrCand()->charge();
