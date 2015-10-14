@@ -6,6 +6,8 @@ options.parseArguments()
 
 process = cms.Process("Taus")
 
+process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
+
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = 2000
 
@@ -16,7 +18,7 @@ process.GlobalTag.globaltag = 'MCRUN2_74_V9::All'
 
 process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring([
-            '/store/mc/RunIISpring15MiniAODv2/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/MINIAODSIM/74X_mcRun2_asymptotic_v2-v1/50000/1278547D-C26D-E511-874F-842B2B185AAA.root'
+            '/store/mc/RunIISpring15DR74/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v1/00000/00D1004A-3B03-E511-8FE3-0025905A60B4.root'
         ])
 )
 

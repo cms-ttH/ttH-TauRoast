@@ -1,8 +1,8 @@
 # vim: set sw=4 sta et :
 
 channel: ttl
-ntupledir: /hadoop/store/user/matze/ttH/v7
-outdir: ~/www/ttH/v7
+ntupledir: /hadoop/store/user/matze/ttH/v8
+outdir: ~/www/ttH/v8
 
 lumi: 10000
 
@@ -12,19 +12,23 @@ plot:
   - ttjets_semilept
   - ttjets_fulllept
   - ttH_125
-  - ttH2bb_125
-  - ttH2Nonbb_125
+  # - ttH2bb_125
+  # - ttH2Nonbb_125
   - ttH2TT_125
   - ttH2TT_125_real
 
 cuts:
+  - "Trigger": "(leptons[0].electron() and event.trigger().single_e()) or (leptons[0].muon() and event.trigger().single_mu())"
   - "ΔR(ττ)  > 0.5": "dR(taus[0], taus[1]) > 0.5"
-  - "ΔR(τ₁l) > 0.25": "dR(taus[0], leptons[0]) > 0.25"
-  - "ΔR(τ₂l) > 0.25": "dR(taus[1], leptons[0]) > 0.25"
+  - "ΔR(τ₁l) > 0.4": "dR(taus[0], leptons[0]) > 0.4"
+  - "ΔR(τ₂l) > 0.4": "dR(taus[1], leptons[0]) > 0.4"
   - "Opposite charge for τ": "taus[0].charge() * taus[1].charge() < 0"
 
 weights:
   - Generator
+
+# Allowed values: JES{Up,Down}, JER{Up,Down}
+systematics: NA
 
 mva:
     signals:
