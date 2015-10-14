@@ -30,12 +30,12 @@ class Snippet(object):
     def __init__(self, code):
         self.__code = code
 
-    def _execute(self, event, combo, locals=None, globals=None, use_exec=True):
+    def _execute(self, event, combo, locals=None, globals=None, systematics="NA", use_exec=True):
         if not locals:
             locals = {}
         if not globals:
             globals = {}
-            Snippet.prepare_globals(globals, event, combo)
+            Snippet.prepare_globals(globals, event, combo, systematics=systematics)
         if use_exec:
             exec self.__code in locals, globals
             if 'result' in globals:
@@ -44,7 +44,7 @@ class Snippet(object):
             return eval(self.__code, globals, locals)
 
     @classmethod
-    def prepare_globals(cls, globals, event, combo, tagging=False):
+    def prepare_globals(cls, globals, event, combo, systematics="NA", tagging=False):
         globals.update({
                 'event': event,
                 'btag': btag,
@@ -52,12 +52,12 @@ class Snippet(object):
                 'mva': mva,
                 'taus': combo.taus(),
                 'leptons': combo.leptons(),
-                'jets': combo.jets(),
+                'jets': combo.jets(systematics),
                 'pv': event.pv(),
-                'met': combo.met()
+                'met': combo.met(systematics)
         })
         if tagging:
             globals.update({
-                'tags': filter(btag, combo.jets()),
-                'notags': [j for j in combo.jets() if not btag(j)]
+                'tags': filter(btag, combo.jets(systematics)),
+                'notags': [j for j in combo.jets(systematics) if not btag(j)]
             })

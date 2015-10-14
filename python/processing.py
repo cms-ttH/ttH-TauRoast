@@ -61,7 +61,7 @@ class BasicProcess(Process):
         self.__cross_section = cross_section
         self.__add_cuts = additional_cuts if additional_cuts else []
 
-    def analyze(self, filename, counts, cuts, weights, basedir, callbacks=None):
+    def analyze(self, filename, counts, cuts, weights, systematics, basedir, callbacks=None):
         logging.info("processing {}".format(self))
 
         from ttH.TauRoast.cutting import StaticCut
@@ -136,7 +136,7 @@ class BasicProcess(Process):
             for combo in combos:
                 ncut = -1
                 for cut in cuts:
-                    if not cut(self, event, combo):
+                    if not cut(self, event, combo, systematics):
                         if ncut > lastcut:
                             lastcombo = combo
                             lastcut = ncut
@@ -168,7 +168,7 @@ class BasicProcess(Process):
                 weights[n][self] += weight
 
             globals = {}
-            Snippet.prepare_globals(globals, event, selected, tagging=True)
+            Snippet.prepare_globals(globals, event, selected, systematics=systematics, tagging=True)
 
             tree.fill(event, selected, passed, weight, globals)
 
