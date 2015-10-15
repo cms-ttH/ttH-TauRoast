@@ -184,7 +184,7 @@ elif args.plot:
         raise IOError("Can't read file '{0}'".format(fn))
 
     for p in Plot.plots():
-        p.read(f, processes, fmt="{p}_{v}_TTL")
+        p.read(f, processes, fmt=config["histformat"])
 
     f.Close()
 

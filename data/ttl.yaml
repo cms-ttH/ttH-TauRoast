@@ -3,6 +3,7 @@
 channel: ttl
 ntupledir: /hadoop/store/user/matze/ttH/v8
 outdir: ~/www/ttH/v8
+histformat: "{p}_{v}_TTL"
 
 lumi: 10000
 

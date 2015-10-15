@@ -1,17 +1,29 @@
 #!/usr/bin/env python
 
 import copy
+import re
+
+officialnames = {
+        "JES": "CMS_scale_j",
+        "JER": "CMS_res_j"
+}
+sysre = re.compile(r'(.*)(Up|Down)$')
+
+def officialize(s):
+    stem, way = sysre.match(s).groups()
+    return officialnames[stem] + way
 
 def add_systematics(configs):
     sys = ["NA", "JESUp", "JESDown", "JERUp", "JERDown"]
 
     for dirname, config in configs:
         for s in sys:
+            newconfig = copy.deepcopy(config)
             newdir = dirname
             if s != "NA":
                 newdir += "_" + s
+                newconfig['histformat'] += "_" + officialize(s)
 
-            newconfig = copy.deepcopy(config)
             newconfig['systematics'] = s
             newconfig['outdir'] = newdir
 
@@ -32,4 +44,4 @@ with open(args.configuration) as f:
 for dn, conf in add_systematics([[os.path.join(args.directory, 'ttl'), config]]):
     os.makedirs(dn)
     with open(os.path.join(dn, 'roaster.yaml'), 'w') as f:
-        yaml.dump(config, f)
+        yaml.dump(conf, f, allow_unicode=True)
