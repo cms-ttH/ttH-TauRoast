@@ -506,6 +506,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
          auto new_jets = helper_.GetCorrectedJets(old_jets_uncorrected, event, setup, sys.second);
          auto corrected_mets = helper_.CorrectMET(old_jets, new_jets, *mets);
 
+         sjets[sys.first] = {};
          for (const auto& jet: selected_jets)
             sjets[sys.first].push_back(superslim::Jet(jet));
 
@@ -560,7 +561,8 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
          }
       }
 
-      combos.push_back(superslim::Combination(staus, sleptons, sjets, smets));
+      auto c = superslim::Combination(staus, sleptons, sjets, smets);
+      combos.push_back(c);
    }
 
    if (combos.size() > 0) {
