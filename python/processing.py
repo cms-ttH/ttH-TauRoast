@@ -7,6 +7,7 @@ import time
 import ROOT as r
 
 from ttH.TauRoast.botany import Tree
+from ttH.TauRoast.heavy import calculate_weights
 from ttH.TauRoast.useful import Snippet
 
 class Process(object):
@@ -167,6 +168,7 @@ class BasicProcess(Process):
             ws = {}
             ws.update(event.weights())
             ws.update(selected.weights())
+            ws.update(calculate_weights(event, combo))
             for n, w in enumerate(str(w).lower() for w in weights):
                 weight *= ws[w]
                 weights[n][self] += weight

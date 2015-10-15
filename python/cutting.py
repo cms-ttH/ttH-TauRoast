@@ -13,8 +13,8 @@ class Cut(Snippet):
         self.__procs = set()
         self.__last = None
 
-    def __call__(self, process, event, combo):
-        passed = self._execute(event, combo, use_exec=False)
+    def __call__(self, process, event, combo, systematics='NA'):
+        passed = self._execute(event, combo, systematics=systematics, use_exec=False)
 
         if passed:
             id = (event.run(), event.lumi(), event.event())
