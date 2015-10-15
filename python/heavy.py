@@ -12,7 +12,7 @@ def calculate_weights(event, combo):
 
     sys = {
             'jetTauFakeUp': jfake**num_jets,
-            'jetTauFakeDown': (2 - jfake)**numjets,
+            'jetTauFakeDown': (2 - jfake)**num_jets,
             'eTauFakeUp': efake**num_eles,
             'eTauFakeDown': (2 - efake)**num_eles,
             'idEffUp': ideff**num_taus,
