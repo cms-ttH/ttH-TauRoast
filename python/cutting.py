@@ -90,7 +90,7 @@ def cutflow(cuts, procs, relative=False, f=sys.stdout):
     namelength = max(len(unicode(cut)) for cut in cuts)
     fieldlengths = []
     for proc, subprocs in zip(procs, expanded_proc):
-        val = sum(cuts[0][p] for p in subprocs)
+        val = max(sum(cut[p] for p in subprocs) for cut in cuts)
         length = max(len(proc), len("{:.2f}".format(float(val))))
         fieldlengths.append(length)
 
