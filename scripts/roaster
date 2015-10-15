@@ -24,6 +24,11 @@ ag.add_argument('-p', '--plot', action='store_true', default=False,
         help="save histograms")
 ag.add_argument('-t', '--train', action='store_true', default=False,
         help="train MVAs")
+ag = parser.add_argument_group('general options')
+ag.add_argument('-i', '--input', type=str, default=None,
+        help="change input directory")
+ag.add_argument('-o', '--output', type=str, default=None,
+        help="change output directory")
 ag = parser.add_argument_group('debugging and syncronization options')
 ag.add_argument('--debug-cuts', action='store_true', default=False,
         help="save event quantites after each cut")
@@ -42,6 +47,11 @@ logging.__dict__['root'].level = (2 + args.quiet - args.verbose) * 10
 
 with open(args.config[0]) as f:
     config = yaml.load(f)
+
+if args.output:
+    config['outdir'] = args.output
+if args.input:
+    config['indir'] = args.input
 
 for k in ('outdir', 'ntupledir'):
     config[k] = os.path.expanduser(os.path.expandvars(config[k]))
@@ -126,7 +136,10 @@ if args.analyze:
 
     cuts = counts + cuts + weights
     normalize(cuts, config["lumi"])
-    cutflow(cuts, config["plot"])
+    try:
+        cutflow(cuts, config["plot"])
+    except UnicodeEncodeError:
+        pass
 
     with codecs.open(os.path.join(config["outdir"], "cuts.txt"), "w", encoding="utf8") as fd:
         cutflow(cuts, config["plot"], f=fd)
@@ -137,7 +150,7 @@ if args.analyze:
     with open(fn, 'wb') as f:
         pickle.dump(cuts, f)
 elif args.fill:
-    fn = os.path.join(config["outdir"], "cutflow.pkl")
+    fn = os.path.join(config.get("indir", config["outdir"]), "cutflow.pkl")
     with open(fn, 'rb') as f:
         cuts = pickle.load(f)
 
@@ -148,7 +161,7 @@ if args.train:
     train(fn, cfg['signals'], cfg['backgrounds'], cfg['variables'], ofn)
 
 if args.fill:
-    fn = os.path.join(config["outdir"], "ntuple.root")
+    fn = os.path.join(config.get("indir", config["outdir"]), "ntuple.root")
     forest = Forest(fn)
     processed = set()
     for proc in sum(map(Process.expand, config['plot']), []):
@@ -177,7 +190,7 @@ if args.fill:
     del forest
 elif args.plot:
     processes = sum(map(Process.expand, config['plot']), [])
-    fn = os.path.join(config["outdir"], "plots.root")
+    fn = os.path.join(config.get("indir", config["outdir"]), "plots.root")
     f = r.TFile(fn, "READ")
 
     if not f.IsOpen():

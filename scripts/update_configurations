@@ -1,11 +1,17 @@
 #!/usr/bin/env python
 
 import copy
+import itertools
+import os
 import re
+import stat
 
 officialnames = {
         "JES": "CMS_scale_j",
-        "JER": "CMS_res_j"
+        "JER": "CMS_res_j",
+        "JetTauFake": "jetTauFake",
+        "eTauFake": "eTauFake",
+        "IdEff": "tauIdEff"
 }
 sysre = re.compile(r'(.*)(Up|Down)$')
 
@@ -13,24 +19,110 @@ def officialize(s):
     stem, way = sysre.match(s).groups()
     return officialnames[stem] + way
 
-def add_systematics(configs):
-    sys = ["NA", "JESUp", "JESDown", "JERUp", "JERDown"]
+def normalized(s):
+    stem, way = sysre.match(s).groups()
+    return stem
 
-    for dirname, config in configs:
-        for s in sys:
-            newconfig = copy.deepcopy(config)
-            newdir = dirname
-            if s != "NA":
-                newdir += "_" + s
-                newconfig['histformat'] += "_" + officialize(s)
+frag = """
+{out}: {ins}
+\troaster -q -i . -o . {args} {conf}
+"""
 
-            newconfig['systematics'] = s
-            newconfig['outdir'] = newdir
+wrap = """#!/bin/sh
 
-            yield newdir, newconfig
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+cd {0}
+cmsenv
+cd -
+exec "$@"
+""".format(os.environ["LOCALRT"])
+
+basedir = None
+makefile = None
+def makeflowify(fct):
+    global basedir
+    global makefile
+    def wrapper(config):
+        output, inputs, flags = fct(config)
+        if isinstance(output, basestring):
+            output = [output]
+
+        outs = ' '.join(["{0}->{1}".format(p, os.path.basename(p)) for p in output])
+        ins = ' '.join(["{0}->{1}".format(p, os.path.basename(p)) for p in inputs])
+        with open(makefile, 'a') as f:
+            s = frag.format(
+                    out=outs,
+                    ins=ins,
+                    args=' '.join(flags),
+                    conf=os.path.basename(inputs[0]))
+            f.write(s.replace(basedir, ''))
+    return wrapper
+
+@makeflowify
+def mk_analyze(config):
+    idir = config.get("indir", config["outdir"])
+    odir = config["outdir"]
+    inputs = [os.path.join(odir, f) for f in ("roaster.yaml",)]
+    output = [os.path.join(odir, d) for d in ("ntuple.root", "cuts.txt", "cuts_rel.txt", "cutflow.pkl")]
+    return output, inputs, ["-a"]
+
+@makeflowify
+def mk_fill(config):
+    idir = config.get("indir", config["outdir"])
+    odir = config["outdir"]
+    inputs = [
+            os.path.join(odir, "roaster.yaml"),
+            os.path.join(idir, "ntuple.root"),
+            os.path.join(idir, "cutflow.pkl")
+    ]
+    output = os.path.join(odir, "plots.root")
+    return output, inputs, ["-f"]
+
+@makeflowify
+def mk_plot(config):
+    idir = config.get("indir", config["outdir"])
+    odir = config["outdir"]
+    inputs = [os.path.join(odir, "roaster.yaml"), os.path.join(idir, "plots.root")]
+    output = [os.path.join(odir, d) for d in ("general", "jets", "leptons", "taus", "vertex")]
+    return output, inputs, ["-p"]
+
+def add_flags(dirname, config):
+    flags = map(''.join, itertools.product(["JetTauFake", "eTauFake", "IdEff"], ["Up", "Down"]))
+
+    for f in flags:
+        newconfig = copy.deepcopy(config)
+        newdir = dirname + "_" + f
+        newconfig['histformat'] += "_" + officialize(f)
+
+        try:
+            newconfig['weights'].remove(normalized(f))
+        except ValueError:
+            pass
+        newconfig['weights'].append(f)
+        newconfig['indir'] = dirname
+        newconfig['outdir'] = newdir
+
+        mk_fill(newconfig)
+
+        yield newdir, newconfig
+
+def add_systematics(dirname, config):
+    sys = map(''.join, itertools.product(["JER", "JES"], ["Up", "Down"]))
+
+    for s in sys:
+        newconfig = copy.deepcopy(config)
+        newdir = dirname + "_" + s
+        newconfig['histformat'] += "_" + officialize(s)
+
+        newconfig['systematics'] = s
+        newconfig['outdir'] = newdir
+
+        mk_analyze(newconfig)
+        mk_fill(newconfig)
+
+        yield newdir, newconfig
 
 import argparse
-import os
 import yaml
 
 parser = argparse.ArgumentParser(description='Get stuff ready to be analyzed.')
@@ -38,10 +130,34 @@ parser.add_argument('configuration')
 parser.add_argument('directory')
 args = parser.parse_args()
 
+if not os.path.exists(args.directory):
+    os.makedirs(args.directory)
+basedir = args.directory
+makefile = os.path.join(args.directory, 'Makeflow')
+with open(makefile, 'w') as f:
+    f.write("# use with: makeflow --wrapper ./w.sh --wrapper-input w.sh\n")
+    # f.write("BASE={d}\n\n".format(d=basedir))
+
+wrapfile = os.path.join(args.directory, 'w.sh')
+with open(wrapfile, 'w') as f:
+    f.write(wrap)
+os.chmod(wrapfile, os.stat(wrapfile).st_mode | stat.S_IEXEC)
+
 with open(args.configuration) as f:
     config = yaml.load(f)
 
-for dn, conf in add_systematics([[os.path.join(args.directory, 'ttl'), config]]):
+cdir = os.path.join(args.directory, 'ttl')
+config['outdir'] = cdir
+
+all_configs = [[cdir, config]]
+all_configs.extend(add_systematics(*all_configs[0]))
+all_configs.extend(add_flags(*all_configs[0]))
+
+mk_analyze(all_configs[0][1])
+mk_fill(all_configs[0][1])
+mk_plot(all_configs[0][1])
+
+for dn, conf in all_configs:
     os.makedirs(dn)
     with open(os.path.join(dn, 'roaster.yaml'), 'w') as f:
         yaml.dump(conf, f, allow_unicode=True)
