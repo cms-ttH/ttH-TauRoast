@@ -72,17 +72,21 @@ class BasicProcess(Process):
         hist = None
         for p in self.__paths:
             for fn in glob.glob(os.path.join(basedir, p, '*.root')):
-                f = r.TFile(fn)
-                h = f.Get("taus/cuts")
-                h.SetDirectory(0)
-                f.Close()
-                if hist is None:
-                    hist = h
-                else:
-                    for n in range(hist.GetNbinsX()):
-                        label = hist.GetXaxis().GetBinLabel(n+1)
-                        h.GetXaxis().SetBinLabel(n+1, label)
-                    hist.Add(h)
+                try:
+                    f = r.TFile(fn)
+                    h = f.Get("taus/cuts")
+                    h.SetDirectory(0)
+                    f.Close()
+                    if hist is None:
+                        hist = h
+                    else:
+                        for n in range(hist.GetNbinsX()):
+                            label = hist.GetXaxis().GetBinLabel(n+1)
+                            h.GetXaxis().SetBinLabel(n+1, label)
+                        hist.Add(h)
+                except AttributeError as e:
+                    logging.error("could not process {0}".format(fn))
+                    raise
 
         if hist is None:
             raise IOError("No files found in '{0}'".format(os.path.join(basedir, p)))
