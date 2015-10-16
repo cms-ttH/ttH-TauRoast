@@ -178,7 +178,7 @@ if args.fill:
         raise IOError("Can't read file '{0}'".format(fn))
 
     for p in Plot.plots():
-        p.write(f, cuts, fmt="{p}_{v}_TTL")
+        p.write(f, cuts, fmt=config["histformat"])
 
     timing = sorted(Plot.plots(), key=lambda p: p._time)
     for p in timing[:10] + timing[-10:]:
