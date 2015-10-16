@@ -2,6 +2,8 @@ import math
 
 from collections import namedtuple
 
+from ttH.TauRoast.heavy import calculate_weights
+
 Config = namedtuple('Config', ['taus', 'leptons'])
 config = None
 
@@ -45,6 +47,10 @@ class Snippet(object):
 
     @classmethod
     def prepare_globals(cls, globals, event, combo, systematics="NA", tagging=False):
+        weights = {}
+        weights.update(event.weights())
+        weights.update(combo.weights())
+        weights.update(calculate_weights(event, combo))
         globals.update({
                 'event': event,
                 'btag': btag,
@@ -54,7 +60,8 @@ class Snippet(object):
                 'leptons': combo.leptons(),
                 'jets': combo.jets(systematics),
                 'pv': event.pv(),
-                'met': combo.met(systematics)
+                'met': combo.met(systematics),
+                'weights': weights
         })
         if tagging:
             globals.update({

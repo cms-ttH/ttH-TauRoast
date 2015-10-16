@@ -1,3 +1,5 @@
+import itertools
+
 from ttH.TauRoast.botany import Leaf
 from ttH.TauRoast.plotting import Plot
 
@@ -147,7 +149,10 @@ Plot(
         binning=[20, 0, 200]
 )
 
-Leaf('w_generator', 'f', 'result = event.weights()["generator"]')
+ws = ["generator"]
+ws += map(''.join, itertools.product(["jettaufake", "etaufake", "ideff"], ["up", "down"]))
+for w in ws:
+    Leaf('w_' + w, 'f', 'result = weights["{0}"]'.format(w))
 
 Plot(
         name="weights/Generator",
