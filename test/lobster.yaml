@@ -16,6 +16,8 @@ task runtime: 1800
 
 advanced:
     log level: 1
+    abort multiplier: 3
+    abort threshold: 100
 
 task defaults:
     cmssw config: ntuplize.py
