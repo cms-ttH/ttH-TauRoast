@@ -6,9 +6,11 @@ BasicProcess(
     name="ttjets",
     sample=2500,
     fullname="t#bar{t}",
-    paths=["ttjets_amc"],
+    paths=["tt_pow", "tt_pow_ext3"],
+    # paths=["ttjets_amc"],
     cross_section=831.76,
-    events=42730273
+    events=115091972
+    # events=42730273
 )
 
 BasicProcess(
