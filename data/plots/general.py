@@ -117,12 +117,9 @@ for l in leptons:
 result = ht
 """)
 Leaf('mht', 'f', """
-ht = None
+ht = superslim.LorentzVector()
 for j in jets:
-    if ht is None:
-        ht = j.p4()
-    else:
-        ht += j.p4()
+    ht += j.p4()
 for t in taus:
     ht += t.p4()
 for l in leptons:
