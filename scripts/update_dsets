@@ -27,9 +27,9 @@ for cfg in config['tasks']:
     dir = cfg['label']
     dset = cfg['dataset']
 
-    label = re.sub(r'_ext\d+', '', dir)
+    label = re.sub(r'_ext\d*', '', dir)
 
-    query = subprocess.check_output(['das_client.py', '--format=json', '--query=dataset={0}'.format(dset)])
+    query = subprocess.check_output(['das_client.py', '--format=json', '--query=dataset={0} | grep dataset.nevents'.format(dset)])
     data = json.loads(query)
     assert len(data['data']) == 1
     for ds in data['data'][0]['dataset']:
@@ -37,8 +37,6 @@ for cfg in config['tasks']:
             events = ds['nevents']
             break
         except:
-            print "UNABLE TO DETERMINE EVENTS IN"
-            print ds.keys()
             pass
     else:
         print "NO EVENTS FOUND FOR", label, dir
