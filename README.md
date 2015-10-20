@@ -35,7 +35,6 @@ and add some CMS dependencies:
     git checkout -b CMGTools-from-CMSSW_7_4_7 cmg-central/CMGTools-from-CMSSW_7_4_7
     git clone git@github.com:cms-ttH/MiniAOD.git
     git clone git@github.com:cms-ttH/ttH-LeptonID.git ttH/LeptonID
-    git clone git@github.com:veelken/SVfit_standalone.git TauAnalysis/SVfitStandalone
 
     gzip -d EgammaAnalysis/ElectronTools/data/PHYS14/*.gz
 
