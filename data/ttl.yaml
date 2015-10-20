@@ -1,14 +1,14 @@
 # vim: set sw=4 sta et :
 
 channel: ttl
-ntupledir: /hadoop/store/user/matze/ttH/v8
+ntupledir: /scratch365/mwolf3/ttH/v8
 outdir: ~/www/ttH/v8
 histformat: "{p}_{v}_TTL"
 
 lumi: 10000
 
 plot:
-  # - fake_data
+  - fake_data
   - ttjets
   - ttjets_semilept
   - ttjets_fulllept
@@ -18,8 +18,15 @@ plot:
   - ttH2TT_125
   - ttH2TT_125_real
 
+limits:
+  - fake_data
+  - ttjets
+  - ttH_125
+
 cuts:
   - "Trigger": "(leptons[0].electron() and event.trigger().single_e()) or (leptons[0].muon() and event.trigger().single_mu())"
+  - "Jets": "len(jets) >= 2"
+  - "Tags": "len(filter(btag, jets)) in (1, 2)"
   - "ΔR(ττ)  > 0.5": "dR(taus[0], taus[1]) > 0.5"
   - "ΔR(τ₁l) > 0.4": "dR(taus[0], leptons[0]) > 0.4"
   - "ΔR(τ₂l) > 0.4": "dR(taus[1], leptons[0]) > 0.4"
