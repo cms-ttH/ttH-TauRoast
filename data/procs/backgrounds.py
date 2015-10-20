@@ -22,12 +22,27 @@ BasicProcess(
 )
 
 BasicProcess(
-    name="ttjets_semilept",
+    name="ttjets_semilept_t",
     sample=2563,
     fullname="t #bar{t} SL",
-    paths=["ttjets_slt_mad", "ttjets_slt_mad_ext", "ttjets_sltbar_mad", "ttjets_sltbar_mad_ext"],
-    cross_section=831.76 * wleptonic * (1 - wleptonic) * 2,
-    events=118357445
+    paths=["ttjets_slt_mad", "ttjets_slt_mad_ext"],
+    cross_section=831.76 * wleptonic * (1 - wleptonic),
+    events=58191090
+)
+
+BasicProcess(
+    name="ttjets_semilept_tbar",
+    sample=2563,
+    fullname="t #bar{t} SL",
+    paths=["ttjets_sltbar_mad", "ttjets_sltbar_mad_ext"],
+    cross_section=831.76 * wleptonic * (1 - wleptonic),
+    events=60166355
+)
+
+CombinedProcess(
+        name="ttjets_semilept",
+        fullname="t #bar{t} SL",
+        subprocesses=["ttjets_semilept_t", "ttjets_semilept_tbar"]
 )
 
 BasicProcess(
