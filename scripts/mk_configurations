@@ -87,7 +87,7 @@ def mk_fill(config):
             os.path.join(idir, "ntuple.root"),
             os.path.join(idir, "cutflow.pkl")
     ]
-    output = os.path.join(odir, "plots.root")
+    output = [os.path.join(odir, fn) for fn in ("limits.root", "plots.root")]
     return output, inputs, ["-f", "roaster.yaml"]
 
 @makeflowify()
@@ -99,9 +99,9 @@ def mk_plot(config):
     return output, inputs, ["-p", "roaster.yaml"]
 
 @makeflowify(prog="hadd", flatten=True)
-def mk_hadd(dest, dirs):
-    inputs = [os.path.join(d, "plots.root") for d in dirs]
-    output = [os.path.join(dest, "plots.root")]
+def mk_hadd(dest, dirs, fn):
+    inputs = [os.path.join(d, fn) for d in dirs]
+    output = [os.path.join(dest, fn)]
     return output, inputs, output + inputs
 
 def add_flags(dirname, config):
@@ -177,7 +177,8 @@ for dirname, conf in all_configs:
 finaldir = (os.path.sep + '_').join(os.path.split(cdir))
 finalcfg = copy.deepcopy(config)
 finalcfg['outdir'] = finaldir
-mk_hadd(finaldir, [d for d, c in all_configs])
+mk_hadd(finaldir, [d for d, c in all_configs], "plots.root")
+mk_hadd(finaldir, [d for d, c in all_configs], "limits.root")
 mk_plot(finalcfg)
 
 all_configs.append((finaldir, finalcfg))
