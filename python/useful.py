@@ -1,4 +1,5 @@
 import math
+import ROOT as r
 
 from collections import namedtuple
 
@@ -52,6 +53,7 @@ class Snippet(object):
         weights.update(combo.weights())
         weights.update(calculate_weights(event, combo))
         globals.update({
+                'superslim': r.superslim,
                 'event': event,
                 'btag': btag,
                 'dR': dR,
