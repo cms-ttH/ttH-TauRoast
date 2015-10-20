@@ -50,12 +50,10 @@ BasicProcess(
     events=262813074
 )
 
-BasicProcess(
+CombinedProcess(
     name="fake_data",
     limitname="data_obs",
-    paths=["ttjets"],
-    cross_section=831.76,
-    events=25446993
+    subprocesses=["ttjets"]
 )
 
 # CombinedProcess(
