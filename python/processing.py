@@ -50,7 +50,7 @@ class Process(object):
 
     @classmethod
     def expand(cls, name):
-        return map(cls.get, cls.__processes__[name].process())
+        return map(cls.get, cls.__processes__[str(name)].process())
 
 class BasicProcess(Process):
     def __init__(self, name, paths, events, fullname=None, limitname=None, sample=-1, cross_section=1, additional_cuts=None):

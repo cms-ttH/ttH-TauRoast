@@ -180,6 +180,15 @@ if args.fill:
     for p in Plot.plots():
         p.write(f, cuts, fmt=config["histformat"])
 
+    fn = os.path.join(config["outdir"], "limits.root")
+    f = r.TFile(fn, "RECREATE")
+
+    if not f.IsOpen():
+        raise IOError("Can't read file '{0}'".format(fn))
+
+    for p in Plot.plots():
+        p.write(f, cuts, procs=config["limits"], fmt=config["histformat"])
+
     timing = sorted(Plot.plots(), key=lambda p: p._time)
     for p in timing[:10] + timing[-10:]:
         logging.debug("plot filling time for {0}: {1}".format(p, p._time))

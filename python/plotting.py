@@ -17,6 +17,7 @@ class Plot(object):
     def __init__(self, name, values, labels, binning, limitname=None, weights=None):
         self.__name = name
         self.__limitname = limitname if limitname else os.path.basename(name)
+        self.__normalized = False
 
         self.__values = values
         self.__weights = weights
@@ -134,6 +135,9 @@ class Plot(object):
         return (bsum / float(ssum) if ssum > 0 and bsum > 0 else 1)
 
     def _normalize(self, cuts):
+        if self.__normalized:
+            return
+        self.__normalized = True
         for proc, hist in self.__hists.items():
             logging.debug("normalizing histogram {0}, process {1}".format(
                 self.__name, proc))
@@ -151,11 +155,17 @@ class Plot(object):
                 h.SetDirectory(0)
                 self.__hists[proc] = h
 
-    def write(self, file, cuts, fmt="{p}_{v}"):
+    def write(self, file, cuts, procs=None, fmt="{p}_{v}"):
         self._normalize(cuts)
 
-        for proc, hist in self.__hists.items():
+        if procs is None:
+            procs = self.__hists.keys()
+        else:
+            procs = map(Process.get, procs)
+
+        for proc in procs:
             logging.debug("writing histogram {0}".format(fmt.format(p=proc.limitname, v=self.__limitname)))
+            hist = self._get_histogram(proc)
             file.WriteObject(hist, fmt.format(p=proc.limitname, v=self.__limitname))
 
     def save(self, config, outdir):
