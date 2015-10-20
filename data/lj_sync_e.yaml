@@ -17,3 +17,5 @@ cuts:
 
 weights:
   - Generator
+
+systematics: NA
