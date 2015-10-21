@@ -148,6 +148,8 @@ class TauProcessor : public edm::EDAnalyzer {
 
       MiniAODHelper helper_;
 
+      bool data_;
+
       unsigned int min_jets_;
       unsigned int min_tags_;
       int max_tags_;
@@ -201,6 +203,7 @@ class TauProcessor : public edm::EDAnalyzer {
 };
 
 TauProcessor::TauProcessor(const edm::ParameterSet& config) :
+   data_(config.getParameter<bool>("data")),
    min_jets_(config.getParameter<unsigned int>("minJets")),
    min_tags_(config.getParameter<unsigned int>("minTags")),
    max_tags_(config.getParameter<int>("maxTags")),
@@ -335,10 +338,14 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    // events run over count
    passCut(event_cut++, "Dataset processed");
 
-   auto geninfo = get_collection(*this, event, geninfo_token_);
+   double genweight = 1.;
+   if (not data_) {
+      auto geninfo = get_collection(*this, event, geninfo_token_);
+      genweight = geninfo->weight();
+   }
 
    // dataset sum of the event weights
-   passCut(event_cut++, "Dataset event weights", geninfo->weight());
+   passCut(event_cut++, "Dataset event weights", genweight);
 
    // filter on HLT paths
    if (m_triggerSelector and m_triggerCache.setEvent(event, setup)) {
@@ -586,8 +593,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
                superslim::Trigger(*trigger_results, trigger_names),
                *genstuff));
 
-      auto geninfo = get_collection(*this, event, geninfo_token_);
-      ptr->setWeight("generator", geninfo->weight());
+      ptr->setWeight("generator", genweight);
 
       event_ = ptr.get();
       tree_->Fill();
