@@ -213,7 +213,7 @@ namespace superslim {
       mixed_(false)
    {
       single_e_ = fired(trig, names, {"HLT_Ele27_eta2p1_WPLoose_Gsf_v2"});
-      single_mu_ = fired(trig, names, {"HLT_IsoMu27_v3"});
+      single_mu_ = fired(trig, names, {"HLT_IsoMu20_v3"});
    }
 
    bool
