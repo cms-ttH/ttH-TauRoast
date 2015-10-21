@@ -233,7 +233,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    rho_token_ = consumes<double>(edm::InputTag("fixedGridRhoFastjetAll"));
    geninfo_token_ = consumes<GenEventInfoProduct>(edm::InputTag("generator"));
    bs_token_ = consumes<reco::BeamSpot>(edm::InputTag("offlineBeamSpot"));
-   pu_token_ = consumes<std::vector<PileupSummaryInfo>>(edm::InputTag("addPileupInfo"));
+   pu_token_ = consumes<std::vector<PileupSummaryInfo>>(edm::InputTag("slimmedAddPileupInfo"));
    vertices_token_ = consumes<reco::VertexCollection>(edm::InputTag("offlineSlimmedPrimaryVertices"));
    electrons_token_ = consumes<pat::ElectronCollection>(config.getParameter<edm::InputTag>("electrons"));
    muons_token_ = consumes<pat::MuonCollection>(config.getParameter<edm::InputTag>("muons"));
