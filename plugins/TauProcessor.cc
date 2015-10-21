@@ -254,7 +254,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
       {"JESDown", sysType::JESdown}
    };
 
-   helper_.SetUp("2012_53x", 2500, analysisType::LJ, false);
+   helper_.SetUp("2012_53x", 2500, analysisType::LJ, data_);
    helper_.SetJetCorrectorUncertainty();
    // helper_.SetFactorizedJetCorrector();
 
