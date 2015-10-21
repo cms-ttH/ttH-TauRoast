@@ -50,6 +50,7 @@ process.ak4PFchsL1L2L3 = cms.ESProducer("JetCorrectionESChain",
 # process.load("ttH.LeptonID.ttHLeptons_cfi")
 
 process.taus = cms.EDAnalyzer("TauProcessor",
+        data = cms.bool(options.data),
         # electrons = cms.InputTag("ttHLeptons"),
         # muons = cms.InputTag("ttHLeptons"),
         electrons = cms.InputTag("slimmedElectrons"),
