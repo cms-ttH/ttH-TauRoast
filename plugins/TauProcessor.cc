@@ -404,7 +404,6 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    auto muons = get_collection(*this, event, muons_token_);
    auto taus = get_collection(*this, event, taus_token_);
    auto ak4jets = get_collection(*this, event, ak4jets_token_);
-   auto genstuff = get_collection(*this, event, gen_token_);
 
    auto raw_mu = helper_.GetSelectedMuons(*muons, 5., mu_id_pre);
    auto all_preselected_e = helper_.GetSelectedElectrons(*electrons, 7., e_id_pre);
@@ -586,12 +585,13 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       auto trigger_results = get_collection(*this, event, trig_token_);
       auto trigger_names = event.triggerNames(*trigger_results);
 
+      reco::GenParticleCollection fake;
       std::auto_ptr<superslim::Event> ptr(new superslim::Event(
                combos,
                event.id().run(), event.id().luminosityBlock(), event.id().event(),
                npv, ntv, pv,
                superslim::Trigger(*trigger_results, trigger_names),
-               *genstuff));
+               data_ ? fake : *get_collection(*this, event, gen_token_)));
 
       ptr->setWeight("generator", genweight);
 
