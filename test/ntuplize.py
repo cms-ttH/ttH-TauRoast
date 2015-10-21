@@ -19,7 +19,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 2000
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( options.maxEvents ) )
 
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff")
-process.GlobalTag.globaltag = ("74X_dataRun2_v2" if options.data else "74X_mcRun2_asymptotic_v2")
+process.GlobalTag.globaltag = ("74X_dataRun2_v4" if options.data else "74X_mcRun2_asymptotic_v2")
 
 process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(options.inputFiles)
