@@ -212,8 +212,8 @@ namespace superslim {
       double_mu_(false),
       mixed_(false)
    {
-      single_e_ = fired(trig, names, {"HLT_Ele27_eta2p1_WP85_Gsf_HT200_v1"});
-      single_mu_ = fired(trig, names, {"HLT_IsoMu24_eta2p1_v1"});
+      single_e_ = fired(trig, names, {"HLT_Ele27_eta2p1_WPLoose_Gsf_v2"});
+      single_mu_ = fired(trig, names, {"HLT_IsoMu27_v3"});
    }
 
    bool
