@@ -2,6 +2,7 @@ import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 
 options = VarParsing.VarParsing('analysis')
+options.inputFiles = '/store/mc/RunIISpring15MiniAODv2/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/MINIAODSIM/74X_mcRun2_asymptotic_v2-v1/50000/1278547D-C26D-E511-874F-842B2B185AAA.root'
 options.register("data", False,
         VarParsing.VarParsing.multiplicity.singleton,
         VarParsing.VarParsing.varType.bool,
@@ -21,9 +22,7 @@ process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_condD
 process.GlobalTag.globaltag = ("74X_dataRun2_v2" if options.data else "74X_mcRun2_asymptotic_v2")
 
 process.source = cms.Source("PoolSource",
-        fileNames = cms.untracked.vstring([
-            '/store/mc/RunIISpring15MiniAODv2/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/MINIAODSIM/74X_mcRun2_asymptotic_v2-v1/50000/1278547D-C26D-E511-874F-842B2B185AAA.root'
-        ])
+        fileNames = cms.untracked.vstring(options.inputFiles)
 )
 
 process.TFileService = cms.Service("TFileService",
