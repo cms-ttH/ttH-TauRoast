@@ -230,8 +230,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
          edm::InputTag("gtDigis"),
          1, false, false, true,
          edm::ConsumesCollector(consumesCollector())
-   ),
-   m_triggerSelector(triggerExpression::parse(config.getParameter<std::string>("triggerSelection")))
+   )
 {
    rho_token_ = consumes<double>(edm::InputTag("fixedGridRhoFastjetAll"));
    geninfo_token_ = consumes<GenEventInfoProduct>(edm::InputTag("generator"));
@@ -253,6 +252,10 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
       {"JESUp", sysType::JESup},
       {"JESDown", sysType::JESdown}
    };
+
+   superslim::Trigger::set_single_e_triggers(config.getParameter<std::vector<std::string>>("triggerSingleE"));
+   superslim::Trigger::set_single_mu_triggers(config.getParameter<std::vector<std::string>>("triggerSingleMu"));
+   m_triggerSelector = std::unique_ptr<triggerExpression::Evaluator>(triggerExpression::parse(superslim::Trigger::get_selection()));
 
    helper_.SetUp("2012_53x", 2500, analysisType::LJ, data_);
    helper_.SetJetCorrectorUncertainty();

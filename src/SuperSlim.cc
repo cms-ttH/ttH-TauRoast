@@ -205,6 +205,26 @@ namespace superslim {
       return rhs.p4().Pt() < lhs.p4().Pt();
    }
 
+   std::vector<std::string> Trigger::triggers_single_e_ = {};
+   std::vector<std::string> Trigger::triggers_single_mu_= {};
+
+   std::string
+   Trigger::get_selection()
+   {
+      std::vector<std::string> vs;
+      std::copy(triggers_single_e_.begin(), triggers_single_e_.end(), std::back_inserter(vs));
+      std::copy(triggers_single_mu_.begin(), triggers_single_mu_.end(), std::back_inserter(vs));
+
+      std::ostringstream os;
+      for (auto& s: vs) {
+         if (os.str().size() > 0)
+            os << " OR ";
+         os << s << "*";
+      }
+
+      return os.str();
+   }
+
    Trigger::Trigger(const edm::TriggerResults& trig, const edm::TriggerNames& names) :
       single_e_(false),
       single_mu_(false),
@@ -212,17 +232,22 @@ namespace superslim {
       double_mu_(false),
       mixed_(false)
    {
-      single_e_ = fired(trig, names, {"HLT_Ele27_eta2p1_WPLoose_Gsf_v2"});
-      single_mu_ = fired(trig, names, {"HLT_IsoMu20_v3"});
+      single_e_ = fired(trig, names, triggers_single_e_);
+      single_mu_ = fired(trig, names, triggers_single_mu_);
    }
 
    bool
    Trigger::fired(const edm::TriggerResults& res, const edm::TriggerNames& names, const std::vector<std::string>& paths)
    {
-      for (const auto& path: paths) {
-         auto idx = names.triggerIndex(path);
-         if (idx < res.size() and res.accept(idx))
-            return true;
+      for (auto& name: names.triggerNames()) {
+         for (auto& path: paths) {
+            // returns <>1 if strings don't match
+            if (name.compare(0, path.size(), path))
+               continue;
+            auto idx = names.triggerIndex(name);
+            if (idx < res.size() and res.accept(idx))
+               return true;
+         }
       }
       return false;
    }

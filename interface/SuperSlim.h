@@ -225,6 +225,10 @@ namespace superslim {
          const bool double_e() const { return double_e_; };
          const bool double_mu() const { return double_mu_; };
          const bool mixed() const { return mixed_; };
+
+         static void set_single_e_triggers(const std::vector<std::string>& v) { triggers_single_e_ = v; };
+         static void set_single_mu_triggers(const std::vector<std::string>& v) { triggers_single_mu_ = v; };
+         static std::string get_selection();
       private:
 #ifndef __CINT__
          bool fired(const edm::TriggerResults&, const edm::TriggerNames&, const std::vector<std::string>&);
@@ -234,6 +238,9 @@ namespace superslim {
          bool double_e_;
          bool double_mu_;
          bool mixed_;
+
+         static std::vector<std::string> triggers_single_e_;
+         static std::vector<std::string> triggers_single_mu_;
 
          ClassDef(Trigger, 1);
    };
