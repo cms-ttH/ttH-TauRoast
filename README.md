@@ -21,14 +21,6 @@ First, create a CMSSW release and source the software environment:
     cmsenv
     git cms-init
 
-[PyYaml](http://pyyaml.org/wiki/PyYAML) is a pre-requisite.
-Install it locally after executing `cmsenv` using the python setuptools:
-
-    wget https://bootstrap.pypa.io/get-pip.py; python get-pip.py --user
-    export PATH=$PATH:$HOME/.local/bin
-    # actual yaml installation
-    pip install --user PyYAML
-
 Afterwards, clone this repository in the CMSSW source area:
 
     git clone git@github.com:cms-ttH/ttH-TauRoast.git ttH/TauRoast
