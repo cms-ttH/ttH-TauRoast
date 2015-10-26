@@ -31,34 +31,34 @@ BasicProcess(
 )
 
 BasicProcess(
-    name="Collisions_SingleElectron",
+    name="collisions_single_e",
     # add cuts:
     #   - NumLooseElectrons = 1
     fullname="Collisions",
     limitname="data_obs_e",
-    paths=["data_SingleElectron_2012A_06Aug", "data_SingleElectron_2012A_13July", "data_SingleElectron_2012B_13Jul", "data_SingleElectron_2012C_24Aug", "data_SingleElectron_2012C_PR", "data_SingleElectron_2012D_PR"],
+    paths=["data_SingleE_2015D"],
     events=297904375
 )
 
 BasicProcess(
-    name="Collisions_SingleMuon",
+    name="collisions_single_mu",
     # add cuts:
     #   - NumLooseMuons = 1
     fullname="Collisions",
     limitname="data_obs_mu",
-    paths=["data_SingleMu_2012A_06Aug", "data_SingleMu_2012A_13July", "data_SingleMu_2012B_13July", "data_SingleMu_2012C_24Aug", "data_SingleMu_2012C_PR", "data_SingleMu_2012D_PR"],
+    paths=["data_SingleMu_2015D"],
     events=262813074
 )
 
-CombinedProcess(
-    name="fake_data",
-    limitname="data_obs",
-    subprocesses=["ttjets"]
-)
-
 # CombinedProcess(
-#     name="Collisions",
-#     fullname="Collisions",
+#     name="fake_data",
 #     limitname="data_obs",
-#     subprocesses=["Collisions_SingleElectron", "Collisions_SingleMuon"]
+#     subprocesses=["ttjets"]
 # )
+
+CombinedProcess(
+    name="collisions",
+    fullname="Collisions",
+    limitname="data_obs",
+    subprocesses=["collisions_single_e", "collisions_single_mu"]
+)
