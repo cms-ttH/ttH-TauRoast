@@ -1,17 +1,17 @@
 # vim: set sw=4 sta et :
 
 channel: ttl
-ntupledir: /scratch365/mwolf3/ttH/v8
-outdir: ~/www/ttH/v8
+ntupledir: /scratch365/mwolf3/ttH/v9
+outdir: ~/www/ttH/v9
 histformat: "{p}_{v}_TTL"
 
 lumi: 10000
 
 plot:
-  - fake_data
+  - collisions
   - ttjets
-  - ttjets_semilept
-  - ttjets_fulllept
+  # - ttjets_semilept
+  # - ttjets_fulllept
   - ttH_125
   # - ttH2bb_125
   # - ttH2Nonbb_125
