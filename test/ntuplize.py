@@ -23,7 +23,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 2000
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( options.maxEvents ) )
 
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff")
-process.GlobalTag.globaltag = options.globaltag
+process.GlobalTag.globaltag = options.globalTag
 
 process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(options.inputFiles)
