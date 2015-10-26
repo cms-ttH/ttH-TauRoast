@@ -331,9 +331,9 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       mu_id_loose = muonID::muonLoose;
       mu_id_tight = muonID::muonTight;
 
-      e_id_pre = electronID::electronPhys14L;
-      e_id_loose = electronID::electronPhys14L;
-      e_id_tight = electronID::electronPhys14M;
+      e_id_pre = electronID::electronSpring15L;
+      e_id_loose = electronID::electronSpring15L;
+      e_id_tight = electronID::electronSpring15M;
    }
 
    int event_cut = 0;
