@@ -245,13 +245,17 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    met_token_ = consumes<pat::METCollection>(edm::InputTag("slimmedMETs"));
    trig_token_ = consumes<edm::TriggerResults>(edm::InputTag("TriggerResults", "", "HLT"));
 
-   systematics_ = {
-      {"NA", sysType::NA},
-      {"JERUp", sysType::JERup},
-      {"JERDown", sysType::JERdown},
-      {"JESUp", sysType::JESup},
-      {"JESDown", sysType::JESdown}
-   };
+   if (data_) {
+      systematics_ = {{"NA", sysType::NA}};
+   } else {
+      systematics_ = {
+         {"NA", sysType::NA},
+         {"JERUp", sysType::JERup},
+         {"JERDown", sysType::JERdown},
+         {"JESUp", sysType::JESup},
+         {"JESDown", sysType::JESdown}
+      };
+   }
 
    superslim::Trigger::set_single_e_triggers(config.getParameter<std::vector<std::string>>("triggerSingleE"));
    superslim::Trigger::set_single_mu_triggers(config.getParameter<std::vector<std::string>>("triggerSingleMu"));
