@@ -73,10 +73,52 @@ get_final(const reco::Candidate * c, bool verbose=false)
    return c;
 }
 
+std::pair<int, const reco::GenParticle*>
+get_mc_match(const pat::Tau& t, const reco::GenParticleCollection& coll)
+{
+   static const auto veto = {11, 12, 13, 14, 16};
+   typedef std::pair<double, std::pair<int, const reco::GenParticle*>> Match;
+   std::vector<Match> cands;
+   for (auto& p: coll) {
+      reco::Candidate::LorentzVector p4;
+      if (abs(p.pdgId()) == 15) {
+         for (unsigned int i = 0; i < p.numberOfDaughters(); ++i) {
+            auto d = get_final(p.daughter(i));
+            if (std::find(veto.begin(), veto.end(), abs(d->pdgId())) != veto.end())
+               continue;
+            p4 += d->p4();
+         }
+      } else {
+         p4 = p.p4();
+      }
+      auto dR = deltaR(p4, t.p4());
+      if (dR > 0.5)
+         continue;
+
+      auto cat = 6;
+      if (abs(p.pdgId()) == 11 and p.statusFlags().isPrompt())
+         cat = 1;
+      else if (abs(p.pdgId()) == 13 and p.isPromptFinalState())
+         cat = 2;
+      else if (abs(p.pdgId()) == 11 and p.statusFlags().isDirectPromptTauDecayProduct())
+         cat = 3;
+      else if (abs(p.pdgId()) == 13 and p.isDirectPromptTauDecayProductFinalState())
+         cat = 4;
+      else if (abs(p.pdgId()) == 15)
+         cat = 5;
+
+      cands.push_back(std::make_pair(dR, std::make_pair(cat, &p)));
+   }
+   auto min = std::min_element(cands.begin(), cands.end(), [](const Match& a, const Match& b) { return a.first < b.first; });
+   if (min != cands.end() and min->first < 0.5)
+      return min->second;
+   return std::make_pair<int, const reco::GenParticle*>(-99, 0);
+}
+
 class TreeDaughter {
    public:
       TreeDaughter(const std::string& prefix, TTree* t);
-      void fill(const reco::Candidate *p, const reco::GenJetCollection& jets, const pat::TauCollection& taus);
+      void fill(const reco::Candidate *p, const reco::GenParticleCollection& particles, const reco::GenJetCollection& jets, const pat::TauCollection& taus);
 
    private:
       float id_;
@@ -90,6 +132,8 @@ class TreeDaughter {
       float mvaid_;
       float dR_nearest_;
       float dR_hardest_;
+      float dR_gen_;
+      float dR_manual_;
       float dR_reco_;
       float dR_reco_best_;
 };
@@ -153,12 +197,13 @@ TreeDaughter::TreeDaughter(const std::string& prefix, TTree* t)
    t->Branch((prefix + "_iso_mva").c_str(), &mvaid_);
    t->Branch((prefix + "_dR_nearest").c_str(), &dR_nearest_);
    t->Branch((prefix + "_dR_hardest").c_str(), &dR_hardest_);
+   t->Branch((prefix + "_dR_gen").c_str(), &dR_gen_);
    t->Branch((prefix + "_dR_reco").c_str(), &dR_reco_);
    t->Branch((prefix + "_dR_reco_best").c_str(), &dR_reco_best_);
 }
 
 void
-TreeDaughter::fill(const reco::Candidate* p, const reco::GenJetCollection& jets, const pat::TauCollection& taus)
+TreeDaughter::fill(const reco::Candidate* p, const reco::GenParticleCollection& particles, const reco::GenJetCollection& jets, const pat::TauCollection& taus)
 {
    id_ = p->pdgId();
    pt_ = p->pt();
@@ -173,6 +218,7 @@ TreeDaughter::fill(const reco::Candidate* p, const reco::GenJetCollection& jets,
 
    dR_hardest_ = -99;
    dR_nearest_ = -99;
+   dR_gen_ = -99;
    dR_reco_ = -99;
    dR_reco_best_ = -99;
 
@@ -204,11 +250,13 @@ TreeDaughter::fill(const reco::Candidate* p, const reco::GenJetCollection& jets,
       }
 
       for (const auto& t: taus) {
-         if (t.genParticle() == p) {
+         auto match = get_mc_match(t, particles);
+         if (match.second == p and match.first == 5) {
             if (t.tauID("decayModeFindingNewDMs") < .5)
                continue;
 
             recopt_ = t.pt();
+            dR_gen_ = deltaR(p->p4(), t.p4());
             dR_reco_ = deltaR(p4, t.p4());
 
             for (unsigned int i = 0; i < p->numberOfDaughters(); ++i) {
@@ -341,8 +389,8 @@ TauGeneratorValidation::analyze(const edm::Event& event, const edm::EventSetup& 
       auto d1 = get_final(particle.daughter(0));
       auto d2 = get_final(particle.daughter(1));
 
-      d1_->fill(d1, *gen_jets, *taus);
-      d2_->fill(d2, *gen_jets, *taus);
+      d1_->fill(d1, *gen_particles, *gen_jets, *taus);
+      d2_->fill(d2, *gen_particles, *gen_jets, *taus);
 
       tdecays_->Fill();
    }
