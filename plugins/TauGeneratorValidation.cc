@@ -53,7 +53,7 @@ get_collection(const edm::Event& event, const edm::EDGetTokenT<T>& token)
 }
 
 const reco::Candidate *
-get_final(const reco::Candidate * c, bool verbose=false)
+get_final(const reco::Candidate * c)
 {
    auto id = c->pdgId();
 
@@ -61,8 +61,6 @@ get_final(const reco::Candidate * c, bool verbose=false)
    for (unsigned int i = 0; i < c->numberOfDaughters(); ++i) {
       if (c->daughter(i) and c->daughter(i)->pdgId() == id) {
          radstate = c->daughter(i);
-         if (verbose)
-            std::cout << "DESCENDING PARENTAGE" << std::endl;
          break;
       }
    }
@@ -74,7 +72,7 @@ get_final(const reco::Candidate * c, bool verbose=false)
 }
 
 std::pair<int, const reco::GenParticle*>
-get_mc_match(const pat::Tau& t, const reco::GenParticleCollection& coll)
+get_mc_match(const reco::Candidate& t, const reco::GenParticleCollection& coll)
 {
    static const auto veto = {11, 12, 13, 14, 16};
    typedef std::pair<double, std::pair<int, const reco::GenParticle*>> Match;

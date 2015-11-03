@@ -434,6 +434,10 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    auto old_jets = helper_.GetSelectedJets(*ak4jets, 0., 666., jetID::jetMETcorrection, '-');
    auto old_jets_uncorrected = helper_.GetUncorrectedJets(old_jets);
 
+   reco::GenParticleCollection particles;
+   if (!data_)
+         particles = *get_collection(*this, event, gen_token_);
+
    // =========================
    // Tau combination selection
    // =========================
@@ -521,7 +525,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
          sjets[sys.first] = {};
          for (const auto& jet: selected_jets)
-            sjets[sys.first].push_back(superslim::Jet(jet));
+            sjets[sys.first].push_back(superslim::Jet(jet, particles));
 
          smets[sys.first] = corrected_mets[0].p4();
       }
@@ -539,13 +543,13 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       std::vector<superslim::Lepton> sleptons;
 
       for (const auto& tau: loose_tau)
-         staus.push_back(superslim::Tau(tau));
+         staus.push_back(superslim::Tau(tau, particles));
 
       for (const auto& lep: loose_e)
-         sleptons.push_back(superslim::Lepton(lep, helper_.GetElectronRelIso(lep), rpv, *bs));
+         sleptons.push_back(superslim::Lepton(lep, helper_.GetElectronRelIso(lep), rpv, *bs, particles));
 
       for (const auto& lep: loose_mu)
-         sleptons.push_back(superslim::Lepton(lep, helper_.GetMuonRelIso(lep), rpv, *bs));
+         sleptons.push_back(superslim::Lepton(lep, helper_.GetMuonRelIso(lep), rpv, *bs, particles));
 
       std::sort(sleptons.begin(), sleptons.end());
 
@@ -592,13 +596,12 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       auto trigger_results = get_collection(*this, event, trig_token_);
       auto trigger_names = event.triggerNames(*trigger_results);
 
-      reco::GenParticleCollection fake;
       std::auto_ptr<superslim::Event> ptr(new superslim::Event(
                combos,
                event.id().run(), event.id().luminosityBlock(), event.id().event(),
                npv, ntv, pv,
                superslim::Trigger(*trigger_results, trigger_names),
-               data_ ? fake : *get_collection(*this, event, gen_token_)));
+               particles));
 
       ptr->setWeight("generator", genweight);
 

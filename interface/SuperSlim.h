@@ -87,29 +87,43 @@ namespace superslim {
             pdgId() const { return pdg_id_; };
          int
             genPdgId() const { return gen_pdg_id_; };
+         // As per https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2015#MC_Matching
+         // 1: prompt e
+         // 2: prompt μ
+         // 3: τ → e
+         // 4: τ → μ
+         // 5: τ → τ had
+         // 6: jet/pu fake
+         int
+            match() const { return match_; };
+
+      protected:
 #ifndef __CINT__
+         const reco::Candidate*
+            getFinal(const reco::Candidate* c);
+         const reco::GenParticle*
+            getMatch(const reco::Candidate& c, const reco::GenParticleCollection& coll);
          void
             setGenInfo(const reco::GenParticle* p, int level=2);
 #endif
-
-      protected:
          int charge_;
 
       private:
          LorentzVector p_;
          std::vector<superslim::PhysObject> parents_;
 
+         int match_;
          int pdg_id_;
          int gen_pdg_id_;
 
-         ClassDef(PhysObject, 1);
+         ClassDef(PhysObject, 2);
    };
 
    class Jet : public PhysObject {
       public:
          Jet() {};
 #ifndef __CINT__
-         Jet(const pat::Jet& j);
+         Jet(const pat::Jet& j, const reco::GenParticleCollection& particles);
 #endif
          virtual ~Jet() {};
 
@@ -123,8 +137,8 @@ namespace superslim {
       public:
          Lepton() {};
 #ifndef __CINT__
-         Lepton(const pat::Electron& e, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs);
-         Lepton(const pat::Muon& m, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs);
+         Lepton(const pat::Electron& e, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles);
+         Lepton(const pat::Muon& m, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles);
 #endif
          virtual ~Lepton() {};
 
@@ -161,7 +175,7 @@ namespace superslim {
       public:
          Tau() {};
 #ifndef __CINT__
-         Tau(const pat::Tau& t);
+         Tau(const pat::Tau& t, const reco::GenParticleCollection& particles);
 #endif
          virtual ~Tau() {};
 

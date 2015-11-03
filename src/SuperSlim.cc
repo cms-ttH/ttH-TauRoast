@@ -28,10 +28,74 @@ namespace superslim {
    PhysObject::PhysObject(const reco::Candidate* c) :
       charge_(c->charge()),
       p_(c->p4()),
+      match_(6),
       pdg_id_(c->pdgId()),
       gen_pdg_id_(0)
    {
    }
+
+   const reco::Candidate *
+   PhysObject::getFinal(const reco::Candidate * c)
+   {
+      auto id = c->pdgId();
+
+      const reco::Candidate *radstate = 0;
+      for (unsigned int i = 0; i < c->numberOfDaughters(); ++i) {
+         if (c->daughter(i) and c->daughter(i)->pdgId() == id) {
+            radstate = c->daughter(i);
+            break;
+         }
+      }
+
+      if (radstate)
+         return getFinal(radstate);
+
+      return c;
+   }
+
+   const reco::GenParticle*
+   PhysObject::getMatch(const reco::Candidate& c, const reco::GenParticleCollection& coll)
+   {
+      static const auto veto = {11, 12, 13, 14, 16};
+
+      typedef std::pair<double, const reco::GenParticle*> Match;
+      std::vector<Match> cands;
+
+      for (auto& p: coll) {
+         reco::Candidate::LorentzVector p4;
+         if (abs(p.pdgId()) == 15) {
+            for (unsigned int i = 0; i < p.numberOfDaughters(); ++i) {
+               auto d = getFinal(p.daughter(i));
+               if (std::find(veto.begin(), veto.end(), abs(d->pdgId())) != veto.end())
+                  continue;
+               p4 += d->p4();
+            }
+         } else {
+            p4 = p.p4();
+         }
+         auto dR = deltaR(p4, c.p4());
+         if (dR > 0.5)
+            continue;
+
+         if (abs(p.pdgId()) == 11 and p.statusFlags().isPrompt())
+            match_ = 1;
+         else if (abs(p.pdgId()) == 13 and p.isPromptFinalState())
+            match_ = 2;
+         else if (abs(p.pdgId()) == 11 and p.statusFlags().isDirectPromptTauDecayProduct())
+            match_ = 3;
+         else if (abs(p.pdgId()) == 13 and p.isDirectPromptTauDecayProductFinalState())
+            match_ = 4;
+         else if (abs(p.pdgId()) == 15)
+            match_ = 5;
+
+         cands.push_back(std::make_pair(dR, &p));
+      }
+      auto min = std::min_element(cands.begin(), cands.end(), [](const Match& a, const Match& b) { return a.first < b.first; });
+      if (min != cands.end() and min->first < 0.5)
+         return min->second;
+      return 0;
+   }
+
 
    int
    PhysObject::parentId() const
@@ -97,14 +161,15 @@ namespace superslim {
       }
    }
 
-   Jet::Jet(const pat::Jet& j) :
+   Jet::Jet(const pat::Jet& j, const reco::GenParticleCollection& particles) :
       PhysObject(&j),
       csv_(j.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags"))
    {
+      getMatch(j, particles);
       setGenInfo(j.genParton());
    }
 
-   Lepton::Lepton(const pat::Electron& e, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs) :
+   Lepton::Lepton(const pat::Electron& e, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles) :
       PhysObject(&e),
       type_(Lepton::e),
       charge_check_(e.isGsfCtfScPixChargeConsistent()),
@@ -112,6 +177,7 @@ namespace superslim {
       impact_parameter_error_(e.edB(pat::Electron::PV3D)),
       rel_iso_(rel_iso)
    {
+      getMatch(e, particles);
       setGenInfo(e.genParticle());
 
       if (e.gsfTrack().isAvailable()) {
@@ -123,7 +189,7 @@ namespace superslim {
       mva_ = (e.userFloat("idTightMVA") > .5) + (e.userFloat("idLooseMVA") > .5);
    }
 
-   Lepton::Lepton(const pat::Muon& m, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs) :
+   Lepton::Lepton(const pat::Muon& m, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles) :
       PhysObject(&m),
       type_(Lepton::mu),
       charge_check_(false),
@@ -131,6 +197,7 @@ namespace superslim {
       impact_parameter_error_(m.edB(pat::Muon::PV3D)),
       rel_iso_(rel_iso)
    {
+      getMatch(m, particles);
       setGenInfo(m.genParticle());
 
       if (m.innerTrack().isAvailable()) {
@@ -143,13 +210,15 @@ namespace superslim {
       mva_ = (m.userFloat("idTightMVA") > .5) + (m.userFloat("idLooseMVA") > .5);
    }
 
-   Tau::Tau(const pat::Tau& t) :
+   Tau::Tau(const pat::Tau& t, const reco::GenParticleCollection& particles) :
       PhysObject(&t),
       decay_mode_(t.decayMode()),
       prongs_(t.signalChargedHadrCands().size()),
       leading_track_pt_(-1.0)
    {
-      setGenInfo(t.genParticle());
+      auto match = getMatch(t, particles);
+      if (match)
+         setGenInfo(match);
 
       // for (auto& pair: t.tauIDs()) {
       //    std::cout << pair.first << std::endl;
