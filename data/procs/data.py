@@ -36,7 +36,7 @@ BasicProcess(
     #   - NumLooseElectrons = 1
     fullname="Collisions",
     limitname="data_obs_e",
-    paths=["data_SingleE_2015D"],
+    paths=["data_SingleE_2015D_PR", "data_SingleE_2015D_Oct05"],
     events=297904375
 )
 
@@ -46,7 +46,7 @@ BasicProcess(
     #   - NumLooseMuons = 1
     fullname="Collisions",
     limitname="data_obs_mu",
-    paths=["data_SingleMu_2015D"],
+    paths=["data_SingleMu_2015D", "data_SingleMu_Oct05"],
     events=262813074
 )
 
