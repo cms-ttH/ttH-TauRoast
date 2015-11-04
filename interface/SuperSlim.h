@@ -75,6 +75,8 @@ namespace superslim {
 
          const LorentzVector&
             p4() const { return p_; };
+         const LorentzVector&
+            genP4() const { return gen_p_; };
          const std::vector<superslim::PhysObject>&
             parents() const { return parents_; };
          int
@@ -110,13 +112,14 @@ namespace superslim {
 
       private:
          LorentzVector p_;
+         LorentzVector gen_p_;
          std::vector<superslim::PhysObject> parents_;
 
          int match_;
          int pdg_id_;
          int gen_pdg_id_;
 
-         ClassDef(PhysObject, 2);
+         ClassDef(PhysObject, 3);
    };
 
    class Jet : public PhysObject {

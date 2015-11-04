@@ -135,6 +135,7 @@ namespace superslim {
       if (!p)
          return;
 
+      gen_p_ = p->p4();
       gen_pdg_id_ = p->pdgId();
 
       if (level <= 0)
