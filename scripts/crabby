@@ -74,11 +74,14 @@ def status(workdir):
     fmt = "{{name:{0}}} {{status:15}} ".format(max([len(xs[0]) for xs in statii] + [4])) \
             + " ".join(['{{{0}:>{1}}}'.format(n, l) for n, l in enumerate(map(len, states))]) \
             + " {total:>6}"
-    print fmt.format(*states, name="task", status="status", total="total")
+    header = fmt.format(*states, name="task", status="status", total="total")
+    print header
+    print "-" * len(header)
     for task, status, jobs, total in statii:
         jobstates = [jobs.get(st, 0) for st in states]
         totals = [a + b for a, b in zip(totals, jobstates)]
         print fmt.format(*jobstates, name=task, status=status, total=total)
+    print "-" * len(header)
     print fmt.format(*totals, name="", status="", total=sum(totals))
 
 if __name__ == '__main__':
