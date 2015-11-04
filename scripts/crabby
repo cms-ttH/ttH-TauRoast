@@ -7,9 +7,11 @@ import argparse
 import imp
 import multiprocessing
 import os
+import sys
 
 from CRABAPI.RawCommand import crabCommand
 from CRABClient.ClientExceptions import ClientException
+from CRABClient.UserUtilities import setConsoleLogLevel
 from httplib import HTTPException
 
 def submit(config):
@@ -31,6 +33,42 @@ def submit(config):
     # for p in procs:
         # p.join()
 
+def status(workdir):
+    setConsoleLogLevel(100)
+
+    statii = []
+    for name in os.listdir(checkpoint):
+        wflow = os.path.join(checkpoint, name)
+        if not os.path.isdir(wflow):
+            continue
+        result = crabCommand(command, dir=wflow)
+        sys.stdout.write('.')
+        sys.stdout.flush()
+
+        statii.append([
+            name,
+            result['status'].lower(),
+            result['jobsPerStatus'],
+            sum([v for k, v in result['jobsPerStatus'].items()])
+        ])
+    print ""
+
+    states = set()
+    for _, _, summary, _ in statii:
+        states = states | set(summary.keys())
+    states = sorted(states)
+    totals = [0] * len(states)
+
+    fmt = "{{name:{0}}} {{status:15}} ".format(max([len(xs[0]) for xs in statii] + [4])) \
+            + " ".join(['{{{0}:>{1}}}'.format(n, l) for n, l in enumerate(map(len, states))]) \
+            + " {total:>6}"
+    print fmt.format(*states, name="task", status="status", total="total")
+    for task, status, jobs, total in statii:
+        jobstates = [jobs.get(st, 0) for st in states]
+        totals = [a + b for a, b in zip(totals, jobstates)]
+        print fmt.format(*jobstates, name=task, status=status, total=total)
+    print fmt.format(*totals, name="", status="", total=sum(totals))
+
 parser = argparse.ArgumentParser('grudgingly manage many crab tasks')
 parser.add_argument('command', type=str, nargs=1,
         help='the crab command to execute')
@@ -42,6 +80,8 @@ command = args.command[0]
 checkpoint = args.checkpoint[0]
 if command in ('submit', 'sub'):
     submit(checkpoint)
+elif command in ('status',):
+    status(checkpoint)
 else:
     for name in os.listdir(checkpoint):
         proj = os.path.join(checkpoint, name)
