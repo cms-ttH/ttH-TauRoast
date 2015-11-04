@@ -1,0 +1,60 @@
+#!/usr/bin/env python
+"""
+This is a small script that does the equivalent of multicrab.
+"""
+
+import argparse
+import imp
+import multiprocessing
+import os
+
+from CRABAPI.RawCommand import crabCommand
+from CRABClient.ClientExceptions import ClientException
+from httplib import HTTPException
+
+def submit(config):
+    def realsub(config):
+        try:
+            crabCommand('submit', config=config)
+        except HTTPException as hte:
+            print "Failed submitting task: {0}".format(hte.headers)
+        except ClientException as cle:
+            print "Failed submitting task: {0}".format(cle)
+
+    procs = []
+    mod = imp.load_source('idontcare', config)
+    for config in mod.configs():
+        p = multiprocessing.Process(target=realsub, args=(config,))
+        p.start()
+        p.join()
+        # procs.append(p)
+    # for p in procs:
+        # p.join()
+
+parser = argparse.ArgumentParser('grudgingly manage many crab tasks')
+parser.add_argument('command', type=str, nargs=1,
+        help='the crab command to execute')
+parser.add_argument('checkpoint', metavar='[config|directory]', type=str, nargs=1,
+        help='the crab configuration/working directory')
+args = parser.parse_args()
+
+command = args.command[0]
+checkpoint = args.checkpoint[0]
+if command in ('submit', 'sub'):
+    submit(checkpoint)
+else:
+    for name in os.listdir(checkpoint):
+        proj = os.path.join(checkpoint, name)
+        if not os.path.isdir(proj):
+            continue
+        # Execute the crab command.
+        msg = "Executing (the equivalent of): crab {0} --dir {1}".format(command, proj)
+        print "-"*len(msg)
+        print msg
+        print "-"*len(msg)
+        try:
+            crabCommand(command, dir=proj)
+        except HTTPException as hte:
+            print "Failed executing command {0} for task {1}: {2}".format(command, proj, hte.headers)
+        except ClientException as cle:
+            print "Failed executing command {0} for task {1}: {2}".format(command, proj, cle)
