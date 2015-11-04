@@ -583,13 +583,15 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    }
 
    if (combos.size() > 0) {
-      auto infos = get_collection(*this, event, pu_token_);
       int ntv = -1;
 
-      for (const auto& info: *infos) {
-         if (info.getBunchCrossing() == 0) {
-            ntv = info.getTrueNumInteractions();
-            break;
+      if (!data_) {
+         auto infos = get_collection(*this, event, pu_token_);
+         for (const auto& info: *infos) {
+            if (info.getBunchCrossing() == 0) {
+               ntv = info.getTrueNumInteractions();
+               break;
+            }
          }
       }
 
