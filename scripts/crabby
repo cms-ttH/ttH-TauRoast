@@ -14,24 +14,25 @@ from CRABClient.ClientExceptions import ClientException
 from CRABClient.UserUtilities import setConsoleLogLevel
 from httplib import HTTPException
 
-def submit(config):
-    def realsub(config):
-        try:
-            crabCommand('submit', config=config)
-        except HTTPException as hte:
-            print "Failed submitting task: {0}".format(hte.headers)
-        except ClientException as cle:
-            print "Failed submitting task: {0}".format(cle)
+def realsub(config):
+    try:
+        os.makedirs(config.General.workArea)
+    except OSError:
+        pass
 
+    try:
+        crabCommand('submit', config=config)
+    except HTTPException as hte:
+        print "Failed submitting task: {0}".format(hte.headers)
+    except ClientException as cle:
+        print "Failed submitting task: {0}".format(cle)
+
+def submit(config):
     procs = []
     mod = imp.load_source('idontcare', config)
-    for config in mod.configs():
-        p = multiprocessing.Process(target=realsub, args=(config,))
-        p.start()
-        p.join()
-        # procs.append(p)
-    # for p in procs:
-        # p.join()
+
+    p =  multiprocessing.Pool(5)
+    results = p.map(realsub, mod.configs())
 
 def realst(wflow):
     result = crabCommand(command, dir=wflow)
