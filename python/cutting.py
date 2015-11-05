@@ -72,9 +72,13 @@ def normalize(cuts, lumi):
     dsetnorm = StaticCut("Dataset norm")
     luminorm = StaticCut("Luminosity norm")
     for proc in cuts[-1].processes():
-        scale = processed[proc] / float(weights[proc])
-        dsetnorm[proc] = cuts[-1][proc] * scale
-        luminorm[proc] = cuts[-1][proc] * scale * lumi * proc.cross_section / float(proc.events)
+        if str(proc).startswith("collisions"):
+            dsetnorm[proc] = cuts[-1][proc]
+            luminorm[proc] = cuts[-1][proc]
+        else:
+            scale = processed[proc] / float(weights[proc])
+            dsetnorm[proc] = cuts[-1][proc] * scale
+            luminorm[proc] = cuts[-1][proc] * scale * lumi * proc.cross_section / float(proc.events)
     cuts.append(dsetnorm)
     cuts.append(luminorm)
 
