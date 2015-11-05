@@ -175,6 +175,7 @@ class BasicProcess(Process):
 
             globals = {}
             Snippet.prepare_globals(globals, event, selected, systematics=systematics, tagging=True)
+            globals['weights'] = ws
 
             tree.fill(event, selected, passed, weight, globals)
 

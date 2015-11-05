@@ -48,10 +48,6 @@ class Snippet(object):
 
     @classmethod
     def prepare_globals(cls, globals, event, combo, systematics="NA", tagging=False):
-        weights = {}
-        weights.update(event.weights())
-        weights.update(combo.weights())
-        weights.update(calculate_weights(event, combo))
         globals.update({
                 'superslim': r.superslim,
                 'event': event,
@@ -62,8 +58,7 @@ class Snippet(object):
                 'leptons': combo.leptons(),
                 'jets': combo.jets(systematics),
                 'pv': event.pv(),
-                'met': combo.met(systematics),
-                'weights': weights
+                'met': combo.met(systematics)
         })
         if tagging:
             globals.update({
