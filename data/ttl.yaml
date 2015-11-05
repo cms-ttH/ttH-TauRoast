@@ -5,7 +5,7 @@ ntupledir: /scratch365/mwolf3/ttH/v10
 outdir: ~/www/ttH/v10
 histformat: "{p}_{v}_TTL"
 
-lumi: 2200
+lumi: 1310.4302447170002
 
 plot:
   - collisions
