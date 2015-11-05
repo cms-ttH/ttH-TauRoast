@@ -168,7 +168,7 @@ class BasicProcess(Process):
             ws = {}
             ws.update(event.weights())
             ws.update(selected.weights())
-            ws.update(calculate_weights(event, combo))
+            ws.update(calculate_weights(event, combo, systematics))
             for n, w in enumerate(str(w).lower() for w in weights):
                 weight *= ws[w]
                 weights[n][self] += weight
