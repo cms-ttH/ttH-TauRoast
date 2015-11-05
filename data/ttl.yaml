@@ -19,7 +19,7 @@ plot:
   - ttH2TT_125_real
 
 limits:
-  - fake_data
+  - collisions
   - ttjets
   - ttH_125
 
