@@ -1,7 +1,7 @@
 legend: true
 scale factor: auto
 data:
-  - fake_data: r.kBlack
+  - collisions: r.kBlack
 backgrounds:
   - ttjets: r.kRed
 signals:
