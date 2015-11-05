@@ -170,7 +170,8 @@ class BasicProcess(Process):
             ws.update(selected.weights())
             ws.update(calculate_weights(event, combo, systematics))
             for n, w in enumerate(str(w).lower() for w in weights):
-                weight *= ws[w]
+                if not self._name.startswith("collisions"):
+                    weight *= ws[w]
                 weights[n][self] += weight
 
             globals = {}
