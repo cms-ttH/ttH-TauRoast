@@ -1,20 +1,20 @@
 # vim: set sw=4 sta et :
 
 channel: ttl
-ntupledir: /scratch365/mwolf3/ttH/v9
-outdir: ~/www/ttH/v9
+ntupledir: /scratch365/mwolf3/ttH/v10
+outdir: ~/www/ttH/v10
 histformat: "{p}_{v}_TTL"
 
-lumi: 10000
+lumi: 2200
 
 plot:
   - collisions
   - ttjets
-  # - ttjets_semilept
-  # - ttjets_fulllept
+  - ttjets_semilept
+  - ttjets_fulllept
   - ttH_125
-  # - ttH2bb_125
-  # - ttH2Nonbb_125
+  - ttH2bb_125
+  - ttH2Nonbb_125
   - ttH2TT_125
   - ttH2TT_125_real
 
@@ -34,8 +34,9 @@ cuts:
 
 weights:
   - Generator
+  - CSVWeight
 
-# Allowed values: JES{Up,Down}, JER{Up,Down}
+# Allowed values: JES{Up,Down}, JER{Up,Down}, NA
 systematics: NA
 
 mva:
