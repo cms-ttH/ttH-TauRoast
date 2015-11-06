@@ -1,5 +1,20 @@
 # A ttH→ττ ntuple analyzing package
 
+## TODO
+
+Open issues:
+
+* Scale factors/weights
+
+  * top pt
+  * lepton
+  * pileup
+
+* Plotting
+
+  * systematics
+  * `s/sqrt(s+b)` instead of ratio?
+
 ## Preface
 
 Every command is to be used at your own risk.  Look at configuration files
