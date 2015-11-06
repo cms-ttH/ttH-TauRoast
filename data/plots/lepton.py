@@ -29,18 +29,25 @@ for n in range(config.leptons):
         binning=[20, -3.2, 3.2]
     )
 
+    Leaf('lep{0}_match'.format(n + 1), 'i', 'result = leptons[{0}].match()'.format(n))
     Leaf('lep{0}_genid'.format(n + 1), 'f', 'result = abs(leptons[{0}].genPdgId())'.format(n))
     Leaf('lep{0}_genparentid'.format(n + 1), 'f', 'result = abs(leptons[{0}].parentId())'.format(n))
 
     # Gen matching
     Plot(
             name="leptons/generator/L{0}_Match".format(n + 1),
+            values=["lep{0}_match".format(n + 1)],
+            labels=[lbl + " id", "Events"],
+            binning=[6, 1, 7]
+    )
+    Plot(
+            name="leptons/generator/L{0}_GenId".format(n + 1),
             values=["lep{0}_genid".format(n + 1)],
             labels=[lbl + " id", "Events"],
             binning=[30, 0, 30]
     )
     Plot(
-            name="leptons/generator/L{0}_ParentMatch".format(n + 1),
+            name="leptons/generator/L{0}_ParentId".format(n + 1),
             values=["lep{0}_genparentid".format(n + 1)],
             labels=[lbl + "parent id", "Events"],
             binning=[30, 0, 30]
