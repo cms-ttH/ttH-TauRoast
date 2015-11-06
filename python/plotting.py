@@ -14,7 +14,7 @@ from ttH.TauRoast.processing import Process
 class Plot(object):
     __plots = {}
 
-    def __init__(self, name, values, labels, binning, limitname=None, weights=None):
+    def __init__(self, name, values, labels, binning, binlabels=None, limitname=None, weights=None):
         self.__name = name
         self.__limitname = limitname if limitname else os.path.basename(name)
         self.__normalized = False
@@ -23,6 +23,7 @@ class Plot(object):
         self.__weights = weights
 
         self.__args = [self.__limitname, ";".join([""] + labels)] + binning
+        self.__labels = binlabels
         self.__hists = {}
 
         if len(values) == 1:
@@ -38,6 +39,17 @@ class Plot(object):
 
     def __str__(self):
         return self.__name
+
+    def _add_binlabels(self, hist):
+        if self.__labels:
+            if isinstance(self.__labels[0], list) or isinstance(self.__labels[0], tuple):
+                for n, label in enumerate(self.__labels[0], 1):
+                    hist.GetXaxis().SetBinLabel(n, label)
+                for n, label in enumerate(self.__labels[1], 1):
+                    hist.GetYaxis().SetBinLabel(n, label)
+            else:
+                for n, label in enumerate(self.__labels, 1):
+                    hist.GetXaxis().SetBinLabel(n, label)
 
     def _add_legend(self, config, factor):
         l = Legend(0.05, 3, 0.08)
@@ -181,6 +193,7 @@ class Plot(object):
         signals = zip((cfg.keys()[0] for cfg in config['signals']), self._get_signals(config))
 
         for label, hist in signals + [('background', bkg_sum)]:
+            self._add_binlabels(hist)
             canvas = r.TCanvas(self.__name + label, self.__name, 600, 600)
 
             canvas.SetTopMargin(.18)
@@ -299,6 +312,18 @@ class Plot(object):
         args = list(self.__args)
         args[0] += "_base"
         base_histo = self.__class(*args)
+        self._add_binlabels(base_histo)
+
+        if self.__labels:
+            if isinstance(self.__labels[0], list) or isinstance(self.__labels[0], tuple):
+                for n, label in enumerate(self.__labels[0], 1):
+                    base_histo.GetXaxis().SetBinLabel(n, label)
+                for n, label in enumerate(self.__labels[1], 1):
+                    base_histo.GetYaxis().SetBinLabel(n, label)
+            else:
+                for n, label in enumerate(self.__labels, 1):
+                    base_histo.GetXaxis().SetBinLabel(n, label)
+
         stylish.setup_upper_axis(base_histo)
 
         canvas.cd(1)

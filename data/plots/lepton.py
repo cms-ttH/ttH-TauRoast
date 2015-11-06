@@ -38,7 +38,8 @@ for n in range(config.leptons):
             name="leptons/generator/L{0}_Match".format(n + 1),
             values=["lep{0}_match".format(n + 1)],
             labels=[lbl + " id", "Events"],
-            binning=[6, 1, 7]
+            binning=[6, 1, 7],
+            binlabels=["e", "#mu", "#tau #rightarrow e", "#tau #rightarrow #mu", "#tau #rightarrow #tau_{h}", "fake"]
     )
     Plot(
             name="leptons/generator/L{0}_GenId".format(n + 1),
