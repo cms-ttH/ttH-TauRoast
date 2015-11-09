@@ -11,19 +11,20 @@ class Plotter(object):
         self.__c = r.TCanvas()
         self.__c.SaveAs(self.__fn + "[")
 
-        self.__cuts = "abs(t_decay) != 11 && abs(t_decay) != 13"
+        self.__dcuts = "abs(t_decay) != 11 && abs(t_decay) != 13 && abs(t_visible_eta) < 2.3 && t_visible_pt > 20"
+        self.__ncuts = "t_reco_pt > 20 && abs(t_reco_eta) < 2.3"
 
     def close(self):
         self.__c.SaveAs(self.__fn + "]")
 
     def plotiso(self, var, titles):
-        self.__t.Draw("t_pt>>hist(15, 0, 150)", self.__cuts)
+        self.__t.Draw("t_pt>>hist(15, 0, 150)", self.__dcuts)
         base = r.gDirectory.Get("hist")
         base.SetName("basehist")
 
         hists = []
         for n, title in enumerate(titles):
-            cut = self.__cuts + " && {0} >= {1}".format(var, n)
+            cut = " && ".join([self.__dcuts, self.__ncuts, "{0} >= {1}".format(var, n)])
             print cut
             self.__t.Draw("t_pt>>hist(15, 0, 150)", cut)
             h = r.gDirectory.Get("hist")
@@ -43,8 +44,8 @@ class Plotter(object):
             h.SetLineColor(color)
             h.SetMarkerColor(color)
             h.SetMarkerStyle(marker)
-            l.AddEntry(h, h.GetTitle() if h.GetTitle() != "" else "No isolation", "l")
-            h.DrawCopy("P " + opt)
+            l.AddEntry(h, h.GetTitle() if h.GetTitle() != "" else "No isolation", "lp")
+            h.DrawCopy("LP " + opt)
             # h.DrawCopy(opt)
             opt = "same"
         l.Draw()
