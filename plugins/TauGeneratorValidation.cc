@@ -125,6 +125,7 @@ class TreeDaughter {
       float phi_;
       float decay_;
       float vispt_;
+      float viseta_;
       float recopt_;
       float recoeta_;
       float iso3hits_;
@@ -195,6 +196,7 @@ TreeDaughter::TreeDaughter(const std::string& prefix, TTree* t)
    t->Branch((prefix + "_phi").c_str(), &phi_);
    t->Branch((prefix + "_decay").c_str(), &decay_);
    t->Branch((prefix + "_visible_pt").c_str(), &vispt_);
+   t->Branch((prefix + "_visible_eta").c_str(), &viseta_);
    t->Branch((prefix + "_reco_pt").c_str(), &recopt_);
    t->Branch((prefix + "_reco_eta").c_str(), &recoeta_);
    t->Branch((prefix + "_iso_3hits").c_str(), &iso3hits_);
@@ -216,6 +218,7 @@ TreeDaughter::fill(const reco::Candidate* p, const reco::GenParticleCollection& 
 
    decay_ = -99;
    vispt_ = -99;
+   viseta_ = -99;
    recopt_ = -99;
    recoeta_ = -99;
    iso3hits_ = -99;
@@ -240,6 +243,7 @@ TreeDaughter::fill(const reco::Candidate* p, const reco::GenParticleCollection& 
       }
 
       vispt_ = p4.pt();
+      viseta_ = p4.eta();
       decay_ = components[0]->pdgId();
 
       if (abs(decay_) == 11 or abs(decay_) == 13)
