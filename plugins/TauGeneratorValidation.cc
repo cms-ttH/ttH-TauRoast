@@ -180,6 +180,10 @@ class TauGeneratorValidation : public edm::EDAnalyzer {
       float m_phi_;
 
       std::vector<int> potential_mothers_ = {6, 23, 24, 25};
+
+      TTree *taus_;
+
+      std::auto_ptr<TreeDaughter> tau_;
 };
 
 TreeDaughter::TreeDaughter(const std::string& prefix, TTree* t)
@@ -330,6 +334,9 @@ TauGeneratorValidation::TauGeneratorValidation(const edm::ParameterSet& config)
 
    d1_ = std::auto_ptr<TreeDaughter>(new TreeDaughter("daughter1", tdecays_));
    d2_ = std::auto_ptr<TreeDaughter>(new TreeDaughter("daughter2", tdecays_));
+
+   taus_ = fs->make<TTree>("taus", "Tau decays");
+   tau_ = std::auto_ptr<TreeDaughter>(new TreeDaughter("t", taus_));
 }
 
 
@@ -391,6 +398,19 @@ TauGeneratorValidation::analyze(const edm::Event& event, const edm::EventSetup& 
       d2_->fill(d2, *gen_particles, *gen_jets, *taus);
 
       tdecays_->Fill();
+   }
+
+   for (const auto& particle: *gen_particles) {
+      if (abs(particle.pdgId()) != 15)
+         continue;
+
+      auto fnl = get_final(&particle);
+
+      if (fnl != &particle)
+         continue;
+
+      tau_->fill(fnl, *gen_particles, *gen_jets, *taus);
+      taus_->Fill();
    }
 
    tree_->Fill();
