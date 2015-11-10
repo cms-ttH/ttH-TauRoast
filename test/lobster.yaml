@@ -1,15 +1,15 @@
 id: tau
 type: cmssw
 
-workdir: /tmpscratch/users/matze/tau_v11
-plotdir: /afs/crc.nd.edu/user/m/mwolf3/www/lobster/tau_v11
+workdir: /tmpscratch/users/matze/tau_v11.1
+plotdir: /afs/crc.nd.edu/user/m/mwolf3/www/lobster/tau_v11.1
 
 storage:
     output:
-      - file:///hadoop/store/user/matze/ttH/v11
-      - hdfs:///store/user/matze/ttH/v11
-      - root://ndcms.crc.nd.edu//store/user/matze/ttH/v11
-      - srm://T3_US_NotreDame/store/user/matze/ttH/v11
+      - file:///hadoop/store/user/matze/ttH/v11.1
+      - hdfs:///store/user/matze/ttH/v11.1
+      - root://ndcms.crc.nd.edu//store/user/matze/ttH/v11.1
+      - srm://T3_US_NotreDame/store/user/matze/ttH/v11.1
 
 merge size: 3.5G
 
