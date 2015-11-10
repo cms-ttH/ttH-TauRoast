@@ -231,6 +231,7 @@ namespace superslim {
          charge_ = t.leadChargedHadrCand()->charge();
       }
 
+      raw_isolation_3hits_ = t.tauID("byCombinedIsolationDeltaBetaCorr3Hits");
       if (t.tauID("byTightCombinedIsolationDeltaBetaCorr3Hits") > .5)
          isolation_3hits_ = 3;
       else if (t.tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits") > .5)
