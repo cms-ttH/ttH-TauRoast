@@ -1,0 +1,49 @@
+#!/usr/bin/env python
+
+import argparse
+import os
+import yaml
+import ROOT as r
+
+r.gROOT.SetBatch()
+
+parser = argparse.ArgumentParser(description='Train TMVA.')
+parser.add_argument('config', metavar='config', type=str, nargs=1,
+        help='a configuration file to use')
+ag = parser.add_argument_group('general options')
+ag.add_argument('-i', '--input', type=str, default=None,
+        help="change input directory")
+ag.add_argument('-o', '--output', type=str, default=None,
+        help="change output directory")
+args = parser.parse_args()
+
+with open(args.config[0]) as f:
+    config = yaml.load(f)
+
+if args.output:
+    config['outdir'] = args.output
+if args.input:
+    config['indir'] = args.input
+
+from ttH.TauRoast import useful
+from ttH.TauRoast.variation import setup, train
+
+useful.channel(config['channel'])
+
+datadir = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data')
+
+import imp
+from glob import glob
+magic = os.path.join(datadir, 'plots', '*.py')
+for n, file in enumerate(glob(magic)):
+    imp.load_source("plots{0}".format(n), file)
+
+magic = os.path.join(datadir, 'procs', '*.py')
+for n, file in enumerate(glob(magic)):
+    imp.load_source("procs{0}".format(n), file)
+
+fn = os.path.join(config["indir"], "ntuple.root")
+ofn = os.path.join(config["outdir"], "tmva.root")
+
+cfg = config['mva']
+train(fn, cfg['signals'], cfg['backgrounds'], cfg['variables'], ofn)
