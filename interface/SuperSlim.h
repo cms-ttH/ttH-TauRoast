@@ -190,6 +190,8 @@ namespace superslim {
 
          float leadingTrackPt() const { return leading_track_pt_; };
          float rawIsolation3Hits() const { return raw_isolation_3hits_; };
+
+         LorentzVector genVisibleP4() const { return gen_vis_p_; };
       private:
          int decay_mode_;
          int isolation_3hits_;
@@ -199,6 +201,8 @@ namespace superslim {
 
          float leading_track_pt_;
          float raw_isolation_3hits_;
+
+         LorentzVector gen_vis_p_;
 
          ClassDef(Tau, 2);
    };
