@@ -12,9 +12,11 @@ def channel(s):
     global config
     config = Config(taus=s.lower().count("t"), leptons=s.lower().count("l"))
 
+def R(p4):
+    return math.sqrt(p4.Eta()**2 + p4.Phi()**2)
+
 def dR(one, two):
-    diff = one.p4() - two.p4()
-    return math.sqrt(diff.Eta()**2 + diff.Phi()**2)
+    return R(one.p4() - two.p4())
 
 def btag(jet):
     return jet.csv() > 0.89
@@ -54,6 +56,7 @@ class Snippet(object):
                 'btag': btag,
                 'dR': dR,
                 'mva': mva,
+                'r': R,
                 'taus': combo.taus(),
                 'leptons': combo.leptons(),
                 'jets': combo.jets(systematics),

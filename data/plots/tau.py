@@ -71,6 +71,7 @@ for n in range(config.taus):
     Leaf('tau{0}_match'.format(n + 1), 'i', 'result = taus[{0}].match()'.format(n))
     Leaf('tau{0}_genid'.format(n + 1), 'f', 'result = min(abs(taus[{0}].genPdgId()), 29)'.format(n))
     Leaf('tau{0}_genparentid'.format(n + 1), 'f', 'result = min(abs(taus[{0}].parentId()), 29)'.format(n))
+    Leaf('tau{0}_gen_deltaR'.format(n + 1), 'f', 'result = r(taus[{0}].p4() - taus[{0}].genP4())'.format(n))
 
     # Gen matching
     Plot(
@@ -91,6 +92,12 @@ for n in range(config.taus):
             values=["tau{0}_genparentid".format(n + 1)],
             labels=[lbl + "parent id", "Events"],
             binning=[30, 0, 30]
+    )
+    Plot(
+            name="taus/generator/T{0}_GenDeltaR".format(n + 1),
+            values=["tau{0}_gen_deltaR".format(n + 1)],
+            labels=["#DeltaR_{reco,gen} " + lbl, "Events"],
+            binning=[15, 0, 6.28]
     )
 
     Leaf('tau{0}_decaymode'.format(n + 1), 'f', 'result = taus[{0}].decayMode()'.format(n))
