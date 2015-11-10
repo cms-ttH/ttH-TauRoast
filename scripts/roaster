@@ -55,7 +55,6 @@ for k in ('outdir', 'ntupledir'):
     config[k] = os.path.expanduser(os.path.expandvars(config[k]))
 
 datadir = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data')
-
 with open(os.path.join(datadir, 'plot.yaml')) as f:
     plotconfig = yaml.load(f)
 
@@ -79,17 +78,8 @@ from ttH.TauRoast.printable import SyncSaver
 from ttH.TauRoast.variation import setup
 
 useful.channel(config['channel'])
+useful.load_python()
 stylish.setup()
-
-import imp
-from glob import glob
-magic = os.path.join(datadir, 'plots', '*.py')
-for n, file in enumerate(glob(magic)):
-    imp.load_source("plots{0}".format(n), file)
-
-magic = os.path.join(datadir, 'procs', '*.py')
-for n, file in enumerate(glob(magic)):
-    imp.load_source("procs{0}".format(n), file)
 
 if 'mva' in config:
     cfg = config['mva']

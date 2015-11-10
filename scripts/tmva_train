@@ -29,18 +29,7 @@ from ttH.TauRoast import useful
 from ttH.TauRoast.variation import setup, train
 
 useful.channel(config['channel'])
-
-datadir = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data')
-
-import imp
-from glob import glob
-magic = os.path.join(datadir, 'plots', '*.py')
-for n, file in enumerate(glob(magic)):
-    imp.load_source("plots{0}".format(n), file)
-
-magic = os.path.join(datadir, 'procs', '*.py')
-for n, file in enumerate(glob(magic)):
-    imp.load_source("procs{0}".format(n), file)
+useful.load_python()
 
 fn = os.path.join(config["indir"], "ntuple.root")
 ofn = os.path.join(config["outdir"], "tmva.root")

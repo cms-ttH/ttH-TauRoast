@@ -1,4 +1,5 @@
 import math
+import os
 import ROOT as r
 
 from collections import namedtuple
@@ -11,6 +12,18 @@ config = None
 def channel(s):
     global config
     config = Config(taus=s.lower().count("t"), leptons=s.lower().count("l"))
+
+def load_python():
+    import imp
+    from glob import glob
+
+    datadir = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data')
+    magic = os.path.join(datadir, 'plots', '*.py')
+    for n, file in enumerate(glob(magic)):
+        imp.load_source("plots{0}".format(n), file)
+    magic = os.path.join(datadir, 'procs', '*.py')
+    for n, file in enumerate(glob(magic)):
+        imp.load_source("procs{0}".format(n), file)
 
 def R(p4):
     return math.sqrt(p4.Eta()**2 + p4.Phi()**2)
