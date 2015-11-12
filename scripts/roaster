@@ -140,7 +140,7 @@ if args.analyze:
 elif args.fill:
     fn = os.path.join(config.get("indir", config["outdir"]), "cutflow.pkl")
     with open(fn, 'rb') as f:
-        cuts = pickle.load(f)[:-1]
+        cuts = pickle.load(f)[:-2]
     normalize(cuts, config["lumi"])
     try:
         cutflow(cuts, config["plot"])
