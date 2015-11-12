@@ -66,7 +66,7 @@ Plot(
 )
 Plot(
         name="general/NumJetsOverview",
-        values=["njets+ntags", "ntags"],
+        values=["ntags", "njets+ntags"],
         labels=["Inclusive jets", "Tagged jets"],
         binning=[10, 0, 10, 5, 0, 5]
 )
