@@ -65,10 +65,16 @@ Plot(
         binning=[40, 0, 40]
 )
 Plot(
+        name="general/NumVertices_coarse",
+        values=['npv'],
+        labels=["Number PV", "Events"],
+        binning=[8, 0, 40]
+)
+Plot(
         name="general/NumJetsOverview",
         values=["ntags", "njets+ntags"],
         labels=["Inclusive jets", "Tagged jets"],
-        binning=[10, 0, 10, 5, 0, 5]
+        binning=[12, 0, 12, 4, 0, 4]
 )
 Plot(
         name="general/NumLeptons",
