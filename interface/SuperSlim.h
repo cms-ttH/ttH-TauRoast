@@ -189,6 +189,9 @@ namespace superslim {
          int vetoMuon() const { return veto_muon_; };
 
          float leadingTrackPt() const { return leading_track_pt_; };
+         float rawIsolation3Hits() const { return raw_isolation_3hits_; };
+
+         LorentzVector genVisibleP4() const { return gen_vis_p_; };
       private:
          int decay_mode_;
          int isolation_3hits_;
@@ -197,8 +200,11 @@ namespace superslim {
          int veto_muon_;
 
          float leading_track_pt_;
+         float raw_isolation_3hits_;
 
-         ClassDef(Tau, 1);
+         LorentzVector gen_vis_p_;
+
+         ClassDef(Tau, 2);
    };
 
    class Combination {

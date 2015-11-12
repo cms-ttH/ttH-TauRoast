@@ -218,8 +218,15 @@ namespace superslim {
       leading_track_pt_(-1.0)
    {
       auto match = getMatch(t, particles);
-      if (match)
+      if (match) {
+         for (unsigned int i = 0; i < match->numberOfDaughters(); ++i) {
+            auto d = getFinal(match->daughter(i));
+            if (abs(d->pdgId()) % 2 == 0 and abs(d->pdgId()) > 10 and abs(d->pdgId()) < 20)
+               continue;
+            gen_vis_p_ = d->p4();
+         }
          setGenInfo(match);
+      }
 
       // for (auto& pair: t.tauIDs()) {
       //    std::cout << pair.first << std::endl;
@@ -231,6 +238,7 @@ namespace superslim {
          charge_ = t.leadChargedHadrCand()->charge();
       }
 
+      raw_isolation_3hits_ = t.tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits");
       if (t.tauID("byTightCombinedIsolationDeltaBetaCorr3Hits") > .5)
          isolation_3hits_ = 3;
       else if (t.tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits") > .5)

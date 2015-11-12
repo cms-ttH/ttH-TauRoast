@@ -157,5 +157,12 @@ the last two steps.
 
 * [Analysis Twiki](https://twiki.cern.ch/twiki/bin/viewauth/CMS/TTH-Multileptons)
 
+# History
+
+## v11.1
+
+* τ raw isolation w/ 3 hits
+* τ generator level visible pt
+
 [lobster]: http://lobster.crc.nd.edu
 [makeflow]: http://ccl.cse.nd.edu/software/manuals/makeflow.html

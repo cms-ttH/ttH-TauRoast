@@ -339,11 +339,13 @@ TauGeneratorValidation::TauGeneratorValidation(const edm::ParameterSet& config)
    tdecays_->Branch("mother_pt", &m_pt_);
    tdecays_->Branch("mother_eta", &m_eta_);
    tdecays_->Branch("mother_phi", &m_phi_);
+   tdecays_->Branch("w", &w_);
 
    d1_ = std::auto_ptr<TreeDaughter>(new TreeDaughter("daughter1", tdecays_));
    d2_ = std::auto_ptr<TreeDaughter>(new TreeDaughter("daughter2", tdecays_));
 
    taus_ = fs->make<TTree>("taus", "Tau decays");
+   taus_->Branch("w", &w_);
    tau_ = std::auto_ptr<TreeDaughter>(new TreeDaughter("t", taus_));
 }
 
