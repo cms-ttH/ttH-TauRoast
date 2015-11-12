@@ -18,7 +18,7 @@ class Plotter(object):
         self.__c.SaveAs(self.__fn + "]")
 
     def plotiso(self, var, titles):
-        self.__t.Draw("t_pt>>hist(15, 0, 150)", self.__dcuts)
+        self.__t.Draw("t_pt>>hist(15, 0, 150)", "({0}) * w".format(self.__dcuts))
         base = r.gDirectory.Get("hist")
         base.SetName("basehist")
 
@@ -26,7 +26,7 @@ class Plotter(object):
         for n, title in enumerate(titles):
             cut = " && ".join([self.__dcuts, self.__ncuts, "{0} >= {1}".format(var, n)])
             print cut
-            self.__t.Draw("t_pt>>hist(15, 0, 150)", cut)
+            self.__t.Draw("t_pt>>hist(15, 0, 150)", "({0}) * w".format(cut))
             h = r.gDirectory.Get("hist")
             h.SetName(var + str(n))
             h.SetTitle(title + ";p_{T}^{#tau,gen} / GeV;Expected #tau efficiency")
