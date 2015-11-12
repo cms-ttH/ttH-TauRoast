@@ -29,7 +29,13 @@ for cfg in config['tasks']:
 
     label = re.sub(r'_ext\d*', '', dir)
 
-    query = subprocess.check_output(['das_client.py', '--format=json', '--query=dataset={0} | grep dataset.nevents'.format(dset)])
+    for i in range(10):
+        try:
+            query = subprocess.check_output(['das_client.py', '--format=json', '--query=dataset={0} | grep dataset.nevents'.format(dset)])
+            break
+        except:
+            pass
+
     data = json.loads(query)
     assert len(data['data']) == 1
     for ds in data['data'][0]['dataset']:
