@@ -1,4 +1,5 @@
 from array import array
+import logging
 
 import ROOT as r
 
@@ -106,6 +107,7 @@ class Forest(object):
         Forest.__instance = None
 
     def _draw(self, name, *args, **kwargs):
+        logging.debug("Generating histogram for {0} with: {1}".format(name, args))
         try:
             self.__f.Get(name).Draw(*args, **kwargs)
         except ReferenceError:
