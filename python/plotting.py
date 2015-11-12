@@ -151,9 +151,9 @@ class Plot(object):
             return
         self.__normalized = True
         for proc, hist in self.__hists.items():
-            logging.debug("normalizing histogram {0}, process {1}".format(
-                self.__name, proc))
-            factor = cuts[-1][proc] / float(cuts[-3][proc])
+            logging.debug("normalizing histogram {0}, process {1}".format(self.__name, proc))
+            denom = float(cuts[-3][proc])
+            factor = 0. if denom == 0. else cuts[-1][proc] / denom
             hist.Scale(factor)
 
     def read(self, file, procs, fmt="{p}_{v}"):
