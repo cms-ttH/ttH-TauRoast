@@ -77,7 +77,7 @@ from ttH.TauRoast.processing import Process
 from ttH.TauRoast.printable import SyncSaver
 from ttH.TauRoast.variation import setup
 
-useful.channel(config['channel'])
+useful.setup(config['channel'], config['generator'])
 useful.load_python()
 stylish.setup()
 

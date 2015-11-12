@@ -1,8 +1,10 @@
 # vim: set sw=4 sta et :
 
 channel: ttl
-ntupledir: /scratch365/mwolf3/ttH/v10.1
-outdir: ~/www/ttH/v10.1
+generator: pow
+ntupledir: /hadoop/store/user/matze/ttH/v11.2
+# ntupledir: /scratch365/mwolf3/ttH/v11.2
+outdir: ~/www/ttH/v11.2
 histformat: "{p}_{v}_TTL"
 
 lumi: 1553
@@ -10,18 +12,20 @@ lumi: 1553
 plot:
   - collisions
   - ttjets
-  - ttjets_semilept
-  - ttjets_fulllept
+  # - ttjets_semilept
+  # - ttjets_fulllept
+  - singletop
+  - ewk
   - ttH_125
-  - ttH2bb_125
-  - ttH2Nonbb_125
+  # - ttH2bb_125
+  # - ttH2Nonbb_125
   - ttH2TT_125
-  - ttH2TT_125_real
+  # - ttH2TT_125_real
 
 limits:
   - collisions
   - ttjets
-  - ttH_125
+  - ttH_125_pow
 
 cuts:
   - "Trigger": "(leptons[0].electron() and event.trigger().single_e()) or (leptons[0].muon() and event.trigger().single_mu())"

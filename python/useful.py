@@ -6,16 +6,18 @@ from collections import namedtuple
 
 from ttH.TauRoast.heavy import calculate_weights
 
-Config = namedtuple('Config', ['taus', 'leptons'])
+Config = namedtuple('Config', ['taus', 'leptons', 'generator'])
 config = None
 
-def channel(s):
+def setup(channel, generator):
     global config
-    config = Config(taus=s.lower().count("t"), leptons=s.lower().count("l"))
+    config = Config(taus=channel.lower().count("t"), leptons=channel.lower().count("l"), generator=generator)
 
 def load_python():
     import imp
     from glob import glob
+
+    from ttH.TauRoast.processing import Process
 
     datadir = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data')
     magic = os.path.join(datadir, 'plots', '*.py')
@@ -24,6 +26,11 @@ def load_python():
     magic = os.path.join(datadir, 'procs', '*.py')
     for n, file in enumerate(glob(magic)):
         imp.load_source("procs{0}".format(n), file)
+
+    global config
+    for p in Process.procs():
+        if str(p).startswith('ttH') and str(p).endswith(config.generator):
+            p.copy(lambda s: s.replace('_' + config.generator, ''))
 
 def R(p4):
     return math.sqrt(p4.Eta()**2 + p4.Phi()**2)

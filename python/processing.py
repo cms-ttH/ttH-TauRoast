@@ -8,7 +8,6 @@ import ROOT as r
 
 from ttH.TauRoast.botany import Tree
 from ttH.TauRoast.heavy import calculate_weights
-from ttH.TauRoast.useful import Snippet
 
 class Process(object):
     __processes__ = {}
@@ -26,6 +25,9 @@ class Process(object):
         elif limitname:
             Process.__limitnames__.add(limitname)
         Process.__processes__[name] = self
+
+    def copy(self, fct=lambda s: s):
+        return Process(fct(self._name), fct(self._fullname), fct(self._limitname))
 
     def __unicode__(self):
         return self._name
@@ -49,6 +51,10 @@ class Process(object):
         return cls.__processes__[name]
 
     @classmethod
+    def procs(cls):
+        return cls.__processes__.values()
+
+    @classmethod
     def expand(cls, name):
         return map(cls.get, cls.__processes__[str(name)].process())
 
@@ -62,10 +68,16 @@ class BasicProcess(Process):
         self.__cross_section = cross_section
         self.__add_cuts = additional_cuts if additional_cuts else []
 
+    def copy(self, fct=lambda s: s):
+        return BasicProcess(fct(self._name), self.__paths, self.__events,
+                fct(self._fullname), fct(self._limitname),
+                self.__sample, self.__cross_section, self.__add_cuts)
+
     def analyze(self, filename, counts, cuts, weights, systematics, basedir, callbacks=None):
         logging.info("processing {}".format(self))
 
         from ttH.TauRoast.cutting import StaticCut
+        from ttH.TauRoast.useful import Snippet
 
         if callbacks is None:
             callbacks = []
@@ -212,6 +224,10 @@ class CombinedProcess(Process):
         super(CombinedProcess, self).__init__(name, fullname, limitname)
 
         self.__subprocesses = subprocesses
+
+    def copy(self, fct=lambda s: s):
+        return CombinedProcess(fct(self._name), map(fct, self.__subprocesses),
+                fct(self._limitname), fct(self._fullname))
 
     def process(self):
         return sum((Process.get(n).process() for n in self.__subprocesses), [])
