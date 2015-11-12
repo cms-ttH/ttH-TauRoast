@@ -126,6 +126,10 @@ And then run the following command to create a datacard and run a limit:
 
 Again, fix all paths to desired values.
 
+### Calculating processed lumis
+
+Use [BrilCalc][brilcalc].  A pain to setup, but it works.
+
 # Other ttH groups
 
 Link to work from other ttH groups
@@ -166,3 +170,4 @@ the last two steps.
 
 [lobster]: http://lobster.crc.nd.edu
 [makeflow]: http://ccl.cse.nd.edu/software/manuals/makeflow.html
+[brilcalc]: http://cms-service-lumi.web.cern.ch/cms-service-lumi/brilwsdoc.html#brilcalc
