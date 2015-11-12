@@ -52,7 +52,7 @@ class Plotter(object):
         self.__c.SaveAs(self.__fn)
 
 p = Plotter("validate.root", "validate.pdf")
-p.plotiso("t_iso_3hits", ["No isolation", "Loose cut-based", "Medium cut-based", "Tight cut-based"])
-p.plotiso("t_iso_mva", ["No isolation", "Very loose mva-based", "Loose mva-based", "Medium mva-based",
-    "Tight mva-based", "Very tight mva-based", "Very very tight mva-based"])
+p.plotiso("t_iso_3hits", ["No isolation", "Cut-based loose", "Cut-based medium", "Cut-based tight"])
+p.plotiso("t_iso_mva", ["No isolation", "MVA-based very loose", "MVA-based Loose", "MVA-based medium",
+    "MVA-based tight", "MVA-based very tight", "MVA-based very vrey tight"])
 p.close()
