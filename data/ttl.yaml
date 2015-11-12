@@ -25,7 +25,7 @@ plot:
 limits:
   - collisions
   - ttjets
-  - ttH_125_pow
+  - ttH_125
 
 cuts:
   - "Trigger": "(leptons[0].electron() and event.trigger().single_e()) or (leptons[0].muon() and event.trigger().single_mu())"
