@@ -15,7 +15,7 @@ ideff = 1.06
 
 # PU systematics
 class PUWeigher(object):
-    def __init__(self, fn):
+    def __init__(self, fn, histname='pileup'):
         import SimGeneral.MixingModule.mix_2015_25ns_Startup_PoissonOOTPU_cfi as mc_pu
 
         mc_vals = mc_pu.mix.input.nbPileupEvents.probValue
@@ -25,7 +25,7 @@ class PUWeigher(object):
         self.weights = []
 
         f = r.TFile(fn)
-        hist = f.Get("pileup")
+        hist = f.Get(histname)
         hist.Scale(1. / hist.Integral())
         for i in range(hist.GetNbinsX()):
             self.weights.append(hist.GetBinContent(i + 1) / mc[i])
@@ -35,6 +35,8 @@ class PUWeigher(object):
         return self.weights[n]
 
 puhelper = PUWeigher(os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data', 'pu.root'))
+puhelper_up = PUWeigher(os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data', 'pu.root'), 'pileup_up')
+puhelper_down = PUWeigher(os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data', 'pu.root'), 'pileup_down')
 
 # Jet CSV systematics
 csvsys = [
@@ -100,5 +102,7 @@ def calculate_weights(event, combo, shift):
             sys[name] = csvhelper.getCSVWeight(jetpt, jeteta, jetcsv, jetflv, idx, hf, lf, cf)
 
     sys['PUWeight'] = puhelper(event.ntv())
+    sys['PUWeightUp'] = puhelper_up(event.ntv())
+    sys['PUWeightDown'] = puhelper_down(event.ntv())
 
     return dict((k.lower(), v) for k, v in sys.items())
