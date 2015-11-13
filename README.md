@@ -132,12 +132,10 @@ Use [BrilCalc][brilcalc].  A pain to setup, but it works.
 
 ### Calculating pileup weights
 
-See the [twiki][pileup] for reference, together with the [PPD twiki][ppd]:
+See the [twiki][pileup] for reference, together with the [PPD twiki][ppd].
+Use the wrapper:
 
-    pileupCalc.py -i total.json --inputLumiJSON \
-        /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/PileUp/pileup_latest.txt \
-        --calcMode true --minBiasXsec 80000 --maxPileupBin 50 --numPileupBins 50 \
-        data_pu.root
+    update_pileup <data processing json>
 
 # Other ttH groups
 

@@ -1,0 +1,30 @@
+#!/bin/sh
+
+if [ $# != 1 ]; then
+	echo "usage: $(basename $0) jsonfile"
+	exit 1
+fi
+
+xsec=69000
+xsec_up=$(($xsec * 105 / 100))
+xsec_down=$(($xsec * 95 / 100))
+
+pileupCalc.py -i total.json --inputLumiJSON \
+	/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/PileUp/pileup_latest.txt \
+	--calcMode true --minBiasXsec $xsec --maxPileupBin 50 --numPileupBins 50 \
+	data_pu.root
+
+pileupCalc.py -i total.json --inputLumiJSON \
+	/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/PileUp/pileup_latest.txt \
+	--calcMode true --minBiasXsec $xsec_up --maxPileupBin 50 --numPileupBins 50 \
+	--pileupHistName pileup_up \
+	data_pu_up.root
+
+pileupCalc.py -i total.json --inputLumiJSON \
+	/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/PileUp/pileup_latest.txt \
+	--calcMode true --minBiasXsec $xsec_down --maxPileupBin 50 --numPileupBins 50 \
+	--pileupHistName pileup_down \
+	data_pu_down.root
+
+hadd -f data/pu.root data_pu.root data_pu_up.root data_pu_down.root
+rm data_pu.root data_pu_up.root data_pu_down.root
