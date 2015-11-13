@@ -39,6 +39,7 @@ cuts:
 weights:
   - Generator
   - CSVWeight
+  - PUWeight
 
 # Allowed values: JES{Up,Down}, JER{Up,Down}, NA
 systematics: NA

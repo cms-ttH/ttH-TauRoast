@@ -8,10 +8,35 @@ if r.gROOT.GetVersion().startswith('6'):
 
 r.gSystem.Load("libMiniAODMiniAODHelper")
 
+# Tau systematics
 efake = 1.05
 jfake = 1.2
 ideff = 1.06
 
+# PU systematics
+class PUWeigher(object):
+    def __init__(self, fn):
+        import SimGeneral.MixingModule.mix_2015_25ns_Startup_PoissonOOTPU_cfi as mc_pu
+
+        mc_vals = mc_pu.mix.input.nbPileupEvents.probValue
+        mc_xs = mc_pu.mix.input.nbPileupEvents.probFunctionVariable
+        mc = dict(zip(mc_xs, mc_vals))
+
+        self.weights = []
+
+        f = r.TFile(fn)
+        hist = f.Get("pileup")
+        hist.Scale(1. / hist.Integral())
+        for i in range(hist.GetNbinsX()):
+            self.weights.append(hist.GetBinContent(i + 1) / mc[i])
+        f.Close()
+
+    def __call__(self, n):
+        return self.weights[n]
+
+puhelper = PUWeigher(os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data', 'pu.root'))
+
+# Jet CSV systematics
 csvsys = [
         ("NA", 0),
         ("JERUp", 0),
@@ -73,5 +98,7 @@ def calculate_weights(event, combo, shift):
     if shift == 'NA':
         for name, idx in csvsys[5:]:
             sys[name] = csvhelper.getCSVWeight(jetpt, jeteta, jetcsv, jetflv, idx, hf, lf, cf)
+
+    sys['PUWeight'] = puhelper(event.ntv())
 
     return dict((k.lower(), v) for k, v in sys.items())

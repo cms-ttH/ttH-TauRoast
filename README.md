@@ -130,6 +130,15 @@ Again, fix all paths to desired values.
 
 Use [BrilCalc][brilcalc].  A pain to setup, but it works.
 
+### Calculating pileup weights
+
+See the [twiki][pileup] for reference, together with the [PPD twiki][ppd]:
+
+    pileupCalc.py -i total.json --inputLumiJSON \
+        /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/PileUp/pileup_latest.txt \
+        --calcMode true --minBiasXsec 80000 --maxPileupBin 50 --numPileupBins 50 \
+        data_pu.root
+
 # Other ttH groups
 
 Link to work from other ttH groups
@@ -171,3 +180,5 @@ the last two steps.
 [lobster]: http://lobster.crc.nd.edu
 [makeflow]: http://ccl.cse.nd.edu/software/manuals/makeflow.html
 [brilcalc]: http://cms-service-lumi.web.cern.ch/cms-service-lumi/brilwsdoc.html#brilcalc
+[pileup]: https://twiki.cern.ch/twiki/bin/view/CMS/PileupJSONFileforData#2015_Pileup_JSON_Files
+[ppd]: https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVPileUpDescription#Startup2015
