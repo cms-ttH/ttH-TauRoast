@@ -170,6 +170,10 @@ the last two steps.
 
 # History
 
+## v11.2
+
+* More powheg samples
+
 ## v11.1
 
 * τ raw isolation w/ 3 hits
