@@ -79,7 +79,7 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         filterPUJets = cms.bool(False),
         printPreselection = cms.bool(False),
         triggerSingleE = cms.vstring("HLT_Ele27_eta2p1_WPLoose_Gsf_v" if options.data else "HLT_Ele27_WP85_Gsf_v"),
-        triggerSingleMu = cms.vstring("HLT_IsoMu20_v")
+        triggerSingleMu = cms.vstring("HLT_IsoMu18_v" if options.data else "HLT_IsoMu17_eta2p1_v")
 )
 
 # process.p = cms.Path(process.ttHLeptons * process.taus)
