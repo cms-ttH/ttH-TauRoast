@@ -416,6 +416,11 @@ class Plot(object):
         drw = '{0}>>{1}'.format(":".join(self.__values), hist.GetName())
         sel = '*'.join(self.__weights if self.__weights else weights)
         opt = '' if len(self.__values) == 1 else 'COLZ'
+
+        # Don't use weights for data
+        if str(process).startswith('collisions'):
+            sel = ''
+
         Forest.draw(str(process), drw, sel, opt)
         # has to happen after the draw, otherwise ROOT won't find the
         # histo!
