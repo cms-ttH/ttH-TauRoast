@@ -68,7 +68,7 @@ Plot(
         name="general/NumVertices_coarse",
         values=['npv'],
         labels=["Number PV", "Events"],
-        binning=[8, 0, 40]
+        binning=[20, 0, 40]
 )
 Plot(
         name="general/NumJetsOverview",
