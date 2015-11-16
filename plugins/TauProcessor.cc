@@ -565,7 +565,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
          staus.push_back(superslim::Tau(tau, particles));
 
       for (const auto& lep: loose_e)
-         sleptons.push_back(superslim::Lepton(lep, helper_.GetElectronRelIso(lep), rpv, *bs, particles));
+         sleptons.push_back(superslim::Lepton(lep, helper_.GetElectronRelIso(lep, coneSize::R04, corrType::deltaBeta), rpv, *bs, particles));
 
       for (const auto& lep: loose_mu)
          sleptons.push_back(superslim::Lepton(lep, helper_.GetMuonRelIso(lep, coneSize::R04, corrType::deltaBeta), rpv, *bs, particles));
