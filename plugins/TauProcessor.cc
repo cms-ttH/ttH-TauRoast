@@ -220,7 +220,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    print_preselection_(config.getParameter<bool>("printPreselection")),
    min_loose_lep_pt_(config.getParameter<double>("minLooseLeptonPt")),
    min_tight_e_pt_(config.getParameter<double>("minTightElectronPt")),
-   min_tight_mu_pt_(config.getParameter<double>("minTightMUonPt")),
+   min_tight_mu_pt_(config.getParameter<double>("minTightMuonPt")),
    max_loose_lep_eta_(config.getParameter<double>("maxLooseLeptonEta")),
    max_tight_lep_eta_(config.getParameter<double>("maxTightLeptonEta")),
    min_jet_pt_(config.getParameter<double>("minJetPt")),
