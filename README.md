@@ -8,7 +8,6 @@ Open issues:
 
   * top pt
   * lepton
-  * pileup
 
 * Plotting
 
