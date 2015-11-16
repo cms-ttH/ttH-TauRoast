@@ -1,8 +1,9 @@
 # vim: set sw=4 sta et :
 
 channel: lj
+generator: pow
 ntupledir: test/leptonplusjets
-outdir: test/sync_e
+outdir: test/sync_lj
 
 lumi: 10000
 
@@ -10,8 +11,7 @@ plot:
   - ttH2bb_125
 
 cuts:
-  - "Trigger": "event.trigger().single_e()"
-  - "Single e": "leptons[0].electron() and len(leptons) == 1"
+  - "Trigger": "(leptons[0].electron() and event.trigger().single_e()) or (leptons[0].muon() and event.trigger().single_mu())"
   - "≥ 4 jets": "len(jets) >= 4"
   - "≥ 2 tags": "len(filter(btag, jets)) >= 2"
 
