@@ -165,7 +165,8 @@ class TauProcessor : public edm::EDAnalyzer {
       bool print_preselection_;
 
       double min_loose_lep_pt_;
-      double min_tight_lep_pt_;
+      double min_tight_e_pt_;
+      double min_tight_mu_pt_;
 
       double max_loose_lep_eta_;
       double max_tight_lep_eta_;
@@ -179,6 +180,7 @@ class TauProcessor : public edm::EDAnalyzer {
       edm::EDGetTokenT<double> rho_token_;
       edm::EDGetTokenT<GenEventInfoProduct> geninfo_token_;
       edm::EDGetTokenT<reco::BeamSpot> bs_token_;
+      edm::EDGetTokenT<reco::ConversionCollection> cc_token_;
       edm::EDGetTokenT<std::vector<PileupSummaryInfo>> pu_token_;
       edm::EDGetTokenT<reco::VertexCollection> vertices_token_;
       edm::EDGetTokenT<pat::ElectronCollection> electrons_token_;
@@ -217,7 +219,8 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    subtract_leptons_(config.getParameter<bool>("subtractLeptons")),
    print_preselection_(config.getParameter<bool>("printPreselection")),
    min_loose_lep_pt_(config.getParameter<double>("minLooseLeptonPt")),
-   min_tight_lep_pt_(config.getParameter<double>("minTightLeptonPt")),
+   min_tight_e_pt_(config.getParameter<double>("minTightElectronPt")),
+   min_tight_mu_pt_(config.getParameter<double>("minTightMUonPt")),
    max_loose_lep_eta_(config.getParameter<double>("maxLooseLeptonEta")),
    max_tight_lep_eta_(config.getParameter<double>("maxTightLeptonEta")),
    min_jet_pt_(config.getParameter<double>("minJetPt")),
@@ -235,6 +238,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    rho_token_ = consumes<double>(edm::InputTag("fixedGridRhoFastjetAll"));
    geninfo_token_ = consumes<GenEventInfoProduct>(edm::InputTag("generator"));
    bs_token_ = consumes<reco::BeamSpot>(edm::InputTag("offlineBeamSpot"));
+   cc_token_ = consumes<reco::ConversionCollection>(edm::InputTag("reducedEgamma", "reducedConversions", ""));
    pu_token_ = consumes<std::vector<PileupSummaryInfo>>(edm::InputTag("slimmedAddPileupInfo"));
    vertices_token_ = consumes<reco::VertexCollection>(edm::InputTag("offlineSlimmedPrimaryVertices"));
    electrons_token_ = consumes<pat::ElectronCollection>(config.getParameter<edm::InputTag>("electrons"));
@@ -264,6 +268,14 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    helper_.SetUp("2012_53x", 2500, analysisType::LJ, data_);
    helper_.SetJetCorrectorUncertainty();
    // helper_.SetFactorizedJetCorrector();
+
+   if (min_leptons_ == 1) {
+      helper_.SetUpElectronMVA(
+            "MiniAOD/MiniAODHelper/data/ElectronMVA/EIDmva_EB1_10_oldTrigSpring15_25ns_data_1_VarD_TMVA412_Sig6BkgAll_MG_noSpec_BDT.weights.xml",
+            "MiniAOD/MiniAODHelper/data/ElectronMVA/EIDmva_EB2_10_oldTrigSpring15_25ns_data_1_VarD_TMVA412_Sig6BkgAll_MG_noSpec_BDT.weights.xml",
+            "MiniAOD/MiniAODHelper/data/ElectronMVA/EIDmva_EE_10_oldTrigSpring15_25ns_data_1_VarD_TMVA412_Sig6BkgAll_MG_noSpec_BDT.weights.xml"
+      );
+   }
 
    edm::Service<TFileService> fs;
    tree_ = fs->make<TTree>("events", "Event data");
@@ -322,24 +334,6 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 {
    using namespace edm;
 
-   muonID::muonID mu_id_pre = muonID::muonPreselection;
-   muonID::muonID mu_id_loose = muonID::muonLooseCutBased;
-   muonID::muonID mu_id_tight = muonID::muonTightCutBased;
-
-   electronID::electronID e_id_pre = electronID::electronPreselection;
-   electronID::electronID e_id_loose = electronID::electronLooseCutBased;
-   electronID::electronID e_id_tight = electronID::electronTightCutBased;
-
-   if (min_leptons_ == 1) {
-      mu_id_pre = muonID::muonLoose;
-      mu_id_loose = muonID::muonLoose;
-      mu_id_tight = muonID::muonTight;
-
-      e_id_pre = electronID::electronSpring15L;
-      e_id_loose = electronID::electronSpring15L;
-      e_id_tight = electronID::electronSpring15M;
-   }
-
    int event_cut = 0;
 
    // events run over count
@@ -396,12 +390,37 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    passCut(event_cut++, "Valid primary vertex");
 
    auto bs = get_collection(*this, event, bs_token_);
+   auto cc = get_collection(*this, event, cc_token_);
 
    auto rho = get_collection(*this, event, rho_token_);
    helper_.SetRho(*rho);
 
    auto corr = JetCorrector::getJetCorrector("ak4PFchsL1L2L3", setup);
    helper_.SetJetCorrector(corr);
+
+   // ===============
+   // Setup lepton ID
+   // ===============
+
+   muonID::muonID mu_id_pre = muonID::muonPreselection;
+   muonID::muonID mu_id_loose = muonID::muonLooseCutBased;
+   muonID::muonID mu_id_tight = muonID::muonTightCutBased;
+
+   electronID::electronID e_id_pre = electronID::electronPreselection;
+   electronID::electronID e_id_loose = electronID::electronLooseCutBased;
+   electronID::electronID e_id_tight = electronID::electronTightCutBased;
+
+   if (min_leptons_ == 1) {
+      mu_id_pre = muonID::muonLoose;
+      mu_id_loose = muonID::muonLoose;
+      mu_id_tight = muonID::muonTight;
+
+      e_id_pre = electronID::electronEndOf15MVAmedium;
+      e_id_loose = electronID::electronEndOf15MVAmedium;
+      e_id_tight = electronID::electronEndOf15MVAmedium;
+
+      helper_.SetElectronMVAinfo(cc, bs);
+   }
 
    // ===============
    // Basic selection
@@ -466,8 +485,8 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       // with tight leptons?
       auto loose_e = helper_.GetSelectedElectrons(preselected_e, min_loose_lep_pt_, e_id_loose, max_loose_lep_eta_);
       auto loose_mu = helper_.GetSelectedMuons(preselected_mu, min_loose_lep_pt_, mu_id_loose, coneSize::R04, corrType::deltaBeta, max_loose_lep_eta_);
-      auto tight_e = helper_.GetSelectedElectrons(loose_e, min_tight_lep_pt_, e_id_tight, max_tight_lep_eta_);
-      auto tight_mu = helper_.GetSelectedMuons(loose_mu, min_tight_lep_pt_, mu_id_tight, coneSize::R04, corrType::deltaBeta, max_tight_lep_eta_);
+      auto tight_e = helper_.GetSelectedElectrons(loose_e, min_tight_e_pt_, e_id_tight, max_tight_lep_eta_);
+      auto tight_mu = helper_.GetSelectedMuons(loose_mu, min_tight_mu_pt_, mu_id_tight, coneSize::R04, corrType::deltaBeta, max_tight_lep_eta_);
 
       if (preselected_e.size() + preselected_mu.size() < min_leptons_)
          continue;

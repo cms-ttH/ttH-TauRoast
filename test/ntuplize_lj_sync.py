@@ -3,31 +3,35 @@ import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 
 options = VarParsing.VarParsing('analysis')
+options.register("data", False,
+        VarParsing.VarParsing.multiplicity.singleton,
+        VarParsing.VarParsing.varType.bool,
+        "Indicate if data is being used (or MC)")
+options.register("globalTag", "74X_mcRun2_asymptotic_v2",
+        VarParsing.VarParsing.multiplicity.singleton,
+        VarParsing.VarParsing.varType.string,
+        "Global tag to use")
 options.parseArguments()
 
 process = cms.Process("Taus")
+
+process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = 2000
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32( options.maxEvents ) )
 
-process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
-process.GlobalTag.globaltag = 'MCRUN2_74_V9::All'
-
-infile = 'root://cmsxrootd.fnal.gov//store/user/shwillia/Spring15_Sync/ttHbb_spring15_25ns_plusboostedjets.root'
-if os.path.isfile(os.path.basename(infile)):
-    infile = 'file:' + os.path.basename(infile)
+process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff")
+process.GlobalTag.globaltag = options.globalTag
 
 process.source = cms.Source("PoolSource",
-        fileNames = cms.untracked.vstring([
-            infile
-        ])
+        fileNames = cms.untracked.vstring(options.inputFiles)
 )
 
 process.TFileService = cms.Service("TFileService",
         closeFileFast = cms.untracked.bool(True),
-        fileName = cms.string("test/leptonplusjets/ttH2bb_125/test.root")
+        fileName = cms.string(options.outputFile)
 )
 
 import os
@@ -53,6 +57,7 @@ process.ak4PFchsL1L2L3 = cms.ESProducer("JetCorrectionESChain",
 )
 
 process.taus = cms.EDAnalyzer("TauProcessor",
+        data = cms.bool(options.data),
         electrons = cms.InputTag("slimmedElectrons"),
         muons = cms.InputTag("slimmedMuons"),
         minJets = cms.uint32(0),
@@ -67,7 +72,8 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         minTightTaus = cms.uint32(0),
         subtractLeptons = cms.bool(False),
         minLooseLeptonPt = cms.double(10.),
-        minTightLeptonPt = cms.double(30.),
+        minTightElectronPt = cms.double(30.),
+        minTightMuonPt = cms.double(25.),
         maxLooseLeptonEta = cms.double(2.4),
         maxTightLeptonEta = cms.double(2.1),
         minJetPt = cms.double(30.),
@@ -75,7 +81,8 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         maxJetEta = cms.double(2.4),
         filterPUJets = cms.bool(False),
         printPreselection = cms.bool(False),
-        triggerSelection = cms.string("HLT_Ele27_eta2p1_WP85_Gsf_HT200_v1 OR HLT_IsoMu24_eta2p1_v1")
+        triggerSingleE = cms.vstring("HLT_Ele27_eta2p1_WPLoose_Gsf_v" if options.data else "HLT_Ele27_WP85_Gsf_v"),
+        triggerSingleMu = cms.vstring("HLT_IsoMu18_v" if options.data else "HLT_IsoMu17_eta2p1_v")
 )
 
 process.p = cms.Path(process.taus)
