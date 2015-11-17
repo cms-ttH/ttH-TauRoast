@@ -8,12 +8,7 @@ class SyncSaver(object):
             os.makedirs(os.path.dirname(filename))
         self.__f = open(filename, 'w')
         if channel == 'lj':
-            self.__fmt = "%6d %8d %10d   " + \
-                    "%6.2f %+4.2f %+4.2f   " + \
-                    "%6.2f %6.2f %6.2f %6.2f   " + \
-                    "%+7.3f %+7.3f %+7.3f %+7.3f   " + \
-                    "%+7.3f   %2d  %2d   " + \
-                    "\n" # "%2d   %2d  %2d\n"
+            self.__f.write("\n")
             self._fct = self._print_lepjets
         elif channel == 'll':
             self.__fmt = "%6d %6d %10d  " + \
@@ -31,34 +26,23 @@ class SyncSaver(object):
         self.__f.close()
 
     def _print_lepjets(self, event, combo):
+        def dtos(d):
+            s = "{0:.6}".format(d)
+            return "0" if s == "0.0" else s
         leptons = combo.leptons()
         jets = combo.jets()
         first = leptons[0]
-        jet1 = jets[0].p4().pt() if len(jets) > 0 else -99
-        jet2 = jets[1].p4().pt() if len(jets) > 1 else -99
-        jet3 = jets[2].p4().pt() if len(jets) > 2 else -99
-        jet4 = jets[3].p4().pt() if len(jets) > 3 else -99
-        csv1 = jets[0].csv() if len(jets) > 0 else -99
-        csv2 = jets[1].csv() if len(jets) > 1 else -99
-        csv3 = jets[2].csv() if len(jets) > 2 else -99
-        csv4 = jets[3].csv() if len(jets) > 3 else -99
-        self.__f.write(self.__fmt % (
-            event.run(), event.lumi(), event.event(),
-            first.p4().pt(), first.p4().eta(), first.p4().phi(),
-            jet1, jet2, jet3, jet4,
-            csv1, csv2, csv3, csv4,
-            combo.met().pt(),
-            len(jets), len(filter(btag, jets))))
-
-          # printf("%6d %8d %10d   %6.2f %+4.2f %+4.2f   %6.2f %6.2f %6.2f %6.2f   %+7.3f %+7.3f %+7.3f %+7.3f   %+7.3f   %2d  %2d   %2d   %2d  %2d\n",
-          #   run, lumi, event,
-          #   lep1_pt, lep1_eta, lep1_phi,
-          #   jet1_pt, jet2_pt, jet3_pt, jet4_pt,
-          #   jet1_CSVv2, jet2_CSVv2, jet3_CSVv2, jet4_CSVv2,
-          #   MET,
-          #   n_jets, n_btags,
-          #   ttHFCategory,
-          #   n_toptags, n_higgstags);
+        jpts = ([dtos(j.p4().pt()) for j in jets] + ["0"] * 4)[:4]
+        jcsvs = ([dtos(j.csv()) for j in jets] + ["0"] * 4)[:4]
+        s = ",".join(map(str,
+            [
+                event.run(), event.lumi(), event.event(),
+                1, 0,
+                dtos(first.p4().pt()), dtos(first.p4().eta()), dtos(first.p4().phi()), dtos(first.relativeIsolation()), first.pdgId(),
+                0, 0, 0, 0, 0
+            ] + jpts + jcsvs
+        ))
+        self.__f.write(s + "\n")
 
     def _print_dilepton(self, event, combo):
         leptons = combo.leptons()
