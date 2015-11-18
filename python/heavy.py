@@ -100,6 +100,9 @@ def calculate_weights(event, combo, shift):
     if shift == 'NA':
         for name, idx in csvsys[5:]:
             sys[name] = csvhelper.getCSVWeight(jetpt, jeteta, jetcsv, jetflv, idx, hf, lf, cf)
+    else:
+        for name, idx in csvsys[5:]:
+            sys[name] = 1.
 
     sys['PUWeight'] = puhelper(event.ntv())
     sys['PUWeightUp'] = puhelper_up(event.ntv())
