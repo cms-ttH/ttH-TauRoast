@@ -69,8 +69,9 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         minTaus = cms.uint32(2),
         minTightTaus = cms.uint32(0),
         subtractLeptons = cms.bool(False),
-        minLooseLeptonPt = cms.double(10.),
-        minTightLeptonPt = cms.double(30.),
+        minLooseLeptonPt = cms.double(15.),
+        minTightElectronPt = cms.double(30.),
+        minTightMuonPt = cms.double(25.),
         maxLooseLeptonEta = cms.double(2.4),
         maxTightLeptonEta = cms.double(2.1),
         minJetPt = cms.double(30.),
@@ -79,7 +80,8 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         filterPUJets = cms.bool(False),
         printPreselection = cms.bool(False),
         triggerSingleE = cms.vstring("HLT_Ele27_eta2p1_WPLoose_Gsf_v" if options.data else "HLT_Ele27_WP85_Gsf_v"),
-        triggerSingleMu = cms.vstring("HLT_IsoMu18_v" if options.data else "HLT_IsoMu17_eta2p1_v")
+        triggerSingleMu = cms.vstring("HLT_IsoMu18_v" if options.data else "HLT_IsoMu17_eta2p1_v"),
+        debugEvents = cms.vuint32()
 )
 
 # process.p = cms.Path(process.ttHLeptons * process.taus)
