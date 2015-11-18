@@ -440,9 +440,13 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    auto taus = get_collection(*this, event, taus_token_);
    auto ak4jets = get_collection(*this, event, ak4jets_token_);
 
-   auto raw_mu = helper_.GetSelectedMuons(*muons, 5., mu_id_pre);
-   auto all_preselected_e = helper_.GetSelectedElectrons(*electrons, 7., e_id_pre);
-   auto raw_e = removeOverlap(all_preselected_e, raw_mu, 0.05);
+   auto raw_mu = *muons;
+   auto raw_e = *electrons;
+   if (min_leptons_ > 1) {
+      raw_mu = helper_.GetSelectedMuons(*muons, 5., mu_id_pre);
+      raw_e = helper_.GetSelectedElectrons(*electrons, 7., e_id_pre);
+      raw_e = removeOverlap(raw_e, raw_mu, 0.05);
+   }
    auto raw_tau = helper_.GetSelectedTaus(*taus, 20., tau::loose);
    auto raw_tight_tau = helper_.GetSelectedTaus(raw_tau, 20., tau::tight);
 
