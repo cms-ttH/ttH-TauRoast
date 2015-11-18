@@ -174,6 +174,13 @@ the last two steps.
 
 # History
 
+## v12
+
+* Synced with ttH Lepton+Jets
+
+  * new electron ID
+  * lower μ pt cuts
+
 ## v11.2
 
 * More powheg samples
