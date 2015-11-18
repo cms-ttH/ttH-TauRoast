@@ -39,7 +39,7 @@ Afterwards, clone this repository in the CMSSW source area:
 
     git clone git@github.com:cms-ttH/ttH-TauRoast.git ttH/TauRoast
 
-and add some CMS dependencies:
+and add some CMS dependencies for TLL:
 
     git remote add cmg-central https://github.com/CERN-PH-CMG/cmg-cmssw.git
     git fetch cmg-central
@@ -55,6 +55,10 @@ and add some CMS dependencies:
     git clone git@github.com:cms-ttH/ttH-LeptonID.git ttH/LeptonID
 
     gzip -d EgammaAnalysis/ElectronTools/data/PHYS14/*.gz
+
+or add some CMS dependencies for TTL:
+
+    git cms-merge-topic --unsafe ikrav:egm_id_7.4.12_v1
 
 then compile:
 
