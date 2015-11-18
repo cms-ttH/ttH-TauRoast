@@ -3,9 +3,10 @@ import os
 from useful import btag
 
 class SyncSaver(object):
-    def __init__(self, channel, filename):
+    def __init__(self, channel, filename, systematics="NA"):
         if not os.path.isdir(os.path.dirname(filename)):
             os.makedirs(os.path.dirname(filename))
+        self.__sys = systematics
         self.__f = open(filename, 'w')
         if channel == 'lj':
             self.__f.write("\n")
@@ -30,8 +31,8 @@ class SyncSaver(object):
             s = "{0:.6}".format(d)
             return "0" if s == "0.0" else s
         leptons = combo.leptons()
-        jets = combo.jets()
-        met = combo.met()
+        jets = combo.jets(self.__sys)
+        met = combo.met(self.__sys)
         first = leptons[0]
         jpts = ([dtos(j.p4().pt()) for j in jets] + ["0"] * 4)[:4]
         jcsvs = ([dtos(j.csv()) for j in jets] + ["0"] * 4)[:4]
