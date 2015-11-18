@@ -1,6 +1,13 @@
+.__afs*
 *.swp
+*.swo
+*.swn
 *.pyc
+Session.vim
 tags
 python/__init__.py
 test/tmp*
 test/*.log
+test/crabby_*
+test/leptonplusjets
+test/sync_lj
