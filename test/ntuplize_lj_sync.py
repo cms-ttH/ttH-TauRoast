@@ -56,6 +56,11 @@ process.ak4PFchsL1L2L3 = cms.ESProducer("JetCorrectionESChain",
             'ak4PFchsL3Absolute')
 )
 
+evts = []
+if os.path.isfile('debug_events'):
+    with open('debug_events') as f:
+        evts = map(int, f.readlines())
+
 process.taus = cms.EDAnalyzer("TauProcessor",
         data = cms.bool(options.data),
         electrons = cms.InputTag("slimmedElectrons"),
@@ -82,7 +87,8 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         filterPUJets = cms.bool(False),
         printPreselection = cms.bool(False),
         triggerSingleE = cms.vstring("HLT_Ele27_eta2p1_WPLoose_Gsf_v" if options.data else "HLT_Ele27_WP85_Gsf_v"),
-        triggerSingleMu = cms.vstring("HLT_IsoMu18_v" if options.data else "HLT_IsoMu17_eta2p1_v")
+        triggerSingleMu = cms.vstring("HLT_IsoMu18_v" if options.data else "HLT_IsoMu17_eta2p1_v"),
+        debugEvents = cms.vuint32(evts)
 )
 
 process.p = cms.Path(process.taus)

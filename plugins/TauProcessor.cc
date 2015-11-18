@@ -199,6 +199,9 @@ class TauProcessor : public edm::EDAnalyzer {
 
       superslim::Event *event_;
 
+      unsigned int evt_;
+      std::vector<unsigned int> evt_list_;
+
       // see https://twiki.cern.ch/twiki/bin/view/CMS/TriggerResultsFilter#Use_as_a_Selector_AN1
       triggerExpression::Data m_triggerCache;
       std::unique_ptr<triggerExpression::Evaluator> m_triggerSelector;
@@ -228,6 +231,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    max_jet_eta_(config.getParameter<double>("maxJetEta")),
    filter_pu_jets_(config.getParameter<bool>("filterPUJets")),
    event_(0),
+   evt_list_(config.getParameter<std::vector<unsigned int>>("debugEvents")),
    m_triggerCache(
          edm::InputTag("TriggerResults", "", "HLT"),
          edm::InputTag("gtDigis"),
@@ -312,6 +316,9 @@ TauProcessor::passCut(unsigned int cut, const std::string& name, float w)
 {
    cuts_->Fill(cut, w);
 
+   if (std::find(begin(evt_list_), end(evt_list_), evt_) != end(evt_list_))
+      std::cout << evt_ << " passes " << name << std::endl;
+
    if (cutnames_.size() == cut) {
       cutnames_.push_back(name);
       cuts_->GetXaxis()->SetBinLabel(cut + 1, name.c_str());
@@ -333,6 +340,8 @@ void
 TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 {
    using namespace edm;
+
+   evt_ = event.id().event();
 
    int event_cut = 0;
 
