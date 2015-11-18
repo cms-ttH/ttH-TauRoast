@@ -18,7 +18,7 @@ advanced:
     # abort multiplier: 3
     # abort threshold: 100
 
-task defaults:
+workflow defaults:
     cmssw config: ntuplize.py
     events per job: 100000
     task runtime: 1800
@@ -30,7 +30,7 @@ task defaults:
         lumi mask: 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions15/13TeV/Cert_246908-259891_13TeV_PromptReco_Collisions15_25ns_JSON.txt'
         parameters: ['data=True', 'globalTag=74X_dataRun2_reMiniAOD_v0']
 
-tasks:
+workflows:
   - {label: ttH2TT_125         , dataset: /ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM}
   - {label: ttH2TT_125_ext1    , dataset: /ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext1-v1/MINIAODSIM}
   - {label: ttH2TT_125_ext2    , dataset: /ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext2-v1/MINIAODSIM}
