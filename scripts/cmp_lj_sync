@@ -1,0 +1,26 @@
+#!/usr/bin/env python
+
+import sys
+
+def read(fn):
+    evts = {}
+    with open(fn) as f:
+        for line in f:
+            if not line.startswith('1'):
+                continue
+            run, lumi, event, stub = line.split(',', 3)
+            evts[(run, lumi, event)] = stub
+    return evts
+
+me = read(sys.argv[1])
+kit = read(sys.argv[2])
+
+mkeys = set(me.keys())
+kkeys = set(kit.keys())
+
+for k in mkeys - kkeys:
+    print "me", ",".join(list(k) + [me[k]]).strip()
+for k in kkeys - mkeys:
+    print "kit", ",".join(list(k) + [kit[k]]).strip()
+print len(mkeys - kkeys), "events unique in first file"
+print len(kkeys - mkeys), "events unique in second file"
