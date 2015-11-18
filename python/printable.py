@@ -31,6 +31,7 @@ class SyncSaver(object):
             return "0" if s == "0.0" else s
         leptons = combo.leptons()
         jets = combo.jets()
+        met = combo.met()
         first = leptons[0]
         jpts = ([dtos(j.p4().pt()) for j in jets] + ["0"] * 4)[:4]
         jcsvs = ([dtos(j.csv()) for j in jets] + ["0"] * 4)[:4]
@@ -39,8 +40,7 @@ class SyncSaver(object):
                 event.run(), event.lumi(), event.event(),
                 1, 0,
                 dtos(first.p4().pt()), dtos(first.p4().eta()), dtos(first.p4().phi()), dtos(first.relativeIsolation()), first.pdgId(),
-                0, 0, 0, 0, 0
-            ] + jpts + jcsvs
+            ] + [0] * 5 + jpts + jcsvs + map(dtos, [met.pt(), met.phi()])
         ))
         self.__f.write(s + "\n")
 
