@@ -411,8 +411,8 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    electronID::electronID e_id_tight = electronID::electronTightCutBased;
 
    if (min_leptons_ == 1) {
-      mu_id_pre = muonID::muonLoose;
-      mu_id_loose = muonID::muonLoose;
+      mu_id_pre = muonID::muonTight;
+      mu_id_loose = muonID::muonTight;
       mu_id_tight = muonID::muonTight;
 
       e_id_pre = electronID::electronEndOf15MVAmedium;
