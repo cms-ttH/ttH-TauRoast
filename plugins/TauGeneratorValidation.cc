@@ -71,6 +71,28 @@ get_final(const reco::Candidate * c)
    return c;
 }
 
+const reco::Candidate *
+get_mother(const reco::Candidate * c)
+{
+   auto id = c->pdgId();
+
+   const reco::Candidate *radstate = 0;
+   for (unsigned int i = 0; i < c->numberOfMothers(); ++i) {
+      if (c->mother(i) and c->mother(i)->pdgId() == id) {
+         radstate = c->mother(i);
+         break;
+      }
+   }
+
+   if (radstate)
+      return get_mother(radstate);
+
+   if (c->numberOfMothers() > 0 and c->mother(0))
+      return c->mother(0);
+
+   return 0;
+}
+
 std::pair<int, const reco::GenParticle*>
 get_mc_match(const reco::Candidate& t, const reco::GenParticleCollection& coll)
 {
@@ -136,6 +158,7 @@ class TreeDaughter {
       float dR_manual_;
       float dR_reco_;
       float dR_reco_best_;
+      float mum_;
 };
 
 class TauGeneratorValidation : public edm::EDAnalyzer {
@@ -206,6 +229,7 @@ TreeDaughter::TreeDaughter(const std::string& prefix, TTree* t)
    t->Branch((prefix + "_dR_gen").c_str(), &dR_gen_);
    t->Branch((prefix + "_dR_reco").c_str(), &dR_reco_);
    t->Branch((prefix + "_dR_reco_best").c_str(), &dR_reco_best_);
+   t->Branch((prefix + "_mum").c_str(), &mum_);
 }
 
 void
@@ -229,6 +253,11 @@ TreeDaughter::fill(const reco::Candidate* p, const reco::GenParticleCollection& 
    dR_gen_ = -99;
    dR_reco_ = -99;
    dR_reco_best_ = -99;
+   mum_ = -99;
+
+   auto m = get_mother(p);
+   if (m)
+      mum_ = m->pdgId();
 
    if (abs(id_) == 15) {
       reco::Candidate::LorentzVector p4;
