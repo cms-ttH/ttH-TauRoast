@@ -1,4 +1,5 @@
 import ROOT as r
+import sys
 
 r.gROOT.SetBatch()
 r.gStyle.SetOptStat(0)
@@ -51,7 +52,7 @@ class Plotter(object):
         l.Draw()
         self.__c.SaveAs(self.__fn)
 
-p = Plotter("validate.root", "validate.pdf")
+p = Plotter(*sys.argv[1:])
 p.plotiso("t_iso_3hits", ["No isolation", "Cut-based loose", "Cut-based medium", "Cut-based tight"])
 p.plotiso("t_iso_mva", ["No isolation", "MVA-based very loose", "MVA-based loose", "MVA-based medium",
     "MVA-based tight", "MVA-based very tight", "MVA-based very vrey tight"])
