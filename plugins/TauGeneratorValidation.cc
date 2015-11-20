@@ -112,7 +112,7 @@ get_mc_match(const reco::Candidate& t, const reco::GenParticleCollection& coll)
          p4 = p.p4();
       }
       auto dR = deltaR(p4, t.p4());
-      if (dR > 0.5)
+      if (dR > 0.2)
          continue;
 
       auto cat = 6;
@@ -126,6 +126,8 @@ get_mc_match(const reco::Candidate& t, const reco::GenParticleCollection& coll)
          cat = 4;
       else if (abs(p.pdgId()) == 15)
          cat = 5;
+      else
+         continue;
 
       cands.push_back(std::make_pair(dR, std::make_pair(cat, &p)));
    }

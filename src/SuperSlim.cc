@@ -74,7 +74,7 @@ namespace superslim {
             p4 = p.p4();
          }
          auto dR = deltaR(p4, c.p4());
-         if (dR > 0.5)
+         if (dR > 0.2)
             continue;
 
          if (abs(p.pdgId()) == 11 and p.statusFlags().isPrompt())
@@ -87,6 +87,8 @@ namespace superslim {
             match_ = 4;
          else if (abs(p.pdgId()) == 15)
             match_ = 5;
+         else
+            continue;
 
          cands.push_back(std::make_pair(dR, &p));
       }
