@@ -2,9 +2,9 @@
 
 channel: ttl
 generator: pow
-ntupledir: /hadoop/store/user/matze/ttH/v11.2
-# ntupledir: /scratch365/mwolf3/ttH/v11.2
-outdir: ~/www/ttH/v11.2
+# ntupledir: /hadoop/store/user/matze/ttH/v12
+ntupledir: /scratch365/mwolf3/ttH/v12
+outdir: ~/www/ttH/v12
 histformat: "{p}_{v}_TTL"
 
 lumi: 1553
@@ -20,7 +20,7 @@ plot:
   # - ttH2bb_125
   # - ttH2Nonbb_125
   - ttH2TT_125
-  # - ttH2TT_125_real
+  - ttH2TT_125_real
 
 limits:
   - collisions
