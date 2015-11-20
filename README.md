@@ -174,6 +174,10 @@ the last two steps.
 
 # History
 
+## v12.1
+
+* Better τ gen-matching resulting in higher efficiency
+
 ## v12
 
 * Synced with ttH Lepton+Jets
