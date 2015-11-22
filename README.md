@@ -174,6 +174,10 @@ the last two steps.
 
 # History
 
+## v13
+
+* Run with LJ sync config, too see where the e/μ mismodelling comes from
+
 ## v12.1
 
 * Better τ gen-matching resulting in higher efficiency
