@@ -1,17 +1,15 @@
 id: tau
 type: cmssw
 
-workdir: /tmpscratch/users/matze/tau_v13
-plotdir: /afs/crc.nd.edu/user/m/mwolf3/www/lobster/tau_v13
+workdir: /tmpscratch/users/matze/tau_v13.1
+plotdir: /afs/crc.nd.edu/user/m/mwolf3/www/lobster/tau_v13.1
 
 storage:
     output:
-      - file:///hadoop/store/user/matze/ttH/v13
-      - hdfs:///store/user/matze/ttH/v13
-      - root://ndcms.crc.nd.edu//store/user/matze/ttH/v13
-      - srm://T3_US_NotreDame/store/user/matze/ttH/v13
-
-merge size: 3.5G
+      - file:///hadoop/store/user/matze/ttH/v13.1
+      - hdfs:///store/user/matze/ttH/v13.1
+      - root://ndcms.crc.nd.edu//store/user/matze/ttH/v13.1
+      - srm://T3_US_NotreDame/store/user/matze/ttH/v13.1
 
 advanced:
     log level: 1
@@ -22,13 +20,15 @@ workflow defaults:
     cmssw config: ntuplize_lj_sync.py
     events per job: 100000
     task runtime: 1800
+    merge size: 3.5G
+    parameters: ['ntuplize=True']
     matching:
       - label: '.*2015D_PR'
         lumi mask: 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions15/13TeV/Cert_246908-259891_13TeV_PromptReco_Collisions15_25ns_JSON.txt'
-        parameters: ['data=True', 'globalTag=74X_dataRun2_Prompt_v4']
+        parameters: ['ntuplize=True', 'data=True', 'globalTag=74X_dataRun2_Prompt_v4']
       - label: '.*2015D_Oct05'
         lumi mask: 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions15/13TeV/Cert_246908-259891_13TeV_PromptReco_Collisions15_25ns_JSON.txt'
-        parameters: ['data=True', 'globalTag=74X_dataRun2_reMiniAOD_v0']
+        parameters: ['ntuplize=True', 'data=True', 'globalTag=74X_dataRun2_reMiniAOD_v0']
 
 workflows:
   - {label: ttH2TT_125         , dataset: /ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM}

@@ -11,6 +11,10 @@ options.register("globalTag", "74X_mcRun2_asymptotic_v2",
         VarParsing.VarParsing.multiplicity.singleton,
         VarParsing.VarParsing.varType.string,
         "Global tag to use")
+options.register("ntuplize", False,
+        VarParsing.VarParsing.multiplicity.singleton,
+        VarParsing.VarParsing.varType.bool,
+        "Indicate if ntuples are produced")
 options.parseArguments()
 
 process = cms.Process("Taus")
@@ -36,7 +40,7 @@ process.TFileService = cms.Service("TFileService",
 
 import os
 dirname = os.path.dirname(process.TFileService.fileName.pythonValue().strip("'"))
-if not os.path.isdir(dirname):
+if not os.path.isdir(dirname) and dirname != '':
     os.makedirs(dirname)
 
 from JetMETCorrections.Configuration.JetCorrectionServices_cff import *
@@ -65,8 +69,8 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         data = cms.bool(options.data),
         electrons = cms.InputTag("slimmedElectrons"),
         muons = cms.InputTag("slimmedMuons"),
-        minJets = cms.uint32(0),
-        minTags = cms.uint32(0),
+        minJets = cms.uint32(2 if options.ntuplize else 0),
+        minTags = cms.uint32(1 if options.ntuplize else 0),
         maxTags = cms.int32(-1),
         minPreselectedLeptons = cms.uint32(1),
         minLooseLeptons = cms.uint32(1),

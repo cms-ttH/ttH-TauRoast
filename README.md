@@ -178,6 +178,10 @@ the last two steps.
 
 * Run with LJ sync config, too see where the e/μ mismodelling comes from
 
+### v13.1
+
+* Apply tighter jet cuts
+
 ## v12.1
 
 * Better τ gen-matching resulting in higher efficiency
