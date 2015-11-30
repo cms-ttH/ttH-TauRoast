@@ -182,10 +182,6 @@ the last two steps.
 
 * Apply tighter jet cuts
 
-## v12.1
-
-* Better τ gen-matching resulting in higher efficiency
-
 ## v12
 
 * Synced with ttH Lepton+Jets
@@ -193,14 +189,20 @@ the last two steps.
   * new electron ID
   * lower μ pt cuts
 
-## v11.2
+### v12.1
 
-* More powheg samples
+* Better τ gen-matching resulting in higher efficiency
 
-## v11.1
+## v11
+
+### v11.1
 
 * τ raw isolation w/ 3 hits
 * τ generator level visible pt
+
+### v11.2
+
+* More powheg samples
 
 [lobster]: http://lobster.crc.nd.edu
 [makeflow]: http://ccl.cse.nd.edu/software/manuals/makeflow.html
