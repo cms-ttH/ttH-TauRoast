@@ -273,14 +273,6 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    helper_.SetJetCorrectorUncertainty();
    // helper_.SetFactorizedJetCorrector();
 
-   if (min_leptons_ == 1) {
-      helper_.SetUpElectronMVA(
-            "RecoEgamma/ElectronIdentification/data/Spring15/EIDmva_EB1_10_oldTrigSpring15_25ns_data_1_VarD_TMVA412_Sig6BkgAll_MG_noSpec_BDT.weights.xml",
-            "RecoEgamma/ElectronIdentification/data/Spring15/EIDmva_EB2_10_oldTrigSpring15_25ns_data_1_VarD_TMVA412_Sig6BkgAll_MG_noSpec_BDT.weights.xml",
-            "RecoEgamma/ElectronIdentification/data/Spring15/EIDmva_EE_10_oldTrigSpring15_25ns_data_1_VarD_TMVA412_Sig6BkgAll_MG_noSpec_BDT.weights.xml"
-      );
-   }
-
    edm::Service<TFileService> fs;
    tree_ = fs->make<TTree>("events", "Event data");
    tree_->Branch("Event", "superslim::Event", &event_, 32000, 0);
@@ -424,11 +416,9 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       mu_id_loose = muonID::muonTight;
       mu_id_tight = muonID::muonTight;
 
-      e_id_pre = electronID::electronEndOf15MVAmedium;
-      e_id_loose = electronID::electronEndOf15MVAmedium;
-      e_id_tight = electronID::electronEndOf15MVAmedium;
-
-      helper_.SetElectronMVAinfo(cc, bs);
+      e_id_pre = electronID::electronEndOf15MVA80;
+      e_id_loose = electronID::electronEndOf15MVA80;
+      e_id_tight = electronID::electronEndOf15MVA80;
    }
 
    // ===============
@@ -637,7 +627,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
                superslim::Trigger(*trigger_results, trigger_names),
                particles));
 
-      ptr->setWeight("generator", genweight);
+      ptr->setWeight("Generator", genweight);
 
       event_ = ptr.get();
       tree_->Fill();

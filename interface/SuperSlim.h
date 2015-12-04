@@ -1,3 +1,6 @@
+#ifndef __SuperSlim_h
+#define __SuperSlim_h
+
 #include <map>
 #include <vector>
 
@@ -320,3 +323,5 @@ namespace superslim {
 
    bool operator<(const PhysObject& lhs, const PhysObject& rhs);
 }
+
+#endif

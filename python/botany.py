@@ -3,9 +3,9 @@ import logging
 
 import ROOT as r
 
-from ttH.TauRoast.useful import Snippet
+from ttH.TauRoast.useful import code2leaf
 
-class Leaf(Snippet):
+class Leaf(object):
     __leaves = {}
     __finals = {}
 
@@ -21,17 +21,16 @@ class Leaf(Snippet):
         else:
             Leaf.__leaves[name] = self
 
-        super(Leaf, self).__init__(code)
-
         self.__name = name
         self.__kind = kind
+
+        typename = 'std::vector<float>'
         if kind.lower() == 'i':
-            self.__val = array('i', [0])
+            typename = 'int'
         elif kind.lower() == 'f':
-            self.__val = array('f', [0.])
-        else:
-            self.__kind = None
-            self.__val = r.vector('float')()
+            typename = 'float'
+
+        self._r = code2leaf(name, typename, code)
 
     @property
     def name(self):
@@ -43,32 +42,16 @@ class Leaf(Snippet):
 
     @property
     def value(self):
+        return None
         if not self.__kind:
             return self.__val[0]
         return self.__val
 
-    def pick(self, event, selected, passed, weight, globals=None):
-        res = self._execute(event, selected, globals=globals,
-                locals={
-                    'combos': passed,
-                    'weight': weight
-        })
-
-        if isinstance(res, list):
-            self.__val.clear()
-            for r in res:
-                self.__val.push_back(r)
-        else:
-            self.__val[0] = res
-
     def attach(self, tree):
         tree.SetBranchAddress(self.__name, self.__val)
 
-    def register(self, tree):
-        if self.__kind:
-            tree.Branch(self.__name, self.__val, '{0}/{1}'.format(self.__name, self.__kind.upper()))
-        else:
-            tree.Branch(self.__name, self.__val)
+    def grow(self, tree):
+        self._r.grow(tree)
 
     @classmethod
     def leaves(cls):
@@ -82,12 +65,10 @@ class Tree(object):
         self.__f = r.TFile(filename, 'UPDATE')
         self.__t = r.TTree(str(name), 'ntuple')
         for l in Leaf.leaves():
-            l.register(self.__t)
+            l.grow(self.__t)
 
-    def fill(self, event, selected, passed, weight, globals=None):
-        for l in Leaf.leaves():
-            l.pick(event, selected, passed, weight, globals)
-        self.__t.Fill()
+    def raw(self):
+        return self.__t
 
     def __del__(self):
         self.__f.WriteObject(self.__t, self.__t.GetName())

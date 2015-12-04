@@ -1,31 +1,31 @@
 from ttH.TauRoast.botany import Leaf
 from ttH.TauRoast.plotting import Plot
 
-Leaf('best_w_mass', 'f', """
-masses = []
-for n, j in enumerate(jets):
-    for k in jets[n + 1:]:
-        if btag(j) or btag(k):
-            continue
-        masses.append((j.p4() + k.p4()).M())
-if len(masses) > 0:
-    result = min(masses, key=lambda m: abs(m - 80))
-else:
-    result = -1.
-"""
-)
+# Leaf('best_w_mass', 'f', """
+# masses = []
+# for n, j in enumerate(jets):
+#     for k in jets[n + 1:]:
+#         if btag(j) or btag(k):
+#             continue
+#         masses.append((j.p4() + k.p4()).M())
+# if len(masses) > 0:
+#     return min(masses, key=lambda m: abs(m - 80))
+# else:
+#     return -1.
+# """
+# )
 
-Plot(
-        name="jets/Best_W_Mass",
-        values=["best_w_mass"],
-        labels=["mass", "count"],
-        binning=[40, 0, 400]
-)
+# Plot(
+#         name="jets/Best_W_Mass",
+#         values=["best_w_mass"],
+#         labels=["mass", "count"],
+#         binning=[40, 0, 400]
+# )
 
 pspace = [
         ("", "jets"),
-        ("Untagged", "notags"),
-        ("Tagged", "tags")
+        ("Untagged", "notags(jets)"),
+        ("Tagged", "tags(jets)")
 ]
 
 jspace = [
@@ -35,10 +35,17 @@ jspace = [
         ("SubSubSubL", "4th")
 ]
 
+return_list = """
+std::vector<float> fs;
+for (const auto& j: {0})
+    fs.push_back(j.{1});
+return fs
+"""
+
 for mode, fltr in pspace:
-    Leaf('{0}jet_pt'.format(mode.lower()), '[f]', 'result = [j.p4().Pt() for j in {0}]'.format(fltr))
-    Leaf('{0}jet_eta'.format(mode.lower()), '[f]', 'result = [j.p4().Eta() for j in {0}]'.format(fltr))
-    Leaf('{0}jet_csv'.format(mode.lower()), '[f]', 'result = [j.csv() for j in {0}]'.format(fltr))
+    Leaf('{0}jet_pt'.format(mode.lower()), '[f]', return_list.format(fltr, 'p4().Pt()'))
+    Leaf('{0}jet_eta'.format(mode.lower()), '[f]', return_list.format(fltr, 'p4().Eta()'))
+    Leaf('{0}jet_csv'.format(mode.lower()), '[f]', return_list.format(fltr, 'csv()'))
 
     Plot(
             name="jets/kinematic/{0}J_Pt".format(mode),

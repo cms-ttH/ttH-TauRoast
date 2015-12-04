@@ -5,9 +5,11 @@ import re
 import time
 
 import ROOT as r
+r.gSystem.Load("libttHTauRoast")
 
 from ttH.TauRoast.botany import Tree
 from ttH.TauRoast.heavy import calculate_weights
+from ttH.TauRoast.useful import code2cut
 
 class Process(object):
     __processes__ = {}
@@ -77,7 +79,6 @@ class BasicProcess(Process):
         logging.info("processing {}".format(self))
 
         from ttH.TauRoast.cutting import StaticCut
-        from ttH.TauRoast.useful import Snippet
 
         if callbacks is None:
             callbacks = []
@@ -124,32 +125,25 @@ class BasicProcess(Process):
         for w in weights:
             w[self] = 0
 
-        t = r.TChain("taus/events")
-        for p in self.__paths:
-            t.Add(os.path.join(basedir, p, '*.root'))
-
-        event = r.superslim.Event()
-        t.SetBranchAddress('Event', r.AddressOf(event))
-
-        cuttime = 0.
-        filltime = 0.
-        errors = 0
-
         tree = Tree(filename, self)
+        chain = r.TChain("taus/events")
+        for p in self.__paths:
+            chain.Add(os.path.join(basedir, p, '*.root'))
+
+        ccuts = r.std.vector('fastlane::Cut*')()
+        for c in cuts:
+            ccuts.push_back(c.raw())
+        cweights = r.std.vector('fastlane::StaticCut*')()
+        for c in weights:
+            cweights.push_back(c.raw())
+        now = time.clock()
+        r.fastlane.process(str(self), chain, tree.raw(), ccuts, cweights, systematics);
+        logging.debug("time spent processing: {0}".format(time.clock() - now))
+        return
+
         for i in range(t.GetEntries()):
             if i % 1000 == 1:
                 logging.info("processing event {0}".format(i))
-
-            t.GetEntry(i)
-
-            start = time.clock()
-
-            passed = []
-            combos = event.combos()
-
-            lastcombo = None
-            lastcut = -1
-
             for combo in combos:
                 ncut = -1
                 for cut in cuts:
@@ -161,9 +155,6 @@ class BasicProcess(Process):
                     ncut += 1
                 else:
                     passed.append(combo)
-
-            cuttime += time.clock() - start
-
             if len(passed) == 0:
                 for callback in callbacks[:lastcut + 1]:
                     callback(event, lastcombo)
@@ -171,31 +162,6 @@ class BasicProcess(Process):
             else:
                 for callback in callbacks:
                     callback(event, passed[0])
-
-            start = time.clock()
-
-            selected = passed[0]
-
-            weight = 1
-            ws = {}
-            ws.update(event.weights())
-            ws.update(selected.weights())
-            ws.update(calculate_weights(event, combo, systematics))
-            for n, w in enumerate(str(w).lower() for w in weights):
-                if not self._name.startswith("collisions"):
-                    weight *= ws[w]
-                weights[n][self] += weight
-
-            globals = {}
-            Snippet.prepare_globals(globals, event, selected, systematics=systematics, tagging=True)
-            globals['weights'] = ws
-
-            tree.fill(event, selected, passed, weight, globals)
-
-            filltime += time.clock() - start
-
-        if errors > 0:
-            logging.info("encountered {0} error(s) while filling histograms".format(errors))
 
         logging.debug("time spent in cutflow: {0}".format(cuttime))
         logging.debug("time spent filling ntuple: {0}".format(filltime))

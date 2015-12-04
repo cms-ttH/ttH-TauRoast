@@ -1,42 +1,18 @@
 import sys
 
+import ROOT as r
+r.gSystem.Load("libttHTauRoast")
+
 from ttH.TauRoast.processing import Process
-from ttH.TauRoast.useful import Snippet
+from ttH.TauRoast.useful import code2cut
 
-class Cut(Snippet):
+class Cut(object):
     def __init__(self, name, code=None):
-        if not code:
-            code = name
-        super(Cut, self).__init__(code)
+        self._r = code2cut(name.encode('ascii', 'ignore'), code) if code else None
         self._name = name
-        self._counts = {}
-        self.__procs = set()
-        self.__last = None
-
-    def __call__(self, process, event, combo, systematics='NA'):
-        passed = self._execute(event, combo, systematics=systematics, use_exec=False)
-
-        if passed:
-            id = (event.run(), event.lumi(), event.event())
-            if id == self.__last:
-                return passed
-            self.__last = id
-
-            try:
-                self[process] += 1
-            except KeyError:
-                self[process] = 1
-        return passed
 
     def __getitem__(self, key):
-        try:
-            return self._counts[str(key)]
-        except KeyError:
-            return 0
-
-    def __setitem__(self, key, value):
-        self.__procs.add(key)
-        self._counts[str(key)] = value
+        return self._r[str(key)]
 
     def __unicode__(self):
         return self._name
@@ -44,18 +20,30 @@ class Cut(Snippet):
     def __str__(self):
         return unicode(self).encode('utf-8')
 
+    def __getstate__(self):
+        counts = dict([(p, self[p]) for p in self.processes()])
+        return self._name, counts
+
+    def __setstate__(self, state):
+        name, counts = state
+        self._name = name
+        self._r = r.fastlane.StaticCut(name.encode('ascii', 'ignore'))
+        for p, count in counts.items():
+            self._r[p] = count
+
+    def raw(self):
+        return self._r
+
     def processes(self):
-        return self.__procs
+        return self._r.processes()
 
 class StaticCut(Cut):
     def __init__(self, name):
         super(StaticCut, self).__init__(name)
+        self._r = r.fastlane.StaticCut(name)
 
-    def __call__(self, process, event, combo):
-        return True
-
-    def __getitem__(self, key):
-        return self._counts[str(key)]
+    def __setitem__(self, key, value):
+        self._r[str(key)] = value
 
 def normalize(cuts, lumi):
     weights = None
@@ -76,9 +64,10 @@ def normalize(cuts, lumi):
             dsetnorm[proc] = cuts[-1][proc]
             luminorm[proc] = cuts[-1][proc]
         else:
+            p = Process.get(proc)
             scale = processed[proc] / float(weights[proc])
             dsetnorm[proc] = cuts[-1][proc] * scale
-            luminorm[proc] = cuts[-1][proc] * scale * lumi * proc.cross_section / float(proc.events)
+            luminorm[proc] = cuts[-1][proc] * scale * lumi * p.cross_section / float(p.events)
     cuts.append(dsetnorm)
     cuts.append(luminorm)
 
@@ -89,7 +78,7 @@ def cutflow(cuts, procs, relative=False, f=sys.stdout):
 
     if relative:
         for i in xrange(1, len(cutdata)):
-            cutdata[-i] = [float(b) / a for a, b in zip(cutdata[-(i + 1)], cutdata[-i])]
+            cutdata[-i] = [(float(b) / a if a != 0 else 0) for a, b in zip(cutdata[-(i + 1)], cutdata[-i])]
 
     namelength = max(len(unicode(cut)) for cut in cuts)
     fieldlengths = []
@@ -101,11 +90,11 @@ def cutflow(cuts, procs, relative=False, f=sys.stdout):
     header = u"{{:{0}}}".format(namelength) \
             + u"".join(u"   {{:{0}}}".format(fl) for fl in fieldlengths) \
             + u"\n"
-    format = u"{{:{0}}}".format(namelength) \
+    body = u"{{:{0}}}".format(namelength) \
             + "".join("   {{:{0}.2f}}".format(fl) for fl in fieldlengths) \
             + "\n"
 
     f.write(header.format("Cut", *procs))
     f.write("-" * namelength + "".join("   " + "-" * fl for fl in fieldlengths) + "\n")
     for cut, data in zip(cuts, cutdata):
-        f.write(format.format(cut, *data))
+        f.write(body.format(cut, *data))

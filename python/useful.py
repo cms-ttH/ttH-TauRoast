@@ -1,6 +1,8 @@
+import hashlib
 import math
 import os
 import ROOT as r
+import time
 
 from collections import namedtuple
 
@@ -51,40 +53,73 @@ def mva():
         __mva = principal
     return __mva.evaluate()
 
-class Snippet(object):
-    def __init__(self, code):
-        self.__code = code
+r.gInterpreter.Declare("""
+        template<typename T> double R(T t) {
+            return std::sqrt(t.Eta() * t.Eta() + t.Phi() * t.Phi());
+        }
+        template<typename T, typename U> double dR(T t, U u) {
+            return R(t.p4() - u.p4());
+        }
 
-    def _execute(self, event, combo, locals=None, globals=None, systematics="NA", use_exec=True):
-        if not locals:
-            locals = {}
-        if not globals:
-            globals = {}
-            Snippet.prepare_globals(globals, event, combo, systematics=systematics)
-        if use_exec:
-            exec self.__code in locals, globals
-            if 'result' in globals:
-                return globals['result']
-        else:
-            return eval(self.__code, globals, locals)
+        std::vector<int> range(int a, int b) {
+            std::vector<int> res;
+            for (; a <= b; ++a)
+                res.push_back(a++);
+            return res;
+        }
 
-    @classmethod
-    def prepare_globals(cls, globals, event, combo, systematics="NA", tagging=False):
-        globals.update({
-                'superslim': r.superslim,
-                'event': event,
-                'btag': btag,
-                'dR': dR,
-                'mva': mva,
-                'r': R,
-                'taus': combo.taus(),
-                'leptons': combo.leptons(),
-                'jets': combo.jets(systematics),
-                'pv': event.pv(),
-                'met': combo.met(systematics)
-        })
-        if tagging:
-            globals.update({
-                'tags': filter(btag, combo.jets(systematics)),
-                'notags': [j for j in combo.jets(systematics) if not btag(j)]
-            })
+        template<typename T> int len(T t) { return t.size(); }
+        template<typename T> bool btag(T j) { return j.csv() > 0.89; }
+        template<typename T> int btags(T js) {
+            int res = 0;
+            for (const auto& j: js)
+                res += btag(j);
+            return res;
+        }
+        template<typename T> T tags(T js) {
+            T res;
+            for (const auto& j: js)
+                if (btag(j))
+                    res.push_back(j);
+            return res;
+        }
+        template<typename T> T notags(T js) {
+            T res;
+            for (const auto& j: js)
+                if (!btag(j))
+                    res.push_back(j);
+            return res;
+        }
+        bool operator==(int i, std::vector<int> is) {
+            return std::find(begin(is), end(is), i) != end(is);
+        }
+""")
+
+def code2cut(name, code):
+    stub = hashlib.sha1(code + "\n{0}".format(time.time())).hexdigest()[:7]
+    chunck = """
+        bool fct_{f}(const superslim::Event& event,
+                const std::vector<superslim::Tau>& taus,
+                const std::vector<superslim::Lepton>& leptons,
+                const std::vector<superslim::Jet>& jets,
+                const superslim::LorentzVector& met) {{ return {c}; }}
+        auto cut_{f} = fastlane::Cut("{n}", &fct_{f});
+    """.format(n=name, f=stub, c=code)
+    if not r.gInterpreter.Declare(chunck):
+        raise RuntimeError
+    return getattr(r, 'cut_' + stub)
+
+def code2leaf(name, typename, code):
+    stub = hashlib.sha1(code).hexdigest()[:7]
+    chunck = """
+        {t} fct_{f}(const superslim::Event& event,
+                const std::vector<superslim::Tau>& taus,
+                const std::vector<superslim::Lepton>& leptons,
+                const std::vector<superslim::Jet>& jets,
+                const superslim::LorentzVector& met,
+                std::unordered_map<std::string, double>& weights) {{ {c}; }}
+        fastlane::Leaf<{t}> leaf_{f}("{n}", &fct_{f});
+    """.format(n=name, f=stub, c=code, t=typename)
+    if not r.gInterpreter.Declare(chunck):
+        raise RuntimeError
+    return getattr(r, 'leaf_' + stub)

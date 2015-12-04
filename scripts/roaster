@@ -66,6 +66,8 @@ r.gErrorIgnoreLevel = 1001
 if r.gROOT.GetVersion().startswith('6'):
     header = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'interface', 'SuperSlim.h')
     r.gInterpreter.ProcessLine('#include "{0}"'.format(header))
+    header = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'interface', 'Fastlane.h')
+    r.gInterpreter.ProcessLine('#include "{0}"'.format(header))
 
 r.gSystem.Load("libttHTauRoast")
 
@@ -88,12 +90,12 @@ if 'mva' in config:
 if args.analyze:
     counts = []
     cuts = [
-            Cut("Ntuple analyzed", "True")
+            Cut("Ntuple analyzed", "true")
     ]
     weights = []
 
-    for hash in config["cuts"]:
-        cuts.append(Cut(*hash.items()[0]))
+    for cfg in config["cuts"]:
+        cuts.append(Cut(*cfg.items()[0]))
 
     for weight in config["weights"]:
         weights.append(StaticCut(weight))
@@ -166,6 +168,9 @@ if args.fill:
 
     for p in Plot.plots():
         p.write(f, cuts, fmt=config["histformat"])
+
+    f.Write()
+    f.Close()
 
     fn = os.path.join(config["outdir"], "limits.root")
     f = r.TFile(fn, "RECREATE")

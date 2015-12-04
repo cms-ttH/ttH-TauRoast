@@ -43,7 +43,9 @@ class Principle(object):
         self.__reader = r.TMVA.Reader("!Color:!Silent")
         leaves = dict((l.name, l) for l in Leaf.leaves())
         for var in variables:
-            self.__reader.AddVariable(var, leaves[var].value)
+            pass
+            # raise NotImplementedError()
+            # self.__reader.AddVariable(var, leaves[var].value)
         fn = os.path.join(wdir, 'weights', 'TMVAClassification_{0}.weights.xml'.format(self.__method))
         if not os.path.isfile(fn):
             raise IOError()

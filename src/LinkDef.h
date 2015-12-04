@@ -1,3 +1,4 @@
+#include "ttH/TauRoast/interface/Fastlane.h"
 #include "ttH/TauRoast/interface/SuperSlim.h"
 
 #ifdef __CINT__
@@ -10,6 +11,13 @@
 #pragma link C++ nestedclasses;
 #pragma link C++ nestedtypedefs;
 
+#pragma link C++ namespace fastlane;
+#pragma link C++ class fastlane::BasicCut+;
+#pragma link C++ class fastlane::Cut+;
+#pragma link C++ class fastlane::StaticCut+;
+#pragma link C++ calss fastlane::BasicLeaf+;
+#pragma link C++ calss fastlane::Leaf+;
+#pragma link C++ function fastlane::process(const std::string& process, TChain& c, TTree& t, std::vector<fastlane::Cut*>& cuts, std::vector<fastlane::StaticCut*>& weights, const std::string& sys);
 #pragma link C++ namespace superslim;
 #pragma link C++ typedef superslim::LorentzVector;
 #pragma link C++ class superslim::PhysObject+;
