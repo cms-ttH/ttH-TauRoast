@@ -3,7 +3,7 @@ import itertools
 from ttH.TauRoast.botany import Leaf
 from ttH.TauRoast.plotting import Plot
 
-Leaf('events', 'f', 'result = 1')
+Leaf('events', 'f', 'result = .5')
 # Leaf('combos', 'f', 'return combos.size()')
 Leaf('allcombos', 'f', 'result = event.combos().size()')
 Leaf('njets', 'f', 'result = jets.size() - btags(jets)')

@@ -30,14 +30,14 @@ limits:
 cuts:
   - "Trigger": "(leptons[0].electron() and event.trigger().single_e()) or (leptons[0].muon() and event.trigger().single_mu())"
   - "Jets": "len(jets) >= 2"
-  - "Tags": "btags(jets) == range(1, 2)"
+  - "Tags": "btags(jets) == 1 or btags(jets) == 2"
   - "ΔR(ττ)  > 0.5": "dR(taus[0], taus[1]) > 0.5"
   - "ΔR(τ₁l) > 0.4": "dR(taus[0], leptons[0]) > 0.4"
   - "ΔR(τ₂l) > 0.4": "dR(taus[1], leptons[0]) > 0.4"
   - "Opposite charge for τ": "taus[0].charge() * taus[1].charge() < 0"
 
 weights:
-  - generator
+  - Generator
   - CSVWeight
   - PUWeight
 

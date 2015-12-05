@@ -1,3 +1,4 @@
+#include <cctype>
 #include <cstdlib>
 
 #include "MiniAOD/MiniAODHelper/interface/CSVHelper.h"
@@ -54,6 +55,15 @@ namespace fastlane {
    }
 }
 
+std::string
+lower(const std::string& s)
+{
+   std::string res(s);
+   for (unsigned i = 0; i < res.size(); ++i)
+      res[i] = std::tolower(res[i]);
+   return res;
+}
+
 void
 fastlane::update_weights(std::unordered_map<std::string, double>& ws, const superslim::Event& e, const superslim::Combination& combo, const std::string& sys)
 {
@@ -102,8 +112,8 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
    double hf, lf, cf;
    double csv = csvhelper.getCSVWeight(jetpt, jeteta, jetcsv, jetflv, csvsys[sys], hf, lf, cf);
 
-   ws["CSVWeight"] = csv;
-   ws["PUWeight"] = puhelper(e.ntv());
+   ws[lower("CSVWeight")] = csv;
+   ws[lower("PUWeight")] = puhelper(e.ntv());
 }
 
 void
@@ -136,16 +146,16 @@ fastlane::process(const std::string& process, TChain& c, TTree& t, std::vector<f
 
          std::unordered_map<std::string, double> ws;
          for (const auto& w: e->weights())
-            ws[w.first] = w.second;
+            ws[lower(w.first)] = w.second;
          for (const auto& w: selected.weights())
-            ws[w.first] = w.second;
+            ws[lower(w.first)] = w.second;
          if (process.compare(0, 10, "collisions"))
             fastlane::update_weights(ws, *e, selected, sys);
 
          double weight = 1.;
          for (auto& w: weights) {
             if (process.compare(0, 10, "collisions"))
-               weight *= ws[w->name()];
+               weight *= ws[lower(w->name())];
             (*w)[process] += weight;
          }
 

@@ -61,13 +61,6 @@ r.gInterpreter.Declare("""
             return R(t.p4() - u.p4());
         }
 
-        std::vector<int> range(int a, int b) {
-            std::vector<int> res;
-            for (; a <= b; ++a)
-                res.push_back(a++);
-            return res;
-        }
-
         template<typename T> int len(T t) { return t.size(); }
         template<typename T> bool btag(T j) { return j.csv() > 0.89; }
         template<typename T> int btags(T js) {
@@ -89,9 +82,6 @@ r.gInterpreter.Declare("""
                 if (!btag(j))
                     res.push_back(j);
             return res;
-        }
-        bool operator==(int i, std::vector<int> is) {
-            return std::find(begin(is), end(is), i) != end(is);
         }
 """)
 
