@@ -112,12 +112,13 @@ def code2cut(name, code):
 def code2leaf(name, typename, code):
     stub = hashlib.sha1(code).hexdigest()[:7]
     chunck = """
-        {t} fct_{f}(const superslim::Event& event,
+        void fct_{f}(const superslim::Event& event,
                 const std::vector<superslim::Tau>& taus,
                 const std::vector<superslim::Lepton>& leptons,
                 const std::vector<superslim::Jet>& jets,
                 const superslim::LorentzVector& met,
-                std::unordered_map<std::string, double>& weights) {{ {c}; }}
+                std::unordered_map<std::string, double>& weights,
+                {t}& result) {{ {c}; }}
         fastlane::Leaf<{t}> leaf_{f}("{n}", &fct_{f});
     """.format(n=name, f=stub, c=code, t=typename)
     if not r.gInterpreter.Declare(chunck):

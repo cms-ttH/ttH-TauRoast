@@ -3,16 +3,16 @@ import itertools
 from ttH.TauRoast.botany import Leaf
 from ttH.TauRoast.plotting import Plot
 
-Leaf('events', 'f', 'return 1')
+Leaf('events', 'f', 'result = 1')
 # Leaf('combos', 'f', 'return combos.size()')
-Leaf('allcombos', 'f', 'return event.combos().size()')
-Leaf('njets', 'f', 'return jets.size() - btags(jets)')
-Leaf('ntags', 'f', 'return btags(jets)')
-Leaf('npv', 'f', 'return event.npv()')
-Leaf('nelectrons', 'f', 'int n = 0; for (const auto& l: leptons) n += l.electron(); return n')
-Leaf('nmuons', 'f', 'int n = 0; for (const auto& l: leptons) n += l.muon(); return n')
+Leaf('allcombos', 'f', 'result = event.combos().size()')
+Leaf('njets', 'f', 'result = jets.size() - btags(jets)')
+Leaf('ntags', 'f', 'result = btags(jets)')
+Leaf('npv', 'f', 'result = event.npv()')
+Leaf('nelectrons', 'f', 'int n = 0; for (const auto& l: leptons) n += l.electron(); result = n')
+Leaf('nmuons', 'f', 'int n = 0; for (const auto& l: leptons) n += l.muon(); result = n')
 
-Leaf('bdt', 'f', 'return 0.', final=True)
+Leaf('bdt', 'f', 'result = 0.', final=True)
 Plot(
         name="general/BDT",
         values=["bdt"],
@@ -95,8 +95,8 @@ Plot(
         binning=[3, 0, 3]
 )
 
-Leaf('vtx_z', 'f', 'return event.pv()[0].z()')
-Leaf('vtx_zerr', 'f', 'return event.pv()[0].zError() * 1000')
+Leaf('vtx_z', 'f', 'result = event.pv()[0].z()')
+Leaf('vtx_zerr', 'f', 'result = event.pv()[0].zError() * 1000')
 
 Plot(
         name="vertex/ZCoord",
@@ -111,7 +111,7 @@ Plot(
         binning=[40, 0, 2]
 )
 
-Leaf('met', 'f', 'return met.Pt()')
+Leaf('met', 'f', 'result = met.Pt()')
 Leaf('ht', 'f', """
 float ht = 0.;
 for (const auto& j: jets)
@@ -120,7 +120,7 @@ for (const auto& t: taus)
     ht += t.p4().Pt();
 for (const auto& l: leptons)
     ht += l.p4().Pt();
-return ht
+result = ht
 """)
 Leaf('mht', 'f', """
 auto ht = superslim::LorentzVector();
@@ -130,7 +130,7 @@ for (const auto& t: taus)
     ht += t.p4();
 for (const auto& l: leptons)
     ht += l.p4();
-return ht.Pt()
+result = ht.Pt()
 """)
 
 Plot(
@@ -156,7 +156,7 @@ ws = ["generator", "csvweight", "puweight"]
 ws += map(''.join, itertools.product(["jettaufake", "etaufake", "ideff"], ["up", "down"]))
 ws += map(''.join, itertools.product(["lfcont", "hfcont", "hfstats1", "hfstats2", "lfstats1", "lfstats2", "charmerr1", "charmerr2"], ["up", "down"]))
 for w in ws:
-    Leaf('w_' + w, 'f', 'return weights["{0}"]'.format(w))
+    Leaf('w_' + w, 'f', 'result = weights["{0}"]'.format(w))
 
 Plot(
         name="weights/Generator",

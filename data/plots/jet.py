@@ -38,8 +38,7 @@ jspace = [
 return_list = """
 std::vector<float> fs;
 for (const auto& j: {0})
-    fs.push_back(j.{1});
-return fs
+    result.push_back(j.{1});
 """
 
 for mode, fltr in pspace:

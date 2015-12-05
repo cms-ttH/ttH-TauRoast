@@ -42,16 +42,15 @@ fastlane::StaticCut::processes() const
 std::vector<fastlane::BasicLeaf*> fastlane::BasicLeaf::leaves_;
 
 namespace fastlane {
-   template<> void
-   Leaf<int>::grow(TTree& t)
+   template<> void Leaf<std::vector<float>>::pick(const superslim::Event& e, const superslim::Combination& c, std::unordered_map<std::string, double>& w, const std::string& sys)
    {
-      t.Branch(name_.c_str(), val_);
+      val_.clear();
+      fct_(e, c.taus(), c.leptons(), c.jets(sys), c.met(sys), w, val_);
    }
-
-   template<> void
-   Leaf<float>::grow(TTree& t)
+   template<> void Leaf<std::vector<int>>::pick(const superslim::Event& e, const superslim::Combination& c, std::unordered_map<std::string, double>& w, const std::string& sys)
    {
-      t.Branch(name_.c_str(), val_);
+      val_.clear();
+      fct_(e, c.taus(), c.leptons(), c.jets(sys), c.met(sys), w, val_);
    }
 }
 

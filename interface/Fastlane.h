@@ -90,34 +90,33 @@ namespace fastlane {
    template<typename T>
    class Leaf : public BasicLeaf {
       public:
-         typedef T (*fct_t)(
+         typedef void (*fct_t)(
                const superslim::Event&,
                const std::vector<superslim::Tau>&,
                const std::vector<superslim::Lepton>&,
                const std::vector<superslim::Jet>&,
                const superslim::LorentzVector&,
-               std::unordered_map<std::string, double>&);
+               std::unordered_map<std::string, double>&,
+               T& result);
 
          Leaf() : BasicLeaf(), val_(0) {};
-         Leaf(const std::string& name, fct_t eval) : BasicLeaf(name), fct_(eval) { leaves_.push_back(this); };
+         Leaf(const std::string& name, fct_t eval) : BasicLeaf(name), fct_(eval), val_(0) { leaves_.push_back(this); };
          virtual ~Leaf() {};
 
          void grow(TTree& t) { t.Branch(name_.c_str(), &val_); };
          virtual void pick(const superslim::Event& e, const superslim::Combination& c, std::unordered_map<std::string, double>& w, const std::string& sys) override {
-            realval_ = std::unique_ptr<T>(new T(fct_(e, c.taus(), c.leptons(), c.jets(sys), c.met(sys), w)));
-            val_ = realval_.get();
+            fct_(e, c.taus(), c.leptons(), c.jets(sys), c.met(sys), w, val_);
          };
 
       private:
          fct_t fct_;
-         T* val_;
-         std::unique_ptr<T> realval_;
+         T val_;
 
          ClassDef(fastlane::Leaf<T>, 1);
    };
 
-   template<> void Leaf<int>::grow(TTree& t);
-   template<> void Leaf<float>::grow(TTree& t);
+   template<> void Leaf<std::vector<float>>::pick(const superslim::Event& e, const superslim::Combination& c, std::unordered_map<std::string, double>& w, const std::string& sys);
+   template<> void Leaf<std::vector<int>>::pick(const superslim::Event& e, const superslim::Combination& c, std::unordered_map<std::string, double>& w, const std::string& sys);
 
    void process(const std::string& process, TChain& c, TTree& t, std::vector<fastlane::Cut*>& cuts, std::vector<fastlane::StaticCut*>& weights, const std::string& sys);
    void update_weights(std::unordered_map<std::string, double>& ws, const superslim::Event& e, const superslim::Combination& combo, const std::string& sys);

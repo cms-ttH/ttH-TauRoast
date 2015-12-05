@@ -5,9 +5,9 @@ from ttH.TauRoast.useful import config
 for n in range(config.leptons):
     lbl = "l_{{{0}}} ".format(n + 1)
 
-    Leaf('lep{0}_pt'.format(n + 1), 'f', 'return leptons[{0}].p4().Pt()'.format(n))
-    Leaf('lep{0}_eta'.format(n + 1), 'f', 'return leptons[{0}].p4().Eta()'.format(n))
-    Leaf('lep{0}_phi'.format(n + 1), 'f', 'return leptons[{0}].p4().Phi()'.format(n))
+    Leaf('lep{0}_pt'.format(n + 1), 'f', 'result = leptons[{0}].p4().Pt()'.format(n))
+    Leaf('lep{0}_eta'.format(n + 1), 'f', 'result = leptons[{0}].p4().Eta()'.format(n))
+    Leaf('lep{0}_phi'.format(n + 1), 'f', 'result = leptons[{0}].p4().Phi()'.format(n))
 
     # Kinematics
     Plot(
@@ -29,9 +29,9 @@ for n in range(config.leptons):
         binning=[20, -3.2, 3.2]
     )
 
-    Leaf('lep{0}_match'.format(n + 1), 'i', 'return leptons[{0}].match()'.format(n))
-    Leaf('lep{0}_genid'.format(n + 1), 'f', 'return abs(leptons[{0}].genPdgId())'.format(n))
-    Leaf('lep{0}_genparentid'.format(n + 1), 'f', 'return abs(leptons[{0}].parentId())'.format(n))
+    Leaf('lep{0}_match'.format(n + 1), 'i', 'result = leptons[{0}].match()'.format(n))
+    Leaf('lep{0}_genid'.format(n + 1), 'f', 'result = abs(leptons[{0}].genPdgId())'.format(n))
+    Leaf('lep{0}_genparentid'.format(n + 1), 'f', 'result = abs(leptons[{0}].parentId())'.format(n))
 
     # Gen matching
     Plot(
@@ -54,9 +54,9 @@ for n in range(config.leptons):
             binning=[30, 0, 30]
     )
 
-    Leaf('lep{0}_ip'.format(n + 1), 'f', 'return abs(leptons[{0}].impactParameter())'.format(n))
-    Leaf('lep{0}_dz'.format(n + 1), 'f', 'return abs(leptons[{0}].correctedDZ())'.format(n))
-    Leaf('lep{0}_reliso'.format(n + 1), 'f', 'return abs(leptons[{0}].relativeIsolation())'.format(n))
+    Leaf('lep{0}_ip'.format(n + 1), 'f', 'result = abs(leptons[{0}].impactParameter())'.format(n))
+    Leaf('lep{0}_dz'.format(n + 1), 'f', 'result = abs(leptons[{0}].correctedDZ())'.format(n))
+    Leaf('lep{0}_reliso'.format(n + 1), 'f', 'result = abs(leptons[{0}].relativeIsolation())'.format(n))
 
     # ID
     Plot(
