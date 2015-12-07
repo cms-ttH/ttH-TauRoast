@@ -174,6 +174,10 @@ the last two steps.
 
 # History
 
+## v14
+
+* Run with new globaltags.
+
 ## v13
 
 * Run with LJ sync config, too see where the e/μ mismodelling comes from
