@@ -11,8 +11,6 @@ storage:
       - root://ndcms.crc.nd.edu//store/user/matze/ttH/v14
       - srm://T3_US_NotreDame/store/user/matze/ttH/v14
 
-merge size: 3.5G
-
 advanced:
     log level: 1
     # abort multiplier: 3
@@ -22,6 +20,7 @@ workflow defaults:
     cmssw config: ntuplize.py
     events per job: 100000
     task runtime: 1800
+    merge size: 3.5G
     matching:
       - label: '.*2015D_PR'
         lumi mask: 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON.txt'
