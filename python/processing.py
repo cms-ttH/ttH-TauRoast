@@ -75,13 +75,10 @@ class BasicProcess(Process):
                 fct(self._fullname), fct(self._limitname),
                 self.__sample, self.__cross_section, self.__add_cuts)
 
-    def analyze(self, filename, counts, cuts, weights, systematics, basedir, callbacks=None):
+    def analyze(self, filename, counts, cuts, weights, systematics, basedir):
         logging.info("processing {}".format(self))
 
         from ttH.TauRoast.cutting import StaticCut
-
-        if callbacks is None:
-            callbacks = []
 
         hist = None
         for p in self.__paths:
@@ -144,32 +141,6 @@ class BasicProcess(Process):
         now = time.clock()
         r.fastlane.process(str(self), chain, tree.raw(), ccuts, cweights, systematics, log);
         logging.debug("time spent processing: {0}".format(time.clock() - now))
-        return
-
-        for i in range(t.GetEntries()):
-            if i % 1000 == 1:
-                logging.info("processing event {0}".format(i))
-            for combo in combos:
-                ncut = -1
-                for cut in cuts:
-                    if not cut(self, event, combo, systematics):
-                        if ncut > lastcut:
-                            lastcombo = combo
-                            lastcut = ncut
-                        break
-                    ncut += 1
-                else:
-                    passed.append(combo)
-            if len(passed) == 0:
-                for callback in callbacks[:lastcut + 1]:
-                    callback(event, lastcombo)
-                continue
-            else:
-                for callback in callbacks:
-                    callback(event, passed[0])
-
-        logging.debug("time spent in cutflow: {0}".format(cuttime))
-        logging.debug("time spent filling ntuple: {0}".format(filltime))
 
     def process(self):
         return [self._name]
