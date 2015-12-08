@@ -3,6 +3,7 @@
 <use name="DataFormats/PatCandidates"/>
 <use name="MiniAOD/MiniAODHelper"/>
 <use name="root"/>
+<use name="rootpy"/>
 <use name="roottmva"/>
 <export>
   <use name="root"/>

@@ -116,13 +116,11 @@ if args.analyze:
         for cfg in proc.additional_cuts:
             local_cuts.insert(0, Cut(*cfg))
 
-        callbacks = None
         if args.debug_cuts:
-            callbacks = []
-            for i in range(len(local_cuts)):
-                callbacks.append(SyncSaver(config["channel"], os.path.join(config["outdir"], "cut_{0}.txt".format(i)), config["systematics"]))
+            for i, cut in enumerate(local_cuts):
+                cut.callback(SyncSaver(config["channel"], os.path.join(config["outdir"], "cut_{0}.txt".format(i)), config["systematics"]))
 
-        proc.analyze(fn, counts, local_cuts, weights, config["systematics"], config['ntupledir'], callbacks=callbacks)
+        proc.analyze(fn, counts, local_cuts, weights, config["systematics"], config['ntupledir'])
 
     cuts = counts + cuts + weights
     normalize(cuts, config["lumi"])

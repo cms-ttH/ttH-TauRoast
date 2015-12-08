@@ -14,6 +14,9 @@
 
 #include "SuperSlim.h"
 
+struct _object;
+typedef _object PyObject;
+
 namespace fastlane {
    class BasicCut {
       public:
@@ -39,11 +42,14 @@ namespace fastlane {
                const std::vector<superslim::Jet>&,
                const superslim::LorentzVector&);
 
-         Cut() : BasicCut() {};
-         Cut(const std::string& name, fct_t eval) : BasicCut(name), fct_(eval), last_(std::make_tuple(-1, -1, -1)) {};
+         Cut() : BasicCut(), callback_(0) {};
+         Cut(const std::string& name, fct_t eval) : BasicCut(name), fct_(eval), last_(std::make_tuple(-1, -1, -1)), callback_(0) {};
          virtual ~Cut() {};
 
          bool operator()(const std::string& process, const superslim::Event& e, const superslim::Combination& c, const std::string& sys);
+
+         void setCallback(PyObject* callback) { callback_ = callback; };
+
          virtual std::vector<std::string> processes() const override;
          virtual int& operator[](const std::string& process) { return counts_[process]; };
       private:
@@ -52,6 +58,7 @@ namespace fastlane {
          std::unordered_map<std::string, int> counts_;
          fct_t fct_;
          event_t last_;
+         PyObject *callback_;
 
          ClassDef(fastlane::Cut, 1);
    };

@@ -31,6 +31,9 @@ class Cut(object):
         for p, count in counts.items():
             self._r[p] = count
 
+    def callback(self, fct):
+        self._r.setCallback(fct);
+
     def raw(self):
         return self._r
 

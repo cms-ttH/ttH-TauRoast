@@ -1,6 +1,9 @@
 #include <cctype>
 #include <cstdlib>
 
+#include "TPython.h"
+#include "TPyArg.h"
+
 #include "MiniAOD/MiniAODHelper/interface/CSVHelper.h"
 #include "MiniAOD/MiniAODHelper/interface/PUWeightProducer.h"
 #include "ttH/TauRoast/interface/Fastlane.h"
@@ -18,6 +21,14 @@ fastlane::Cut::operator()(const std::string& process, const superslim::Event& e,
          return passed;
       last_ = id;
       counts_[process]++;
+      if (callback_) {
+         auto event = superslim::Event(e);
+         auto combo = superslim::Combination(c);
+         auto py_e = TPython::ObjectProxy_FromVoidPtr(dynamic_cast<void*>(&event), "superslim::Event");
+         auto py_c = TPython::ObjectProxy_FromVoidPtr(dynamic_cast<void*>(&combo), "superslim::Combination");
+         std::vector<TPyArg> args = {py_e, py_c};
+         TPyArg::CallMethod(callback_, args);
+      }
    }
    return passed;
 }

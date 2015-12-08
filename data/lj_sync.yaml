@@ -13,7 +13,7 @@ plot:
 cuts:
   - "Trigger": "(leptons[0].electron() and event.trigger().single_e()) or (leptons[0].muon() and event.trigger().single_mu())"
   - "≥ 4 jets": "len(jets) >= 4"
-  - "≥ 2 tags": "len(filter(btag, jets)) >= 2"
+  - "≥ 2 tags": "btags(jets) >= 2"
 
 weights:
   - Generator

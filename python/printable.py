@@ -21,7 +21,11 @@ class SyncSaver(object):
             raise ValueError, channel
 
     def __call__(self, *args):
-        self._fct(*args)
+        try:
+            self._fct(*args)
+        except Exception as e:
+            print e
+            raise
 
     def __del__(self):
         self.__f.close()
