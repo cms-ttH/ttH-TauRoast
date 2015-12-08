@@ -128,13 +128,18 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
 }
 
 void
-fastlane::process(const std::string& process, TChain& c, TTree& t, std::vector<fastlane::Cut*>& cuts, std::vector<fastlane::StaticCut*>& weights, const std::string& sys)
+fastlane::process(const std::string& process, TChain& c, TTree& t, std::vector<fastlane::Cut*>& cuts, std::vector<fastlane::StaticCut*>& weights, const std::string& sys, PyObject* log)
 {
    superslim::Event* e = 0;
    c.SetBranchAddress("Event", &e);
 
    for (unsigned int i = 0; i < c.GetEntries(); ++i) {
       c.GetEntry(i);
+
+      if (i % 1000 == 0) {
+         std::vector<TPyArg> args = {Int_t(i)};
+         TPyArg::CallMethod(log, args);
+      }
 
       const auto& combos = e->combos();
       std::vector<superslim::Combination> passed;

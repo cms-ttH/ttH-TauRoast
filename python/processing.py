@@ -136,8 +136,13 @@ class BasicProcess(Process):
         cweights = r.std.vector('fastlane::StaticCut*')()
         for c in weights:
             cweights.push_back(c.raw())
+
+        logging.info("events left to process: {0}".format(chain.GetEntries()))
+
+        def log(i):
+            logging.info("processing event {0}".format(i))
         now = time.clock()
-        r.fastlane.process(str(self), chain, tree.raw(), ccuts, cweights, systematics);
+        r.fastlane.process(str(self), chain, tree.raw(), ccuts, cweights, systematics, log);
         logging.debug("time spent processing: {0}".format(time.clock() - now))
         return
 
