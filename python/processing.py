@@ -75,10 +75,15 @@ class BasicProcess(Process):
                 fct(self._fullname), fct(self._limitname),
                 self.__sample, self.__cross_section, self.__add_cuts)
 
-    def analyze(self, filename, counts, cuts, weights, systematics, basedir):
+    def analyze(self, filename, counts, cuts, weights, systematics, basedir, debug=False):
         logging.info("processing {}".format(self))
 
         from ttH.TauRoast.cutting import StaticCut
+        from ttH.TauRoast.printable import SyncSaver
+
+        if debug:
+            for i, cut in enumerate(cuts):
+                cut.callback(SyncSaver(os.path.join(os.path.dirname(filename), "cut_{0}_{1}.txt".format(self, i)), systematics))
 
         hist = None
         for p in self.__paths:

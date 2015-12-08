@@ -76,7 +76,6 @@ from ttH.TauRoast.botany import Forest
 from ttH.TauRoast.cutting import StaticCut, Cut, cutflow, normalize
 from ttH.TauRoast.plotting import Plot
 from ttH.TauRoast.processing import Process
-from ttH.TauRoast.printable import SyncSaver
 from ttH.TauRoast.variation import setup
 
 useful.setup(config['channel'], config['generator'])
@@ -116,11 +115,7 @@ if args.analyze:
         for cfg in proc.additional_cuts:
             local_cuts.insert(0, Cut(*cfg))
 
-        if args.debug_cuts:
-            for i, cut in enumerate(local_cuts):
-                cut.callback(SyncSaver(config["channel"], os.path.join(config["outdir"], "cut_{0}.txt".format(i)), config["systematics"]))
-
-        proc.analyze(fn, counts, local_cuts, weights, config["systematics"], config['ntupledir'])
+        proc.analyze(fn, counts, local_cuts, weights, config["systematics"], config['ntupledir'], args.debug_cuts)
 
     cuts = counts + cuts + weights
     normalize(cuts, config["lumi"])

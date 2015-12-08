@@ -1,17 +1,17 @@
 import os
 
-from useful import btag
+from useful import btag, config
 
 class SyncSaver(object):
-    def __init__(self, channel, filename, systematics="NA"):
+    def __init__(self, filename, systematics="NA"):
         if not os.path.isdir(os.path.dirname(filename)):
             os.makedirs(os.path.dirname(filename))
         self.__sys = systematics
         self.__f = open(filename, 'w')
-        if channel == 'lj':
+        if config.leptons == 1:
             self.__f.write("\n")
             self._fct = self._print_lepjets
-        elif channel == 'll':
+        elif config.leptons == 2:
             self.__fmt = "%6d %6d %10d  " + \
                     "%+2d  %6.2f %+4.2f %+4.2f   " + \
                     "%+2d  %6.2f %+4.2f %+4.2f    " + \
