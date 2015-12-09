@@ -78,6 +78,9 @@ class BasicProcess(Process):
     def analyze(self, filename, counts, cuts, weights, systematics, basedir, debug=False):
         logging.info("processing {}".format(self))
 
+        if str(self).startswith("collisions"):
+            systematics = "NA"
+
         from ttH.TauRoast.cutting import StaticCut
         from ttH.TauRoast.printable import SyncSaver
 
