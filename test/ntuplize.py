@@ -84,5 +84,6 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         debugEvents = cms.vuint32()
 )
 
-# process.p = cms.Path(process.ttHLeptons * process.taus)
-process.p = cms.Path(process.taus)
+process.load("RecoEgamma.ElectronIdentification.ElectronMVAValueMapProducer_cfi")
+
+process.p = cms.Path(process.electronMVAValueMapProducer * process.taus)
