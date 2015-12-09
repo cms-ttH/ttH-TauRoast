@@ -9,6 +9,8 @@ lumi: 10000
 
 plot:
   - ttH2bb_125
+  - ttjets
+  - collisions_single_mu
 
 cuts:
   - "Trigger": "(leptons[0].electron() and event.trigger().single_e()) or (leptons[0].muon() and event.trigger().single_mu())"

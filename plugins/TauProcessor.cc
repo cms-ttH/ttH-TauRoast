@@ -41,6 +41,8 @@
 
 #include "JetMETCorrections/Objects/interface/JetCorrector.h"
 
+#include "DataFormats/Common/interface/ValueMap.h"
+
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 
@@ -184,12 +186,16 @@ class TauProcessor : public edm::EDAnalyzer {
       edm::EDGetTokenT<std::vector<PileupSummaryInfo>> pu_token_;
       edm::EDGetTokenT<reco::VertexCollection> vertices_token_;
       edm::EDGetTokenT<pat::ElectronCollection> electrons_token_;
+      edm::EDGetTokenT<edm::View<pat::Electron>> mva_electrons_token_;
       edm::EDGetTokenT<pat::MuonCollection> muons_token_;
       edm::EDGetTokenT<pat::TauCollection> taus_token_;
       edm::EDGetTokenT<pat::JetCollection> ak4jets_token_;
       edm::EDGetTokenT<reco::GenParticleCollection> gen_token_;
       edm::EDGetTokenT<pat::METCollection> met_token_;
       edm::EDGetTokenT<edm::TriggerResults> trig_token_;
+
+      edm::EDGetTokenT<edm::ValueMap<float>> mva_val_token_;
+      edm::EDGetTokenT<edm::ValueMap<int>> mva_cat_token_;
 
       TTree *tree_;
       TH1F *cuts_;
@@ -246,12 +252,16 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    pu_token_ = consumes<std::vector<PileupSummaryInfo>>(edm::InputTag("slimmedAddPileupInfo"));
    vertices_token_ = consumes<reco::VertexCollection>(edm::InputTag("offlineSlimmedPrimaryVertices"));
    electrons_token_ = consumes<pat::ElectronCollection>(config.getParameter<edm::InputTag>("electrons"));
+   mva_electrons_token_ = consumes<edm::View<pat::Electron>>(config.getParameter<edm::InputTag>("electrons"));
    muons_token_ = consumes<pat::MuonCollection>(config.getParameter<edm::InputTag>("muons"));
    taus_token_ = consumes<pat::TauCollection>(edm::InputTag("slimmedTaus"));
    ak4jets_token_ = consumes<pat::JetCollection>(edm::InputTag("slimmedJets"));
    gen_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("prunedGenParticles"));
    met_token_ = consumes<pat::METCollection>(edm::InputTag("slimmedMETs"));
    trig_token_ = consumes<edm::TriggerResults>(edm::InputTag("TriggerResults", "", "HLT"));
+
+   mva_val_token_ = consumes<edm::ValueMap<float>>(edm::InputTag("electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring15Trig25nsV1Values"));
+   mva_cat_token_ = consumes<edm::ValueMap<int>>(edm::InputTag("electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring15Trig25nsV1Categories"));
 
    if (data_) {
       systematics_ = {{"NA", sysType::NA}};
@@ -432,9 +442,13 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
    auto raw_mu = *muons;
    auto raw_e = *electrons;
-   if (min_leptons_ > 1) {
+   if (min_leptons_ == 1) {
+      auto electrons = get_collection(*this, event, mva_electrons_token_);
+      auto mva_vals = get_collection(*this, event, mva_val_token_);
+      auto mva_cats = get_collection(*this, event, mva_cat_token_);
+      auto mva_e = helper_.GetElectronsWithMVAid(electrons, mva_vals, mva_cats);
       raw_mu = helper_.GetSelectedMuons(*muons, 5., mu_id_pre);
-      raw_e = helper_.GetSelectedElectrons(*electrons, 7., e_id_pre);
+      raw_e = helper_.GetSelectedElectrons(mva_e, 7., e_id_pre);
       raw_e = removeOverlap(raw_e, raw_mu, 0.05);
    }
    auto raw_tau = helper_.GetSelectedTaus(*taus, 20., tau::loose);

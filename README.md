@@ -151,9 +151,7 @@ Link to work from other ttH groups
 Run the following to test the sync status with the LJ analysis (for the TTL
 channel):
 
-    cmsRun test/ntuplize_lj_sync.py \
-        outputFile=test/leptonplusjets/ttH2bb_125_pow/test.root \
-        inputFiles=/store/mc/RunIISpring15MiniAODv2/ttHTobb_M125_13TeV_powheg_pythia8/MINIAODSIM/74X_mcRun2_asymptotic_v2-v1/30000/DA1B6FD6-C46D-E511-9C7B-00A0D1EE29B8.root
+    sh test/ntuplize_lj_sync.sh
     roaster -a --debug-cuts data/lj_sync.yaml
 
 Detailed event lists are present in the configured output directories for

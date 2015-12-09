@@ -7,7 +7,7 @@ options.register("data", False,
         VarParsing.VarParsing.multiplicity.singleton,
         VarParsing.VarParsing.varType.bool,
         "Indicate if data is being used (or MC)")
-options.register("globalTag", "74X_mcRun2_asymptotic_v2",
+options.register("globalTag", "74X_mcRun2_asymptotic_v4",
         VarParsing.VarParsing.multiplicity.singleton,
         VarParsing.VarParsing.varType.string,
         "Global tag to use")
@@ -95,4 +95,6 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         debugEvents = cms.vuint32(evts)
 )
 
-process.p = cms.Path(process.taus)
+process.load("RecoEgamma.ElectronIdentification.ElectronMVAValueMapProducer_cfi")
+
+process.p = cms.Path(process.electronMVAValueMapProducer * process.taus)
