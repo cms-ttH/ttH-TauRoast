@@ -174,7 +174,9 @@ the last two steps.
 
 ## v14
 
-* Run with new globaltags.
+* Run with new globaltags
+* Includes new JER/JES
+* Switch e MVA ID over to yet another producer
 
 ## v13
 
