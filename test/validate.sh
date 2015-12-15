@@ -2,7 +2,7 @@
 
 set -e
 
-max=40000
+max=80000
 
 cmsRun test/validate.py maxEvents=$max outputFile=validate_tth.root inputFiles_load=test/validate_tth.txt
 python test/validate_plot_tau.py validate_tth_numEvent${max}.root validate_tth.pdf

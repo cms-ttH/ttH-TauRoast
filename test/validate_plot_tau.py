@@ -46,7 +46,7 @@ class Plotter(object):
             h.SetMarkerColor(color)
             h.SetMarkerStyle(marker)
             l.AddEntry(h, h.GetTitle() if h.GetTitle() != "" else "No isolation", "lp")
-            h.DrawCopy("LP " + opt)
+            h.DrawCopy("EP " + opt)
             # h.DrawCopy(opt)
             opt = "same"
         l.Draw()
