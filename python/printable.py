@@ -9,9 +9,15 @@ class SyncSaver(object):
         self.__sys = systematics
         self.__f = open(filename, 'w')
         if config.leptons == 1:
-            self.__f.write("run,lumi,event,is_SL,is_DL,lep1_pt,lep1_eta,lep1_phi,lep1_iso,lep1_pdgId,"
-                    + "lep2_pt,lep2_eta,lep2_phi,lep2_iso,lep2_pdgId,jet1_pt,jet2_pt,jet3_pt,jet4_pt,"
-                    + "jet1_CSVv2,jet2_CSVv2,jet3_CSVv2,jet4_CSVv2,MET_pt,MET_phi\n")
+            self.__f.write("run,lumi,event,"
+                    + "is_SL,is_DL,"
+                    + "lep1_pt,lep1_eta,lep1_phi,lep1_iso,lep1_pdgId,"
+                    + "lep2_pt,lep2_eta,lep2_phi,lep2_iso,lep2_pdgId,"
+                    + "mll,mll_passed,"
+                    + "jet1_pt,jet2_pt,jet3_pt,jet4_pt,"
+                    + "jet1_CSVv2,jet2_CSVv2,jet3_CSVv2,jet4_CSVv2,"
+                    + "MET_pt,MET_phi,met_passed,"
+                    + "n_jets,n_btags,bWeight,ttHFCategory\n")
             self._fct = self._print_lepjets
         elif config.leptons == 2:
             self.__fmt = "%6d %6d %10d  " + \
@@ -34,8 +40,8 @@ class SyncSaver(object):
 
     def _print_lepjets(self, event, combo):
         def dtos(d):
-            s = "{0:.4}".format(d)
-            return "0" if s == "0.0" else s
+            s = "{0:.4f}".format(d)
+            return "0" if s == "0.0000" else s
         leptons = combo.leptons()
         jets = combo.jets(self.__sys)
         met = combo.met(self.__sys)
@@ -47,7 +53,7 @@ class SyncSaver(object):
                 event.run(), event.lumi(), event.event(),
                 1, 0,
                 dtos(first.p4().pt()), dtos(first.p4().eta()), dtos(first.p4().phi()), dtos(first.relativeIsolation()), first.pdgId(),
-            ] + [0] * 5 + jpts + jcsvs + map(dtos, [met.pt(), met.phi()])
+            ] + [0] * 7 + jpts + jcsvs + map(dtos, [met.pt(), met.phi()]) + [0, len(jets), len(filter(btag, jets)), 0, 0]
         ))
         self.__f.write(s + "\n")
 
