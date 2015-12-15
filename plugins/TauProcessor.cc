@@ -279,7 +279,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    superslim::Trigger::set_single_mu_triggers(config.getParameter<std::vector<std::string>>("triggerSingleMu"));
    m_triggerSelector = std::unique_ptr<triggerExpression::Evaluator>(triggerExpression::parse(superslim::Trigger::get_selection()));
 
-   helper_.SetUp("2012_53x", 2500, analysisType::LJ, data_);
+   helper_.SetUp("2015_74x", 2500, analysisType::LJ, data_);
    helper_.SetJetCorrectorUncertainty();
    // helper_.SetFactorizedJetCorrector();
 
@@ -426,9 +426,9 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       mu_id_loose = muonID::muonTight;
       mu_id_tight = muonID::muonTight;
 
-      e_id_pre = electronID::electronEndOf15MVA80;
-      e_id_loose = electronID::electronEndOf15MVA80;
-      e_id_tight = electronID::electronEndOf15MVA80;
+      e_id_pre = electronID::electronEndOf15MVA80iso0p15;
+      e_id_loose = electronID::electronEndOf15MVA80iso0p15;
+      e_id_tight = electronID::electronEndOf15MVA80iso0p15;
    }
 
    // ===============
