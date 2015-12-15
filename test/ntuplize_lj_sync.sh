@@ -29,3 +29,7 @@ cmsRun test/ntuplize_lj_sync.py \
   data=true globalTag=74X_dataRun2_v5 \
   outputFile=test/leptonplusjets/data_SingleE_2015D_Oct05/test.root \
   inputFiles=file:el_skim_3loosejets.root &
+
+wait
+
+scripts/roaster -a --debug-cuts data/lj_sync.yaml
