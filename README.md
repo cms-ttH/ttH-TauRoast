@@ -160,7 +160,8 @@ the last two steps.
 ### Twiki
 
 * [Analysis Twiki](https://twiki.cern.ch/twiki/bin/viewauth/CMS/TTbarHiggsRun2LeptonPlusJets)
-* [Reference Analysis](https://twiki.cern.ch/twiki/bin/view/CMS/TTbarHbbRun2ReferenceAnalysis)
+* [Reference Analysis (2015)](https://twiki.cern.ch/twiki/bin/view/CMS/TTbarHbbRun2ReferenceAnalysis)
+* [Reference Analysis (2016)](https://twiki.cern.ch/twiki/bin/viewauth/CMS/TTbarHbbRun2ReferenceAnalysis_StartOf2016)
 
 ## Multilepton
 
