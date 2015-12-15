@@ -9,7 +9,9 @@ class SyncSaver(object):
         self.__sys = systematics
         self.__f = open(filename, 'w')
         if config.leptons == 1:
-            self.__f.write("\n")
+            self.__f.write("run,lumi,event,is_SL,is_DL,lep1_pt,lep1_eta,lep1_phi,lep1_iso,lep1_pdgId,"
+                    + "lep2_pt,lep2_eta,lep2_phi,lep2_iso,lep2_pdgId,jet1_pt,jet2_pt,jet3_pt,jet4_pt,"
+                    + "jet1_CSVv2,jet2_CSVv2,jet3_CSVv2,jet4_CSVv2,MET_pt,MET_phi\n")
             self._fct = self._print_lepjets
         elif config.leptons == 2:
             self.__fmt = "%6d %6d %10d  " + \
@@ -32,7 +34,7 @@ class SyncSaver(object):
 
     def _print_lepjets(self, event, combo):
         def dtos(d):
-            s = "{0:.6}".format(d)
+            s = "{0:.4}".format(d)
             return "0" if s == "0.0" else s
         leptons = combo.leptons()
         jets = combo.jets(self.__sys)
