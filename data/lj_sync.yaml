@@ -10,6 +10,7 @@ lumi: 10000
 plot:
   - ttH2bb_125
   - ttjets
+  - collisions_single_e
   - collisions_single_mu
 
 cuts:
