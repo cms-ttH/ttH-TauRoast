@@ -59,6 +59,16 @@ and add some CMS dependencies for TLL:
 or add some CMS dependencies for TTL:
 
     git cms-merge-topic --unsafe ikrav:egm_id_7.4.12_v1
+    git cms-addpkg PhysicsTools/JetMCAlgos/
+    cd PhysicsTools/JetMCAlgos/plugins/
+    rm GenHFHadronMatcher.cc
+    wget https://twiki.cern.ch/twiki/pub/CMSPublic/GenHFHadronMatcher/GenHFHadronMatcher.cc
+    wget https://twiki.cern.ch/twiki/pub/CMSPublic/GenHFHadronMatcher/GenTtbarCategorizer.cc
+    cd -
+    cd PhysicsTools/JetMCAlgos/python/
+    wget https://twiki.cern.ch/twiki/pub/CMSPublic/GenHFHadronMatcher/GenTtbarCategorizer_cfi.py.txt
+    mv GenTtbarCategorizer_cfi.py.txt GenTtbarCategorizer_cfi.py
+    cd -
 
 then compile:
 

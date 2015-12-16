@@ -53,7 +53,7 @@ class SyncSaver(object):
                 event.run(), event.lumi(), event.event(),
                 1, 0,
                 dtos(first.p4().pt()), dtos(first.p4().eta()), dtos(first.p4().phi()), dtos(first.relativeIsolation()), first.pdgId(),
-            ] + [0] * 7 + jpts + jcsvs + map(dtos, [met.pt(), met.phi()]) + [0, len(jets), len(filter(btag, jets)), 0, 0]
+            ] + [0] * 7 + jpts + jcsvs + map(dtos, [met.pt(), met.phi()]) + [0, len(jets), len(filter(btag, jets)), 0, event.hfCategory()]
         ))
         self.__f.write(s + "\n")
 

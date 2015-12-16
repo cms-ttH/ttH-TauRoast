@@ -336,11 +336,13 @@ namespace superslim {
          long run, long lumi, long event,
          int npv, int ntv,
          const std::vector<superslim::Vertex>& pv,
+         int category,
          const superslim::Trigger& trigger,
          const reco::GenParticleCollection& genparticles) :
       combos_(cs),
       run_(run), lumi_(lumi), event_(event),
       npv_(npv), ntv_(ntv),
+      hfcat_(category),
       hdecay_(-1),
       pv_(pv),
       trigger_(trigger)

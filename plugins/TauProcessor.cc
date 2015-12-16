@@ -197,12 +197,6 @@ class TauProcessor : public edm::EDAnalyzer {
       edm::EDGetTokenT<edm::ValueMap<float>> mva_val_token_;
       edm::EDGetTokenT<edm::ValueMap<int>> mva_cat_token_;
 
-      TTree *tree_;
-      TH1F *cuts_;
-
-      std::vector<std::string> cutnames_;
-      std::map<std::string, sysType::sysType> systematics_;
-
       superslim::Event *event_;
 
       unsigned int evt_;
@@ -211,6 +205,27 @@ class TauProcessor : public edm::EDAnalyzer {
       // see https://twiki.cern.ch/twiki/bin/view/CMS/TriggerResultsFilter#Use_as_a_Selector_AN1
       triggerExpression::Data m_triggerCache;
       std::unique_ptr<triggerExpression::Evaluator> m_triggerSelector;
+
+      edm::EDGetTokenT<reco::GenJetCollection> genJetsToken_;
+      edm::EDGetTokenT<std::vector<int>> genBHadJetIndexToken_;
+      edm::EDGetTokenT<std::vector<int>> genBHadFlavourToken_;
+      edm::EDGetTokenT<std::vector<int>> genBHadFromTopWeakDecayToken_;
+      edm::EDGetTokenT<std::vector<reco::GenParticle>> genBHadPlusMothersToken_;
+      edm::EDGetTokenT<std::vector<std::vector<int>>> genBHadPlusMothersIndicesToken_;
+      edm::EDGetTokenT<std::vector<int>> genBHadIndexToken_;
+      edm::EDGetTokenT<std::vector<int>> genBHadLeptonHadronIndexToken_;
+      edm::EDGetTokenT<std::vector<int>> genBHadLeptonViaTauToken_;
+
+      edm::EDGetTokenT<std::vector<int>> genCHadJetIndexToken_;
+      edm::EDGetTokenT<std::vector<int>> genCHadFlavourToken_;
+      edm::EDGetTokenT<std::vector<int>> genCHadFromTopWeakDecayToken_;
+      edm::EDGetTokenT<std::vector<int>> genCHadBHadronIdToken_;
+
+      TTree *tree_;
+      TH1F *cuts_;
+
+      std::vector<std::string> cutnames_;
+      std::map<std::string, sysType::sysType> systematics_;
 };
 
 TauProcessor::TauProcessor(const edm::ParameterSet& config) :
@@ -262,6 +277,20 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
 
    mva_val_token_ = consumes<edm::ValueMap<float>>(edm::InputTag("electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring15Trig25nsV1Values"));
    mva_cat_token_ = consumes<edm::ValueMap<int>>(edm::InputTag("electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring15Trig25nsV1Categories"));
+
+   genJetsToken_ = consumes<reco::GenJetCollection>(edm::InputTag("ak4GenJetsCustom"));
+   genBHadJetIndexToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenBHadron", "genBHadJetIndex"));
+   genBHadFlavourToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenBHadron", "genBHadFlavour"));
+   genBHadFromTopWeakDecayToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenBHadron", "genBHadFromTopWeakDecay"));
+   genBHadPlusMothersToken_ = consumes<std::vector<reco::GenParticle>>(edm::InputTag("matchGenBHadron", "genBHadPlusMothers"));
+   genBHadPlusMothersIndicesToken_ = consumes<std::vector<std::vector<int>> >(edm::InputTag("matchGenBHadron", "genBHadPlusMothersIndices"));
+   genBHadIndexToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenBHadron", "genBHadIndex"));
+   genBHadLeptonHadronIndexToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenBHadron", "genBHadLeptonHadronIndex"));
+   genBHadLeptonViaTauToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenBHadron", "genBHadLeptonViaTau"));
+   genCHadJetIndexToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenCHadron", "genCHadJetIndex"));
+   genCHadFlavourToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenCHadron", "genCHadFlavour"));
+   genCHadFromTopWeakDecayToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenCHadron", "genCHadFromTopWeakDecay"));
+   genCHadBHadronIdToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenCHadron", "genCHadBHadronId"));
 
    if (data_) {
       systematics_ = {{"NA", sysType::NA}};
@@ -422,8 +451,8 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    electronID::electronID e_id_tight = electronID::electronTightCutBased;
 
    if (min_leptons_ == 1) {
-      mu_id_pre = muonID::muonTight;
-      mu_id_loose = muonID::muonTight;
+      mu_id_pre = muonID::muonTightDL;
+      mu_id_loose = muonID::muonTightDL;
       mu_id_tight = muonID::muonTight;
 
       e_id_pre = electronID::electronEndOf15MVA80iso0p15;
@@ -619,9 +648,30 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    }
 
    if (combos.size() > 0) {
+      int category = 0;
       int ntv = -1;
 
       if (!data_) {
+         // HF categorization
+         auto genJets = get_collection(*this, event, genJetsToken_);
+         auto genBHadFlavour = get_collection(*this, event, genBHadFlavourToken_);
+         auto genBHadJetIndex = get_collection(*this, event, genBHadJetIndexToken_);
+         auto genBHadFromTopWeakDecay = get_collection(*this, event, genBHadFromTopWeakDecayToken_);
+         auto genBHadPlusMothers = get_collection(*this, event, genBHadPlusMothersToken_);
+         auto genBHadPlusMothersIndices = get_collection(*this, event, genBHadPlusMothersIndicesToken_);
+         auto genBHadIndex = get_collection(*this, event, genBHadIndexToken_);
+         auto genBHadLeptonHadronIndex = get_collection(*this, event, genBHadLeptonHadronIndexToken_);
+         auto genBHadLeptonViaTau = get_collection(*this, event, genBHadLeptonViaTauToken_);
+         auto genCHadFlavour = get_collection(*this, event, genCHadFlavourToken_);
+         auto genCHadJetIndex = get_collection(*this, event, genCHadJetIndexToken_);
+         auto genCHadFromTopWeakDecay = get_collection(*this, event, genCHadFromTopWeakDecayToken_);
+         auto genCHadBHadronId = get_collection(*this, event, genCHadBHadronIdToken_);
+
+         category = helper_.ttHFCategorization(*genJets,
+            *genBHadIndex, *genBHadJetIndex, *genBHadFlavour, *genBHadFromTopWeakDecay,
+            *genBHadPlusMothers, *genBHadPlusMothersIndices, *genBHadLeptonHadronIndex, *genBHadLeptonViaTau,
+            *genCHadFlavour, *genCHadJetIndex, *genCHadFromTopWeakDecay, *genCHadBHadronId, 20., 2.4);
+
          auto infos = get_collection(*this, event, pu_token_);
          for (const auto& info: *infos) {
             if (info.getBunchCrossing() == 0) {
@@ -638,6 +688,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
                combos,
                event.id().run(), event.id().luminosityBlock(), event.id().event(),
                npv, ntv, pv,
+               category,
                superslim::Trigger(*trigger_results, trigger_names),
                particles));
 

@@ -85,5 +85,22 @@ process.taus = cms.EDAnalyzer("TauProcessor",
 )
 
 process.load("RecoEgamma.ElectronIdentification.ElectronMVAValueMapProducer_cfi")
+process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
+process.load("ttH.TauRoast.genHadronMatching_cfi")
 
-process.p = cms.Path(process.electronMVAValueMapProducer * process.taus)
+if options.data:
+    process.p = cms.Path(
+            process.electronMVAValueMapProducer
+            * process.taus
+    )
+else:
+    process.p = cms.Path(
+            process.genParticlesForJetsNoNu
+            * process.ak4GenJetsCustom
+            * process.selectedHadronsAndPartons
+            * process.genJetFlavourPlusLeptonInfos
+            * process.matchGenBHadron
+            * process.matchGenCHadron
+            * process.electronMVAValueMapProducer
+            * process.taus
+    )
