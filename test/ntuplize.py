@@ -50,6 +50,10 @@ process.ak4PFchsL1L2L3 = cms.ESProducer("JetCorrectionESChain",
             'ak4PFchsL3Absolute')
 )
 
+if options.data:
+    process.ak4PFchsResidual  = ak4CaloResidual.clone(algorithm = 'AK4PFchs')
+    process.ak4PFchsL1L2L3.correctors.append('ak4PFchsResidual')
+
 # process.load("ttH.LeptonID.ttHLeptons_cfi")
 
 process.taus = cms.EDAnalyzer("TauProcessor",

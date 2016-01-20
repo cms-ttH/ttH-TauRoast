@@ -60,6 +60,10 @@ process.ak4PFchsL1L2L3 = cms.ESProducer("JetCorrectionESChain",
             'ak4PFchsL3Absolute')
 )
 
+if options.data:
+    process.ak4PFchsResidual  = ak4CaloResidual.clone(algorithm = 'AK4PFchs')
+    process.ak4PFchsL1L2L3.correctors.append('ak4PFchsResidual')
+
 evts = []
 if os.path.isfile('debug_events'):
     with open('debug_events') as f:
