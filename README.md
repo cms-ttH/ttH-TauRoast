@@ -183,6 +183,11 @@ the last two steps.
 
 # History
 
+## v15
+
+* Sync data sample setup with the ttH→bb group
+* Fixes JER/JES for data
+
 ## v14
 
 * Run with new globaltags
