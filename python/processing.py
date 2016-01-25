@@ -8,7 +8,6 @@ import ROOT as r
 r.gSystem.Load("libttHTauRoast")
 
 from ttH.TauRoast.botany import Tree
-from ttH.TauRoast.heavy import calculate_weights
 from ttH.TauRoast.useful import code2cut
 
 class Process(object):

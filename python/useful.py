@@ -6,8 +6,6 @@ import time
 
 from collections import namedtuple
 
-from ttH.TauRoast.heavy import calculate_weights
-
 Config = namedtuple('Config', ['taus', 'leptons', 'generator'])
 config = None
 
