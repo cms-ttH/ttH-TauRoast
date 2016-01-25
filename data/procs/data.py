@@ -21,7 +21,7 @@ BasicProcess(
 )
 
 BasicProcess(
-    name="Collisions_ElectronMuon",
+    name="collisions_ElectronMuon",
     # add cuts:
     #   - NumLooseElectrons = 1 and NumLooseMuons = 1
     fullname="Collisions",
@@ -32,21 +32,27 @@ BasicProcess(
 
 BasicProcess(
     name="collisions_single_e",
-    # add cuts:
-    #   - NumLooseElectrons = 1
     fullname="Collisions",
     limitname="data_obs_e",
+    additional_cuts=[('trigger selection', 'len(leptons) == 1 and leptons[0].electron()')],
     paths=["data_SingleE_2015D_PR", "data_SingleE_2015D_Oct05"],
     events=297904375
 )
 
 BasicProcess(
     name="collisions_single_mu",
-    # add cuts:
-    #   - NumLooseMuons = 1
     fullname="Collisions",
     limitname="data_obs_mu",
+    additional_cuts=[('trigger selection', 'len(leptons) == 1 and leptons[0].muon()')],
     paths=["data_SingleMu_2015D", "data_SingleMu_2015D_Oct05"],
+    events=262813074
+)
+
+BasicProcess(
+    name="collisions_mu_egamma",
+    fullname="Collisions",
+    limitname="data_obs_mueg",
+    paths=["data_MuEG_2015D", "data_MuEG_2015D_Oct05"],
     events=262813074
 )
 
