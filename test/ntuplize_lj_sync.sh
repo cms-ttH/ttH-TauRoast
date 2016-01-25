@@ -16,12 +16,12 @@ for f in $files; do
    fi
 done
 
-# cmsRun test/ntuplize_lj_sync.py \
-#   outputFile=test/leptonplusjets/ttH2bb_125_pow/test.root \
-#   inputFiles=file:DA1B6FD6-C46D-E511-9C7B-00A0D1EE29B8.root &
-# cmsRun test/ntuplize_lj_sync.py \
-#   outputFile=test/leptonplusjets/tt_pow/test.root \
-#   inputFiles=file:0EE7E064-BE6F-E511-BB41-E4115BB4C4BC.root &
+cmsRun test/ntuplize_lj_sync.py \
+  outputFile=test/leptonplusjets/ttH2bb_125_pow/test.root \
+  inputFiles=file:DA1B6FD6-C46D-E511-9C7B-00A0D1EE29B8.root &
+cmsRun test/ntuplize_lj_sync.py \
+  outputFile=test/leptonplusjets/tt_pow/test.root \
+  inputFiles=file:0EE7E064-BE6F-E511-BB41-E4115BB4C4BC.root &
 cmsRun test/ntuplize_lj_sync.py \
   data=true globalTag=74X_dataRun2_v5 \
   outputFile=test/leptonplusjets/data_MuEG_2015D_Oct05/test.root \
