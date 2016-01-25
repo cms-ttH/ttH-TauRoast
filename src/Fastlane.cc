@@ -44,7 +44,7 @@ fastlane::Cut::operator()(const std::string& process, const superslim::Event& e,
 
          auto py_e = TPython::ObjectProxy_FromVoidPtr(dynamic_cast<void*>(&event), "superslim::Event");
          auto py_c = TPython::ObjectProxy_FromVoidPtr(dynamic_cast<void*>(&combo), "superslim::Combination");
-         auto py_w = TPython::ObjectProxy_FromVoidPtr(static_cast<void*>(&ws), "std::unordered_map<std::string,float>");
+         auto py_w = TPython::ObjectProxy_FromVoidPtr(static_cast<void*>(&ws), "std::unordered_map<std::string,double>");
          std::vector<TPyArg> args = {py_e, py_c, py_w};
          TPyArg::CallMethod(callback_, args);
       }
@@ -127,7 +127,7 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
       jetpt.push_back(j.p4().pt());
       jeteta.push_back(j.p4().eta());
       jetcsv.push_back(j.csv());
-      jetflv.push_back(j.hadronFlavour());
+      jetflv.push_back(j.flavor());
    }
 
    double hf, lf, cf;

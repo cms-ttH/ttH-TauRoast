@@ -166,7 +166,8 @@ namespace superslim {
 
    Jet::Jet(const pat::Jet& j, const reco::GenParticleCollection& particles) :
       PhysObject(&j),
-      csv_(j.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags"))
+      csv_(j.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")),
+      flavor_(j.hadronFlavour())
    {
       getMatch(j, particles);
       setGenInfo(j.genParton());

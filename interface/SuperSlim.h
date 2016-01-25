@@ -134,9 +134,11 @@ namespace superslim {
          virtual ~Jet() {};
 
          float csv() const { return csv_; };
+         int flavor() const { return flavor_; };
       private:
          float csv_;
-         ClassDef(Jet, 1);
+         int flavor_;
+         ClassDef(Jet, 2);
    };
 
    class Lepton : public PhysObject {
