@@ -12,6 +12,7 @@ plot:
   - ttjets
   - collisions_single_e
   - collisions_single_mu
+  - collisions_mu_egamma
 
 cuts:
   - "Trigger": "(leptons[0].electron() and event.trigger().single_e()) or (leptons[0].muon() and event.trigger().single_mu())"
