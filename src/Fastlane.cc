@@ -8,6 +8,15 @@
 #include "MiniAOD/MiniAODHelper/interface/PUWeightProducer.h"
 #include "ttH/TauRoast/interface/Fastlane.h"
 
+std::string
+lower(const std::string& s)
+{
+   std::string res(s);
+   for (unsigned i = 0; i < res.size(); ++i)
+      res[i] = std::tolower(res[i]);
+   return res;
+}
+
 bool
 fastlane::Cut::operator()(const std::string& process, const superslim::Event& e, const superslim::Combination& c, const std::string& sys)
 {
@@ -24,9 +33,19 @@ fastlane::Cut::operator()(const std::string& process, const superslim::Event& e,
       if (callback_) {
          auto event = superslim::Event(e);
          auto combo = superslim::Combination(c);
+
+         std::unordered_map<std::string, double> ws;
+         for (const auto& w: e.weights())
+            ws[lower(w.first)] = w.second;
+         for (const auto& w: c.weights())
+            ws[lower(w.first)] = w.second;
+         if (process.compare(0, 10, "collisions"))
+            fastlane::update_weights(ws, e, c, sys);
+
          auto py_e = TPython::ObjectProxy_FromVoidPtr(dynamic_cast<void*>(&event), "superslim::Event");
          auto py_c = TPython::ObjectProxy_FromVoidPtr(dynamic_cast<void*>(&combo), "superslim::Combination");
-         std::vector<TPyArg> args = {py_e, py_c};
+         auto py_w = TPython::ObjectProxy_FromVoidPtr(static_cast<void*>(&ws), "std::unordered_map<std::string,float>");
+         std::vector<TPyArg> args = {py_e, py_c, py_w};
          TPyArg::CallMethod(callback_, args);
       }
    }
@@ -64,15 +83,6 @@ namespace fastlane {
       val_.clear();
       fct_(e, c.taus(), c.leptons(), c.jets(sys), c.met(sys), w, val_);
    }
-}
-
-std::string
-lower(const std::string& s)
-{
-   std::string res(s);
-   for (unsigned i = 0; i < res.size(); ++i)
-      res[i] = std::tolower(res[i]);
-   return res;
 }
 
 void
@@ -123,7 +133,10 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
    double hf, lf, cf;
    double csv = csvhelper.getCSVWeight(jetpt, jeteta, jetcsv, jetflv, csvsys[sys], hf, lf, cf);
 
-   ws[lower("CSVWeight")] = csv;
+   ws[lower("HFWeight")] = hf;
+   ws[lower("LFWeight")] = lf;
+   ws[lower("CFWeight")] = cf;
+   ws[lower("CSVWeight")] = std::min(csv, 1.);
    ws[lower("PUWeight")] = puhelper(e.ntv());
 }
 

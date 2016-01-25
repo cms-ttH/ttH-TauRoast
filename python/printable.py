@@ -38,7 +38,7 @@ class SyncSaver(object):
     def __del__(self):
         self.__f.close()
 
-    def _print_lepjets(self, event, combo):
+    def _print_lepjets(self, event, combo, ws):
         def dtos(d):
             s = "{0:.4f}".format(d)
             return "0" if s == "0.0000" else s
@@ -53,11 +53,11 @@ class SyncSaver(object):
                 event.run(), event.lumi(), event.event(),
                 1, 0,
                 dtos(first.p4().pt()), dtos(first.p4().eta()), dtos(first.p4().phi()), dtos(first.relativeIsolation()), first.pdgId(),
-            ] + [0] * 7 + jpts + jcsvs + map(dtos, [met.pt(), met.phi()]) + [0, len(jets), len(filter(btag, jets)), 0, event.hfCategory()]
+            ] + [0] * 7 + jpts + jcsvs + map(dtos, [met.pt(), met.phi()]) + [0, len(jets), len(filter(btag, jets)), ws['csvweight'], event.hfCategory()]
         ))
         self.__f.write(s + "\n")
 
-    def _print_dilepton(self, event, combo):
+    def _print_dilepton(self, event, combo, ws):
         leptons = combo.leptons()
         first, second = leptons[:2]
         self.__f.write(self.__fmt % (
