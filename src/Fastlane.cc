@@ -117,7 +117,7 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
       jetpt.push_back(j.p4().pt());
       jeteta.push_back(j.p4().eta());
       jetcsv.push_back(j.csv());
-      jetflv.push_back(j.genPdgId());
+      jetflv.push_back(j.hadronFlavour());
    }
 
    double hf, lf, cf;
