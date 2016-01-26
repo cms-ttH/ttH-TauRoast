@@ -53,39 +53,42 @@
 
 template<typename T>
 std::vector<std::vector<T>>
-build_permutations(const std::vector<T>& things, const unsigned int num)
+build_permutations(const std::vector<T>& things, unsigned int min, unsigned int max)
 {
-    if (num == 0)
-        return {{}};
-    if (num > things.size())
-        return {};
+   std::vector<std::vector<T>> res;
 
-    std::vector<std::vector<T>> res;
-    std::vector<unsigned int> indices;
-    for (unsigned int i = 0; i < num; ++i)
-        indices.push_back(i);
+   if (min == 0) {
+      res.push_back({});
+      ++min;
+   }
 
-    do {
-       std::vector<T> perm;
-        for (const auto& i: indices)
+   for (unsigned int num = min; num <= max and num < things.size(); ++num) {
+      std::vector<unsigned int> indices;
+      for (unsigned int i = 0; i < num; ++i)
+         indices.push_back(i);
+
+      do {
+         std::vector<T> perm;
+         for (const auto& i: indices)
             perm.push_back(things[i]);
-        res.push_back(perm);
+         res.push_back(perm);
 
-        for (int i = indices.size() - 1; i >= 0; --i) {
+         for (int i = indices.size() - 1; i >= 0; --i) {
             // increase indices, starting with the back
             indices[i] += 1;
             if (indices[i] <= things.size() - indices.size() + i) {
-                // if an index is smaller than the # of things (minus room
-                // for the other indices), we need to reset the
-                // remaining ones and stop increasing lower indices.
-                for (unsigned int j = 1; i + j < indices.size(); ++j)
-                    indices[i + j] = indices[i] + j;
-                break;
+               // if an index is smaller than the # of things (minus room
+               // for the other indices), we need to reset the
+               // remaining ones and stop increasing lower indices.
+               for (unsigned int j = 1; i + j < indices.size(); ++j)
+                  indices[i + j] = indices[i] + j;
+               break;
             }
-        }
-    } while (indices.front() < things.size() && indices.back() < things.size());
+         }
+      } while (indices.front() < things.size() && indices.back() < things.size());
+   }
 
-    return res;
+   return res;
 }
 
 template<typename T>
@@ -161,6 +164,7 @@ class TauProcessor : public edm::EDAnalyzer {
       int max_loose_leptons_;
       int max_tight_leptons_;
       unsigned int min_taus_;
+      unsigned int max_taus_;
       unsigned int min_tight_taus_;
 
       bool subtract_leptons_;
@@ -239,6 +243,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    max_loose_leptons_(config.getParameter<int>("maxLooseLeptons")),
    max_tight_leptons_(config.getParameter<int>("maxTightLeptons")),
    min_taus_(config.getParameter<unsigned int>("minTaus")),
+   max_taus_(config.getParameter<unsigned int>("maxTaus")),
    min_tight_taus_(config.getParameter<unsigned int>("minTightTaus")),
    subtract_leptons_(config.getParameter<bool>("subtractLeptons")),
    print_preselection_(config.getParameter<bool>("printPreselection")),
@@ -486,7 +491,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    if (raw_tau.size() < min_taus_)
       return;
 
-   if (raw_tight_tau.size() < min_tight_taus_)
+   if (raw_tight_tau.size() < min_tight_taus_ or min_tight_taus_ < min_taus_)
       return;
 
    // ================
@@ -512,13 +517,13 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    // cut index bitmap
    int passed = 0;
 
-   for (const std::vector<pat::Tau>& combo: build_permutations(raw_tau, min_taus_)) {
+   for (const std::vector<pat::Tau>& combo: build_permutations(raw_tau, min_taus_, max_taus_)) {
       int combo_cut = 0;
 
       auto loose_tau = helper_.GetSelectedTaus(combo, 20., tau::loose);
       auto tight_tau = helper_.GetSelectedTaus(loose_tau, 20., tau::tight);
 
-      if (tight_tau.size() < min_tight_taus_)
+      if (tight_tau.size() < min_tight_taus_ or combo.size() < min_tight_taus_)
          continue;
 
       passComboCut(event_cut, combo_cut++, passed, "Taus in combo");
