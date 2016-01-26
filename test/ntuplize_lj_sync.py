@@ -32,6 +32,12 @@ process.GlobalTag.globaltag = options.globalTag
 process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(options.inputFiles)
 )
+if options.data:
+    import json
+    from FWCore.PythonUtilities.LumiList import LumiList
+    data = json.load(open('test/ntuplize_lj_sync.json'))
+    process.source.lumisToProcess = cms.untracked.VLuminosityBlockRange(
+            LumiList(compactList=data).getVLuminosityBlockRange())
 
 process.TFileService = cms.Service("TFileService",
         closeFileFast = cms.untracked.bool(True),
