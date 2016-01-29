@@ -183,6 +183,11 @@ the last two steps.
 
 # History
 
+## v16
+
+* Yet more sync stuff
+* Ran with 0-2 τ per combination to compare to lepton+jets
+
 ## v15
 
 * Sync data sample setup with the ttH→bb group
