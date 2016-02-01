@@ -183,6 +183,11 @@ the last two steps.
 
 # History
 
+## v17
+
+* Same as v16, but run with CRAB, to see if Lobster is processing datasets
+  wrong
+
 ## v16
 
 * Yet more sync stuff

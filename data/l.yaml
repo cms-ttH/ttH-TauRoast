@@ -2,9 +2,9 @@
 
 channel: l
 generator: pow
-ntupledir: /hadoop/store/user/matze/ttH/v16
-# ntupledir: /scratch365/mwolf3/ttH/v13
-outdir: ~/www/ttH/v16_l
+# ntupledir: /hadoop/store/user/matze/ttH/v16
+ntupledir: /scratch365/mwolf3/ttH/v17
+outdir: ~/www/ttH/v17_l
 histformat: "{p}_{v}_TTL"
 
 lumi: 1553
