@@ -403,7 +403,7 @@ class Plot(object):
         canvas.SaveAs(os.path.join(outdir, self.__name + ".pdf"))
 
     @savetime
-    def fill(self, process, weights):
+    def fill(self, process, weights, category=None):
         try:
             hist = self.__hists[process]
         except KeyError:
@@ -416,6 +416,8 @@ class Plot(object):
 
         drw = '{0}>>{1}'.format(":".join(self.__values), hist.GetName())
         sel = '*'.join(self.__weights if self.__weights else weights)
+        if category:
+            sel += ' * ({})'.format(category)
         opt = '' if len(self.__values) == 1 else 'COLZ'
 
         # Don't use weights for data

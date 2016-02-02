@@ -1,0 +1,51 @@
+# vim: set sw=4 sta et :
+
+channel: l
+generator: pow
+# ntupledir: /hadoop/store/user/matze/ttH/v16
+ntupledir: /scratch365/mwolf3/ttH/v17
+indir: ~/www/ttH/v17_l
+outdir: ~/www/ttH/v17_e
+histformat: "{p}_{v}_TTL"
+
+lumi: 1553
+
+plot:
+  - collisions
+  - ttjets
+  # - ttjets_semilept
+  # - ttjets_fulllept
+  - singletop
+  - ewk
+  # - ttH_125
+  - ttH2bb_125
+  # - ttH2Nonbb_125
+  - ttH2TT_125
+  # - ttH2TT_125_real
+
+limits: []
+
+category: "nelectrons == 1"
+
+cuts:
+  - "Trigger": "leptons[0].electron() and event.trigger().single_e()"
+  - "Taus": "len(taus) == 0"
+  - "Jets": "len(jets) >= 4"
+  - "Tags": "btags(jets) >= 2"
+
+weights:
+  - Generator
+  - CSVWeight
+  - PUWeight
+
+# Allowed values: JES{Up,Down}, JER{Up,Down}, NA
+systematics: NA
+
+mva:
+    signals:
+      - ttH2TT_125_real
+    backgrounds:
+      - ttjets
+    variables:
+      - met
+      - ht
