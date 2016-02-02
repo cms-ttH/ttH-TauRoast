@@ -3,6 +3,10 @@ import itertools
 from ttH.TauRoast.botany import Leaf
 from ttH.TauRoast.plotting import Plot
 
+Leaf('run', 'i', 'result = event.run()')
+Leaf('lumi', 'i', 'result = event.lumi()')
+Leaf('event', 'i', 'result = event.event()')
+
 Leaf('events', 'f', 'result = .5')
 # Leaf('combos', 'f', 'return combos.size()')
 Leaf('allcombos', 'f', 'result = event.combos().size()')
