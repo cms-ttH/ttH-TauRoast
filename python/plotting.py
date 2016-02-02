@@ -422,7 +422,7 @@ class Plot(object):
 
         # Don't use weights for data
         if str(process).startswith('collisions'):
-            sel = ''
+            sel = category if category else ''
 
         Forest.draw(str(process), drw, sel, opt)
         # has to happen after the draw, otherwise ROOT won't find the
