@@ -30,6 +30,7 @@ for n in range(config.leptons):
     )
 
     Leaf('lep{0}_match'.format(n + 1), 'i', 'result = leptons[{0}].match()'.format(n))
+    Leaf('lep{0}_id'.format(n + 1), 'i', 'result = leptons[{}].pdgId()'.format(n))
     Leaf('lep{0}_genid'.format(n + 1), 'f', 'result = abs(leptons[{0}].genPdgId())'.format(n))
     Leaf('lep{0}_genparentid'.format(n + 1), 'f', 'result = abs(leptons[{0}].parentId())'.format(n))
 
