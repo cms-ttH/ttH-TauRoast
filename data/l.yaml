@@ -16,16 +16,13 @@ plot:
   # - ttjets_fulllept
   - singletop
   - ewk
-  - ttH_125
-  # - ttH2bb_125
+  # - ttH_125
+  - ttH2bb_125
   # - ttH2Nonbb_125
   - ttH2TT_125
   # - ttH2TT_125_real
 
-limits:
-  - collisions
-  - ttjets
-  - ttH_125
+limits: []
 
 cuts:
   - "Trigger": "(leptons[0].electron() and event.trigger().single_e()) or (leptons[0].muon() and event.trigger().single_mu())"
