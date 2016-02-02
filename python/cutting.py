@@ -74,10 +74,20 @@ def normalize(cuts, lumi):
     cuts.append(dsetnorm)
     cuts.append(luminorm)
 
-def cutflow(cuts, procs, relative=False, f=sys.stdout):
+def cutflow(cuts, procs, relative=False, weighed=False, f=sys.stdout):
     expanded_proc = [Process.expand(proc) for proc in procs]
 
     cutdata = [[sum(float(cut[p]) for p in ps) for ps in expanded_proc] for cut in cuts]
+
+    if weighed:
+        for n, c in enumerate(reversed(cuts)):
+            if not isinstance(c, StaticCut):
+                break
+
+        ratios = [a / b for a, b in zip(cutdata[-1], cutdata[-(n + 1)])]
+        cutdata = cutdata[:-n]
+        for i in xrange(3, len(cutdata)):
+            cutdata[i] = [a * b for a, b in zip(cutdata[i], ratios)]
 
     if relative:
         for i in xrange(1, len(cutdata)):

@@ -128,6 +128,8 @@ if args.analyze:
         cutflow(cuts, config["plot"], f=fd)
     with codecs.open(os.path.join(config["outdir"], "cuts_rel.txt"), "w", encoding="utf8") as fd:
         cutflow(cuts, config["plot"], f=fd, relative=True)
+    with codecs.open(os.path.join(config["outdir"], "cuts_weighed.txt"), "w", encoding="utf8") as fd:
+        cutflow(cuts, config["plot"], f=fd, weighed=True)
 
     fn = os.path.join(config["outdir"], "cutflow.pkl")
     with open(fn, 'wb') as f:
