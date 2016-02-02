@@ -167,33 +167,33 @@ fastlane::process(const std::string& process, TChain& c, TTree& t, std::vector<f
          if (not failed) {
             passed.push_back(combo);
          }
-
-         if (passed.size() == 0)
-            continue;
-
-         auto& selected = passed[0];
-
-         std::unordered_map<std::string, double> ws;
-         for (const auto& w: e->weights())
-            ws[lower(w.first)] = w.second;
-         for (const auto& w: selected.weights())
-            ws[lower(w.first)] = w.second;
-         if (process.compare(0, 10, "collisions"))
-            fastlane::update_weights(ws, *e, selected, sys);
-
-         double weight = 1.;
-         for (auto& w: weights) {
-            if (process.compare(0, 10, "collisions"))
-               weight *= ws[lower(w->name())];
-            (*w)[process] += weight;
-         }
-
-         for (auto& leaf: BasicLeaf::leaves()) {
-            leaf->pick(*e, selected, ws, sys);
-         }
-
-         t.Fill();
       }
+
+      if (passed.size() == 0)
+         continue;
+
+      auto& selected = passed[0];
+
+      std::unordered_map<std::string, double> ws;
+      for (const auto& w: e->weights())
+         ws[lower(w.first)] = w.second;
+      for (const auto& w: selected.weights())
+         ws[lower(w.first)] = w.second;
+      if (process.compare(0, 10, "collisions"))
+         fastlane::update_weights(ws, *e, selected, sys);
+
+      double weight = 1.;
+      for (auto& w: weights) {
+         if (process.compare(0, 10, "collisions"))
+            weight *= ws[lower(w->name())];
+         (*w)[process] += weight;
+      }
+
+      for (auto& leaf: BasicLeaf::leaves()) {
+         leaf->pick(*e, selected, ws, sys);
+      }
+
+      t.Fill();
    }
 }
 
