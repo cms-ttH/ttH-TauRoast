@@ -14,7 +14,7 @@ from ttH.TauRoast.processing import Process
 class Plot(object):
     __plots = {}
 
-    def __init__(self, name, values, labels, binning, binlabels=None, limitname=None, weights=None):
+    def __init__(self, name, values, labels, binning, binlabels=None, limitname=None, weights=None, log=False):
         self.__name = name
         self.__limitname = limitname if limitname else os.path.basename(name)
         self.__normalized = False
@@ -25,6 +25,8 @@ class Plot(object):
         self.__args = [self.__limitname, ";".join([""] + labels)] + binning
         self.__labels = binlabels
         self.__hists = {}
+
+        self.__log = log
 
         if len(values) == 1:
             self.__class = r.TH1F
@@ -206,6 +208,10 @@ class Plot(object):
             subdir = os.path.dirname(os.path.join(outdir, self.__name))
             if not os.path.exists(subdir) and subdir != '':
                 os.makedirs(subdir)
+
+            if self.__log:
+                canvas.SetLogz()
+
             canvas.SaveAs(os.path.join(outdir, "{0}_{1}.pdf".format(self.__name, label)))
 
     def _build_background_errors(self, background):
@@ -372,6 +378,9 @@ class Plot(object):
         legend = None
         if config.get("legend", True):
             legend = self._add_legend(config, factor)
+
+        if self.__log:
+            canvas.GetPad(1).SetLogy()
 
         canvas.cd(2)
 
