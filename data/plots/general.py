@@ -15,6 +15,8 @@ Leaf('ntags', 'f', 'result = btags(jets)')
 Leaf('npv', 'f', 'result = event.npv()')
 Leaf('nelectrons', 'f', 'int n = 0; for (const auto& l: leptons) n += l.electron(); result = n')
 Leaf('nmuons', 'f', 'int n = 0; for (const auto& l: leptons) n += l.muon(); result = n')
+Leaf('category', 'i', 'result = min(max(0, btags(jets) - 1), 1) * 3 + min(max(0, len(jets) - 2), 2)')
+Leaf('category_lj', 'i', 'result = min(max(0, btags(jets) - 2), 2) * 3 + min(max(0, len(jets) - 4), 2)')
 
 Leaf('bdt', 'f', 'result = 0.', final=True)
 Plot(
@@ -62,6 +64,22 @@ Plot(
         labels=["Number of tags", "Events"],
         binning=[10, 0, 10]
 )
+
+Plot(
+        name="general/Category",
+        values=["category"],
+        labels=["", "Events"],
+        binning=[6, 0, 6],
+        binlabels=["2j1t", "3j1t", "4j1t", "2j2t", "3j2t", "4j2t"]
+)
+Plot(
+        name="general/Category_lj",
+        values=["category_lj"],
+        labels=["", "Events"],
+        binning=[9, 0, 9],
+        binlabels=["4j2t", "5j2t", "6j2t", "4j3t", "5j3t", "6j3t", "4j4t", "5j4t", "6j4t"]
+)
+
 Plot(
         name="general/NumVertices",
         values=['npv'],
