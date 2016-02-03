@@ -74,7 +74,7 @@ class BasicProcess(Process):
                 fct(self._fullname), fct(self._limitname),
                 self.__sample, self.__cross_section, self.__add_cuts)
 
-    def analyze(self, filename, counts, cuts, weights, systematics, basedir, debug=False):
+    def analyze(self, filename, counts, cuts, weights, systematics, basedir, limit=-1, debug=False):
         logging.info("processing {}".format(self))
 
         if str(self).startswith("collisions"):
@@ -146,7 +146,7 @@ class BasicProcess(Process):
         def log(i):
             logging.info("processing event {0}".format(i))
         now = time.clock()
-        r.fastlane.process(str(self), chain, tree.raw(), ccuts, cweights, systematics, log);
+        r.fastlane.process(str(self), chain, tree.raw(), ccuts, cweights, systematics, log, limit);
         logging.debug("time spent processing: {0}".format(time.clock() - now))
 
     def process(self):

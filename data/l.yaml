@@ -24,6 +24,7 @@ plot:
 
 limits: []
 
+event limit: 300000
 cuts:
   - "Trigger": "(leptons[0].electron() and event.trigger().single_e()) or (leptons[0].muon() and event.trigger().single_mu())"
   - "Taus": "len(taus) == 0"

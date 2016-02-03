@@ -52,12 +52,19 @@ def normalize(cuts, lumi):
     weights = None
     processed = None
 
+    ntuplized = None
+    analyzed = None
+
     for cut in cuts:
         if str(cut).lower() == "dataset processed":
             processed = cut
         elif str(cut).lower() == "dataset event weights":
             weights = cut
-        elif processed and weights:
+        elif str(cut).lower() == "ntuple":
+            ntuplized = cut
+        elif str(cut).lower() == "ntuple analyzed":
+            analyzed = cut
+        elif processed and weights and ntuplized and analyzed:
             break
 
     dsetnorm = StaticCut("Dataset norm")
@@ -69,8 +76,9 @@ def normalize(cuts, lumi):
         else:
             p = Process.get(proc)
             scale = processed[proc] / float(weights[proc])
-            dsetnorm[proc] = cuts[-1][proc] * scale
-            luminorm[proc] = cuts[-1][proc] * scale * lumi * p.cross_section / float(p.events)
+            fraction = analyzed[proc] / float(ntuplized[proc])
+            dsetnorm[proc] = cuts[-1][proc] * scale / fraction
+            luminorm[proc] = cuts[-1][proc] * scale / fraction * lumi * p.cross_section / float(p.events)
     cuts.append(dsetnorm)
     cuts.append(luminorm)
 

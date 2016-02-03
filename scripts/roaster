@@ -116,7 +116,7 @@ if args.analyze:
         for cfg in proc.additional_cuts:
             local_cuts.insert(0, Cut(*cfg))
 
-        proc.analyze(fn, counts, local_cuts, weights, config["systematics"], config['ntupledir'], args.debug_cuts)
+        proc.analyze(fn, counts, local_cuts, weights, config["systematics"], config['ntupledir'], config.get('event limit', -1), args.debug_cuts)
 
     cuts = counts + cuts + weights
     normalize(cuts, config["lumi"])

@@ -141,12 +141,12 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
 }
 
 void
-fastlane::process(const std::string& process, TChain& c, TTree& t, std::vector<fastlane::Cut*>& cuts, std::vector<fastlane::StaticCut*>& weights, const std::string& sys, PyObject* log)
+fastlane::process(const std::string& process, TChain& c, TTree& t, std::vector<fastlane::Cut*>& cuts, std::vector<fastlane::StaticCut*>& weights, const std::string& sys, PyObject* log, int max)
 {
    superslim::Event* e = 0;
    c.SetBranchAddress("Event", &e);
 
-   for (unsigned int i = 0; i < c.GetEntries(); ++i) {
+   for (unsigned int i = 0; i < c.GetEntries() and (max < 0 or i < (unsigned int) max); ++i) {
       c.GetEntry(i);
 
       if (i % 1000 == 0) {
