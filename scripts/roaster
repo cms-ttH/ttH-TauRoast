@@ -145,6 +145,13 @@ elif args.fill:
     except UnicodeEncodeError:
         pass
 
+    with codecs.open(os.path.join(config["outdir"], "cuts.txt"), "w", encoding="utf8") as fd:
+        cutflow(cuts, config["plot"], f=fd)
+    with codecs.open(os.path.join(config["outdir"], "cuts_relative.txt"), "w", encoding="utf8") as fd:
+        cutflow(cuts, config["plot"], f=fd, relative=True)
+    with codecs.open(os.path.join(config["outdir"], "cuts_weighed.txt"), "w", encoding="utf8") as fd:
+        cutflow(cuts, config["plot"], f=fd, weighed=True)
+
 if args.fill:
     fn = os.path.join(config.get("indir", config["outdir"]), "ntuple.root")
     forest = Forest(fn)
