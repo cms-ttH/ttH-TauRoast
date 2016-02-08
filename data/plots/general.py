@@ -15,6 +15,7 @@ Leaf('ntags', 'f', 'result = btags(jets)')
 Leaf('npv', 'f', 'result = event.npv()')
 Leaf('nelectrons', 'f', 'int n = 0; for (const auto& l: leptons) n += l.electron(); result = n')
 Leaf('nmuons', 'f', 'int n = 0; for (const auto& l: leptons) n += l.muon(); result = n')
+Leaf('ntaus', 'i', 'result = len(taus)')
 Leaf('category', 'i', 'result = min(max(0, btags(jets) - 1), 1) * 3 + min(max(0, len(jets) - 2), 2)')
 Leaf('category_lj', 'i', 'result = min(max(0, btags(jets) - 2), 2) * 3 + min(max(0, len(jets) - 4), 2)')
 
