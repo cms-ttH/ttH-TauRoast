@@ -183,6 +183,10 @@ the last two steps.
 
 # History
 
+## v19
+
+* Use silver JSON
+
 ## v18
 
 * Actually allow more than 2 b-tags

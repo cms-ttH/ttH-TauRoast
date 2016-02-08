@@ -3,7 +3,7 @@ from lobster.core import *
 
 from ttH.TauRoast.datasets import datasets
 
-version = "v18"
+version = "v19"
 
 storage = StorageConfiguration(
         output=[
@@ -27,7 +27,7 @@ for label, path in datasets:
     mask = None
     params = []
     if label.endswith('2015D_PR') or label.endswith('2015D_Oct05'):
-        mask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2.txt'
+        mask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver_v2.txt'
         params = ['data=True', 'globalTag=74X_dataRun2_v5']
     workflows.append(Workflow(
         label=label,

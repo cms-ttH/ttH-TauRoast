@@ -2,12 +2,13 @@
 
 channel: l
 generator: pow
-# ntupledir: /hadoop/store/user/matze/ttH/v16
-ntupledir: /scratch365/mwolf3/ttH/v17
-outdir: ~/www/ttH/v17_l
+ntupledir: /hadoop/store/user/matze/ttH/v19
+# ntupledir: /scratch365/mwolf3/ttH/v17
+# ntupledir: test/leptonplusjets
+outdir: ~/www/ttH/v19_l
 histformat: "{p}_{v}_TTL"
 
-lumi: 1553
+lumi: 2430
 
 plot:
   - collisions
@@ -19,7 +20,7 @@ plot:
   # - ttH_125
   - ttH2bb_125
   # - ttH2Nonbb_125
-  - ttH2TT_125
+  # - ttH2TT_125
   # - ttH2TT_125_real
 
 limits: []
