@@ -9,7 +9,8 @@ BasicProcess(
     paths=["tt_pow", "tt_pow_ext3"],
     # paths=["ttjets_amc"],
     cross_section=831.76,
-    events=115091972
+    events=116591749
+    # events=115091972
     # events=42730273
 )
 
