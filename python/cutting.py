@@ -49,7 +49,7 @@ class StaticCut(Cut):
     def __setitem__(self, key, value):
         self._r[str(key)] = value
 
-def normalize(cuts, lumi):
+def normalize(cuts, lumi, limit=None):
     weights = None
     processed = None
 
@@ -80,8 +80,11 @@ def normalize(cuts, lumi):
             if ntuplized[proc] == 0 or analyzed[proc] == 0:
                 logging.warning("0 event count for {}".format(proc))
                 fraction = 1.
+            elif (not limit) or analyzed[proc] < limit:
+                fraction = 1.
             else:
                 fraction = analyzed[proc] / float(ntuplized[proc])
+                logging.warning("scaling {} by {} to compensate for partially analyzed dataset".format(proc, 1. / fraction))
             dsetnorm[proc] = cuts[-1][proc] * scale / fraction
             luminorm[proc] = cuts[-1][proc] * scale / fraction * lumi * p.cross_section / float(p.events)
     cuts.append(dsetnorm)

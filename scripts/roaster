@@ -119,7 +119,7 @@ if args.analyze:
         proc.analyze(fn, counts, local_cuts, weights, config["systematics"], config['ntupledir'], config.get('event limit', -1), args.debug_cuts)
 
     cuts = counts + cuts + weights
-    normalize(cuts, config["lumi"])
+    normalize(cuts, config["lumi"], config.get("event limit"))
     try:
         cutflow(cuts, config["plot"])
     except UnicodeEncodeError:
@@ -139,7 +139,7 @@ elif args.fill:
     fn = os.path.join(config.get("indir", config["outdir"]), "cutflow.pkl")
     with open(fn, 'rb') as f:
         cuts = pickle.load(f)[:-2]
-    normalize(cuts, config["lumi"])
+    normalize(cuts, config["lumi"], config.get("event limit"))
     try:
         cutflow(cuts, config["plot"])
     except UnicodeEncodeError:
