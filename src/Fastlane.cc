@@ -149,7 +149,7 @@ fastlane::process(const std::string& process, TChain& c, TTree& t, std::vector<f
    for (unsigned int i = 0; i < c.GetEntries() and (max < 0 or i < (unsigned int) max); ++i) {
       c.GetEntry(i);
 
-      if (i % 1000 == 0) {
+      if (i % 10000 == 0) {
          std::vector<TPyArg> args = {Int_t(i)};
          TPyArg::CallMethod(log, args);
       }
