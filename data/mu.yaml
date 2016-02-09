@@ -11,11 +11,11 @@ lumi: 2430
 
 plot:
   - collisions
-  - ttjets
   # - ttjets_semilept
   # - ttjets_fulllept
-  - singletop
   - ewk
+  - singletop
+  - ttjets
   # - ttH_125
   - ttH2bb_125
   # - ttH2Nonbb_125
