@@ -44,7 +44,7 @@ BasicProcess(
     fullname="Collisions",
     limitname="data_obs_mu",
     additional_cuts=[('trigger selection', 'len(leptons) == 1 and leptons[0].muon()')],
-    paths=["data_SingleMu_2015D", "data_SingleMu_2015D_Oct05"],
+    paths=["data_SingleMu_2015D_PR", "data_SingleMu_2015D_Oct05"],
     events=262813074
 )
 
