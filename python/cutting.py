@@ -1,3 +1,4 @@
+import logging
 import sys
 
 import ROOT as r
@@ -76,7 +77,11 @@ def normalize(cuts, lumi):
         else:
             p = Process.get(proc)
             scale = processed[proc] / float(weights[proc])
-            fraction = analyzed[proc] / float(ntuplized[proc])
+            if ntuplized[proc] == 0 or analyzed[proc] == 0:
+                logging.warning("0 event count for {}".format(proc))
+                fraction = 1.
+            else:
+                fraction = analyzed[proc] / float(ntuplized[proc])
             dsetnorm[proc] = cuts[-1][proc] * scale / fraction
             luminorm[proc] = cuts[-1][proc] * scale / fraction * lumi * p.cross_section / float(p.events)
     cuts.append(dsetnorm)
