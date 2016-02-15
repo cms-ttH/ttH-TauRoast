@@ -30,13 +30,14 @@ CCL programs can be used:
 
 First, create a CMSSW release and source the software environment:
 
-    cmsrel CMSSW_7_4_7
-    cd CMSSW_7_4_7/src
+    cmsrel CMSSW_7_6_3_patch2
+    cd CMSSW_7_6_3_patch2/src
     cmsenv
     git cms-init
 
-Afterwards, clone this repository in the CMSSW source area:
+Afterwards, clone these repositories in the CMSSW source area:
 
+    git clone git@github.com:cms-ttH/MiniAOD.git
     git clone git@github.com:cms-ttH/ttH-TauRoast.git ttH/TauRoast
 
 and add some CMS dependencies for TLL:
@@ -51,14 +52,12 @@ and add some CMS dependencies for TLL:
     EOF
 
     git checkout -b CMGTools-from-CMSSW_7_4_7 cmg-central/CMGTools-from-CMSSW_7_4_7
-    git clone git@github.com:cms-ttH/MiniAOD.git
     git clone git@github.com:cms-ttH/ttH-LeptonID.git ttH/LeptonID
 
     gzip -d EgammaAnalysis/ElectronTools/data/PHYS14/*.gz
 
 or add some CMS dependencies for TTL:
 
-    git cms-merge-topic --unsafe ikrav:egm_id_7.4.12_v1
     git cms-addpkg PhysicsTools/JetMCAlgos/
     cd PhysicsTools/JetMCAlgos/plugins/
     rm GenHFHadronMatcher.cc
@@ -69,6 +68,7 @@ or add some CMS dependencies for TTL:
     wget https://twiki.cern.ch/twiki/pub/CMSPublic/GenHFHadronMatcher/GenTtbarCategorizer_cfi.py.txt
     mv GenTtbarCategorizer_cfi.py.txt GenTtbarCategorizer_cfi.py
     cd -
+    ( cd MiniAOD; git merge origin/CMSSW_7_6_3 )
 
 then compile:
 
