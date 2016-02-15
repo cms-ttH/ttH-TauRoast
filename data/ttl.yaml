@@ -7,7 +7,7 @@ ntupledir: /hadoop/store/user/matze/ttH/v15
 outdir: ~/www/ttH/v15
 histformat: "{p}_{v}_TTL"
 
-lumi: 2110
+lumi: 2430
 
 plot:
   - collisions

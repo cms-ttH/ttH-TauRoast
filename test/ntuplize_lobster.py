@@ -3,21 +3,38 @@ from lobster.core import *
 
 from ttH.TauRoast.datasets import datasets
 
-version = "v19"
+version = "v20"
 
 storage = StorageConfiguration(
         output=[
             "hdfs:///store/user/matze/ttH/" + version,
             "file:///hadoop/store/user/matze/ttH/" + version,
             "root://ndcms.crc.nd.edu//store/user/matze/ttH/" + version,
-            "srm://T3_US_NotreDame/store/user/matze/ttH/" + version,
+            # "srm://T3_US_NotreDame/store/user/matze/ttH/" + version,
             "chirp://earth.crc.nd.edu:9666/ttH/" + version
         ]
 )
 
-processing = Category(
-        name='processing',
+data = Category(
+        name='data',
         cores=1,
+        disk=500,
+        runtime=900,
+        memory=1200
+)
+
+tth = Category(
+        name='ttH',
+        cores=1,
+        disk=500,
+        runtime=900,
+        memory=1500
+)
+
+mc = Category(
+        name='mc',
+        cores=1,
+        disk=500,
         runtime=900,
         memory=1500
 )
@@ -26,9 +43,15 @@ workflows = []
 for label, path in datasets:
     mask = None
     params = []
+    category = mc
+
     if label.endswith('2015D_PR') or label.endswith('2015D_Oct05'):
         mask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver_v2.txt'
         params = ['data=True', 'globalTag=74X_dataRun2_v5']
+        category = data
+    elif label.startswith('ttH'):
+        category = tth
+
     workflows.append(Workflow(
         label=label,
         dataset=cmssw.Dataset(
@@ -36,7 +59,7 @@ for label, path in datasets:
             events_per_task=100000,
             lumi_mask=mask
         ),
-        category=processing,
+        category=category,
         cmssw_config='ntuplize.py',
         arguments=params,
         merge_size='3.5G'

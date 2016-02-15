@@ -183,6 +183,10 @@ the last two steps.
 
 # History
 
+## v20
+
+* Restrict to two τs again
+
 ## v19
 
 * Use silver JSON
