@@ -7,7 +7,7 @@ indir: ~/www/ttH/v19_l
 outdir: ~/www/ttH/v19_mu
 histformat: "{p}_{v}_TTL"
 
-lumi: 2430
+lumi: 2517
 
 plot:
   - collisions
