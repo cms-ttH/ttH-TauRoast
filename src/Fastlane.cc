@@ -94,8 +94,8 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
          "MiniAOD/MiniAODHelper/data/DataPileupHistogram_Run2015D-PromptReco-Silver_MinBias69000.root",
          "pileup");
    static auto csvhelper = CSVHelper(
-         "MiniAOD/MiniAODHelper/data/csv_rwt_fit_hf_2015_11_20.root",
-         "MiniAOD/MiniAODHelper/data/csv_rwt_fit_lf_2015_11_20.root", 5);
+         "MiniAOD/MiniAODHelper/data/csv_rwt_fit_hf_76x_2016_02_08.root",
+         "MiniAOD/MiniAODHelper/data/csv_rwt_fit_lf_76x_2016_02_08.root", 5);
    static std::unordered_map<std::string, int> csvsys = {
       {"NA", 0},
       {"JERUp", 0},
