@@ -491,7 +491,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    if (raw_tau.size() < min_taus_)
       return;
 
-   if (raw_tight_tau.size() < min_tight_taus_ or min_tight_taus_ < min_taus_)
+   if (raw_tight_tau.size() < min_tight_taus_)
       return;
 
    // ================
