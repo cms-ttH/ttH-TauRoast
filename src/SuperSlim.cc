@@ -189,8 +189,14 @@ namespace superslim {
          corrected_dz_ = e.gsfTrack()->dz(pv.position());
       }
 
-      cut_ = (e.userFloat("idTightCut") > .5) + (e.userFloat("idLooseCut") > .5);
-      mva_ = (e.userFloat("idTightMVA") > .5) + (e.userFloat("idLooseMVA") > .5);
+      if (e.hasUserFloat("idTightCut") and e.hasUserFloat("idLooseCut") and
+            e.hasUserFloat("idTightMVA") and e.hasUserFloat("idLooseMVA")) {
+         cut_ = (e.userFloat("idTightCut") > .5) + (e.userFloat("idLooseCut") > .5);
+         mva_ = (e.userFloat("idTightMVA") > .5) + (e.userFloat("idLooseMVA") > .5);
+      } else {
+         cut_ = 0;
+         mva_ = 0;
+      }
    }
 
    Lepton::Lepton(const pat::Muon& m, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles) :
@@ -210,8 +216,14 @@ namespace superslim {
          corrected_dz_ = m.innerTrack()->dz(pv.position());
       }
 
-      cut_ = (m.userFloat("idTightCut") > .5) + (m.userFloat("idLooseCut") > .5);
-      mva_ = (m.userFloat("idTightMVA") > .5) + (m.userFloat("idLooseMVA") > .5);
+      if (m.hasUserFloat("idTightCut") and m.hasUserFloat("idLooseCut") and
+            m.hasUserFloat("idTightMVA") and m.hasUserFloat("idLooseMVA")) {
+         cut_ = (m.userFloat("idTightCut") > .5) + (m.userFloat("idLooseCut") > .5);
+         mva_ = (m.userFloat("idTightMVA") > .5) + (m.userFloat("idLooseMVA") > .5);
+      } else {
+         cut_ = 0;
+         mva_ = 0;
+      }
    }
 
    Tau::Tau(const pat::Tau& t, const reco::GenParticleCollection& particles) :

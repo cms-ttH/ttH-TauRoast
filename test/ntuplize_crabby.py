@@ -5,7 +5,7 @@ import yaml
 from WMCore.Configuration import Configuration
 from ttH.TauRoast.datasets import datasets
 
-version = "v22"
+version = "v24"
 
 def configs():
     for label, path in datasets:
