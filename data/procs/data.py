@@ -35,7 +35,7 @@ BasicProcess(
     fullname="Collisions",
     limitname="data_obs_e",
     additional_cuts=[('trigger selection', 'len(leptons) == 1 and leptons[0].electron()')],
-    paths=["data_SingleE_2015D_PR", "data_SingleE_2015D_Oct05"],
+    paths=["data_SingleE_2015D_Dec16"],
     events=297904375
 )
 
@@ -44,7 +44,7 @@ BasicProcess(
     fullname="Collisions",
     limitname="data_obs_mu",
     additional_cuts=[('trigger selection', 'len(leptons) == 1 and leptons[0].muon()')],
-    paths=["data_SingleMu_2015D_PR", "data_SingleMu_2015D_Oct05"],
+    paths=["data_SingleMu_2015D_Dec16"],
     events=262813074
 )
 

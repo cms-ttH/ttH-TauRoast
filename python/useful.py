@@ -39,7 +39,7 @@ def dR(one, two):
     return R(one.p4() - two.p4())
 
 def btag(jet):
-    return jet.csv() > 0.89
+    return jet.csv() > 0.80
 
 __mva = None
 def mva():
@@ -60,7 +60,7 @@ r.gInterpreter.Declare("""
         }
 
         template<typename T> int len(T t) { return t.size(); }
-        template<typename T> bool btag(T j) { return j.csv() > 0.89; }
+        template<typename T> bool btag(T j) { return j.csv() > 0.80; }
         template<typename T> int btags(T js) {
             int res = 0;
             for (const auto& j: js)

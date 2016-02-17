@@ -5,15 +5,15 @@ import yaml
 from WMCore.Configuration import Configuration
 from ttH.TauRoast.datasets import datasets
 
-version = "v17"
+version = "v22"
 
 def configs():
     for label, path in datasets:
         mask = None
         params = []
-        if label.endswith('2015D_PR') or label.endswith('2015D_Oct05'):
+        if '2015' in label:
             mask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2.txt'
-            params = ['data=True', 'globalTag=74X_dataRun2_v5']
+            params = ['data=True', 'globalTag=76X_dataRun2_v12']
 
         config = Configuration()
 
@@ -29,7 +29,7 @@ def configs():
         config.section_("Data")
         config.Data.inputDataset = path
         config.Data.splitting = 'EventAwareLumiBased'
-        config.Data.unitsPerJob = 500000
+        config.Data.unitsPerJob = 1000000
         if mask:
             config.Data.lumiMask = mask
 

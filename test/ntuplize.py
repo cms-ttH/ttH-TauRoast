@@ -6,7 +6,7 @@ options.register("data", False,
         VarParsing.VarParsing.multiplicity.singleton,
         VarParsing.VarParsing.varType.bool,
         "Indicate if data is being used (or MC)")
-options.register("globalTag", "74X_mcRun2_asymptotic_v4",
+options.register("globalTag", "76X_mcRun2_asymptotic_v12",
         VarParsing.VarParsing.multiplicity.singleton,
         VarParsing.VarParsing.varType.string,
         "Global tag to use")
@@ -84,7 +84,7 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         maxJetEta = cms.double(2.4),
         filterPUJets = cms.bool(False),
         printPreselection = cms.bool(False),
-        triggerSingleE = cms.vstring("HLT_Ele27_eta2p1_WPLoose_Gsf_v" if options.data else "HLT_Ele27_WP85_Gsf_v"),
+        triggerSingleE = cms.vstring("HLT_Ele27_eta2p1_WPLoose_Gsf_v" if options.data else "HLT_Ele27_WPLoose_Gsf_v"),
         triggerSingleMu = cms.vstring("HLT_IsoMu18_v" if options.data else "HLT_IsoMu17_eta2p1_v"),
         debugEvents = cms.vuint32()
 )
@@ -103,7 +103,7 @@ else:
             process.genParticlesForJetsNoNu
             * process.ak4GenJetsCustom
             * process.selectedHadronsAndPartons
-            * process.genJetFlavourPlusLeptonInfos
+            * process.genJetFlavourInfos
             * process.matchGenBHadron
             * process.matchGenCHadron
             * process.electronMVAValueMapProducer

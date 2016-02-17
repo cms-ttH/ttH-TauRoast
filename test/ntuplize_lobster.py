@@ -3,7 +3,7 @@ from lobster.core import *
 
 from ttH.TauRoast.datasets import datasets
 
-version = "v20"
+version = "v21"
 
 storage = StorageConfiguration(
         output=[
@@ -20,15 +20,15 @@ data = Category(
         cores=1,
         disk=500,
         runtime=900,
-        memory=1200
+        memory=1500
 )
 
 tth = Category(
         name='ttH',
         cores=1,
         disk=500,
-        runtime=900,
-        memory=1500
+        runtime=1200,
+        memory=1800
 )
 
 mc = Category(
@@ -36,7 +36,7 @@ mc = Category(
         cores=1,
         disk=500,
         runtime=900,
-        memory=1500
+        memory=1800
 )
 
 workflows = []
@@ -45,9 +45,9 @@ for label, path in datasets:
     params = []
     category = mc
 
-    if label.endswith('2015D_PR') or label.endswith('2015D_Oct05'):
+    if '2015' in label:
         mask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver_v2.txt'
-        params = ['data=True', 'globalTag=74X_dataRun2_v5']
+        params = ['data=True', 'globalTag=76X_dataRun2_v12']
         category = data
     elif label.startswith('ttH'):
         category = tth
@@ -66,7 +66,7 @@ for label, path in datasets:
     ))
 
 config = Config(
-        label='tau',
+        label='tau_' + version,
         workdir='/tmpscratch/users/matze/tau_' + version,
         plotdir='/afs/crc.nd.edu/user/m/mwolf3/www/lobster/tau_' + version,
         storage=storage,
