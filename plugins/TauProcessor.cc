@@ -62,7 +62,7 @@ build_permutations(const std::vector<T>& things, unsigned int min, unsigned int 
       ++min;
    }
 
-   for (unsigned int num = min; num <= max and num < things.size(); ++num) {
+   for (unsigned int num = min; num <= max and num <= things.size(); ++num) {
       std::vector<unsigned int> indices;
       for (unsigned int i = 0; i < num; ++i)
          indices.push_back(i);
