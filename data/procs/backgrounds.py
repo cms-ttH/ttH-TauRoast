@@ -9,9 +9,19 @@ BasicProcess(
     paths=["tt_pow", "tt_pow_ext3"],
     # paths=["ttjets_amc"],
     cross_section=831.76,
-    events=116591749
+    events=97994442
+    # events=116591749
     # events=115091972
     # events=42730273
+)
+
+BasicProcess(
+    name="ttjets_sl",
+    sample=2563,
+    fullname="t #bar{t} SL",
+    paths=["tt_sl_pow"],
+    cross_section=831.76 * wleptonic * (1 - wleptonic),
+    events=353216236
 )
 
 BasicProcess(

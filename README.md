@@ -183,6 +183,10 @@ the last two steps.
 
 # History
 
+## v26
+
+* As v25, but done right with Lobster
+
 ## v25
 
 * More τ selection bugfixes, with CRAB

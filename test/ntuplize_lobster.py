@@ -3,7 +3,7 @@ from lobster.core import *
 
 from ttH.TauRoast.datasets import datasets
 
-version = "v23"
+version = "v26"
 
 storage = StorageConfiguration(
         output=[
@@ -19,7 +19,7 @@ data = Category(
         name='data',
         cores=1,
         disk=500,
-        runtime=900,
+        runtime=30 * 60,
         memory=1500
 )
 
@@ -27,7 +27,7 @@ tth = Category(
         name='ttH',
         cores=1,
         disk=500,
-        runtime=1200,
+        runtime=30 * 60,
         memory=1800
 )
 
@@ -35,7 +35,7 @@ mc = Category(
         name='mc',
         cores=1,
         disk=500,
-        runtime=900,
+        runtime=30 * 60,
         memory=1800
 )
 
@@ -56,7 +56,7 @@ for label, path in datasets:
         label=label,
         dataset=cmssw.Dataset(
             dataset=path,
-            events_per_task=100000,
+            events_per_task=200000,
             lumi_mask=mask
         ),
         category=category,
