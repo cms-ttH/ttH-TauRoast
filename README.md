@@ -183,6 +183,18 @@ the last two steps.
 
 # History
 
+## v25
+
+* More τ selection bugfixes, with CRAB
+
+## v24
+
+* Same as v23, but processed with CRAB
+
+## v23
+
+* Bugfixes for τ selection
+
 ## v22
 
 * Same as v21, but processed with CRAB

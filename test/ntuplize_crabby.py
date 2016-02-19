@@ -5,7 +5,7 @@ import yaml
 from WMCore.Configuration import Configuration
 from ttH.TauRoast.datasets import datasets
 
-version = "v24"
+version = "v25"
 
 def configs():
     for label, path in datasets:
@@ -29,7 +29,7 @@ def configs():
         config.section_("Data")
         config.Data.inputDataset = path
         config.Data.splitting = 'EventAwareLumiBased'
-        config.Data.unitsPerJob = 1000000
+        config.Data.unitsPerJob = 500000
         if mask:
             config.Data.lumiMask = mask
 
