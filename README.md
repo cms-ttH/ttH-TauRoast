@@ -38,25 +38,12 @@ First, create a CMSSW release and source the software environment:
 Afterwards, clone these repositories in the CMSSW source area:
 
     git clone git@github.com:cms-ttH/MiniAOD.git
-    git clone git@github.com:cms-ttH/ttH-TauRoast.git ttH/TauRoast
-
-and add some CMS dependencies for TLL:
-
-    git remote add cmg-central https://github.com/CERN-PH-CMG/cmg-cmssw.git
-    git fetch cmg-central
-
-    cat <<EOF >.git/info/sparse-checkout
-    /.gitignore/
-    /CMGTools/TTHAnalysis/data/
-    /EgammaAnalysis/ElectronTools/
-    EOF
-
-    git checkout -b CMGTools-from-CMSSW_7_4_7 cmg-central/CMGTools-from-CMSSW_7_4_7
     git clone git@github.com:cms-ttH/ttH-LeptonID.git ttH/LeptonID
+    git clone git@github.com:cms-ttH/ttH-TauRoast.git ttH/TauRoast
+    git clone git@github.com:cms-ttH/ttH-13TeVMultiLeptons.git
 
-    gzip -d EgammaAnalysis/ElectronTools/data/PHYS14/*.gz
-
-or add some CMS dependencies for TTL:
+and add some CMS dependencies for TTL (no extra dependencies needed for
+TLL):
 
     git cms-addpkg PhysicsTools/JetMCAlgos/
     cd PhysicsTools/JetMCAlgos/plugins/
