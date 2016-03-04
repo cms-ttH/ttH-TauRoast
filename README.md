@@ -42,8 +42,7 @@ Afterwards, clone these repositories in the CMSSW source area:
     git clone git@github.com:cms-ttH/ttH-TauRoast.git ttH/TauRoast
     git clone git@github.com:cms-ttH/ttH-13TeVMultiLeptons.git
 
-and add some CMS dependencies for TTL (no extra dependencies needed for
-TLL):
+and add some CMS dependencies for TTL:
 
     git cms-addpkg PhysicsTools/JetMCAlgos/
     cd PhysicsTools/JetMCAlgos/plugins/
