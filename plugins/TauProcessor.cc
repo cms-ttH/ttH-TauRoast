@@ -488,12 +488,6 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    auto raw_tau = helper_.GetSelectedTaus(*taus, 20., tau::loose);
    auto raw_tight_tau = helper_.GetSelectedTaus(raw_tau, 20., tau::tight);
 
-   if (raw_tau.size() < min_taus_)
-      return;
-
-   if (raw_tight_tau.size() < min_tight_taus_)
-      return;
-
    // ================
    // Jet preselection
    // ================
@@ -508,6 +502,13 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    if (!data_)
          particles = *get_collection(*this, event, gen_token_);
 
+   std::vector<superslim::Tau> all_taus;
+   for (const auto& tau: *taus) {
+      auto t = superslim::Tau(tau, particles);
+      if (t.loose())
+         all_taus.push_back(t);
+   }
+
    // =========================
    // Tau combination selection
    // =========================
@@ -517,14 +518,8 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    // cut index bitmap
    int passed = 0;
 
-   for (const std::vector<pat::Tau>& combo: build_permutations(raw_tau, min_taus_, max_taus_)) {
+   for (const std::vector<superslim::Tau>& loose_tau: build_permutations(all_taus, min_taus_, max_taus_)) {
       int combo_cut = 0;
-
-      auto loose_tau = helper_.GetSelectedTaus(combo, 20., tau::loose);
-      auto tight_tau = helper_.GetSelectedTaus(loose_tau, 20., tau::tight);
-
-      if (tight_tau.size() < min_tight_taus_ or combo.size() < min_tight_taus_)
-         continue;
 
       passComboCut(event_cut, combo_cut++, passed, "Taus in combo");
 
@@ -609,11 +604,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       // ===============
       // Conversion part
       // ===============
-      std::vector<superslim::Tau> staus;
       std::vector<superslim::Lepton> sleptons;
-
-      for (const auto& tau: loose_tau)
-         staus.push_back(superslim::Tau(tau, particles));
 
       for (const auto& lep: loose_e)
          sleptons.push_back(superslim::Lepton(lep, helper_.GetElectronRelIso(lep, coneSize::R03, corrType::rhoEA, effAreaType::spring15), rpv, *bs, particles));
@@ -648,7 +639,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
          }
       }
 
-      auto c = superslim::Combination(staus, sleptons, sjets, smets);
+      auto c = superslim::Combination(loose_tau, sleptons, sjets, smets);
       combos.push_back(c);
    }
 

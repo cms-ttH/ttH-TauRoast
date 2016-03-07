@@ -29,6 +29,19 @@ namespace reco {
 }
 #endif
 
+namespace id {
+   enum value {
+      None = 0,
+      VLoose = 1,
+      Loose = 2,
+      Medium = 3,
+      Tight = 4,
+      VTight = 5
+   };
+
+   extern const std::vector<std::pair<std::string, id::value>> values;
+}
+
 namespace superslim {
    typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > LorentzVector;
 
@@ -191,25 +204,48 @@ namespace superslim {
 #endif
          virtual ~Tau() {};
 
+#ifndef __CINT__
+         id::value getID(const std::string&, const std::string&, const pat::Tau&) const;
+#endif
+
+         bool loose() const { return
+            isolation_3hits03_ > id::None or
+            isolation_3hits05_ > id::None or
+            isolation_mva03_ > id::None or
+            isolation_mva05_ > id::None; };
+
          int decayMode() const { return decay_mode_; };
-         int isolation3Hits() const { return isolation_3hits_; };
+         int isolation3Hits03() const { return isolation_3hits03_; };
+         int isolation3Hits05() const { return isolation_3hits05_; };
+         int isolationMVA03() const { return isolation_mva03_; };
+         int isolationMVA05() const { return isolation_mva05_; };
          int prongs() const { return prongs_; };
          int vetoElectron() const { return veto_electron_; };
          int vetoMuon() const { return veto_muon_; };
 
          float leadingTrackPt() const { return leading_track_pt_; };
-         float rawIsolation3Hits() const { return raw_isolation_3hits_; };
+         float rawIsolation3Hits03() const { return raw_isolation_3hits03_; };
+         float rawIsolation3Hits05() const { return raw_isolation_3hits05_; };
+         float rawIsolationMVA03() const { return raw_isolation_mva03_; };
+         float rawIsolationMVA05() const { return raw_isolation_mva05_; };
 
          LorentzVector genVisibleP4() const { return gen_vis_p_; };
       private:
          int decay_mode_;
-         int isolation_3hits_;
          int prongs_;
-         int veto_electron_;
-         int veto_muon_;
+
+         id::value isolation_3hits03_;
+         id::value isolation_3hits05_;
+         id::value isolation_mva03_;
+         id::value isolation_mva05_;
+         id::value veto_electron_;
+         id::value veto_muon_;
 
          float leading_track_pt_;
-         float raw_isolation_3hits_;
+         float raw_isolation_3hits03_;
+         float raw_isolation_3hits05_;
+         float raw_isolation_mva03_;
+         float raw_isolation_mva05_;
 
          LorentzVector gen_vis_p_;
 

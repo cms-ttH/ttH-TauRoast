@@ -11,6 +11,16 @@
 
 #include "ttH/TauRoast/interface/SuperSlim.h"
 
+namespace id {
+   const std::vector<std::pair<std::string, id::value>> values = {
+      {"VTight", VTight},
+      {"Tight", Tight},
+      {"Medium", Medium},
+      {"Loose", Loose},
+      {"VLoose", VLoose}
+   };
+}
+
 namespace superslim {
    Vertex::Vertex(const reco::Vertex& v) :
       x_(v.x()),
@@ -226,6 +236,15 @@ namespace superslim {
       }
    }
 
+   id::value Tau::getID(const std::string& prefix, const std::string& suffix, const pat::Tau& t) const {
+      for (const auto& _id: id::values) {
+         std::string name = prefix + _id.first + suffix;
+         if (t.isTauIDAvailable(name) and t.tauID(name) > .5)
+            return _id.second;
+      }
+      return id::None;
+   };
+
    Tau::Tau(const pat::Tau& t, const reco::GenParticleCollection& particles) :
       PhysObject(&t),
       decay_mode_(t.decayMode()),
@@ -253,31 +272,16 @@ namespace superslim {
          charge_ = t.leadChargedHadrCand()->charge();
       }
 
-      raw_isolation_3hits_ = t.tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits");
-      if (t.tauID("byTightCombinedIsolationDeltaBetaCorr3Hits") > .5)
-         isolation_3hits_ = 3;
-      else if (t.tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits") > .5)
-         isolation_3hits_ = 2;
-      else if (t.tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits") > .5)
-         isolation_3hits_ = 1;
-      else
-         isolation_3hits_ = 0;
+      raw_isolation_3hits03_ = 0.; // NOT PRESENT: t.tauID("byCombinedIsolationDeltaBetaCorrRaw3HitsdR03");
+      raw_isolation_3hits05_ = t.tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits");
 
-      if (t.tauID("againstMuonTight3") > .5)
-         veto_muon_ = 2;
-      else if (t.tauID("againstMuonLoose3") > .5)
-         veto_muon_ = 1;
-      else
-         veto_muon_ = 0;
+      isolation_3hits03_ = getID("by", "CombinedIsolationDeltaBetaCorr3HitsdR03", t);
+      isolation_3hits05_ = getID("by", "CombinedIsolationDeltaBetaCorr3Hits", t);
+      isolation_mva03_ = getID("by", "IsolationMVArun2v1DBdR03oldDMwLT", t);
+      isolation_mva05_ = getID("by", "IsolationMVArun2v1DBoldDMwLT", t);
 
-      if (t.tauID("againstElectronMediumMVA5") > .5)
-         veto_electron_ = 3;
-      if (t.tauID("againstElectronLooseMVA5") > .5)
-         veto_electron_ = 2;
-      if (t.tauID("againstElectronVLooseMVA5") > .5)
-         veto_electron_ = 1;
-      else
-         veto_electron_ = 0;
+      veto_electron_ = getID("againstElectron", "MVA6", t);
+      veto_muon_ = getID("againstMuon", "3", t);
    }
 
    Combination::Combination(
