@@ -54,7 +54,7 @@ class Plot(object):
                     hist.GetXaxis().SetBinLabel(n, label)
 
     def _add_legend(self, config, factor):
-        l = Legend(0.05, 3, 0.08)
+        l = Legend(0.05, 4, 0.03)
         for cfg in config['backgrounds']:
             bkg, color = cfg.items()[0]
             l.draw_box(1001, self._eval(color), Process.get(bkg).fullname)
@@ -67,6 +67,7 @@ class Plot(object):
             if factor != 1:
                 label += " (#times {0:.1f})".format(factor)
             l.draw_line(2, self._eval(color), label)
+            l.new_row()
         return l
 
     def _eval(self, color):
@@ -346,10 +347,11 @@ class Plot(object):
 
         if config.get("legend", True):
             scale = 1.175 + 0.05 * (
-                    math.ceil(len(config['backgrounds'] + config.get('data', [])) / 3. + 1)
-                    + math.ceil(len(config['signals']) / 3.))
+                    math.ceil(len(config['backgrounds'] + config.get('data', [])) / 4. + 1)
+                    + len(config['signals']))
 
-        max_y = scale * max([bkg_stack.GetMaximum()] + [factor * h.GetMaximum() for h in signals])
+        max_y = scale * max([bkg_stack.GetMaximum()] + [factor * h.GetMaximum() for h in signals] +
+                [c.GetMaximum() for c in collisions])
 
         if max_y == 0:
             logging.warning("empty plot: {0}".format(self.__name))
