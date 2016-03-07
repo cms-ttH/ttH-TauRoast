@@ -75,7 +75,7 @@ def mk_analyze(config):
     idir = config.get("indir", config["outdir"])
     odir = config["outdir"]
     inputs = [os.path.join(odir, f) for f in ("roaster.yaml",)]
-    output = [os.path.join(odir, d) for d in ("ntuple.root", "cuts.txt", "cuts_rel.txt", "cutflow.pkl")]
+    output = [os.path.join(odir, d) for d in ("ntuple.root", "cuts.txt", "cuts_relative.txt", "cutflow.pkl")]
     return output, inputs, ["-a", "roaster.yaml"]
 
 @makeflowify()
