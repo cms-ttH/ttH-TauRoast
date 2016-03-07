@@ -14,7 +14,7 @@ for n in range(config.leptons):
         name="leptons/kinematic/L{0}_Pt".format(n + 1),
         values=["lep{0}_pt".format(n + 1)],
         labels=[lbl + "P_{T}", "Events"],
-        binning=[20, 0, 100]
+        binning=[20, 0, 150]
     )
     Plot(
         name="leptons/kinematic/L{0}_Eta".format(n + 1),
