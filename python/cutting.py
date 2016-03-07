@@ -113,14 +113,14 @@ def cutflow(cuts, procs, relative=False, weighed=False, f=sys.stdout):
     fieldlengths = []
     for proc, subprocs in zip(procs, expanded_proc):
         val = max(sum(cut[p] for p in subprocs) for cut in cuts)
-        length = max(len(proc), len("{:.2f}".format(float(val))))
+        length = max(len(proc), len("{:,.2f}".format(float(val))))
         fieldlengths.append(length)
 
     header = u"{{:{0}}}".format(namelength) \
             + u"".join(u"   {{:{0}}}".format(fl) for fl in fieldlengths) \
             + u"\n"
     body = u"{{:{0}}}".format(namelength) \
-            + "".join("   {{:{0}.2f}}".format(fl) for fl in fieldlengths) \
+            + "".join("   {{:{0},.2f}}".format(fl) for fl in fieldlengths) \
             + "\n"
 
     f.write(header.format("Cut", *procs))
