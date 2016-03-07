@@ -76,6 +76,10 @@ namespace superslim {
 #endif
          virtual ~PhysObject() {};
 
+         const float
+            eta() const { return p_.eta(); };
+         const float
+            phi() const { return p_.phi(); };
          const LorentzVector&
             p4() const { return p_; };
          const LorentzVector&
