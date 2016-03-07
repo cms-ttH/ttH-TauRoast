@@ -89,7 +89,7 @@ void
 fastlane::update_weights(std::unordered_map<std::string, double>& ws, const superslim::Event& e, const superslim::Combination& combo, const std::string& sys)
 {
    static auto puhelper = PUWeightProducer(
-         "MiniAOD/MiniAODHelper/data/Spring15_NumTruePU.root",
+         "MiniAOD/MiniAODHelper/data/Fall15_NumTruePU.root",
          "h_numTruePVs",
          "MiniAOD/MiniAODHelper/data/DataPileupHistogram_Run2015D-PromptReco-Silver_MinBias69000.root",
          "pileup");
