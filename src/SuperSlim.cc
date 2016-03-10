@@ -236,15 +236,6 @@ namespace superslim {
       }
    }
 
-   id::value Tau::getID(const std::string& prefix, const std::string& suffix, const pat::Tau& t) const {
-      for (const auto& _id: id::values) {
-         std::string name = prefix + _id.first + suffix;
-         if (t.isTauIDAvailable(name) and t.tauID(name) > .5)
-            return _id.second;
-      }
-      return id::None;
-   };
-
    Tau::Tau(const pat::Tau& t, const reco::GenParticleCollection& particles) :
       PhysObject(&t),
       decay_mode_(t.decayMode()),
@@ -283,6 +274,15 @@ namespace superslim {
       veto_electron_ = getID("againstElectron", "MVA6", t);
       veto_muon_ = getID("againstMuon", "3", t);
    }
+
+   id::value Tau::getID(const std::string& prefix, const std::string& suffix, const pat::Tau& t) const {
+      for (const auto& _id: id::values) {
+         std::string name = prefix + _id.first + suffix;
+         if (t.isTauIDAvailable(name) and t.tauID(name) > .5)
+            return _id.second;
+      }
+      return id::None;
+   };
 
    Combination::Combination(
          const std::vector<Tau>& taus,
