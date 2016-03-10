@@ -32,11 +32,12 @@ namespace reco {
 namespace id {
    enum value {
       None = 0,
-      VLoose = 1,
-      Loose = 2,
-      Medium = 3,
-      Tight = 4,
-      VTight = 5
+      Preselected = 1,
+      VLoose = 2,
+      Loose = 3,
+      Medium = 4,
+      Tight = 5,
+      VTight = 6
    };
 
    extern const std::vector<std::pair<std::string, id::value>> values;
@@ -177,15 +178,24 @@ namespace superslim {
          float impactParameter() const { return impact_parameter_; };
          float impactParameterError() const { return impact_parameter_error_; };
          float relativeIsolation() const { return rel_iso_; };
+
          int cut() const { return cut_; };
          int mva() const { return mva_; };
+         int lj() const { return lj_; };
+
       private:
+#ifndef __CINT__
+         template<typename T>
+         id::value getID(const std::string&, const T&) const;
+#endif
+
          enum kind { e, mu } type_;
 
          bool charge_check_;
 
-         int cut_;
-         int mva_;
+         id::value cut_;
+         id::value mva_;
+         id::value lj_;
 
          float corrected_d0_ = 0.;
          float corrected_dz_ = 0.;
@@ -203,10 +213,6 @@ namespace superslim {
          Tau(const pat::Tau& t, const reco::GenParticleCollection& particles);
 #endif
          virtual ~Tau() {};
-
-#ifndef __CINT__
-         id::value getID(const std::string&, const std::string&, const pat::Tau&) const;
-#endif
 
          bool loose() const { return
             isolation_3hits03_ > id::None or
@@ -231,6 +237,10 @@ namespace superslim {
 
          LorentzVector genVisibleP4() const { return gen_vis_p_; };
       private:
+#ifndef __CINT__
+         id::value getID(const std::string&, const std::string&, const pat::Tau&) const;
+#endif
+
          int decay_mode_;
          int prongs_;
 

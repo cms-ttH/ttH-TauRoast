@@ -17,7 +17,8 @@ namespace id {
       {"Tight", Tight},
       {"Medium", Medium},
       {"Loose", Loose},
-      {"VLoose", VLoose}
+      {"VLoose", VLoose},
+      {"Preselection", Preselected}
    };
 }
 
@@ -199,14 +200,9 @@ namespace superslim {
          corrected_dz_ = e.gsfTrack()->dz(pv.position());
       }
 
-      if (e.hasUserFloat("idTightCut") and e.hasUserFloat("idLooseCut") and
-            e.hasUserFloat("idTightMVA") and e.hasUserFloat("idLooseMVA")) {
-         cut_ = (e.userFloat("idTightCut") > .5) + (e.userFloat("idLooseCut") > .5);
-         mva_ = (e.userFloat("idTightMVA") > .5) + (e.userFloat("idLooseMVA") > .5);
-      } else {
-         cut_ = 0;
-         mva_ = 0;
-      }
+      cut_ = getID("Cut", e);
+      mva_ = getID("MVA", e);
+      lj_ = getID("LJ", e);
    }
 
    Lepton::Lepton(const pat::Muon& m, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles) :
@@ -226,15 +222,20 @@ namespace superslim {
          corrected_dz_ = m.innerTrack()->dz(pv.position());
       }
 
-      if (m.hasUserFloat("idTightCut") and m.hasUserFloat("idLooseCut") and
-            m.hasUserFloat("idTightMVA") and m.hasUserFloat("idLooseMVA")) {
-         cut_ = (m.userFloat("idTightCut") > .5) + (m.userFloat("idLooseCut") > .5);
-         mva_ = (m.userFloat("idTightMVA") > .5) + (m.userFloat("idLooseMVA") > .5);
-      } else {
-         cut_ = 0;
-         mva_ = 0;
-      }
+      cut_ = getID("Cut", m);
+      mva_ = getID("MVA", m);
+      lj_ = getID("LJ", m);
    }
+
+   template<typename T>
+   id::value Lepton::getID(const std::string& suffix, const T& t) const {
+      for (const auto& _id: id::values) {
+         std::string name = "id" + _id.first + (_id.first == "Preselection" ? "" : suffix);
+         if (t.hasUserFloat(name) and t.userFloat(name) > .5)
+            return _id.second;
+      }
+      return id::None;
+   };
 
    Tau::Tau(const pat::Tau& t, const reco::GenParticleCollection& particles) :
       PhysObject(&t),
