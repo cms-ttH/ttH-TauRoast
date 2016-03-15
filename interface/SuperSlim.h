@@ -312,6 +312,10 @@ namespace superslim {
 
          static void set_single_e_triggers(const std::vector<std::string>& v) { triggers_single_e_ = v; };
          static void set_single_mu_triggers(const std::vector<std::string>& v) { triggers_single_mu_ = v; };
+         static void set_double_e_triggers(const std::vector<std::string>& v) { triggers_double_e_ = v; };
+         static void set_double_mu_triggers(const std::vector<std::string>& v) { triggers_double_mu_ = v; };
+         static void set_mixed_triggers(const std::vector<std::string>& v) { triggers_mixed_ = v; };
+
          static std::string get_selection();
       private:
 #ifndef __CINT__
@@ -325,8 +329,11 @@ namespace superslim {
 
          static std::vector<std::string> triggers_single_e_;
          static std::vector<std::string> triggers_single_mu_;
+         static std::vector<std::string> triggers_double_e_;
+         static std::vector<std::string> triggers_double_mu_;
+         static std::vector<std::string> triggers_mixed_;
 
-         ClassDef(Trigger, 1);
+         ClassDef(Trigger, 2);
    };
 
    class Event {

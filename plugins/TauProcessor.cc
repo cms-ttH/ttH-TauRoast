@@ -292,6 +292,9 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
 
    superslim::Trigger::set_single_e_triggers(config.getParameter<std::vector<std::string>>("triggerSingleE"));
    superslim::Trigger::set_single_mu_triggers(config.getParameter<std::vector<std::string>>("triggerSingleMu"));
+   superslim::Trigger::set_double_e_triggers(config.getParameter<std::vector<std::string>>("triggerDoubleE"));
+   superslim::Trigger::set_double_mu_triggers(config.getParameter<std::vector<std::string>>("triggerDoubleMu"));
+   superslim::Trigger::set_mixed_triggers(config.getParameter<std::vector<std::string>>("triggerMixed"));
    m_triggerSelector = std::unique_ptr<triggerExpression::Evaluator>(triggerExpression::parse(superslim::Trigger::get_selection()));
 
    helper_.SetUp("2015_74x", 2500, analysisType::LJ, data_);

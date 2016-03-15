@@ -323,6 +323,9 @@ namespace superslim {
 
    std::vector<std::string> Trigger::triggers_single_e_ = {};
    std::vector<std::string> Trigger::triggers_single_mu_= {};
+   std::vector<std::string> Trigger::triggers_double_e_ = {};
+   std::vector<std::string> Trigger::triggers_double_mu_= {};
+   std::vector<std::string> Trigger::triggers_mixed_= {};
 
    std::string
    Trigger::get_selection()
@@ -330,6 +333,9 @@ namespace superslim {
       std::vector<std::string> vs;
       std::copy(triggers_single_e_.begin(), triggers_single_e_.end(), std::back_inserter(vs));
       std::copy(triggers_single_mu_.begin(), triggers_single_mu_.end(), std::back_inserter(vs));
+      std::copy(triggers_double_e_.begin(), triggers_double_e_.end(), std::back_inserter(vs));
+      std::copy(triggers_double_mu_.begin(), triggers_double_mu_.end(), std::back_inserter(vs));
+      std::copy(triggers_mixed_.begin(), triggers_mixed_.end(), std::back_inserter(vs));
 
       std::ostringstream os;
       for (auto& s: vs) {
@@ -350,6 +356,9 @@ namespace superslim {
    {
       single_e_ = fired(trig, names, triggers_single_e_);
       single_mu_ = fired(trig, names, triggers_single_mu_);
+      double_e_ = fired(trig, names, triggers_double_e_);
+      double_mu_ = fired(trig, names, triggers_double_mu_);
+      mixed_ = fired(trig, names, triggers_mixed_);
    }
 
    bool

@@ -80,6 +80,23 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         printPreselection = cms.bool(False),
         triggerSingleE = cms.vstring("HLT_Ele27_eta2p1_WPLoose_Gsf_v" if options.data else "HLT_Ele27_WPLoose_Gsf_v"),
         triggerSingleMu = cms.vstring("HLT_IsoMu18_v" if options.data else "HLT_IsoMu17_eta2p1_v"),
+        triggerDoubleE = cms.vstring([
+            "HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v",
+            ("HLT_Ele23_WPLoose_Gsf_v" if options.data else "HLT_Ele23_CaloIdL_TrackIdL_IsoVL_v"),
+        ]),
+        triggerDoubleMu = cms.vstring([
+            "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v",
+            "HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v",
+            "HLT_IsoMu20_v",
+            "HLT_IsoTkMu20_v"
+        ]),
+        triggerMixed = cms.vstring([
+            "HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v",
+            "HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v",
+            "HLT_IsoMu20_v",
+            "HLT_IsoTkMu20_v",
+            ("HLT_Ele23_WPLoose_Gsf_v" if options.data else "HLT_Ele23_CaloIdL_TrackIdL_IsoVL_v")
+        ]),
         debugEvents = cms.vuint32()
 )
 
