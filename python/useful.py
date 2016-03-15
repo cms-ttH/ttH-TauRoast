@@ -81,6 +81,19 @@ r.gInterpreter.Declare("""
                     res.push_back(j);
             return res;
         }
+
+        template<typename T> int electrons(T ls) {
+            int res = 0;
+            for (const auto& l: ls)
+                res += l.electron();
+            return res;
+        }
+        template<typename T> int muons(T ls) {
+            int res = 0;
+            for (const auto& l: ls)
+                res += l.muon();
+            return res;
+        }
 """)
 
 def code2cut(name, code):
