@@ -132,6 +132,11 @@ get_non_pileup(const pat::JetCollection& jets)
    return res;
 }
 
+struct LeptonCounts {
+   int leptons;
+   int taus;
+};
+
 class TauProcessor : public edm::EDAnalyzer {
    public:
       explicit TauProcessor(const edm::ParameterSet&);
@@ -158,28 +163,12 @@ class TauProcessor : public edm::EDAnalyzer {
       unsigned int min_jets_;
       unsigned int min_tags_;
       int max_tags_;
-      unsigned int min_leptons_;
-      unsigned int min_loose_leptons_;
-      unsigned int min_tight_leptons_;
-      int max_loose_leptons_;
-      int max_tight_leptons_;
-      unsigned int min_taus_;
-      unsigned int max_taus_;
-      unsigned int min_tight_taus_;
-
-      bool subtract_leptons_;
-      bool print_preselection_;
-
-      double min_loose_lep_pt_;
-      double min_tight_e_pt_;
-      double min_tight_mu_pt_;
-
-      double max_loose_lep_eta_;
-      double max_tight_lep_eta_;
 
       double min_jet_pt_;
       double min_tag_pt_;
       double max_jet_eta_;
+
+      std::vector<LeptonCounts> leptons_;
 
       bool filter_pu_jets_;
 
@@ -237,21 +226,6 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    min_jets_(config.getParameter<unsigned int>("minJets")),
    min_tags_(config.getParameter<unsigned int>("minTags")),
    max_tags_(config.getParameter<int>("maxTags")),
-   min_leptons_(config.getParameter<unsigned int>("minPreselectedLeptons")),
-   min_loose_leptons_(config.getParameter<unsigned int>("minLooseLeptons")),
-   min_tight_leptons_(config.getParameter<unsigned int>("minTightLeptons")),
-   max_loose_leptons_(config.getParameter<int>("maxLooseLeptons")),
-   max_tight_leptons_(config.getParameter<int>("maxTightLeptons")),
-   min_taus_(config.getParameter<unsigned int>("minTaus")),
-   max_taus_(config.getParameter<unsigned int>("maxTaus")),
-   min_tight_taus_(config.getParameter<unsigned int>("minTightTaus")),
-   subtract_leptons_(config.getParameter<bool>("subtractLeptons")),
-   print_preselection_(config.getParameter<bool>("printPreselection")),
-   min_loose_lep_pt_(config.getParameter<double>("minLooseLeptonPt")),
-   min_tight_e_pt_(config.getParameter<double>("minTightElectronPt")),
-   min_tight_mu_pt_(config.getParameter<double>("minTightMuonPt")),
-   max_loose_lep_eta_(config.getParameter<double>("maxLooseLeptonEta")),
-   max_tight_lep_eta_(config.getParameter<double>("maxTightLeptonEta")),
    min_jet_pt_(config.getParameter<double>("minJetPt")),
    min_tag_pt_(config.getParameter<double>("minTagPt")),
    max_jet_eta_(config.getParameter<double>("maxJetEta")),
@@ -307,6 +281,13 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
          {"JESUp", sysType::JESup},
          {"JESDown", sysType::JESdown}
       };
+   }
+
+   for (const auto& pset: config.getParameter<std::vector<edm::ParameterSet>>("leptons")) {
+      LeptonCounts c;
+      c.leptons = pset.getParameter<int>("leptons");
+      c.taus = pset.getParameter<int>("taus");
+      leptons_.push_back(c);
    }
 
    superslim::Trigger::set_single_e_triggers(config.getParameter<std::vector<std::string>>("triggerSingleE"));
@@ -444,28 +425,6 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    helper_.SetJetCorrector(corr);
 
    // ===============
-   // Setup lepton ID
-   // ===============
-
-   muonID::muonID mu_id_pre = muonID::muonPreselection;
-   muonID::muonID mu_id_loose = muonID::muonLooseCutBased;
-   muonID::muonID mu_id_tight = muonID::muonTightCutBased;
-
-   electronID::electronID e_id_pre = electronID::electronPreselection;
-   electronID::electronID e_id_loose = electronID::electronLooseCutBased;
-   electronID::electronID e_id_tight = electronID::electronTightCutBased;
-
-   if (min_leptons_ == 1) {
-      mu_id_pre = muonID::muonTightDL;
-      mu_id_loose = muonID::muonTightDL;
-      mu_id_tight = muonID::muonTight;
-
-      e_id_pre = electronID::electronEndOf15MVA80iso0p15;
-      e_id_loose = electronID::electronEndOf15MVA80iso0p15;
-      e_id_tight = electronID::electronEndOf15MVA80iso0p15;
-   }
-
-   // ===============
    // Basic selection
    // ===============
 
@@ -473,20 +432,6 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    auto muons = get_collection(*this, event, muons_token_);
    auto taus = get_collection(*this, event, taus_token_);
    auto ak4jets = get_collection(*this, event, ak4jets_token_);
-
-   auto raw_mu = *muons;
-   auto raw_e = *electrons;
-   if (min_leptons_ == 1) {
-      auto electrons = get_collection(*this, event, mva_electrons_token_);
-      auto mva_vals = get_collection(*this, event, mva_val_token_);
-      auto mva_cats = get_collection(*this, event, mva_cat_token_);
-      auto mva_e = helper_.GetElectronsWithMVAid(electrons, mva_vals, mva_cats);
-      raw_mu = helper_.GetSelectedMuons(*muons, 5., mu_id_pre);
-      raw_e = helper_.GetSelectedElectrons(mva_e, 7., e_id_pre);
-      raw_e = removeOverlap(raw_e, raw_mu, 0.05);
-   }
-   auto raw_tau = helper_.GetSelectedTaus(*taus, 20., tau::loose);
-   auto raw_tight_tau = helper_.GetSelectedTaus(raw_tau, 20., tau::tight);
 
    // ================
    // Jet preselection
@@ -501,6 +446,20 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    reco::GenParticleCollection particles;
    if (!data_)
          particles = *get_collection(*this, event, gen_token_);
+
+   std::vector<superslim::Lepton> all_leptons;
+   for (const auto& lep: *electrons) {
+      auto l = superslim::Lepton(lep, helper_.GetElectronRelIso(lep, coneSize::R03, corrType::rhoEA, effAreaType::spring15), rpv, *bs, particles);
+      if (l.preselected())
+         all_leptons.push_back(l);
+   }
+
+   for (const auto& lep: *muons) {
+      auto l = superslim::Lepton(lep, helper_.GetMuonRelIso(lep, coneSize::R04, corrType::deltaBeta), rpv, *bs, particles);
+      if (l.preselected())
+         all_leptons.push_back(l);
+   }
+   std::sort(all_leptons.begin(), all_leptons.end());
 
    std::vector<superslim::Tau> all_taus;
    for (const auto& tau: *taus) {
@@ -518,129 +477,71 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    // cut index bitmap
    int passed = 0;
 
-   for (const std::vector<superslim::Tau>& loose_tau: build_permutations(all_taus, min_taus_, max_taus_)) {
-      int combo_cut = 0;
+   for (const auto& conf: leptons_) {
+      for (const auto& taus: build_permutations(all_taus, conf.taus, conf.taus)) {
+         int combo_cut = 0;
 
-      passComboCut(event_cut, combo_cut++, passed, "Taus in combo");
+         passComboCut(event_cut, combo_cut++, passed, "Taus in combo");
 
-      auto preselected_e = removeOverlap(raw_e, loose_tau, 0.15);
-      auto preselected_mu = removeOverlap(raw_mu, loose_tau, 0.15);
+         auto leptons = removeOverlap(all_leptons, taus, .4);
 
-      // TODO there might be tight electrons that overlap with loose muons,
-      // but not tight muons?  Should these be considered when only dealing
-      // with tight leptons?
-      auto loose_e = helper_.GetSelectedElectrons(preselected_e, min_loose_lep_pt_, e_id_loose, max_loose_lep_eta_);
-      auto loose_mu = helper_.GetSelectedMuons(preselected_mu, min_loose_lep_pt_, mu_id_loose, coneSize::R04, corrType::deltaBeta, max_loose_lep_eta_);
-      auto tight_e = helper_.GetSelectedElectrons(loose_e, min_tight_e_pt_, e_id_tight, max_tight_lep_eta_);
-      auto tight_mu = helper_.GetSelectedMuons(loose_mu, min_tight_mu_pt_, mu_id_tight, coneSize::R04, corrType::deltaBeta, max_tight_lep_eta_);
+         // See if any of the surviving leptons get preselected by any of
+         // the possible lepton ids
+         bool take_leptons = false;
+         for (const auto& id_: {superslim::Lepton::Cut, superslim::Lepton::MVA, superslim::Lepton::LJ}) {
+            if (conf.leptons == std::count_if(leptons.begin(), leptons.end(),
+                     [&](const auto& l) { return l.preselected(id_); }))
+               take_leptons = true;
+         }
+         if (not take_leptons)
+            continue;
 
-      if (preselected_e.size() + preselected_mu.size() < min_leptons_)
-         continue;
+         passComboCut(event_cut, combo_cut++, passed, "Leptons in combo");
 
-      if (loose_e.size() + loose_mu.size() < min_loose_leptons_)
-         continue;
+         bool pass_jets = false;
+         bool pass_tags = false;
+         std::map<std::string, std::vector<superslim::Jet>> sjets;
+         std::map<std::string, superslim::LorentzVector> smets;
+         for (auto& sys: systematics_) {
+            auto corrected_jets = helper_.GetCorrectedJets(uncorrected_jets, event, setup, sys.second);
+            corrected_jets = helper_.GetSelectedJets(corrected_jets, std::min(min_jet_pt_, min_tag_pt_), max_jet_eta_, jetID::none, '-');
+            corrected_jets = helper_.GetSortedByPt(corrected_jets);
+            auto jets_wo_lep = removeOverlap(corrected_jets, all_leptons, .4);
 
-      if (tight_e.size() + tight_mu.size() < min_tight_leptons_)
-         continue;
+            // Jet selection
+            auto jets_no_taus = removeOverlap(jets_wo_lep, taus, .25);
+            auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, max_jet_eta_, jetID::none, '-');
+            auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'M');
+            if (filter_pu_jets_) {
+               selected_jets = get_non_pileup(selected_jets);
+               selected_tags = get_non_pileup(selected_tags);
+            };
 
-      passComboCut(event_cut, combo_cut++, passed, "Leptons in combo (min)");
+            if (selected_jets.size() >= min_jets_ and selected_tags.size() >= min_tags_)
+               pass_jets = true;
 
-      if (max_loose_leptons_ >= 0 && loose_e.size() + loose_mu.size() > (unsigned int) max_loose_leptons_)
-         continue;
+            if (max_tags_ < 0 or selected_tags.size() <= (unsigned int) max_tags_)
+               pass_tags = true;
 
-      if (max_tight_leptons_ >= 0 && tight_e.size() + tight_mu.size() > (unsigned int) max_tight_leptons_)
-         continue;
+            auto new_jets = helper_.GetCorrectedJets(old_jets_uncorrected, event, setup, sys.second);
+            auto corrected_mets = helper_.CorrectMET(old_jets, new_jets, *mets);
 
-      passComboCut(event_cut, combo_cut++, passed, "Leptons in combo (max)");
+            sjets[sys.first] = {};
+            for (const auto& jet: selected_jets)
+               sjets[sys.first].push_back(superslim::Jet(jet, particles));
 
-      bool pass_jets = false;
-      bool pass_tags = false;
-      std::map<std::string, std::vector<superslim::Jet>> sjets;
-      std::map<std::string, superslim::LorentzVector> smets;
-      for (auto& sys: systematics_) {
-         auto corrected_jets = helper_.GetCorrectedJets(uncorrected_jets, event, setup, sys.second);
-         corrected_jets = helper_.GetSelectedJets(corrected_jets, std::min(min_jet_pt_, min_tag_pt_), max_jet_eta_, jetID::none, '-');
-         corrected_jets = helper_.GetSortedByPt(corrected_jets);
-         pat::JetCollection jets_wo_lep;
-
-         if (subtract_leptons_) {
-            auto jets_wo_mu = helper_.RemoveOverlaps(loose_mu, corrected_jets);
-            jets_wo_lep = helper_.RemoveOverlaps(loose_e, jets_wo_mu);
-         } else {
-            jets_wo_lep = helper_.GetDeltaRCleanedJets(corrected_jets, loose_mu, loose_e, .4);
+            smets[sys.first] = corrected_mets[0].p4();
          }
 
-         // Jet selection
-         auto jets_no_taus = removeOverlap(jets_wo_lep, loose_tau, .25);
-         auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, max_jet_eta_, jetID::none, '-');
-         auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'M');
-         if (filter_pu_jets_) {
-            selected_jets = get_non_pileup(selected_jets);
-            selected_tags = get_non_pileup(selected_tags);
-         };
+         if (not (pass_jets and pass_tags))
+            continue;
 
-         if (selected_jets.size() >= min_jets_ and selected_tags.size() >= min_tags_)
-            pass_jets = true;
+         passComboCut(event_cut, combo_cut++, passed, "Jet requirements");
+         passComboCut(event_cut, combo_cut++, passed, "Ntuple");
 
-         if (max_tags_ < 0 or selected_tags.size() <= (unsigned int) max_tags_)
-            pass_tags = true;
-
-         auto new_jets = helper_.GetCorrectedJets(old_jets_uncorrected, event, setup, sys.second);
-         auto corrected_mets = helper_.CorrectMET(old_jets, new_jets, *mets);
-
-         sjets[sys.first] = {};
-         for (const auto& jet: selected_jets)
-            sjets[sys.first].push_back(superslim::Jet(jet, particles));
-
-         smets[sys.first] = corrected_mets[0].p4();
+         auto c = superslim::Combination(taus, all_leptons, sjets, smets);
+         combos.push_back(c);
       }
-
-      if (not (pass_jets and pass_tags))
-         continue;
-
-      passComboCut(event_cut, combo_cut++, passed, "Jet requirements");
-      passComboCut(event_cut, combo_cut++, passed, "Ntuple");
-
-      // ===============
-      // Conversion part
-      // ===============
-      std::vector<superslim::Lepton> sleptons;
-
-      for (const auto& lep: loose_e)
-         sleptons.push_back(superslim::Lepton(lep, helper_.GetElectronRelIso(lep, coneSize::R03, corrType::rhoEA, effAreaType::spring15), rpv, *bs, particles));
-
-      for (const auto& lep: loose_mu)
-         sleptons.push_back(superslim::Lepton(lep, helper_.GetMuonRelIso(lep, coneSize::R04, corrType::deltaBeta), rpv, *bs, particles));
-
-      std::sort(sleptons.begin(), sleptons.end());
-
-      if (print_preselection_) {
-         for (const auto& l: preselected_e) {
-            std::cout << "DEBUG "
-               << event.id().event() << ','
-               << l.pdgId() << ','
-               << l.pt() << ',' << l.eta() << ',' << l.phi() << ','
-               << std::abs(l.gsfTrack()->dxy(rpv.position())) << ','
-               << std::abs(l.gsfTrack()->dz(rpv.position())) << ','
-               << l.userFloat("relIso") << ','
-               << std::abs(l.dB(pat::Electron::PV3D) / l.edB(pat::Electron::PV3D)) << ','
-               << l.userFloat("leptonMVA") << '\n';
-         }
-         for (const auto& l: preselected_mu) {
-            std::cout << "DEBUG "
-               << event.id().event() << ','
-               << l.pdgId() << ','
-               << l.pt() << ',' << l.eta() << ',' << l.phi() << ','
-               << std::abs(l.innerTrack()->dxy(rpv.position())) << ','
-               << std::abs(l.innerTrack()->dz(rpv.position())) << ','
-               << l.userFloat("relIso") << ','
-               << std::abs(l.dB(pat::Muon::PV3D) / l.edB(pat::Muon::PV3D)) << ','
-               << l.userFloat("leptonMVA") << '\n';
-         }
-      }
-
-      auto c = superslim::Combination(loose_tau, sleptons, sjets, smets);
-      combos.push_back(c);
    }
 
    if (combos.size() > 0) {

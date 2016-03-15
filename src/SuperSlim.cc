@@ -11,18 +11,18 @@
 
 #include "ttH/TauRoast/interface/SuperSlim.h"
 
-namespace id {
-   const std::vector<std::pair<std::string, id::value>> values = {
-      {"VTight", VTight},
-      {"Tight", Tight},
-      {"Medium", Medium},
-      {"Loose", Loose},
-      {"VLoose", VLoose},
-      {"Preselection", Preselected}
-   };
-}
-
 namespace superslim {
+   namespace id {
+      const std::vector<std::pair<std::string, id::value>> values = {
+         {"VTight", VTight},
+         {"Tight", Tight},
+         {"Medium", Medium},
+         {"Loose", Loose},
+         {"VLoose", VLoose},
+         {"Preselection", Preselected}
+      };
+   }
+
    Vertex::Vertex(const reco::Vertex& v) :
       x_(v.x()),
       y_(v.y()),
@@ -229,12 +229,30 @@ namespace superslim {
 
    template<typename T>
    id::value Lepton::getID(const std::string& suffix, const T& t) const {
-      for (const auto& _id: id::values) {
+      for (const auto& _id: superslim::id::values) {
          std::string name = "id" + _id.first + (_id.first == "Preselection" ? "" : suffix);
          if (t.hasUserFloat(name) and t.userFloat(name) > .5)
             return _id.second;
       }
-      return id::None;
+      return superslim::id::None;
+   };
+
+   bool Lepton::selected(Lepton::id id_, superslim::id::value min) const {
+      switch (id_) {
+         case Lepton::All:
+            return cut_ >= min or mva_ >= min or lj_ >= min;
+            break;
+         case Lepton::Cut:
+            return cut_ >= min;
+            break;
+         case Lepton::MVA:
+            return mva_ >= min;
+            break;
+         case Lepton::LJ:
+            return lj_ >= min;
+            break;
+      };
+      return false;
    };
 
    Tau::Tau(const pat::Tau& t, const reco::GenParticleCollection& particles) :

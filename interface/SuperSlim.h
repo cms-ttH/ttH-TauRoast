@@ -29,21 +29,21 @@ namespace reco {
 }
 #endif
 
-namespace id {
-   enum value {
-      None = 0,
-      Preselected = 1,
-      VLoose = 2,
-      Loose = 3,
-      Medium = 4,
-      Tight = 5,
-      VTight = 6
-   };
-
-   extern const std::vector<std::pair<std::string, id::value>> values;
-}
-
 namespace superslim {
+   namespace id {
+      enum value {
+         None = 0,
+         Preselected = 1,
+         VLoose = 2,
+         Loose = 3,
+         Medium = 4,
+         Tight = 5,
+         VTight = 6
+      };
+
+      extern const std::vector<std::pair<std::string, id::value>> values;
+   }
+
    typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > LorentzVector;
 
    class Vertex {
@@ -161,6 +161,8 @@ namespace superslim {
 
    class Lepton : public PhysObject {
       public:
+         enum id { All, Cut, MVA, LJ };
+
          Lepton() {};
 #ifndef __CINT__
          Lepton(const pat::Electron& e, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles);
@@ -183,19 +185,23 @@ namespace superslim {
          int mva() const { return mva_; };
          int lj() const { return lj_; };
 
+         bool selected(Lepton::id id_=Lepton::All, superslim::id::value min=superslim::id::Preselected) const;
+         bool loose(Lepton::id id_=Lepton::All) const { return selected(id_, superslim::id::Loose); };
+         bool preselected(Lepton::id id_=Lepton::All) const { return selected(id_, superslim::id::Preselected); };
+
       private:
 #ifndef __CINT__
          template<typename T>
-         id::value getID(const std::string&, const T&) const;
+         superslim::id::value getID(const std::string&, const T&) const;
 #endif
 
          enum kind { e, mu } type_;
 
          bool charge_check_;
 
-         id::value cut_;
-         id::value mva_;
-         id::value lj_;
+         superslim::id::value cut_;
+         superslim::id::value mva_;
+         superslim::id::value lj_;
 
          float corrected_d0_ = 0.;
          float corrected_dz_ = 0.;

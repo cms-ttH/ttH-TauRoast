@@ -58,27 +58,21 @@ if options.data:
 
 process.taus = cms.EDAnalyzer("TauProcessor",
         data = cms.bool(options.data),
-        # electrons = cms.InputTag("ttHLeptons"),
-        # muons = cms.InputTag("ttHLeptons"),
-        electrons = cms.InputTag("slimmedElectrons"),
-        muons = cms.InputTag("slimmedMuons"),
+        electrons = cms.InputTag("ttHLeptons"),
+        muons = cms.InputTag("ttHLeptons"),
+        leptons = cms.VPSet(
+            cms.PSet(
+                leptons = cms.int32(1),
+                taus = cms.int32(2)
+            ),
+            cms.PSet(
+                leptons = cms.int32(2),
+                taus = cms.int32(1)
+            )
+        ),
         minJets = cms.uint32(2),
         minTags = cms.uint32(1),
         maxTags = cms.int32(-1),
-        minPreselectedLeptons = cms.uint32(1),
-        minLooseLeptons = cms.uint32(1),
-        minTightLeptons = cms.uint32(1),
-        maxLooseLeptons = cms.int32(1),
-        maxTightLeptons = cms.int32(1),
-        minTaus = cms.uint32(2),
-        maxTaus = cms.uint32(2),
-        minTightTaus = cms.uint32(0),
-        subtractLeptons = cms.bool(False),
-        minLooseLeptonPt = cms.double(15.),
-        minTightElectronPt = cms.double(30.),
-        minTightMuonPt = cms.double(25.),
-        maxLooseLeptonEta = cms.double(2.4),
-        maxTightLeptonEta = cms.double(2.1),
         minJetPt = cms.double(30.),
         minTagPt = cms.double(30.),
         maxJetEta = cms.double(2.4),
@@ -91,11 +85,13 @@ process.taus = cms.EDAnalyzer("TauProcessor",
 
 process.load("RecoEgamma.ElectronIdentification.ElectronMVAValueMapProducer_cfi")
 process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
+process.load("ttH.LeptonID.ttHLeptons_cfi")
 process.load("ttH.TauRoast.genHadronMatching_cfi")
 
 if options.data:
     process.p = cms.Path(
             process.electronMVAValueMapProducer
+            * process.ttHLeptons
             * process.taus
     )
 else:
@@ -107,5 +103,6 @@ else:
             * process.matchGenBHadron
             * process.matchGenCHadron
             * process.electronMVAValueMapProducer
+            * process.ttHLeptons
             * process.taus
     )
