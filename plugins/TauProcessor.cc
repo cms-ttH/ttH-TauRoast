@@ -481,25 +481,27 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    int passed = 0;
 
    for (const auto& conf: leptons_) {
-      for (const auto& taus: build_permutations(all_taus, conf.taus, conf.taus)) {
-         int combo_cut = 0;
+      int combo_cut = 0;
 
+      // auto leptons = removeOverlap(all_leptons, taus, .4);
+      auto leptons = all_leptons;
+      auto selected_taus = removeOverlap(all_taus, leptons, .4);
+
+      // See if any of the surviving leptons get preselected by any of
+      // the possible lepton ids
+      bool take_leptons = false;
+      for (const auto& id_: {superslim::Lepton::Cut, superslim::Lepton::MVA, superslim::Lepton::LJ}) {
+         if (conf.leptons == std::count_if(leptons.begin(), leptons.end(),
+                  [&](const auto& l) { return l.preselected(id_); }))
+            take_leptons = true;
+      }
+      if (not take_leptons)
+         continue;
+
+      passComboCut(event_cut, combo_cut++, passed, "Leptons in combo");
+
+      for (const auto& taus: build_permutations(selected_taus, conf.taus, conf.taus)) {
          passComboCut(event_cut, combo_cut++, passed, "Taus in combo");
-
-         auto leptons = removeOverlap(all_leptons, taus, .4);
-
-         // See if any of the surviving leptons get preselected by any of
-         // the possible lepton ids
-         bool take_leptons = false;
-         for (const auto& id_: {superslim::Lepton::Cut, superslim::Lepton::MVA, superslim::Lepton::LJ}) {
-            if (conf.leptons == std::count_if(leptons.begin(), leptons.end(),
-                     [&](const auto& l) { return l.preselected(id_); }))
-               take_leptons = true;
-         }
-         if (not take_leptons)
-            continue;
-
-         passComboCut(event_cut, combo_cut++, passed, "Leptons in combo");
 
          bool pass_jets = false;
          bool pass_tags = false;
@@ -509,9 +511,9 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
             auto corrected_jets = helper_.GetCorrectedJets(uncorrected_jets, event, setup, sys.second);
             corrected_jets = helper_.GetSelectedJets(corrected_jets, std::min(min_jet_pt_, min_tag_pt_), max_jet_eta_, jetID::none, '-');
             corrected_jets = helper_.GetSortedByPt(corrected_jets);
-            auto jets_wo_lep = removeOverlap(corrected_jets, all_leptons, .4);
 
             // Jet selection
+            auto jets_wo_lep = removeOverlap(corrected_jets, all_leptons, .4);
             auto jets_no_taus = removeOverlap(jets_wo_lep, taus, .25);
             auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, max_jet_eta_, jetID::none, '-');
             auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'M');
@@ -542,7 +544,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
          passComboCut(event_cut, combo_cut++, passed, "Jet requirements");
          passComboCut(event_cut, combo_cut++, passed, "Ntuple");
 
-         auto c = superslim::Combination(taus, all_leptons, sjets, smets);
+         auto c = superslim::Combination(taus, selected_taus, leptons, sjets, smets);
          combos.push_back(c);
       }
    }

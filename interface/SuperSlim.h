@@ -273,6 +273,7 @@ namespace superslim {
          Combination() {};
          Combination(
                const std::vector<superslim::Tau>&,
+               const std::vector<superslim::Tau>&,
                const std::vector<superslim::Lepton>&,
                const std::map<std::string, std::vector<superslim::Jet>>&,
                const std::map<std::string, LorentzVector>& met);
@@ -281,6 +282,7 @@ namespace superslim {
          const std::vector<superslim::Jet>& jets(const std::string& s="NA") const { return jets_.find(s)->second; };
          const std::vector<superslim::Lepton>& leptons() const { return leptons_; };
          const std::vector<superslim::Tau>& taus() const { return taus_; };
+         const std::vector<superslim::Tau>& all_taus() const { return taus_all_; };
          const LorentzVector& met(const std::string& s="NA") const { return met_.find(s)->second; };
          const std::map<std::string, float>& weights() const { return weights_; };
 
@@ -289,11 +291,12 @@ namespace superslim {
          std::map<std::string, std::vector<superslim::Jet>> jets_;
          std::vector<superslim::Lepton> leptons_;
          std::vector<superslim::Tau> taus_;
+         std::vector<superslim::Tau> taus_all_;
          std::map<std::string, LorentzVector> met_;
 
          std::map<std::string, float> weights_;
 
-         ClassDef(Combination, 3);
+         ClassDef(Combination, 4);
    };
 
    class Trigger {
