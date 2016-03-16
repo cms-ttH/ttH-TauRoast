@@ -315,6 +315,12 @@ namespace superslim {
       taus_all_(all_taus),
       met_(met)
    {
+      for (const auto& l: leptons_) {
+         if (l.electron())
+            electrons_.push_back(l);
+         else
+            muons_.push_back(l);
+      }
    }
 
    bool

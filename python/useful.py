@@ -86,19 +86,6 @@ r.gInterpreter.Declare("""
                     res.push_back(j);
             return res;
         }
-
-        template<typename T> int electrons(T ls) {
-            int res = 0;
-            for (const auto& l: ls)
-                res += l.electron();
-            return res;
-        }
-        template<typename T> int muons(T ls) {
-            int res = 0;
-            for (const auto& l: ls)
-                res += l.muon();
-            return res;
-        }
 """)
 
 def code2cut(name, code):
@@ -108,6 +95,8 @@ def code2cut(name, code):
                 const std::vector<superslim::Tau>& taus,
                 const std::vector<superslim::Tau>& all_taus,
                 const std::vector<superslim::Lepton>& leptons,
+                const std::vector<superslim::Lepton>& electrons,
+                const std::vector<superslim::Lepton>& muons,
                 const std::vector<superslim::Jet>& jets,
                 const superslim::LorentzVector& met) {{ return {c}; }}
         auto cut_{f} = fastlane::Cut("{n}", &fct_{f});
@@ -123,6 +112,8 @@ def code2leaf(name, typename, code):
                 const std::vector<superslim::Tau>& taus,
                 const std::vector<superslim::Tau>& all_taus,
                 const std::vector<superslim::Lepton>& leptons,
+                const std::vector<superslim::Lepton>& electrons,
+                const std::vector<superslim::Lepton>& muons,
                 const std::vector<superslim::Jet>& jets,
                 const superslim::LorentzVector& met,
                 std::unordered_map<std::string, double>& weights,
