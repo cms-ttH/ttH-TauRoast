@@ -106,6 +106,7 @@ def code2cut(name, code):
     chunck = """
         bool fct_{f}(const superslim::Event& event,
                 const std::vector<superslim::Tau>& taus,
+                const std::vector<superslim::Tau>& all_taus,
                 const std::vector<superslim::Lepton>& leptons,
                 const std::vector<superslim::Jet>& jets,
                 const superslim::LorentzVector& met) {{ return {c}; }}
@@ -120,6 +121,7 @@ def code2leaf(name, typename, code):
     chunck = """
         void fct_{f}(const superslim::Event& event,
                 const std::vector<superslim::Tau>& taus,
+                const std::vector<superslim::Tau>& all_taus,
                 const std::vector<superslim::Lepton>& leptons,
                 const std::vector<superslim::Jet>& jets,
                 const superslim::LorentzVector& met,

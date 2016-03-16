@@ -1,0 +1,18 @@
+# vim: set sw=4 sta et :
+
+channel: tll
+generator: pow
+ntupledir: .
+outdir: .
+sync: true
+
+lumi: 2517
+
+plot:
+  - sync
+
+cuts:
+  - "Jets": "len(jets) >= 2"
+
+weights: []
+systematics: NA

@@ -27,8 +27,6 @@ ag.add_argument('-i', '--input', type=str, default=None,
         help="change input directory")
 ag.add_argument('-o', '--output', type=str, default=None,
         help="change output directory")
-ag.add_argument('-s', '--sync', action='store_true', default=False,
-        help="produce sync ntuple")
 ag = parser.add_argument_group('debugging and syncronization options')
 ag.add_argument('--debug-cuts', action='store_true', default=False,
         help="save event quantites after each cut")
@@ -82,7 +80,7 @@ from ttH.TauRoast.processing import Process
 from ttH.TauRoast.variation import setup
 
 useful.setup(config['channel'], config['generator'])
-useful.load_python(args.sync)
+useful.load_python(config.get('sync', False))
 stylish.setup()
 
 if not os.path.exists(config["outdir"]):
