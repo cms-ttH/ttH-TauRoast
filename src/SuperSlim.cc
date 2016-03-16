@@ -38,6 +38,8 @@ namespace superslim {
 
    PhysObject::PhysObject(const reco::Candidate* c) :
       charge_(c->charge()),
+      dxy_(-9999.),
+      dz_(-9999.),
       p_(c->p4()),
       match_(6),
       pdg_id_(c->pdgId()),
@@ -196,8 +198,8 @@ namespace superslim {
       setGenInfo(e.genParticle());
 
       if (e.gsfTrack().isAvailable()) {
-         corrected_d0_ = e.gsfTrack()->dxy(bs.position());
-         corrected_dz_ = e.gsfTrack()->dz(pv.position());
+         dxy_ = e.gsfTrack()->dxy(pv.position());
+         dz_ = e.gsfTrack()->dz(pv.position());
       }
 
       cut_ = getID("Cut", e);
@@ -218,8 +220,8 @@ namespace superslim {
 
       if (m.innerTrack().isAvailable()) {
          charge_check_ = m.innerTrack()->ptError() / m.innerTrack()->pt() < .2;
-         corrected_d0_ = m.innerTrack()->dxy(bs.position());
-         corrected_dz_ = m.innerTrack()->dz(pv.position());
+         dxy_ = m.innerTrack()->dxy(pv.position());
+         dz_ = m.innerTrack()->dz(pv.position());
       }
 
       cut_ = getID("Cut", m);
@@ -255,7 +257,7 @@ namespace superslim {
       return false;
    };
 
-   Tau::Tau(const pat::Tau& t, const reco::GenParticleCollection& particles) :
+   Tau::Tau(const pat::Tau& t, const reco::Vertex& pv, const reco::GenParticleCollection& particles) :
       PhysObject(&t),
       decay_mode_(t.decayMode()),
       prongs_(t.signalChargedHadrCands().size()),
@@ -280,6 +282,11 @@ namespace superslim {
       if (t.leadChargedHadrCand().isNonnull()) {
          leading_track_pt_ = t.leadChargedHadrCand()->pt();
          charge_ = t.leadChargedHadrCand()->charge();
+
+         if (t.leadChargedHadrCand()->bestTrack()) {
+            dxy_ = t.leadChargedHadrCand()->bestTrack()->dxy(pv.position());
+            dz_ = t.leadChargedHadrCand()->bestTrack()->dz(pv.position());
+         }
       }
 
       raw_isolation_3hits03_ = 0.; // NOT PRESENT: t.tauID("byCombinedIsolationDeltaBetaCorrRaw3HitsdR03");

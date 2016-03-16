@@ -466,7 +466,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
    std::vector<superslim::Tau> all_taus;
    for (const auto& tau: *taus) {
-      auto t = superslim::Tau(tau, particles);
+      auto t = superslim::Tau(tau, rpv, particles);
       if (t.loose())
          all_taus.push_back(t);
    }

@@ -90,26 +90,18 @@ namespace superslim {
 #endif
          virtual ~PhysObject() {};
 
-         const float
-            eta() const { return p_.eta(); };
-         const float
-            phi() const { return p_.phi(); };
-         const LorentzVector&
-            p4() const { return p_; };
-         const LorentzVector&
-            genP4() const { return gen_p_; };
-         const std::vector<superslim::PhysObject>&
-            parents() const { return parents_; };
-         int
-            parentId() const;
-         int
-            grandParentId() const;
-         int
-            charge() const { return charge_; };
-         int
-            pdgId() const { return pdg_id_; };
-         int
-            genPdgId() const { return gen_pdg_id_; };
+         const float eta() const { return p_.eta(); };
+         const float phi() const { return p_.phi(); };
+         const LorentzVector& p4() const { return p_; };
+         const LorentzVector& genP4() const { return gen_p_; };
+         const std::vector<superslim::PhysObject>& parents() const { return parents_; };
+         int parentId() const;
+         int grandParentId() const;
+         float dxy() const { return dxy_; };
+         float dz() const { return dz_; };
+         int charge() const { return charge_; };
+         int pdgId() const { return pdg_id_; };
+         int genPdgId() const { return gen_pdg_id_; };
          // As per https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2015#MC_Matching
          // 1: prompt e
          // 2: prompt μ
@@ -117,19 +109,18 @@ namespace superslim {
          // 4: τ → μ
          // 5: τ → τ had
          // 6: jet/pu fake
-         int
-            match() const { return match_; };
+         int match() const { return match_; };
 
       protected:
 #ifndef __CINT__
-         const reco::Candidate*
-            getFinal(const reco::Candidate* c);
-         const reco::GenParticle*
-            getMatch(const reco::Candidate& c, const reco::GenParticleCollection& coll);
-         void
-            setGenInfo(const reco::GenParticle* p, int level=2);
+         const reco::Candidate* getFinal(const reco::Candidate* c);
+         const reco::GenParticle* getMatch(const reco::Candidate& c, const reco::GenParticleCollection& coll);
+         void setGenInfo(const reco::GenParticle* p, int level=2);
 #endif
          int charge_;
+
+         float dxy_;
+         float dz_;
 
       private:
          LorentzVector p_;
@@ -175,8 +166,6 @@ namespace superslim {
 
          bool chargeConsistent() const { return charge_check_; };
 
-         float correctedD0() const { return corrected_d0_; };
-         float correctedDZ() const { return corrected_dz_; };
          float impactParameter() const { return impact_parameter_; };
          float impactParameterError() const { return impact_parameter_error_; };
          float relativeIsolation() const { return rel_iso_; };
@@ -203,8 +192,6 @@ namespace superslim {
          superslim::id::value mva_;
          superslim::id::value lj_;
 
-         float corrected_d0_ = 0.;
-         float corrected_dz_ = 0.;
          float impact_parameter_;
          float impact_parameter_error_;
          float rel_iso_;
@@ -216,7 +203,7 @@ namespace superslim {
       public:
          Tau() {};
 #ifndef __CINT__
-         Tau(const pat::Tau& t, const reco::GenParticleCollection& particles);
+         Tau(const pat::Tau& t, const reco::Vertex& pv, const reco::GenParticleCollection& particles);
 #endif
          virtual ~Tau() {};
 
