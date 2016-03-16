@@ -13,19 +13,24 @@ def setup(channel, generator):
     global config
     config = Config(taus=channel.lower().count("t"), leptons=channel.lower().count("l"), generator=generator)
 
-def load_python():
+def load_python(sync):
     import imp
     from glob import glob
 
     from ttH.TauRoast.processing import Process
 
     datadir = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data')
-    magic = os.path.join(datadir, 'plots', '*.py')
-    for n, file in enumerate(glob(magic)):
-        imp.load_source("plots{0}".format(n), file)
-    magic = os.path.join(datadir, 'procs', '*.py')
-    for n, file in enumerate(glob(magic)):
-        imp.load_source("procs{0}".format(n), file)
+    if sync:
+        magic = os.path.join(datadir, 'sync', '*.py')
+        for n, file in enumerate(glob(magic)):
+            imp.load_source("sync{0}".format(n), file)
+    else:
+        magic = os.path.join(datadir, 'plots', '*.py')
+        for n, file in enumerate(glob(magic)):
+            imp.load_source("plots{0}".format(n), file)
+        magic = os.path.join(datadir, 'procs', '*.py')
+        for n, file in enumerate(glob(magic)):
+            imp.load_source("procs{0}".format(n), file)
 
     global config
     for p in Process.procs():

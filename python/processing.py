@@ -10,6 +10,8 @@ r.gSystem.Load("libttHTauRoast")
 from ttH.TauRoast.botany import Tree
 from ttH.TauRoast.useful import code2cut
 
+NTUPLE_GLOB = 'test*.root'
+
 class Process(object):
     __processes__ = {}
     __limitnames__ = set()
@@ -89,7 +91,7 @@ class BasicProcess(Process):
 
         hist = None
         for p in self.__paths:
-            for fn in glob.glob(os.path.join(basedir, p, '*.root')):
+            for fn in glob.glob(os.path.join(basedir, p, NTUPLE_GLOB)):
                 try:
                     f = r.TFile(fn)
                     h = f.Get("taus/cuts")
@@ -132,7 +134,7 @@ class BasicProcess(Process):
         tree = Tree(filename, self)
         chain = r.TChain("taus/events")
         for p in self.__paths:
-            chain.Add(os.path.join(basedir, p, '*.root'))
+            chain.Add(os.path.join(basedir, p, NTUPLE_GLOB))
 
         ccuts = r.std.vector('fastlane::Cut*')()
         for c in cuts:
