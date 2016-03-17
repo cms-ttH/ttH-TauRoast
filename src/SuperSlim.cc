@@ -36,17 +36,6 @@ namespace superslim {
    {
    }
 
-   PhysObject::PhysObject(const reco::Candidate* c) :
-      charge_(c->charge()),
-      dxy_(-9999.),
-      dz_(-9999.),
-      p_(c->p4()),
-      match_(6),
-      pdg_id_(c->pdgId()),
-      gen_pdg_id_(0)
-   {
-   }
-
    const reco::Candidate *
    PhysObject::getFinal(const reco::Candidate * c)
    {
@@ -111,6 +100,17 @@ namespace superslim {
       return 0;
    }
 
+   template<>
+   PhysObject::PhysObject(const reco::GenParticle& c) :
+         charge_(c.charge()),
+         dxy_(-9999.),
+         dz_(-9999.),
+         p_(c.p4()),
+         match_(6),
+         pdg_id_(c.pdgId()),
+         gen_pdg_id_(0)
+   {
+   }
 
    int
    PhysObject::parentId() const
@@ -171,14 +171,14 @@ namespace superslim {
          if (!mother)
             continue;
 
-         PhysObject o(mother);
+         PhysObject o(*mother);
          o.setGenInfo(mother, level - 1);
          parents_.push_back(o);
       }
    }
 
    Jet::Jet(const pat::Jet& j, const reco::GenParticleCollection& particles) :
-      PhysObject(&j),
+      PhysObject(j),
       csv_(j.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")),
       flavor_(j.hadronFlavour())
    {
@@ -187,7 +187,7 @@ namespace superslim {
    }
 
    Lepton::Lepton(const pat::Electron& e, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles) :
-      PhysObject(&e),
+      PhysObject(e),
       type_(Lepton::e),
       charge_check_(e.isGsfCtfScPixChargeConsistent()),
       impact_parameter_(e.dB(pat::Electron::PV3D)),
@@ -197,18 +197,13 @@ namespace superslim {
       getMatch(e, particles);
       setGenInfo(e.genParticle());
 
-      if (e.gsfTrack().isAvailable()) {
-         dxy_ = e.gsfTrack()->dxy(pv.position());
-         dz_ = e.gsfTrack()->dz(pv.position());
-      }
-
       cut_ = getID("Cut", e);
       mva_ = getID("MVA", e);
       lj_ = getID("LJ", e);
    }
 
    Lepton::Lepton(const pat::Muon& m, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles) :
-      PhysObject(&m),
+      PhysObject(m),
       type_(Lepton::mu),
       charge_check_(false),
       impact_parameter_(m.dB(pat::Muon::PV3D)),
@@ -220,8 +215,6 @@ namespace superslim {
 
       if (m.innerTrack().isAvailable()) {
          charge_check_ = m.innerTrack()->ptError() / m.innerTrack()->pt() < .2;
-         dxy_ = m.innerTrack()->dxy(pv.position());
-         dz_ = m.innerTrack()->dz(pv.position());
       }
 
       cut_ = getID("Cut", m);
@@ -258,7 +251,7 @@ namespace superslim {
    };
 
    Tau::Tau(const pat::Tau& t, const reco::Vertex& pv, const reco::GenParticleCollection& particles) :
-      PhysObject(&t),
+      PhysObject(t),
       decay_mode_(t.decayMode()),
       prongs_(t.signalChargedHadrCands().size()),
       leading_track_pt_(-1.0)
@@ -282,11 +275,6 @@ namespace superslim {
       if (t.leadChargedHadrCand().isNonnull()) {
          leading_track_pt_ = t.leadChargedHadrCand()->pt();
          charge_ = t.leadChargedHadrCand()->charge();
-
-         if (t.leadChargedHadrCand()->bestTrack()) {
-            dxy_ = t.leadChargedHadrCand()->bestTrack()->dxy(pv.position());
-            dz_ = t.leadChargedHadrCand()->bestTrack()->dz(pv.position());
-         }
       }
 
       raw_isolation_3hits03_ = 0.; // NOT PRESENT: t.tauID("byCombinedIsolationDeltaBetaCorrRaw3HitsdR03");

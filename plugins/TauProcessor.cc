@@ -248,7 +248,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    electrons_token_ = consumes<pat::ElectronCollection>(config.getParameter<edm::InputTag>("electrons"));
    mva_electrons_token_ = consumes<edm::View<pat::Electron>>(config.getParameter<edm::InputTag>("electrons"));
    muons_token_ = consumes<pat::MuonCollection>(config.getParameter<edm::InputTag>("muons"));
-   taus_token_ = consumes<pat::TauCollection>(edm::InputTag("slimmedTaus"));
+   taus_token_ = consumes<pat::TauCollection>(config.getParameter<edm::InputTag>("taus"));
    ak4jets_token_ = consumes<pat::JetCollection>(edm::InputTag("slimmedJets"));
    gen_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("prunedGenParticles"));
    met_token_ = consumes<pat::METCollection>(edm::InputTag("slimmedMETs"));

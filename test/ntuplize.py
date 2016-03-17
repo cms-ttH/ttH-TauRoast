@@ -60,6 +60,7 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         data = cms.bool(options.data),
         electrons = cms.InputTag("ttHLeptons"),
         muons = cms.InputTag("ttHLeptons"),
+        taus = cms.InputTag("ttHLeptons"),
         leptons = cms.VPSet(
             cms.PSet(
                 leptons = cms.int32(1),

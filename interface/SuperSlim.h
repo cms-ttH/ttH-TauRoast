@@ -86,7 +86,21 @@ namespace superslim {
       public:
          PhysObject() : p_() {};
 #ifndef __CINT__
-         PhysObject(const reco::Candidate*);
+         template<typename T>
+         PhysObject(const T& c) :
+            charge_(c.charge()),
+            dxy_(-9999.),
+            dz_(-9999.),
+            p_(c.p4()),
+            match_(6),
+            pdg_id_(c.pdgId()),
+            gen_pdg_id_(0)
+         {
+            if (c.hasUserFloat("dxy") and c.hasUserFloat("dz")) {
+               dxy_ = c.userFloat("dxy");
+               dz_ = c.userFloat("dz");
+            }
+         };
 #endif
          virtual ~PhysObject() {};
 
@@ -384,6 +398,10 @@ namespace superslim {
    };
 
    bool operator<(const PhysObject& lhs, const PhysObject& rhs);
+
+#ifndef __CINT__
+   template<> PhysObject::PhysObject(const reco::GenParticle&);
+#endif
 }
 
 #endif
