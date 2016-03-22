@@ -25,6 +25,15 @@ BasicProcess(
 )
 
 BasicProcess(
+    name="ttjets_dl",
+    sample=2533,
+    fullname="t #bar{t} DL",
+    paths=["tt_dl_pow"],
+    cross_section=831.76 * wleptonic**2,
+    events=4995600
+)
+
+BasicProcess(
     name="ttbar_hadronic",
     sample=2566,
     fullname="t #bar{t} H",
