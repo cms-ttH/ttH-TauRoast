@@ -170,8 +170,8 @@ namespace superslim {
 
          Lepton() {};
 #ifndef __CINT__
-         Lepton(const pat::Electron& e, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles);
-         Lepton(const pat::Muon& m, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles);
+         Lepton(const pat::Electron& e, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles);
+         Lepton(const pat::Muon& m, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles);
 #endif
          virtual ~Lepton() {};
 
@@ -182,7 +182,17 @@ namespace superslim {
 
          float impactParameter() const { return impact_parameter_; };
          float impactParameterError() const { return impact_parameter_error_; };
-         float relativeIsolation() const { return rel_iso_; };
+         float relativeIsolation() const { return iso_rel_; };
+         float chargedIsolation() const { return iso_charged_; };
+         float neutralIsolation() const { return iso_neutral_; };
+
+         int nearestJetConstituents() const { return jet_nconst_; };
+         float nearestJetRelativePt() const { return jet_pt_rel_; };
+         float nearestJetRatioPt() const { return jet_pt_ratio_; };
+         float nearestJetCSV() const { return jet_csv_; };
+
+         float sip3D() const { return sip3d_; };
+         float mvaRaw() const { return lep_mva_; };
 
          int cut() const { return cut_; };
          int mva() const { return mva_; };
@@ -208,9 +218,20 @@ namespace superslim {
 
          float impact_parameter_;
          float impact_parameter_error_;
-         float rel_iso_;
 
-         ClassDef(Lepton, 3);
+         float iso_rel_;
+         float iso_charged_;
+         float iso_neutral_;
+
+         int jet_nconst_;
+         float jet_pt_rel_;
+         float jet_pt_ratio_;
+         float jet_csv_;
+
+         float sip3d_;
+         float lep_mva_;
+
+         ClassDef(Lepton, 4);
    };
 
    class Tau : public PhysObject {

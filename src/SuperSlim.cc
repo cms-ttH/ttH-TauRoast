@@ -186,13 +186,12 @@ namespace superslim {
       setGenInfo(j.genParton());
    }
 
-   Lepton::Lepton(const pat::Electron& e, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles) :
+   Lepton::Lepton(const pat::Electron& e, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles) :
       PhysObject(e),
       type_(Lepton::e),
       charge_check_(e.isGsfCtfScPixChargeConsistent()),
       impact_parameter_(e.dB(pat::Electron::PV3D)),
-      impact_parameter_error_(e.edB(pat::Electron::PV3D)),
-      rel_iso_(rel_iso)
+      impact_parameter_error_(e.edB(pat::Electron::PV3D))
    {
       getMatch(e, particles);
       setGenInfo(e.genParticle());
@@ -200,15 +199,25 @@ namespace superslim {
       cut_ = getID("Cut", e);
       mva_ = getID("MVA", e);
       lj_ = getID("LJ", e);
+
+      iso_rel_ = e.userFloat("miniIso");
+      iso_charged_ = e.userFloat("miniAbsIsoCharged");
+      iso_neutral_ = e.userFloat("miniAbsIsoNeutral");
+
+      jet_pt_rel_ = e.userFloat("nearestJetPtRel");
+      jet_pt_ratio_ = e.userFloat("nearestJetPtRatio");
+      jet_csv_ = e.userFloat("nearestJetCsv");
+
+      sip3d_ = e.userFloat("sip3D");
+      lep_mva_ = e.userFloat("leptonMVA");
    }
 
-   Lepton::Lepton(const pat::Muon& m, float rel_iso, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles) :
+   Lepton::Lepton(const pat::Muon& m, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles) :
       PhysObject(m),
       type_(Lepton::mu),
       charge_check_(false),
       impact_parameter_(m.dB(pat::Muon::PV3D)),
-      impact_parameter_error_(m.edB(pat::Muon::PV3D)),
-      rel_iso_(rel_iso)
+      impact_parameter_error_(m.edB(pat::Muon::PV3D))
    {
       getMatch(m, particles);
       setGenInfo(m.genParticle());
@@ -220,6 +229,17 @@ namespace superslim {
       cut_ = getID("Cut", m);
       mva_ = getID("MVA", m);
       lj_ = getID("LJ", m);
+
+      iso_rel_ = m.userFloat("miniIso");
+      iso_charged_ = m.userFloat("miniAbsIsoCharged");
+      iso_neutral_ = m.userFloat("miniAbsIsoNeutral");
+
+      jet_pt_rel_ = m.userFloat("nearestJetPtRel");
+      jet_pt_ratio_ = m.userFloat("nearestJetPtRatio");
+      jet_csv_ = m.userFloat("nearestJetCsv");
+
+      sip3d_ = m.userFloat("sip3D");
+      lep_mva_ = m.userFloat("leptonMVA");
    }
 
    template<typename T>
