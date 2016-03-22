@@ -2,6 +2,10 @@ import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 
 options = VarParsing.VarParsing('analysis')
+options.register("filter", True,
+        VarParsing.VarParsing.multiplicity.singleton,
+        VarParsing.VarParsing.varType.bool,
+        "Filter untriggered events")
 options.register("data", False,
         VarParsing.VarParsing.multiplicity.singleton,
         VarParsing.VarParsing.varType.bool,
@@ -61,23 +65,18 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         electrons = cms.InputTag("ttHLeptons"),
         muons = cms.InputTag("ttHLeptons"),
         taus = cms.InputTag("ttHLeptons"),
-        leptons = cms.VPSet(
-            cms.PSet(
-                leptons = cms.int32(1),
-                taus = cms.int32(2)
-            ),
-            cms.PSet(
-                leptons = cms.int32(2),
-                taus = cms.int32(1)
-            )
-        ),
-        minJets = cms.uint32(2),
-        minTags = cms.uint32(1),
+        minTaus = cms.uint32(0),
+        maxTaus = cms.uint32(2),
+        minLeptons = cms.uint32(0),
+        maxLeptons = cms.uint32(9999),
+        minJets = cms.uint32(0),
+        minTags = cms.uint32(0),
         maxTags = cms.int32(-1),
         minJetPt = cms.double(25.),
         minTagPt = cms.double(25.),
         maxJetEta = cms.double(2.4),
         filterPUJets = cms.bool(False),
+        filterTrigger = cms.bool(options.filter),
         printPreselection = cms.bool(False),
         triggerSingleE = cms.vstring("HLT_Ele27_eta2p1_WPLoose_Gsf_v" if options.data else "HLT_Ele27_WPLoose_Gsf_v"),
         triggerSingleMu = cms.vstring("HLT_IsoMu18_v" if options.data else "HLT_IsoMu17_eta2p1_v"),

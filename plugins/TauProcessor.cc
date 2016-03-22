@@ -132,11 +132,6 @@ get_non_pileup(const pat::JetCollection& jets)
    return res;
 }
 
-struct LeptonCounts {
-   int leptons;
-   int taus;
-};
-
 class TauProcessor : public edm::EDAnalyzer {
    public:
       explicit TauProcessor(const edm::ParameterSet&);
@@ -160,6 +155,11 @@ class TauProcessor : public edm::EDAnalyzer {
 
       bool data_;
 
+      unsigned int min_leptons_;
+      unsigned int max_leptons_;
+      unsigned int min_taus_;
+      unsigned int max_taus_;
+
       unsigned int min_jets_;
       unsigned int min_tags_;
       int max_tags_;
@@ -168,9 +168,8 @@ class TauProcessor : public edm::EDAnalyzer {
       double min_tag_pt_;
       double max_jet_eta_;
 
-      std::vector<LeptonCounts> leptons_;
-
       bool filter_pu_jets_;
+      bool filter_trigger_;
 
       edm::EDGetTokenT<double> rho_token_;
       edm::EDGetTokenT<GenEventInfoProduct> geninfo_token_;
@@ -223,6 +222,10 @@ class TauProcessor : public edm::EDAnalyzer {
 
 TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    data_(config.getParameter<bool>("data")),
+   min_leptons_(config.getParameter<unsigned int>("minLeptons")),
+   max_leptons_(config.getParameter<unsigned int>("maxLeptons")),
+   min_taus_(config.getParameter<unsigned int>("minTaus")),
+   max_taus_(config.getParameter<unsigned int>("maxTaus")),
    min_jets_(config.getParameter<unsigned int>("minJets")),
    min_tags_(config.getParameter<unsigned int>("minTags")),
    max_tags_(config.getParameter<int>("maxTags")),
@@ -230,6 +233,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    min_tag_pt_(config.getParameter<double>("minTagPt")),
    max_jet_eta_(config.getParameter<double>("maxJetEta")),
    filter_pu_jets_(config.getParameter<bool>("filterPUJets")),
+   filter_trigger_(config.getParameter<bool>("filterTrigger")),
    event_(0),
    evt_list_(config.getParameter<std::vector<unsigned int>>("debugEvents")),
    m_triggerCache(
@@ -281,13 +285,6 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
          {"JESUp", sysType::JESup},
          {"JESDown", sysType::JESdown}
       };
-   }
-
-   for (const auto& pset: config.getParameter<std::vector<edm::ParameterSet>>("leptons")) {
-      LeptonCounts c;
-      c.leptons = pset.getParameter<int>("leptons");
-      c.taus = pset.getParameter<int>("taus");
-      leptons_.push_back(c);
    }
 
    superslim::Trigger::set_single_e_triggers(config.getParameter<std::vector<std::string>>("triggerSingleE"));
@@ -384,10 +381,10 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
       if ((*m_triggerSelector)(m_triggerCache)) {
          passCut(event_cut++, "HLT selection");
-      } else {
+      } else if (filter_trigger_) {
          return;
       }
-   } else {
+   } else if (filter_trigger_) {
       return;
    }
 
@@ -480,9 +477,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
    // cut index bitmap
    int passed = 0;
 
-   for (const auto& conf: leptons_) {
-      int combo_cut = 0;
-
+   for (unsigned int nleptons = min_leptons_; nleptons <= std::min((unsigned int) all_leptons.size(), max_leptons_); ++nleptons) {
       // auto leptons = removeOverlap(all_leptons, taus, .4);
       auto leptons = all_leptons;
       auto selected_taus = removeOverlap(all_taus, leptons, .4);
@@ -491,16 +486,18 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       // the possible lepton ids
       bool take_leptons = false;
       for (const auto& id_: {superslim::Lepton::Cut, superslim::Lepton::MVA, superslim::Lepton::LJ}) {
-         if (conf.leptons == std::count_if(leptons.begin(), leptons.end(),
+         if (nleptons == std::count_if(leptons.begin(), leptons.end(),
                   [&](const auto& l) { return l.preselected(id_); }))
             take_leptons = true;
       }
       if (not take_leptons)
          continue;
 
-      passComboCut(event_cut, combo_cut++, passed, "Leptons in combo");
+      passComboCut(event_cut, 0, passed, "Leptons in combo");
 
-      for (const auto& taus: build_permutations(selected_taus, conf.taus, conf.taus)) {
+      for (const auto& taus: build_permutations(selected_taus, min_taus_, max_taus_)) {
+         int combo_cut = 1;
+
          passComboCut(event_cut, combo_cut++, passed, "Taus in combo");
 
          bool pass_jets = false;
