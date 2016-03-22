@@ -2,10 +2,10 @@ import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 
 options = VarParsing.VarParsing('analysis')
-options.register("filter", True,
+options.register("takeAll", False,
         VarParsing.VarParsing.multiplicity.singleton,
         VarParsing.VarParsing.varType.bool,
-        "Filter untriggered events")
+        "Save as many events as possible")
 options.register("data", False,
         VarParsing.VarParsing.multiplicity.singleton,
         VarParsing.VarParsing.varType.bool,
@@ -76,7 +76,7 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         minTagPt = cms.double(25.),
         maxJetEta = cms.double(2.4),
         filterPUJets = cms.bool(False),
-        filterTrigger = cms.bool(options.filter),
+        takeAll = cms.bool(options.takeAll),
         printPreselection = cms.bool(False),
         triggerSingleE = cms.vstring("HLT_Ele27_eta2p1_WPLoose_Gsf_v" if options.data else "HLT_Ele27_WPLoose_Gsf_v"),
         triggerSingleMu = cms.vstring("HLT_IsoMu18_v" if options.data else "HLT_IsoMu17_eta2p1_v"),

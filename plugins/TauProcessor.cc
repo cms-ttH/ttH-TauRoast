@@ -169,7 +169,7 @@ class TauProcessor : public edm::EDAnalyzer {
       double max_jet_eta_;
 
       bool filter_pu_jets_;
-      bool filter_trigger_;
+      bool take_all_;
 
       edm::EDGetTokenT<double> rho_token_;
       edm::EDGetTokenT<GenEventInfoProduct> geninfo_token_;
@@ -233,7 +233,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    min_tag_pt_(config.getParameter<double>("minTagPt")),
    max_jet_eta_(config.getParameter<double>("maxJetEta")),
    filter_pu_jets_(config.getParameter<bool>("filterPUJets")),
-   filter_trigger_(config.getParameter<bool>("filterTrigger")),
+   take_all_(config.getParameter<bool>("takeAll")),
    event_(0),
    evt_list_(config.getParameter<std::vector<unsigned int>>("debugEvents")),
    m_triggerCache(
@@ -381,10 +381,10 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
       if ((*m_triggerSelector)(m_triggerCache)) {
          passCut(event_cut++, "HLT selection");
-      } else if (filter_trigger_) {
+      } else if (not take_all_) {
          return;
       }
-   } else if (filter_trigger_) {
+   } else if (not take_all_) {
       return;
    }
 
@@ -497,7 +497,13 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
       passComboCut(event_cut, 0, passed, "Leptons in combo");
 
-      for (const auto& taus: build_permutations(selected_taus, min_taus_, max_taus_)) {
+      std::vector<std::vector<superslim::Tau>> combinations;
+      if (take_all_)
+         combinations.push_back(selected_taus);
+      else
+         combinations = build_permutations(selected_taus, min_taus_, max_taus_);
+
+      for (const auto& taus: combinations) {
          int combo_cut = 1;
 
          passComboCut(event_cut, combo_cut++, passed, "Taus in combo");
