@@ -2,13 +2,19 @@ from ttH.TauRoast.botany import Leaf
 from ttH.TauRoast.processing import BasicProcess
 
 BasicProcess(
-    name="sync",
+    name="ttH",
     sample=9125,
-    fullname="Sync",
-    limitname="sync",
-    paths=['.'],
+    paths=['ttH'],
     cross_section=1,
     events=45140
+)
+
+BasicProcess(
+    name="ttjets",
+    sample=9126,
+    paths=['ttjets'],
+    cross_section=1,
+    events=41812
 )
 
 Leaf('nEvent', 'i', 'result = event.event()')
@@ -26,6 +32,14 @@ for i in range(2):
     Leaf('mu{}_dxy'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].dxy()'.format(i))
     Leaf('mu{}_dz'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].dz()'.format(i))
 
+    Leaf('mu{}_miniRelIso'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].relativeIsolation()'.format(i))
+    Leaf('mu{}_miniIsoCharged'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].chargedIsolation()'.format(i))
+    Leaf('mu{}_miniIsoNeutral'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].neutralIsolation()'.format(i))
+
+    Leaf('mu{}_jetPtRel'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].nearestJetRelativePt()'.format(i))
+    Leaf('mu{}_jetPtRatio'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].nearestJetRatioPt()'.format(i))
+    Leaf('mu{}_jetCSV'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].nearestJetCSV()'.format(i))
+
 for i in range(2):
     Leaf('ele{}_pt'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].p4().pt()'.format(i))
     Leaf('ele{}_eta'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].p4().eta()'.format(i))
@@ -34,6 +48,14 @@ for i in range(2):
     Leaf('ele{}_charge'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].charge()'.format(i))
     Leaf('ele{}_dxy'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].dxy()'.format(i))
     Leaf('ele{}_dz'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].dz()'.format(i))
+
+    Leaf('ele{}_miniRelIso'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].relativeIsolation()'.format(i))
+    Leaf('ele{}_miniIsoCharged'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].chargedIsolation()'.format(i))
+    Leaf('ele{}_miniIsoNeutral'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].neutralIsolation()'.format(i))
+
+    Leaf('ele{}_jetPtRel'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].nearestJetRelativePt()'.format(i))
+    Leaf('ele{}_jetPtRatio'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].nearestJetRatioPt()'.format(i))
+    Leaf('ele{}_jetCSV'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].nearestJetCSV()'.format(i))
 
 for i in range(1):
     Leaf('tau{}_pt'.format(i), 'f', 'result = len(taus) <= {0} ? -9999 : taus[{0}].p4().pt()'.format(i))

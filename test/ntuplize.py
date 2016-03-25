@@ -2,6 +2,7 @@ import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 
 options = VarParsing.VarParsing('analysis')
+options.outputFile = "test.root"
 options.register("takeAll", False,
         VarParsing.VarParsing.multiplicity.singleton,
         VarParsing.VarParsing.varType.bool,
@@ -34,7 +35,7 @@ process.source = cms.Source("PoolSource",
 
 process.TFileService = cms.Service("TFileService",
         closeFileFast = cms.untracked.bool(True),
-        fileName = cms.string("test.root")
+        fileName = cms.string(options.outputFile)
 )
 
 from JetMETCorrections.Configuration.JetCorrectionServices_cff import *

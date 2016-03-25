@@ -2,17 +2,18 @@
 
 channel: tll
 generator: pow
-ntupledir: .
-outdir: .
+ntupledir: test/sync_tau
+outdir: test/sync_tau/out
 sync: true
 
 lumi: 2517
 
 plot:
-  - sync
+  - ttH
+  - ttjets
 
 cuts:
-  - "Jets": "len(jets) >= 2"
+    - "e/μ quality": "all_of(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.selected(superslim::Lepton::Cut); })"
 
 weights: []
 systematics: NA
