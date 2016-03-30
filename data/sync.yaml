@@ -14,6 +14,7 @@ plot:
 
 cuts:
     - "e/μ quality": "all_of(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.selected(superslim::Lepton::Cut); })"
+    - "τ quality": "all_of(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolation3Hits05() >= superslim::id::Loose; })"
 
 weights: []
 systematics: NA

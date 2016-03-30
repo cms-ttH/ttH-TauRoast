@@ -20,7 +20,7 @@ BasicProcess(
 Leaf('nEvent', 'i', 'result = event.event()')
 Leaf('n_presel_mu', 'i', 'result = len(muons)')
 Leaf('n_presel_ele', 'i', 'result = len(electrons)')
-Leaf('n_presel_tau', 'i', 'result = len(all_taus)')
+Leaf('n_presel_tau', 'i', 'result = len(taus)')
 Leaf('n_presel_jet', 'i', 'result = len(jets)')
 
 for i in range(2):
