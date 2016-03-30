@@ -40,6 +40,9 @@ for i in range(2):
     Leaf('mu{}_jetPtRatio'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].nearestJetRatioPt()'.format(i))
     Leaf('mu{}_jetCSV'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].nearestJetCSV()'.format(i))
 
+    Leaf('mu{}_sip3D'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].sip3D()'.format(i))
+    Leaf('mu{}_leptonMVA'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].mvaRaw()'.format(i))
+
 for i in range(2):
     Leaf('ele{}_pt'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].p4().pt()'.format(i))
     Leaf('ele{}_eta'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].p4().eta()'.format(i))
@@ -56,6 +59,9 @@ for i in range(2):
     Leaf('ele{}_jetPtRel'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].nearestJetRelativePt()'.format(i))
     Leaf('ele{}_jetPtRatio'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].nearestJetRatioPt()'.format(i))
     Leaf('ele{}_jetCSV'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].nearestJetCSV()'.format(i))
+
+    Leaf('ele{}_sip3D'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].sip3D()'.format(i))
+    Leaf('ele{}_leptonMVA'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].mvaRaw()'.format(i))
 
 for i in range(1):
     Leaf('tau{}_pt'.format(i), 'f', 'result = len(taus) <= {0} ? -9999 : taus[{0}].p4().pt()'.format(i))
