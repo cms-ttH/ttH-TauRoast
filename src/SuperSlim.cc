@@ -274,6 +274,7 @@ namespace superslim {
       PhysObject(t),
       decay_mode_(t.decayMode()),
       prongs_(t.signalChargedHadrCands().size()),
+      selected_(t.userFloat("idNonIsolated")),
       leading_track_pt_(-1.0)
    {
       auto match = getMatch(t, particles);
@@ -309,14 +310,39 @@ namespace superslim {
       veto_muon_ = getID("againstMuon", "3", t);
    }
 
-   id::value Tau::getID(const std::string& prefix, const std::string& suffix, const pat::Tau& t) const {
-      for (const auto& _id: id::values) {
+   superslim::id::value Tau::getID(const std::string& prefix, const std::string& suffix, const pat::Tau& t) const {
+      for (const auto& _id: superslim::id::values) {
          std::string name = prefix + _id.first + suffix;
          if (t.isTauIDAvailable(name) and t.tauID(name) > .5)
             return _id.second;
       }
-      return id::None;
+      return superslim::id::None;
    };
+
+   bool Tau::selected(Tau::id id_, superslim::id::value min) const {
+      if (not selected_)
+         return false;
+
+      switch (id_) {
+         case Tau::All:
+            return isolation_3hits03_ >= min or isolation_3hits05_ >= min or isolation_mva03_ >= min or isolation_mva05_ >= min;
+            break;
+         case Tau::Iso3Hits05:
+            return isolation_3hits05_ >= min;
+            break;
+         case Tau::Iso3Hits03:
+            return isolation_3hits03_ >= min;
+            break;
+         case Tau::IsoMVA05:
+            return isolation_mva05_ >= min;
+            break;
+         case Tau::IsoMVA03:
+            return isolation_mva03_ >= min;
+            break;
+      };
+      return false;
+   };
+
 
    Combination::Combination(
          const std::vector<Tau>& taus,

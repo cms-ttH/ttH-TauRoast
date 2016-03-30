@@ -236,17 +236,16 @@ namespace superslim {
 
    class Tau : public PhysObject {
       public:
+         enum id { All, Iso3Hits05, Iso3Hits03, IsoMVA05, IsoMVA03 };
+
          Tau() {};
 #ifndef __CINT__
          Tau(const pat::Tau& t, const reco::Vertex& pv, const reco::GenParticleCollection& particles);
 #endif
          virtual ~Tau() {};
 
-         bool loose() const { return
-            isolation_3hits03_ > id::None or
-            isolation_3hits05_ > id::None or
-            isolation_mva03_ > id::None or
-            isolation_mva05_ > id::None; };
+         bool selected(Tau::id id_=Tau::All, superslim::id::value min=superslim::id::Preselected) const;
+         bool loose(Tau::id id_=Tau::All) const { return selected(id_, superslim::id::Loose); };
 
          int decayMode() const { return decay_mode_; };
          int isolation3Hits03() const { return isolation_3hits03_; };
@@ -266,18 +265,19 @@ namespace superslim {
          LorentzVector genVisibleP4() const { return gen_vis_p_; };
       private:
 #ifndef __CINT__
-         id::value getID(const std::string&, const std::string&, const pat::Tau&) const;
+         superslim::id::value getID(const std::string&, const std::string&, const pat::Tau&) const;
 #endif
 
          int decay_mode_;
          int prongs_;
 
-         id::value isolation_3hits03_;
-         id::value isolation_3hits05_;
-         id::value isolation_mva03_;
-         id::value isolation_mva05_;
-         id::value veto_electron_;
-         id::value veto_muon_;
+         bool selected_;
+         superslim::id::value isolation_3hits03_;
+         superslim::id::value isolation_3hits05_;
+         superslim::id::value isolation_mva03_;
+         superslim::id::value isolation_mva05_;
+         superslim::id::value veto_electron_;
+         superslim::id::value veto_muon_;
 
          float leading_track_pt_;
          float raw_isolation_3hits03_;
@@ -287,7 +287,7 @@ namespace superslim {
 
          LorentzVector gen_vis_p_;
 
-         ClassDef(Tau, 2);
+         ClassDef(Tau, 3);
    };
 
    class Combination {
