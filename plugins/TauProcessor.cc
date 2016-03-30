@@ -498,10 +498,15 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       passComboCut(event_cut, 0, passed, "Leptons in combo");
 
       std::vector<std::vector<superslim::Tau>> combinations;
-      if (take_all_)
-         combinations.push_back(selected_taus);
-      else
+      if (take_all_) {
+         for (const auto& id_: {superslim::Tau::Iso3Hits05, superslim::Tau::Iso3Hits03, superslim::Tau::IsoMVA03, superslim::Tau::IsoMVA05}) {
+            std::vector<superslim::Tau> selection;
+            std::copy_if(selected_taus.begin(), selected_taus.end(), std::back_inserter(selection), [&](const superslim::Tau& t) -> bool { return t.loose(id_); });
+            combinations.push_back(selection);
+         }
+      } else {
          combinations = build_permutations(selected_taus, min_taus_, max_taus_);
+      }
 
       for (const auto& taus: combinations) {
          int combo_cut = 1;
