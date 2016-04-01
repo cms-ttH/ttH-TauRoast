@@ -42,6 +42,7 @@ for i in range(2):
 
     Leaf('mu{}_sip3D'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].sip3D()'.format(i))
     Leaf('mu{}_leptonMVA'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].mvaRaw()'.format(i))
+    Leaf('mu{}_segmentCompatibility'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].segmentCompatibility()'.format(i))
 
 for i in range(2):
     Leaf('ele{}_pt'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].p4().pt()'.format(i))
@@ -63,7 +64,7 @@ for i in range(2):
     Leaf('ele{}_sip3D'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].sip3D()'.format(i))
     Leaf('ele{}_leptonMVA'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].mvaRaw()'.format(i))
 
-for i in range(1):
+for i in range(2):
     Leaf('tau{}_pt'.format(i), 'f', 'result = len(taus) <= {0} ? -9999 : taus[{0}].p4().pt()'.format(i))
     Leaf('tau{}_eta'.format(i), 'f', 'result = len(taus) <= {0} ? -9999 : taus[{0}].p4().eta()'.format(i))
     Leaf('tau{}_phi'.format(i), 'f', 'result = len(taus) <= {0} ? -9999 : taus[{0}].p4().phi()'.format(i))

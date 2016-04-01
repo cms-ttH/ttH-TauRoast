@@ -193,6 +193,7 @@ namespace superslim {
 
          float sip3D() const { return sip3d_; };
          float mvaRaw() const { return lep_mva_; };
+         float segmentCompatiblity() const { return seg_compat_; };
 
          int cut() const { return cut_; };
          int mva() const { return mva_; };
@@ -223,6 +224,8 @@ namespace superslim {
          float iso_charged_;
          float iso_neutral_;
 
+         float seg_compat_;
+
          int jet_nconst_;
          float jet_pt_rel_;
          float jet_pt_ratio_;
@@ -231,7 +234,7 @@ namespace superslim {
          float sip3d_;
          float lep_mva_;
 
-         ClassDef(Lepton, 4);
+         ClassDef(Lepton, 5);
    };
 
    class Tau : public PhysObject {

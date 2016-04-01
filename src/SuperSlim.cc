@@ -191,7 +191,8 @@ namespace superslim {
       type_(Lepton::e),
       charge_check_(e.isGsfCtfScPixChargeConsistent()),
       impact_parameter_(e.dB(pat::Electron::PV3D)),
-      impact_parameter_error_(e.edB(pat::Electron::PV3D))
+      impact_parameter_error_(e.edB(pat::Electron::PV3D)),
+      seg_compat_(-666.)
    {
       getMatch(e, particles);
       setGenInfo(e.genParticle());
@@ -217,7 +218,8 @@ namespace superslim {
       type_(Lepton::mu),
       charge_check_(false),
       impact_parameter_(m.dB(pat::Muon::PV3D)),
-      impact_parameter_error_(m.edB(pat::Muon::PV3D))
+      impact_parameter_error_(m.edB(pat::Muon::PV3D)),
+      seg_compat_(m.segmentCompatibility())
    {
       getMatch(m, particles);
       setGenInfo(m.genParticle());
