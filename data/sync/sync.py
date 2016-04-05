@@ -22,6 +22,8 @@ Leaf('n_presel_mu', 'i', 'result = len(muons)')
 Leaf('n_presel_ele', 'i', 'result = len(electrons)')
 Leaf('n_presel_tau', 'i', 'result = len(taus)')
 Leaf('n_presel_jet', 'i', 'result = len(jets)')
+Leaf('PFMET', 'f', 'result = met.pt()')
+Leaf('PFMETphi', 'f', 'result = met.phi()')
 
 for i in range(2):
     Leaf('mu{}_pt'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].p4().pt()'.format(i))
@@ -36,6 +38,7 @@ for i in range(2):
     Leaf('mu{}_miniIsoCharged'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].chargedIsolation()'.format(i))
     Leaf('mu{}_miniIsoNeutral'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].neutralIsolation()'.format(i))
 
+    Leaf('mu{}_jetNDauChargedMVASel'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].nearestJetConstituents()'.format(i))
     Leaf('mu{}_jetPtRel'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].nearestJetRelativePt()'.format(i))
     Leaf('mu{}_jetPtRatio'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].nearestJetRatioPt()'.format(i))
     Leaf('mu{}_jetCSV'.format(i), 'f', 'result = len(muons) <= {0} ? -9999 : muons[{0}].nearestJetCSV()'.format(i))
@@ -57,6 +60,7 @@ for i in range(2):
     Leaf('ele{}_miniIsoCharged'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].chargedIsolation()'.format(i))
     Leaf('ele{}_miniIsoNeutral'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].neutralIsolation()'.format(i))
 
+    Leaf('ele{}_jetNDauChargedMVASel'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].nearestJetConstituents()'.format(i))
     Leaf('ele{}_jetPtRel'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].nearestJetRelativePt()'.format(i))
     Leaf('ele{}_jetPtRatio'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].nearestJetRatioPt()'.format(i))
     Leaf('ele{}_jetCSV'.format(i), 'f', 'result = len(electrons) <= {0} ? -9999 : electrons[{0}].nearestJetCSV()'.format(i))
