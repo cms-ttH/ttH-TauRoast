@@ -40,7 +40,6 @@ Afterwards, clone these repositories in the CMSSW source area:
     git clone git@github.com:cms-ttH/MiniAOD.git
     git clone git@github.com:cms-ttH/ttH-LeptonID.git ttH/LeptonID
     git clone git@github.com:cms-ttH/ttH-TauRoast.git ttH/TauRoast
-    git clone git@github.com:cms-ttH/ttH-13TeVMultiLeptons.git
 
 and add some CMS dependencies for TTL:
 
