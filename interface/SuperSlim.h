@@ -193,7 +193,7 @@ namespace superslim {
 
          float sip3D() const { return sip3d_; };
          float mvaRaw() const { return lep_mva_; };
-         float segmentCompatiblity() const { return seg_compat_; };
+         float segmentCompatibility() const { return seg_compat_; };
 
          int cut() const { return cut_; };
          int mva() const { return mva_; };
