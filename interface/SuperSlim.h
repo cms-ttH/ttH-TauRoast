@@ -166,7 +166,7 @@ namespace superslim {
 
    class Lepton : public PhysObject {
       public:
-         enum id { All, Cut, MVA, LJ };
+         enum id { All, Fakeable, Cut, MVA, LJ };
 
          Lepton() {};
 #ifndef __CINT__
@@ -195,6 +195,7 @@ namespace superslim {
          float mvaRaw() const { return lep_mva_; };
          float segmentCompatibility() const { return seg_compat_; };
 
+         int fakeable() const { return fakeable_; };
          int cut() const { return cut_; };
          int mva() const { return mva_; };
          int lj() const { return lj_; };
@@ -206,13 +207,14 @@ namespace superslim {
       private:
 #ifndef __CINT__
          template<typename T>
-         superslim::id::value getID(const std::string&, const T&) const;
+         superslim::id::value getID(const std::string&, const T&, bool=false) const;
 #endif
 
          enum kind { e, mu } type_;
 
          bool charge_check_;
 
+         superslim::id::value fakeable_;
          superslim::id::value cut_;
          superslim::id::value mva_;
          superslim::id::value lj_;
@@ -234,7 +236,7 @@ namespace superslim {
          float sip3d_;
          float lep_mva_;
 
-         ClassDef(Lepton, 5);
+         ClassDef(Lepton, 6);
    };
 
    class Tau : public PhysObject {
@@ -298,7 +300,6 @@ namespace superslim {
          Combination() {};
          Combination(
                const std::vector<superslim::Tau>&,
-               const std::vector<superslim::Tau>&,
                const std::vector<superslim::Lepton>&,
                const std::map<std::string, std::vector<superslim::Jet>>&,
                const std::map<std::string, LorentzVector>& met);
@@ -309,7 +310,6 @@ namespace superslim {
          const std::vector<superslim::Lepton>& electrons() const { return electrons_; };
          const std::vector<superslim::Lepton>& muons() const { return muons_; };
          const std::vector<superslim::Tau>& taus() const { return taus_; };
-         const std::vector<superslim::Tau>& all_taus() const { return taus_all_; };
          const LorentzVector& met(const std::string& s="NA") const { return met_.find(s)->second; };
          const std::map<std::string, float>& weights() const { return weights_; };
 
@@ -320,12 +320,11 @@ namespace superslim {
          std::vector<superslim::Lepton> electrons_;
          std::vector<superslim::Lepton> muons_;
          std::vector<superslim::Tau> taus_;
-         std::vector<superslim::Tau> taus_all_;
          std::map<std::string, LorentzVector> met_;
 
          std::map<std::string, float> weights_;
 
-         ClassDef(Combination, 5);
+         ClassDef(Combination, 6);
    };
 
    class Trigger {
@@ -373,6 +372,8 @@ namespace superslim {
          Event() {};
 #ifndef __CINT__
          Event(const std::vector<superslim::Combination>& cs,
+               const std::vector<superslim::Tau>&,
+               const std::vector<superslim::Lepton>&,
                long run, long lumi, long event,
                int npv, int ntv,
                const std::vector<superslim::Vertex>& pv,
@@ -383,6 +384,8 @@ namespace superslim {
          virtual ~Event() {};
 
          const std::vector<superslim::Combination>& combos() const { return combos_; };
+         const std::vector<superslim::Lepton>& leptons() const { return leptons_; };
+         const std::vector<superslim::Tau>& taus() const { return taus_; };
          const std::map<std::string, float>& weights() const { return weights_; };
 
          long run() const { return run_; };
@@ -403,6 +406,9 @@ namespace superslim {
          void setWeight(const std::string& s, float f) { weights_[s] = f; };
       private:
          std::vector<superslim::Combination> combos_;
+         std::vector<superslim::Tau> taus_;
+         std::vector<superslim::Lepton> leptons_;
+
          std::map<std::string, float> weights_;
 
          long run_;
@@ -418,7 +424,7 @@ namespace superslim {
          std::vector<superslim::Vertex> pv_;
          superslim::Trigger trigger_;
 
-         ClassDef(Event, 5);
+         ClassDef(Event, 6);
    };
 
    bool operator<(const PhysObject& lhs, const PhysObject& rhs);

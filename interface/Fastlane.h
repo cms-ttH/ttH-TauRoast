@@ -118,7 +118,7 @@ namespace fastlane {
 
          void grow(TTree& t) { t.Branch(name_.c_str(), &val_); };
          virtual void pick(const superslim::Event& e, const superslim::Combination& c, std::unordered_map<std::string, double>& w, const std::string& sys) override {
-            fct_(e, c.taus(), c.all_taus(), c.leptons(), c.electrons(), c.muons(), c.jets(sys), c.met(sys), w, val_);
+            fct_(e, c.taus(), e.taus(), c.leptons(), c.electrons(), c.muons(), c.jets(sys), c.met(sys), w, val_);
          };
 
       private:

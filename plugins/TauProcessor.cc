@@ -554,7 +554,7 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
          passComboCut(event_cut, combo_cut++, passed, "Jet requirements");
          passComboCut(event_cut, combo_cut++, passed, "Ntuple");
 
-         auto c = superslim::Combination(taus, selected_taus, leptons, sjets, smets);
+         auto c = superslim::Combination(taus, leptons, sjets, smets);
          combos.push_back(c);
       }
    }
@@ -598,6 +598,8 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
       std::auto_ptr<superslim::Event> ptr(new superslim::Event(
                combos,
+               all_taus,
+               all_leptons,
                event.id().run(), event.id().luminosityBlock(), event.id().event(),
                npv, ntv, pv,
                category,

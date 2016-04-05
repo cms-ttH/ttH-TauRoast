@@ -197,8 +197,9 @@ namespace superslim {
       getMatch(e, particles);
       setGenInfo(e.genParticle());
 
-      cut_ = getID("Cut", e);
-      mva_ = getID("MVA", e);
+      fakeable_ = getID("Fakeable", e);
+      cut_ = getID("CutBased", e);
+      mva_ = getID("MVABased", e);
       lj_ = getID("LJ", e);
 
       iso_rel_ = e.userFloat("miniIso");
@@ -228,6 +229,7 @@ namespace superslim {
          charge_check_ = m.innerTrack()->ptError() / m.innerTrack()->pt() < .2;
       }
 
+      fakeable_ = getID("Fakeable", m);
       cut_ = getID("Cut", m);
       mva_ = getID("MVA", m);
       lj_ = getID("LJ", m);
@@ -245,11 +247,20 @@ namespace superslim {
    }
 
    template<typename T>
-   id::value Lepton::getID(const std::string& suffix, const T& t) const {
-      for (const auto& _id: superslim::id::values) {
-         std::string name = "id" + _id.first + (_id.first == "Preselection" ? "" : suffix);
+   id::value Lepton::getID(const std::string& suffix, const T& t, bool range) const {
+      if (range) {
+         for (const auto& _id: superslim::id::values) {
+            std::string name = "id" + _id.first + (_id.first == "Preselection" ? "" : suffix);
+            if (t.hasUserFloat(name) and t.userFloat(name) > .5)
+               return _id.second;
+         }
+      } else {
+         std::string name = "id" + suffix;
          if (t.hasUserFloat(name) and t.userFloat(name) > .5)
-            return _id.second;
+            return superslim::id::Loose;
+         name = "idPreselection";
+         if (t.hasUserFloat(name) and t.userFloat(name) > .5)
+            return superslim::id::Preselected;
       }
       return superslim::id::None;
    };
@@ -258,6 +269,9 @@ namespace superslim {
       switch (id_) {
          case Lepton::All:
             return cut_ >= min or mva_ >= min or lj_ >= min;
+            break;
+         case Lepton::Fakeable:
+            return fakeable_ >= min;
             break;
          case Lepton::Cut:
             return cut_ >= min;
@@ -348,14 +362,12 @@ namespace superslim {
 
    Combination::Combination(
          const std::vector<Tau>& taus,
-         const std::vector<Tau>& all_taus,
          const std::vector<Lepton>& leptons,
          const std::map<std::string, std::vector<Jet>>& jets,
          const std::map<std::string, LorentzVector>& met) :
       jets_(jets),
       leptons_(leptons),
       taus_(taus),
-      taus_all_(all_taus),
       met_(met)
    {
       for (const auto& l: leptons_) {
@@ -429,6 +441,8 @@ namespace superslim {
    }
 
    Event::Event(const std::vector<superslim::Combination>& cs,
+         const std::vector<superslim::Tau>& taus,
+         const std::vector<superslim::Lepton>& leps,
          long run, long lumi, long event,
          int npv, int ntv,
          const std::vector<superslim::Vertex>& pv,
@@ -436,6 +450,7 @@ namespace superslim {
          const superslim::Trigger& trigger,
          const reco::GenParticleCollection& genparticles) :
       combos_(cs),
+      taus_(taus), leptons_(leps),
       run_(run), lumi_(lumi), event_(event),
       npv_(npv), ntv_(ntv),
       hfcat_(category),
