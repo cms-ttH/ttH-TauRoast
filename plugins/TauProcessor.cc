@@ -485,9 +485,11 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       auto selected_taus = removeOverlap(all_taus, leptons, .4);
 
       // See if any of the surviving leptons get preselected by any of
-      // the possible lepton ids
+      // the possible lepton ids.
+      // Need to run over only two ids: the LJ and one of the multilepton
+      // ones, as the preselection stays the same for all multilepton IDs.
       bool take_leptons = false;
-      for (const auto& id_: {superslim::Lepton::Cut, superslim::Lepton::MVA, superslim::Lepton::LJ}) {
+      for (const auto& id_: {superslim::Lepton::Cut, superslim::Lepton::LJ}) {
          if (nleptons == std::count_if(leptons.begin(), leptons.end(),
                   [&](const auto& l) { return l.preselected(id_); }))
             take_leptons = true;
