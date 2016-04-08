@@ -37,7 +37,7 @@ First, create a CMSSW release and source the software environment:
 
 Afterwards, clone these repositories in the CMSSW source area:
 
-    git clone git@github.com:cms-ttH/MiniAOD.git
+    git clone -b CMSSW_7_6_3 git@github.com:cms-ttH/MiniAOD.git
     git clone git@github.com:cms-ttH/ttH-LeptonID.git ttH/LeptonID
     git clone git@github.com:cms-ttH/ttH-TauRoast.git ttH/TauRoast
 
@@ -53,7 +53,6 @@ and add some CMS dependencies for TTL:
     wget https://twiki.cern.ch/twiki/pub/CMSPublic/GenHFHadronMatcher/GenTtbarCategorizer_cfi.py.txt
     mv GenTtbarCategorizer_cfi.py.txt GenTtbarCategorizer_cfi.py
     cd -
-    ( cd MiniAOD; git merge origin/CMSSW_7_6_3 )
 
 then compile:
 
