@@ -243,6 +243,12 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
          edm::ConsumesCollector(consumesCollector())
    )
 {
+   // Override lepton counts if we're taking everything.
+   if (take_all_) {
+      min_leptons_ = 0;
+      max_leptons_ = 99999;
+   }
+
    rho_token_ = consumes<double>(edm::InputTag("fixedGridRhoFastjetAll"));
    geninfo_token_ = consumes<GenEventInfoProduct>(edm::InputTag("generator"));
    bs_token_ = consumes<reco::BeamSpot>(edm::InputTag("offlineBeamSpot"));
