@@ -206,6 +206,7 @@ namespace superslim {
       iso_charged_ = e.userFloat("miniAbsIsoCharged");
       iso_neutral_ = e.userFloat("miniAbsIsoNeutral");
 
+      jet_nconst_ = e.userFloat("nearestJetNDauCharged");
       jet_pt_rel_ = e.userFloat("nearestJetPtRel");
       jet_pt_ratio_ = e.userFloat("nearestJetPtRatio");
       jet_csv_ = e.userFloat("nearestJetCsv");
@@ -238,6 +239,7 @@ namespace superslim {
       iso_charged_ = m.userFloat("miniAbsIsoCharged");
       iso_neutral_ = m.userFloat("miniAbsIsoNeutral");
 
+      jet_nconst_ = m.userFloat("nearestJetNDauCharged");
       jet_pt_rel_ = m.userFloat("nearestJetPtRel");
       jet_pt_ratio_ = m.userFloat("nearestJetPtRatio");
       jet_csv_ = m.userFloat("nearestJetCsv");
