@@ -193,7 +193,14 @@ namespace superslim {
 
          float sip3D() const { return sip3d_; };
          float mvaRaw() const { return lep_mva_; };
+
          float segmentCompatibility() const { return seg_compat_; };
+         float relativePtError() const { return relative_pt_error_; };
+
+         bool consistentCharge() const { return consistent_charge_; };
+         bool passesConversionVeto() const { return conversion_veto_; };
+         float missingHits() const { return missing_hits_; };
+         float nonTriggeringId() const { return non_trig_id_; };
 
          int fakeable() const { return fakeable_; };
          int cut() const { return cut_; };
@@ -226,8 +233,6 @@ namespace superslim {
          float iso_charged_;
          float iso_neutral_;
 
-         float seg_compat_;
-
          int jet_nconst_;
          float jet_pt_rel_;
          float jet_pt_ratio_;
@@ -236,7 +241,18 @@ namespace superslim {
          float sip3d_;
          float lep_mva_;
 
-         ClassDef(Lepton, 6);
+         // electron specific
+         bool consistent_charge_;
+         bool conversion_veto_;
+         float missing_hits_;
+         float non_trig_id_;
+
+         // muon specific
+         float seg_compat_;
+         float relative_pt_error_;
+         bool medium_;
+
+         ClassDef(Lepton, 7);
    };
 
    class Tau : public PhysObject {

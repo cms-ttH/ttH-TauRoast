@@ -213,6 +213,11 @@ namespace superslim {
 
       sip3d_ = e.userFloat("sip3D");
       lep_mva_ = e.userFloat("leptonMVA");
+
+      consistent_charge_ = e.isGsfCtfScPixChargeConsistent();
+      conversion_veto_ = e.passConversionVeto();
+      missing_hits_ = e.userFloat("numMissingHits");
+      non_trig_id_ = e.userFloat("eleMvaId");
    }
 
    Lepton::Lepton(const pat::Muon& m, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles) :
@@ -221,13 +226,18 @@ namespace superslim {
       charge_check_(false),
       impact_parameter_(m.dB(pat::Muon::PV3D)),
       impact_parameter_error_(m.edB(pat::Muon::PV3D)),
-      seg_compat_(m.segmentCompatibility())
+      seg_compat_(m.segmentCompatibility()),
+      relative_pt_error_(-666.)
    {
       getMatch(m, particles);
       setGenInfo(m.genParticle());
 
       if (m.innerTrack().isAvailable()) {
          charge_check_ = m.innerTrack()->ptError() / m.innerTrack()->pt() < .2;
+      }
+
+      if (m.bestTrack()) {
+         relative_pt_error_ = m.bestTrack()->ptError() / m.bestTrack()->pt();
       }
 
       fakeable_ = getID("Fakeable", m);
@@ -246,6 +256,8 @@ namespace superslim {
 
       sip3d_ = m.userFloat("sip3D");
       lep_mva_ = m.userFloat("leptonMVA");
+      bool global = (m.isGlobalMuon() && m.userFloat("normalizedChiSq") < 3 && m.userFloat("localChiSq") < 12 && m.userFloat("trackKink") < 20);
+      medium_ = (m.userFloat("validFraction") >= 0.8 && m.segmentCompatibility() >= (global ? 0.303 : 0.451));
    }
 
    template<typename T>
