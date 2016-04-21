@@ -535,13 +535,20 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
             auto jets_no_taus = removeOverlap(jets_wo_lep, taus, .25);
             auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, max_jet_eta_, jetID::none, '-');
             auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'M');
+            auto selected_loose_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'L');
+
             if (filter_pu_jets_) {
                selected_jets = get_non_pileup(selected_jets);
                selected_tags = get_non_pileup(selected_tags);
+               selected_loose_tags = get_non_pileup(selected_loose_tags);
             };
 
-            if (selected_jets.size() >= min_jets_ and selected_tags.size() >= min_tags_)
+            if (selected_jets.size() >= min_jets_ and selected_tags.size() >= min_tags_) {
                pass_jets = true;
+            } else if (selected_jets.size() >= min_jets_ and selected_loose_tags.size() >= std::max(min_tags_, 2u)) {
+               pass_jets = true;
+               selected_tags = selected_loose_tags;
+            }
 
             if (max_tags_ < 0 or selected_tags.size() <= (unsigned int) max_tags_)
                pass_tags = true;
