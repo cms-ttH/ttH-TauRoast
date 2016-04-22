@@ -3,6 +3,10 @@ import FWCore.ParameterSet.VarParsing as VarParsing
 
 options = VarParsing.VarParsing('analysis')
 options.outputFile = "test.root"
+options.register("channel", "ttl",
+        VarParsing.VarParsing.multiplicity.singleton,
+        VarParsing.VarParsing.varType.string,
+        "Which analysis to run")
 options.register("takeAll", False,
         VarParsing.VarParsing.multiplicity.singleton,
         VarParsing.VarParsing.varType.bool,
@@ -61,18 +65,34 @@ if options.data:
 
 # process.load("ttH.LeptonID.ttHLeptons_cfi")
 
+min_jets = 2
+min_tags = 1
+max_tags = -1
+if options.channel == 'ttl':
+    min_taus = 2
+    max_taus = 2
+    min_leptons = 1
+    max_leptons = 1
+elif options.channel == 'tll':
+    min_taus = 0
+    max_taus = 1
+    min_leptons = 2
+    max_leptons = 2
+else:
+    raise ValueError("channel needs to be either tll or ttl")
+
 process.taus = cms.EDAnalyzer("TauProcessor",
         data = cms.bool(options.data),
         electrons = cms.InputTag("ttHLeptons"),
         muons = cms.InputTag("ttHLeptons"),
         taus = cms.InputTag("ttHLeptons"),
-        minTaus = cms.uint32(1),
-        maxTaus = cms.uint32(2),
-        minLeptons = cms.uint32(1),
-        maxLeptons = cms.uint32(2),
-        minJets = cms.uint32(0),
-        minTags = cms.uint32(0),
-        maxTags = cms.int32(-1),
+        minTaus = cms.uint32(min_taus),
+        maxTaus = cms.uint32(max_taus),
+        minLeptons = cms.uint32(min_leptons),
+        maxLeptons = cms.uint32(max_leptons),
+        minJets = cms.uint32(min_jets),
+        minTags = cms.uint32(min_tags),
+        maxTags = cms.int32(max_tags),
         minJetPt = cms.double(25.),
         minTagPt = cms.double(25.),
         maxJetEta = cms.double(2.4),
