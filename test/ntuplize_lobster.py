@@ -3,7 +3,7 @@ from lobster.core import *
 
 from ttH.TauRoast.datasets import datasets
 
-version = "v26"
+version = "v27"
 
 storage = StorageConfiguration(
         output=[
@@ -60,7 +60,7 @@ for label, path in datasets:
             lumi_mask=mask
         ),
         category=category,
-        cmssw_config='ntuplize.py',
+        pset='ntuplize.py',
         arguments=params,
         merge_size='3.5G'
     ))
