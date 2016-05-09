@@ -56,7 +56,7 @@ for n in range(config.leptons):
     )
 
     Leaf('lep{0}_ip'.format(n + 1), 'f', 'result = abs(leptons[{0}].impactParameter())'.format(n))
-    Leaf('lep{0}_dz'.format(n + 1), 'f', 'result = abs(leptons[{0}].correctedDZ())'.format(n))
+    Leaf('lep{0}_dz'.format(n + 1), 'f', 'result = abs(leptons[{0}].dz())'.format(n))
     Leaf('lep{0}_reliso'.format(n + 1), 'f', 'result = abs(leptons[{0}].relativeIsolation())'.format(n))
 
     # ID
