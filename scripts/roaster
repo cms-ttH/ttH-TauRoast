@@ -33,6 +33,9 @@ ag.add_argument('--debug-cuts', action='store_true', default=False,
 
 args = parser.parse_args()
 
+if 'LOCALRT' not in os.environ:
+    parser.error("need to do a `cmsenv` first")
+
 if not any([args.analyze, args.fill, args.plot]):
     parser.error("need to either analyze, fill, or plot")
 
