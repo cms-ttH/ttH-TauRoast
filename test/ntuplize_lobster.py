@@ -10,7 +10,7 @@ storage = StorageConfiguration(
             "hdfs:///store/user/matze/ttH/" + version,
             "file:///hadoop/store/user/matze/ttH/" + version,
             "root://ndcms.crc.nd.edu//store/user/matze/ttH/" + version,
-            # "srm://T3_US_NotreDame/store/user/matze/ttH/" + version,
+            "srm://T3_US_NotreDame/store/user/matze/ttH/" + version,
             "chirp://earth.crc.nd.edu:9666/ttH/" + version
         ]
 )
@@ -18,36 +18,30 @@ storage = StorageConfiguration(
 data = Category(
         name='data',
         cores=1,
-        disk=500,
-        runtime=30 * 60,
-        memory=1500
+        runtime=30 * 60
 )
 
 tth = Category(
         name='ttH',
         cores=1,
-        disk=500,
-        runtime=30 * 60,
-        memory=1800
+        runtime=30 * 60
 )
 
 mc = Category(
         name='mc',
         cores=1,
-        disk=500,
-        runtime=30 * 60,
-        memory=1800
+        runtime=30 * 60
 )
 
 workflows = []
-for label, path in datasets:
+for label, path in datasets + datasets_2015D:
     mask = None
-    params = []
+    params = ['channel=ttl']
     category = mc
 
     if '2015' in label:
         mask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver_v2.txt'
-        params = ['data=True', 'globalTag=76X_dataRun2_v12']
+        params += ['data=True', 'globalTag=76X_dataRun2_v12']
         category = data
     elif label.startswith('ttH'):
         category = tth

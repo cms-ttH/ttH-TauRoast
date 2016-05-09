@@ -84,15 +84,21 @@ datasets = [
         # ("data_SingleE_2015D_Oct05"  , "/SingleElectron/Run2015D-05Oct2015-v1/MINIAOD")                                                                                                        ,
         # ("data_SingleMu_2015D_PR"    , "/SingleMuon/Run2015D-PromptReco-v4/MINIAOD")                                                                                                           ,
         # ("data_SingleMu_2015D_Oct05" , "/SingleMuon/Run2015D-05Oct2015-v1/MINIAOD")
-        ("data_SingleE_2015C_Dec16", "/SingleElectron/Run2015C_25ns-16Dec2015-v1/MINIAOD"),
-        ("data_SingleE_2015D_Dec04", "/SingleElectron/Run2015D-04Dec2015-v2/MINIAOD"),
-        ("data_SingleE_2015D_Dec16"    , "/SingleElectron/Run2015D-16Dec2015-v1/MINIAOD")                                                                                                        ,
-        ("data_SingleMu_2015C_Dec16", "/SingleMuon/Run2015C_25ns-16Dec2015-v1/MINIAOD"),
-        ("data_SingleMu_2015D_Dec16"   , "/SingleMuon/Run2015D-16Dec2015-v1/MINIAOD")                                                                                                            ,
-        ("data_DoubleMu_2015C_Dec16", "/DoubleMuon/Run2015C_25ns-16Dec2015-v1/MINIAOD"),
-        ("data_DoubleMu_2015D_Dec16", "/DoubleMuon/Run2015D-16Dec2015-v1/MINIAOD"),
-        ("data_DoubleEG_2015C_Dec16", "/DoubleEG/Run2015C_25ns-16Dec2015-v1/MINIAOD"),
-        ("data_DoubleEG_2015D_Dec16", "/DoubleEG/Run2015D-04Dec2015-v2/MINIAOD"),
-        ("data_MuonEG_2015C_Dec16", "/MuonEG/Run2015C_25ns-16Dec2015-v1/MINIAOD"),
-        ("data_MuonEG_2015D_Dec16", "/MuonEG/Run2015D-16Dec2015-v1/MINIAOD"),
+        # ("data_SingleE_2015D_Dec04", "/SingleElectron/Run2015D-04Dec2015-v2/MINIAOD"),
+]
+
+datasets_2015C = [
+        ("data_SingleE_2015C_Dec16"  , "/SingleElectron/Run2015C_25ns-16Dec2015-v1/MINIAOD") ,
+        ("data_SingleMu_2015C_Dec16" , "/SingleMuon/Run2015C_25ns-16Dec2015-v1/MINIAOD")     ,
+        ("data_DoubleMu_2015C_Dec16" , "/DoubleMuon/Run2015C_25ns-16Dec2015-v1/MINIAOD")     ,
+        ("data_DoubleEG_2015C_Dec16" , "/DoubleEG/Run2015C_25ns-16Dec2015-v1/MINIAOD")       ,
+        ("data_MuonEG_2015C_Dec16"   , "/MuonEG/Run2015C_25ns-16Dec2015-v1/MINIAOD")         ,
+]
+
+datasets_2015D = [
+        ("data_SingleE_2015D_Dec16"  , "/SingleElectron/Run2015D-16Dec2015-v1/MINIAOD") ,
+        ("data_SingleMu_2015D_Dec16" , "/SingleMuon/Run2015D-16Dec2015-v1/MINIAOD")     ,
+        ("data_DoubleMu_2015D_Dec16" , "/DoubleMuon/Run2015D-16Dec2015-v1/MINIAOD")     ,
+        ("data_DoubleEG_2015D_Dec16" , "/DoubleEG/Run2015D-16Dec2015-v2/MINIAOD")       ,
+        ("data_MuonEG_2015D_Dec16"   , "/MuonEG/Run2015D-16Dec2015-v1/MINIAOD")         ,
 ]
