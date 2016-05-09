@@ -2,9 +2,9 @@
 
 channel: ttl
 generator: pow
-ntupledir: /hadoop/store/user/matze/ttH/v26
+ntupledir: /hadoop/store/user/matze/ttH/v27
 # ntupledir: /scratch365/mwolf3/ttH/v25
-outdir: ~/www/ttH/v26
+outdir: ~/www/ttH/v27
 histformat: "{p}_{v}_TTL"
 
 lumi: 2517
@@ -31,6 +31,8 @@ limits:
 
 cuts:
   - "Trigger": "(leptons[0].electron() and event.trigger().single_e()) or (leptons[0].muon() and event.trigger().single_mu())"
+  - "e/μ quality": "len(leptons) == 1 and all_of(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.selected(superslim::Lepton::LJ); })"
+  - "τ quality": "len(taus) == 2 and all_of(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolation3Hits05() >= superslim::id::Loose; })"
   - "Jets": "len(jets) >= 2"
   - "Tags": "btags(jets) == 1 or btags(jets) == 2"
   - "ΔR(ττ)  > 0.5": "dR(taus[0], taus[1]) > 0.5"
