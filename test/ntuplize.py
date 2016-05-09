@@ -7,6 +7,10 @@ options.register("channel", "ttl",
         VarParsing.VarParsing.multiplicity.singleton,
         VarParsing.VarParsing.varType.string,
         "Which analysis to run")
+options.register("dataset", None,
+        VarParsing.VarParsing.multiplicity.singleton,
+        VarParsing.VarParsing.varType.string,
+        "Which dataset is being processed")
 options.register("takeAll", False,
         VarParsing.VarParsing.multiplicity.singleton,
         VarParsing.VarParsing.varType.bool,
@@ -68,16 +72,44 @@ if options.data:
 min_jets = 2
 min_tags = 1
 max_tags = -1
+
+trig_single_e = []
+trig_single_mu = []
+trig_double_eg = []
+trig_double_mu = []
+trig_mixed = []
+
 if options.channel == 'ttl':
     min_taus = 2
     max_taus = 2
     min_leptons = 1
     max_leptons = 1
+
+    trig_single_e = "HLT_Ele27_eta2p1_WPLoose_Gsf_v" if options.data else "HLT_Ele27_WPLoose_Gsf_v"
+    trig_single_mu = "HLT_IsoMu18_v" if options.data else "HLT_IsoMu17_eta2p1_v"
 elif options.channel == 'tll':
     min_taus = 0
     max_taus = 1
     min_leptons = 2
     max_leptons = 2
+
+    trig_double_eg = [
+            "HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v",
+            ("HLT_Ele23_WPLoose_Gsf_v" if options.data else "HLT_Ele23_CaloIdL_TrackIdL_IsoVL_v"),
+    ]
+    trig_double_mu = [
+            "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v",
+            "HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v",
+            "HLT_IsoMu20_v",
+            "HLT_IsoTkMu20_v"
+    ]
+    trig_mixed = [
+            "HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v",
+            "HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v",
+            "HLT_IsoMu20_v",
+            "HLT_IsoTkMu20_v",
+            ("HLT_Ele23_WPLoose_Gsf_v" if options.data else "HLT_Ele23_CaloIdL_TrackIdL_IsoVL_v")
+    ]
 else:
     raise ValueError("channel needs to be either tll or ttl")
 
@@ -99,25 +131,11 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         filterPUJets = cms.bool(False),
         takeAll = cms.bool(options.takeAll),
         printPreselection = cms.bool(False),
-        triggerSingleE = cms.vstring("HLT_Ele27_eta2p1_WPLoose_Gsf_v" if options.data else "HLT_Ele27_WPLoose_Gsf_v"),
-        triggerSingleMu = cms.vstring("HLT_IsoMu18_v" if options.data else "HLT_IsoMu17_eta2p1_v"),
-        triggerDoubleE = cms.vstring([
-            "HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v",
-            ("HLT_Ele23_WPLoose_Gsf_v" if options.data else "HLT_Ele23_CaloIdL_TrackIdL_IsoVL_v"),
-        ]),
-        triggerDoubleMu = cms.vstring([
-            "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v",
-            "HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v",
-            "HLT_IsoMu20_v",
-            "HLT_IsoTkMu20_v"
-        ]),
-        triggerMixed = cms.vstring([
-            "HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v",
-            "HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v",
-            "HLT_IsoMu20_v",
-            "HLT_IsoTkMu20_v",
-            ("HLT_Ele23_WPLoose_Gsf_v" if options.data else "HLT_Ele23_CaloIdL_TrackIdL_IsoVL_v")
-        ]),
+        triggerSingleE = cms.vstring(trig_single_e),
+        triggerSingleMu = cms.vstring(trig_single_mu),
+        triggerDoubleE = cms.vstring(trig_double_eg),
+        triggerDoubleMu = cms.vstring(trig_double_mu),
+        triggerMixed = cms.vstring(trig_mixed),
         debugEvents = cms.vuint32()
 )
 
