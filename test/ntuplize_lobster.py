@@ -1,17 +1,23 @@
 from lobster import cmssw
 from lobster.core import *
 
-from ttH.TauRoast.datasets import datasets
+from ttH.TauRoast.datasets import *
 
-version = "v27"
+channel = "tll"
+if channel == "tll":
+    version = "v1"
+elif channel == "ttl":
+    version = "v27"
+else:
+    raise ValueError("invalid channel '{}'".format(channel))
 
 storage = StorageConfiguration(
         output=[
-            "hdfs:///store/user/matze/ttH/" + version,
-            "file:///hadoop/store/user/matze/ttH/" + version,
-            "root://ndcms.crc.nd.edu//store/user/matze/ttH/" + version,
-            "srm://T3_US_NotreDame/store/user/matze/ttH/" + version,
-            "chirp://earth.crc.nd.edu:9666/ttH/" + version
+            "hdfs:///store/user/matze/ttH/{}/{}".format(channel, version),
+            "file:///hadoop/store/user/matze/ttH/{}/{}".format(channel, version),
+            "root://ndcms.crc.nd.edu//store/user/matze/ttH/{}/{}".format(channel, version),
+            "srm://T3_US_NotreDame/store/user/matze/ttH/{}/{}".format(channel, version),
+            "chirp://earth.crc.nd.edu:9666/ttH/{}/{}".format(channel, version)
         ]
 )
 
@@ -36,7 +42,7 @@ mc = Category(
 workflows = []
 for label, path in datasets + datasets_2015D:
     mask = None
-    params = ['channel=ttl']
+    params = ['channel=' + channel]
     category = mc
 
     if '2015' in label:
@@ -61,8 +67,8 @@ for label, path in datasets + datasets_2015D:
 
 config = Config(
         label='tau_' + version,
-        workdir='/tmpscratch/users/matze/tau_' + version,
-        plotdir='/afs/crc.nd.edu/user/m/mwolf3/www/lobster/tau_' + version,
+        workdir='/tmpscratch/users/matze/tau_{}_{}'.format(channel, version),
+        plotdir='/afs/crc.nd.edu/user/m/mwolf3/www/lobster/tau_{}_{}'.format(channel, version),
         storage=storage,
         workflows=workflows,
         advanced=AdvancedOptions(log_level=1)
