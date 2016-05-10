@@ -15,7 +15,7 @@ storage = StorageConfiguration(
         output=[
             "hdfs:///store/user/matze/ttH/{}/{}".format(channel, version),
             "file:///hadoop/store/user/matze/ttH/{}/{}".format(channel, version),
-            "root://ndcms.crc.nd.edu//store/user/matze/ttH/{}/{}".format(channel, version),
+            "root://deepthought.crc.nd.edu//store/user/matze/ttH/{}/{}".format(channel, version),
             "srm://T3_US_NotreDame/store/user/matze/ttH/{}/{}".format(channel, version),
             "chirp://earth.crc.nd.edu:9666/ttH/{}/{}".format(channel, version)
         ]
