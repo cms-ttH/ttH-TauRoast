@@ -72,7 +72,7 @@ for label, path in datasets:
     ))
 
 config = Config(
-        label='tau_' + version,
+        label='tau_{}_{}'.format(channel, version),
         workdir='/tmpscratch/users/matze/ttH/{}/{}'.format(channel, version),
         plotdir='/afs/crc.nd.edu/user/m/mwolf3/www/lobster/ttH/{}/{}'.format(channel, version),
         storage=storage,
