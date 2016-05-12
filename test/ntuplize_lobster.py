@@ -21,19 +21,19 @@ storage = StorageConfiguration(
 
 data = Category(
         name='data',
-        cores=1,
+        cores=2,
         runtime=30 * 60
 )
 
 tth = Category(
         name='ttH',
-        cores=1,
+        cores=2,
         runtime=30 * 60
 )
 
 mc = Category(
         name='mc',
-        cores=1,
+        cores=2,
         runtime=30 * 60
 )
 
