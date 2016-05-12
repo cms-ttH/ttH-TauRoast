@@ -4,10 +4,8 @@ from lobster.core import *
 from ttH.TauRoast.datasets import *
 
 channel = "tll"
-if channel == "tll":
-    version = "v1"
-elif channel == "ttl":
-    version = "v27"
+version = "v28"
+
 else:
     raise ValueError("invalid channel '{}'".format(channel))
 
@@ -40,7 +38,15 @@ mc = Category(
 )
 
 workflows = []
-for label, path in datasets + datasets_2015D:
+datasets = sum(
+        [
+            datasets_ttH,
+            datasets_ttjets,
+            datasets_other,
+            datasets_2015D
+        ], []
+)
+for label, path in datasets:
     mask = None
     params = ['channel=' + channel]
     category = mc
@@ -67,8 +73,8 @@ for label, path in datasets + datasets_2015D:
 
 config = Config(
         label='tau_' + version,
-        workdir='/tmpscratch/users/matze/tau_{}_{}'.format(channel, version),
-        plotdir='/afs/crc.nd.edu/user/m/mwolf3/www/lobster/tau_{}_{}'.format(channel, version),
+        workdir='/tmpscratch/users/matze/ttH/{}/{}'.format(channel, version),
+        plotdir='/afs/crc.nd.edu/user/m/mwolf3/www/lobster/ttH/{}/{}'.format(channel, version),
         storage=storage,
         workflows=workflows,
         advanced=AdvancedOptions(log_level=1)
