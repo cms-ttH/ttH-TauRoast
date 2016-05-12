@@ -6,9 +6,6 @@ from ttH.TauRoast.datasets import *
 channel = "tll"
 version = "v28"
 
-else:
-    raise ValueError("invalid channel '{}'".format(channel))
-
 storage = StorageConfiguration(
         output=[
             "hdfs:///store/user/matze/ttH/{}/{}".format(channel, version),
