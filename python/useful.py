@@ -102,12 +102,14 @@ def code2cut(name, code):
         auto cut_{f} = fastlane::Cut("{n}", &fct_{f});
     """.format(n=name, f=stub, c=code)
     if not r.gInterpreter.Declare(chunck):
-        raise RuntimeError
+        raise RuntimeError("Can't compile:\n" + chunck)
     return getattr(r, 'cut_' + stub)
 
 def code2leaf(name, typename, code):
     stub = hashlib.sha1(code).hexdigest()[:7]
     chunck = """
+        #include "interface/Fastlane.h"
+
         void fct_{f}(const superslim::Event& event,
                 const std::vector<superslim::Tau>& taus,
                 const std::vector<superslim::Tau>& all_taus,
@@ -121,5 +123,5 @@ def code2leaf(name, typename, code):
         fastlane::Leaf<{t}> leaf_{f}("{n}", &fct_{f});
     """.format(n=name, f=stub, c=code, t=typename)
     if not r.gInterpreter.Declare(chunck):
-        raise RuntimeError
+        raise RuntimeError("Can't compile\n" + chunck)
     return getattr(r, 'leaf_' + stub)

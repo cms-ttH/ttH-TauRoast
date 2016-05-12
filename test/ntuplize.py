@@ -27,7 +27,12 @@ options.parseArguments()
 
 process = cms.Process("Taus")
 
-process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
+process.options = cms.untracked.PSet(
+        wantSummary = cms.untracked.bool(True),
+        numberOfThreads = cms.untracked.uint32(2),
+        numberOfStreams = cms.untracked.uint32(0)
+)
+
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = 2000
@@ -113,7 +118,7 @@ elif options.channel == 'tll':
 else:
     raise ValueError("channel needs to be either tll or ttl")
 
-process.taus = cms.EDAnalyzer("TauProcessor",
+process.taus = cms.EDProducer("TauProcessor",
         data = cms.bool(options.data),
         electrons = cms.InputTag("ttHLeptons"),
         muons = cms.InputTag("ttHLeptons"),
@@ -139,16 +144,24 @@ process.taus = cms.EDAnalyzer("TauProcessor",
         debugEvents = cms.vuint32()
 )
 
+process.writer = cms.EDAnalyzer("TauWriter",
+        input = cms.InputTag("taus")
+)
+
 process.load("RecoEgamma.ElectronIdentification.ElectronMVAValueMapProducer_cfi")
 process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
 process.load("ttH.LeptonID.ttHLeptons_cfi")
 process.load("ttH.TauRoast.genHadronMatching_cfi")
+
+process.dump = cms.EDAnalyzer("EventContentAnalyzer")
 
 if options.data:
     process.p = cms.Path(
             process.electronMVAValueMapProducer
             * process.ttHLeptons
             * process.taus
+            # * process.dump
+            * process.writer
     )
 else:
     process.p = cms.Path(
@@ -161,4 +174,6 @@ else:
             * process.electronMVAValueMapProducer
             * process.ttHLeptons
             * process.taus
+            # * process.dump
+            * process.writer
     )

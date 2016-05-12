@@ -21,12 +21,10 @@
 #include <memory>
 
 // user include files
-#include "CommonTools/UtilAlgos/interface/TFileService.h"
-
 #include "FWCore/Common/interface/TriggerNames.h"
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
-#include "FWCore/Framework/interface/EDAnalyzer.h"
+#include "FWCore/Framework/interface/one/EDProducer.h"
 
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
@@ -132,7 +130,7 @@ get_non_pileup(const pat::JetCollection& jets)
    return res;
 }
 
-class TauProcessor : public edm::EDAnalyzer {
+class TauProcessor : public edm::one::EDProducer<> {
    public:
       explicit TauProcessor(const edm::ParameterSet&);
       ~TauProcessor();
@@ -141,7 +139,7 @@ class TauProcessor : public edm::EDAnalyzer {
 
    private:
       virtual void beginJob() override;
-      virtual void analyze(const edm::Event&, const edm::EventSetup&) override;
+      virtual void produce(edm::Event&, const edm::EventSetup&) override;
       virtual void endJob() override;
 
       template<typename T1, typename T2>
@@ -189,8 +187,6 @@ class TauProcessor : public edm::EDAnalyzer {
       edm::EDGetTokenT<edm::ValueMap<float>> mva_val_token_;
       edm::EDGetTokenT<edm::ValueMap<int>> mva_cat_token_;
 
-      superslim::Event *event_;
-
       unsigned int evt_;
       std::vector<unsigned int> evt_list_;
 
@@ -213,11 +209,10 @@ class TauProcessor : public edm::EDAnalyzer {
       edm::EDGetTokenT<std::vector<int>> genCHadFromTopWeakDecayToken_;
       edm::EDGetTokenT<std::vector<int>> genCHadBHadronIdToken_;
 
-      TTree *tree_;
-      TH1F *cuts_;
-
       std::vector<std::string> cutnames_;
       std::map<std::string, sysType::sysType> systematics_;
+
+      std::auto_ptr<TH1F> cuts_;
 };
 
 TauProcessor::TauProcessor(const edm::ParameterSet& config) :
@@ -234,7 +229,6 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    max_jet_eta_(config.getParameter<double>("maxJetEta")),
    filter_pu_jets_(config.getParameter<bool>("filterPUJets")),
    take_all_(config.getParameter<bool>("takeAll")),
-   event_(0),
    evt_list_(config.getParameter<std::vector<unsigned int>>("debugEvents")),
    m_triggerCache(
          edm::InputTag("TriggerResults", "", "HLT"),
@@ -243,6 +237,9 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
          edm::ConsumesCollector(consumesCollector())
    )
 {
+   produces<superslim::Event>();
+   produces<TH1F>();
+
    // Override lepton counts if we're taking everything.
    if (take_all_) {
       min_leptons_ = 0;
@@ -303,12 +300,6 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    helper_.SetUp("2015_74x", 2500, analysisType::LJ, data_);
    helper_.SetJetCorrectorUncertainty();
    // helper_.SetFactorizedJetCorrector();
-
-   edm::Service<TFileService> fs;
-   tree_ = fs->make<TTree>("events", "Event data");
-   tree_->Branch("Event", "superslim::Event", &event_, 32000, 0);
-
-   cuts_ = fs->make<TH1F>("cuts", "Cut counts", 64, -0.5, 63.5);
 }
 
 
@@ -360,10 +351,11 @@ TauProcessor::passComboCut(unsigned int event_cut, unsigned int combo_cut, int& 
 
 
 void
-TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
+TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
 {
    using namespace edm;
 
+   cuts_.reset(new TH1F("cuts", "Cut counts", 64, -0.5, 63.5));
    evt_ = event.id().event();
 
    int event_cut = 0;
@@ -388,9 +380,11 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       if ((*m_triggerSelector)(m_triggerCache)) {
          passCut(event_cut++, "HLT selection");
       } else if (not take_all_) {
+         event.put(std::move(cuts_));
          return;
       }
    } else if (not take_all_) {
+      event.put(std::move(cuts_));
       return;
    }
 
@@ -410,13 +404,16 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
       } else if (first) {
          // first pv needs to pass cuts, otherwise RECO step is messed up
          // https://hypernews.cern.ch/HyperNews/CMS/get/csa14/85/1.html
+         event.put(std::move(cuts_));
          return;
       }
       first = false;
    }
 
-   if (npv == 0)
+   if (npv == 0) {
+      event.put(std::move(cuts_));
       return;
+   }
 
    // passed valid pv cut
    passCut(event_cut++, "Valid primary vertex");
@@ -623,9 +620,10 @@ TauProcessor::analyze(const edm::Event& event, const edm::EventSetup& setup)
 
       ptr->setWeight("Generator", genweight);
 
-      event_ = ptr.get();
-      tree_->Fill();
+      event.put(std::move(ptr));
    }
+
+   event.put(std::move(cuts_));
 }
 
 void

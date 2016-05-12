@@ -66,13 +66,6 @@ import ROOT as r
 
 r.gROOT.SetBatch()
 r.gErrorIgnoreLevel = 1001
-
-if r.gROOT.GetVersion().startswith('6'):
-    header = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'interface', 'SuperSlim.h')
-    r.gInterpreter.ProcessLine('#include "{0}"'.format(header))
-    header = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'interface', 'Fastlane.h')
-    r.gInterpreter.ProcessLine('#include "{0}"'.format(header))
-
 r.gSystem.Load("libttHTauRoast")
 
 from ttH.TauRoast import stylish, useful

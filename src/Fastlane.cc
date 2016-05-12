@@ -197,6 +197,6 @@ fastlane::process(const std::string& process, TChain& c, TTree& t, std::vector<f
    }
 }
 
-ClassImp(fastlane::BasicCut);
-ClassImp(fastlane::Cut);
-ClassImp(fastlane::StaticCut);
+// ClassImp(fastlane::BasicCut);
+// ClassImp(fastlane::Cut);
+// ClassImp(fastlane::StaticCut);

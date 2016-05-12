@@ -500,11 +500,11 @@ namespace superslim {
    }
 }
 
-ClassImp(superslim::Vertex);
-ClassImp(superslim::PhysObject);
-ClassImp(superslim::Jet);
-ClassImp(superslim::Lepton);
-ClassImp(superslim::Tau);
-ClassImp(superslim::Combination);
-ClassImp(superslim::Trigger);
-ClassImp(superslim::Event);
+// ClassImp(superslim::Vertex);
+// ClassImp(superslim::PhysObject);
+// ClassImp(superslim::Jet);
+// ClassImp(superslim::Lepton);
+// ClassImp(superslim::Tau);
+// ClassImp(superslim::Combination);
+// ClassImp(superslim::Trigger);
+// ClassImp(superslim::Event);

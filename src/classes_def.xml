@@ -1,0 +1,27 @@
+<lcgdict>
+	<function name="fastlane::process"/>
+	<class name="fastlane::Leaf<int>"/>
+	<class name="fastlane::Leaf<float>"/>
+	<class name="fastlane::Leaf<std::vector<int>>"/>
+	<class name="fastlane::Leaf<std::vector<float>>"/>
+	<class name="fastlane::Cut"/>
+	<class name="fastlane::BasicCut"/>
+	<class name="fastlane::StaticCut"/>
+	<class name="superslim::LorentzVector"/>
+	<class name="std::map<std::string, superslim::LorentzVector>"/>
+	<class name="superslim::PhysObject"/>
+	<class name="superslim::Vertex"/>
+	<class name="std::vector<superslim::Vertex>"/>
+	<class name="superslim::Jet"/>
+	<class name="std::vector<superslim::Jet>"/>
+	<class name="std::map<std::string, std::vector<superslim::Jet>>"/>
+	<class name="superslim::Lepton"/>
+	<class name="std::vector<superslim::Lepton>"/>
+	<class name="superslim::Tau"/>
+	<class name="std::vector<superslim::Tau>"/>
+	<class name="superslim::Combination"/>
+	<class name="std::vector<superslim::Combination>"/>
+	<class name="superslim::Trigger"/>
+	<class name="superslim::Event"/>
+	<class name="edm::Wrapper<superslim::Event>"/>
+</lcgdict>

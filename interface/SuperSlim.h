@@ -79,7 +79,7 @@ namespace superslim {
          float normalized_chi2_;
          int ndof_;
 
-         ClassDef(Vertex, 2);
+         // ClassDef(Vertex, 2);
    };
 
    class PhysObject {
@@ -145,7 +145,7 @@ namespace superslim {
          int pdg_id_;
          int gen_pdg_id_;
 
-         ClassDef(PhysObject, 3);
+         // ClassDef(PhysObject, 3);
    };
 
    class Jet : public PhysObject {
@@ -161,7 +161,7 @@ namespace superslim {
       private:
          float csv_;
          int flavor_;
-         ClassDef(Jet, 2);
+         // ClassDef(Jet, 2);
    };
 
    class Lepton : public PhysObject {
@@ -252,7 +252,7 @@ namespace superslim {
          float relative_pt_error_;
          bool medium_;
 
-         ClassDef(Lepton, 7);
+         // ClassDef(Lepton, 7);
    };
 
    class Tau : public PhysObject {
@@ -308,7 +308,7 @@ namespace superslim {
 
          LorentzVector gen_vis_p_;
 
-         ClassDef(Tau, 3);
+         // ClassDef(Tau, 3);
    };
 
    class Combination {
@@ -340,7 +340,7 @@ namespace superslim {
 
          std::map<std::string, float> weights_;
 
-         ClassDef(Combination, 6);
+         // ClassDef(Combination, 6);
    };
 
    class Trigger {
@@ -380,7 +380,7 @@ namespace superslim {
          static std::vector<std::string> triggers_double_mu_;
          static std::vector<std::string> triggers_mixed_;
 
-         ClassDef(Trigger, 2);
+         // ClassDef(Trigger, 2);
    };
 
    class Event {
@@ -440,7 +440,7 @@ namespace superslim {
          std::vector<superslim::Vertex> pv_;
          superslim::Trigger trigger_;
 
-         ClassDef(Event, 6);
+         // ClassDef(Event, 6);
    };
 
    bool operator<(const PhysObject& lhs, const PhysObject& rhs);

@@ -30,7 +30,7 @@ namespace fastlane {
       private:
          std::string name_;
 
-         ClassDef(fastlane::BasicCut, 1);
+         // ClassDef(fastlane::BasicCut, 1);
    };
 
    class Cut : public BasicCut {
@@ -63,7 +63,7 @@ namespace fastlane {
          event_t last_;
          PyObject *callback_;
 
-         ClassDef(fastlane::Cut, 1);
+         // ClassDef(fastlane::Cut, 1);
    };
 
    class StaticCut : public BasicCut {
@@ -77,7 +77,7 @@ namespace fastlane {
       private:
          std::unordered_map<std::string, double> counts_;
 
-         ClassDef(fastlane::StaticCut, 1);
+         // ClassDef(fastlane::StaticCut, 1);
    };
 
    class BasicLeaf {
@@ -94,7 +94,7 @@ namespace fastlane {
 
          static std::vector<BasicLeaf*> leaves_;
 
-         ClassDef(fastlane::BasicLeaf, 1);
+         // ClassDef(fastlane::BasicLeaf, 1);
    };
 
    template<typename T>
@@ -125,7 +125,7 @@ namespace fastlane {
          fct_t fct_;
          T val_;
 
-         ClassDef(fastlane::Leaf<T>, 1);
+         // ClassDef(fastlane::Leaf<T>, 1);
    };
 
    template<> void Leaf<std::vector<float>>::pick(const superslim::Event& e, const superslim::Combination& c, std::unordered_map<std::string, double>& w, const std::string& sys);

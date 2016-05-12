@@ -94,7 +94,7 @@ class BasicProcess(Process):
             for fn in glob.glob(os.path.join(basedir, p, NTUPLE_GLOB)):
                 try:
                     f = r.TFile(fn)
-                    h = f.Get("taus/cuts")
+                    h = f.Get("writer/cuts")
                     h.SetDirectory(0)
                     f.Close()
                     if hist is None:
@@ -132,7 +132,7 @@ class BasicProcess(Process):
             w[self] = 0
 
         tree = Tree(filename, self)
-        chain = r.TChain("taus/events")
+        chain = r.TChain("writer/events")
         for p in self.__paths:
             chain.Add(os.path.join(basedir, p, NTUPLE_GLOB))
 
