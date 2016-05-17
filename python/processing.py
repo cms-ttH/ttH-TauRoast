@@ -7,6 +7,8 @@ import time
 import ROOT as r
 r.gSystem.Load("libttHTauRoast")
 
+from DataFormats.FWLite import Events, Handle, Runs
+
 from ttH.TauRoast.botany import Tree
 from ttH.TauRoast.useful import code2cut
 
@@ -77,8 +79,6 @@ class BasicProcess(Process):
                 self.__sample, self.__cross_section, self.__add_cuts)
 
     def analyze(self, filename, counts, cuts, weights, systematics, basedir, limit=-1, debug=False):
-        logging.info("processing {}".format(self))
-
         if str(self).startswith("collisions"):
             systematics = "NA"
 
@@ -89,27 +89,26 @@ class BasicProcess(Process):
             for i, cut in enumerate(cuts):
                 cut.callback(SyncSaver(os.path.join(os.path.dirname(filename), "cut_{0}_{1}.txt".format(self, i)), systematics))
 
+        files = sum([glob.glob(os.path.join(basedir, p, NTUPLE_GLOB)) for p in self.__paths], [])
         hist = None
-        for p in self.__paths:
-            for fn in glob.glob(os.path.join(basedir, p, NTUPLE_GLOB)):
-                try:
-                    f = r.TFile(fn)
-                    h = f.Get("writer/cuts")
-                    h.SetDirectory(0)
-                    f.Close()
-                    if hist is None:
-                        hist = h
-                    else:
-                        for n in range(hist.GetNbinsX()):
-                            label = hist.GetXaxis().GetBinLabel(n+1)
-                            h.GetXaxis().SetBinLabel(n+1, label)
-                        hist.Add(h)
-                except AttributeError as e:
-                    logging.error("could not process {0}".format(fn))
-                    raise
+        handle = Handle("TH1F")
+        for run in Runs(files):
+            if not run.getByLabel("taus", handle):
+                logging.error("could not find cutflow histogram")
+                continue
+
+            if hist is None:
+                hist = handle.product()
+                hist.SetDirectory(0)
+            else:
+                for n in range(hist.GetNbinsX()):
+                    label = handle.product().GetXaxis().GetBinLabel(n+1)
+                    if label != "":
+                        hist.GetXaxis().SetBinLabel(n+1, label)
+                hist.Add(handle.product())
 
         if hist is None:
-            raise IOError("No files found in '{0}'".format(os.path.join(basedir, p)))
+            raise IOError("Could not produce cutflow histogram from directory '{0}'".format(os.path.join(basedir, p)))
 
         if len(counts) == 0:
             counts.append(StaticCut("Dataset"))
@@ -132,9 +131,6 @@ class BasicProcess(Process):
             w[self] = 0
 
         tree = Tree(filename, self)
-        chain = r.TChain("writer/events")
-        for p in self.__paths:
-            chain.Add(os.path.join(basedir, p, NTUPLE_GLOB))
 
         ccuts = r.std.vector('fastlane::Cut*')()
         for c in cuts:
@@ -142,13 +138,14 @@ class BasicProcess(Process):
         cweights = r.std.vector('fastlane::StaticCut*')()
         for c in weights:
             cweights.push_back(c.raw())
-
-        logging.info("events left to process: {0}".format(chain.GetEntries()))
+        cfiles = r.std.vector('std::string')()
+        for f in files:
+            cfiles.push_back(f)
 
         def log(i):
-            logging.info("processing event {0}".format(i))
+            logging.info("processing {0}, event {1}".format(str(self), i))
         now = time.clock()
-        r.fastlane.process(str(self), chain, tree.raw(), ccuts, cweights, systematics, log, limit);
+        r.fastlane.process(str(self), cfiles, tree.raw(), ccuts, cweights, systematics, log, limit);
         logging.debug("time spent processing: {0}".format(time.clock() - now))
 
     def process(self):

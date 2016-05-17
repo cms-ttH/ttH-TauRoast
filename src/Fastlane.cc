@@ -4,6 +4,9 @@
 #include "TPython.h"
 #include "TPyArg.h"
 
+#include "DataFormats/FWLite/interface/ChainEvent.h"
+#include "DataFormats/FWLite/interface/Handle.h"
+
 #include "MiniAOD/MiniAODHelper/interface/CSVHelper.h"
 #include "MiniAOD/MiniAODHelper/interface/PUWeightProducer.h"
 #include "ttH/TauRoast/interface/Fastlane.h"
@@ -141,19 +144,21 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
 }
 
 void
-fastlane::process(const std::string& process, TChain& c, TTree& t, std::vector<fastlane::Cut*>& cuts, std::vector<fastlane::StaticCut*>& weights, const std::string& sys, PyObject* log, int max)
+fastlane::process(const std::string& process, const std::vector<std::string>& files, TTree& t, std::vector<fastlane::Cut*>& cuts, std::vector<fastlane::StaticCut*>& weights, const std::string& sys, PyObject* log, int max)
 {
-   superslim::Event* e = 0;
-   c.SetBranchAddress("Event", &e);
+   fwlite::Handle<superslim::Event> handle;
+   fwlite::ChainEvent events(files);
 
-   for (unsigned int i = 0; i < c.GetEntries() and (max < 0 or i < (unsigned int) max); ++i) {
-      c.GetEntry(i);
-
+   int i = 0;
+   for (events.toBegin(); !events.atEnd() and (max < 0 or i < max); ++events, ++i) {
       if (i % 10000 == 0) {
          std::vector<TPyArg> args = {Int_t(i)};
          TPyArg::CallMethod(log, args);
       }
 
+      handle.getByLabel(events, "taus");
+
+      const auto e = handle.ptr();
       const auto& combos = e->combos();
       std::vector<superslim::Combination> passed;
       for (const auto& combo: combos) {
