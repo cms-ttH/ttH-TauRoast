@@ -37,10 +37,10 @@ mc = Category(
 workflows = []
 datasets = sum(
         [
-            datasets_ttH,
+            # datasets_ttH,
             datasets_ttjets,
-            datasets_other,
-            datasets_2015D
+            # datasets_other,
+            # datasets_2015D
         ], []
 )
 for label, path in datasets:

@@ -130,7 +130,7 @@ get_non_pileup(const pat::JetCollection& jets)
    return res;
 }
 
-class TauProcessor : public edm::one::EDProducer<> {
+class TauProcessor : public edm::one::EDProducer<edm::BeginRunProducer, edm::EndRunProducer> {
    public:
       explicit TauProcessor(const edm::ParameterSet&);
       ~TauProcessor();
@@ -138,7 +138,8 @@ class TauProcessor : public edm::one::EDProducer<> {
       static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
 
    private:
-      virtual void beginJob() override;
+      virtual void beginRunProduce(edm::Run&, const edm::EventSetup&) override;
+      virtual void endRunProduce(edm::Run&, const edm::EventSetup&) override;
       virtual void produce(edm::Event&, const edm::EventSetup&) override;
       virtual void endJob() override;
 
@@ -238,7 +239,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    )
 {
    produces<superslim::Event>();
-   produces<TH1F>();
+   produces<TH1F, edm::InRun>();
 
    // Override lepton counts if we're taking everything.
    if (take_all_) {
@@ -355,7 +356,6 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
 {
    using namespace edm;
 
-   cuts_.reset(new TH1F("cuts", "Cut counts", 64, -0.5, 63.5));
    evt_ = event.id().event();
 
    int event_cut = 0;
@@ -380,11 +380,9 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
       if ((*m_triggerSelector)(m_triggerCache)) {
          passCut(event_cut++, "HLT selection");
       } else if (not take_all_) {
-         event.put(std::move(cuts_));
          return;
       }
    } else if (not take_all_) {
-      event.put(std::move(cuts_));
       return;
    }
 
@@ -404,14 +402,12 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
       } else if (first) {
          // first pv needs to pass cuts, otherwise RECO step is messed up
          // https://hypernews.cern.ch/HyperNews/CMS/get/csa14/85/1.html
-         event.put(std::move(cuts_));
          return;
       }
       first = false;
    }
 
    if (npv == 0) {
-      event.put(std::move(cuts_));
       return;
    }
 
@@ -622,18 +618,26 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
 
       event.put(std::move(ptr));
    }
-
-   event.put(std::move(cuts_));
 }
 
 void
-TauProcessor::beginJob()
+TauProcessor::beginRunProduce(edm::Run& run, const edm::EventSetup& s)
 {
+   cuts_.reset(new TH1F("cuts", "Cut counts", 64, -0.5, 63.5));
+}
+
+void
+TauProcessor::endRunProduce(edm::Run& run, const edm::EventSetup& s)
+{
+   run.put(std::move(cuts_));
 }
 
 void
 TauProcessor::endJob()
 {
+   if (cuts_.get() != 0) {
+      edm::LogError("TauProcessor") << "Cut histogram still set!";
+   }
 }
 
 // ------------ method fills 'descriptions' with the allowed parameters for the module  ------------

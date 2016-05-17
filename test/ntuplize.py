@@ -46,10 +46,19 @@ process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(options.inputFiles)
 )
 
-process.TFileService = cms.Service("TFileService",
-        closeFileFast = cms.untracked.bool(True),
-        fileName = cms.string(options.outputFile)
+process.out = cms.OutputModule("PoolOutputModule",
+        fileName = cms.untracked.string(options.outputFile),
+        outputCommands = cms.untracked.vstring(['drop *', 'keep *_taus_*_*']),
+        SelectEvents = cms.untracked.PSet(
+            SelectEvents = cms.vstring('p')
+        ),
 )
+process.end = cms.EndPath(process.out)
+
+# process.TFileService = cms.Service("TFileService",
+#         closeFileFast = cms.untracked.bool(True),
+#         fileName = cms.string(options.outputFile)
+# )
 
 from JetMETCorrections.Configuration.JetCorrectionServices_cff import *
 
@@ -148,6 +157,10 @@ process.writer = cms.EDAnalyzer("TauWriter",
         input = cms.InputTag("taus")
 )
 
+process.selector = cms.EDFilter("TauSelector",
+        input = cms.InputTag("taus")
+)
+
 process.load("RecoEgamma.ElectronIdentification.ElectronMVAValueMapProducer_cfi")
 process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
 process.load("ttH.LeptonID.ttHLeptons_cfi")
@@ -161,7 +174,8 @@ if options.data:
             * process.ttHLeptons
             * process.taus
             # * process.dump
-            * process.writer
+            # * process.writer
+            * process.selector
     )
 else:
     process.p = cms.Path(
@@ -175,5 +189,6 @@ else:
             * process.ttHLeptons
             * process.taus
             # * process.dump
-            * process.writer
+            # * process.writer
+            * process.selector
     )
