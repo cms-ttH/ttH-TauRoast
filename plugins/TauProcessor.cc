@@ -481,7 +481,6 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
    for (unsigned int nleptons = min_leptons_; nleptons <= std::min((unsigned int) all_leptons.size(), max_leptons_); ++nleptons) {
       // auto leptons = removeOverlap(all_leptons, taus, .4);
       auto leptons = all_leptons;
-      auto selected_taus = removeOverlap(all_taus, leptons, .4);
 
       // See if any of the surviving leptons get preselected by any of
       // the possible lepton ids.
@@ -493,9 +492,11 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
                   [&](const auto& l) { return l.preselected(id_); }))
             take_leptons = true;
       }
+
       if (not take_leptons)
          continue;
 
+      auto selected_taus = removeOverlap(all_taus, leptons, .4);
       passComboCut(event_cut, 0, passed, "Leptons in combo");
 
       std::vector<std::vector<superslim::Tau>> combinations;
@@ -503,7 +504,13 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
          for (const auto& id_: {superslim::Tau::Iso3Hits05, superslim::Tau::Iso3Hits03, superslim::Tau::IsoMVA03, superslim::Tau::IsoMVA05}) {
             std::vector<superslim::Tau> selection;
             std::copy_if(selected_taus.begin(), selected_taus.end(), std::back_inserter(selection), [&](const superslim::Tau& t) -> bool { return t.loose(id_); });
-            combinations.push_back(selection);
+            if (selection.size() > 0)
+               combinations.push_back(selection);
+         }
+
+         // Do this only once!
+         if (combinations.size() == 0) {
+            combinations.push_back({});
          }
       } else {
          combinations = build_permutations(selected_taus, min_taus_, max_taus_);
@@ -556,8 +563,9 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
             smets[sys.first] = corrected_mets[0].p4();
          }
 
-         if (not (pass_jets and pass_tags))
+         if (not (pass_jets and pass_tags) and not take_all_) {
             continue;
+         }
 
          passComboCut(event_cut, combo_cut++, passed, "Jet requirements");
          passComboCut(event_cut, combo_cut++, passed, "Ntuple");
