@@ -7,7 +7,6 @@
 #include "Math/LorentzVector.h"
 #include "TObject.h"
 
-#ifndef __CINT__
 namespace edm {
    class TriggerNames;
    class TriggerResults;
@@ -27,7 +26,6 @@ namespace reco {
    typedef std::vector<GenParticle> GenParticleCollection;
    class Vertex;
 }
-#endif
 
 namespace superslim {
    namespace id {
@@ -49,9 +47,7 @@ namespace superslim {
    class Vertex {
       public:
          Vertex() {};
-#ifndef __CINT__
          Vertex(const reco::Vertex&);
-#endif
          virtual ~Vertex() {};
 
          float x() const { return x_; };
@@ -78,14 +74,11 @@ namespace superslim {
          float rho_;
          float normalized_chi2_;
          int ndof_;
-
-         // ClassDef(Vertex, 2);
    };
 
    class PhysObject {
       public:
          PhysObject() : p_() {};
-#ifndef __CINT__
          template<typename T>
          PhysObject(const T& c) :
             charge_(c.charge()),
@@ -101,7 +94,6 @@ namespace superslim {
                dz_ = c.userFloat("dz");
             }
          };
-#endif
          virtual ~PhysObject() {};
 
          const float eta() const { return p_.eta(); };
@@ -126,11 +118,9 @@ namespace superslim {
          int match() const { return match_; };
 
       protected:
-#ifndef __CINT__
          const reco::Candidate* getFinal(const reco::Candidate* c);
          const reco::GenParticle* getMatch(const reco::Candidate& c, const reco::GenParticleCollection& coll);
          void setGenInfo(const reco::GenParticle* p, int level=2);
-#endif
          int charge_;
 
          float dxy_;
@@ -144,16 +134,12 @@ namespace superslim {
          int match_;
          int pdg_id_;
          int gen_pdg_id_;
-
-         // ClassDef(PhysObject, 3);
    };
 
    class Jet : public PhysObject {
       public:
          Jet() {};
-#ifndef __CINT__
          Jet(const pat::Jet& j, const reco::GenParticleCollection& particles);
-#endif
          virtual ~Jet() {};
 
          float csv() const { return csv_; };
@@ -161,7 +147,6 @@ namespace superslim {
       private:
          float csv_;
          int flavor_;
-         // ClassDef(Jet, 2);
    };
 
    class Lepton : public PhysObject {
@@ -169,10 +154,8 @@ namespace superslim {
          enum id { All, Fakeable, Cut, MVA, LJ };
 
          Lepton() {};
-#ifndef __CINT__
          Lepton(const pat::Electron& e, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles);
          Lepton(const pat::Muon& m, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles);
-#endif
          virtual ~Lepton() {};
 
          bool electron() const { return type_ == e; };
@@ -212,10 +195,8 @@ namespace superslim {
          bool preselected(Lepton::id id_=Lepton::All) const { return selected(id_, superslim::id::Preselected); };
 
       private:
-#ifndef __CINT__
          template<typename T>
          superslim::id::value getID(const std::string&, const T&, bool=false) const;
-#endif
 
          enum kind { e, mu } type_;
 
@@ -251,8 +232,6 @@ namespace superslim {
          float seg_compat_;
          float relative_pt_error_;
          bool medium_;
-
-         // ClassDef(Lepton, 7);
    };
 
    class Tau : public PhysObject {
@@ -260,9 +239,7 @@ namespace superslim {
          enum id { All, Iso3Hits05, Iso3Hits03, IsoMVA05, IsoMVA03 };
 
          Tau() {};
-#ifndef __CINT__
          Tau(const pat::Tau& t, const reco::Vertex& pv, const reco::GenParticleCollection& particles);
-#endif
          virtual ~Tau() {};
 
          bool selected(Tau::id id_=Tau::All, superslim::id::value min=superslim::id::Preselected) const;
@@ -285,9 +262,7 @@ namespace superslim {
 
          LorentzVector genVisibleP4() const { return gen_vis_p_; };
       private:
-#ifndef __CINT__
          superslim::id::value getID(const std::string&, const std::string&, const pat::Tau&) const;
-#endif
 
          int decay_mode_;
          int prongs_;
@@ -307,8 +282,6 @@ namespace superslim {
          float raw_isolation_mva05_;
 
          LorentzVector gen_vis_p_;
-
-         // ClassDef(Tau, 3);
    };
 
    class Combination {
@@ -339,16 +312,12 @@ namespace superslim {
          std::map<std::string, LorentzVector> met_;
 
          std::map<std::string, float> weights_;
-
-         // ClassDef(Combination, 6);
    };
 
    class Trigger {
       public:
          Trigger() {};
-#ifndef __CINT__
          Trigger(const edm::TriggerResults&, const edm::TriggerNames&);
-#endif
          virtual ~Trigger() {};
 
          const bool single_e() const { return single_e_; };
@@ -365,9 +334,7 @@ namespace superslim {
 
          static std::string get_selection();
       private:
-#ifndef __CINT__
          bool fired(const edm::TriggerResults&, const edm::TriggerNames&, const std::vector<std::string>&);
-#endif
          bool single_e_;
          bool single_mu_;
          bool double_e_;
@@ -379,14 +346,11 @@ namespace superslim {
          static std::vector<std::string> triggers_double_e_;
          static std::vector<std::string> triggers_double_mu_;
          static std::vector<std::string> triggers_mixed_;
-
-         // ClassDef(Trigger, 2);
    };
 
    class Event {
       public:
          Event() {};
-#ifndef __CINT__
          Event(const std::vector<superslim::Combination>& cs,
                const std::vector<superslim::Tau>&,
                const std::vector<superslim::Lepton>&,
@@ -396,7 +360,6 @@ namespace superslim {
                int catergory,
                const superslim::Trigger& trigger,
                const reco::GenParticleCollection& genparticles);
-#endif
          virtual ~Event() {};
 
          const std::vector<superslim::Combination>& combos() const { return combos_; };
@@ -439,15 +402,11 @@ namespace superslim {
 
          std::vector<superslim::Vertex> pv_;
          superslim::Trigger trigger_;
-
-         // ClassDef(Event, 6);
    };
 
    bool operator<(const PhysObject& lhs, const PhysObject& rhs);
 
-#ifndef __CINT__
    template<> PhysObject::PhysObject(const reco::GenParticle&);
-#endif
 }
 
 #endif

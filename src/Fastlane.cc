@@ -201,7 +201,3 @@ fastlane::process(const std::string& process, const std::vector<std::string>& fi
       t.Fill();
    }
 }
-
-// ClassImp(fastlane::BasicCut);
-// ClassImp(fastlane::Cut);
-// ClassImp(fastlane::StaticCut);
