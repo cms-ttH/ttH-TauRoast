@@ -9,6 +9,8 @@
 	<class name="fastlane::StaticCut"/>
 	<class name="superslim::LorentzVector"/>
 	<class name="std::map<std::string, superslim::LorentzVector>"/>
+	<class name="superslim::CutHistogram"/>
+	<class name="edm::Wrapper<superslim::CutHistogram>"/>
 	<class name="superslim::PhysObject"/>
 	<class name="superslim::Vertex"/>
 	<class name="std::vector<superslim::Vertex>"/>

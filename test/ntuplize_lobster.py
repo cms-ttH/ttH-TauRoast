@@ -3,49 +3,48 @@ from lobster.core import *
 
 from ttH.TauRoast.datasets import *
 
-channel = "tll"
 version = "v28"
 
 storage = StorageConfiguration(
         output=[
-            "hdfs:///store/user/matze/ttH/{}/{}".format(channel, version),
-            "file:///hadoop/store/user/matze/ttH/{}/{}".format(channel, version),
-            "root://deepthought.crc.nd.edu//store/user/matze/ttH/{}/{}".format(channel, version),
-            "srm://T3_US_NotreDame/store/user/matze/ttH/{}/{}".format(channel, version),
-            "chirp://earth.crc.nd.edu:9666/ttH/{}/{}".format(channel, version)
+            "hdfs:///store/user/matze/ttH/{}".format(version),
+            "file:///hadoop/store/user/matze/ttH/{}".format(version),
+            "root://deepthought.crc.nd.edu//store/user/matze/ttH/{}".format(version),
+            "srm://T3_US_NotreDame/store/user/matze/ttH/{}".format(version),
+            "chirp://earth.crc.nd.edu:9666/ttH/{}".format(version)
         ]
 )
 
 data = Category(
         name='data',
         cores=2,
-        runtime=30 * 60
+        runtime=45 * 60
 )
 
 tth = Category(
         name='ttH',
         cores=2,
-        runtime=30 * 60
+        runtime=45 * 60
 )
 
 mc = Category(
         name='mc',
         cores=2,
-        runtime=30 * 60
+        runtime=45 * 60
 )
 
 workflows = []
 datasets = sum(
         [
-            # datasets_ttH,
+            datasets_ttH,
             datasets_ttjets,
-            # datasets_other,
-            # datasets_2015D
+            datasets_other,
+            datasets_2015D
         ], []
 )
 for label, path in datasets:
     mask = None
-    params = ['channel=' + channel]
+    params = []
     category = mc
 
     if '2015' in label:
@@ -69,9 +68,9 @@ for label, path in datasets:
     ))
 
 config = Config(
-        label='tau_{}_{}'.format(channel, version),
-        workdir='/tmpscratch/users/matze/ttH/{}/{}'.format(channel, version),
-        plotdir='/afs/crc.nd.edu/user/m/mwolf3/www/lobster/ttH/{}/{}'.format(channel, version),
+        label='tau_{}'.format(version),
+        workdir='/tmpscratch/users/matze/ttH/{}'.format(version),
+        plotdir='/afs/crc.nd.edu/user/m/mwolf3/www/lobster/ttH/{}'.format(version),
         storage=storage,
         workflows=workflows,
         advanced=AdvancedOptions(log_level=1)

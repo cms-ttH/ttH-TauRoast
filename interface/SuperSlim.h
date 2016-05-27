@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "Math/LorentzVector.h"
-#include "TObject.h"
+#include "TH1F.h"
 
 namespace edm {
    class TriggerNames;
@@ -43,6 +43,21 @@ namespace superslim {
    }
 
    typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > LorentzVector;
+
+   class CutHistogram {
+      public:
+         CutHistogram() : h_("cuts", "Cut counts", 64, -0.5, 63.5) {};
+
+         TH1* operator->() { return &h_; };
+         TH1& operator*() { return h_; };
+         const TH1* operator->() const { return &h_; };
+         const TH1& operator*() const { return h_; };
+         operator const TH1*() const { return &h_; };
+
+         bool mergeProduct(const CutHistogram& other) { h_.Add(other); return true; };
+      private:
+         TH1F h_;
+   };
 
    class Vertex {
       public:

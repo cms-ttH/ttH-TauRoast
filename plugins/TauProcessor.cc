@@ -213,7 +213,7 @@ class TauProcessor : public edm::one::EDProducer<edm::BeginRunProducer, edm::End
       std::vector<std::string> cutnames_;
       std::map<std::string, sysType::sysType> systematics_;
 
-      std::auto_ptr<TH1F> cuts_;
+      std::auto_ptr<superslim::CutHistogram> cuts_;
 };
 
 TauProcessor::TauProcessor(const edm::ParameterSet& config) :
@@ -239,7 +239,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    )
 {
    produces<superslim::Event>();
-   produces<TH1F, edm::InRun>();
+   produces<superslim::CutHistogram, edm::InRun>();
 
    // Override lepton counts if we're taking everything.
    if (take_all_) {
@@ -329,14 +329,14 @@ TauProcessor::removeOverlap(const std::vector<T1>& v1, const std::vector<T2>& v2
 void
 TauProcessor::passCut(unsigned int cut, const std::string& name, float w)
 {
-   cuts_->Fill(cut, w);
+   (*cuts_)->Fill(cut, w);
 
    if (std::find(begin(evt_list_), end(evt_list_), evt_) != end(evt_list_))
       std::cout << evt_ << " passes " << name << std::endl;
 
    if (cutnames_.size() == cut) {
       cutnames_.push_back(name);
-      cuts_->GetXaxis()->SetBinLabel(cut + 1, name.c_str());
+      (*cuts_)->GetXaxis()->SetBinLabel(cut + 1, name.c_str());
    }
 }
 
@@ -631,7 +631,7 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
 void
 TauProcessor::beginRunProduce(edm::Run& run, const edm::EventSetup& s)
 {
-   cuts_.reset(new TH1F("cuts", "Cut counts", 64, -0.5, 63.5));
+   cuts_.reset(new superslim::CutHistogram());
 }
 
 void

@@ -144,10 +144,12 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
 }
 
 void
-fastlane::process(const std::string& process, const std::vector<std::string>& files, TTree& t, std::vector<fastlane::Cut*>& cuts, std::vector<fastlane::StaticCut*>& weights, const std::string& sys, PyObject* log, int max)
+fastlane::process(const std::string& process, const std::string& channel, const std::vector<std::string>& files, TTree& t, std::vector<fastlane::Cut*>& cuts, std::vector<fastlane::StaticCut*>& weights, const std::string& sys, PyObject* log, int max)
 {
    fwlite::Handle<superslim::Event> handle;
    fwlite::ChainEvent events(files);
+
+   auto label = channel + "Taus";
 
    int i = 0;
    for (events.toBegin(); !events.atEnd() and (max < 0 or i < max); ++events, ++i) {
@@ -156,7 +158,7 @@ fastlane::process(const std::string& process, const std::vector<std::string>& fi
          TPyArg::CallMethod(log, args);
       }
 
-      handle.getByLabel(events, "taus");
+      handle.getByLabel(events, label.c_str());
 
       const auto e = handle.ptr();
       const auto& combos = e->combos();

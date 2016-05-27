@@ -6,12 +6,12 @@ import time
 
 from collections import namedtuple
 
-Config = namedtuple('Config', ['taus', 'leptons', 'generator'])
+Config = namedtuple('Config', ['channel', 'taus', 'leptons', 'generator'])
 config = None
 
 def setup(channel, generator):
     global config
-    config = Config(taus=channel.lower().count("t"), leptons=channel.lower().count("l"), generator=generator)
+    config = Config(channel=channel, taus=channel.lower().count("t"), leptons=channel.lower().count("l"), generator=generator)
 
 def load_python(sync):
     import imp

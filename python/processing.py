@@ -10,9 +10,9 @@ r.gSystem.Load("libttHTauRoast")
 from DataFormats.FWLite import Events, Handle, Runs
 
 from ttH.TauRoast.botany import Tree
-from ttH.TauRoast.useful import code2cut
+from ttH.TauRoast.useful import code2cut, config
 
-NTUPLE_GLOB = 'test*.root'
+NTUPLE_GLOB = '{channel}_test*.root'
 
 class Process(object):
     __processes__ = {}
@@ -79,6 +79,8 @@ class BasicProcess(Process):
                 self.__sample, self.__cross_section, self.__add_cuts)
 
     def analyze(self, filename, counts, cuts, weights, systematics, basedir, limit=-1, debug=False):
+        from ttH.TauRoast.useful import config
+
         if str(self).startswith("collisions"):
             systematics = "NA"
 
@@ -89,11 +91,11 @@ class BasicProcess(Process):
             for i, cut in enumerate(cuts):
                 cut.callback(SyncSaver(os.path.join(os.path.dirname(filename), "cut_{0}_{1}.txt".format(self, i)), systematics))
 
-        files = sum([glob.glob(os.path.join(basedir, p, NTUPLE_GLOB)) for p in self.__paths], [])
+        files = sum([glob.glob(os.path.join(basedir, p, NTUPLE_GLOB.format(channel=config.channel))) for p in self.__paths], [])
         hist = None
-        handle = Handle("TH1F")
+        handle = Handle("superslim::CutHistogram")
         for run in Runs(files):
-            if not run.getByLabel("taus", handle):
+            if not run.getByLabel(config.channel + "Taus", handle):
                 logging.error("could not find cutflow histogram")
                 continue
 
@@ -145,7 +147,7 @@ class BasicProcess(Process):
         def log(i):
             logging.info("processing {0}, event {1}".format(str(self), i))
         now = time.clock()
-        r.fastlane.process(str(self), cfiles, tree.raw(), ccuts, cweights, systematics, log, limit);
+        r.fastlane.process(str(self), config.channel, cfiles, tree.raw(), ccuts, cweights, systematics, log, limit);
         logging.debug("time spent processing: {0}".format(time.clock() - now))
 
     def process(self):

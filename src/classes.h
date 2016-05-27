@@ -14,6 +14,8 @@ namespace {
 
       superslim::LorentzVector dummy_vector;
       std::map<std::string, superslim::LorentzVector> dummy_vector_map;
+      superslim::CutHistogram dummy_hist;
+      edm::Wrapper<superslim::CutHistogram> dummy_hist_wrapper;
       superslim::PhysObject dummy_object;
       superslim::Vertex dummy_vertex;
       std::vector<superslim::Vertex> dummy_vertex_vector;
