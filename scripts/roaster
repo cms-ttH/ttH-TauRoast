@@ -151,56 +151,60 @@ elif args.fill:
 if args.fill:
     fn = os.path.join(config.get("indir", config["outdir"]), "ntuple.root")
     forest = Forest(fn)
-    processed = set()
-    for proc in sum(map(Process.expand, config['plot']), []):
-        if proc in processed:
-            continue
-        processed.add(proc)
+
+    for category, definition in config.get("categories", {'inclusive': None}).items():
+        Plot.reset()
+
+        processed = set()
+        for proc in sum(map(Process.expand, config['plot']), []):
+            if proc in processed:
+                continue
+            processed.add(proc)
+            for p in Plot.plots():
+                p.fill(proc, config["weights"], definition)
+
+        fn = os.path.join(config["outdir"], "plots.root")
+        f = r.TFile(fn, "UPDATE")
+
+        if not f.IsOpen():
+            raise IOError("Can't read file '{0}'".format(fn))
+
         for p in Plot.plots():
-            p.fill(proc, config["weights"], config.get("category"))
+            p.write(f, cuts, category, fmt=config["histformat"])
 
-    fn = os.path.join(config["outdir"], "plots.root")
-    f = r.TFile(fn, "RECREATE")
+        f.Write()
+        f.Close()
 
-    if not f.IsOpen():
-        raise IOError("Can't read file '{0}'".format(fn))
+        fn = os.path.join(config["outdir"], "limits.root")
+        f = r.TFile(fn, "UPDATE")
 
-    for p in Plot.plots():
-        p.write(f, cuts, fmt=config["histformat"])
+        if not f.IsOpen():
+            raise IOError("Can't read file '{0}'".format(fn))
 
-    f.Write()
-    f.Close()
+        for p in Plot.plots():
+            p.write(f, cuts, category, procs=config["limits"], fmt=config["histformat"])
 
-    fn = os.path.join(config["outdir"], "limits.root")
-    f = r.TFile(fn, "RECREATE")
+        timing = sorted(Plot.plots(), key=lambda p: p._time)
+        for p in timing[:10] + timing[-10:]:
+            logging.debug("plot filling time for {0}: {1}".format(p, p._time))
 
-    if not f.IsOpen():
-        raise IOError("Can't read file '{0}'".format(fn))
-
-    for p in Plot.plots():
-        p.write(f, cuts, procs=config["limits"], fmt=config["histformat"])
-
-    timing = sorted(Plot.plots(), key=lambda p: p._time)
-    for p in timing[:10] + timing[-10:]:
-        logging.debug("plot filling time for {0}: {1}".format(p, p._time))
-
-    f.Write()
-    f.Close()
-
+        f.Write()
+        f.Close()
     del forest
-elif args.plot:
-    processes = sum(map(Process.expand, config['plot']), [])
-    fn = os.path.join(config.get("indir", config["outdir"]), "plots.root")
-    f = r.TFile(fn, "READ")
-
-    if not f.IsOpen():
-        raise IOError("Can't read file '{0}'".format(fn))
-
-    for p in Plot.plots():
-        p.read(f, processes, fmt=config["histformat"])
-
-    f.Close()
 
 if args.plot:
-    for p in Plot.plots():
-        p.save(plotconfig, config["outdir"])
+    for category, cuts in config.get("categories", {'inclusive': None}).items():
+        Plot.reset()
+
+        processes = sum(map(Process.expand, config['plot']), [])
+        fn = os.path.join(config.get("indir", config["outdir"]), "plots.root")
+        f = r.TFile(fn, "READ")
+
+        if not f.IsOpen():
+            raise IOError("Can't read file '{0}'".format(fn))
+
+        for p in Plot.plots():
+            p.read(f, category, processes, fmt=config["histformat"])
+            p.save(plotconfig, os.path.join(config["outdir"], category))
+
+        f.Close()

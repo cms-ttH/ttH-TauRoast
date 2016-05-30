@@ -159,18 +159,18 @@ class Plot(object):
             factor = 0. if denom == 0. else cuts[-1][proc] / denom
             hist.Scale(factor)
 
-    def read(self, file, procs, fmt="{p}_{v}"):
+    def read(self, file, category, procs, fmt="{p}_{c}_{v}"):
         for proc in procs:
-            logging.debug("reading histogram {0}".format(fmt.format(p=proc.limitname, v=self.__limitname)))
-            h = file.Get(fmt.format(p=proc.limitname, v=self.__limitname))
+            histname = fmt.format(p=proc.limitname, v=self.__limitname, c=category)
+            logging.debug("reading histogram {0}".format(histname))
+            h = file.Get(histname)
             if h is None:
-                logging.warning("histogram {0} not found in file".format(
-                    fmt.format(p=proc.limitname, v=self.__limitname)))
+                logging.warning("histogram {0} not found in file".format(histname))
             else:
                 h.SetDirectory(0)
                 self.__hists[proc] = h
 
-    def write(self, file, cuts, procs=None, fmt="{p}_{v}"):
+    def write(self, file, cuts, category, procs=None, fmt="{p}_{c}_{v}"):
         self._normalize(cuts)
 
         if procs is None:
@@ -179,9 +179,10 @@ class Plot(object):
             procs = map(Process.get, procs)
 
         for proc in procs:
-            logging.debug("writing histogram {0}".format(fmt.format(p=proc.limitname, v=self.__limitname)))
+            histname = fmt.format(p=proc.limitname, v=self.__limitname, c=category)
+            logging.debug("writing histogram {0}".format(histname))
             hist = self._get_histogram(proc)
-            file.WriteObject(hist, fmt.format(p=proc.limitname, v=self.__limitname))
+            file.WriteObject(hist, histname)
 
     def save(self, config, outdir):
         logging.debug("saving histogram {0}".format(self.__name))
@@ -440,6 +441,9 @@ class Plot(object):
         # histo!
         self.__hists[process].SetDirectory(0)
 
+    def clear(self):
+        self.__hists.clear()
+
     @property
     def name(self):
         return self.__name
@@ -447,3 +451,8 @@ class Plot(object):
     @classmethod
     def plots(cls):
         return cls.__plots.values()
+
+    @classmethod
+    def reset(cls):
+        for p in cls.__plots.values():
+            p.clear()
