@@ -107,7 +107,7 @@ class BasicProcess(Process):
                     label = handle.product().GetXaxis().GetBinLabel(n+1)
                     if label != "":
                         hist.GetXaxis().SetBinLabel(n+1, label)
-                hist.Add(handle.product())
+                hist.Add(handle.product().product())
 
         if hist is None:
             raise IOError("Could not produce cutflow histogram from directory '{0}'".format(os.path.join(basedir, p)))

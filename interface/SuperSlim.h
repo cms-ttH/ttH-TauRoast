@@ -54,6 +54,8 @@ namespace superslim {
          const TH1& operator*() const { return h_; };
          operator const TH1*() const { return &h_; };
 
+         const TH1* product() const { return &h_; };
+
          bool mergeProduct(const CutHistogram& other) { h_.Add(other); return true; };
       private:
          TH1F h_;
