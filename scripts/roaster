@@ -148,11 +148,18 @@ elif args.fill:
     with codecs.open(os.path.join(config["outdir"], "cuts_weighed.txt"), "w", encoding="utf8") as fd:
         cutflow(cuts, config["plot"], f=fd, weighed=True)
 
+categories = []
+definitions = []
+for cfg in config.get("categories", [{'inclusive': None}]):
+    category, definition = cfg.items()[0]
+    categories.append(category)
+    definitions.append(definition)
+
 if args.fill:
     fn = os.path.join(config.get("indir", config["outdir"]), "ntuple.root")
     forest = Forest(fn)
 
-    for category, definition in config.get("categories", {'inclusive': None}).items():
+    for category, definition in zip(categories, definitions):
         Plot.reset()
 
         processed = set()
@@ -192,8 +199,31 @@ if args.fill:
         f.Close()
     del forest
 
+if args.fill or args.plot:
+    counts = []
+
+    fn = os.path.join(config.get("indir", config["outdir"]), "plots.root")
+    f = r.TFile(fn, "READ")
+
+    if not f.IsOpen():
+        raise IOError("Can't read file '{0}'".format(fn))
+
+    for proc in config['plot']:
+        count = StaticCut(proc)
+        for cat in categories:
+            count[cat] = Plot.get_event_count(f, proc, cat, config['histformat'])
+        counts.append(count)
+
+    try:
+        useful.print_cuts(counts, categories)
+    except UnicodeEncodeError:
+        pass
+
+    with codecs.open(os.path.join(config["outdir"], "categories.txt"), "w", encoding="utf8") as fd:
+        useful.print_cuts(counts, categories, f=fd)
+
 if args.plot:
-    for category, cuts in config.get("categories", {'inclusive': None}).items():
+    for category in categories:
         Plot.reset()
 
         processes = sum(map(Process.expand, config['plot']), [])

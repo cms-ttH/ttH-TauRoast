@@ -443,6 +443,7 @@ class Plot(object):
 
     def clear(self):
         self.__hists.clear()
+        self.__normalized = False
 
     @property
     def name(self):
@@ -456,3 +457,10 @@ class Plot(object):
     def reset(cls):
         for p in cls.__plots.values():
             p.clear()
+
+    @classmethod
+    def get_event_count(cls, f, proc, category, fmt):
+        p = cls.__plots['Events']
+        p.clear()
+        p.read(f, category, Process.expand(proc), fmt)
+        return p._get_histogram(proc).GetBinContent(1)

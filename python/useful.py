@@ -2,6 +2,7 @@ import hashlib
 import math
 import os
 import ROOT as r
+import sys
 import time
 
 from collections import namedtuple
@@ -125,3 +126,29 @@ def code2leaf(name, typename, code):
     if not r.gInterpreter.Declare(chunck):
         raise RuntimeError("Can't compile\n" + chunck)
     return getattr(r, 'leaf_' + stub)
+
+def print_cuts(cuts, columns, cutdata=None, sum_columns=None, what="", f=sys.stdout):
+    if not sum_columns:
+        sum_columns = [[c] for c in columns]
+
+    if not cutdata:
+        cutdata = [[sum(float(cut[c]) for c in cs) for cs in sum_columns] for cut in cuts]
+
+    namelength = max(len(unicode(cut)) for cut in cuts)
+    fieldlengths = []
+    for col, subcols in zip(columns, sum_columns):
+        val = max(sum(cut[c] for c in subcols) for cut in cuts)
+        length = max(len(col), len("{:,.2f}".format(float(val))))
+        fieldlengths.append(length)
+
+    header = u"{{:{0}}}".format(namelength) \
+            + u"".join(u"   {{:{0}}}".format(fl) for fl in fieldlengths) \
+            + u"\n"
+    body = u"{{:{0}}}".format(namelength) \
+            + "".join("   {{:{0},.2f}}".format(fl) for fl in fieldlengths) \
+            + "\n"
+
+    f.write(header.format(what, *columns))
+    f.write("-" * namelength + "".join("   " + "-" * fl for fl in fieldlengths) + "\n")
+    for cut, data in zip(cuts, cutdata):
+        f.write(body.format(cut, *data))

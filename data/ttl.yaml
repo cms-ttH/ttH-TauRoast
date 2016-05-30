@@ -49,9 +49,12 @@ weights:
 systematics: NA
 
 categories:
-    inclusive: ""
-    eletron: "nelectrons == 1"
-    muon: "nmuons == 1"
+  - inclusive: ""
+  - electron: "nelectrons == 1"
+  - muon: "nmuons == 1"
+  - 2j: "njets + ntags == 2"
+  - 3j: "njets + ntags == 3"
+  - 4j: "njets + ntags >= 4"
 
 mva:
     signals:
