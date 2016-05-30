@@ -95,19 +95,20 @@ class BasicProcess(Process):
         hist = None
         handle = Handle("superslim::CutHistogram")
         for run in Runs(files):
-            if not run.getByLabel(config.channel + "Taus", handle):
+            if not run.getByLabel(config.channel + "Taus", handle) or not isinstance(handle.product(), r.superslim.CutHistogram):
                 logging.error("could not find cutflow histogram")
                 continue
 
             if hist is None:
-                hist = handle.product()
+                hist = handle.product().Clone()
                 hist.SetDirectory(0)
             else:
+                h = handle.product()
                 for n in range(hist.GetNbinsX()):
-                    label = handle.product().GetXaxis().GetBinLabel(n+1)
+                    label = h.GetXaxis().GetBinLabel(n+1)
                     if label != "":
                         hist.GetXaxis().SetBinLabel(n+1, label)
-                hist.Add(handle.product().product())
+                hist.Add(h.product())
 
         if hist is None:
             raise IOError("Could not produce cutflow histogram from directory '{0}'".format(os.path.join(basedir, p)))
