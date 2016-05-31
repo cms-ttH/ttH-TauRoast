@@ -10,8 +10,8 @@ storage = StorageConfiguration(
             "hdfs:///store/user/matze/ttH/{}".format(version),
             "file:///hadoop/store/user/matze/ttH/{}".format(version),
             "root://deepthought.crc.nd.edu//store/user/matze/ttH/{}".format(version),
-            "srm://T3_US_NotreDame/store/user/matze/ttH/{}".format(version),
-            "chirp://earth.crc.nd.edu:9666/ttH/{}".format(version)
+            "chirp://earth.crc.nd.edu:9666/ttH/{}".format(version),
+            "srm://T3_US_NotreDame/store/user/matze/ttH/{}".format(version)
         ]
 )
 
