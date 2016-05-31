@@ -34,7 +34,7 @@ cuts:
   - "e/μ quality": "len(leptons) == 1 and all_of(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.selected(superslim::Lepton::LJ); })"
   - "τ quality": "len(taus) == 2 and all_of(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Medium; })"
   - "Jets": "len(jets) >= 2"
-  - "Tags": "btags(jets) == 1 or btags(jets) == 2"
+  - "Tags": "btags(jets) == 1 or btags(jets, true) == 2"
   - "ΔR(ττ)  > 0.5": "dR(taus[0], taus[1]) > 0.5"
   - "Opposite charge for τ": "taus[0].charge() * taus[1].charge() < 0"
 

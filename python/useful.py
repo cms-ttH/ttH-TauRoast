@@ -64,11 +64,11 @@ r.gInterpreter.Declare("""
         }
 
         template<typename T> int len(T t) { return t.size(); }
-        template<typename T> bool btag(T j) { return j.csv() > 0.80; }
-        template<typename T> int btags(T js) {
+        template<typename T> bool btag(T j, bool loose=false) { return j.csv() > (loose ? 0.46 : 0.80); }
+        template<typename T> int btags(T js, bool loose=false) {
             int res = 0;
             for (const auto& j: js)
-                res += btag(j);
+                res += btag(j, loose);
             return res;
         }
         template<typename T> T tags(T js) {
