@@ -169,6 +169,7 @@ class TauProcessor : public edm::one::EDProducer<edm::BeginRunProducer, edm::End
 
       bool filter_pu_jets_;
       bool take_all_;
+      bool tau_combinatorics_;
 
       edm::EDGetTokenT<double> rho_token_;
       edm::EDGetTokenT<GenEventInfoProduct> geninfo_token_;
@@ -230,6 +231,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    max_jet_eta_(config.getParameter<double>("maxJetEta")),
    filter_pu_jets_(config.getParameter<bool>("filterPUJets")),
    take_all_(config.getParameter<bool>("takeAll")),
+   tau_combinatorics_(config.getParameter<bool>("tauCombinatorics")),
    evt_list_(config.getParameter<std::vector<unsigned int>>("debugEvents")),
    m_triggerCache(
          edm::InputTag("TriggerResults", "", "HLT"),
@@ -245,6 +247,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    if (take_all_) {
       min_leptons_ = 0;
       max_leptons_ = 99999;
+      tau_combinatorics_ = false;
    }
 
    rho_token_ = consumes<double>(edm::InputTag("fixedGridRhoFastjetAll"));
@@ -479,7 +482,6 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
    int passed = 0;
 
    for (unsigned int nleptons = min_leptons_; nleptons <= std::min((unsigned int) all_leptons.size(), max_leptons_); ++nleptons) {
-      // auto leptons = removeOverlap(all_leptons, taus, .4);
       auto leptons = all_leptons;
 
       // See if any of the surviving leptons get preselected by any of
@@ -488,8 +490,7 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
       // ones, as the preselection stays the same for all multilepton IDs.
       bool take_leptons = false;
       for (const auto& id_: {superslim::Lepton::Cut, superslim::Lepton::LJ}) {
-         if (nleptons == std::count_if(leptons.begin(), leptons.end(),
-                  [&](const auto& l) { return l.preselected(id_); }))
+         if (nleptons == std::count_if(leptons.begin(), leptons.end(), [&](const auto& l) { return l.preselected(id_); }))
             take_leptons = true;
       }
 
@@ -500,7 +501,7 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
       passComboCut(event_cut, 0, passed, "Leptons in combo");
 
       std::vector<std::vector<superslim::Tau>> combinations;
-      if (take_all_) {
+      if (not tau_combinatorics_) {
          for (const auto& id_: {superslim::Tau::Iso3Hits05, superslim::Tau::Iso3Hits03, superslim::Tau::IsoMVA03, superslim::Tau::IsoMVA05}) {
             std::vector<superslim::Tau> selection;
             std::copy_if(selected_taus.begin(), selected_taus.end(), std::back_inserter(selection), [&](const superslim::Tau& t) -> bool { return t.loose(id_); });
@@ -547,7 +548,6 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
                pass_jets = true;
             } else if (selected_jets.size() >= min_jets_ and selected_loose_tags.size() >= std::max(min_tags_, 2u)) {
                pass_jets = true;
-               selected_tags = selected_loose_tags;
             }
 
             if (max_tags_ < 0 or selected_tags.size() <= (unsigned int) max_tags_)

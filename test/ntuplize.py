@@ -90,10 +90,6 @@ process.load("ttH.TauRoast.genHadronMatching_cfi")
 
 process.dump = cms.EDAnalyzer("EventContentAnalyzer")
 
-min_jets = 2
-min_tags = 1
-max_tags = -1
-
 trig_single_e = []
 trig_single_mu = []
 trig_double_eg = []
@@ -104,18 +100,22 @@ process.end = cms.EndPath()
 
 for channel in options.channels:
     if channel == 'ttl':
-        min_taus = 2
-        max_taus = 2
-        min_leptons = 1
-        max_leptons = 1
+        taus = (2, 2)
+        leptons = (1, 1)
+        jets = (2,)
+        tags = (1, -1)
+
+        build_combinations = True
 
         trig_single_e = "HLT_Ele27_eta2p1_WPLoose_Gsf_v" if options.data else "HLT_Ele27_WPLoose_Gsf_v"
         trig_single_mu = "HLT_IsoMu18_v" if options.data else "HLT_IsoMu17_eta2p1_v"
     elif channel == 'tll':
-        min_taus = 0
-        max_taus = 1
-        min_leptons = 2
-        max_leptons = 2
+        taus = (0, 1)
+        leptons = (2, 99999)
+        jets = (4,)
+        tags = (1, -1)
+
+        build_combinations = False
 
         trig_double_eg = [
                 "HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v",
@@ -142,18 +142,19 @@ for channel in options.channels:
             electrons = cms.InputTag("ttHLeptons"),
             muons = cms.InputTag("ttHLeptons"),
             taus = cms.InputTag("ttHLeptons"),
-            minTaus = cms.uint32(min_taus),
-            maxTaus = cms.uint32(max_taus),
-            minLeptons = cms.uint32(min_leptons),
-            maxLeptons = cms.uint32(max_leptons),
-            minJets = cms.uint32(min_jets),
-            minTags = cms.uint32(min_tags),
-            maxTags = cms.int32(max_tags),
+            minTaus = cms.uint32(taus[0]),
+            maxTaus = cms.uint32(taus[1]),
+            minLeptons = cms.uint32(leptons[0]),
+            maxLeptons = cms.uint32(leptons[1]),
+            minJets = cms.uint32(jets[0]),
+            minTags = cms.uint32(tags[0]),
+            maxTags = cms.int32(tags[1]),
             minJetPt = cms.double(25.),
             minTagPt = cms.double(25.),
             maxJetEta = cms.double(2.4),
             filterPUJets = cms.bool(False),
             takeAll = cms.bool(options.takeAll),
+            tauCombinatorics = cms.bool(build_combinations),
             printPreselection = cms.bool(False),
             triggerSingleE = cms.vstring(trig_single_e),
             triggerSingleMu = cms.vstring(trig_single_mu),
