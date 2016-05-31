@@ -3,7 +3,7 @@ from lobster.core import *
 
 from ttH.TauRoast.datasets import *
 
-version = "v28"
+version = "v29"
 
 storage = StorageConfiguration(
         output=[
@@ -18,19 +18,19 @@ storage = StorageConfiguration(
 data = Category(
         name='data',
         cores=2,
-        runtime=45 * 60
+        runtime=75 * 60
 )
 
 tth = Category(
         name='ttH',
         cores=2,
-        runtime=45 * 60
+        runtime=75 * 60
 )
 
 mc = Category(
         name='mc',
         cores=2,
-        runtime=45 * 60
+        runtime=75 * 60
 )
 
 workflows = []
@@ -58,13 +58,12 @@ for label, path in datasets:
         label=label,
         dataset=cmssw.Dataset(
             dataset=path,
-            events_per_task=200000,
+            events_per_task=10000,
             lumi_mask=mask
         ),
         category=category,
         pset='ntuplize.py',
-        arguments=params,
-        merge_size='3.5G'
+        arguments=params
     ))
 
 config = Config(
