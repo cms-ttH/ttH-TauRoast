@@ -4,6 +4,8 @@
 #include <map>
 #include <vector>
 
+#include "DataFormats/Math/interface/deltaR.h"
+
 #include "Math/LorentzVector.h"
 #include "TH1F.h"
 
@@ -122,6 +124,7 @@ namespace superslim {
          int grandParentId() const;
          float dxy() const { return dxy_; };
          float dz() const { return dz_; };
+         float dR(const superslim::PhysObject& o) const { return reco::deltaR(*this, o); };
          int charge() const { return charge_; };
          int pdgId() const { return pdg_id_; };
          int genPdgId() const { return gen_pdg_id_; };

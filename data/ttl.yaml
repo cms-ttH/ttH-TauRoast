@@ -4,7 +4,7 @@ channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v28
 # ntupledir: /scratch365/mwolf3/ttH/v25
-outdir: ~/www/ttH/v28
+outdir: ~/www/ttH/v28/ttl
 histformat: "{p}_{c}_{v}_TTL"
 
 lumi: 2517
@@ -36,8 +36,6 @@ cuts:
   - "Jets": "len(jets) >= 2"
   - "Tags": "btags(jets) == 1 or btags(jets) == 2"
   - "ΔR(ττ)  > 0.5": "dR(taus[0], taus[1]) > 0.5"
-  - "ΔR(τ₁l) > 0.4": "dR(taus[0], leptons[0]) > 0.4"
-  - "ΔR(τ₂l) > 0.4": "dR(taus[1], leptons[0]) > 0.4"
   - "Opposite charge for τ": "taus[0].charge() * taus[1].charge() < 0"
 
 weights:

@@ -71,7 +71,7 @@ for n in range(config.taus):
     Leaf('tau{0}_match'.format(n + 1), 'i', 'result = taus[{0}].match()'.format(n))
     Leaf('tau{0}_genid'.format(n + 1), 'f', 'result = min(abs(taus[{0}].genPdgId()), 29)'.format(n))
     Leaf('tau{0}_genparentid'.format(n + 1), 'f', 'result = min(abs(taus[{0}].parentId()), 29)'.format(n))
-    Leaf('tau{0}_gen_deltaR'.format(n + 1), 'f', 'result = R(taus[{0}].p4() - taus[{0}].genP4())'.format(n))
+    Leaf('tau{0}_gen_deltaR'.format(n + 1), 'f', 'result = dR(taus[{0}].p4(), taus[{0}].genP4())'.format(n))
 
     # Gen matching
     Plot(

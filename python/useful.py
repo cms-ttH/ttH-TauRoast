@@ -58,11 +58,9 @@ def mva():
     return __mva.evaluate()
 
 r.gInterpreter.Declare("""
-        template<typename T> double R(T t) {
-            return std::sqrt(t.Eta() * t.Eta() + t.Phi() * t.Phi());
-        }
+        #include "DataFormats/Math/interface/deltaR.h"
         template<typename T, typename U> double dR(T t, U u) {
-            return R(t.p4() - u.p4());
+            return reco::deltaR(t, u);
         }
 
         template<typename T> int len(T t) { return t.size(); }
