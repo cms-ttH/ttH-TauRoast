@@ -167,6 +167,18 @@ the last two steps.
 
 # History
 
+## v29
+
+* Tighter skim for TLL
+
+## v28
+
+* New output structure with FWLite ntuples
+
+## v27
+
+* ¿Various improvements?
+
 ## v26
 
 * As v25, but done right with Lobster
