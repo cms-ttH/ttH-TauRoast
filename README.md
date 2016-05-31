@@ -62,8 +62,13 @@ then compile:
 
 See the parameter sets in `ttH/TauRoast/test`, e.g., `nutplize.py`.
 
-A [lobster][lobster] configuration is in `ttH/TauRoast/test/lobster.yaml`,
+A [Lobster][lobster] configuration is in
+`ttH/TauRoast/test/ntuplize_lobster.py`,
 to produce the latest and greatest ntuple.
+
+Similarly, for CRAB, a configuration can be found in
+`ttH/TauRoast/test/ntuplize_crabby.py`.  It has to be called by the CRAB
+wrapper `crabby`, provided by this package.
 
 ## Basic usage
 
