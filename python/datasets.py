@@ -1,5 +1,5 @@
 datasets_ttH = [
-        ("ttH2TT_125"         , "/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM")                  ,
+        # ("ttH2TT_125"         , "/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM")                  ,
         ("ttH2TT_125_ext1"    , "/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12_ext1-v1/MINIAODSIM")             ,
         ("ttH2TT_125_ext2"    , "/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12_ext2-v1/MINIAODSIM")             ,
         ("ttH2TT_125_ext3"    , "/ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12_ext3-v1/MINIAODSIM")             ,
