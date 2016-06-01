@@ -2,9 +2,9 @@
 
 channel: tll
 generator: pow
-ntupledir: /hadoop/store/user/matze/ttH/v28
+ntupledir: /hadoop/store/user/matze/ttH/v29
 # ntupledir: /scratch365/mwolf3/ttH/v25
-outdir: ~/www/ttH/v28/tll
+outdir: ~/www/ttH/v29/tll
 histformat: "{p}_{c}_{v}_TLL"
 
 lumi: 2517
@@ -22,7 +22,7 @@ plot:
   # - ttH2bb_125
   # - ttH2Nonbb_125
   - ttH2TT_125
-  - ttH2TT_125_real
+  # - ttH2TT_125_real
 
 limits:
   - collisions
