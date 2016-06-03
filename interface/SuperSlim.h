@@ -310,7 +310,9 @@ namespace superslim {
          Combination() {};
          Combination(
                const std::vector<superslim::Tau>&,
+               superslim::Tau::id,
                const std::vector<superslim::Lepton>&,
+               superslim::Lepton::id,
                const std::map<std::string, std::vector<superslim::Jet>>&,
                const std::map<std::string, LorentzVector>& met);
          virtual ~Combination() {};
@@ -331,6 +333,9 @@ namespace superslim {
          std::vector<superslim::Lepton> muons_;
          std::vector<superslim::Tau> taus_;
          std::map<std::string, LorentzVector> met_;
+
+         superslim::Tau::id tau_id_;
+         superslim::Lepton::id lepton_id_;
 
          std::map<std::string, float> weights_;
    };

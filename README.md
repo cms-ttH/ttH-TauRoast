@@ -158,6 +158,13 @@ the last two steps.
 
 # History
 
+## v30
+
+* Lepton counts in selection are for loose leptons
+  * preselected leptons are a superset of loose leptons
+  * for TTL/LJ lepton id, loose leptons are identical preselected leptons
+* Save the lepton, τ id in the combination to select the right one easier
+
 ## v29
 
 * Tighter skim for TLL

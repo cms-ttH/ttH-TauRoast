@@ -3,7 +3,7 @@ from lobster.core import *
 
 from ttH.TauRoast.datasets import *
 
-version = "v29"
+version = "v30"
 
 storage = StorageConfiguration(
         output=[

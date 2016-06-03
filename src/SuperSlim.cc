@@ -376,13 +376,17 @@ namespace superslim {
 
    Combination::Combination(
          const std::vector<Tau>& taus,
+         superslim::Tau::id tau_id,
          const std::vector<Lepton>& leptons,
+         superslim::Lepton::id lepton_id,
          const std::map<std::string, std::vector<Jet>>& jets,
          const std::map<std::string, LorentzVector>& met) :
       jets_(jets),
       leptons_(leptons),
       taus_(taus),
-      met_(met)
+      met_(met),
+      tau_id_(tau_id),
+      lepton_id_(lepton_id)
    {
       for (const auto& l: leptons_) {
          if (l.electron())

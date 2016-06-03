@@ -111,7 +111,7 @@ for channel in options.channels:
         trig_single_mu = "HLT_IsoMu18_v" if options.data else "HLT_IsoMu17_eta2p1_v"
     elif channel == 'tll':
         taus = (0, 1)
-        leptons = (2, 99999)
+        leptons = (2, 2)
         jets = (4,)
         tags = (1, -1)
 
