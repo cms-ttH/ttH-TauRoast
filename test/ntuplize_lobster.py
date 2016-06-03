@@ -72,5 +72,11 @@ config = Config(
         plotdir='/afs/crc.nd.edu/user/m/mwolf3/www/lobster/ttH/{}'.format(version),
         storage=storage,
         workflows=workflows,
-        advanced=AdvancedOptions(log_level=1)
+        advanced=AdvancedOptions(
+            log_level=1,
+            xrootd_servers=[
+                'ndcms.crc.nd.edu',
+                'cmsxrootd.fnal.gov'
+            ]
+        )
 )
