@@ -64,7 +64,7 @@ for label, path in datasets:
         label=label,
         dataset=cmssw.Dataset(
             dataset=path,
-            events_per_task=10000,
+            events_per_task=50000,
             lumi_mask=mask
         ),
         category=category,
