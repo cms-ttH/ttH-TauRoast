@@ -18,19 +18,25 @@ storage = StorageConfiguration(
 data = Category(
         name='data',
         cores=2,
-        runtime=75 * 60
+        runtime=75 * 60,
+        disk=1000,
+        memory=1200
 )
 
 tth = Category(
         name='ttH',
         cores=2,
-        runtime=75 * 60
+        runtime=75 * 60,
+        disk=1000,
+        memory=1200
 )
 
 mc = Category(
         name='mc',
         cores=2,
-        runtime=75 * 60
+        runtime=75 * 60,
+        disk=1000,
+        memory=1200
 )
 
 workflows = []
