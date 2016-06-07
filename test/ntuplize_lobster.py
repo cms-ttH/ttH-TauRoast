@@ -6,47 +6,47 @@ from ttH.TauRoast.datasets import *
 version = "v30"
 
 storage = StorageConfiguration(
-        output=[
-            "hdfs:///store/user/matze/ttH/{}".format(version),
-            "file:///hadoop/store/user/matze/ttH/{}".format(version),
-            "root://deepthought.crc.nd.edu//store/user/matze/ttH/{}".format(version),
-            "chirp://earth.crc.nd.edu:9666/ttH/{}".format(version),
-            "srm://T3_US_NotreDame/store/user/matze/ttH/{}".format(version)
-        ]
+    output=[
+        "hdfs:///store/user/matze/ttH/{}".format(version),
+        "file:///hadoop/store/user/matze/ttH/{}".format(version),
+        "root://deepthought.crc.nd.edu//store/user/matze/ttH/{}".format(version),
+        "chirp://earth.crc.nd.edu:9666/ttH/{}".format(version),
+        "srm://T3_US_NotreDame/store/user/matze/ttH/{}".format(version)
+    ]
 )
 
 data = Category(
-        name='data',
-        cores=2,
-        runtime=75 * 60,
-        disk=1000,
-        memory=1200
+    name='data',
+    cores=2,
+    runtime=75 * 60,
+    disk=1000,
+    memory=1200
 )
 
 tth = Category(
-        name='ttH',
-        cores=2,
-        runtime=75 * 60,
-        disk=1000,
-        memory=1200
+    name='ttH',
+    cores=2,
+    runtime=75 * 60,
+    disk=1000,
+    memory=1200
 )
 
 mc = Category(
-        name='mc',
-        cores=2,
-        runtime=75 * 60,
-        disk=1000,
-        memory=1200
+    name='mc',
+    cores=2,
+    runtime=75 * 60,
+    disk=1000,
+    memory=1200
 )
 
 workflows = []
 datasets = sum(
-        [
-            datasets_ttH,
-            datasets_ttjets,
-            datasets_other,
-            datasets_2015D
-        ], []
+    [
+        datasets_ttH,
+        datasets_ttjets,
+        datasets_other,
+        datasets_2015D
+    ], []
 )
 for label, path in datasets:
     mask = None
@@ -73,16 +73,16 @@ for label, path in datasets:
     ))
 
 config = Config(
-        label='tau_{}'.format(version),
-        workdir='/tmpscratch/users/matze/ttH/{}'.format(version),
-        plotdir='/afs/crc.nd.edu/user/m/mwolf3/www/lobster/ttH/{}'.format(version),
-        storage=storage,
-        workflows=workflows,
-        advanced=AdvancedOptions(
-            log_level=1,
-            xrootd_servers=[
-                # 'ndcms.crc.nd.edu',
-                'cmsxrootd.fnal.gov'
-            ]
-        )
+    label='tau_{}'.format(version),
+    workdir='/tmpscratch/users/matze/ttH/{}'.format(version),
+    plotdir='/afs/crc.nd.edu/user/m/mwolf3/www/lobster/ttH/{}'.format(version),
+    storage=storage,
+    workflows=workflows,
+    advanced=AdvancedOptions(
+        log_level=1,
+        xrootd_servers=[
+            # 'ndcms.crc.nd.edu',
+            'cmsxrootd.fnal.gov'
+        ]
+    )
 )
