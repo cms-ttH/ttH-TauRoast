@@ -81,7 +81,7 @@ config = Config(
         advanced=AdvancedOptions(
             log_level=1,
             xrootd_servers=[
-                'ndcms.crc.nd.edu',
+                # 'ndcms.crc.nd.edu',
                 'cmsxrootd.fnal.gov'
             ]
         )
