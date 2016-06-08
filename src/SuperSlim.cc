@@ -197,10 +197,12 @@ namespace superslim {
       getMatch(e, particles);
       setGenInfo(e.genParticle());
 
-      fakeable_ = getID("Fakeable", e);
-      cut_ = getID("CutBased", e);
-      mva_ = getID("MVABased", e);
-      lj_ = getID("LJ", e);
+      fakeable_ = getID("Fakeable", e, false, true);
+      cut_ = getID("Cut", e, true, true);
+      mva_ = getID("MVA", e, true, true);
+      legacy_cut_ = getID("CutBased", e, false, true);
+      legacy_mva_ = getID("MVABased", e, false, true);
+      lj_ = getID("LJ", e, true);
 
       iso_rel_ = e.userFloat("miniIso");
       iso_charged_ = e.userFloat("miniAbsIsoCharged");
@@ -240,10 +242,12 @@ namespace superslim {
          relative_pt_error_ = m.bestTrack()->ptError() / m.bestTrack()->pt();
       }
 
-      fakeable_ = getID("Fakeable", m);
-      cut_ = getID("Cut", m);
-      mva_ = getID("MVA", m);
-      lj_ = getID("LJ", m);
+      fakeable_ = getID("Fakeable", m, false, true);
+      cut_ = getID("Cut", m, true, true);
+      mva_ = getID("MVA", m, true, true);
+      legacy_cut_ = getID("CutBased", m, false, true);
+      legacy_mva_ = getID("MVABased", m, false, true);
+      lj_ = getID("LJ", m, true);
 
       iso_rel_ = m.userFloat("miniIso");
       iso_charged_ = m.userFloat("miniAbsIsoCharged");
@@ -261,9 +265,11 @@ namespace superslim {
    }
 
    template<typename T>
-   id::value Lepton::getID(const std::string& suffix, const T& t, bool range) const {
+   id::value Lepton::getID(const std::string& suffix, const T& t, bool range, bool preselected) const {
       if (range) {
          for (const auto& _id: superslim::id::values) {
+            if (_id.first == "Preselection" and not preselected)
+               continue;
             std::string name = "id" + _id.first + (_id.first == "Preselection" ? "" : suffix);
             if (t.hasUserFloat(name) and t.userFloat(name) > .5)
                return _id.second;
@@ -292,6 +298,12 @@ namespace superslim {
             break;
          case Lepton::MVA:
             return mva_ >= min;
+            break;
+         case Lepton::LegacyCut:
+            return legacy_cut_ >= min;
+            break;
+         case Lepton::LegacyMVA:
+            return legacy_mva_ >= min;
             break;
          case Lepton::LJ:
             return lj_ >= min;

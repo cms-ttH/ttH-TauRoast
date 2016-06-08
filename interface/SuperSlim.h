@@ -172,7 +172,7 @@ namespace superslim {
 
    class Lepton : public PhysObject {
       public:
-         enum id { All, Fakeable, Cut, MVA, LJ };
+         enum id { All, Fakeable, Cut, MVA, LegacyCut, LegacyMVA, LJ };
 
          Lepton() {};
          Lepton(const pat::Electron& e, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles);
@@ -209,6 +209,8 @@ namespace superslim {
          int fakeable() const { return fakeable_; };
          int cut() const { return cut_; };
          int mva() const { return mva_; };
+         int legacyCut() const { return legacy_cut_; };
+         int legacyMVA() const { return legacy_mva_; };
          int lj() const { return lj_; };
 
          bool selected(Lepton::id id_=Lepton::All, superslim::id::value min=superslim::id::Preselected) const;
@@ -217,7 +219,7 @@ namespace superslim {
 
       private:
          template<typename T>
-         superslim::id::value getID(const std::string&, const T&, bool=false) const;
+         superslim::id::value getID(const std::string&, const T&, bool=false, bool=false) const;
 
          enum kind { e, mu } type_;
 
@@ -226,6 +228,8 @@ namespace superslim {
          superslim::id::value fakeable_;
          superslim::id::value cut_;
          superslim::id::value mva_;
+         superslim::id::value legacy_cut_;
+         superslim::id::value legacy_mva_;
          superslim::id::value lj_;
 
          float impact_parameter_;
