@@ -325,6 +325,9 @@ namespace superslim {
          const LorentzVector& met(const std::string& s="NA") const { return met_.find(s)->second; };
          const std::map<std::string, float>& weights() const { return weights_; };
 
+         superslim::Tau::id tauId() const { return tau_id_; };
+         superslim::Lepton::id leptonId() const { return lepton_id_; };
+
          void setWeight(const std::string& s, float f) { weights_[s] = f; };
       private:
          std::map<std::string, std::vector<superslim::Jet>> jets_;
