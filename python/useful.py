@@ -93,9 +93,11 @@ def code2cut(name, code):
         bool fct_{f}(const superslim::Event& event,
                 const std::vector<superslim::Tau>& taus,
                 const std::vector<superslim::Tau>& all_taus,
+                superslim::Tau::id tau_id,
                 const std::vector<superslim::Lepton>& leptons,
                 const std::vector<superslim::Lepton>& electrons,
                 const std::vector<superslim::Lepton>& muons,
+                superslim::Lepton::id lepton_id,
                 const std::vector<superslim::Jet>& jets,
                 const superslim::LorentzVector& met) {{ return {c}; }}
         auto cut_{f} = fastlane::Cut("{n}", &fct_{f});

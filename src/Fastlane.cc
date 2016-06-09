@@ -23,7 +23,7 @@ lower(const std::string& s)
 bool
 fastlane::Cut::operator()(const std::string& process, const superslim::Event& e, const superslim::Combination& c, const std::string& sys)
 {
-   auto passed = fct_(e, c.taus(), e.taus(), c.leptons(), c.electrons(), c.muons(), c.jets(sys), c.met(sys));
+   auto passed = fct_(e, c.taus(), e.taus(), c.tauId(), c.leptons(), c.electrons(), c.muons(), c.leptonId() ,c.jets(sys), c.met(sys));
 
    if (passed) {
       event_t id = std::make_tuple(e.run(), e.lumi(), e.event());

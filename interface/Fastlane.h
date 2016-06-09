@@ -36,9 +36,11 @@ namespace fastlane {
                const superslim::Event&,
                const std::vector<superslim::Tau>&,
                const std::vector<superslim::Tau>&,
+               superslim::Tau::id,
                const std::vector<superslim::Lepton>&,
                const std::vector<superslim::Lepton>&,
                const std::vector<superslim::Lepton>&,
+               superslim::Lepton::id,
                const std::vector<superslim::Jet>&,
                const superslim::LorentzVector&);
 
