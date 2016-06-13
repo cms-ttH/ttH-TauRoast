@@ -121,9 +121,7 @@ def code2leaf(name, typename, code):
                 const superslim::LorentzVector& met,
                 std::unordered_map<std::string, double>& weights,
                 {t}& result) {{
-            try {{
-                {c};
-            }} catch (const std::out_of_range& e) {{ }}
+            {c};
         }}
         fastlane::Leaf<{t}> leaf_{f}("{n}", &fct_{f});
     """.format(n=name, f=stub, c=code, t=typename)
