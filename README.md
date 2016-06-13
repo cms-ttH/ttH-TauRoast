@@ -14,7 +14,8 @@ CCL programs can be used:
 
 ## Installation
 
-First, create a CMSSW release and source the software environment:
+First, create a CMSSW release and source the software environment (to run
+the final analysis, `CMSSW_8_0_11` or higher is required):
 
     cmsrel CMSSW_7_6_3_patch2
     cd CMSSW_7_6_3_patch2/src
