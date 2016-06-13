@@ -197,7 +197,11 @@ fastlane::process(const std::string& process, const std::string& channel, const 
       }
 
       for (auto& leaf: BasicLeaf::leaves()) {
-         leaf->pick(*e, selected, ws, sys);
+         // std::cout << leaf->name() << std::endl;
+         try {
+            leaf->pick(*e, selected, ws, sys);
+         } catch (const std::out_of_range& e) {
+         }
       }
 
       t.Fill();
