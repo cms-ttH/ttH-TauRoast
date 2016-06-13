@@ -18,10 +18,10 @@ plot:
   # - ttjets_fulllept
   # - singletop
   # - ewk
-  # - ttH_125
+  - ttH_125
   # - ttH2bb_125
   # - ttH2Nonbb_125
-  - ttH2TT_125
+  # - ttH2TT_125
   # - ttH2TT_125_real
 
 limits:
@@ -60,6 +60,9 @@ systematics: NA
 
 categories:
   - inclusive: ""
+  - mm: "nmuons == 2"
+  - em: "nmuons == 1 && nelectrons == 1"
+  - ee: "nelectrons == 2"
 
 mva:
     signals:
