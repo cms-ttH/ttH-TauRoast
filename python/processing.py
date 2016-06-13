@@ -92,6 +92,8 @@ class BasicProcess(Process):
                 cut.callback(SyncSaver(os.path.join(os.path.dirname(filename), "cut_{0}_{1}.txt".format(self, i)), systematics))
 
         files = sum([glob.glob(os.path.join(basedir, p, NTUPLE_GLOB.format(channel=config.channel))) for p in self.__paths], [])
+        if len(files) == 0:
+            raise IOError("could not find any files in {}".format(", ".join(self.__paths)))
         hist = None
         handle = Handle("superslim::CutHistogram")
         for run in Runs(files):

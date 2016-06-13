@@ -2,23 +2,23 @@
 
 channel: tll
 generator: pow
-ntupledir: /hadoop/store/user/matze/ttH/v29
+ntupledir: /hadoop/store/user/matze/ttH/v30
 # ntupledir: /scratch365/mwolf3/ttH/v25
-outdir: ~/www/ttH/v29/tll
+outdir: ~/www/ttH/v30/tll
 histformat: "{p}_{c}_{v}_TLL"
 
 lumi: 2517
 
 plot:
-  - collisions
-  - ttjets
+  # - collisions
+  # - ttjets
   # - ttjets_sl
   # - ttjets_dl
   # - ttjets_semilept
   # - ttjets_fulllept
-  - singletop
-  - ewk
-  - ttH_125
+  # - singletop
+  # - ewk
+  # - ttH_125
   # - ttH2bb_125
   # - ttH2Nonbb_125
   - ttH2TT_125
@@ -36,9 +36,11 @@ cuts:
       (leptons[0].electron() != leptons[1].electron() and event.trigger().mixed())
   - "e/μ pt": >
       leptons[0].pt() > 20 and leptons[1].pt() > (leptons[1].electron() ? 15 : 10)
-  - "e/μ quality": >
-      leptons[0].mva() >= superslim::id::Tight and leptons[1].mva() >= superslim::id::Tight and
-      count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Tight; }) == 2
+  # - "e/μ quality": >
+  #     (lepton_id == superslim::Lepton::MVA) and
+  #     (std::count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Tight; }) == 2) and
+  #     (leptons[0].mva() >= superslim::id::Tight) and
+  #     (leptons[1].mva() >= superslim::id::Tight)
   - "dilepton mass": >
       (leptons[0].p4() + leptons[1].p4()).M() > 12
   - "Z veto": >

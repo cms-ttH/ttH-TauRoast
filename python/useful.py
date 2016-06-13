@@ -120,7 +120,12 @@ def code2leaf(name, typename, code):
                 const std::vector<superslim::Jet>& jets,
                 const superslim::LorentzVector& met,
                 std::unordered_map<std::string, double>& weights,
-                {t}& result) {{ {c}; }}
+                {t}& result) {{
+            try {{
+                std::cout << " HI " << std::endl;
+                {c};
+            }} catch (const std::out_of_range& e) {{ std::cout << "CAUGHT " << std::endl; }}
+        }}
         fastlane::Leaf<{t}> leaf_{f}("{n}", &fct_{f});
     """.format(n=name, f=stub, c=code, t=typename)
     if not r.gInterpreter.Declare(chunck):

@@ -82,6 +82,7 @@ namespace fastlane {
          virtual ~BasicLeaf() {};
 
          virtual void pick(const superslim::Event& e, const superslim::Combination& c, std::unordered_map<std::string, double>& w, const std::string& sys) = 0;
+         const std::string& name() const { return name_; };
 
          static std::vector<BasicLeaf*>& leaves() { return leaves_; };
       protected:
@@ -111,6 +112,7 @@ namespace fastlane {
 
          void grow(TTree& t) { t.Branch(name_.c_str(), &val_); };
          virtual void pick(const superslim::Event& e, const superslim::Combination& c, std::unordered_map<std::string, double>& w, const std::string& sys) override {
+            val_ = T();
             fct_(e, c.taus(), e.taus(), c.leptons(), c.electrons(), c.muons(), c.jets(sys), c.met(sys), w, val_);
          };
 

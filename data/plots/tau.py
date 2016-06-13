@@ -28,19 +28,21 @@ if config.taus >= 2:
 for n in range(config.taus):
     lbl = "#tau_{{{0}}} ".format(n + 1)
 
-    Leaf('tau{0}lep{0}_deltaR'.format(n + 1, 1), 'f', 'result = dR(leptons[{0}], taus[{1}])'.format(0, n))
+    for l in range(config.leptons):
+        lbl = "#tau_{{{0}}} ".format(n + 1)
+        Leaf('tau{}lep{}_deltaR'.format(n + 1, l + 1), 'f', 'result = dR(leptons.at({0}), taus.at({1}))'.format(l, n))
 
-    Plot(
-        name="taus/T{0}L_DeltaR".format(n + 1),
-        values=["tau{0}lep{0}_deltaR".format(n + 1, 1)],
-        labels=["#DeltaR " + lbl + ", l", "Events"],
-        binning=[15, 0, 6.28]
-    )
+        Plot(
+            name="taus/T{}L{}_DeltaR".format(n + 1, l + 1),
+            values=["tau{}lep{}_deltaR".format(n + 1, l + 1)],
+            labels=["#DeltaR {}, l_{}".format(lbl, l + 1), "Events"],
+            binning=[15, 0, 6.28]
+        )
 
-    Leaf('tau{0}_pt'.format(n + 1), 'f', 'result = taus[{0}].p4().Pt()'.format(n))
-    Leaf('tau{0}_eta'.format(n + 1), 'f', 'result = taus[{0}].p4().Eta()'.format(n))
-    Leaf('tau{0}_phi'.format(n + 1), 'f', 'result = taus[{0}].p4().Phi()'.format(n))
-    Leaf('tau{0}_leadingtrackpt'.format(n + 1), 'f', 'result = taus[{0}].leadingTrackPt()'.format(n))
+    Leaf('tau{0}_pt'.format(n + 1), 'f', 'result = taus.at({0}).p4().Pt()'.format(n))
+    Leaf('tau{0}_eta'.format(n + 1), 'f', 'result = taus.at({0}).p4().Eta()'.format(n))
+    Leaf('tau{0}_phi'.format(n + 1), 'f', 'result = taus.at({0}).p4().Phi()'.format(n))
+    Leaf('tau{0}_leadingtrackpt'.format(n + 1), 'f', 'result = taus.at({0}).leadingTrackPt()'.format(n))
 
     # Kinematics
     Plot(
@@ -68,10 +70,10 @@ for n in range(config.taus):
         binning=[20, -3.2, 3.2]
     )
 
-    Leaf('tau{0}_match'.format(n + 1), 'i', 'result = taus[{0}].match()'.format(n))
-    Leaf('tau{0}_genid'.format(n + 1), 'f', 'result = min(abs(taus[{0}].genPdgId()), 29)'.format(n))
-    Leaf('tau{0}_genparentid'.format(n + 1), 'f', 'result = min(abs(taus[{0}].parentId()), 29)'.format(n))
-    Leaf('tau{0}_gen_deltaR'.format(n + 1), 'f', 'result = dR(taus[{0}].p4(), taus[{0}].genP4())'.format(n))
+    Leaf('tau{0}_match'.format(n + 1), 'i', 'result = taus.at({0}).match()'.format(n))
+    Leaf('tau{0}_genid'.format(n + 1), 'f', 'result = min(abs(taus.at({0}).genPdgId()), 29)'.format(n))
+    Leaf('tau{0}_genparentid'.format(n + 1), 'f', 'result = min(abs(taus.at({0}).parentId()), 29)'.format(n))
+    Leaf('tau{0}_gen_deltaR'.format(n + 1), 'f', 'result = dR(taus.at({0}).p4(), taus.at({0}).genP4())'.format(n))
 
     # Gen matching
     Plot(
@@ -100,12 +102,12 @@ for n in range(config.taus):
             binning=[15, 0, 6.28]
     )
 
-    Leaf('tau{0}_decaymode'.format(n + 1), 'f', 'result = taus[{0}].decayMode()'.format(n))
-    Leaf('tau{0}_nprongs'.format(n + 1), 'f', 'result = taus[{0}].prongs()'.format(n))
-    Leaf('tau{0}_iso3hits03'.format(n + 1), 'f', 'result = taus[{0}].isolation3Hits03()'.format(n))
-    Leaf('tau{0}_iso3hits05'.format(n + 1), 'f', 'result = taus[{0}].isolation3Hits05()'.format(n))
-    Leaf('tau{0}_vetoelectron'.format(n + 1), 'f', 'result = taus[{0}].vetoElectron()'.format(n))
-    Leaf('tau{0}_vetomuon'.format(n + 1), 'f', 'result = taus[{0}].vetoMuon()'.format(n))
+    Leaf('tau{0}_decaymode'.format(n + 1), 'f', 'result = taus.at({0}).decayMode()'.format(n))
+    Leaf('tau{0}_nprongs'.format(n + 1), 'f', 'result = taus.at({0}).prongs()'.format(n))
+    Leaf('tau{0}_iso3hits03'.format(n + 1), 'f', 'result = taus.at({0}).isolation3Hits03()'.format(n))
+    Leaf('tau{0}_iso3hits05'.format(n + 1), 'f', 'result = taus.at({0}).isolation3Hits05()'.format(n))
+    Leaf('tau{0}_vetoelectron'.format(n + 1), 'f', 'result = taus.at({0}).vetoElectron()'.format(n))
+    Leaf('tau{0}_vetomuon'.format(n + 1), 'f', 'result = taus.at({0}).vetoMuon()'.format(n))
 
     # ID
     Plot(
