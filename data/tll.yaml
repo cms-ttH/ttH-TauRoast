@@ -36,11 +36,13 @@ cuts:
       (leptons[0].electron() != leptons[1].electron() and event.trigger().mixed())
   - "e/μ pt": >
       leptons[0].pt() > 20 and leptons[1].pt() > (leptons[1].electron() ? 15 : 10)
-  # - "e/μ quality": >
-  #     (lepton_id == superslim::Lepton::MVA) and
-  #     (std::count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Tight; }) == 2) and
-  #     (leptons[0].mva() >= superslim::id::Tight) and
-  #     (leptons[1].mva() >= superslim::id::Tight)
+  - "e/μ quality": >
+      (lepton_id == superslim::Lepton::MVA) and
+      (std::count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Tight; }) == 2) and
+      (leptons[0].mva() >= superslim::id::Tight) and
+      (leptons[1].mva() >= superslim::id::Tight)
+  - "e/μ charge": >
+      leptons[0].charge() * leptons[1].charge() > 0
   - "dilepton mass": >
       (leptons[0].p4() + leptons[1].p4()).M() > 12
   - "Z veto": >
