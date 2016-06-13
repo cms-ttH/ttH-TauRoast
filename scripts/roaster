@@ -188,8 +188,13 @@ if args.fill:
         if not f.IsOpen():
             raise IOError("Can't read file '{0}'".format(fn))
 
+        limit_processes = set(config["limits"]) & set(config["plot"])
+        not_processed = set(config["limits"]) - set(config["plot"])
+        if len(not_processed) > 0:
+            logging.error("the limit plots could not be saved for: {}".format(", ".join(not_processed)))
+
         for p in Plot.plots():
-            p.write(f, cuts, category, procs=config["limits"], fmt=config["histformat"])
+            p.write(f, cuts, category, procs=limit_processes, fmt=config["histformat"])
 
         timing = sorted(Plot.plots(), key=lambda p: p._time)
         for p in timing[:10] + timing[-10:]:
