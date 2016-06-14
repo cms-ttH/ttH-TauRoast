@@ -7,10 +7,13 @@ r.gSystem.Load("libttHTauRoast")
 from ttH.TauRoast.processing import Process
 from ttH.TauRoast.useful import code2cut, print_cuts
 
+
 class Cut(object):
+
     def __init__(self, name, code=None):
         self._r = code2cut(name.encode('ascii', 'ignore'), code) if code else None
         self._name = name
+        self._code = code
 
     def __getitem__(self, key):
         return self._r[str(key)]
@@ -23,17 +26,21 @@ class Cut(object):
 
     def __getstate__(self):
         counts = dict([(p, self[p]) for p in self.processes()])
-        return self._name, counts
+        return self._name, counts, self._code
 
     def __setstate__(self, state):
-        name, counts = state
+        name, counts, code = state
         self._name = name
-        self._r = r.fastlane.StaticCut(name.encode('ascii', 'ignore'))
+        self._code = code
+        if code:
+            self._r = code2cut(name.encode('ascii', 'ignore'), code)
+        else:
+            self._r = r.fastlane.StaticCut(name.encode('ascii', 'ignore'))
         for p, count in counts.items():
             self._r[p] = count
 
     def callback(self, fct):
-        self._r.setCallback(fct);
+        self._r.setCallback(fct)
 
     def raw(self):
         return self._r
