@@ -75,7 +75,7 @@ from ttH.TauRoast.plotting import Plot
 from ttH.TauRoast.processing import Process
 from ttH.TauRoast.variation import setup
 
-useful.setup(config['channel'], config['generator'])
+useful.setup(config['channel'])
 useful.load_python(config.get('sync', False))
 stylish.setup()
 

@@ -11,7 +11,7 @@ Config = namedtuple('Config', ['channel', 'taus', 'leptons'])
 config = None
 
 
-def setup(channel, generator):
+def setup(channel):
     global config
     config = Config(channel=channel, taus=channel.lower().count("t"), leptons=channel.lower().count("l"))
 
