@@ -1,7 +1,6 @@
 # vim: set sw=4 sta et :
 
 channel: tll
-generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v30
 # ntupledir: /scratch365/mwolf3/ttH/v25
 outdir: ~/www/ttH/v30/tll
@@ -18,7 +17,7 @@ plot:
   # - ttjets_fulllept
   # - singletop
   # - ewk
-  - ttH_125
+  - ttH_125_amc
   # - ttH2bb_125
   # - ttH2Nonbb_125
   # - ttH2TT_125

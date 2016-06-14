@@ -7,18 +7,18 @@ import time
 
 from collections import namedtuple
 
-Config = namedtuple('Config', ['channel', 'taus', 'leptons', 'generator'])
+Config = namedtuple('Config', ['channel', 'taus', 'leptons'])
 config = None
+
 
 def setup(channel, generator):
     global config
-    config = Config(channel=channel, taus=channel.lower().count("t"), leptons=channel.lower().count("l"), generator=generator)
+    config = Config(channel=channel, taus=channel.lower().count("t"), leptons=channel.lower().count("l"))
+
 
 def load_python(sync):
     import imp
     from glob import glob
-
-    from ttH.TauRoast.processing import Process
 
     datadir = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data')
     if sync:
@@ -33,21 +33,21 @@ def load_python(sync):
         for n, file in enumerate(glob(magic)):
             imp.load_source("procs{0}".format(n), file)
 
-    global config
-    for p in Process.procs():
-        if str(p).startswith('ttH') and str(p).endswith(config.generator):
-            p.copy(lambda s: s.replace('_' + config.generator, ''))
 
 def R(p4):
-    return math.sqrt(p4.Eta()**2 + p4.Phi()**2)
+    return math.sqrt(p4.Eta() ** 2 + p4.Phi() ** 2)
+
 
 def dR(one, two):
     return R(one.p4() - two.p4())
+
 
 def btag(jet):
     return jet.csv() > 0.80
 
 __mva = None
+
+
 def mva():
     global __mva
     if __mva is None:
@@ -87,6 +87,7 @@ r.gInterpreter.Declare("""
         }
 """)
 
+
 def code2cut(name, code):
     stub = hashlib.sha1(code + "\n{0}".format(time.time())).hexdigest()[:7]
     chunck = """
@@ -105,6 +106,7 @@ def code2cut(name, code):
     if not r.gInterpreter.Declare(chunck):
         raise RuntimeError("Can't compile:\n" + chunck)
     return getattr(r, 'cut_' + stub)
+
 
 def code2leaf(name, typename, code):
     stub = hashlib.sha1(code).hexdigest()[:7]
@@ -129,6 +131,7 @@ def code2leaf(name, typename, code):
         raise RuntimeError("Can't compile\n" + chunck)
     return getattr(r, 'leaf_' + stub)
 
+
 def print_cuts(cuts, columns, cutdata=None, sum_columns=None, what="", f=sys.stdout):
     if not sum_columns:
         sum_columns = [[c] for c in columns]
@@ -144,11 +147,11 @@ def print_cuts(cuts, columns, cutdata=None, sum_columns=None, what="", f=sys.std
         fieldlengths.append(length)
 
     header = u"{{:{0}}}".format(namelength) \
-            + u"".join(u"   {{:{0}}}".format(fl) for fl in fieldlengths) \
-            + u"\n"
+        + u"".join(u"   {{:{0}}}".format(fl) for fl in fieldlengths) \
+        + u"\n"
     body = u"{{:{0}}}".format(namelength) \
-            + "".join("   {{:{0},.2f}}".format(fl) for fl in fieldlengths) \
-            + "\n"
+        + "".join("   {{:{0},.2f}}".format(fl) for fl in fieldlengths) \
+        + "\n"
 
     f.write(header.format(what, *columns))
     f.write("-" * namelength + "".join("   " + "-" * fl for fl in fieldlengths) + "\n")
