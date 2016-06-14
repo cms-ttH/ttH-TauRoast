@@ -29,7 +29,7 @@ BasicProcess(
     sample=2533,
     fullname="t #bar{t} DL",
     paths=["tt_dl_pow"],
-    cross_section=831.76 * wleptonic**2,
+    cross_section=831.76 * wleptonic ** 2,
     events=4995600
 )
 
@@ -60,9 +60,9 @@ BasicProcess(
 )
 
 CombinedProcess(
-        name="ttjets_semilept",
-        fullname="t #bar{t} SL",
-        subprocesses=["ttjets_semilept_t", "ttjets_semilept_tbar"]
+    name="ttjets_semilept",
+    fullname="t #bar{t} SL",
+    subprocesses=["ttjets_semilept_t", "ttjets_semilept_tbar"]
 )
 
 BasicProcess(
@@ -70,8 +70,16 @@ BasicProcess(
     sample=2533,
     fullname="t #bar{t} FL",
     paths=["ttjets_dl_mad", "ttjets_dl_mad_ext"],
-    cross_section=831.76 * wleptonic**2,
+    cross_section=831.76 * wleptonic ** 2,
     events=30426583
+)
+
+BasicProcess(
+    name="ttW",
+    fullname="ttW",
+    paths=["ttw"],
+    cross_section=0.2043,
+    events=250307
 )
 
 BasicProcess(
@@ -91,10 +99,10 @@ BasicProcess(
 )
 
 CombinedProcess(
-        name="singletop",
-        fullname="single t/#bar{t}",
-        limitname="singlet",
-        subprocesses=["st", "stbar"]
+    name="singletop",
+    fullname="single t/#bar{t}",
+    limitname="singlet",
+    subprocesses=["st", "stbar"]
 )
 
 BasicProcess(
@@ -109,14 +117,14 @@ BasicProcess(
     name="dyjets_50",
     fullname="Z + jets M50+",
     paths=["dyjets_50"],
-    cross_section=6025.2 ,
+    cross_section=6025.2,
     events=28747969
 )
 
 CombinedProcess(
-        name="dyjets",
-        fullname="Z + jets",
-        subprocesses=["dyjets_10_50", "dyjets_50"]
+    name="dyjets",
+    fullname="Z + jets",
+    subprocesses=["dyjets_10_50", "dyjets_50"]
 )
 
 BasicProcess(
@@ -152,14 +160,14 @@ BasicProcess(
 )
 
 CombinedProcess(
-        name="ewk",
-        fullname="EWK",
-        subprocesses=["dyjets", "wjets", "diboson"]
+    name="ewk",
+    fullname="EWK",
+    subprocesses=["dyjets", "wjets", "diboson"]
 )
 
 CombinedProcess(
-        name="diboson",
-        fullname="ww, wz, zz",
-        limitname="diboson",
-        subprocesses=["ww", "wz", "zz"]
+    name="diboson",
+    fullname="ww, wz, zz",
+    limitname="diboson",
+    subprocesses=["ww", "wz", "zz"]
 )
