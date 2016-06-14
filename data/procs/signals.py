@@ -17,7 +17,7 @@ BasicProcess(
     sample=9125,
     fullname="t#bar{t}H(125) #rightarrow #tau_{h} #tau_{h} gen-match",
     paths=['ttH2TT_125', 'ttH2TT_125_ext1', 'ttH2TT_125_ext2', 'ttH2TT_125_ext3'],
-    cross_section= 0.5085 * 6.32e-2,
+    cross_section=0.5085 * 6.32e-2,
     events=8378353,
     additional_cuts=[('parentage', 'abs(taus[0].parentId()) == 25 and abs(taus[1].parentId()) == 25')]
     # split: {hbb: 0, hcc: 1, hww: 2, hzz: 3, htt: 4, hgg: 5, hgluglu: 6, hzg: 7}
@@ -40,7 +40,7 @@ BasicProcess(
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
     limitname="ttH2Nonbb125",
     paths=['ttH2Nonbb_125', 'ttH2Nonbb_125_ext1'],
-    cross_section=0.5085 * (1 - 0.577),
+    cross_section=0.2586,  # 0.5085 * (1 - 0.577),
     events=17594172
 )
 
@@ -67,7 +67,7 @@ BasicProcess(
     name="ttH2TT_125_real_pow",
     fullname="t#bar{t}H(125) #rightarrow #tau_{h} #tau_{h} gen-match",
     paths=['ttH2TT_125_pow'],
-    cross_section= 0.5085 * 6.32e-2,
+    cross_section=0.5085 * 6.32e-2,
     events=2199600,
     additional_cuts=[('parentage', 'abs(taus[0].parentId()) == 25 and abs(taus[1].parentId()) == 25')]
 )
@@ -89,15 +89,15 @@ BasicProcess(
 )
 
 CombinedProcess(
-        name="ttH_125_amc",
-        fullname="t#bar{t}H(125)",
-        limitname="ttH125_amc",
-        subprocesses=["ttH2bb_125_amc", "ttH2Nonbb_125_amc"]
+    name="ttH_125_amc",
+    fullname="t#bar{t}H(125)",
+    limitname="ttH125_amc",
+    subprocesses=["ttH2bb_125_amc", "ttH2Nonbb_125_amc"]
 )
 
 CombinedProcess(
-        name="ttH_125_pow",
-        fullname="t#bar{t}H(125)",
-        limitname="ttH125_pow",
-        subprocesses=["ttH2bb_125_pow", "ttH2Nonbb_125_pow"]
+    name="ttH_125_pow",
+    fullname="t#bar{t}H(125)",
+    limitname="ttH125_pow",
+    subprocesses=["ttH2bb_125_pow", "ttH2Nonbb_125_pow"]
 )
