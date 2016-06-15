@@ -22,6 +22,7 @@ plot:
   - tttt
   - tZq
   - ttH_125_amc
+  - collisions_double
   # - ttH2bb_125
   # - ttH2Nonbb_125
   # - ttH2TT_125
@@ -46,8 +47,8 @@ cuts:
       (leptons[1].mva() >= superslim::id::Tight)
   - "e/μ charge": >
       leptons[0].charge() * leptons[1].charge() > 0
-  - "τ quality": >
-      tau_id == superslim::Tau::Iso3Hits05
+  # - "τ quality": >
+  #     tau_id == superslim::Tau::Iso3Hits05
   - "dilepton mass": >
       (leptons[0].p4() + leptons[1].p4()).M() > 12
   - "Z veto": >

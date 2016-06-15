@@ -7,16 +7,14 @@ import time
 import ROOT as r
 r.gSystem.Load("libttHTauRoast")
 
-from DataFormats.FWLite import Events, Handle, Runs
-
+from DataFormats.FWLite import Handle, Runs
 from ttH.TauRoast.botany import Tree
-from ttH.TauRoast.useful import code2cut, config
 
 NTUPLE_GLOB = '{channel}_test*.root'
 
+
 class Process(object):
     __processes__ = {}
-    __limitnames__ = set()
 
     def __init__(self, name, fullname, limitname):
         self._name = name
@@ -24,11 +22,7 @@ class Process(object):
         self._limitname = limitname if limitname else name
 
         if name in Process.__processes__:
-            raise KeyError("Plot with name {0} defined twice".format(name))
-        if limitname in Process.__limitnames__ and limitname:
-            raise KeyError("Plot with limit name {0} defined twice".format(limitname))
-        elif limitname:
-            Process.__limitnames__.add(limitname)
+            raise KeyError("Process with name {0} defined twice".format(name))
         Process.__processes__[name] = self
 
     def copy(self, fct=lambda s: s):
@@ -63,7 +57,9 @@ class Process(object):
     def expand(cls, name):
         return map(cls.get, cls.__processes__[str(name)].process())
 
+
 class BasicProcess(Process):
+
     def __init__(self, name, paths, events, fullname=None, limitname=None, sample=-1, cross_section=1, additional_cuts=None):
         super(BasicProcess, self).__init__(name, fullname, limitname)
 
@@ -75,8 +71,8 @@ class BasicProcess(Process):
 
     def copy(self, fct=lambda s: s):
         return BasicProcess(fct(self._name), self.__paths, self.__events,
-                fct(self._fullname), fct(self._limitname),
-                self.__sample, self.__cross_section, self.__add_cuts)
+                            fct(self._fullname), fct(self._limitname),
+                            self.__sample, self.__cross_section, self.__add_cuts)
 
     def analyze(self, filename, counts, cuts, weights, systematics, basedir, limit=-1, debug=False):
         from ttH.TauRoast.useful import config
@@ -107,9 +103,9 @@ class BasicProcess(Process):
             else:
                 h = handle.product()
                 for n in range(hist.GetNbinsX()):
-                    label = h.GetXaxis().GetBinLabel(n+1)
+                    label = h.GetXaxis().GetBinLabel(n + 1)
                     if label != "":
-                        hist.GetXaxis().SetBinLabel(n+1, label)
+                        hist.GetXaxis().SetBinLabel(n + 1, label)
                 hist.Add(h.product())
 
         if hist is None:
@@ -117,7 +113,6 @@ class BasicProcess(Process):
 
         if len(counts) == 0:
             counts.append(StaticCut("Dataset"))
-            names = []
 
             rx = re.compile(r'pass\w*Cut\(.*"(.*)".*\)')
             fn = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'plugins', 'TauProcessor.cc')
@@ -150,7 +145,7 @@ class BasicProcess(Process):
         def log(i):
             logging.info("processing {0}, event {1}".format(str(self), i))
         now = time.clock()
-        r.fastlane.process(str(self), config.channel, cfiles, tree.raw(), ccuts, cweights, systematics, log, limit);
+        r.fastlane.process(str(self), config.channel, cfiles, tree.raw(), ccuts, cweights, systematics, log, limit)
         logging.debug("time spent processing: {0}".format(time.clock() - now))
 
     def process(self):
@@ -172,7 +167,9 @@ class BasicProcess(Process):
     def paths(self):
         return self.__paths
 
+
 class CombinedProcess(Process):
+
     def __init__(self, name, subprocesses, limitname=None, fullname=None):
         super(CombinedProcess, self).__init__(name, fullname, limitname)
 
@@ -180,7 +177,7 @@ class CombinedProcess(Process):
 
     def copy(self, fct=lambda s: s):
         return CombinedProcess(fct(self._name), map(fct, self.__subprocesses),
-                fct(self._limitname), fct(self._fullname))
+                               fct(self._limitname), fct(self._fullname))
 
     def process(self):
         return sum((Process.get(n).process() for n in self.__subprocesses), [])

@@ -1,33 +1,27 @@
 from ttH.TauRoast.processing import BasicProcess, CombinedProcess
 
 BasicProcess(
-    name="Collisions_DoubleElectron",
+    name="collisions_double_e",
     fullname="Collisions",
-    limitname="data_obs_ee",
-    # add cuts:
-    #   - NumLooseElectrons = 2
-    paths=["data_DoubleElectron_2012A_06Aug", "data_DoubleElectron_2012A_12Jul", "data_DoubleElectron_2012B_13Jul", "data_DoubleElectron_2012C_24Aug", "data_DoubleElectron_2012C_PR", "data_DoubleElectron_2012D_PR"],
-    events=105139786
+    additional_cuts=[('trigger selection', 'len(leptons) == 2 and leptons[0].electron() and leptons[1].electron()')],
+    paths=["data_DoubleEG_2015D_Dec16"],
+    events=93018487
 )
 
 BasicProcess(
-    name="Collisions_DoubleMuon",
-    # add cuts:
-    #   - NumLooseMuons = 2
+    name="collisions_double_mu",
     fullname="Collisions",
-    limitname="data_obs_mumu",
-    paths=["data_DoubleMu_2012A_06Aug", "data_DoubleMu_2012A_13Jul", "data_DoubleMu_2012B_PR", "data_DoubleMu_2012C_24Aug", "data_DoubleMu_2012C_PR", "data_DoubleMu_2012D_PR"],
-    events=88169930
+    additional_cuts=[('trigger selection', 'len(leptons) == 2 and leptons[0].muon() and leptons[1].muon()')],
+    paths=["data_DoubleMu_2015D_Dec16"],
+    events=51342919
 )
 
 BasicProcess(
-    name="collisions_ElectronMuon",
-    # add cuts:
-    #   - NumLooseElectrons = 1 and NumLooseMuons = 1
+    name="collisions_mu_egamma",
     fullname="Collisions",
-    limitname="data_obs_emu",
-    paths=["data_MuEG_2012A_06Aug", "data_MuEG_2012A_13Jul", "data_MuEG_2012B_13Jul", "data_MuEG_2012C_24Aug", "data_MuEG_2012C_PR", "data_MuEG_2012D_PR"],
-    events=60158786
+    additional_cuts=[('trigger selection', 'len(leptons) == 2 and (leptons[0].muon() != leptons[1].muon())')],
+    paths=["data_MuonEG_2015D_Dec16"],
+    events=13442593
 )
 
 BasicProcess(
@@ -48,14 +42,6 @@ BasicProcess(
     events=262813074
 )
 
-BasicProcess(
-    name="collisions_mu_egamma",
-    fullname="Collisions",
-    limitname="data_obs_mueg",
-    paths=["data_MuEG_2015D", "data_MuEG_2015D_Oct05"],
-    events=262813074
-)
-
 # CombinedProcess(
 #     name="fake_data",
 #     limitname="data_obs",
@@ -63,8 +49,15 @@ BasicProcess(
 # )
 
 CombinedProcess(
-    name="collisions",
+    name="collisions_single",
     fullname="Collisions",
     limitname="data_obs",
     subprocesses=["collisions_single_e", "collisions_single_mu"]
+)
+
+CombinedProcess(
+    name="collisions_double",
+    fullname="Collisions",
+    limitname="data_obs",
+    subprocesses=["collisions_double_e", "collisions_double_mu", "collisions_mu_egamma"]
 )
