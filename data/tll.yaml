@@ -19,6 +19,8 @@ plot:
   # - singletop
   # - ewk
   - ttW
+  - tttt
+  - tZq
   - ttH_125_amc
   # - ttH2bb_125
   # - ttH2Nonbb_125

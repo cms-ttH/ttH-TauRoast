@@ -83,6 +83,22 @@ BasicProcess(
 )
 
 BasicProcess(
+    name="tttt",
+    fullname="tttt",
+    paths=["tttt", "tttt_ext1"],
+    cross_section=0.009103,
+    events=1210521
+)
+
+BasicProcess(
+    name="tZq",
+    fullname="tZq",
+    paths=["tZq"],
+    cross_section=0.0758,
+    events=2996000
+)
+
+BasicProcess(
     name="st",
     fullname="t",
     paths=["st"],
