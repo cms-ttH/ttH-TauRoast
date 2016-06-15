@@ -2,34 +2,34 @@
 # vim: ts=4:sw=4:et:sta
 
 import argparse
-import codecs
 import logging
 import os
-import pickle
 import yaml
 
 parser = argparse.ArgumentParser(description='Grill some taus.')
 parser.add_argument('config', metavar='config', type=str, nargs=1,
-        help='a configuration file to use')
+                    help='a configuration file to use')
 parser.add_argument('-v', '--verbose', action="count", default=0,
-        help="increase verbosity")
+                    help="increase verbosity")
 parser.add_argument('-q', '--quiet', action="count", default=0,
-        help="decrease verbosity")
+                    help="decrease verbosity")
 ag = parser.add_argument_group('analysis options')
 ag.add_argument('-a', '--analyze', action='store_true', default=False,
-        help="analyze datasets")
+                help="analyze datasets")
 ag.add_argument('-f', '--fill', action='store_true', default=False,
-        help="fill histograms")
+                help="fill histograms")
 ag.add_argument('-p', '--plot', action='store_true', default=False,
-        help="save histograms")
+                help="save histograms")
 ag = parser.add_argument_group('general options')
 ag.add_argument('-i', '--input', type=str, default=None,
-        help="change input directory")
+                help="change input directory")
 ag.add_argument('-o', '--output', type=str, default=None,
-        help="change output directory")
+                help="change output directory")
+ag.add_argument('-r', '--reuse', action='store_true', default=False,
+                help="continue processing reusing previous results")
 ag = parser.add_argument_group('debugging and syncronization options')
 ag.add_argument('--debug-cuts', action='store_true', default=False,
-        help="save event quantites after each cut")
+                help="save event quantites after each cut")
 
 args = parser.parse_args()
 
@@ -41,8 +41,8 @@ if not any([args.analyze, args.fill, args.plot]):
 
 # Logging setup
 logging.basicConfig(
-        datefmt="%Y-%m-%d %H:%M:%S",
-        format="%(asctime)s [%(levelname)s] - %(filename)s %(lineno)d: %(message)s")
+    datefmt="%Y-%m-%d %H:%M:%S",
+    format="%(asctime)s [%(levelname)s] - %(filename)s %(lineno)d: %(message)s")
 
 logging.__dict__['root'].level = (2 + args.quiet - args.verbose) * 10
 
@@ -58,10 +58,6 @@ for k in ('indir', 'outdir', 'ntupledir'):
     if k in config:
         config[k] = os.path.expanduser(os.path.expandvars(config[k]))
 
-datadir = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data')
-with open(os.path.join(datadir, 'plot.yaml')) as f:
-    plotconfig = yaml.load(f)
-
 import ROOT as r
 
 r.gROOT.SetBatch()
@@ -69,10 +65,7 @@ r.gErrorIgnoreLevel = 1001
 r.gSystem.Load("libttHTauRoast")
 
 from ttH.TauRoast import stylish, useful
-from ttH.TauRoast.botany import Forest
-from ttH.TauRoast.cutting import StaticCut, Cut, cutflow, normalize
-from ttH.TauRoast.plotting import Plot
-from ttH.TauRoast.processing import Process
+from ttH.TauRoast.actionable import analyze, dump_categories, dump_cuts, fill, plot
 from ttH.TauRoast.variation import setup
 
 useful.setup(config['channel'])
@@ -86,160 +79,18 @@ if 'mva' in config:
     cfg = config['mva']
     setup(config['outdir'], cfg['variables'])
 
+actions = []
+
 if args.analyze:
-    counts = []
-    cuts = [
-            Cut("Ntuple analyzed", "true")
-    ]
-    weights = []
-
-    for cfg in config["cuts"]:
-        cuts.append(Cut(*cfg.items()[0]))
-
-    for weight in config["weights"]:
-        weights.append(StaticCut(weight))
-
-    fn = os.path.join(config["outdir"], "ntuple.root")
-    if os.path.exists(fn):
-        os.unlink(fn)
-
-    processed = set()
-    for proc in sum(map(Process.expand, config['plot']), []):
-        if proc in processed:
-            continue
-        processed.add(proc)
-        local_cuts = list(cuts)
-        for cfg in proc.additional_cuts:
-            local_cuts.insert(0, Cut(*cfg))
-
-        proc.analyze(fn, counts, local_cuts, weights, config["systematics"], config['ntupledir'], config.get('event limit', -1), args.debug_cuts)
-
-    cuts = counts + cuts + weights
-    normalize(cuts, config["lumi"], config.get("event limit"))
-    try:
-        cutflow(cuts, config["plot"])
-    except UnicodeEncodeError:
-        pass
-
-    with codecs.open(os.path.join(config["outdir"], "cuts.txt"), "w", encoding="utf8") as fd:
-        cutflow(cuts, config["plot"], f=fd)
-    with codecs.open(os.path.join(config["outdir"], "cuts_relative.txt"), "w", encoding="utf8") as fd:
-        cutflow(cuts, config["plot"], f=fd, relative=True)
-    with codecs.open(os.path.join(config["outdir"], "cuts_weighed.txt"), "w", encoding="utf8") as fd:
-        cutflow(cuts, config["plot"], f=fd, weighed=True)
-
-    fn = os.path.join(config["outdir"], "cutflow.pkl")
-    with open(fn, 'wb') as f:
-        pickle.dump(cuts, f)
-elif args.fill:
-    fn = os.path.join(config.get("indir", config["outdir"]), "cutflow.pkl")
-    with open(fn, 'rb') as f:
-        cuts = pickle.load(f)[:-2]
-    normalize(cuts, config["lumi"], config.get("event limit"))
-    try:
-        cutflow(cuts, config["plot"])
-    except UnicodeEncodeError:
-        pass
-
-    with codecs.open(os.path.join(config["outdir"], "cuts.txt"), "w", encoding="utf8") as fd:
-        cutflow(cuts, config["plot"], f=fd)
-    with codecs.open(os.path.join(config["outdir"], "cuts_relative.txt"), "w", encoding="utf8") as fd:
-        cutflow(cuts, config["plot"], f=fd, relative=True)
-    with codecs.open(os.path.join(config["outdir"], "cuts_weighed.txt"), "w", encoding="utf8") as fd:
-        cutflow(cuts, config["plot"], f=fd, weighed=True)
-
-categories = []
-definitions = []
-for cfg in config.get("categories", [{'inclusive': None}]):
-    category, definition = cfg.items()[0]
-    categories.append(category)
-    definitions.append(definition)
-
+    actions.append(analyze)
+if args.analyze or args.fill:
+    actions.append(dump_cuts)
 if args.fill:
-    fn = os.path.join(config.get("indir", config["outdir"]), "ntuple.root")
-    forest = Forest(fn)
-
-    for category, definition in zip(categories, definitions):
-        Plot.reset()
-
-        processed = set()
-        for proc in sum(map(Process.expand, config['plot']), []):
-            if proc in processed:
-                continue
-            processed.add(proc)
-            for p in Plot.plots():
-                p.fill(proc, config["weights"], definition)
-
-        fn = os.path.join(config["outdir"], "plots.root")
-        f = r.TFile(fn, "UPDATE")
-
-        if not f.IsOpen():
-            raise IOError("Can't read file '{0}'".format(fn))
-
-        for p in Plot.plots():
-            p.write(f, cuts, category, fmt=config["histformat"])
-
-        f.Write()
-        f.Close()
-
-        fn = os.path.join(config["outdir"], "limits.root")
-        f = r.TFile(fn, "UPDATE")
-
-        if not f.IsOpen():
-            raise IOError("Can't read file '{0}'".format(fn))
-
-        limit_processes = set(config["limits"]) & set(config["plot"])
-        not_processed = set(config["limits"]) - set(config["plot"])
-        if len(not_processed) > 0:
-            logging.error("the limit plots could not be saved for: {}".format(", ".join(not_processed)))
-
-        for p in Plot.plots():
-            p.write(f, cuts, category, procs=limit_processes, fmt=config["histformat"])
-
-        timing = sorted(Plot.plots(), key=lambda p: p._time)
-        for p in timing[:10] + timing[-10:]:
-            logging.debug("plot filling time for {0}: {1}".format(p, p._time))
-
-        f.Write()
-        f.Close()
-    del forest
-
+    actions.append(fill)
 if args.fill or args.plot:
-    counts = []
-
-    fn = os.path.join(config.get("indir", config["outdir"]), "plots.root")
-    f = r.TFile(fn, "READ")
-
-    if not f.IsOpen():
-        raise IOError("Can't read file '{0}'".format(fn))
-
-    for proc in config['plot']:
-        count = StaticCut(proc)
-        for cat in categories:
-            count[cat] = Plot.get_event_count(f, proc, cat, config['histformat'])
-        counts.append(count)
-
-    try:
-        useful.print_cuts(counts, categories)
-    except UnicodeEncodeError:
-        pass
-
-    with codecs.open(os.path.join(config["outdir"], "categories.txt"), "w", encoding="utf8") as fd:
-        useful.print_cuts(counts, categories, f=fd)
-
+    actions.append(dump_categories)
 if args.plot:
-    for category in categories:
-        Plot.reset()
+    actions.append(plot)
 
-        processes = sum(map(Process.expand, config['plot']), [])
-        fn = os.path.join(config.get("indir", config["outdir"]), "plots.root")
-        f = r.TFile(fn, "READ")
-
-        if not f.IsOpen():
-            raise IOError("Can't read file '{0}'".format(fn))
-
-        for p in Plot.plots():
-            p.read(f, category, processes, fmt=config["histformat"])
-            p.save(plotconfig, os.path.join(config["outdir"], category))
-
-        f.Close()
+for action in actions:
+    action(args, config)
