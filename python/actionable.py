@@ -142,14 +142,14 @@ def fill(args, config):
 
     atomic_processes = set(sum(map(Process.expand, config['plot']), []))
     limit_processes = set(config["limits"]) & set(config["plot"])
-    all_processes = limit_processes + atomic_processes
+    all_processes = limit_processes | atomic_processes
     not_processed = set(config["limits"]) - set(config["plot"])
 
     if len(not_processed) > 0:
         logging.error(
             "the limit plots will not be saved for: {}".format(", ".join(not_processed)))
 
-    if len(all_processes) != len(set([p.limitname() for p in all_processes])):
+    if len(all_processes) != len(set([p.limitname for p in all_processes])):
         logging.error(
             "the limit names of the processes are not unique and will lead to collisions!")
 

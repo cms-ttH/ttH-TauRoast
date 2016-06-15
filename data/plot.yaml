@@ -1,13 +1,14 @@
 legend: true
 scale factor: auto
 data:
-  - collisions: r.kBlack
+  - collisions_double: r.kBlack
+  - collisions_single: r.kBlack
 backgrounds:
   - ewk: r.kBlue
   - singletop: r.kGreen
   - ttjets: r.kRed
 signals:
-  # - ttH_125: r.kBlue
-  - ttH2bb_125: r.kBlack
-  - ttH2TT_125: r.kGreen + 1
-  - ttH2TT_125_real: r.kGreen + 3
+  - ttH_125_amc: r.kBlue
+  - ttH2bb_125_pow: r.kBlack
+  - ttH2TT_125_pow: r.kGreen + 1
+  - ttH2TT_125_real_pow: r.kGreen + 3
