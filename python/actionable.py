@@ -140,17 +140,26 @@ def fill(args, config):
 
     categories, definitions = get_categories(config)
 
+    atomic_processes = set(sum(map(Process.expand, config['plot']), []))
+    limit_processes = set(config["limits"]) & set(config["plot"])
+    all_processes = limit_processes + atomic_processes
+    not_processed = set(config["limits"]) - set(config["plot"])
+
+    if len(not_processed) > 0:
+        logging.error(
+            "the limit plots will not be saved for: {}".format(", ".join(not_processed)))
+
+    if len(all_processes) != len(set([p.limitname() for p in all_processes])):
+        logging.error(
+            "the limit names of the processes are not unique and will lead to collisions!")
+
     fn = os.path.join(config.get("indir", config["outdir"]), "ntuple.root")
     forest = Forest(fn)
 
     for category, definition in zip(categories, definitions):
         Plot.reset()
 
-        processed = set()
-        for proc in sum(map(Process.expand, config['plot']), []):
-            if proc in processed:
-                continue
-            processed.add(proc)
+        for proc in atomic_processes:
             for p in Plot.plots():
                 p.fill(proc, config["weights"], definition)
 
@@ -158,12 +167,6 @@ def fill(args, config):
         with open_rootfile(fn) as f:
             for p in Plot.plots():
                 p.write(f, cuts, category, fmt=config["histformat"])
-
-        limit_processes = set(config["limits"]) & set(config["plot"])
-        not_processed = set(config["limits"]) - set(config["plot"])
-        if len(not_processed) > 0:
-            logging.error(
-                "the limit plots could not be saved for: {}".format(", ".join(not_processed)))
 
         fn = os.path.join(config["outdir"], "limits.root")
         with open_rootfile(fn) as f:
