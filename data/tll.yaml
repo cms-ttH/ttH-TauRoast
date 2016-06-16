@@ -7,7 +7,7 @@ outdir: ~/www/ttH/v30/tll
 histformat: "{p}_{c}_{v}_TLL"
 
 lumi: 2517
-event limit: 10000
+event limit: 50000
 
 plot:
   # - collisions
@@ -34,27 +34,29 @@ limits:
   - ttH_125
 
 cuts:
-  - "Trigger": >
-      (leptons[0].electron() and leptons[1].electron() and event.trigger().double_e()) or
-      (leptons[0].muon() and leptons[1].muon() and event.trigger().double_mu()) or
-      (leptons[0].electron() != leptons[1].electron() and event.trigger().mixed())
-  - "e/μ pt": >
-      leptons[0].pt() > 20 and leptons[1].pt() > (leptons[1].electron() ? 15 : 10)
-  - "e/μ quality": >
-      (lepton_id == superslim::Lepton::MVA) and
-      (std::count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Tight; }) == 2) and
-      (leptons[0].mva() >= superslim::id::Tight) and
-      (leptons[1].mva() >= superslim::id::Tight)
-  - "e/μ charge": >
-      leptons[0].charge() * leptons[1].charge() > 0
-  # - "τ quality": >
-  #     tau_id == superslim::Tau::Iso3Hits05
-  - "dilepton mass": >
-      (leptons[0].p4() + leptons[1].p4()).M() > 12
-  - "Z veto": >
-      (not (leptons[0].electron() and leptons[1].electron())) or abs((leptons[0].p4() + leptons[1].p4()).M() - 91.2) > 10
-  - "Jets": "len(jets) >= 4"
-  - "Tags": "btags(jets) >= 1 or btags(jets, true) >= 2"
+    default:
+        - "Trigger": >
+            (leptons[0].electron() and leptons[1].electron() and event.trigger().double_e()) or
+            (leptons[0].muon() and leptons[1].muon() and event.trigger().double_mu()) or
+            (leptons[0].electron() != leptons[1].electron() and event.trigger().mixed())
+        - "e/μ pt": >
+            leptons[0].pt() > 20 and leptons[1].pt() > (leptons[1].electron() ? 15 : 10)
+        - "e/μ quality": >
+            (lepton_id == superslim::Lepton::MVA) and
+            (std::count_if(leptons.begin(), leptons.end(),
+                    [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Tight; }) == 2) and
+            (leptons[0].mva() >= superslim::id::Tight) and
+            (leptons[1].mva() >= superslim::id::Tight)
+        - "e/μ charge": >
+            leptons[0].charge() * leptons[1].charge() > 0
+        # - "τ quality": >
+        #     tau_id == superslim::Tau::Iso3Hits05
+        - "dilepton mass": >
+            (leptons[0].p4() + leptons[1].p4()).M() > 12
+        - "Z veto": >
+            not (leptons[0].electron() and leptons[1].electron() and abs((leptons[0].p4() + leptons[1].p4()).M() - 91.2) < 10)
+        - "Jets": "len(jets) >= 4"
+        - "Tags": "btags(jets) >= 1 or btags(jets, true) >= 2"
 
 weights:
   - Generator

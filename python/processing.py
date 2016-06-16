@@ -60,13 +60,14 @@ class Process(object):
 
 class BasicProcess(Process):
 
-    def __init__(self, name, paths, events, fullname=None, limitname=None, sample=-1, cross_section=1, additional_cuts=None):
+    def __init__(self, name, paths, events, fullname=None, limitname=None, sample=-1, cross_section=1, cutflow="default", additional_cuts=None):
         super(BasicProcess, self).__init__(name, fullname, limitname)
 
         self.__paths = paths
         self.__events = events
         self.__sample = sample
         self.__cross_section = cross_section
+        self.__cutflow = cutflow
         self.__add_cuts = additional_cuts if additional_cuts else []
 
     def copy(self, fct=lambda s: s):
@@ -158,6 +159,10 @@ class BasicProcess(Process):
     @property
     def cross_section(self):
         return self.__cross_section
+
+    @property
+    def cutflow(self):
+        return self.__cutflow
 
     @property
     def events(self):

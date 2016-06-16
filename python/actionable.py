@@ -17,28 +17,35 @@ from ttH.TauRoast.processing import Process
 
 
 def setup_cuts(config):
-    counts = []
-    cuts = [Cut("Ntuple analyzed", "true")]
-    weights = []
+    cutflows = {}
+    for name, cut_cfgs in config["cuts"].items():
+        counts = []
+        cuts = [Cut("Ntuple analyzed", "true")]
+        weights = []
 
-    for cfg in config["cuts"]:
-        cuts.append(Cut(*cfg.items()[0]))
+        for cfg in cut_cfgs:
+            cuts.append(Cut(*cfg.items()[0]))
 
-    for weight in config["weights"]:
-        weights.append(StaticCut(weight))
+        for weight in config["weights"]:
+            weights.append(StaticCut(weight))
 
-    return counts, cuts, weights
+        cutflows[name] = (counts, cuts, weights)
+    return cutflows
 
 
-def load_cuts(config):
+def load_cutflows(config):
+    cutflows = {}
     fn = os.path.join(config.get("indir", config["outdir"]), "cutflow.pkl")
     with open(fn, 'rb') as f:
-        cuts = pickle.load(f)[:-2]
-    return cuts
+        for name, cuts in pickle.load(f).items():
+            cutflows[name] = cuts[:-2]
+    return cutflows
 
 
-def split_cuts(all_cuts):
-    return [list(g) for k, g in groupby(all_cuts, key=type)]
+def split_cuts(concatenated_cutflows):
+    cutflows = {}
+    for name, all_cuts in concatenated_cutflows.items():
+        cutflows[name] = tuple(list(g) for k, g in groupby(all_cuts, key=type))
 
 
 def dump_categories(args, config):
@@ -67,32 +74,35 @@ def dump_categories(args, config):
 
 
 def dump_cuts(args, config):
-    cuts = load_cuts(config)
-    normalize(cuts, config["lumi"], config.get("event limit"))
-    try:
-        cutflow(cuts, config["plot"])
-    except UnicodeEncodeError:
-        pass
+    cutflows = load_cutflows(config)
+    for name, cuts in cutflows.items():
+        normalize(cuts, config["lumi"], config.get("event limit"))
+        try:
+            cutflow(cuts, config["plot"])
+        except UnicodeEncodeError:
+            pass
 
-    with codecs.open(os.path.join(config["outdir"], "cuts.txt"), "w", encoding="utf8") as fd:
-        cutflow(cuts, config["plot"], f=fd)
-    with codecs.open(os.path.join(config["outdir"], "cuts_relative.txt"), "w", encoding="utf8") as fd:
-        cutflow(cuts, config["plot"], f=fd, relative=True)
-    with codecs.open(os.path.join(config["outdir"], "cuts_weighed.txt"), "w", encoding="utf8") as fd:
-        cutflow(cuts, config["plot"], f=fd, weighed=True)
+        with codecs.open(os.path.join(config["outdir"], "cuts_{}.txt").format(name), "w", encoding="utf8") as fd:
+            cutflow(cuts, config["plot"], f=fd)
+        with codecs.open(os.path.join(config["outdir"], "cuts_{}_relative.txt").format(name), "w", encoding="utf8") as fd:
+            cutflow(cuts, config["plot"], f=fd, relative=True)
+        with codecs.open(os.path.join(config["outdir"], "cuts_{}_weighed.txt".format(name)), "w", encoding="utf8") as fd:
+            cutflow(cuts, config["plot"], f=fd, weighed=True)
 
 
 def analyze(args, config):
     fn = os.path.join(config["outdir"], "ntuple.root")
 
     if args.reuse:
-        counts, cuts, weights = split_cuts(load_cuts(config))
+        cutflows = split_cuts(load_cutflows(config))
     else:
         if os.path.exists(fn):
             os.unlink(fn)
-        counts, cuts, weights = setup_cuts(config)
+        cutflows = setup_cuts(config)
 
     for proc in sum(map(Process.expand, config['plot']), []):
+        counts, cuts, weights = cutflows[proc.cutflow]
+
         if len(counts) > 0 and str(proc) in counts[0].processes():
             continue
         local_cuts = list(cuts)
@@ -102,13 +112,15 @@ def analyze(args, config):
         proc.analyze(fn, counts, local_cuts, weights, config["systematics"], config[
                      'ntupledir'], config.get('event limit', -1), args.debug_cuts)
 
-    cuts = counts + cuts + weights
-
-    normalize(cuts, config["lumi"], config.get("event limit"))
+    concatenated_cutflows = {}
+    for name, (counts, cuts, weights) in cutflows.items():
+        cuts = counts + cuts + weights
+        normalize(cuts, config["lumi"], config.get("event limit"))
+        concatenated_cutflows[name] = cuts
 
     fn = os.path.join(config["outdir"], "cutflow.pkl")
     with open(fn, 'wb') as f:
-        pickle.dump(cuts, f)
+        pickle.dump(concatenated_cutflows, f)
 
 
 def get_categories(config):
@@ -135,8 +147,9 @@ def open_rootfile(fn, mode="UPDATE"):
 
 
 def fill(args, config):
-    cuts = load_cuts(config)
-    normalize(cuts, config["lumi"], config.get("event limit"))
+    cutflows = load_cutflows(config)
+    for name, cuts in cutflows.items():
+        normalize(cuts, config["lumi"], config.get("event limit"))
 
     categories, definitions = get_categories(config)
 
@@ -166,12 +179,12 @@ def fill(args, config):
         fn = os.path.join(config["outdir"], "plots.root")
         with open_rootfile(fn) as f:
             for p in Plot.plots():
-                p.write(f, cuts, category, fmt=config["histformat"])
+                p.write(f, cutflows, category, fmt=config["histformat"])
 
         fn = os.path.join(config["outdir"], "limits.root")
         with open_rootfile(fn) as f:
             for p in Plot.plots():
-                p.write(f, cuts, category, procs=limit_processes, fmt=config["histformat"])
+                p.write(f, cutflows, category, procs=limit_processes, fmt=config["histformat"])
 
         timing = sorted(Plot.plots(), key=lambda p: p._time)
         for p in timing[:10] + timing[-10:]:

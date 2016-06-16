@@ -149,14 +149,14 @@ class Plot(object):
 
         return (bsum / float(ssum) if ssum > 0 and bsum > 0 else 1)
 
-    def _normalize(self, cuts):
+    def _normalize(self, cutflows):
         if self.__normalized:
             return
         self.__normalized = True
         for proc, hist in self.__hists.items():
             logging.debug("normalizing histogram {0}, process {1}".format(self.__name, proc))
-            denom = float(cuts[-3][proc])
-            factor = 0. if denom == 0. else cuts[-1][proc] / denom
+            denom = float(cutflows[proc.cutflow][-3][proc])
+            factor = 0. if denom == 0. else cutflows[proc.cutflow][-1][proc] / denom
             hist.Scale(factor)
 
     def read(self, file, category, procs, fmt="{p}_{c}_{v}"):
@@ -170,8 +170,8 @@ class Plot(object):
                 h.SetDirectory(0)
                 self.__hists[proc] = h
 
-    def write(self, file, cuts, category, procs=None, fmt="{p}_{c}_{v}"):
-        self._normalize(cuts)
+    def write(self, file, cutflows, category, procs=None, fmt="{p}_{c}_{v}"):
+        self._normalize(cutflows)
 
         if procs is None:
             procs = self.__hists.keys()
