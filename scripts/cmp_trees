@@ -1,0 +1,123 @@
+#!/usr/bin/env python
+
+from root_numpy import root2array
+
+import matplotlib.gridspec as gs
+import matplotlib.pyplot as plt
+import numpy as np
+import os
+import pandas as pd
+import sys
+
+
+def bin_it(df, mn, mx):
+    bins = np.linspace(mn, mx, 30)
+    groups = df.groupby(pd.cut(df, bins))
+    return bins, groups
+
+
+try:
+    outdir, baseline, comparison = sys.argv[1:]
+except ValueError:
+    print "usage: {0[0]} outdir baseline:treename comparison:treename".format(sys.argv)
+    sys.exit(1)
+
+if not os.path.exists(outdir):
+    os.makedirs(outdir)
+
+fn, tn = baseline.split(':')
+basetree = root2array(fn, tn)
+
+fn, tn = comparison.split(':')
+comptree = root2array(fn, tn)
+
+baseonly = set(basetree.dtype.names) - set(comptree.dtype.names)
+componly = set(comptree.dtype.names) - set(basetree.dtype.names)
+both = set(comptree.dtype.names) & set(basetree.dtype.names)
+
+print "Fields only in baseline: {}".format(", ".join(sorted(baseonly)))
+print "Fields only in comparison: {}".format(", ".join(sorted(componly)))
+
+baseframe = pd.DataFrame(basetree)
+compframe = pd.DataFrame(comptree)
+
+joint = pd.merge(baseframe, compframe, how='inner', on=['nEvent'], suffixes=('_b', '_c'))
+
+for column in both:
+    if column == 'nEvent':
+        continue
+    print "Processing {}".format(column)
+    data_b = joint[column + '_b']
+    data_c = joint[column + '_c']
+
+    fig = plt.figure()
+    fig.suptitle(column, size=15)
+
+    g1 = gs.GridSpec(3, 1)
+    g1.update(left=0.1, right=0.58)
+
+    ax1 = plt.subplot(g1[0, 0])
+    ax2 = plt.subplot(g1[1, 0], sharex=ax1)
+    ax3 = plt.subplot(g1[2, 0], sharex=ax2)
+
+    plt.setp(ax1.get_xticklabels(), visible=False)
+    plt.setp(ax2.get_xticklabels(), visible=False)
+
+    g2 = gs.GridSpec(2, 1)
+    g2.update(left=0.62, right=0.9)
+
+    ax4 = plt.subplot(g2[0, 0])
+    ax5 = plt.subplot(g2[1, 0], sharex=ax4)
+
+    ax4.yaxis.tick_right()
+    ax4.yaxis.set_ticks_position('both')
+    ax5.yaxis.tick_right()
+    ax5.yaxis.set_ticks_position('both')
+
+    plt.setp(ax4.get_xticklabels(), visible=False)
+
+    diff = ((data_c - data_b) / data_b)[(data_b > -666) & (data_c > -666)]
+
+    data_b = data_b[data_b > -666]
+    data_c = data_c[data_c > -666]
+
+    mn = 0
+    mx = 0
+    if len(data_b) > 0:
+        mn = min(data_b.min(), mn)
+        mx = max(data_b.max(), mx)
+    if len(data_c) > 0:
+        mn = min(data_c.min(), mn)
+        mx = max(data_c.max(), mx)
+
+    if len(diff) > 0:
+        try:
+            ax4.hist(diff)
+            ax5.hist(diff)
+        except KeyError:
+            pass
+        except AttributeError:
+            pass
+
+    bins, groups_b = bin_it(data_b, mn, mx)
+    centers = [.5 * (a + b) for a, b in zip(bins, bins[1:])]
+    ax1.errorbar(x=centers, y=groups_b.count(), yerr=groups_b.std(), fmt='o')
+    ax2.errorbar(x=centers, y=groups_b.count(), yerr=groups_b.std(), fmt='o')
+
+    bins, groups_c = bin_it(data_c, mn, mx)
+    centers = [.5 * (a + b) for a, b in zip(bins, bins[1:])]
+    ax1.errorbar(x=centers, y=groups_c.count(), yerr=groups_c.std(), fmt='o')
+    ax2.errorbar(x=centers, y=groups_c.count(), yerr=groups_c.std(), fmt='o')
+
+    ax3.errorbar(x=centers, y=groups_b.count() / groups_c.count(), fmt='o')
+
+    ax1.set_ylim(ymin=0)
+    ax2.set_ylim(ymin=0)
+
+    if len(data_b) > 0 or len(data_c) > 0:
+        ax2.set_yscale('log')
+    if len(diff) > 0:
+        ax5.set_yscale('log')
+
+    plt.savefig(os.path.join(outdir, column + '.png'))
+    plt.close()
