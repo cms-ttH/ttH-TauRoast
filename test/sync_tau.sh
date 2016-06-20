@@ -10,3 +10,4 @@ cmsRun test/ntuplize.py inputFiles=file:00DF0A73-17C2-E511-B086-E41D2D08DE30.roo
 wait
 
 scripts/roaster -avv data/sync.yaml
+scripts/cmp_trees ~/www/ttH/sync/mutlilepton ttHtausNtuple.root:ttHtaus/eventTree:TLN test/sync_tau/out/ntuple.root:ttH:ND
