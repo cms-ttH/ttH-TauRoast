@@ -19,16 +19,16 @@ def bin_it(df, mn, mx):
 try:
     outdir, baseline, comparison = sys.argv[1:]
 except ValueError:
-    print "usage: {0[0]} outdir baseline:treename comparison:treename".format(sys.argv)
+    print "usage: {0[0]} outdir baseline:treename:name comparison:treename:name".format(sys.argv)
     sys.exit(1)
 
 if not os.path.exists(outdir):
     os.makedirs(outdir)
 
-fn, tn = baseline.split(':')
+fn, tn, basename = baseline.split(':')
 basetree = root2array(fn, tn)
 
-fn, tn = comparison.split(':')
+fn, tn, compname = comparison.split(':')
 comptree = root2array(fn, tn)
 
 baseonly = set(basetree.dtype.names) - set(comptree.dtype.names)
@@ -50,25 +50,28 @@ for column in both:
     data_b = joint[column + '_b']
     data_c = joint[column + '_c']
 
-    fig = plt.figure()
-    fig.suptitle(column, size=15)
+    fig = plt.figure(figsize=(15, 10))
 
-    g1 = gs.GridSpec(3, 1)
-    g1.update(left=0.1, right=0.58)
+    g1 = gs.GridSpec(3, 1, height_ratios=[2, 2, 1])
+    g1.update(top=0.95, bottom=0.05, left=0.05, right=0.59, hspace=0)
 
     ax1 = plt.subplot(g1[0, 0])
     ax2 = plt.subplot(g1[1, 0], sharex=ax1)
     ax3 = plt.subplot(g1[2, 0], sharex=ax2)
 
+    ax1.set_title(column)
+    ax3.set_ylabel('({c} - {b}) / {b}'.format(c=compname, b=basename))
+
     plt.setp(ax1.get_xticklabels(), visible=False)
     plt.setp(ax2.get_xticklabels(), visible=False)
 
     g2 = gs.GridSpec(2, 1)
-    g2.update(left=0.62, right=0.9)
+    g2.update(top=0.95, bottom=0.05, left=0.61, right=0.95, hspace=0)
 
     ax4 = plt.subplot(g2[0, 0])
     ax5 = plt.subplot(g2[1, 0], sharex=ax4)
 
+    ax4.set_title('({c} - {b}) / {b}'.format(c=compname, b=basename))
     ax4.yaxis.tick_right()
     ax4.yaxis.set_ticks_position('both')
     ax5.yaxis.tick_right()
@@ -92,8 +95,8 @@ for column in both:
 
     if len(diff) > 0:
         try:
-            ax4.hist(diff)
-            ax5.hist(diff)
+            ax4.hist(diff, bins=20)
+            ax5.hist(diff, bins=20)
         except KeyError:
             pass
         except AttributeError:
@@ -117,7 +120,7 @@ for column in both:
     if len(data_b) > 0 or len(data_c) > 0:
         ax2.set_yscale('log')
     if len(diff) > 0:
-        ax5.set_yscale('log')
+        ax5.set_yscale('log', nonposy='clip')
 
     plt.savefig(os.path.join(outdir, column + '.png'))
     plt.close()
