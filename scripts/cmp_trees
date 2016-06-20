@@ -10,6 +10,19 @@ import pandas as pd
 import sys
 
 
+html = """
+<hmtl>
+<body>
+<section>
+{}
+</section>
+</body>
+</html>
+"""
+
+img = '<a href="{0}.png"><img src="{0}.png" width="600" height="400"></img></a>'
+
+
 def bin_it(df, mn, mx):
     bins = np.linspace(mn, mx, 30)
     groups = df.groupby(pd.cut(df, bins))
@@ -42,6 +55,9 @@ baseframe = pd.DataFrame(basetree)
 compframe = pd.DataFrame(comptree)
 
 joint = pd.merge(baseframe, compframe, how='inner', on=['nEvent'], suffixes=('_b', '_c'))
+
+with open(os.path.join(outdir, 'index.html'), 'w') as f:
+    f.write(html.format('\n'.join([img.format(c) for c in sorted(both)])))
 
 for column in both:
     if column == 'nEvent':
