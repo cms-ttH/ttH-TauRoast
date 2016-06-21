@@ -2,6 +2,7 @@
 
 from root_numpy import root2array
 
+import itertools
 import matplotlib.gridspec as gs
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,15 +13,27 @@ import sys
 
 html = """
 <hmtl>
+<head>
+<style>
+tr:first-child {{background-color: #ccc}}
+tr:nth-child(even) {{background-color: #f2f2f2}}
+</style>
+</head>
 <body>
 <section>
-{}
+{0}
+</section>
+<section>
+{1}
 </section>
 </body>
 </html>
 """
 
 img = '<a href="{0}.png"><img src="{0}.png" width="600" height="400"></img></a>'
+row = '<tr>{}</tr>'
+cell = '<td style="{0[1]}">{0[0]}</td>'
+table = '<table>{}</table>'
 
 
 def bin_it(df, mn, mx):
@@ -56,8 +69,30 @@ compframe = pd.DataFrame(comptree)
 
 joint = pd.merge(baseframe, compframe, how='inner', on=['nEvent'], suffixes=('_b', '_c'))
 
+tables = []
+objs = ['ele0', 'ele1', 'mu0', 'mu1', 'tau0', 'tau1', 'jet0', 'jet1', 'jet2', 'jet3']
+for obj in objs:
+    quants = [col for col in both if col.startswith(obj)]
+
+    cols = ['nEvent'] + ['_'.join(t) for t in itertools.product(quants, [basename, compname])]
+    rows = [''.join(map(cell.format, [(c, '') for c in cols]))]
+    count = 0
+    for index, series in joint.iterrows():
+        values_b = [series[q + '_b'] for q in quants]
+        values_c = [series[q + '_c'] for q in quants]
+
+        if np.array_equal(values_b, values_c):
+            continue
+
+        count += 1
+        if count > 10:
+            continue
+
+        rows += [''.join(map(cell.format, [(series['nEvent'], '')] + [(v, '' if t[0] == t[1] else 'color: #e00') for t in zip(values_b, values_c) for v in t]))]
+    tables.append(''.join(map(row.format, rows)))
+
 with open(os.path.join(outdir, 'index.html'), 'w') as f:
-    f.write(html.format('\n'.join([img.format(c) for c in sorted(both)])))
+    f.write(html.format('\n'.join(map(table.format, tables)), '\n'.join([img.format(c) for c in sorted(both) if c != 'nEvent'])))
 
 for column in both:
     if column == 'nEvent':
@@ -120,18 +155,19 @@ for column in both:
 
     bins, groups_b = bin_it(data_b, mn, mx)
     centers = [.5 * (a + b) for a, b in zip(bins, bins[1:])]
-    ax1.errorbar(x=centers, y=groups_b.count(), yerr=groups_b.std(), fmt='o')
+    ax1.errorbar(x=centers, y=groups_b.count(), yerr=groups_b.std(), fmt='o', label=basename)
     ax2.errorbar(x=centers, y=groups_b.count(), yerr=groups_b.std(), fmt='o')
 
     bins, groups_c = bin_it(data_c, mn, mx)
     centers = [.5 * (a + b) for a, b in zip(bins, bins[1:])]
-    ax1.errorbar(x=centers, y=groups_c.count(), yerr=groups_c.std(), fmt='o')
+    ax1.errorbar(x=centers, y=groups_c.count(), yerr=groups_c.std(), fmt='o', label=compname)
     ax2.errorbar(x=centers, y=groups_c.count(), yerr=groups_c.std(), fmt='o')
 
     ax3.errorbar(x=centers, y=groups_b.count() / groups_c.count(), fmt='o')
 
+    ax1.legend()
     ax1.set_ylim(ymin=0)
-    ax2.set_ylim(ymin=0)
+    # ax2.set_ylim(ymin=0)
 
     if len(data_b) > 0 or len(data_c) > 0:
         ax2.set_yscale('log')
