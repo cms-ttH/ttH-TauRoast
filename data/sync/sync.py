@@ -112,9 +112,9 @@ for i in range(2):
     Leaf('tau{}_charge'.format(i), 'f',
          'result = len(taus) <= {0} ? -9999 : taus[{0}].charge()'.format(i))
     Leaf('tau{}_dxy'.format(i), 'f',
-         'result = len(taus) <= {0} ? -9999 : abs(taus[{0}].dxy())'.format(i))
+         'result = len(taus) <= {0} ? -9999 : taus[{0}].dxy()'.format(i))
     Leaf('tau{}_dz'.format(i), 'f',
-         'result = len(taus) <= {0} ? -9999 : abs(taus[{0}].dz())'.format(i))
+         'result = len(taus) <= {0} ? -9999 : taus[{0}].dz()'.format(i))
 
     Leaf('tau{}_byLooseCombinedIsolationDeltaBetaCorr3Hits'.format(i), 'i',
          'result = len(taus) <= {0} ? -9999 : taus[{0}].isolation3Hits05() >= superslim::id::Loose'.format(i))
