@@ -78,17 +78,17 @@ for obj in objs:
     rows = [''.join(map(cell.format, [(c, '') for c in cols]))]
     count = 0
     for index, series in joint.iterrows():
-        values_b = [series[q + '_b'] for q in quants]
-        values_c = [series[q + '_c'] for q in quants]
+        values_b = np.array([series[q + '_b'] for q in quants])
+        values_c = np.array([series[q + '_c'] for q in quants])
 
-        if np.array_equal(values_b, values_c):
+        if not np.any(np.absolute(values_b - values_c) > 0.01 * np.absolute(values_b)):
             continue
 
         count += 1
         if count > 10:
-            continue
+            break
 
-        rows += [''.join(map(cell.format, [(series['nEvent'], '')] + [(v, '' if t[0] == t[1] else 'color: #e00') for t in zip(values_b, values_c) for v in t]))]
+        rows += [''.join(map(cell.format, [(series['nEvent'], '')] + [(v, '' if abs(t[0] - t[1]) < 0.01 * abs(t[0]) else 'color: #e00') for t in zip(values_b, values_c) for v in t]))]
     tables.append(''.join(map(row.format, rows)))
 
 with open(os.path.join(outdir, 'index.html'), 'w') as f:
