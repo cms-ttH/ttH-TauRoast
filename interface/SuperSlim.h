@@ -123,8 +123,8 @@ namespace superslim {
          const std::vector<superslim::PhysObject>& parents() const { return parents_; };
          int parentId() const;
          int grandParentId() const;
-         float dxy() const { return abs(dxy_); };
-         float dz() const { return abs(dz_); };
+         float dxy() const { return dxy_; };
+         float dz() const { return dz_; };
          float dR(const superslim::PhysObject& o) const { return reco::deltaR(*this, o); };
          int charge() const { return charge_; };
          int pdgId() const { return pdg_id_; };
