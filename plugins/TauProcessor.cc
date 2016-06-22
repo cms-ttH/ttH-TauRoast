@@ -27,6 +27,7 @@
 #include "FWCore/Framework/interface/one/EDProducer.h"
 
 #include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
@@ -38,6 +39,7 @@
 #include "HLTrigger/HLTcore/interface/TriggerExpressionParser.h"
 
 #include "JetMETCorrections/Objects/interface/JetCorrector.h"
+#include "JetMETCorrections/Objects/interface/JetCorrectionsRecord.h"
 
 #include "DataFormats/Common/interface/ValueMap.h"
 
@@ -260,7 +262,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    mva_electrons_token_ = consumes<edm::View<pat::Electron>>(config.getParameter<edm::InputTag>("electrons"));
    muons_token_ = consumes<pat::MuonCollection>(config.getParameter<edm::InputTag>("muons"));
    taus_token_ = consumes<pat::TauCollection>(config.getParameter<edm::InputTag>("taus"));
-   ak4jets_token_ = consumes<pat::JetCollection>(edm::InputTag("slimmedJets"));
+   ak4jets_token_ = consumes<pat::JetCollection>(config.getParameter<edm::InputTag>("jets"));
    gen_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("prunedGenParticles"));
    met_token_ = consumes<pat::METCollection>(edm::InputTag("slimmedMETs"));
    trig_token_ = consumes<edm::TriggerResults>(edm::InputTag("TriggerResults", "", "HLT"));
@@ -302,7 +304,8 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    m_triggerSelector = std::unique_ptr<triggerExpression::Evaluator>(triggerExpression::parse(superslim::Trigger::get_selection()));
 
    helper_.SetUp("2015_74x", 2500, analysisType::LJ, data_);
-   helper_.SetJetCorrectorUncertainty();
+   helper_.UseCorrectedJets();
+   // helper_.SetJetCorrectorUncertainty();
    // helper_.SetFactorizedJetCorrector();
 }
 
@@ -423,8 +426,11 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
    auto rho = get_collection(*this, event, rho_token_);
    helper_.SetRho(*rho);
 
-   auto corr = JetCorrector::getJetCorrector("ak4PFchsL1L2L3", setup);
-   helper_.SetJetCorrector(corr);
+   edm::ESHandle<JetCorrectorParametersCollection> jetcorr;
+   setup.get<JetCorrectionsRecord>().get("AK4PF", jetcorr);
+
+   const JetCorrectorParameters& params = (*jetcorr)["Uncertainty"];
+   helper_.SetJetCorrectorUncertainty(params);
 
    // ===============
    // Basic selection
@@ -439,11 +445,11 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
    // Jet preselection
    // ================
    auto raw_jets = helper_.GetSelectedJets(*ak4jets, 0., 666., jetID::jetLoose, '-');
-   auto uncorrected_jets = helper_.GetUncorrectedJets(raw_jets);
+   // auto uncorrected_jets = helper_.GetUncorrectedJets(raw_jets);
 
    auto mets = get_collection(*this, event, met_token_);
    auto old_jets = helper_.GetSelectedJets(*ak4jets, 0., 666., jetID::jetMETcorrection, '-');
-   auto old_jets_uncorrected = helper_.GetUncorrectedJets(old_jets);
+   // auto old_jets_uncorrected = helper_.GetUncorrectedJets(old_jets);
 
    reco::GenParticleCollection particles;
    if (!data_)
@@ -515,12 +521,14 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
             std::map<std::string, std::vector<superslim::Jet>> sjets;
             std::map<std::string, superslim::LorentzVector> smets;
             for (auto& sys: systematics_) {
-               auto corrected_jets = helper_.GetCorrectedJets(uncorrected_jets, event, setup, sys.second);
-               corrected_jets = helper_.GetSelectedJets(corrected_jets, std::min(min_jet_pt_, min_tag_pt_), max_jet_eta_, jetID::none, '-');
-               corrected_jets = helper_.GetSortedByPt(corrected_jets);
+               // auto corrected_jets = helper_.GetCorrectedJets(uncorrected_jets, event, setup, sys.second);
+               // corrected_jets = helper_.GetSelectedJets(corrected_jets, std::min(min_jet_pt_, min_tag_pt_), max_jet_eta_, jetID::none, '-');
+               // corrected_jets = helper_.GetSelectedJets(raw_jets, std::min(min_jet_pt_, min_tag_pt_), max_jet_eta_, jetID::none, '-');
+               // corrected_jets = helper_.GetSortedByPt(corrected_jets);
 
                // Jet selection
-               auto jets_wo_lep = removeOverlap(corrected_jets, leptons, .4);
+               // auto jets_wo_lep = removeOverlap(corrected_jets, leptons, .4);
+               auto jets_wo_lep = removeOverlap(raw_jets, leptons, .4);
                auto jets_no_taus = removeOverlap(jets_wo_lep, taus, .25);
                auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, max_jet_eta_, jetID::none, '-');
                auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'M');
@@ -541,14 +549,15 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
                if (max_tags_ < 0 or selected_tags.size() <= (unsigned int) max_tags_)
                   pass_tags = true;
 
-               auto new_jets = helper_.GetCorrectedJets(old_jets_uncorrected, event, setup, sys.second);
-               auto corrected_mets = helper_.CorrectMET(old_jets, new_jets, *mets);
+               // auto new_jets = helper_.GetCorrectedJets(old_jets_uncorrected, event, setup, sys.second);
+               // auto corrected_mets = helper_.CorrectMET(old_jets, new_jets, *mets);
 
                sjets[sys.first] = {};
                for (const auto& jet: selected_jets)
                   sjets[sys.first].push_back(superslim::Jet(jet, particles));
 
-               smets[sys.first] = corrected_mets[0].p4();
+               // smets[sys.first] = corrected_mets[0].p4();
+               smets[sys.first] = mets->at(0).p4();
             }
 
             if (not (pass_jets and pass_tags) and not take_all_) {
