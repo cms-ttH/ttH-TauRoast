@@ -72,7 +72,7 @@ joint = pd.merge(baseframe, compframe, how='inner', on=['nEvent'], suffixes=('_b
 tables = []
 objs = ['ele0', 'ele1', 'mu0', 'mu1', 'tau0', 'tau1', 'jet0', 'jet1', 'jet2', 'jet3']
 for obj in objs:
-    quants = [col for col in both if col.startswith(obj)]
+    quants = sorted([col for col in both if col.startswith(obj)])
 
     cols = ['nEvent'] + ['_'.join(t) for t in itertools.product(quants, [basename, compname])]
     rows = [''.join(map(cell.format, [(c, '') for c in cols]))]
@@ -81,14 +81,14 @@ for obj in objs:
         values_b = np.array([series[q + '_b'] for q in quants])
         values_c = np.array([series[q + '_c'] for q in quants])
 
-        if not np.any(np.absolute(values_b - values_c) > 0.01 * np.absolute(values_b)):
+        if not np.any(np.logical_and(np.absolute(values_b - values_c) > 0.01 * np.absolute(values_b), values_b != values_c)):
             continue
 
         count += 1
         if count > 10:
             break
 
-        rows += [''.join(map(cell.format, [(series['nEvent'], '')] + [(v, '' if abs(t[0] - t[1]) < 0.01 * abs(t[0]) else 'color: #e00') for t in zip(values_b, values_c) for v in t]))]
+        rows += [''.join(map(cell.format, [(series['nEvent'], '')] + [(v, '' if not (t[0] != t[1] and abs(t[0] - t[1]) > 0.01 * abs(t[0])) else 'color: #e00') for t in zip(values_b, values_c) for v in t]))]
     tables.append(''.join(map(row.format, rows)))
 
 with open(os.path.join(outdir, 'index.html'), 'w') as f:
@@ -130,7 +130,7 @@ for column in both:
 
     plt.setp(ax4.get_xticklabels(), visible=False)
 
-    diff = ((data_c - data_b) / data_b)[(data_b > -666) & (data_c > -666)]
+    diff = ((data_c - data_b) / data_b)[(data_b > -666) & (data_c > -666) & (data_b > 0)]
 
     data_b = data_b[data_b > -666]
     data_c = data_c[data_c > -666]
