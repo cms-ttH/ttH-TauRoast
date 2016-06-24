@@ -42,20 +42,35 @@ def bin_it(df, mn, mx):
     return bins, groups
 
 
+def load_root(spec):
+    fn, tn, label = spec.split(':')
+    return label, root2array(fn, tn)
+
+
+def load_txt(spec):
+    fn, label = spec.split(':')
+    return label, np.genfromtxt(fn, delimiter=' ', names=True)
+
+
+def load(spec):
+    if ".root" in spec:
+        return load_root(spec)
+    else:
+        return load_txt(spec)
+
+
 try:
     outdir, baseline, comparison = sys.argv[1:]
 except ValueError:
-    print "usage: {0[0]} outdir baseline:treename:name comparison:treename:name".format(sys.argv)
+    print "usage: {0[0]} outdir basespec compspec".format(sys.argv)
+    print "  spec: rootfile:treename:label | textfile:label"
     sys.exit(1)
 
 if not os.path.exists(outdir):
     os.makedirs(outdir)
 
-fn, tn, basename = baseline.split(':')
-basetree = root2array(fn, tn)
-
-fn, tn, compname = comparison.split(':')
-comptree = root2array(fn, tn)
+basename, basetree = load(baseline)
+compname, comptree = load(comparison)
 
 baseonly = set(basetree.dtype.names) - set(comptree.dtype.names)
 componly = set(comptree.dtype.names) - set(basetree.dtype.names)
