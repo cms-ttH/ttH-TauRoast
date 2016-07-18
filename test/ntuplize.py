@@ -38,7 +38,8 @@ process = cms.Process("Taus")
 process.options = cms.untracked.PSet(
     wantSummary=cms.untracked.bool(True),
     numberOfThreads=cms.untracked.uint32(2),
-    numberOfStreams=cms.untracked.uint32(0)
+    numberOfStreams=cms.untracked.uint32(0),
+    SkipEvent=cms.untracked.vstring('ProductNotFound')
 )
 
 

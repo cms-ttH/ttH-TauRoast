@@ -100,7 +100,7 @@ get_collection(const edm::EDConsumerBase& base, const edm::Event& event, const e
    if (!handle.isValid()) {
       edm::EDConsumerBase::Labels l;
       base.labelsForToken(token, l);
-      throw edm::Exception(edm::errors::InvalidReference, "Can't find collection: " + std::string(l.module));
+      throw edm::Exception(edm::errors::ProductNotFound, "Can't find collection: " + std::string(l.module));
    }
    return handle;
 }
