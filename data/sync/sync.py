@@ -26,6 +26,8 @@ Leaf('PFMET', 'f', 'result = met.pt()')
 Leaf('PFMETphi', 'f', 'result = met.phi()')
 
 for i in range(2):
+    Leaf('mu{}_pdgID'.format(i), 'f',
+         'result = len(muons) <= {0} ? -9999 : muons[{0}].pdgId()'.format(i))
     Leaf('mu{}_pt'.format(i), 'f',
          'result = len(muons) <= {0} ? -9999 : muons[{0}].p4().pt()'.format(i))
     Leaf('mu{}_eta'.format(i), 'f',
@@ -64,6 +66,8 @@ for i in range(2):
          'result = len(muons) <= {0} ? -9999 : muons[{0}].segmentCompatibility()'.format(i))
 
 for i in range(2):
+    Leaf('ele{}_pdgID'.format(i), 'f',
+         'result = len(electrons) <= {0} ? -9999 : electrons[{0}].pdgId()'.format(i))
     Leaf('ele{}_pt'.format(i), 'f',
          'result = len(electrons) <= {0} ? -9999 : electrons[{0}].p4().pt()'.format(i))
     Leaf('ele{}_eta'.format(i), 'f',
@@ -99,6 +103,8 @@ for i in range(2):
          'result = len(electrons) <= {0} ? -9999 : electrons[{0}].sip3D()'.format(i))
     Leaf('ele{}_leptonMVA'.format(i), 'f',
          'result = len(electrons) <= {0} ? -9999 : electrons[{0}].mvaRaw()'.format(i))
+    Leaf('ele{}_eleMVA'.format(i), 'f',
+         'result = len(electrons) <= {0} ? -9999 : electrons[{0}].nonTriggeringId()'.format(i))
 
 for i in range(2):
     Leaf('tau{}_pt'.format(i), 'f',
@@ -115,6 +121,9 @@ for i in range(2):
          'result = len(taus) <= {0} ? -9999 : taus[{0}].dxy()'.format(i))
     Leaf('tau{}_dz'.format(i), 'f',
          'result = len(taus) <= {0} ? -9999 : taus[{0}].dz()'.format(i))
+
+    Leaf('tau{}_decayModeFinding'.format(i), 'f',
+         'result = len(taus) <= {0} ? -9999 : 1'.format(i))
 
     Leaf('tau{}_byLooseCombinedIsolationDeltaBetaCorr3Hits'.format(i), 'i',
          'result = len(taus) <= {0} ? -9999 : taus[{0}].isolation3Hits05() >= superslim::id::Loose'.format(i))
