@@ -487,7 +487,7 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
    // cut index bitmap
    int passed = 0;
 
-   for (const auto& lepton_id: {superslim::Lepton::LJ, superslim::Lepton::Cut, superslim::Lepton::LegacyCut, superslim::Lepton::MVA, superslim::Lepton::LegacyMVA}) {
+   for (const auto& lepton_id: {superslim::Lepton::LJ, superslim::Lepton::MVA}) {
       std::vector<superslim::Lepton> leptons;
 
       std::copy_if(all_leptons.begin(), all_leptons.end(), std::back_inserter(leptons),
@@ -502,7 +502,7 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
       auto selected_taus = removeOverlap(all_taus, leptons, .4);
       passComboCut(event_cut, 0, passed, "Leptons in combo");
 
-      for (const auto& tau_id: {superslim::Tau::Iso3Hits05, superslim::Tau::Iso3Hits03, superslim::Tau::IsoMVA03, superslim::Tau::IsoMVA05}) {
+      for (const auto& tau_id: {superslim::Tau::IsoMVA03}) {
          std::vector<superslim::Tau> taus;
          std::copy_if(selected_taus.begin(), selected_taus.end(), std::back_inserter(taus),
                [&](const superslim::Tau& t) -> bool { return t.loose(tau_id); });
