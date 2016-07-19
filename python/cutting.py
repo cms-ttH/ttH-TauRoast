@@ -48,13 +48,16 @@ class Cut(object):
     def processes(self):
         return self._r.processes()
 
+
 class StaticCut(Cut):
+
     def __init__(self, name):
         super(StaticCut, self).__init__(name)
         self._r = r.fastlane.StaticCut(name)
 
     def __setitem__(self, key, value):
         self._r[str(key)] = value
+
 
 def normalize(cuts, lumi, limit=None):
     weights = None
@@ -97,6 +100,7 @@ def normalize(cuts, lumi, limit=None):
     cuts.append(dsetnorm)
     cuts.append(luminorm)
 
+
 def cutflow(cuts, procs, relative=False, weighed=False, f=sys.stdout):
     expanded_proc = [Process.expand(proc) for proc in procs]
 
@@ -114,6 +118,7 @@ def cutflow(cuts, procs, relative=False, weighed=False, f=sys.stdout):
 
     if relative:
         for i in xrange(1, len(cutdata)):
-            cutdata[-i] = [(float(b) / a if a != 0 else 0) for a, b in zip(cutdata[-(i + 1)], cutdata[-i])]
+            cutdata[-i] = [(float(b) / a if a != 0 else 0)
+                           for a, b in zip(cutdata[-(i + 1)], cutdata[-i])]
 
     print_cuts(cuts, procs, cutdata, expanded_proc, "Cut", f)
