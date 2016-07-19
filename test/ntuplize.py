@@ -81,10 +81,6 @@ process.source = cms.Source("PoolSource",
 #     process.ak4PFchsResidual = ak4CaloResidual.clone(algorithm='AK4PFchs')
 #     process.ak4PFchsL1L2L3.correctors.append('ak4PFchsResidual')
 
-process.selector = cms.EDFilter("TauSelector",
-                                inputs=cms.VInputTag()
-                                )
-
 from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJetCorrFactors
 process.patJetCorrFactorsReapplyJEC = updatedPatJetCorrFactors.clone(
     src=cms.InputTag("slimmedJets"),
