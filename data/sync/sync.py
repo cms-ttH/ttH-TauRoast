@@ -1,4 +1,5 @@
 from ttH.TauRoast.botany import Leaf
+from ttH.TauRoast.plotting import Plot
 from ttH.TauRoast.processing import BasicProcess
 
 BasicProcess(
@@ -15,6 +16,14 @@ BasicProcess(
     paths=['ttjets'],
     cross_section=1,
     events=41812
+)
+
+Leaf('events', 'f', 'result = .5')
+Plot(
+    name="general/Events",
+    values=["events"],
+    labels=["", "Events"],
+    binning=[1, 0, 1]
 )
 
 Leaf('nEvent', 'i', 'result = event.event()')

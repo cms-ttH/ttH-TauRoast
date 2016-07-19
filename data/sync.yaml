@@ -9,11 +9,11 @@ lumi: 2517
 
 plot:
   - ttH
-  - ttjets
+  # - ttjets
 
 cuts:
-    - "e/μ quality": "lepton_id == superslim::Lepton::Cut"
-    - "τ quality": "tau_id == superslim::Tau::Iso3Hits05"
+    - "e/μ quality": "lepton_id == superslim::Lepton::MVA"
+    - "τ quality": "tau_id == superslim::Tau::IsoMVA03"
 
 weights: []
 systematics: NA

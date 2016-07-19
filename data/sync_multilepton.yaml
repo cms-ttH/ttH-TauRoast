@@ -1,0 +1,43 @@
+# vim: set sw=4 sta et :
+
+channel: tll
+ntupledir: test/sync_multilepton
+outdir: test/sync_multilepton/out
+histformat: "{p}_{c}_{v}_TLL"
+sync: true
+
+lumi: 2517
+
+plot:
+  - ttH
+
+cuts:
+    default:
+        - "e/μ quality": "lepton_id == superslim::Lepton::MVA"
+        - "τ quality": "tau_id == superslim::Tau::IsoMVA03"
+        - "ss": "leptons[0].charge() * leptons[1].charge() > 0"
+        - "e/μ pt": >
+            leptons[0].pt() > (leptons[0].electron() ? 25 : 20) and
+            leptons[1].pt() > (leptons[1].electron() ? 15 : 10)
+        - "dilepton mass": >
+            (leptons[0].p4() + leptons[1].p4()).M() > 12
+        - "e/μ quality": >
+            (lepton_id == superslim::Lepton::MVA) and
+            (std::count_if(leptons.begin(), leptons.end(),
+                    [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Loose; }) == 2) and
+            (leptons[0].mva() >= superslim::id::Loose) and
+            (leptons[1].mva() >= superslim::id::Loose)
+        - "Z veto": >
+            not (leptons[0].electron() and leptons[1].electron() and abs((leptons[0].p4() + leptons[1].p4()).M() - 91.2) < 10)
+        - "charge": >
+            leptons[0].consistentCharge() and leptons[1].consistentCharge() and
+            (leptons[0].muon() or (leptons[0].missingHits() == 0 and leptons[0].passesConversionVeto())) and
+            (leptons[1].muon() or (leptons[1].missingHits() == 0 and leptons[1].passesConversionVeto()))
+        - "Jets": "len(jets) >= 4"
+        - "Tags": "btags(jets) >= 1 or btags(jets, true) >= 2"
+        - "tau": "len(taus) > 0"
+        # - "mm": "leptons[0].electron() != leptons[1].electron()"
+
+weights: []
+systematics: NA
+limits: []
