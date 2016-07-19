@@ -429,7 +429,7 @@ class Plot(object):
         drw = '{0}>>{1}'.format(":".join(self.__values), hist.GetName())
         sel = '*'.join(self.__weights if self.__weights else weights)
         if category:
-            sel += ' * ({})'.format(category)
+            sel += ' * ({})'.format(category) if len(sel) > 0 else category
         opt = '' if len(self.__values) == 1 else 'COLZ'
 
         # Don't use weights for data
