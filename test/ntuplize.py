@@ -26,7 +26,7 @@ options.register("data", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
                  "Indicate if data is being used (or MC)")
-options.register("globalTag", "76X_mcRun2_asymptotic_v12",
+options.register("globalTag", "80X_mcRun2_asymptotic_2016_miniAODv2",
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.string,
                  "Global tag to use")
@@ -85,16 +85,16 @@ process.selector = cms.EDFilter("TauSelector",
                                 inputs=cms.VInputTag()
                                 )
 
-from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import patJetCorrFactorsUpdated
-process.patJetCorrFactorsReapplyJEC = patJetCorrFactorsUpdated.clone(
+from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJetCorrFactors
+process.patJetCorrFactorsReapplyJEC = updatedPatJetCorrFactors.clone(
     src=cms.InputTag("slimmedJets"),
     levels=['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual'],
     payload='AK4PFchs'  # Make sure to choose the appropriate levels and payload here!
 )
 
 
-from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import patJetsUpdated
-process.patJetsReapplyJEC = patJetsUpdated.clone(
+from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJets
+process.patJetsReapplyJEC = updatedPatJets.clone(
     jetSource=cms.InputTag("slimmedJets"),
     jetCorrFactorsSource=cms.VInputTag(cms.InputTag("patJetCorrFactorsReapplyJEC"))
 )
