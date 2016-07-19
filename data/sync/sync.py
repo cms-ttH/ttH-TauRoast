@@ -6,15 +6,43 @@ BasicProcess(
     name="ttH",
     sample=9125,
     paths=['ttH'],
-    cross_section=1,
+    cross_section=45140,
     events=45140
 )
+
+BasicProcess(
+    name="ttH_mva",
+    sample=9125,
+    paths=['ttH'],
+    cross_section=45140,
+    events=45140,
+    cutflow="mva"
+)
+
+BasicProcess(
+    name="ttH_signal",
+    sample=9125,
+    paths=['ttH'],
+    cross_section=45140,
+    events=45140,
+    cutflow="signal"
+)
+
+BasicProcess(
+    name="ttH_jets",
+    sample=9125,
+    paths=['ttH'],
+    cross_section=45140,
+    events=45140,
+    cutflow="jets"
+)
+
 
 BasicProcess(
     name="ttjets",
     sample=9126,
     paths=['ttjets'],
-    cross_section=1,
+    cross_section=45140,
     events=41812
 )
 
