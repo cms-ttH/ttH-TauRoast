@@ -107,7 +107,7 @@ def cutflow(cuts, procs, relative=False, weighed=False, f=sys.stdout):
             if not isinstance(c, StaticCut):
                 break
 
-        ratios = [a / b for a, b in zip(cutdata[-1], cutdata[-(n + 1)])]
+        ratios = [a / (b if b != 0 else 1) for a, b in zip(cutdata[-1], cutdata[-(n + 1)])]
         cutdata = cutdata[:-n]
         for i in xrange(3, len(cutdata)):
             cutdata[i] = [a * b for a, b in zip(cutdata[i], ratios)]
