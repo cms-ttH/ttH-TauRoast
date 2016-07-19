@@ -101,8 +101,14 @@ def normalize(cuts, lumi, limit=None):
     cuts.append(luminorm)
 
 
-def cutflow(cuts, procs, relative=False, weighed=False, f=sys.stdout):
-    expanded_proc = [Process.expand(proc) for proc in procs]
+def cutflow(cuts, processes, relative=False, weighed=False, f=sys.stdout):
+    expanded_proc = []
+    procs = []
+    for proc in processes:
+        subs = [p for p in Process.expand(proc) if str(p) in cuts[0].processes()]
+        if len(subs) > 0:
+            expanded_proc.append(subs)
+            procs.append(proc)
 
     cutdata = [[sum(float(cut[p]) for p in ps) for ps in expanded_proc] for cut in cuts]
 
