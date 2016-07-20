@@ -29,12 +29,12 @@ BasicProcess(
 )
 
 BasicProcess(
-    name="ttH_jets",
+    name="ttH_os",
     sample=9125,
     paths=['ttH'],
     cross_section=45140,
     events=45140,
-    cutflow="jets"
+    cutflow="os"
 )
 
 

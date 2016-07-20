@@ -12,7 +12,7 @@ plot:
   - ttH
   - ttH_signal
   - ttH_mva
-  - ttH_jets
+  - ttH_os
 
 cuts:
     default:
@@ -65,7 +65,7 @@ cuts:
             (leptons[1].muon() or (leptons[1].missingHits() == 0 and leptons[1].passesConversionVeto()))
         - "Jets": "len(jets) >= 4"
         - "Tags": "btags(jets) >= 1 or btags(jets, true) >= 2"
-    jets:
+    os:
         - "e/μ quality": "lepton_id == superslim::Lepton::MVA"
         - "τ quality": "tau_id == superslim::Tau::IsoMVA03"
         - "os": "leptons[0].charge() * leptons[1].charge() < 0"
@@ -86,7 +86,7 @@ cuts:
             leptons[0].consistentCharge() and leptons[1].consistentCharge() and
             (leptons[0].muon() or (leptons[0].missingHits() == 0 and leptons[0].passesConversionVeto())) and
             (leptons[1].muon() or (leptons[1].missingHits() == 0 and leptons[1].passesConversionVeto()))
-        - "Jets": "len(jets) == 3"
+        - "Jets": "len(jets) >= 4"
         - "Tags": "btags(jets) >= 1 or btags(jets, true) >= 2"
 
 weights: []
