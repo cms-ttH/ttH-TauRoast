@@ -54,8 +54,8 @@ Plot(
     binning=[1, 0, 1]
 )
 
-Leaf('nelectrons', 'f', 'int n = 0; for (const auto& l: leptons) n += (l.electron() and l.mva() >= superslim::id::Loose); result = n')
-Leaf('nmuons', 'f', 'int n = 0; for (const auto& l: leptons) n += (l.muon() and l.mva() >= superslim::id::Loose); result = n')
+Leaf('nelectrons', 'f', 'result = leptons.size() > 1 ? leptons[0].electron() + leptons[1].electron() : 0')
+Leaf('nmuons', 'f', 'result =  leptons.size() > 1 ? leptons[0].muon() + leptons[1].muon() : 0')
 Leaf('ntaus', 'i', 'result = len(taus);')
 
 Leaf('nEvent', 'i', 'result = event.event()')
