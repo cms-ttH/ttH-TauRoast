@@ -41,8 +41,6 @@ cuts:
             (leptons[1].muon() or (leptons[1].missingHits() == 0 and leptons[1].passesConversionVeto()))
         - "Jets": "len(jets) >= 4"
         - "Tags": "btags(jets) >= 1 or btags(jets, true) >= 2"
-        - "tau": "len(taus) > 0"
-        # - "mm": "leptons[0].electron() != leptons[1].electron()"
     mva:
         - "e/μ quality": "lepton_id == superslim::Lepton::MVA"
         - "τ quality": "tau_id == superslim::Tau::IsoMVA03"
@@ -67,7 +65,6 @@ cuts:
             (leptons[1].muon() or (leptons[1].missingHits() == 0 and leptons[1].passesConversionVeto()))
         - "Jets": "len(jets) >= 4"
         - "Tags": "btags(jets) >= 1 or btags(jets, true) >= 2"
-        - "tau": "len(taus) > 0"
     jets:
         - "e/μ quality": "lepton_id == superslim::Lepton::MVA"
         - "τ quality": "tau_id == superslim::Tau::IsoMVA03"
@@ -91,8 +88,14 @@ cuts:
             (leptons[1].muon() or (leptons[1].missingHits() == 0 and leptons[1].passesConversionVeto()))
         - "Jets": "len(jets) == 3"
         - "Tags": "btags(jets) >= 1 or btags(jets, true) >= 2"
-        - "tau": "len(taus) > 0"
 
 weights: []
 systematics: NA
 limits: []
+
+categories:
+    - inclusive: ""
+    - 2lss ee: "nelectrons == 2"
+    - 2lss em: "nelectrons == 1 && nmuons == 1"
+    - 2lss mm: "nmuons == 2"
+    - 2lss tau: "ntaus > 0"
