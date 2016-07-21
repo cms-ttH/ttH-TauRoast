@@ -60,5 +60,19 @@ leptonMVA
 EOF
 fi
 
+if [ ! -f test/sync_multilepton/sync/jet_names ]; then
+   cat<<EOF > test/sync_multilepton/sync/jet_names
+nEvent
+pt
+eta
+phi
+E
+CSV
+METpt
+METphi
+EOF
+fi
+
 scripts/cmp_trees --names test/sync_multilepton/sync/mu_names ~/www/ttH/sync/me_vs_thomas/mu test/sync_multilepton/sync/llr/mu_80X.txt:LLR test/sync_multilepton/sync/me/mu.txt:ND
 scripts/cmp_trees --names test/sync_multilepton/sync/ele_names ~/www/ttH/sync/me_vs_thomas/ele test/sync_multilepton/sync/llr/ele_80X.txt:LLR test/sync_multilepton/sync/me/ele.txt:ND
+scripts/cmp_trees --names test/sync_multilepton/sync/jet_names ~/www/ttH/sync/me_vs_thomas/jet test/sync_multilepton/sync/llr/jet_80X.txt:LLR test/sync_multilepton/sync/me/jet.txt:ND

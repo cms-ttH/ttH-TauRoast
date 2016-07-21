@@ -50,7 +50,7 @@ stuffs = {
 }
 
 for k, vs in stuffs.items():
-    add = ['PFMET', 'PFMETphi'] if k == 'jet0' else []
+    add = ['PFMET', 'PFMETphi'] if k == 'jet' else []
     with open(os.path.join('test/sync_multilepton/sync/me', k + '.txt'), 'w') as fd:
         for row in get(['nEvent'] + ["0_".join([k, v]) for v in vs] + add):
             fd.write(" ".join(map(str, row)) + "\n")
