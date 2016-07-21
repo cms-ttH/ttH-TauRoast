@@ -59,6 +59,25 @@ def load(spec, names):
         return load_txt(spec, names)
 
 
+def compare(joint, quants):
+    cols = ['nEvent'] + ['_'.join(t) for t in itertools.product(quants, [basename, compname])]
+    rows = [''.join(map(cell.format, [(c, '') for c in cols]))]
+    count = 0
+    for index, series in joint.iterrows():
+        values_b = np.array([series[q + '_b'] for q in quants])
+        values_c = np.array([series[q + '_c'] for q in quants])
+
+        if not np.any(np.logical_and(np.absolute(values_b - values_c) > 0.01 * np.absolute(values_b), values_b != values_c)):
+            continue
+
+        count += 1
+        if count > 10:
+            break
+
+        rows += [''.join(map(cell.format, [(series['nEvent'], '')] + [(v, '' if not (t[0] != t[1] and abs(t[0] - t[1]) > 0.01 * abs(t[0])) else 'color: #e00') for t in zip(values_b, values_c) for v in t]))]
+    return rows
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--names')
 parser.add_argument(dest='outdir')
@@ -92,26 +111,17 @@ compframe = pd.DataFrame(comptree)
 joint = pd.merge(baseframe, compframe, how='inner', on=['nEvent'], suffixes=('_b', '_c'))
 
 tables = []
-objs = ['ele0', 'ele1', 'mu0', 'mu1', 'tau0', 'tau1', 'jet0', 'jet1', 'jet2', 'jet3']
-for obj in objs:
-    quants = sorted([col for col in both if col.startswith(obj)])
-
-    cols = ['nEvent'] + ['_'.join(t) for t in itertools.product(quants, [basename, compname])]
-    rows = [''.join(map(cell.format, [(c, '') for c in cols]))]
-    count = 0
-    for index, series in joint.iterrows():
-        values_b = np.array([series[q + '_b'] for q in quants])
-        values_c = np.array([series[q + '_c'] for q in quants])
-
-        if not np.any(np.logical_and(np.absolute(values_b - values_c) > 0.01 * np.absolute(values_b), values_b != values_c)):
-            continue
-
-        count += 1
-        if count > 10:
-            break
-
-        rows += [''.join(map(cell.format, [(series['nEvent'], '')] + [(v, '' if not (t[0] != t[1] and abs(t[0] - t[1]) > 0.01 * abs(t[0])) else 'color: #e00') for t in zip(values_b, values_c) for v in t]))]
-    tables.append(''.join(map(row.format, rows)))
+if names:
+    rows = compare(joint, names[1:])
+    if len(rows) > 0:
+        tables.append(''.join(map(row.format, rows)))
+else:
+    objs = ['ele0', 'ele1', 'mu0', 'mu1', 'tau0', 'tau1', 'jet0', 'jet1', 'jet2', 'jet3']
+    for obj in objs:
+        quants = sorted([col for col in both if col.startswith(obj)])
+        rows = compare(joint, quants)
+        if len(rows) > 0:
+            tables.append(''.join(map(row.format, rows)))
 
 with open(os.path.join(args.outdir, 'index.html'), 'w') as f:
     f.write(html.format('\n'.join(map(table.format, tables)), '\n'.join([img.format(c) for c in sorted(both) if c != 'nEvent'])))
