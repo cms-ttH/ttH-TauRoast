@@ -85,6 +85,15 @@ r.gInterpreter.Declare("""
                     res.push_back(j);
             return res;
         }
+        template<typename S, typename T> float metLD(float met, S js, T ls) {
+            superslim::LorentzVector mht;
+            for (const auto& j: js)
+                if (j.pt() >= 25.)
+                    mht += j.p4();
+            for (const auto& l: ls)
+                mht += l.p4();
+            return 0.00397 * met + 0.00265 * mht.pt();
+        }
 """)
 
 
