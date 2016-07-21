@@ -2,13 +2,13 @@
 
 from root_numpy import root2array
 
+import argparse
 import itertools
 import matplotlib.gridspec as gs
 import matplotlib.pyplot as plt
 import numpy as np
 import os
 import pandas as pd
-import sys
 
 
 html = """
@@ -47,30 +47,37 @@ def load_root(spec):
     return label, root2array(fn, tn)
 
 
-def load_txt(spec):
+def load_txt(spec, names):
     fn, label = spec.split(':')
-    return label, np.genfromtxt(fn, delimiter=' ', names=True)
+    return label, np.genfromtxt(fn, delimiter=' ', names=(True if not names else names))
 
 
-def load(spec):
+def load(spec, names):
     if ".root" in spec:
         return load_root(spec)
     else:
-        return load_txt(spec)
+        return load_txt(spec, names)
 
 
-try:
-    outdir, baseline, comparison = sys.argv[1:]
-except ValueError:
-    print "usage: {0[0]} outdir basespec compspec".format(sys.argv)
-    print "  spec: rootfile:treename:label | textfile:label"
-    sys.exit(1)
+parser = argparse.ArgumentParser()
+parser.add_argument('--names')
+parser.add_argument(dest='outdir')
+parser.add_argument(dest='baseline')
+parser.add_argument(dest='comparison')
+args = parser.parse_args()
 
-if not os.path.exists(outdir):
-    os.makedirs(outdir)
+# print "  spec: rootfile:treename:label | textfile:label"
 
-basename, basetree = load(baseline)
-compname, comptree = load(comparison)
+if not os.path.exists(args.outdir):
+    os.makedirs(args.outdir)
+
+names = None
+if args.names:
+    with open(args.names) as fd:
+        names = map(str.strip, fd.readlines())
+
+basename, basetree = load(args.baseline, names)
+compname, comptree = load(args.comparison, names)
 
 baseonly = set(basetree.dtype.names) - set(comptree.dtype.names)
 componly = set(comptree.dtype.names) - set(basetree.dtype.names)
@@ -106,7 +113,7 @@ for obj in objs:
         rows += [''.join(map(cell.format, [(series['nEvent'], '')] + [(v, '' if not (t[0] != t[1] and abs(t[0] - t[1]) > 0.01 * abs(t[0])) else 'color: #e00') for t in zip(values_b, values_c) for v in t]))]
     tables.append(''.join(map(row.format, rows)))
 
-with open(os.path.join(outdir, 'index.html'), 'w') as f:
+with open(os.path.join(args.outdir, 'index.html'), 'w') as f:
     f.write(html.format('\n'.join(map(table.format, tables)), '\n'.join([img.format(c) for c in sorted(both) if c != 'nEvent'])))
 
 for column in both:
@@ -189,5 +196,5 @@ for column in both:
     if len(diff) > 0:
         ax5.set_yscale('log', nonposy='clip')
 
-    plt.savefig(os.path.join(outdir, column + '.png'))
+    plt.savefig(os.path.join(args.outdir, column + '.png'))
     plt.close()
