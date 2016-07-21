@@ -11,5 +11,29 @@ scripts/roaster -avv data/sync_multilepton.yaml
 
 mkdir -p "test/sync_multilepton/sync/me"
 python "test/sync_multilepton.py"
-# scripts/cmp_trees ~/www/ttH/sync/tau_llr syncNtuple_ttH.root:syncTree:LLR test/sync_tau/out/ntuple.root:ttH:ND
-# scripts/cmp_trees ~/www/ttH/sync/tau_tallinn/ syncNtuple_ttH.root:syncTree:Tallinn test/sync_tau/out/ntuple.root:ttH:ND
+
+if [ ! -f test/sync_multilepton/sync/mu_names ]; then
+   cat<<EOF > test/sync_multilepton/sync/mu_names
+nEvent
+pt
+eta
+phi
+E
+pdgID
+charge
+jetNDauChargedMVASel
+miniIso
+miniIsoCharged
+miniIsoNeutral
+jetPtRel
+jetCSV
+jetPtRatio
+sip3D
+dxy
+dz
+segmentCompatibility
+leptonMVA
+EOF
+fi
+
+scripts/cmp_trees --names test/sync_multilepton/sync/mu_names ~/www/ttH/sync/me_vs_thomas/mu test/sync_multilepton/sync/llr/mu_80X.txt:LLR test/sync_multilepton/sync/me/mu.txt:ND
