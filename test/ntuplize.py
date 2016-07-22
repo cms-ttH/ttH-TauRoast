@@ -51,35 +51,10 @@ process.maxEvents = cms.untracked.PSet(input=cms.untracked.int32(options.maxEven
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff")
 process.GlobalTag.globaltag = options.globalTag
 
-process.source = cms.Source("PoolSource",
-                            fileNames=cms.untracked.vstring(options.inputFiles)
-                            )
-
-# process.TFileService = cms.Service("TFileService",
-#         closeFileFast = cms.untracked.bool(True),
-#         fileName = cms.string(options.outputFile)
-# )
-
-# from JetMETCorrections.Configuration.JetCorrectionServices_cff import *
-
-# process.ak4PFCHSL1Fastjet = cms.ESProducer(
-#     'L1FastjetCorrectionESProducer',
-#     level=cms.string('L1FastJet'),
-#     algorithm=cms.string('AK4PFchs'),
-#     srcRho=cms.InputTag('fixedGridRhoFastjetAll')
-# )
-# process.ak4PFchsL2Relative = ak4CaloL2Relative.clone(algorithm='AK4PFchs')
-# process.ak4PFchsL3Absolute = ak4CaloL3Absolute.clone(algorithm='AK4PFchs')
-# process.ak4PFchsL1L2L3 = cms.ESProducer("JetCorrectionESChain",
-#                                         correctors=cms.vstring(
-#                                             'ak4PFCHSL1Fastjet',
-#                                             'ak4PFchsL2Relative',
-#                                             'ak4PFchsL3Absolute')
-#                                         )
-
-# if options.data:
-#     process.ak4PFchsResidual = ak4CaloResidual.clone(algorithm='AK4PFchs')
-#     process.ak4PFchsL1L2L3.correctors.append('ak4PFchsResidual')
+process.source = cms.Source(
+    "PoolSource",
+    fileNames=cms.untracked.vstring(options.inputFiles)
+)
 
 from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJetCorrFactors
 process.patJetCorrFactorsReapplyJEC = updatedPatJetCorrFactors.clone(
