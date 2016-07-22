@@ -7,7 +7,7 @@ cmsRun test/ntuplize.py inputFiles=/store/mc/RunIISpring16MiniAODv1/ttHToNonbb_M
 
 wait
 
-scripts/roaster -avv data/sync_multilepton.yaml
+scripts/roaster -afvv data/sync_multilepton.yaml
 
 mkdir -p "test/sync_multilepton/sync/me"
 python "test/sync_multilepton.py"
