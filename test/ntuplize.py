@@ -84,9 +84,11 @@ process.source = cms.Source("PoolSource",
 from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJetCorrFactors
 process.patJetCorrFactorsReapplyJEC = updatedPatJetCorrFactors.clone(
     src=cms.InputTag("slimmedJets"),
-    levels=['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual'],
+    levels=['L1FastJet', 'L2Relative', 'L3Absolute'],
     payload='AK4PFchs'  # Make sure to choose the appropriate levels and payload here!
 )
+if options.data:
+    process.patJetCorrFactorsReapplyJEC.levels.append('L2L3Residual')
 
 
 from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJets
@@ -105,6 +107,7 @@ process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
 process.load("ttH.LeptonID.ttHLeptons_cfi")
 process.load("ttH.TauRoast.genHadronMatching_cfi")
 
+process.ttHLeptons.rhoParam = "fixedGridRhoFastjetCentralNeutral"
 process.ttHLeptons.jets = cms.InputTag("patJetsReapplyJEC")
 
 process.dump = cms.EDAnalyzer("EventContentAnalyzer")
@@ -161,8 +164,8 @@ for channel in options.channels:
                           electrons=cms.InputTag("ttHLeptons"),
                           muons=cms.InputTag("ttHLeptons"),
                           taus=cms.InputTag("ttHLeptons"),
-                          jets=cms.InputTag("patJetsReapplyJEC"),
-                          # jets=cms.InputTag("slimmedJets"),
+                          # jets=cms.InputTag("patJetsReapplyJEC"),
+                          jets=cms.InputTag("slimmedJets"),
                           minTaus=cms.uint32(taus[0]),
                           maxTaus=cms.uint32(taus[1]),
                           minLeptons=cms.uint32(leptons[0]),
