@@ -37,7 +37,7 @@ cuts:
             not (leptons[0].electron() and leptons[1].electron() and
                  abs((leptons[0].p4() + leptons[1].p4()).M() - 91.2) < 10)
         - "metLD": >
-            not (leptons[0].electron() and leptons[1].electron() and metLD(met.pt(), jets, leptons) > 0.2)
+            not (leptons[0].electron() and leptons[1].electron() and metLD(met.pt(), jets, leptons) < 0.2)
         - "charge": >
             leptons[0].consistentCharge() and leptons[1].consistentCharge() and
             (leptons[0].muon() or (leptons[0].missingHits() == 0 and leptons[0].passesConversionVeto())) and
@@ -64,7 +64,7 @@ cuts:
             not (leptons[0].electron() and leptons[1].electron() and
                  abs((leptons[0].p4() + leptons[1].p4()).M() - 91.2) < 10)
         - "metLD": >
-            not (leptons[0].electron() and leptons[1].electron() and metLD(met.pt(), jets, leptons) > 0.2)
+            not (leptons[0].electron() and leptons[1].electron() and metLD(met.pt(), jets, leptons) < 0.2)
         - "charge": >
             leptons[0].consistentCharge() and leptons[1].consistentCharge() and
             (leptons[0].muon() or (leptons[0].missingHits() == 0 and leptons[0].passesConversionVeto())) and
@@ -90,7 +90,7 @@ cuts:
             not (leptons[0].electron() and leptons[1].electron() and
                  abs((leptons[0].p4() + leptons[1].p4()).M() - 91.2) < 10)
         - "metLD": >
-            not (leptons[0].electron() and leptons[1].electron() and metLD(met.pt(), jets, leptons) > 0.2)
+            not (leptons[0].electron() and leptons[1].electron() and metLD(met.pt(), jets, leptons) < 0.2)
         - "charge": >
             leptons[0].consistentCharge() and leptons[1].consistentCharge() and
             (leptons[0].muon() or (leptons[0].missingHits() == 0 and leptons[0].passesConversionVeto())) and
