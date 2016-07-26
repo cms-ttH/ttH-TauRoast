@@ -35,6 +35,8 @@ row = '<tr>{}</tr>'
 cell = '<td style="{0[1]}">{0[0]}</td>'
 table = '<table>{}</table>'
 
+precision = 0.02
+
 
 def bin_it(df, mn, mx):
     bins = np.linspace(mn, mx, 30)
@@ -74,7 +76,7 @@ def compare(joint, quants):
         if count > 10:
             break
 
-        rows += [''.join(map(cell.format, [(series['nEvent'], '')] + [(v, '' if not (t[0] != t[1] and abs(t[0] - t[1]) > 0.01 * abs(t[0])) else 'color: #e00') for t in zip(values_b, values_c) for v in t]))]
+        rows += [''.join(map(cell.format, [(series['nEvent'], '')] + [(v, '' if not (t[0] != t[1] and abs(t[0] - t[1]) > precision * abs(t[0])) else 'color: #e00') for t in zip(values_b, values_c) for v in t]))]
     return rows
 
 
