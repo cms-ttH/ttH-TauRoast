@@ -193,7 +193,7 @@ namespace superslim {
          int nearestJetConstituents() const { return jet_nconst_; };
          float nearestJetRelativePt() const { return jet_pt_rel_; };
          float nearestJetRatioPt() const { return jet_pt_ratio_; };
-         float nearestJetCSV() const { return jet_csv_; };
+         float nearestJetCSV() const { return jet_csv_ == 0. ? -10. : jet_csv_; };
 
          float sip3D() const { return sip3d_; };
          float mvaRaw() const { return lep_mva_; };
