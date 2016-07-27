@@ -35,7 +35,8 @@ row = '<tr>{}</tr>'
 cell = '<td style="{0[1]}">{0[0]}</td>'
 table = '<table>{}</table>'
 
-precision = 0.02
+absolute_precision = 0.001
+relative_precision = 0.02
 
 
 def bin_it(df, mn, mx):
@@ -62,6 +63,11 @@ def load(spec, names):
 
 
 def compare(joint, quants):
+    def highlight(a, b):
+        return a != b and \
+            abs(a - b) > relative_precision * a and \
+            abs(a - b) > absolute_precision
+
     cols = ['nEvent'] + ['_'.join(t) for t in itertools.product(quants, [basename, compname])]
     rows = [''.join(map(cell.format, [(c, '') for c in cols]))]
     count = 0
@@ -69,14 +75,21 @@ def compare(joint, quants):
         values_b = np.array([series[q + '_b'] for q in quants])
         values_c = np.array([series[q + '_c'] for q in quants])
 
-        if not np.any(np.logical_and(np.absolute(values_b - values_c) > 0.01 * np.absolute(values_b), values_b != values_c)):
+        if not np.any(
+                np.logical_and(
+                    np.logical_and(
+                        np.absolute(values_b - values_c) > relative_precision * np.absolute(values_b),
+                        np.absolute(values_b - values_c) > absolute_precision
+                    ),
+                    values_b != values_c
+                )):
             continue
 
         count += 1
         if count > 10:
             break
 
-        rows += [''.join(map(cell.format, [(series['nEvent'], '')] + [(v, '' if not (t[0] != t[1] and abs(t[0] - t[1]) > precision * abs(t[0])) else 'color: #e00') for t in zip(values_b, values_c) for v in t]))]
+        rows += [''.join(map(cell.format, [(series['nEvent'], '')] + [(v, '' if not highlight(t[0], t[1]) else 'color: #e00') for t in zip(values_b, values_c) for v in t]))]
     return rows
 
 
