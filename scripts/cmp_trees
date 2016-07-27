@@ -68,7 +68,7 @@ def compare(joint, quants):
             abs(a - b) > relative_precision * a and \
             abs(a - b) > absolute_precision
 
-    cols = ['nEvent'] + ['_'.join(t) for t in itertools.product(quants, [basename, compname])]
+    cols = ['nEvent', 'rank'] + ['_'.join(t) for t in itertools.product(quants, [basename, compname])]
     rows = [''.join(map(cell.format, [(c, '') for c in cols]))]
     count = 0
     for index, series in joint.iterrows():
@@ -89,7 +89,7 @@ def compare(joint, quants):
         if count > 10:
             break
 
-        rows += [''.join(map(cell.format, [(series['nEvent'], '')] + [(v, '' if not highlight(t[0], t[1]) else 'color: #e00') for t in zip(values_b, values_c) for v in t]))]
+        rows += [''.join(map(cell.format, [(series['nEvent'], ''), (index, '')] + [(v, '' if not highlight(t[0], t[1]) else 'color: #e00') for t in zip(values_b, values_c) for v in t]))]
     return rows
 
 
