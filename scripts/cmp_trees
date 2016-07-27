@@ -4,11 +4,15 @@ from root_numpy import root2array
 
 import argparse
 import itertools
+import matplotlib
 import matplotlib.gridspec as gs
 import matplotlib.pyplot as plt
 import numpy as np
 import os
 import pandas as pd
+
+
+matplotlib.rc('axes.formatter', limits=(-3, 4))
 
 
 html = """
@@ -169,7 +173,7 @@ for column in both:
     ax4 = plt.subplot(g2[0, 0])
     ax5 = plt.subplot(g2[1, 0], sharex=ax4)
 
-    ax4.set_title('({c} - {b}) / {b}'.format(c=compname, b=basename))
+    ax4.set_title('{c} - {b}'.format(c=compname, b=basename))
     ax4.yaxis.tick_right()
     ax4.yaxis.set_ticks_position('both')
     ax5.yaxis.tick_right()
@@ -177,7 +181,7 @@ for column in both:
 
     plt.setp(ax4.get_xticklabels(), visible=False)
 
-    diff = ((data_c - data_b) / data_b)[(data_b > -666) & (data_c > -666) & (data_b > 0)]
+    diff = (data_c - data_b)[(data_b > -666) & (data_c > -666)]
 
     data_b = data_b[data_b > -666]
     data_c = data_c[data_c > -666]
