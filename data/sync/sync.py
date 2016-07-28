@@ -56,7 +56,7 @@ Plot(
 
 Leaf('nelectrons', 'f', 'result = leptons.size() > 1 ? leptons[0].electron() + leptons[1].electron() : 0')
 Leaf('nmuons', 'f', 'result =  leptons.size() > 1 ? leptons[0].muon() + leptons[1].muon() : 0')
-Leaf('ntaus', 'i', 'result = len(taus);')
+Leaf('ntaus', 'i', 'result = std::count_if(std::begin(taus), std::end(taus), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Medium; })')
 
 Leaf('nEvent', 'i', 'result = event.event()')
 Leaf('n_presel_mu', 'i', 'result = len(muons)')
