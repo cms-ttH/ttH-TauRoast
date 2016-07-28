@@ -1,16 +1,18 @@
 from lobster import cmssw
 from lobster.core import *
+from lobster.monitor.elk import ElkInterface
 
 from ttH.TauRoast.datasets import *
 
-version = "v30"
+version = "v31"
 
 storage = StorageConfiguration(
     output=[
         "hdfs:///store/user/matze/ttH/{}".format(version),
         "file:///hadoop/store/user/matze/ttH/{}".format(version),
         "root://deepthought.crc.nd.edu//store/user/matze/ttH/{}".format(version),
-        "chirp://earth.crc.nd.edu:9666/ttH/{}".format(version),
+        "gsiftp://T3_US_NotreDame/store/user/matze/ttH/{}".format(version),
+        "chirp://eddie.crc.nd.edu:9094/store/user/matze/ttH/{}".format(version),
         "srm://T3_US_NotreDame/store/user/matze/ttH/{}".format(version)
     ]
 )
@@ -76,12 +78,13 @@ config = Config(
     label='tau_{}'.format(version),
     workdir='/tmpscratch/users/matze/ttH/{}'.format(version),
     plotdir='/afs/crc.nd.edu/user/m/mwolf3/www/lobster/ttH/{}'.format(version),
+    elk=ElkInterface('elk.crc.nd.edu', 9200, 'elk.crc.nd.edu', 5601, 'ttH_{}'.format(version)),
     storage=storage,
     workflows=workflows,
     advanced=AdvancedOptions(
         log_level=1,
         xrootd_servers=[
-            # 'ndcms.crc.nd.edu',
+            'ndcms.crc.nd.edu',
             'cmsxrootd.fnal.gov'
         ]
     )

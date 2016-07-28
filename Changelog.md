@@ -1,5 +1,9 @@
 # Ntuple History
 
+## v31
+
+* Intermediate run synced on 80X for lepton ID (not event-variables)
+
 ## v30
 
 * Lepton counts in selection are for loose leptons

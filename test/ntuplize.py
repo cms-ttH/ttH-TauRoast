@@ -83,7 +83,8 @@ process.load("ttH.LeptonID.ttHLeptons_cfi")
 process.load("ttH.TauRoast.genHadronMatching_cfi")
 
 process.ttHLeptons.rhoParam = "fixedGridRhoFastjetCentralNeutral"
-process.ttHLeptons.jets = cms.InputTag("patJetsReapplyJEC")
+# process.ttHLeptons.jets = cms.InputTag("patJetsReapplyJEC")
+# process.ttHLeptons.useReappliedJEC = cms.bool(False)
 
 process.dump = cms.EDAnalyzer("EventContentAnalyzer")
 
