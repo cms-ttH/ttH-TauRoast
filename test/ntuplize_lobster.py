@@ -11,8 +11,8 @@ storage = StorageConfiguration(
         "hdfs:///store/user/matze/ttH/{}".format(version),
         "file:///hadoop/store/user/matze/ttH/{}".format(version),
         "root://deepthought.crc.nd.edu//store/user/matze/ttH/{}".format(version),
-        "gsiftp://T3_US_NotreDame/store/user/matze/ttH/{}".format(version),
         "chirp://eddie.crc.nd.edu:9094/store/user/matze/ttH/{}".format(version),
+        "gsiftp://T3_US_NotreDame/store/user/matze/ttH/{}".format(version),
         "srm://T3_US_NotreDame/store/user/matze/ttH/{}".format(version)
     ]
 )
