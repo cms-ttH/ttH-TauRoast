@@ -489,12 +489,20 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
 
    for (const auto& lepton_id: {superslim::Lepton::LJ, superslim::Lepton::MVA}) {
       std::vector<superslim::Lepton> leptons;
+      std::vector<superslim::Lepton> cleaning_leptons;
 
       std::copy_if(all_leptons.begin(), all_leptons.end(), std::back_inserter(leptons),
             [&](const auto& l) { return l.preselected(lepton_id); });
 
       auto loose_leptons = std::count_if(all_leptons.begin(), all_leptons.end(),
             [&](const auto& l) { return l.loose(lepton_id); });
+
+      if (lepton_id == superslim::Lepton::MVA) {
+         std::copy_if(all_leptons.begin(), all_leptons.end(), std::back_inserter(cleaning_leptons),
+               [&](const auto& l) { return l.loose(superslim::Lepton::Fakeable); });
+      } else {
+         cleaning_leptons = leptons;
+      }
 
       if (not take_all_ and (loose_leptons < min_leptons_ or loose_leptons > max_leptons_))
          continue;
@@ -528,7 +536,7 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
 
                // Jet selection
                // auto jets_wo_lep = removeOverlap(corrected_jets, leptons, .4);
-               auto jets_wo_lep = removeOverlap(raw_jets, leptons, .4);
+               auto jets_wo_lep = removeOverlap(raw_jets, cleaning_leptons, .4);
                auto jets_no_taus = removeOverlap(jets_wo_lep, taus, .25);
                auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, max_jet_eta_, jetID::none, '-');
                auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'M');
