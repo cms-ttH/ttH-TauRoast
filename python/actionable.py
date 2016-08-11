@@ -155,7 +155,7 @@ def fill(args, config):
 
     atomic_processes = set(sum(map(Process.expand, config['plot']), []))
     limit_processes = set(config["limits"]) & set(config["plot"])
-    all_processes = limit_processes | atomic_processes
+    all_processes = set(Process.get(n) for n in limit_processes) | atomic_processes
     not_processed = set(config["limits"]) - set(config["plot"])
 
     if len(not_processed) > 0:
