@@ -18,15 +18,16 @@ from ttH.TauRoast.processing import Process
 
 def setup_cuts(config):
     cutflows = {}
-    for name, cut_cfgs in config["cuts"].items():
+    cutflownames = [k.replace(' cuts', '') for k in config if k.endswith(' cuts')]
+    for name in cutflownames:
         counts = []
         cuts = [Cut("Ntuple analyzed", "true")]
         weights = []
 
-        for cfg in cut_cfgs:
+        for cfg in config[name + ' cuts']:
             cuts.append(Cut(*cfg.items()[0]))
 
-        for weight in config["weights"]:
+        for weight in config[name + ' weights']:
             weights.append(StaticCut(weight))
 
         cutflows[name] = (counts, cuts, weights)
@@ -174,7 +175,7 @@ def fill(args, config):
 
         for proc in atomic_processes:
             for p in Plot.plots():
-                p.fill(proc, config["weights"], definition)
+                p.fill(proc, config[proc.cutflow + " weights"], definition)
 
         fn = os.path.join(config["outdir"], "plots.root")
         with open_rootfile(fn) as f:
