@@ -42,12 +42,6 @@ BasicProcess(
     events=262813074
 )
 
-# CombinedProcess(
-#     name="fake_data",
-#     limitname="data_obs",
-#     subprocesses=["ttjets"]
-# )
-
 CombinedProcess(
     name="collisions_single",
     fullname="Collisions",

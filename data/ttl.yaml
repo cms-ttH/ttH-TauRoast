@@ -2,15 +2,16 @@
 
 channel: ttl
 generator: pow
-ntupledir: /hadoop/store/user/matze/ttH/v28
+ntupledir: /hadoop/store/user/matze/ttH/v31
 # ntupledir: /scratch365/mwolf3/ttH/v25
-outdir: ~/www/ttH/v28/ttl
+outdir: ~/www/ttH/v31/ttl
 histformat: "{p}_{c}_{v}_TTL"
 
 lumi: 2517
 
 plot:
-  - collisions
+  # - collisions
+  - collisions_fake
   - ttjets
   # - ttjets_sl
   # - ttjets_dl
@@ -18,27 +19,27 @@ plot:
   # - ttjets_fulllept
   - singletop
   - ewk
-  - ttH_125
+  - ttH_125_pow
   # - ttH2bb_125
   # - ttH2Nonbb_125
-  - ttH2TT_125
-  - ttH2TT_125_real
+  - ttH2TT_125_pow
+  - ttH2TT_125_real_pow
 
 limits:
-  - collisions
+  # - collisions
   - ttjets
   - ttH_125
 
-cuts:
+default cuts:
   - "Trigger": "(leptons[0].electron() and event.trigger().single_e()) or (leptons[0].muon() and event.trigger().single_mu())"
-  - "e/μ quality": "len(leptons) == 1 and all_of(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.selected(superslim::Lepton::LJ); })"
+  - "e/μ quality": "len(leptons) == 1 and lepton_id == superslim::Lepton::LJ"
   - "τ quality": "len(taus) == 2 and all_of(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Medium; })"
   - "Jets": "len(jets) >= 2"
   - "Tags": "btags(jets) == 1 or btags(jets, true) == 2"
   - "ΔR(ττ)  > 0.5": "dR(taus[0], taus[1]) > 0.5"
   - "Opposite charge for τ": "taus[0].charge() * taus[1].charge() < 0"
 
-weights:
+default weights:
   - Generator
   - CSVWeight
   - PUWeight

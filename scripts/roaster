@@ -68,7 +68,7 @@ from ttH.TauRoast import stylish, useful
 from ttH.TauRoast.actionable import analyze, dump_categories, dump_cuts, fill, plot
 from ttH.TauRoast.variation import setup
 
-useful.setup(config['channel'])
+useful.setup(config)
 useful.load_python(config.get('sync', False))
 stylish.setup()
 

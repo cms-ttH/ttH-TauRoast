@@ -11,9 +11,31 @@ Config = namedtuple('Config', ['channel', 'taus', 'leptons'])
 config = None
 
 
-def setup(channel):
+def setup_collisions(config):
+    """Replace ``collisions_fake`` by a sum of the backgrounds in the `config`.
+    """
+    from ttH.TauRoast.processing import CombinedProcess
+    procs = [p for p in config['plot'] if (not p.startswith('ttH')) and
+                                          (not p.startswith('collisions'))]
+    CombinedProcess(
+        name="collisions_fake",
+        fullname="Collisoins",
+        limitname="data_obs",
+        subprocesses=procs
+    )
+
+
+def setup(cfg):
     global config
-    config = Config(channel=channel, taus=channel.lower().count("t"), leptons=channel.lower().count("l"))
+
+    channel = cfg['channel']
+    config = Config(
+        channel=channel,
+        taus=channel.lower().count("t"),
+        leptons=channel.lower().count("l")
+    )
+
+    setup_collisions(cfg)
 
 
 def load_python(sync):
