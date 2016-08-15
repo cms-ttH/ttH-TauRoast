@@ -11,6 +11,7 @@ from ttH.TauRoast.decorative import savetime
 from ttH.TauRoast.legendary import Legend
 from ttH.TauRoast.processing import Process
 
+
 class Plot(object):
     __plots = {}
 
@@ -232,8 +233,8 @@ class Plot(object):
             bin_width = background.GetBinWidth(i + 1)
 
             if bin_content > 0.001:
-                rel_up = math.sqrt(err_up[i] + bin_error**2) / bin_content
-                rel_down = math.sqrt(err_down[i] + bin_error**2) / bin_content
+                rel_up = math.sqrt(err_up[i] + bin_error ** 2) / bin_content
+                rel_down = math.sqrt(err_down[i] + bin_error ** 2) / bin_content
             else:
                 rel_up = 0
                 rel_down = 0
@@ -348,11 +349,11 @@ class Plot(object):
 
         if config.get("legend", True):
             scale = 1.175 + 0.05 * (
-                    math.ceil(len(config['backgrounds'] + config.get('data', [])) / 4. + 1)
-                    + len(config['signals']))
+                math.ceil(len(config['backgrounds'] + config.get('data', [])) / 4. + 1)
+                + len(config['signals']))
 
         max_y = scale * max([bkg_stack.GetMaximum()] + [factor * h.GetMaximum() for h in signals] +
-                [c.GetMaximum() for c in collisions])
+                            [c.GetMaximum() for c in collisions])
 
         if max_y == 0:
             logging.warning("empty plot: {0}".format(self.__name))
@@ -400,19 +401,23 @@ class Plot(object):
         line.SetLineColor(1)
         line.SetLineWidth(1)
         line.DrawLineNDC(
-                r.gPad.GetLeftMargin(),
-                r.gPad.GetBottomMargin() +
-                    (1 / stylish.ratio_plot_max) *
-                    (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin()),
-                1 - r.gPad.GetRightMargin(),
-                r.gPad.GetBottomMargin() +
-                    (1 / stylish.ratio_plot_max) *
-                    (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin()))
+            r.gPad.GetLeftMargin(),
+            r.gPad.GetBottomMargin() +
+            (1 / stylish.ratio_plot_max) *
+            (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin()),
+            1 - r.gPad.GetRightMargin(),
+            r.gPad.GetBottomMargin() +
+            (1 / stylish.ratio_plot_max) *
+            (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin()))
 
         subdir = os.path.dirname(os.path.join(outdir, self.__name))
         if not os.path.exists(subdir) and subdir != '':
             os.makedirs(subdir)
         canvas.SaveAs(os.path.join(outdir, self.__name + ".pdf"))
+
+        if legend:
+            del legend
+        del err
 
     @savetime
     def fill(self, process, weights, category=None):
