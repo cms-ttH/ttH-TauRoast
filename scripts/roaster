@@ -27,6 +27,8 @@ ag.add_argument('-o', '--output', type=str, default=None,
                 help="change output directory")
 ag.add_argument('-r', '--reuse', action='store_true', default=False,
                 help="continue processing reusing previous results")
+ag.add_argument('-s', '--systematics', action='store_true', default=False,
+                help="run systematics")
 ag = parser.add_argument_group('debugging and syncronization options')
 ag.add_argument('--debug-cuts', action='store_true', default=False,
                 help="save event quantites after each cut")

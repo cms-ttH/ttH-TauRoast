@@ -131,7 +131,8 @@ class BasicProcess(Process):
         for w in weights:
             w[self] = 0
 
-        tree = Tree(filename, self)
+        suffix = '' if systematics == 'NA' else '_' + systematics
+        tree = Tree(filename, str(self) + suffix)
 
         ccuts = r.std.vector('fastlane::Cut*')()
         for c in cuts:

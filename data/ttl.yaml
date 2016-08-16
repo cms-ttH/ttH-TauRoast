@@ -2,8 +2,8 @@
 
 channel: ttl
 generator: pow
-ntupledir: /hadoop/store/user/matze/ttH/v31
-# ntupledir: /scratch365/mwolf3/ttH/v25
+# ntupledir: /hadoop/store/user/matze/ttH/v31
+ntupledir: /scratch365/mwolf3/ttH/v31
 outdir: ~/www/ttH/v31/ttl
 histformat: "{p}_{c}_{v}_TTL"
 
@@ -27,8 +27,9 @@ plot:
 
 limits:
   # - collisions
+  - collisions_fake
   - ttjets
-  - ttH_125
+  - ttH_125_pow
 
 default cuts:
   - "Trigger": "(leptons[0].electron() and event.trigger().single_e()) or (leptons[0].muon() and event.trigger().single_mu())"
@@ -44,8 +45,10 @@ default weights:
   - CSVWeight
   - PUWeight
 
-# Allowed values: JES{Up,Down}, JER{Up,Down}, NA
-systematics: NA
+# List of systematics to run when `-s` is specified
+systematics:
+  - JES
+  - JER
 
 categories:
   - inclusive: ""

@@ -74,11 +74,12 @@ class Plot(object):
     def _eval(self, color):
         return eval(color, {}, {'r': r})
 
-    def _get_histogram(self, process):
-        procs = Process.expand(process)
-        h = self.__hists[procs[0]].Clone()
+    def _get_histogram(self, process, systematic=None):
+        suffix = '_' + systematic if systematic else ''
+        procs = map(str, Process.expand(process))
+        h = self.__hists[procs[0] + suffix].Clone()
         for proc in procs[1:]:
-            h.Add(self.__hists[proc])
+            h.Add(self.__hists[proc + suffix])
         return h
 
     def _get_background_sum(self, config):
@@ -154,13 +155,19 @@ class Plot(object):
         if self.__normalized:
             return
         self.__normalized = True
-        for proc, hist in self.__hists.items():
+        for fullname, hist in self.__hists.items():
+            if fullname.endswith('Up') or fullname.endswith('Down'):
+                name, _ = fullname.rsplit('_', 1)
+                proc = Process.get(name)
+            else:
+                proc = Process.get(fullname)
+
             logging.debug("normalizing histogram {0}, process {1}".format(self.__name, proc))
             denom = float(cutflows[proc.cutflow][-3][proc])
             factor = 0. if denom == 0. else cutflows[proc.cutflow][-1][proc] / denom
             hist.Scale(factor)
 
-    def read(self, file, category, procs, fmt="{p}_{c}_{v}"):
+    def read(self, file, category, procs, fmt="{p}_{c}_{v}", systematics=None):
         for proc in procs:
             histname = fmt.format(p=proc.limitname, v=self.__limitname, c=category)
             logging.debug("reading histogram {0}".format(histname))
@@ -169,21 +176,36 @@ class Plot(object):
                 logging.warning("histogram {0} not found in file".format(histname))
             else:
                 h.SetDirectory(0)
-                self.__hists[proc] = h
+                self.__hists[str(proc)] = h
 
-    def write(self, file, cutflows, category, procs=None, fmt="{p}_{c}_{v}"):
+    def write(self, file, cutflows, category, systematics=None, procs=None, fmt="{p}_{c}_{v}"):
         self._normalize(cutflows)
 
+        if systematics is None:
+            systematics = []
+        systematics = set(systematics + ['NA'])
+
+        uncertainties = []
+        for systematic in systematics:
+            if systematic == 'NA':
+                uncertainties.append((None, ''))
+            else:
+                uncertainties.append((systematic + 'Up', '_{}Up'.format(systematic)))
+                uncertainties.append((systematic + 'Down', '_{}Down'.format(systematic)))
+
         if procs is None:
-            procs = self.__hists.keys()
+            procs = [Process.get(k) for k in self.__hists if
+                     (not k.endswith('Up')) and (not k.endswith('Down'))]
         else:
             procs = map(Process.get, procs)
 
         for proc in procs:
-            histname = fmt.format(p=proc.limitname, v=self.__limitname, c=category)
-            logging.debug("writing histogram {0}".format(histname))
-            hist = self._get_histogram(proc)
-            file.WriteObject(hist, histname)
+            for uncertainty, suffix in uncertainties:
+                histname = fmt.format(p=proc.limitname, v=self.__limitname, c=category)
+                histname += suffix
+                logging.debug("writing histogram {0}".format(histname))
+                hist = self._get_histogram(proc, uncertainty)
+                file.WriteObject(hist, histname)
 
     def save(self, config, outdir):
         logging.debug("saving histogram {0}".format(self.__name))
@@ -420,14 +442,21 @@ class Plot(object):
         del err
 
     @savetime
-    def fill(self, process, weights, category=None):
+    def fill(self, process, systematics, weights, category=None):
+        suffix = ''
+        for s in [systematics] + weights:
+            if s.endswith('Up') or s.endswith('Down'):
+                suffix = '_' + s
+                break
+        fullname = str(process) + suffix
+
         try:
-            hist = self.__hists[process]
+            hist = self.__hists[fullname]
         except KeyError:
             args = list(self.__args)
-            args[0] += "_{p}".format(p=process)
-            self.__hists[process] = self.__class(*args)
-            hist = self.__hists[process]
+            args[0] += "_{p}".format(p=fullname)
+            self.__hists[fullname] = self.__class(*args)
+            hist = self.__hists[fullname]
 
         weights = ["w_" + w.lower() for w in weights]
 
@@ -441,10 +470,10 @@ class Plot(object):
         if str(process).startswith('collisions'):
             sel = category if category else ''
 
-        Forest.draw(str(process), drw, sel, opt)
+        Forest.draw(fullname, drw, sel, opt)
         # has to happen after the draw, otherwise ROOT won't find the
         # histo!
-        self.__hists[process].SetDirectory(0)
+        self.__hists[fullname].SetDirectory(0)
 
     def clear(self):
         self.__hists.clear()

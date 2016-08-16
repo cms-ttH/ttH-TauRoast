@@ -16,21 +16,41 @@ from ttH.TauRoast.plotting import Plot
 from ttH.TauRoast.processing import Process
 
 
+def expand_systematics(systematics, weights):
+    all_systematics = [('NA', weights)]
+    for unc in set(systematics) - set(['NA']):
+        if unc not in ('JER', 'JES'):
+            new_weights = weights[:]
+            if unc in new_weights:
+                new_weights.remove(unc)
+            all_systematics.append(('NA', new_weights + [unc + 'Up']))
+            all_systematics.append(('NA', new_weights + [unc + 'Down']))
+        else:
+            all_systematics.append((unc + 'Up', weights))
+            all_systematics.append((unc + 'Down', weights))
+    return all_systematics
+
+
 def setup_cuts(config):
+    systematics = config.get('systematics', [])
+
     cutflows = {}
     cutflownames = [k.replace(' cuts', '') for k in config if k.endswith(' cuts')]
     for name in cutflownames:
-        counts = []
-        cuts = [Cut("Ntuple analyzed", "true")]
-        weights = []
+        weights = config.get(name + ' weights')
+        for unc in [s for s, w in expand_systematics(systematics, weights)]:
+            counts = []
+            cuts = [Cut("Ntuple analyzed", "true")]
+            weights = []
 
-        for cfg in config[name + ' cuts']:
-            cuts.append(Cut(*cfg.items()[0]))
+            for cfg in config[name + ' cuts']:
+                cuts.append(Cut(*cfg.items()[0]))
 
-        for weight in config[name + ' weights']:
-            weights.append(StaticCut(weight))
+            for weight in config[name + ' weights']:
+                weights.append(StaticCut(weight))
 
-        cutflows[name] = (counts, cuts, weights)
+            suffix = '' if unc == 'NA' else '_' + unc
+            cutflows[name + suffix] = (counts, cuts, weights)
     return cutflows
 
 
@@ -102,16 +122,28 @@ def analyze(args, config):
         cutflows = setup_cuts(config)
 
     for proc in sum(map(Process.expand, config['plot']), []):
-        counts, cuts, weights = cutflows[proc.cutflow]
+        uncertainties = ['NA']
+        if args.systematics:
+            weights = config.get(proc.cutflow + ' weights')
+            systematics = config.get('systematics', [])
+            uncertainties = [s for s, w in expand_systematics(systematics, weights)]
+        for unc in uncertainties:
+            suffix = '' if unc == 'NA' else '_' + unc
+            counts, cuts, weights = cutflows[proc.cutflow + suffix]
 
-        if len(counts) > 0 and str(proc) in counts[0].processes():
-            continue
-        local_cuts = list(cuts)
-        for cfg in proc.additional_cuts:
-            local_cuts.insert(0, Cut(*cfg))
+            if len(counts) > 0 and str(proc) in counts[0].processes():
+                continue
 
-        proc.analyze(fn, counts, local_cuts, weights, config["systematics"], config[
-                     'ntupledir'], config.get('event limit', -1), args.debug_cuts)
+            logging.info("using systematics: " + unc)
+
+            local_cuts = list(cuts)
+            for cfg in proc.additional_cuts:
+                local_cuts.insert(0, Cut(*cfg))
+
+            proc.analyze(fn, counts, local_cuts, weights, unc,
+                         config['ntupledir'],
+                         config.get('event limit', -1),
+                         args.debug_cuts)
 
     concatenated_cutflows = {}
     for name, (counts, cuts, weights) in cutflows.items():
@@ -173,19 +205,29 @@ def fill(args, config):
     for category, definition in zip(categories, definitions):
         Plot.reset()
 
+        systematics = config.get('systematics', [])
         for proc in atomic_processes:
-            for p in Plot.plots():
-                p.fill(proc, config[proc.cutflow + " weights"], definition)
+            logging.info("filling process: " + str(proc))
+
+            weights = config.get(proc.cutflow + ' weights')
+            uncertainties = [('NA', weights)]
+            if args.systematics:
+                uncertainties = expand_systematics(systematics, weights)
+            for systematic, weights in uncertainties:
+                logging.info("using systematics: " + systematic)
+                logging.info("using weights: " + ", ".join(weights))
+                for p in Plot.plots():
+                    p.fill(proc, systematic, weights, definition)
 
         fn = os.path.join(config["outdir"], "plots.root")
         with open_rootfile(fn) as f:
             for p in Plot.plots():
-                p.write(f, cutflows, category, fmt=config["histformat"])
+                p.write(f, cutflows, category, systematics, fmt=config["histformat"])
 
         fn = os.path.join(config["outdir"], "limits.root")
         with open_rootfile(fn) as f:
             for p in Plot.plots():
-                p.write(f, cutflows, category, procs=limit_processes, fmt=config["histformat"])
+                p.write(f, cutflows, category, systematics, procs=limit_processes, fmt=config["histformat"])
 
         timing = sorted(Plot.plots(), key=lambda p: p._time)
         for p in timing[:10] + timing[-10:]:
