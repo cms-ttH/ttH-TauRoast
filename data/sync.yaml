@@ -11,9 +11,9 @@ plot:
   - ttH
   # - ttjets
 
-cuts:
+default cuts:
     - "e/μ quality": "lepton_id == superslim::Lepton::MVA"
     - "τ quality": "tau_id == superslim::Tau::IsoMVA03"
 
-weights: []
+default weights: []
 systematics: NA
