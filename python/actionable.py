@@ -240,6 +240,10 @@ def plot(args, config):
     with open(os.path.join(datadir, 'plot.yaml')) as f:
         plotconfig = yaml.load(f)
 
+    systematics = []
+    if args.systematics:
+        systematics = config['systematics']
+
     categories, _ = get_categories(config)
     for category in categories:
         Plot.reset()
@@ -252,7 +256,9 @@ def plot(args, config):
             raise IOError("Can't read file '{0}'".format(fn))
 
         for p in Plot.plots():
-            p.read(f, category, processes, fmt=config["histformat"])
+            p.read(f, category, processes, systematics=systematics,
+                   fmt=config["histformat"])
             p.save(plotconfig, os.path.join(config["outdir"], category))
+            p.clear()
 
         f.Close()

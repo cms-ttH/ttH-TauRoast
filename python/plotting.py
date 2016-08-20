@@ -167,16 +167,30 @@ class Plot(object):
             factor = 0. if denom == 0. else cutflows[proc.cutflow][-1][proc] / denom
             hist.Scale(factor)
 
-    def read(self, file, category, procs, fmt="{p}_{c}_{v}", systematics=None):
-        for proc in procs:
-            histname = fmt.format(p=proc.limitname, v=self.__limitname, c=category)
-            logging.debug("reading histogram {0}".format(histname))
-            h = file.Get(histname)
-            if h is None:
-                logging.warning("histogram {0} not found in file".format(histname))
+    def read(self, file, category, procs, systematics=None, fmt="{p}_{c}_{v}"):
+        if systematics is None:
+            systematics = []
+        systematics = set(systematics + ['NA'])
+
+        suffixes = []
+        for systematic in systematics:
+            if systematic == 'NA':
+                suffixes.append('')
             else:
-                h.SetDirectory(0)
-                self.__hists[str(proc)] = h
+                suffixes.append('_{}Up'.format(systematic))
+                suffixes.append('_{}Down'.format(systematic))
+
+        for proc in procs:
+            for suffix in suffixes:
+                histname = fmt.format(p=proc.limitname, v=self.__limitname, c=category)
+                histname += suffix
+                logging.debug("reading histogram {0}".format(histname))
+                h = file.Get(histname)
+                if h is None:
+                    logging.warning("histogram {0} not found in file".format(histname))
+                else:
+                    h.SetDirectory(0)
+                    self.__hists[str(proc) + suffix] = h
 
     def write(self, file, cutflows, category, systematics=None, procs=None, fmt="{p}_{c}_{v}"):
         self._normalize(cutflows)
@@ -496,5 +510,5 @@ class Plot(object):
     def get_event_count(cls, f, proc, category, fmt):
         p = cls.__plots['Events']
         p.clear()
-        p.read(f, category, Process.expand(proc), fmt)
+        p.read(f, category, Process.expand(proc), fmt=fmt)
         return p._get_histogram(proc).GetBinContent(1)
