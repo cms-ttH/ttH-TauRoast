@@ -1,9 +1,9 @@
-from array import array
 import logging
 
 import ROOT as r
 
 from ttH.TauRoast.useful import code2leaf
+
 
 class Leaf(object):
     __leaves = {}
@@ -60,7 +60,9 @@ class Leaf(object):
         for k in sorted(cls.__finals.keys()):
             yield cls.__finals[k]
 
+
 class Tree(object):
+
     def __init__(self, filename, name):
         self.__f = r.TFile(filename, 'UPDATE')
         self.__t = r.TTree(str(name), 'ntuple')
@@ -73,6 +75,7 @@ class Tree(object):
     def __del__(self):
         self.__f.WriteObject(self.__t, self.__t.GetName())
         self.__f.Close()
+
 
 class Forest(object):
     __instance = None
