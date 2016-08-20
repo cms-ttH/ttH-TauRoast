@@ -34,12 +34,12 @@ Plot(
         binning=[1, 0, 1]
 )
 
-Plot(
-        name="general/Combos",
-        values=["combos"],
-        labels=["Number of passed #tau combinations", "Events"],
-        binning=[5, 0, 5]
-)
+# Plot(
+#         name="general/Combos",
+#         values=["combos"],
+#         labels=["Number of passed #tau combinations", "Events"],
+#         binning=[5, 0, 5]
+# )
 Plot(
         name="general/AllCombos",
         values=['allcombos'],
