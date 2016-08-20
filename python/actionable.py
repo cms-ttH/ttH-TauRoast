@@ -258,7 +258,8 @@ def plot(args, config):
         for p in Plot.plots():
             p.read(f, category, processes, systematics=systematics,
                    fmt=config["histformat"])
-            p.save(plotconfig, os.path.join(config["outdir"], category))
+            p.save(plotconfig, os.path.join(config["outdir"], category),
+                   systematics=systematics)
             p.clear()
 
         f.Close()

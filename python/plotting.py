@@ -82,12 +82,60 @@ class Plot(object):
             h.Add(self.__hists[proc + suffix])
         return h
 
-    def _get_background_sum(self, config):
+    def _get_background_shifts(self, config, systematics, direction):
+        central = self._get_background_sum(config)
+        result = [0] * central.GetNbinsX()
+        for systematic in systematics:
+            error = self._get_background_sum(config, systematic + direction)
+            for n in range(len(result)):
+                result[n] += (central.GetBinContent(n + 1) -
+                              error.GetBinContent(n + 1)) ** 2
+        return result
+
+    def _get_background_errors(self, config, systematics):
+        central = self._get_background_sum(config)
+        abs_err = r.TGraphAsymmErrors(central)
+        rel_err = r.TGraphAsymmErrors(central)
+
+        err_up = self._get_background_shifts(config, systematics, 'Up')
+        err_down = self._get_background_shifts(config, systematics, 'Down')
+
+        for i in range(central.GetNbinsX()):
+            bin_center = central.GetBinCenter(i + 1)
+            bin_content = central.GetBinContent(i + 1)
+            bin_error = central.GetBinError(i + 1)
+            bin_width = central.GetBinWidth(i + 1)
+
+            if bin_content > 0.001:
+                rel_up = math.sqrt(err_up[i] + bin_error ** 2) / bin_content
+                rel_down = math.sqrt(err_down[i] + bin_error ** 2) / bin_content
+                # Systematical errors only
+                # rel_up = math.sqrt(err_up[i]) / bin_content
+                # rel_down = math.sqrt(err_down[i]) / bin_content
+            else:
+                rel_up = 0
+                rel_down = 0
+
+            abs_err.SetPoint(i, bin_center, bin_content)
+            rel_err.SetPoint(i, bin_center, 1)
+
+            abs_err.SetPointEXlow(i, bin_width / 2)
+            abs_err.SetPointEXhigh(i, bin_width / 2)
+            abs_err.SetPointEYlow(i, math.sqrt(err_down[i]))
+            abs_err.SetPointEYhigh(i, math.sqrt(err_up[i]))
+
+            rel_err.SetPointEXlow(i, bin_width / 2)
+            rel_err.SetPointEXhigh(i, bin_width / 2)
+            rel_err.SetPointEYlow(i, rel_down)
+            rel_err.SetPointEYhigh(i, rel_up)
+        return (abs_err, rel_err)
+
+    def _get_background_sum(self, config, systematic=None):
         res = None
         for cfg in config['backgrounds']:
             background, color = cfg.items()[0]
             try:
-                h = self._get_histogram(background)
+                h = self._get_histogram(background, systematic)
                 if res is None:
                     res = h
                 else:
@@ -221,15 +269,15 @@ class Plot(object):
                 hist = self._get_histogram(proc, uncertainty)
                 file.WriteObject(hist, histname)
 
-    def save(self, config, outdir):
+    def save(self, config, outdir, systematics=None):
         logging.debug("saving histogram {0}".format(self.__name))
 
         if self.__class == r.TH1F:
-            self._save1d(config, outdir)
+            self._save1d(config, outdir, systematics=systematics)
         else:
-            self._save2d(config, outdir)
+            self._save2d(config, outdir, systematics=systematics)
 
-    def _save2d(self, config, outdir):
+    def _save2d(self, config, outdir, systematics=None):
         bkg_sum = self._get_background_sum(config)
         signals = zip((cfg.keys()[0] for cfg in config['signals']), self._get_signals(config))
 
@@ -252,42 +300,6 @@ class Plot(object):
                 canvas.SetLogz()
 
             canvas.SaveAs(os.path.join(outdir, "{0}_{1}.pdf".format(self.__name, label)))
-
-    def _build_background_errors(self, background):
-        abs_err = r.TGraphAsymmErrors(background)
-        rel_err = r.TGraphAsymmErrors(background)
-
-        # err_up = self.get_squared_bkg_shifts(self.__up, histname, histo)
-        # err_down = self.get_squared_bkg_shifts(self.__down, histname, histo)
-        err_up = [0] * background.GetNbinsX()
-        err_down = [0] * background.GetNbinsX()
-
-        for i in range(background.GetNbinsX()):
-            bin_center = background.GetBinCenter(i + 1)
-            bin_content = background.GetBinContent(i + 1)
-            bin_error = background.GetBinError(i + 1)
-            bin_width = background.GetBinWidth(i + 1)
-
-            if bin_content > 0.001:
-                rel_up = math.sqrt(err_up[i] + bin_error ** 2) / bin_content
-                rel_down = math.sqrt(err_down[i] + bin_error ** 2) / bin_content
-            else:
-                rel_up = 0
-                rel_down = 0
-
-            abs_err.SetPoint(i, bin_center, bin_content)
-            abs_err.SetPointEXlow(i, bin_width / 2)
-            abs_err.SetPointEXhigh(i, bin_width / 2)
-            abs_err.SetPointEYlow(i, math.sqrt(err_down[i]))
-            abs_err.SetPointEYhigh(i, math.sqrt(err_up[i]))
-
-            rel_err.SetPoint(i, bin_center, 1)
-            rel_err.SetPointEXlow(i, bin_width / 2)
-            rel_err.SetPointEXhigh(i, bin_width / 2)
-            rel_err.SetPointEYlow(i, rel_down)
-            rel_err.SetPointEYhigh(i, rel_up)
-
-        return (abs_err, rel_err)
 
     def _build_ratio_errors(self, ratio, nom, div):
         graph = r.TGraphAsymmErrors(ratio)
@@ -322,11 +334,10 @@ class Plot(object):
 
         return graph
 
-    def _draw_ratio(self, config):
+    def _draw_ratio(self, config, rel_err):
         background = self._get_background_sum(config)
         collisions = self._get_data(config)
 
-        (_, rel_err) = self._build_background_errors(background)
         rel_err.SetMarkerSize(0)
         rel_err.SetFillColor(r.kGreen)
         rel_err.SetFillStyle(1001)
@@ -342,7 +353,7 @@ class Plot(object):
 
         return err, rel_err
 
-    def _save1d(self, config, outdir):
+    def _save1d(self, config, outdir, systematics=None):
         min_y = 0.002
         max_y = min_y
         scale = 1.15
@@ -374,6 +385,7 @@ class Plot(object):
         canvas.cd(1)
 
         bkg_sum = self._get_background_sum(config)
+        err_abs, err_rel = self._get_background_errors(config, systematics)
         bkg_stack = self._get_backgrounds(config)
         bkg_stack.Draw()
 
@@ -409,7 +421,7 @@ class Plot(object):
         for data in collisions:
             data.DrawCopy("E1 P same")
 
-        bkg_sum.Draw("E2 same")
+        err_abs.Draw("2 same")
 
         base_histo.Draw("axis same")
 
@@ -429,7 +441,7 @@ class Plot(object):
 
         lower.Draw("axis")
 
-        err = self._draw_ratio(config)
+        self._draw_ratio(config, err_rel)
 
         lower.Draw("axis same")
 
@@ -453,7 +465,6 @@ class Plot(object):
 
         if legend:
             del legend
-        del err
 
     @savetime
     def fill(self, process, systematics, weights, category=None):
