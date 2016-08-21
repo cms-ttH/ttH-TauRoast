@@ -468,10 +468,13 @@ class Plot(object):
 
     @savetime
     def fill(self, process, systematics, weights, category=None):
+        procname = str(process)
         suffix = ''
         for s in [systematics] + weights:
             if s.endswith('Up') or s.endswith('Down'):
                 suffix = '_' + s
+                if s not in weights:
+                    procname += suffix
                 break
         fullname = str(process) + suffix
 
@@ -495,7 +498,7 @@ class Plot(object):
         if str(process).startswith('collisions'):
             sel = category if category else ''
 
-        Forest.draw(fullname, drw, sel, opt)
+        Forest.draw(procname, drw, sel, opt)
         # has to happen after the draw, otherwise ROOT won't find the
         # histo!
         self.__hists[fullname].SetDirectory(0)
