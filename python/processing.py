@@ -70,6 +70,19 @@ class BasicProcess(Process):
         self.__cutflow = cutflow
         self.__add_cuts = additional_cuts if additional_cuts else []
 
+    def _setup_counts(self, counts):
+        from ttH.TauRoast.cutting import StaticCut
+        if len(counts) == 0:
+            counts.append(StaticCut("Dataset"))
+
+            rx = re.compile(r'pass\w*Cut\(.*"(.*)".*\)')
+            fn = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'plugins', 'TauProcessor.cc')
+            with open(fn) as f:
+                for line in f:
+                    m = rx.search(line)
+                    if m:
+                        counts.append(StaticCut(m.group(1)))
+
     def copy(self, fct=lambda s: s):
         return BasicProcess(fct(self._name), self.__paths, self.__events,
                             fct(self._fullname), fct(self._limitname),
@@ -77,12 +90,10 @@ class BasicProcess(Process):
 
     def analyze(self, filename, counts, cuts, weights, systematics, basedir, limit=-1, debug=False):
         from ttH.TauRoast.useful import config
+        from ttH.TauRoast.printable import SyncSaver
 
         if str(self).startswith("collisions"):
             systematics = "NA"
-
-        from ttH.TauRoast.cutting import StaticCut
-        from ttH.TauRoast.printable import SyncSaver
 
         if debug:
             for i, cut in enumerate(cuts):
@@ -96,17 +107,7 @@ class BasicProcess(Process):
         if hist is None:
             raise IOError("Could not produce cutflow histogram from directory '{0}'".format(os.path.join(basedir, p)))
 
-        if len(counts) == 0:
-            counts.append(StaticCut("Dataset"))
-
-            rx = re.compile(r'pass\w*Cut\(.*"(.*)".*\)')
-            fn = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'plugins', 'TauProcessor.cc')
-            with open(fn) as f:
-                for line in f:
-                    m = rx.search(line)
-                    if m:
-                        counts.append(StaticCut(m.group(1)))
-
+        self._setup_counts(counts)
         for n, cut in enumerate(counts[1:], 1):
             cut[self] = hist.GetBinContent(n)
 
