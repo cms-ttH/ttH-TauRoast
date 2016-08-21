@@ -207,3 +207,26 @@ fastlane::process(const std::string& process, const std::string& channel, const 
       t.Fill();
    }
 }
+
+const TH1*
+fastlane::get_cuts(const std::string& label, const std::vector<std::string>& files)
+{
+   TH1* result = 0;
+   edm::Handle<superslim::CutHistogram> handle;
+   edm::InputTag tag(label);
+   for (const auto& filename: files) {
+      TFile f(filename.c_str());
+      fwlite::Run run(&f);
+      for (run.toBegin(); !run.atEnd(); ++run) {
+         run.getByLabel(tag, handle);
+         if (!result) {
+            result = static_cast<TH1*>(handle.product()->product()->Clone());
+            result->SetDirectory(0);
+         } else {
+            result->Add(handle.product()->product());
+         }
+      }
+      f.Close();
+   }
+   return result;
+}

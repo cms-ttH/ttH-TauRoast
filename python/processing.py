@@ -7,8 +7,8 @@ import time
 import ROOT as r
 r.gSystem.Load("libttHTauRoast")
 
-from DataFormats.FWLite import Handle, Runs
 from ttH.TauRoast.botany import Tree
+from ttH.TauRoast.useful import vectorize
 
 NTUPLE_GLOB = '{channel}_test*.root'
 
@@ -89,26 +89,10 @@ class BasicProcess(Process):
                 cut.callback(SyncSaver(os.path.join(os.path.dirname(filename), "cut_{0}_{1}.txt".format(self, i)), systematics))
 
         files = sum([glob.glob(os.path.join(basedir, p, NTUPLE_GLOB.format(channel=config.channel))) for p in self.__paths], [])
+        cfiles = vectorize(files, 'std::string')
         if len(files) == 0:
             raise IOError("could not find any files in {}".format(", ".join(self.__paths)))
-        hist = None
-        handle = Handle("superslim::CutHistogram")
-        for run in Runs(files):
-            if not run.getByLabel(config.channel + "Taus", handle) or not isinstance(handle.product(), r.superslim.CutHistogram):
-                logging.error("could not find cutflow histogram")
-                continue
-
-            if hist is None:
-                hist = handle.product().Clone()
-                hist.SetDirectory(0)
-            else:
-                h = handle.product()
-                for n in range(hist.GetNbinsX()):
-                    label = h.GetXaxis().GetBinLabel(n + 1)
-                    if label != "":
-                        hist.GetXaxis().SetBinLabel(n + 1, label)
-                hist.Add(h.product())
-
+        hist = r.fastlane.get_cuts(config.channel + "Taus", cfiles)
         if hist is None:
             raise IOError("Could not produce cutflow histogram from directory '{0}'".format(os.path.join(basedir, p)))
 
@@ -134,15 +118,8 @@ class BasicProcess(Process):
         suffix = '' if systematics == 'NA' else '_' + systematics
         tree = Tree(filename, str(self) + suffix)
 
-        ccuts = r.std.vector('fastlane::Cut*')()
-        for c in cuts:
-            ccuts.push_back(c.raw())
-        cweights = r.std.vector('fastlane::StaticCut*')()
-        for c in weights:
-            cweights.push_back(c.raw())
-        cfiles = r.std.vector('std::string')()
-        for f in files:
-            cfiles.push_back(f)
+        ccuts = vectorize(cuts, 'fastlane::Cut*')
+        cweights = vectorize(weights, 'fastlane::StaticCut*')
 
         def log(i):
             logging.info("processing {0}, event {1}".format(str(self), i))

@@ -64,6 +64,16 @@ def load_python(sync):
             imp.load_source("procs{0}".format(n), file)
 
 
+def vectorize(things, cls):
+    res = r.std.vector(cls)()
+    for thing in things:
+        if hasattr(thing, 'raw'):
+            res.push_back(thing.raw())
+        else:
+            res.push_back(thing)
+    return res
+
+
 def R(p4):
     return math.sqrt(p4.Eta() ** 2 + p4.Phi() ** 2)
 
