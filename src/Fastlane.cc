@@ -91,14 +91,20 @@ namespace fastlane {
 void
 fastlane::update_weights(std::unordered_map<std::string, double>& ws, const superslim::Event& e, const superslim::Combination& combo, const std::string& sys)
 {
-   static auto puhelper = PUWeightProducer(
-         "MiniAOD/MiniAODHelper/data/puweights/MC/Spring16_25nsV1_NumTruePU.root",
-         "hNumTruePUPdf",
-         "MiniAOD/MiniAODHelper/data/puweights/Run2016/DataPileupHistogram_Run2016B-PromptReco-271036-275125_MinBias71300.root",
-         "pileup");
+   // =====================
+   // Constants for weights
+   // =====================
+   //
+   static const float tau_efficiency = 0.06;
+
+   // ===========
+   // CSV weights
+   // ===========
+
    static auto csvhelper = CSVHelper(
          "MiniAOD/MiniAODHelper/data/csv_rwt_fit_hf_76x_2016_02_08.root",
          "MiniAOD/MiniAODHelper/data/csv_rwt_fit_lf_76x_2016_02_08.root", 5);
+
    static std::unordered_map<std::string, int> csvsys = {
       {"NA", 0},
       {"JERUp", 0},
@@ -140,7 +146,35 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
    ws[lower("LFWeight")] = lf;
    ws[lower("CFWeight")] = cf;
    ws[lower("CSVWeight")] = std::min(csv, 1.);
+
+   // =========
+   // PU weight
+   // =========
+   static auto puhelper = PUWeightProducer(
+         "MiniAOD/MiniAODHelper/data/puweights/MC/Spring16_25nsV1_NumTruePU.root",
+         "hNumTruePUPdf",
+         "MiniAOD/MiniAODHelper/data/puweights/Run2016/DataPileupHistogram_Run2016B-PromptReco-271036-275125_MinBias71300.root",
+         "pileup");
    ws[lower("PUWeight")] = puhelper(e.ntv());
+
+   // =================
+   // τ related weights
+   // =================
+
+   auto taus = combo.taus();
+   int real_taus = std::count_if(std::begin(taus), std::end(taus),
+         [](const auto& t) { return t.match() == 5; });
+   int real_electrons = std::count_if(std::begin(taus), std::end(taus),
+         [](const auto& t) { return t.match() == 1; });
+   int real_jets = std::count_if(std::begin(taus), std::end(taus),
+         [](const auto& t) { return t.match() == 6; });
+
+   ws[lower("tauIdEffUp")] = std::pow(1 + tau_efficiency, real_taus);
+   ws[lower("tauIdEffDown")] = std::pow(1 - tau_efficiency, real_taus);
+   ws[lower("jetTauFakeUp")] = 1;
+   ws[lower("jetTauFakeDown")] = 1;
+   ws[lower("eTauFakeUp")] = 1;
+   ws[lower("eTauFakeDown")] = 1;
 }
 
 void
