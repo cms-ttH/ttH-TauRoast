@@ -227,7 +227,8 @@ def fill(args, config):
         fn = os.path.join(config["outdir"], "limits.root")
         with open_rootfile(fn) as f:
             for p in Plot.plots():
-                p.write(f, cutflows, category, systematics, procs=limit_processes, fmt=config["histformat"])
+                p.write(f, cutflows, category, systematics,
+                        procs=limit_processes, fmt=config["histformat"])
 
         timing = sorted(Plot.plots(), key=lambda p: p._time)
         for p in timing[:10] + timing[-10:]:
@@ -263,3 +264,50 @@ def plot(args, config):
             p.clear()
 
         f.Close()
+
+
+def datacard(args, config):
+    import CombineHarvester.CombineTools.ch as ch
+
+    fn = os.path.join(config["outdir"], "limits.root")
+
+    cats = list(enumerate([d.keys()[0] for d in config['categories']], 1))
+    sigs = ['ttH']
+    bkgs = ['ttjets']
+
+    cb = ch.CombineHarvester()
+    # cb.SetVerbosity(2)
+
+    masses = ch.ValsFromRange('120:130|5')
+    masses = ['125']
+    cb.AddObservations(['*'], ['ttH'], ['13TeV'], ['ttl'], cats)
+    cb.AddProcesses(['*'], ['ttH'], ['13TeV'], ['ttl'], bkgs, cats, False)
+    cb.AddProcesses(masses, ['ttH'], ['13TeV'], ['ttl'], sigs, cats, True)
+
+    cb.cp().AddSyst(cb, 'lumi_13TeV', 'lnN', ch.SystMap()(1.025))
+    cb.cp().AddSyst(cb, 'JES', 'shape', ch.SystMap()(1.0))
+    cb.cp().AddSyst(cb, 'JER', 'shape', ch.SystMap()(1.0))
+    # cb.cp().AddSyst(cb, 'CMS_scale_j', 'shape', ch.SystMap()(1.0))
+    # cb.cp().AddSyst(cb, 'CMS_res_j', 'shape', ch.SystMap()(1.0))
+    cb.cp().AddSyst(cb, 'jetTauFake', 'shape', ch.SystMap()(1.0))
+    cb.cp().AddSyst(cb, 'eTauFake', 'shape', ch.SystMap()(1.0))
+    cb.cp().AddSyst(cb, 'tauIdEff', 'shape', ch.SystMap()(1.0))
+
+    cb.cp().backgrounds().ExtractShapes(
+        fn,
+        "$PROCESS_$BIN_{0}_TTL".format(args.discriminant),
+        "$PROCESS_$BIN_{0}_TTL_$SYSTEMATIC".format(args.discriminant)
+    )
+    cb.cp().signals().ExtractShapes(
+        fn,
+        "$PROCESS$MASS_$BIN_{0}_TTL".format(args.discriminant),
+        "$PROCESS$MASS_$BIN_{0}_TTL_$SYSTEMATIC".format(args.discriminant)
+    )
+
+    cb.PrintObs().PrintProcs().PrintSysts()
+
+    cb.WriteDatacard("card.txt", "file.root")
+    writer = ch.CardWriter('$TAG/$MASS/$ANALYSIS_$CHANNEL.txt',
+                           '$TAG/common/$ANALYSIS_$CHANNEL.root')
+    writer.SetVerbosity(1)
+    writer.WriteCards('limits', cb)

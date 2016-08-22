@@ -20,6 +20,8 @@ ag.add_argument('-f', '--fill', action='store_true', default=False,
                 help="fill histograms")
 ag.add_argument('-p', '--plot', action='store_true', default=False,
                 help="save histograms")
+ag.add_argument('-d', '--datacard', action='store_true', default=False,
+                help="save datacard")
 ag = parser.add_argument_group('general options')
 ag.add_argument('-i', '--input', type=str, default=None,
                 help="change input directory")
@@ -32,14 +34,17 @@ ag.add_argument('-s', '--systematics', action='store_true', default=False,
 ag = parser.add_argument_group('debugging and syncronization options')
 ag.add_argument('--debug-cuts', action='store_true', default=False,
                 help="save event quantites after each cut")
+ag = parser.add_argument_group('datacard options')
+ag.add_argument('--discriminant', type=str, default='BDT',
+                help="which discriminant to use")
 
 args = parser.parse_args()
 
 if 'LOCALRT' not in os.environ:
     parser.error("need to do a `cmsenv` first")
 
-if not any([args.analyze, args.fill, args.plot]):
-    parser.error("need to either analyze, fill, or plot")
+if not any([args.analyze, args.fill, args.plot, args.datacard]):
+    parser.error("need to either analyze, fill, plot, or datacard")
 
 # Logging setup
 logging.basicConfig(
@@ -67,7 +72,7 @@ r.gErrorIgnoreLevel = 1001
 r.gSystem.Load("libttHTauRoast")
 
 from ttH.TauRoast import stylish, useful
-from ttH.TauRoast.actionable import analyze, dump_categories, dump_cuts, fill, plot
+from ttH.TauRoast.actionable import analyze, dump_categories, dump_cuts, fill, plot, datacard
 from ttH.TauRoast.variation import setup
 
 useful.setup(config)
@@ -93,6 +98,8 @@ if args.fill or args.plot:
     actions.append(dump_categories)
 if args.plot:
     actions.append(plot)
+if args.datacard:
+    actions.append(datacard)
 
 for action in actions:
     action(args, config)
