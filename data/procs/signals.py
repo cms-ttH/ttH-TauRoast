@@ -57,7 +57,7 @@ BasicProcess(
 BasicProcess(
     name="ttH2TT_125_pow",
     fullname="t#bar{t}H(125) #rightarrow #tau_{h} #tau_{h}",
-    limitname="ttHTT125_pow",
+    limitname="ttHTT125",
     paths=['ttH2TT_125_pow'],
     cross_section=0.5085 * 6.32e-2,
     events=2199600
@@ -98,6 +98,6 @@ CombinedProcess(
 CombinedProcess(
     name="ttH_125_pow",
     fullname="t#bar{t}H(125)",
-    limitname="ttH125_pow",
+    limitname="ttH125",
     subprocesses=["ttH2bb_125_pow", "ttH2Nonbb_125_pow"]
 )
