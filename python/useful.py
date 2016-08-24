@@ -160,7 +160,7 @@ def code2cut(name, code):
 def code2leaf(name, typename, code):
     stub = hashlib.sha1(name + code).hexdigest()[:7]
     chunck = """
-        #include "interface/Fastlane.h"
+        #include "ttH/TauRoast/interface/Fastlane.h"
 
         void fct_{f}(const superslim::Event& event,
                 const std::vector<superslim::Tau>& taus,
