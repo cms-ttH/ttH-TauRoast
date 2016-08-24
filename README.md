@@ -14,36 +14,10 @@ CCL programs can be used:
 
 ## Installation
 
-First, create a CMSSW release and source the software environment (to run
-the final analysis, `CMSSW_8_0_11` or higher is required):
+Run `setup.sh` to get a new release with all the necessary packages.  For a
+fresh installation:
 
-    cmsrel CMSSW_7_6_3_patch2
-    cd CMSSW_7_6_3_patch2/src
-    cmsenv
-    git cms-init
-
-Afterwards, clone these repositories in the CMSSW source area:
-
-    git clone -b CMSSW_7_6_3 git@github.com:cms-ttH/MiniAOD.git
-    git clone git@github.com:cms-ttH/ttH-LeptonID.git ttH/LeptonID
-    git clone git@github.com:cms-ttH/ttH-TauRoast.git ttH/TauRoast
-
-and add some CMS dependencies for TTL:
-
-    git cms-addpkg PhysicsTools/JetMCAlgos/
-    cd PhysicsTools/JetMCAlgos/plugins/
-    rm GenHFHadronMatcher.cc
-    wget https://twiki.cern.ch/twiki/pub/CMSPublic/GenHFHadronMatcher/GenHFHadronMatcher.cc
-    wget https://twiki.cern.ch/twiki/pub/CMSPublic/GenHFHadronMatcher/GenTtbarCategorizer.cc
-    cd -
-    cd PhysicsTools/JetMCAlgos/python/
-    wget https://twiki.cern.ch/twiki/pub/CMSPublic/GenHFHadronMatcher/GenTtbarCategorizer_cfi.py.txt
-    mv GenTtbarCategorizer_cfi.py.txt GenTtbarCategorizer_cfi.py
-    cd -
-
-then compile:
-
-    scram b -j32
+    curl https://raw.githubusercontent.com/cms-ttH/ttH-TauRoast/master/setup.sh|sh -
 
 ## Creating Ntuples
 
