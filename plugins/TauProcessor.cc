@@ -238,7 +238,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    m_triggerCache(
          edm::InputTag("TriggerResults", "", "HLT"),
          edm::InputTag("gtDigis"),
-         1, false, false, true,
+         false, false,
          edm::ConsumesCollector(consumesCollector())
    )
 {
