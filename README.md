@@ -19,6 +19,13 @@ fresh installation:
 
     curl https://raw.githubusercontent.com/cms-ttH/ttH-TauRoast/master/setup.sh|sh -
 
+To create a release to create datacards and run limits, use
+
+    curl https://raw.githubusercontent.com/cms-ttH/ttH-TauRoast/master/setup_limit.sh|sh -
+
+Note that both setup scripts may fail due to concurrent `scram` usage, in
+which case `scram build -j 8` or similar has to be re-issued.
+
 ## Creating Ntuples
 
 See the parameter sets in `ttH/TauRoast/test`, e.g., `nutplize.py`.
