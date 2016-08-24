@@ -47,8 +47,8 @@ default weights:
 
 # List of systematics to run when `-s` is specified
 systematics:
-  - JES
-  - JER
+  - CMS_scale_j
+  - CMS_res_j
   - jetTauFake
   - eTauFake
   - tauIdEff

@@ -289,10 +289,10 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    } else {
       systematics_ = {
          {"NA", sysType::NA},
-         {"JERUp", sysType::JERup},
-         {"JERDown", sysType::JERdown},
-         {"JESUp", sysType::JESup},
-         {"JESDown", sysType::JESdown}
+         {"CMS_res_jUp", sysType::JERup},
+         {"CMS_res_jDown", sysType::JERdown},
+         {"CMS_scale_jUp", sysType::JESup},
+         {"CMS_scale_jDown", sysType::JESdown}
       };
    }
 

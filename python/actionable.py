@@ -19,7 +19,7 @@ from ttH.TauRoast.processing import Process
 def expand_systematics(systematics, weights):
     all_systematics = [('NA', weights)]
     for unc in set(systematics) - set(['NA']):
-        if unc not in ('JER', 'JES'):
+        if unc not in ('CMS_scale_j', 'CMS_res_j'):
             new_weights = weights[:]
             if unc in new_weights:
                 new_weights.remove(unc)
