@@ -1,5 +1,9 @@
 # Ntuple History
 
+## v32
+
+* Run with 80X triggers
+
 ## v31
 
 * Intermediate run synced on 80X for lepton ID (not event-variables)

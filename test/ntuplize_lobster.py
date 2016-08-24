@@ -1,10 +1,10 @@
 from lobster import cmssw
-from lobster.core import *
+from lobster.core import AdvancedOptions, Category, Config, StorageConfiguration, Workflow
 from lobster.monitor.elk import ElkInterface
 
-from ttH.TauRoast.datasets import *
+from ttH.TauRoast.datasets import datasets_ttH, datasets_ttjets, datasets_other, datasets_2015D
 
-version = "v31"
+version = "v32"
 
 storage = StorageConfiguration(
     output=[
