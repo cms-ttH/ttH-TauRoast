@@ -163,11 +163,11 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
 
    auto taus = combo.taus();
    int real_taus = std::count_if(std::begin(taus), std::end(taus),
-         [](const auto& t) { return t.match() == 5; });
+         [](const superslim::Tau& t) { return t.match() == 5; });
    int real_electrons = std::count_if(std::begin(taus), std::end(taus),
-         [](const auto& t) { return t.match() == 1; });
+         [](const superslim::Tau& t) { return t.match() == 1; });
    int real_jets = std::count_if(std::begin(taus), std::end(taus),
-         [](const auto& t) { return t.match() == 6; });
+         [](const superslim::Tau& t) { return t.match() == 6; });
 
    ws[lower("tauIdEffUp")] = std::pow(1 + tau_efficiency, real_taus);
    ws[lower("tauIdEffDown")] = std::pow(1 - tau_efficiency, real_taus);
