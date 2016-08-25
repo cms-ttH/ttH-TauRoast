@@ -5,6 +5,7 @@ from lobster.monitor.elk import ElkInterface
 from ttH.TauRoast.datasets import datasets
 
 version = "v32"
+tag = "all"
 
 storage = StorageConfiguration(
     output=[
@@ -42,14 +43,14 @@ mc = Category(
 )
 
 workflows = []
-for path in datasets:
+for path in datasets(tag):
     _, major, minor, _ = path.split('/')
     label = (major + '___' + minor).replace('-', '_')
     mask = None
     params = []
     category = mc
 
-    if 'Run2016' in label and path.endswith('MINIAOD'):
+    if '/Run2016' in path and path.endswith('MINIAOD'):
         mask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/Cert_271036-277148_13TeV_PromptReco_Collisions16_JSON.txt'
         params += ['data=True', 'globalTag=80X_dataRun2_Prompt_ICHEP16JEC_v0']
         category = data
@@ -69,10 +70,10 @@ for path in datasets:
     ))
 
 config = Config(
-    label='tau_{}'.format(version),
-    workdir='/tmpscratch/users/matze/ttH/{}'.format(version),
-    plotdir='/afs/crc.nd.edu/user/m/mwolf3/www/lobster/ttH/{}'.format(version),
-    elk=ElkInterface('elk.crc.nd.edu', 9200, 'elk.crc.nd.edu', 5601, 'tth_{}'.format(version)),
+    label='tau_{}_{}'.format(version, tag),
+    workdir='/tmpscratch/users/matze/ttH/{}_{}'.format(version, tag),
+    plotdir='/afs/crc.nd.edu/user/m/mwolf3/www/lobster/ttH/{}_{}'.format(version, tag),
+    elk=ElkInterface('elk.crc.nd.edu', 9200, 'elk.crc.nd.edu', 5601, 'ttH_{}_{}'.format(version, tag).lower()),
     storage=storage,
     workflows=workflows,
     advanced=AdvancedOptions(

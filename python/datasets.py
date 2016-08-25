@@ -1,10 +1,12 @@
-datasets_raw = """
+datasets_ttH = """
 /ttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v2/MINIAODSIM
 /ttHJetTobb_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext3-v2/MINIAODSIM
 
 /ttHToNonbb_M125_13TeV_powheg_pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM
 /ttHTobb_M125_13TeV_powheg_pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v2/MINIAODSIM
+"""
 
+datasets_mc = """
 /TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM
 /TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM
 /WGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM
@@ -75,4 +77,18 @@ datasets_collisions = """
 /MuonEG/Run2016G-PromptReco-v1/MINIAOD
 """
 
-datasets = [ds.strip() for ds in (datasets_raw + datasets_collisions).split() if len(ds) > 0]
+
+def datasets(tag):
+    if tag == 'all':
+        dsets = datasets_ttH + datasets_mc + datasets_collisions
+    elif tag == 'ttH':
+        dsets = datasets_ttH
+    elif tag == 'mc':
+        dsets = datasets_ttH + datasets_mc
+    elif tag == 'data':
+        dsets = datasets_collisions
+    elif tag == 'bkgs':
+        dsets = datasets_mc
+    else:
+        raise ValueError("invalid tag '{}'".format(tag))
+    return [ds.strip() for ds in dsets.split() if len(ds) > 0]
