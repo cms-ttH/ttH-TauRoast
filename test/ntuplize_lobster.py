@@ -2,7 +2,7 @@ from lobster import cmssw
 from lobster.core import AdvancedOptions, Category, Config, StorageConfiguration, Workflow
 from lobster.monitor.elk import ElkInterface
 
-from ttH.TauRoast.datasets import datasets_ttH, datasets_ttjets, datasets_other, datasets_2015D
+from ttH.TauRoast.datasets import datasets
 
 version = "v32"
 
@@ -42,22 +42,16 @@ mc = Category(
 )
 
 workflows = []
-datasets = sum(
-    [
-        datasets_ttH,
-        datasets_ttjets,
-        datasets_other,
-        datasets_2015D
-    ], []
-)
-for label, path in datasets:
+for path in datasets:
+    _, major, minor, _ = path.split('/')
+    label = (major + '___' + minor).replace('-', '_')
     mask = None
     params = []
     category = mc
 
-    if '2015' in label:
-        mask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver_v2.txt'
-        params += ['data=True', 'globalTag=76X_dataRun2_v12']
+    if '2016' in label:
+        mask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/Cert_271036-277148_13TeV_PromptReco_Collisions16_JSON.txt'
+        params += ['data=True', 'globalTag=80X_dataRun2_Prompt_ICHEP16JEC_v0']
         category = data
     elif label.startswith('ttH'):
         category = tth
@@ -78,7 +72,7 @@ config = Config(
     label='tau_{}'.format(version),
     workdir='/tmpscratch/users/matze/ttH/{}'.format(version),
     plotdir='/afs/crc.nd.edu/user/m/mwolf3/www/lobster/ttH/{}'.format(version),
-    elk=ElkInterface('elk.crc.nd.edu', 9200, 'elk.crc.nd.edu', 5601, 'ttH_{}'.format(version)),
+    elk=ElkInterface('elk.crc.nd.edu', 9200, 'elk.crc.nd.edu', 5601, 'tth_{}'.format(version)),
     storage=storage,
     workflows=workflows,
     advanced=AdvancedOptions(
