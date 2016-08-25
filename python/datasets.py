@@ -36,41 +36,43 @@ datasets_raw = """
 /WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM
 /WWTo2L2Nu_13TeV-powheg/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM
 /ZZTo4L_13TeV_powheg_pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM
+"""
 
-/SingleElectron/Run2016B-29Jul2016-v1/MINIAOD
+datasets_collisions = """
+/SingleElectron/Run2016B-PromptReco-v2/MINIAOD
 /SingleElectron/Run2016C-PromptReco-v2/MINIAOD
 /SingleElectron/Run2016D-PromptReco-v2/MINIAOD
-/SingleElectron/Run2016E-29Jul2016-v1/MINIAOD
+/SingleElectron/Run2016E-PromptReco-v2/MINIAOD
 /SingleElectron/Run2016F-PromptReco-v1/MINIAOD
 /SingleElectron/Run2016G-PromptReco-v1/MINIAOD
 
-/SingleMuon/Run2016B-29Jul2016-v1/MINIAOD
+/SingleMuon/Run2016B-PromptReco-v2/MINIAOD
 /SingleMuon/Run2016C-PromptReco-v2/MINIAOD
 /SingleMuon/Run2016D-PromptReco-v2/MINIAOD
-/SingleMuon/Run2016E-29Jul2016-v1/MINIAOD
+/SingleMuon/Run2016E-PromptReco-v2/MINIAOD
 /SingleMuon/Run2016F-PromptReco-v1/MINIAOD
 /SingleMuon/Run2016G-PromptReco-v1/MINIAOD
 
-/DoubleElectron/Run2016B-29Jul2016-v1/MINIAOD
+/DoubleElectron/Run2016B-PromptReco-v2/MINIAOD
 /DoubleElectron/Run2016C-PromptReco-v2/MINIAOD
 /DoubleElectron/Run2016D-PromptReco-v2/MINIAOD
-/DoubleElectron/Run2016E-29Jul2016-v1/MINIAOD
+/DoubleElectron/Run2016E-PromptReco-v2/MINIAOD
 /DoubleElectron/Run2016F-PromptReco-v1/MINIAOD
 /DoubleElectron/Run2016G-PromptReco-v1/MINIAOD
 
-/DoubleMuon/Run2016B-29Jul2016-v1/MINIAOD
+/DoubleMuon/Run2016B-PromptReco-v2/MINIAOD
 /DoubleMuon/Run2016C-PromptReco-v2/MINIAOD
 /DoubleMuon/Run2016D-PromptReco-v2/MINIAOD
-/DoubleMuon/Run2016E-29Jul2016-v1/MINIAOD
+/DoubleMuon/Run2016E-PromptReco-v2/MINIAOD
 /DoubleMuon/Run2016F-PromptReco-v1/MINIAOD
 /DoubleMuon/Run2016G-PromptReco-v1/MINIAOD
 
-/MuonEG/Run2016B-29Jul2016-v1/MINIAOD
+/MuonEG/Run2016B-PromptReco-v2/MINIAOD
 /MuonEG/Run2016C-PromptReco-v2/MINIAOD
 /MuonEG/Run2016D-PromptReco-v2/MINIAOD
-/MuonEG/Run2016E-29Jul2016-v1/MINIAOD
+/MuonEG/Run2016E-PromptReco-v2/MINIAOD
 /MuonEG/Run2016F-PromptReco-v1/MINIAOD
 /MuonEG/Run2016G-PromptReco-v1/MINIAOD
 """
 
-datasets = [ds.strip() for ds in datasets_raw.split() if len(ds) > 0]
+datasets = [ds.strip() for ds in (datasets_raw + datasets_collisions).split() if len(ds) > 0]

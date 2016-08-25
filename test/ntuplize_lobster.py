@@ -49,7 +49,7 @@ for path in datasets:
     params = []
     category = mc
 
-    if '2016' in label:
+    if 'Run2016' in label and path.endswith('MINIAOD'):
         mask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/Cert_271036-277148_13TeV_PromptReco_Collisions16_JSON.txt'
         params += ['data=True', 'globalTag=80X_dataRun2_Prompt_ICHEP16JEC_v0']
         category = data
