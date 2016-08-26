@@ -2,7 +2,7 @@ from lobster import cmssw
 from lobster.core import AdvancedOptions, Category, Config, StorageConfiguration, Workflow
 from lobster.monitor.elk import ElkInterface
 
-from ttH.TauRoast.datasets import datasets
+from ttH.TauRoast.datasets import datasets, mctag
 
 version = "v32"
 tag = "all"
@@ -45,7 +45,7 @@ mc = Category(
 workflows = []
 for path in datasets(tag):
     _, major, minor, _ = path.split('/')
-    label = (major + '___' + minor).replace('-', '_')
+    label = (major + '_' + minor.replace(mctag, '')).replace('-', '_')
     mask = None
     params = []
     category = mc

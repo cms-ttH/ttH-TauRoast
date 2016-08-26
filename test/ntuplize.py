@@ -30,7 +30,7 @@ options.register("data", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
                  "Indicate if data is being used (or MC)")
-options.register("globalTag", "80X_mcRun2_asymptotic_2016_miniAODv2",
+options.register("globalTag", "80X_mcRun2_asymptotic_2016_miniAODv2_v1",
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.string,
                  "Global tag to use")
