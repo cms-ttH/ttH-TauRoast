@@ -1,11 +1,14 @@
 from lobster import cmssw
 from lobster.core import AdvancedOptions, Category, Config, StorageConfiguration, Workflow
-from lobster.monitor.elk import ElkInterface
+# from lobster.monitor.elk import ElkInterface
 
 from ttH.TauRoast.datasets import datasets, mctag
 
 version = "v32"
 tag = "all"
+
+globaltag_mc = "80X_mcRun2_asymptotic_2016_miniAODv2_v1"
+globaltag_data = "80X_dataRun2_Prompt_ICHEP16JEC_v0"
 
 storage = StorageConfiguration(
     output=[
@@ -47,12 +50,12 @@ for path in datasets(tag):
     _, major, minor, _ = path.split('/')
     label = (major + '_' + minor.replace(mctag, '')).replace('-', '_')
     mask = None
-    params = []
+    params = ['globalTag=' + globaltag_mc]
     category = mc
 
     if '/Run2016' in path and path.endswith('MINIAOD'):
         mask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/Cert_271036-277148_13TeV_PromptReco_Collisions16_JSON.txt'
-        params += ['data=True', 'globalTag=80X_dataRun2_Prompt_ICHEP16JEC_v0']
+        params = ['data=True', 'globalTag=' + globaltag_data]
         category = data
     elif label.startswith('ttH'):
         category = tth
