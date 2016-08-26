@@ -41,7 +41,7 @@ process = cms.Process("Taus")
 
 process.options = cms.untracked.PSet(
     wantSummary=cms.untracked.bool(True),
-    numberOfThreads=cms.untracked.uint32(2),
+    numberOfThreads=cms.untracked.uint32(1),
     numberOfStreams=cms.untracked.uint32(0),
     SkipEvent=cms.untracked.vstring('ProductNotFound')
 )
@@ -86,6 +86,11 @@ process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
 process.load("ttH.LeptonID.ttHLeptons_cfi")
 process.load("ttH.TauRoast.genHadronMatching_cfi")
 
+process.lepPath = cms.Path(
+    process.electronMVAValueMapProducer
+    * process.ttHLeptons
+)
+
 process.ttHLeptons.rhoParam = "fixedGridRhoFastjetCentralNeutral"
 # process.ttHLeptons.jets = cms.InputTag("patJetsReapplyJEC")
 # process.ttHLeptons.useReappliedJEC = cms.bool(False)
@@ -94,6 +99,16 @@ if options.dump:
     process.dump = cms.EDAnalyzer("EventContentAnalyzer")
     process.dpath = cms.Path(process.dump)
     process.maxEvents.input = cms.untracked.int32(1)
+
+if not options.data:
+    process.matchPath = cms.Path(
+        process.genParticlesForJetsNoNu
+        * process.ak4GenJetsCustom
+        * process.selectedHadronsAndPartons
+        * process.genJetFlavourInfos
+        * process.matchGenBHadron
+        * process.matchGenCHadron
+    )
 
 trig_single_e = []
 trig_single_mu = []
@@ -193,23 +208,16 @@ for channel in options.channels:
     #         input = cms.InputTag("taus")
     # )
 
-    if not options.data:
-        path = cms.Path(
-            process.genParticlesForJetsNoNu
-            * process.ak4GenJetsCustom
-            * process.selectedHadronsAndPartons
-            * process.genJetFlavourInfos
-            * process.matchGenBHadron
-            * process.matchGenCHadron
-        )
-    else:
-        path = cms.Path()
-
-    path *= process.electronMVAValueMapProducer
-    path *= process.ttHLeptons
+    path = cms.Path()
     path *= getattr(process, channel + "Taus")
     path *= getattr(process, channel + "Selector")
 
     setattr(process, channel + "Path", path)
 
     process.end *= getattr(process, channel + "Output")
+
+process.SimpleMemoryCheck = cms.Service(
+    "SimpleMemoryCheck",
+    ignoreTotal=cms.untracked.int32(1),
+    moduleMemorySummary=cms.untracked.bool(True)
+)
