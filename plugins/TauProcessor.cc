@@ -188,9 +188,6 @@ class TauProcessor : public edm::one::EDProducer<edm::BeginRunProducer, edm::End
       edm::EDGetTokenT<pat::METCollection> met_token_;
       edm::EDGetTokenT<edm::TriggerResults> trig_token_;
 
-      edm::EDGetTokenT<edm::ValueMap<float>> mva_val_token_;
-      edm::EDGetTokenT<edm::ValueMap<int>> mva_cat_token_;
-
       unsigned int evt_;
       std::vector<unsigned int> evt_list_;
 
@@ -266,9 +263,6 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    gen_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("prunedGenParticles"));
    met_token_ = consumes<pat::METCollection>(edm::InputTag("slimmedMETs"));
    trig_token_ = consumes<edm::TriggerResults>(edm::InputTag("TriggerResults", "", "HLT2"));
-
-   mva_val_token_ = consumes<edm::ValueMap<float>>(edm::InputTag("electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring15Trig25nsV1Values"));
-   mva_cat_token_ = consumes<edm::ValueMap<int>>(edm::InputTag("electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring15Trig25nsV1Categories"));
 
    genJetsToken_ = consumes<reco::GenJetCollection>(edm::InputTag("ak4GenJetsCustom"));
    genBHadJetIndexToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenBHadron", "genBHadJetIndex"));
