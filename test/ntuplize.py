@@ -22,6 +22,10 @@ options.register("takeAll", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
                  "Save as many events as possible")
+options.register("dump", False,
+                 VarParsing.VarParsing.multiplicity.singleton,
+                 VarParsing.VarParsing.varType.bool,
+                 "Dump event content and quit after one event.")
 options.register("data", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
@@ -86,7 +90,10 @@ process.ttHLeptons.rhoParam = "fixedGridRhoFastjetCentralNeutral"
 # process.ttHLeptons.jets = cms.InputTag("patJetsReapplyJEC")
 # process.ttHLeptons.useReappliedJEC = cms.bool(False)
 
-process.dump = cms.EDAnalyzer("EventContentAnalyzer")
+if options.dump:
+    process.dump = cms.EDAnalyzer("EventContentAnalyzer")
+    process.dpath = cms.Path(process.dump)
+    process.maxEvents.input = cms.untracked.int32(1)
 
 trig_single_e = []
 trig_single_mu = []
