@@ -236,8 +236,8 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    tau_combinatorics_(config.getParameter<bool>("tauCombinatorics")),
    evt_list_(config.getParameter<std::vector<unsigned int>>("debugEvents")),
    m_triggerCache(
-         edm::InputTag("TriggerResults", "", "HLT"),
-         edm::InputTag("gtDigis"),
+         edm::InputTag("TriggerResults", "", "HLT2"),
+         edm::InputTag("gtStage2Digis"),
          false, false,
          edm::ConsumesCollector(consumesCollector())
    )
@@ -265,7 +265,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    ak4jets_token_ = consumes<pat::JetCollection>(config.getParameter<edm::InputTag>("jets"));
    gen_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("prunedGenParticles"));
    met_token_ = consumes<pat::METCollection>(edm::InputTag("slimmedMETs"));
-   trig_token_ = consumes<edm::TriggerResults>(edm::InputTag("TriggerResults", "", "HLT"));
+   trig_token_ = consumes<edm::TriggerResults>(edm::InputTag("TriggerResults", "", "HLT2"));
 
    mva_val_token_ = consumes<edm::ValueMap<float>>(edm::InputTag("electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring15Trig25nsV1Values"));
    mva_cat_token_ = consumes<edm::ValueMap<int>>(edm::InputTag("electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring15Trig25nsV1Categories"));
