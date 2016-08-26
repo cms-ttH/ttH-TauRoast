@@ -216,8 +216,11 @@ for channel in options.channels:
 
     process.end *= getattr(process, channel + "Output")
 
-process.SimpleMemoryCheck = cms.Service(
-    "SimpleMemoryCheck",
-    ignoreTotal=cms.untracked.int32(1),
-    moduleMemorySummary=cms.untracked.bool(True)
-)
+# process.SimpleMemoryCheck = cms.Service(
+#     "SimpleMemoryCheck",
+#     ignoreTotal=cms.untracked.int32(1),
+#     moduleMemorySummary=cms.untracked.bool(True)
+# )
+
+from FWCore.ParameterSet.Utilities import convertToUnscheduled
+convertToUnscheduled(process)
