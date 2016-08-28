@@ -1,4 +1,6 @@
-mctag = "RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14_"
+import re
+
+mctag = re.compile(r'RunIISpring16MiniAODv2-PUSpring16\w*_reHLT_80X_mcRun2_asymptotic_v14.')
 
 datasets_ttH = """
 /ttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14_ext1-v1/MINIAODSIM
@@ -59,12 +61,12 @@ datasets_collisions = """
 /SingleMuon/Run2016F-PromptReco-v1/MINIAOD
 /SingleMuon/Run2016G-PromptReco-v1/MINIAOD
 
-/DoubleElectron/Run2016B-PromptReco-v2/MINIAOD
-/DoubleElectron/Run2016C-PromptReco-v2/MINIAOD
-/DoubleElectron/Run2016D-PromptReco-v2/MINIAOD
-/DoubleElectron/Run2016E-PromptReco-v2/MINIAOD
-/DoubleElectron/Run2016F-PromptReco-v1/MINIAOD
-/DoubleElectron/Run2016G-PromptReco-v1/MINIAOD
+/DoubleEG/Run2016B-PromptReco-v2/MINIAOD
+/DoubleEG/Run2016C-PromptReco-v2/MINIAOD
+/DoubleEG/Run2016D-PromptReco-v2/MINIAOD
+/DoubleEG/Run2016E-PromptReco-v2/MINIAOD
+/DoubleEG/Run2016F-PromptReco-v1/MINIAOD
+/DoubleEG/Run2016G-PromptReco-v1/MINIAOD
 
 /DoubleMuon/Run2016B-PromptReco-v2/MINIAOD
 /DoubleMuon/Run2016C-PromptReco-v2/MINIAOD

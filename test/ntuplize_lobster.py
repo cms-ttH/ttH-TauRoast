@@ -48,7 +48,8 @@ mc = Category(
 workflows = []
 for path in datasets(tag):
     _, major, minor, _ = path.split('/')
-    label = (major + '_' + minor.replace(mctag, '')).replace('-', '_')
+    minor = mctag.sub('', minor)
+    label = (major + '_' + minor).replace('-', '_')
     mask = None
     params = ['globalTag=' + globaltag_mc]
     category = mc
