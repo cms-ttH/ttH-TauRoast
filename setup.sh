@@ -14,8 +14,8 @@ EOF
    set -o xtrace
 
    export SCRAM_ARCH=slc6_amd64_gcc530
-   scramv1 project CMSSW CMSSW_8_0_18
-   cd CMSSW_8_0_18/src
+   scramv1 project CMSSW CMSSW_8_0_15
+   cd CMSSW_8_0_15/src
    set +o xtrace
    eval $(scramv1 runtime -sh)
    set -o xtrace
