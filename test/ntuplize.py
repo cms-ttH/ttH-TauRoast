@@ -208,10 +208,6 @@ for channel in options.channels:
 
     setattr(process, channel + "Output", output)
 
-    # writer = cms.EDAnalyzer("TauWriter",
-    #         input = cms.InputTag("taus")
-    # )
-
     path = cms.Path()
     path *= getattr(process, channel + "Taus")
     path *= getattr(process, channel + "Selector")
