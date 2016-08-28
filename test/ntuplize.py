@@ -30,10 +30,6 @@ options.register("globalTag", "80X_mcRun2_asymptotic_2016_miniAODv2_v1",
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.string,
                  "Global tag to use")
-options.register("memory", False,
-                 VarParsing.VarParsing.multiplicity.singleton,
-                 VarParsing.VarParsing.varType.bool,
-                 "Add simple CMSSW memory monitoring")
 options.setDefault("channels", "ttl,tll")
 options.parseArguments()
 
@@ -211,13 +207,6 @@ for channel in options.channels:
     setattr(process, channel + "Path", path)
 
     process.end *= getattr(process, channel + "Output")
-
-if options.memory:
-    process.SimpleMemoryCheck = cms.Service(
-        "SimpleMemoryCheck",
-        ignoreTotal=cms.untracked.int32(1),
-        moduleMemorySummary=cms.untracked.bool(True)
-    )
 
 from FWCore.ParameterSet.Utilities import convertToUnscheduled
 convertToUnscheduled(process)
