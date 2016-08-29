@@ -347,32 +347,10 @@ namespace superslim {
          Trigger(const edm::TriggerResults&, const edm::TriggerNames&);
          virtual ~Trigger() {};
 
-         const bool single_e() const { return single_e_; };
-         const bool single_mu() const { return single_mu_; };
-         const bool double_e() const { return double_e_; };
-         const bool double_mu() const { return double_mu_; };
-         const bool mixed() const { return mixed_; };
+         bool accepted(const std::string& s) { return std::binary_search(accepted_.begin(), accepted_.end(), s); };
 
-         static void set_single_e_triggers(const std::vector<std::string>& v) { triggers_single_e_ = v; };
-         static void set_single_mu_triggers(const std::vector<std::string>& v) { triggers_single_mu_ = v; };
-         static void set_double_e_triggers(const std::vector<std::string>& v) { triggers_double_e_ = v; };
-         static void set_double_mu_triggers(const std::vector<std::string>& v) { triggers_double_mu_ = v; };
-         static void set_mixed_triggers(const std::vector<std::string>& v) { triggers_mixed_ = v; };
-
-         static std::string get_selection();
       private:
-         bool fired(const edm::TriggerResults&, const edm::TriggerNames&, const std::vector<std::string>&);
-         bool single_e_;
-         bool single_mu_;
-         bool double_e_;
-         bool double_mu_;
-         bool mixed_;
-
-         static std::vector<std::string> triggers_single_e_;
-         static std::vector<std::string> triggers_single_mu_;
-         static std::vector<std::string> triggers_double_e_;
-         static std::vector<std::string> triggers_double_mu_;
-         static std::vector<std::string> triggers_mixed_;
+         std::vector<std::string> accepted_;
    };
 
    class Event {

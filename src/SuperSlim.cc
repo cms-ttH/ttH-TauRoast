@@ -399,60 +399,14 @@ namespace superslim {
       return rhs.p4().Pt() < lhs.p4().Pt();
    }
 
-   std::vector<std::string> Trigger::triggers_single_e_ = {};
-   std::vector<std::string> Trigger::triggers_single_mu_= {};
-   std::vector<std::string> Trigger::triggers_double_e_ = {};
-   std::vector<std::string> Trigger::triggers_double_mu_= {};
-   std::vector<std::string> Trigger::triggers_mixed_= {};
-
-   std::string
-   Trigger::get_selection()
-   {
-      std::vector<std::string> vs;
-      std::copy(triggers_single_e_.begin(), triggers_single_e_.end(), std::back_inserter(vs));
-      std::copy(triggers_single_mu_.begin(), triggers_single_mu_.end(), std::back_inserter(vs));
-      std::copy(triggers_double_e_.begin(), triggers_double_e_.end(), std::back_inserter(vs));
-      std::copy(triggers_double_mu_.begin(), triggers_double_mu_.end(), std::back_inserter(vs));
-      std::copy(triggers_mixed_.begin(), triggers_mixed_.end(), std::back_inserter(vs));
-
-      std::ostringstream os;
-      for (auto& s: vs) {
-         if (os.str().size() > 0)
-            os << " OR ";
-         os << s << "*";
-      }
-
-      return os.str();
-   }
-
-   Trigger::Trigger(const edm::TriggerResults& trig, const edm::TriggerNames& names) :
-      single_e_(false),
-      single_mu_(false),
-      double_e_(false),
-      double_mu_(false),
-      mixed_(false)
-   {
-      single_e_ = fired(trig, names, triggers_single_e_);
-      single_mu_ = fired(trig, names, triggers_single_mu_);
-      double_e_ = fired(trig, names, triggers_double_e_);
-      double_mu_ = fired(trig, names, triggers_double_mu_);
-      mixed_ = fired(trig, names, triggers_mixed_);
-   }
-
-   bool
-   Trigger::fired(const edm::TriggerResults& res, const edm::TriggerNames& names, const std::vector<std::string>& paths)
+   Trigger::Trigger(const edm::TriggerResults& trig, const edm::TriggerNames& names)
    {
       for (auto& name: names.triggerNames()) {
-         for (auto& path: paths) {
-            // returns <>1 if strings don't match
-            if (name.compare(0, path.size(), path))
-               continue;
-            auto idx = names.triggerIndex(name);
-            if (idx < res.size() and res.accept(idx))
-               return true;
-         }
+         auto idx = names.triggerIndex(name);
+         if (idx < trig.size() and trig.accept(idx))
+            accepted_.push_back(name);
       }
-      return false;
+      std::sort(accepted_.begin(), accepted_.end());
    }
 
    Event::Event(const std::vector<superslim::Combination>& cs,

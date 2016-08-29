@@ -193,7 +193,6 @@ class TauProcessor : public edm::one::EDProducer<edm::BeginRunProducer, edm::End
 
       // see https://twiki.cern.ch/twiki/bin/view/CMS/TriggerResultsFilter#Use_as_a_Selector_AN1
       triggerExpression::Data m_triggerCache;
-      std::unique_ptr<triggerExpression::Evaluator> m_triggerSelector;
 
       edm::EDGetTokenT<reco::GenJetCollection> genJetsToken_;
       edm::EDGetTokenT<std::vector<int>> genBHadJetIndexToken_;
@@ -290,13 +289,6 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
       };
    }
 
-   superslim::Trigger::set_single_e_triggers(config.getParameter<std::vector<std::string>>("triggerSingleE"));
-   superslim::Trigger::set_single_mu_triggers(config.getParameter<std::vector<std::string>>("triggerSingleMu"));
-   superslim::Trigger::set_double_e_triggers(config.getParameter<std::vector<std::string>>("triggerDoubleE"));
-   superslim::Trigger::set_double_mu_triggers(config.getParameter<std::vector<std::string>>("triggerDoubleMu"));
-   superslim::Trigger::set_mixed_triggers(config.getParameter<std::vector<std::string>>("triggerMixed"));
-   m_triggerSelector = std::unique_ptr<triggerExpression::Evaluator>(triggerExpression::parse(superslim::Trigger::get_selection()));
-
    helper_.SetUp("2015_74x", 2500, analysisType::LJ, data_);
    helper_.UseCorrectedJets();
    // helper_.SetJetCorrectorUncertainty();
@@ -371,20 +363,6 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
 
    // dataset sum of the event weights
    passCut(event_cut++, "Dataset event weights", genweight);
-
-   // filter on HLT paths
-   if (m_triggerSelector and m_triggerCache.setEvent(event, setup)) {
-      if (m_triggerCache.configurationUpdated())
-         m_triggerSelector ->init(m_triggerCache);
-
-      if ((*m_triggerSelector)(m_triggerCache)) {
-         passCut(event_cut++, "HLT selection");
-      } else if (not take_all_) {
-         return;
-      }
-   } else if (not take_all_) {
-      return;
-   }
 
    auto vertices = get_collection(*this, event, vertices_token_);
 
