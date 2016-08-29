@@ -1,12 +1,16 @@
 import os.path
 
+import FWCore.ParameterSet.Config as cms
+import FWCore.ParameterSet.VarParsing as VarParsing
+from FWCore.ParameterSet.Utilities import convertToUnscheduled
+
+from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJets
+from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJetCorrFactors
+
 
 def add_channel(channel, path):
     dirname, filename = os.path.split(path)
     return os.path.join(dirname, "{}_{}".format(channel, filename))
-
-import FWCore.ParameterSet.Config as cms
-import FWCore.ParameterSet.VarParsing as VarParsing
 
 options = VarParsing.VarParsing('analysis')
 options.outputFile = "test.root"
@@ -60,7 +64,6 @@ process.source = cms.Source(
     fileNames=cms.untracked.vstring(options.inputFiles)
 )
 
-from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJetCorrFactors
 process.patJetCorrFactorsReapplyJEC = updatedPatJetCorrFactors.clone(
     src=cms.InputTag("slimmedJets"),
     levels=['L1FastJet', 'L2Relative', 'L3Absolute'],
@@ -70,15 +73,14 @@ if options.data:
     process.patJetCorrFactorsReapplyJEC.levels.append('L2L3Residual')
 
 
-from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJets
 process.patJetsReapplyJEC = updatedPatJets.clone(
     jetSource=cms.InputTag("slimmedJets"),
     jetCorrFactorsSource=cms.VInputTag(cms.InputTag("patJetCorrFactorsReapplyJEC"))
 )
 
 process.jetPath = cms.Path(
-    process.patJetCorrFactorsReapplyJEC
-    * process.patJetsReapplyJEC
+    process.patJetCorrFactorsReapplyJEC *
+    process.patJetsReapplyJEC
 )
 
 process.load("RecoEgamma.ElectronIdentification.ElectronMVAValueMapProducer_cfi")
@@ -87,8 +89,8 @@ process.load("ttH.LeptonID.ttHLeptons_cfi")
 process.load("ttH.TauRoast.genHadronMatching_cfi")
 
 process.lepPath = cms.Path(
-    process.electronMVAValueMapProducer
-    * process.ttHLeptons
+    process.electronMVAValueMapProducer *
+    process.ttHLeptons
 )
 
 process.ttHLeptons.rhoParam = "fixedGridRhoFastjetCentralNeutral"
@@ -102,12 +104,12 @@ if options.dump:
 
 if not options.data:
     process.matchPath = cms.Path(
-        process.genParticlesForJetsNoNu
-        * process.ak4GenJetsCustom
-        * process.selectedHadronsAndPartons
-        * process.genJetFlavourInfos
-        * process.matchGenBHadron
-        * process.matchGenCHadron
+        process.genParticlesForJetsNoNu *
+        process.ak4GenJetsCustom *
+        process.selectedHadronsAndPartons *
+        process.genJetFlavourInfos *
+        process.matchGenBHadron *
+        process.matchGenCHadron
     )
 
 trig_single_e = []
@@ -191,14 +193,12 @@ for channel in options.channels:
                             input=cms.InputTag(channel + "Taus")
                             )
 
-    output = cms.OutputModule("PoolOutputModule",
-                              fileName=cms.untracked.string(
-                                  add_channel(channel, options.outputFile)),
-                              outputCommands=cms.untracked.vstring(
-                                  ['drop *', 'keep *_{}_*_*'.format(channel + "Taus")]),
-                              SelectEvents=cms.untracked.PSet(
-                                  SelectEvents=cms.vstring(channel + "Path")),
-                              )
+    output = cms.OutputModule(
+        "PoolOutputModule",
+        fileName=cms.untracked.string(add_channel(channel, options.outputFile)),
+        outputCommands=cms.untracked.vstring(['drop *', 'keep *_{}_*_*'.format(channel + "Taus")]),
+        SelectEvents=cms.untracked.PSet(SelectEvents=cms.vstring(channel + "Path")),
+    )
 
     setattr(process, channel + "Taus", prod)
     setattr(process, channel + "Selector", selector)
@@ -213,5 +213,4 @@ for channel in options.channels:
 
     process.end *= getattr(process, channel + "Output")
 
-from FWCore.ParameterSet.Utilities import convertToUnscheduled
 convertToUnscheduled(process)
