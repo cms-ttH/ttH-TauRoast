@@ -233,8 +233,8 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    tau_combinatorics_(config.getParameter<bool>("tauCombinatorics")),
    evt_list_(config.getParameter<std::vector<unsigned int>>("debugEvents")),
    m_triggerCache(
-         edm::InputTag("TriggerResults", "", "HLT2"),
-         edm::InputTag("gtStage2Digis"),
+         edm::InputTag("TriggerResults", "", config.getParameter<bool>("reHLT") ? "HLT2" : "HLT"),
+         edm::InputTag(""),
          false, false,
          edm::ConsumesCollector(consumesCollector())
    )

@@ -26,6 +26,10 @@ options.register("data", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
                  "Indicate if data is being used (or MC)")
+options.register("reHLT", False,
+                 VarParsing.VarParsing.multiplicity.singleton,
+                 VarParsing.VarParsing.varType.bool,
+                 "Indicate if the HLT has been re-run.")
 options.register("globalTag", "80X_mcRun2_asymptotic_2016_miniAODv2_v1",
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.string,
@@ -174,6 +178,7 @@ for channel in options.channels:
                           takeAll=cms.bool(options.takeAll),
                           tauCombinatorics=cms.bool(build_combinations),
                           printPreselection=cms.bool(False),
+                          reHLT=cms.bool(options.reHLT),
                           triggerSingleE=cms.vstring(trig_single_e),
                           triggerSingleMu=cms.vstring(trig_single_mu),
                           triggerDoubleE=cms.vstring(trig_double_eg),

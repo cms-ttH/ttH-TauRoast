@@ -59,6 +59,7 @@ for path in datasets(tag):
         params = ['data=True', 'globalTag=' + globaltag_data]
         category = data
     elif label.startswith('ttH'):
+        params += ['reHLT=True']
         category = tth
 
     workflows.append(Workflow(
