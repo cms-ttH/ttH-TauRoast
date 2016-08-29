@@ -112,12 +112,6 @@ if not options.data:
         process.matchGenCHadron
     )
 
-trig_single_e = []
-trig_single_mu = []
-trig_double_eg = []
-trig_double_mu = []
-trig_mixed = []
-
 process.end = cms.EndPath()
 
 for channel in options.channels:
@@ -128,9 +122,6 @@ for channel in options.channels:
         tags = (1, -1)
 
         build_combinations = True
-
-        trig_single_e = "HLT_Ele27_eta2p1_WPTight_Gsf_v"
-        trig_single_mu = ["HLT_IsoMu22_v", "HLT_IsoTkMu22_v"]
     elif channel == 'tll':
         taus = (0, 1)
         leptons = (2, 2)
@@ -138,24 +129,6 @@ for channel in options.channels:
         tags = (1, -1)
 
         build_combinations = False
-
-        trig_double_eg = [
-            "HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v",
-            "HLT_Ele27_eta2p1_WPLoose_Gsf_v"
-        ]
-        trig_double_mu = [
-            "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v",
-            "HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v",
-            "HLT_IsoMu22_v",
-            "HLT_IsoTkMu22_v"
-        ]
-        trig_mixed = [
-            "HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_v",
-            "HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v",
-            "HLT_IsoMu22_v",
-            "HLT_IsoTkMu22_v",
-            "HLT_Ele27_eta2p1_WPLoose_Gsf_v"
-        ]
     else:
         raise ValueError("channel needs to be either tll or ttl")
 
@@ -181,11 +154,6 @@ for channel in options.channels:
                           tauCombinatorics=cms.bool(build_combinations),
                           printPreselection=cms.bool(False),
                           reHLT=cms.bool(options.reHLT),
-                          triggerSingleE=cms.vstring(trig_single_e),
-                          triggerSingleMu=cms.vstring(trig_single_mu),
-                          triggerDoubleE=cms.vstring(trig_double_eg),
-                          triggerDoubleMu=cms.vstring(trig_double_mu),
-                          triggerMixed=cms.vstring(trig_mixed),
                           debugEvents=cms.vuint32()
                           )
 
