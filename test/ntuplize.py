@@ -166,6 +166,7 @@ for channel in options.channels:
         fileName=cms.untracked.string(add_channel(channel, options.outputFile)),
         outputCommands=cms.untracked.vstring(['drop *', 'keep *_{}_*_*'.format(channel + "Taus")]),
         SelectEvents=cms.untracked.PSet(SelectEvents=cms.vstring(channel + "Path")),
+        dataset=cms.untracked.PSet(filterName=cms.untracked.string(''))
     )
 
     setattr(process, channel + "Taus", prod)
