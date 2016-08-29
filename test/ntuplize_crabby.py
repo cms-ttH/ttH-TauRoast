@@ -29,7 +29,7 @@ def configs():
         config = Configuration()
 
         config.section_("General")
-        config.General.requestName = label
+        config.General.requestName = version + "_" + label
         config.General.workArea = os.path.join(os.path.dirname(__file__), 'crabby_tau_' + version)
         config.General.instance = 'jibbers-crabst.cern.ch'
 
