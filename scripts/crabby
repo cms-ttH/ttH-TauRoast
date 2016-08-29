@@ -31,7 +31,7 @@ def submit(config):
     procs = []
     mod = imp.load_source('idontcare', config)
 
-    p =  multiprocessing.Pool(5)
+    p =  multiprocessing.Pool(1)
     results = p.map(realsub, mod.configs())
 
 def realst(wflow):
@@ -52,7 +52,7 @@ def status(workdir):
         names.append(name)
         wflows.append(wflow)
 
-    p =  multiprocessing.Pool(5)
+    p =  multiprocessing.Pool(3)
     results = p.map(realst, wflows)
 
     statii = []
