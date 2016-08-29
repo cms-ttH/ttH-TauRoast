@@ -14,6 +14,7 @@ from CRABClient.ClientExceptions import ClientException
 from CRABClient.UserUtilities import setConsoleLogLevel
 from httplib import HTTPException
 
+
 def realsub(config):
     try:
         os.makedirs(config.General.workArea)
@@ -27,18 +28,20 @@ def realsub(config):
     except ClientException as cle:
         print "Failed submitting task: {0}".format(cle)
 
+
 def submit(config):
-    procs = []
     mod = imp.load_source('idontcare', config)
 
-    p =  multiprocessing.Pool(1)
-    results = p.map(realsub, mod.configs())
+    p = multiprocessing.Pool(1)
+    p.map(realsub, mod.configs())
+
 
 def realst(wflow):
     result = crabCommand(command, dir=wflow)
     sys.stdout.write('.')
     sys.stdout.flush()
     return result
+
 
 def status(workdir):
     setConsoleLogLevel(100)
@@ -52,7 +55,7 @@ def status(workdir):
         names.append(name)
         wflows.append(wflow)
 
-    p =  multiprocessing.Pool(3)
+    p = multiprocessing.Pool(3)
     results = p.map(realst, wflows)
 
     statii = []
@@ -72,8 +75,8 @@ def status(workdir):
     totals = [0] * len(states)
 
     fmt = "{{name:{0}}} {{status:15}} ".format(max([len(xs[0]) for xs in statii] + [4])) \
-            + " ".join(['{{{0}:>{1}}}'.format(n, l) for n, l in enumerate(map(len, states))]) \
-            + " {total:>6}"
+        + " ".join(['{{{0}:>{1}}}'.format(n, l) for n, l in enumerate(map(len, states))]) \
+        + " {total:>6}"
     header = fmt.format(*states, name="task", status="status", total="total")
     print header
     print "-" * len(header)
@@ -87,9 +90,9 @@ def status(workdir):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('grudgingly manage many crab tasks')
     parser.add_argument('command', type=str, nargs=1,
-            help='the crab command to execute')
+                        help='the crab command to execute')
     parser.add_argument('checkpoint', metavar='[config|directory]', type=str, nargs=1,
-            help='the crab configuration/working directory')
+                        help='the crab configuration/working directory')
     args = parser.parse_args()
 
     command = args.command[0]
@@ -105,9 +108,9 @@ if __name__ == '__main__':
                 continue
             # Execute the crab command.
             msg = "Executing (the equivalent of): crab {0} --dir {1}".format(command, proj)
-            print "-"*len(msg)
+            print "-" * len(msg)
             print msg
-            print "-"*len(msg)
+            print "-" * len(msg)
             try:
                 crabCommand(command, dir=proj)
             except HTTPException as hte:
