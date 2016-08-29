@@ -3,7 +3,7 @@ import os
 from WMCore.Configuration import Configuration
 from ttH.TauRoast.datasets import datasets, mctag
 
-version = "v25"
+version = "v32"
 tag = "all"
 
 globaltag_mc = "80X_mcRun2_asymptotic_2016_miniAODv2_v1"
