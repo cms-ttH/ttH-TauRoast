@@ -40,6 +40,7 @@ def configs():
 
         config.section_("Data")
         config.Data.inputDataset = path
+        config.Data.publication = False
         config.Data.splitting = 'Automatic'
         hours = 60 ** 2
         config.Data.unitsPerJob = 6 * hours
