@@ -347,7 +347,7 @@ namespace superslim {
          Trigger(const edm::TriggerResults&, const edm::TriggerNames&);
          virtual ~Trigger() {};
 
-         bool accepted(const std::string& s) { return std::binary_search(accepted_.begin(), accepted_.end(), s); };
+         bool accepted(const std::string& s) const { return std::binary_search(accepted_.begin(), accepted_.end(), s); };
 
       private:
          std::vector<std::string> accepted_;
