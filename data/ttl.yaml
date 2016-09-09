@@ -12,7 +12,7 @@ lumi: 20000
 
 plot:
   # - collisions
-  # - collisions_fake
+  - collisions_fake
   - ttH_125_pow
   - ttH2Nonbb_125_pow
   - ttH2TT_125_pow
@@ -27,8 +27,13 @@ plot:
 limits:
   # - collisions
   - collisions_fake
-  - ttjets
   - ttH_125_pow
+  - ttW
+  - ttZ
+  - ttjets_mad
+  - ewk
+  - rares
+  - singletop
 
 default cuts:
   # - "Trigger": >
@@ -56,8 +61,8 @@ systematics:
 
 categories:
   - inclusive: ""
-  # - electron: "nelectrons == 1"
-  # - muon: "nmuons == 1"
+  - electron: "nelectrons == 1"
+  - muon: "nmuons == 1"
   # - 2j: "njets + ntags == 2"
   # - 3j: "njets + ntags == 3"
   # - 4j: "njets + ntags >= 4"
