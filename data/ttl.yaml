@@ -41,6 +41,8 @@ default cuts:
   #     (leptons[0].muon() and event.trigger().accepted(""))
   - "e/μ quality": "len(leptons) == 1 and lepton_id == superslim::Lepton::MVA"
   - "τ quality": "len(taus) == 2 and all_of(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; })"
+  - "τ anti-e": "all_of(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.vetoElectron() >= superslim::id::Loose; })"
+  - "τ anti-μ": "all_of(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.vetoMuon() >= superslim::id::Loose; })"
   - "Jets": "len(jets) >= 2"
   - "Tags": "btags(jets) == 1 or btags(jets, true) == 2"
   - "ΔR(ττ)  > 0.5": "dR(taus[0], taus[1]) > 0.5"
