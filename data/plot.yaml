@@ -4,11 +4,14 @@ data:
   - collisions_double: r.kBlack
   - collisions_single: r.kBlack
 backgrounds:
-  - ewk: r.kBlue
   - singletop: r.kGreen
-  - ttjets: r.kRed
+  - rares: r.kGray
+  - ewk: r.kBlue
+  - ttW: r.kAzure
+  - ttZ: r.kCyan
+  - ttjets_mad: r.kRed
 signals:
-  - ttH_125_amc: r.kBlue
+  - ttH_125_pow: r.kBlue
   - ttH2bb_125_pow: r.kBlack
   - ttH2TT_125_pow: r.kGreen + 1
   - ttH2TT_125_real_pow: r.kGreen + 3
