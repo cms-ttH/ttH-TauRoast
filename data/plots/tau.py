@@ -106,6 +106,8 @@ for n in range(config.taus):
     Leaf('tau{0}_nprongs'.format(n + 1), 'f', 'result = taus.at({0}).prongs()'.format(n))
     Leaf('tau{0}_iso3hits03'.format(n + 1), 'f', 'result = taus.at({0}).isolation3Hits03()'.format(n))
     Leaf('tau{0}_iso3hits05'.format(n + 1), 'f', 'result = taus.at({0}).isolation3Hits05()'.format(n))
+    Leaf('tau{0}_isoMVA03'.format(n + 1), 'f', 'result = taus.at({0}).isolationMVA03()'.format(n))
+    Leaf('tau{0}_isoMVA05'.format(n + 1), 'f', 'result = taus.at({0}).isolationMVA05()'.format(n))
     Leaf('tau{0}_vetoelectron'.format(n + 1), 'f', 'result = taus.at({0}).vetoElectron()'.format(n))
     Leaf('tau{0}_vetomuon'.format(n + 1), 'f', 'result = taus.at({0}).vetoMuon()'.format(n))
 
@@ -131,6 +133,18 @@ for n in range(config.taus):
     Plot(
             name="taus/id/T{0}_Isolation3Hits05".format(n + 1),
             values=["tau{0}_iso3hits05".format(n + 1)],
+            labels=[lbl + " 3 Hit Isolation Index", "Events"],
+            binning=[5, 0, 5]
+    )
+    Plot(
+            name="taus/id/T{0}_IsolationMVA03".format(n + 1),
+            values=["tau{0}_isoMVA03".format(n + 1)],
+            labels=[lbl + " 3 Hit Isolation Index", "Events"],
+            binning=[5, 0, 5]
+    )
+    Plot(
+            name="taus/id/T{0}_IsolationMVA05".format(n + 1),
+            values=["tau{0}_isoMVA05".format(n + 1)],
             labels=[lbl + " 3 Hit Isolation Index", "Events"],
             binning=[5, 0, 5]
     )
