@@ -219,15 +219,19 @@ def fill(args, config):
                 for p in Plot.plots():
                     p.fill(proc, systematic, weights, definition)
 
+        uncertainties = None
+        if args.systematics:
+            uncertainties = list(systematics)
+
         fn = os.path.join(config["outdir"], "plots.root")
         with open_rootfile(fn) as f:
             for p in Plot.plots():
-                p.write(f, cutflows, category, systematics, fmt=config["histformat"])
+                p.write(f, cutflows, category, uncertainties, fmt=config["histformat"])
 
         fn = os.path.join(config["outdir"], "limits.root")
         with open_rootfile(fn) as f:
             for p in Plot.plots():
-                p.write(f, cutflows, category, systematics,
+                p.write(f, cutflows, category, uncertainties,
                         procs=limit_processes, fmt=config["histformat"])
 
         timing = sorted(Plot.plots(), key=lambda p: p._time)
