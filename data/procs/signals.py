@@ -58,34 +58,35 @@ BasicProcess(
     name="ttH2TT_125_pow",
     fullname="t#bar{t}H(125) #rightarrow #tau_{h} #tau_{h}",
     limitname="ttHTT125",
-    paths=['ttH2TT_125_pow'],
+    paths=['ttHToTT_M125_13TeV_powheg_pythia8_v1'],
     cross_section=0.5085 * 6.32e-2,
-    events=2199600
+    events=2187600
 )
 
 BasicProcess(
     name="ttH2TT_125_real_pow",
     fullname="t#bar{t}H(125) #rightarrow #tau_{h} #tau_{h} gen-match",
-    paths=['ttH2TT_125_pow'],
+    paths=['ttHToTT_M125_13TeV_powheg_pythia8_v1'],
     cross_section=0.5085 * 6.32e-2,
-    events=2199600,
+    events=2187600,
     additional_cuts=[('parentage', 'abs(taus[0].parentId()) == 25 and abs(taus[1].parentId()) == 25')]
 )
 
 BasicProcess(
     name="ttH2bb_125_pow",
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
-    paths=['ttH2bb_125_pow'],
+    paths=['ttHTobb_M125_13TeV_powheg_pythia8_v1'],
     cross_section=0.5085 * 0.577,
-    events=3933404
+    events=3912212
 )
 
 BasicProcess(
     name="ttH2Nonbb_125_pow",
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
-    paths=['ttH2Nonbb_125_pow'],
-    cross_section=0.5085 * (1 - 0.577),
-    events=3913550
+    paths=['ttHToNonbb_M125_13TeV_powheg_pythia8_v1'],
+    # cross_section=0.5085 * (1 - 0.577),
+    cross_section=0.2586,
+    events=3860872
 )
 
 CombinedProcess(

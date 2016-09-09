@@ -2,28 +2,27 @@
 
 channel: ttl
 generator: pow
-# ntupledir: /hadoop/store/user/matze/ttH/v31
-ntupledir: /scratch365/mwolf3/ttH/v31
-outdir: ~/www/ttH/v31/ttl
+ntupledir: /hadoop/store/user/matze/ttH/v32
+# ntupledir: /scratch365/mwolf3/ttH/v32
+outdir: ~/www/ttH/v32/ttl
 histformat: "{p}_{c}_{v}_TTL"
 
-lumi: 2517
+# lumi: 2517
+lumi: 20000
 
 plot:
   # - collisions
-  - collisions_fake
-  - ttjets
-  # - ttjets_sl
-  # - ttjets_dl
-  # - ttjets_semilept
-  # - ttjets_fulllept
-  - singletop
-  - ewk
+  # - collisions_fake
   - ttH_125_pow
-  # - ttH2bb_125
-  # - ttH2Nonbb_125
+  - ttH2Nonbb_125_pow
   - ttH2TT_125_pow
   - ttH2TT_125_real_pow
+  - ttW
+  - ttZ
+  - ttjets_mad
+  - ewk
+  - rares
+  - singletop
 
 limits:
   # - collisions
@@ -32,9 +31,11 @@ limits:
   - ttH_125_pow
 
 default cuts:
-  - "Trigger": "(leptons[0].electron() and event.trigger().single_e()) or (leptons[0].muon() and event.trigger().single_mu())"
-  - "e/μ quality": "len(leptons) == 1 and lepton_id == superslim::Lepton::LJ"
-  - "τ quality": "len(taus) == 2 and all_of(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Medium; })"
+  # - "Trigger": >
+  #     (leptons[0].electron() and event.trigger().accepted("")) or
+  #     (leptons[0].muon() and event.trigger().accepted(""))
+  - "e/μ quality": "len(leptons) == 1 and lepton_id == superslim::Lepton::MVA"
+  - "τ quality": "len(taus) == 2 and all_of(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; })"
   - "Jets": "len(jets) >= 2"
   - "Tags": "btags(jets) == 1 or btags(jets, true) == 2"
   - "ΔR(ττ)  > 0.5": "dR(taus[0], taus[1]) > 0.5"
