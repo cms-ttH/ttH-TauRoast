@@ -146,13 +146,13 @@ for n in range(config.taus):
         name="taus/id/T{0}_IsolationMVA03".format(n + 1),
         values=["tau{0}_isoMVA03".format(n + 1)],
         labels=[lbl + " Isolation MVA Index", "Events"],
-        binning=[5, 0, 5]
+        binning=[7, 0, 7]
     )
     Plot(
         name="taus/id/T{0}_IsolationMVA05".format(n + 1),
         values=["tau{0}_isoMVA05".format(n + 1)],
         labels=[lbl + " Isolation MVA Index", "Events"],
-        binning=[5, 0, 5]
+        binning=[7, 0, 7]
     )
     Plot(
         name="taus/id/T{0}_VetoElectron".format(n + 1),
