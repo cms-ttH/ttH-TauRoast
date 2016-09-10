@@ -98,7 +98,7 @@ for n in range(config.leptons):
         name="leptons/id/L{0}_MVA".format(n + 1),
         values=["lep{0}_mva".format(n + 1)],
         labels=[lbl + "MVA", "Events"],
-        binning=[20, 0, 0.25]
+        binning=[20, .5, 1]
     )
     Plot(
         name="leptons/id/L{0}_NonTrigID".format(n + 1),
