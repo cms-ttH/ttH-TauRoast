@@ -4,7 +4,7 @@ from lobster.core import AdvancedOptions, Category, Config, StorageConfiguration
 
 from ttH.TauRoast.datasets import datasets, mctag
 
-version = "v32"
+version = "v32_scale_v2"
 tag = "all"
 
 globaltag_mc = "80X_mcRun2_asymptotic_2016_miniAODv2_v1"
@@ -14,8 +14,8 @@ lumimask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certificatio
 
 storage = StorageConfiguration(
     output=[
-        "hdfs:///store/user/matze/ttH/{}".format(version),
         "file:///hadoop/store/user/matze/ttH/{}".format(version),
+        "hdfs:///store/user/matze/ttH/{}".format(version),
         "root://deepthought.crc.nd.edu//store/user/matze/ttH/{}".format(version),
         "chirp://eddie.crc.nd.edu:9094/store/user/matze/ttH/{}".format(version),
         "gsiftp://T3_US_NotreDame/store/user/matze/ttH/{}".format(version),
@@ -26,7 +26,7 @@ storage = StorageConfiguration(
 data = Category(
     name='data',
     cores=2,
-    runtime=75 * 60,
+    runtime=90 * 60,
     disk=1000,
     memory=1200
 )
@@ -34,7 +34,7 @@ data = Category(
 tth = Category(
     name='ttH',
     cores=2,
-    runtime=75 * 60,
+    runtime=90 * 60,
     disk=1000,
     memory=1200
 )
@@ -42,7 +42,7 @@ tth = Category(
 mc = Category(
     name='mc',
     cores=2,
-    runtime=75 * 60,
+    runtime=90 * 60,
     disk=1000,
     memory=1200
 )
@@ -84,6 +84,7 @@ config = Config(
     storage=storage,
     workflows=workflows,
     advanced=AdvancedOptions(
+        bad_exit_codes=[127, 169],
         log_level=1,
         xrootd_servers=[
             'ndcms.crc.nd.edu',
