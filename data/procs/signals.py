@@ -69,7 +69,21 @@ BasicProcess(
     paths=['ttHToTT_M125_13TeV_powheg_pythia8_v1'],
     cross_section=0.5085 * 6.32e-2,
     events=2187600,
-    additional_cuts=[('parentage', 'abs(taus[0].parentId()) == 25 and abs(taus[1].parentId()) == 25')]
+    additional_cuts=[
+        ('parentage', 'abs(taus[0].parentId()) == 25 and abs(taus[1].parentId()) == 25'),
+        ('id', 'abs(taus[0].match()) == 5 and abs(taus[1].match()) == 5')
+    ]
+)
+
+BasicProcess(
+    name="ttH2TT_125_realtaus_pow",
+    fullname="t#bar{t}H(125) #rightarrow #tau_{h} #tau_{h} gen-match",
+    paths=['ttHToTT_M125_13TeV_powheg_pythia8_v1'],
+    cross_section=0.5085 * 6.32e-2,
+    events=2187600,
+    additional_cuts=[
+        ('id', 'abs(taus[0].match()) == 5 and abs(taus[1].match()) == 5')
+    ]
 )
 
 BasicProcess(
@@ -87,6 +101,33 @@ BasicProcess(
     # cross_section=0.5085 * (1 - 0.577),
     cross_section=0.2586,
     events=3860872
+)
+
+BasicProcess(
+    name="ttH2Nonbb_125_real_pow",
+    fullname="t#bar{t}H(125) #rightarrow #tau_{h} #tau_{h} gen-match",
+    paths=['ttHToNonbb_M125_13TeV_powheg_pythia8_v1'],
+    # cross_section=0.5085 * (1 - 0.577),
+    cross_section=0.2586,
+    events=3860872,
+    additional_cuts=[
+        (
+            'parentage',
+            '(abs(taus[0].parentId()) == 25 and abs(taus[1].parentId()) == 25) or ' +
+            '(abs(taus[0].parentId()) == 24 and abs(taus[1].parentId()) == 24)'
+        ),
+        ('id', 'abs(taus[0].match()) == 5 and abs(taus[1].match()) == 5')
+    ]
+)
+
+BasicProcess(
+    name="ttH2Nonbb_125_realtaus_pow",
+    fullname="t#bar{t}H(125) #rightarrow #tau_{h} #tau_{h} gen-match",
+    paths=['ttHToNonbb_M125_13TeV_powheg_pythia8_v1'],
+    # cross_section=0.5085 * (1 - 0.577),
+    cross_section=0.2586,
+    events=3860872,
+    additional_cuts=[('id', 'abs(taus[0].match()) == 5 and abs(taus[1].match()) == 5')]
 )
 
 CombinedProcess(
