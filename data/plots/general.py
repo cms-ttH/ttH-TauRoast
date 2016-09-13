@@ -179,7 +179,8 @@ Plot(
 )
 
 ws = ["generator", "csvweight", "puweight"]
-ws += map(''.join, itertools.product(["jettaufake", "etaufake", "tauideff"], ["up", "down"]))
+ws += map(''.join, itertools.product(["tauideff"], ["", "up", "down"]))
+ws += map(''.join, itertools.product(["jettaufake", "etaufake"], ["up", "down"]))
 ws += map(''.join, itertools.product(["lfcont", "hfcont", "hfstats1",
                                       "hfstats2", "lfstats1", "lfstats2", "charmerr1", "charmerr2"], ["up", "down"]))
 for w in ws:
