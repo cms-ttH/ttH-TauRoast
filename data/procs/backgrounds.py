@@ -5,6 +5,7 @@ wleptonic = (10.71 + 10.63 + 11.38) * 0.01
 BasicProcess(
     name="ttW",
     fullname="t#bar{t}W",
+    limitname="ttw",
     paths=["TTWJetsToLNu_TuneCUETP8M1_13TeV_amcatnloFXFX_madspin_pythia8_v1"],
     cross_section=0.2043,
     events=252673
@@ -13,6 +14,7 @@ BasicProcess(
 BasicProcess(
     name="ttZ",
     fullname="t#bar{t}Z",
+    limitname="ttz",
     paths=["TTZToLLNuNu_M_10_TuneCUETP8M1_13TeV_amcatnlo_pythia8_v1"],
     cross_section=0.2529,
     events=398600
@@ -102,6 +104,7 @@ BasicProcess(
 CombinedProcess(
     name="ttjets_mad",
     fullname="t#bar{t}",
+    limitname="ttjets",
     subprocesses=["ttjets_semilept", "ttjets_fulllept"]
 )
 
