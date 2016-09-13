@@ -94,7 +94,8 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
    // =====================
    // Constants for weights
    // =====================
-   //
+
+   static const float tau_efficiency_scale = 0.83;
    static const float tau_efficiency = 0.06;
 
    // ===========
@@ -169,8 +170,9 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
    // int real_jets = std::count_if(std::begin(taus), std::end(taus),
    //       [](const superslim::Tau& t) { return t.match() == 6; });
 
-   ws[lower("tauIdEffUp")] = std::pow(1 + tau_efficiency, real_taus);
-   ws[lower("tauIdEffDown")] = std::pow(1 - tau_efficiency, real_taus);
+   ws[lower("tauIdEff")] = tau_efficiency_scale;
+   ws[lower("tauIdEffUp")] = std::pow(tau_efficiency_scale * (1 + tau_efficiency), real_taus);
+   ws[lower("tauIdEffDown")] = std::pow(tau_efficiency_scale * (1 - tau_efficiency), real_taus);
    ws[lower("jetTauFakeUp")] = 1;
    ws[lower("jetTauFakeDown")] = 1;
    ws[lower("eTauFakeUp")] = 1;

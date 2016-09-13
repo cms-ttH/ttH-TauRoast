@@ -8,15 +8,18 @@ outdir: ~/www/ttH/v32/ttl
 histformat: "{p}_{c}_{v}_TTL"
 
 # lumi: 2517
-lumi: 20000
+lumi: 30000
 
 plot:
   # - collisions
   - collisions_fake
   - ttH_125_pow
   - ttH2Nonbb_125_pow
+  - ttH2Nonbb_125_real_pow
+  - ttH2Nonbb_125_realtaus_pow
   - ttH2TT_125_pow
   - ttH2TT_125_real_pow
+  - ttH2TT_125_realtaus_pow
   - ttW
   - ttZ
   - ttjets_mad
@@ -52,6 +55,7 @@ default weights:
   - Generator
   - CSVWeight
   - PUWeight
+  - tauIdEff
 
 # List of systematics to run when `-s` is specified
 systematics:
@@ -65,9 +69,10 @@ categories:
   - inclusive: ""
   - electron: "nelectrons == 1"
   - muon: "nmuons == 1"
-  # - 2j: "njets + ntags == 2"
-  # - 3j: "njets + ntags == 3"
-  # - 4j: "njets + ntags >= 4"
+  - 2j: "njets + ntags == 2"
+  - 3j: "njets + ntags == 3"
+  - 3pj: "njets + ntags >= 3"
+  - 4j: "njets + ntags >= 4"
 
 mva:
     signals:
