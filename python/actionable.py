@@ -289,13 +289,9 @@ def datacard(args, config):
     cb.AddProcesses(masses, ['ttH'], ['13TeV'], ['ttl'], sigs, cats, True)
 
     cb.cp().AddSyst(cb, 'lumi_13TeV', 'lnN', ch.SystMap()(1.025))
-    cb.cp().AddSyst(cb, 'JES', 'shape', ch.SystMap()(1.0))
-    cb.cp().AddSyst(cb, 'JER', 'shape', ch.SystMap()(1.0))
-    # cb.cp().AddSyst(cb, 'CMS_scale_j', 'shape', ch.SystMap()(1.0))
-    # cb.cp().AddSyst(cb, 'CMS_res_j', 'shape', ch.SystMap()(1.0))
-    cb.cp().AddSyst(cb, 'jetTauFake', 'shape', ch.SystMap()(1.0))
-    cb.cp().AddSyst(cb, 'eTauFake', 'shape', ch.SystMap()(1.0))
-    cb.cp().AddSyst(cb, 'tauIdEff', 'shape', ch.SystMap()(1.0))
+    if args.systematics:
+        for unc in config['systematics']:
+            cb.cp().AddSyst(cb, unc, 'shape', ch.SystMap()(1.0))
 
     cb.cp().backgrounds().ExtractShapes(
         fn,
