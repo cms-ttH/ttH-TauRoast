@@ -73,10 +73,10 @@ categories:
   - inclusive: ""
   - electron: "nelectrons == 1"
   - muon: "nmuons == 1"
-  - 2j: "njets + ntags == 2"
-  - 3j: "njets + ntags == 3"
-  - 3pj: "njets + ntags >= 3"
-  - 4j: "njets + ntags >= 4"
+  - ttl_2j: "njets + ntags == 2"
+  - ttl_3j: "njets + ntags == 3"
+  - ttl_3pj: "njets + ntags >= 3"
+  - ttl_4j: "njets + ntags >= 4"
 
 mva:
     signals:
