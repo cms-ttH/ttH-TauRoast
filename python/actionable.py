@@ -310,8 +310,8 @@ def datacard(args, config):
 
     cb.PrintObs().PrintProcs().PrintSysts()
 
-    cb.WriteDatacard("card.txt", "file.root")
-    writer = ch.CardWriter('$TAG/$MASS/$ANALYSIS_$CHANNEL.txt',
-                           '$TAG/common/$ANALYSIS_$CHANNEL.root')
+    # cb.WriteDatacard("card.txt", "file.root")
+    writer = ch.CardWriter('$TAG/$MASS/$ANALYSIS_$BIN.txt',
+                           '$TAG/common/$ANALYSIS_$BIN.root')
     writer.SetVerbosity(1)
     writer.WriteCards('limits', cb)
