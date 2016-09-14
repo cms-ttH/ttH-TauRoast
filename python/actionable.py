@@ -228,11 +228,13 @@ def fill(args, config):
             for p in Plot.plots():
                 p.write(f, cutflows, category, uncertainties, fmt=config["histformat"])
 
+        discriminants = config.get("discriminants", [])
         fn = os.path.join(config["outdir"], "limits.root")
         with open_rootfile(fn) as f:
             for p in Plot.plots():
-                p.write(f, cutflows, category, uncertainties,
-                        procs=limit_processes, fmt=config["histformat"])
+                if p.limitname in discriminants:
+                    p.write(f, cutflows, category, uncertainties,
+                            procs=limit_processes, fmt=config["histformat"])
 
         timing = sorted(Plot.plots(), key=lambda p: p._time)
         for p in timing[:10] + timing[-10:]:

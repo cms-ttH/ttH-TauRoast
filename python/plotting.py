@@ -43,6 +43,10 @@ class Plot(object):
     def __str__(self):
         return self.__name
 
+    @property
+    def limitname(self):
+        return self.__limitname
+
     def _add_binlabels(self, hist):
         if self.__labels:
             if isinstance(self.__labels[0], list) or isinstance(self.__labels[0], tuple):

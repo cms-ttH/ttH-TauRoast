@@ -38,6 +38,10 @@ limits:
   - rares
   - singletop
 
+discriminants:
+  - NumInclusiveJets
+  - TT_VisibleMass
+
 default cuts:
   # - "Trigger": >
   #     (leptons[0].electron() and event.trigger().accepted("")) or
