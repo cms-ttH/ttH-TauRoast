@@ -299,13 +299,13 @@ def datacard(args, config):
 
     cb.cp().backgrounds().ExtractShapes(
         fn,
-        "$PROCESS_$BIN_{0}_TTL".format(args.discriminant),
-        "$PROCESS_$BIN_{0}_TTL_$SYSTEMATIC".format(args.discriminant)
+        config['histformat'].format(p='$PROCESS', c='$BIN', v=args.discriminant),
+        config['histformat'].format(p='$PROCESS', c='$BIN', v=args.discriminant) + '_$SYSTEMATIC'
     )
     cb.cp().signals().ExtractShapes(
         fn,
-        "$PROCESS$MASS_$BIN_{0}_TTL".format(args.discriminant),
-        "$PROCESS$MASS_$BIN_{0}_TTL_$SYSTEMATIC".format(args.discriminant)
+        config['histformat'].format(p='$PROCESS$MASS', c='$BIN', v=args.discriminant),
+        config['histformat'].format(p='$PROCESS$MASS', c='$BIN', v=args.discriminant) + '_$SYSTEMATIC'
     )
 
     cb.PrintObs().PrintProcs().PrintSysts()

@@ -5,7 +5,7 @@ generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v32
 # ntupledir: /scratch365/mwolf3/ttH/v32
 outdir: ~/www/ttH/v32/ttl
-histformat: "{p}_{c}_{v}_TTL"
+histformat: "{p}_{c}_{v}"
 
 # lumi: 2517
 lumi: 30000
