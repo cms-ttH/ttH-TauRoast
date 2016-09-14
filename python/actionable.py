@@ -277,7 +277,9 @@ def datacard(args, config):
 
     cats = list(enumerate([d.keys()[0] for d in config['categories']], 1))
     sigs = ['ttH']
-    bkgs = ['ttjets']
+    bkgs = [Process.get(p).limitname
+            for p in config['limits'] if (not p.startswith('ttH')) and
+                                         (not p.startswith('collisions'))]
 
     cb = ch.CombineHarvester()
     # cb.SetVerbosity(2)
