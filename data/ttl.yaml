@@ -43,9 +43,9 @@ discriminants:
   - TT_VisibleMass
 
 default cuts:
-  # - "Trigger": >
-  #     (leptons[0].electron() and event.trigger().accepted("")) or
-  #     (leptons[0].muon() and event.trigger().accepted(""))
+  - "Trigger": >
+      (leptons[0].muon() and leptons[0].pt() > 25) or
+      (leptons[0].electron() and leptons[0].pt() > 30)
   - "e/μ quality": "len(leptons) == 1 and lepton_id == superslim::Lepton::MVA"
   - "τ quality": "len(taus) == 2 and all_of(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; })"
   - "τ anti-e": "all_of(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.vetoElectron() >= superslim::id::Loose; })"
@@ -76,7 +76,7 @@ categories:
   - ttl_2j: "njets + ntags == 2"
   - ttl_3j: "njets + ntags == 3"
   - ttl_3pj: "njets + ntags >= 3"
-  - ttl_4j: "njets + ntags >= 4"
+  - ttl_4pj: "njets + ntags >= 4"
 
 mva:
     signals:
