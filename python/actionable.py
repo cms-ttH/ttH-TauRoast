@@ -11,7 +11,7 @@ import ROOT as r
 
 from ttH.TauRoast import useful
 from ttH.TauRoast.botany import Forest
-from ttH.TauRoast.cutting import StaticCut, Cut, cutflow, normalize
+from ttH.TauRoast.cutting import StaticCut, Cut, Cutflows, cutflow, normalize
 from ttH.TauRoast.plotting import Plot
 from ttH.TauRoast.processing import Process
 
@@ -34,7 +34,7 @@ def expand_systematics(systematics, weights):
 def setup_cuts(config):
     systematics = config.get('systematics', [])
 
-    cutflows = {}
+    cutflows = Cutflows()
     cutflownames = [k.replace(' cuts', '') for k in config if k.endswith(' cuts')]
     for name in cutflownames:
         weights = config.get(name + ' weights')
@@ -55,16 +55,13 @@ def setup_cuts(config):
 
 
 def load_cutflows(config):
-    cutflows = {}
     fn = os.path.join(config.get("indir", config["outdir"]), "cutflow.pkl")
-    with open(fn, 'rb') as f:
-        for name, cuts in pickle.load(f).items():
-            cutflows[name] = cuts[:-2]
-    return cutflows
+
+    return Cutflows(fn)
 
 
 def split_cuts(concatenated_cutflows):
-    cutflows = {}
+    cutflows = Cutflows()
     for name, all_cuts in concatenated_cutflows.items():
         cutflows[name] = tuple(list(g) for k, g in groupby(all_cuts, key=type))
 
@@ -145,15 +142,13 @@ def analyze(args, config):
                          config.get('event limit', -1),
                          args.debug_cuts)
 
-    concatenated_cutflows = {}
+    concatenated_cutflows = Cutflows()
     for name, (counts, cuts, weights) in cutflows.items():
         cuts = counts + cuts + weights
         normalize(cuts, config["lumi"], config.get("event limit"))
         concatenated_cutflows[name] = cuts
 
-    fn = os.path.join(config["outdir"], "cutflow.pkl")
-    with open(fn, 'wb') as f:
-        pickle.dump(concatenated_cutflows, f)
+    concatenated_cutflows.save(config)
 
 
 def get_categories(config):

@@ -1,4 +1,6 @@
 import logging
+import os
+import pickle
 import sys
 
 import ROOT as r
@@ -6,6 +8,37 @@ r.gSystem.Load("libttHTauRoast")
 
 from ttH.TauRoast.processing import Process
 from ttH.TauRoast.useful import code2cut, print_cuts
+
+
+class Cutflows(dict):
+
+    def __init__(self, fn=None, *args, **kwargs):
+        dict.__init__(self, *args, **kwargs)
+        if not fn:
+            return
+
+        with open(fn, 'rb') as f:
+            for name, cuts in pickle.load(f).items():
+                dict.__setitem__(self, name, cuts[:-2])
+
+    def __add__(self, other):
+        for name, cuts in other.items():
+            if name not in self:
+                self[name] = cuts
+                continue
+            for theirs in cuts:
+                for mine in self[name]:
+                    try:
+                        mine = mine + theirs
+                    except ValueError:
+                        continue
+
+        return self
+
+    def save(self, config):
+        fn = os.path.join(config["outdir"], "cutflow.pkl")
+        with open(fn, 'wb') as f:
+            pickle.dump(self, f)
 
 
 class Cut(object):
@@ -38,6 +71,12 @@ class Cut(object):
             self._r = r.fastlane.StaticCut(name.encode('ascii', 'ignore'))
         for p, count in counts.items():
             self._r[p] = count
+
+    def __add__(self, other):
+        if self._name != str(other):
+            raise ValueError('names do not match: {} and {}'.format(self._name, other))
+        for p in other.processes():
+            self._r[p] += float(other[p])
 
     def callback(self, fct):
         self._r.setCallback(fct)
