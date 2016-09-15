@@ -308,9 +308,10 @@ namespace superslim {
       if (match) {
          for (unsigned int i = 0; i < match->numberOfDaughters(); ++i) {
             auto d = getFinal(match->daughter(i));
+            // Ignore neutrinos
             if (abs(d->pdgId()) % 2 == 0 and abs(d->pdgId()) > 10 and abs(d->pdgId()) < 20)
                continue;
-            gen_vis_p_ = d->p4();
+            gen_vis_p_ += d->p4();
          }
          setGenInfo(match);
       }
