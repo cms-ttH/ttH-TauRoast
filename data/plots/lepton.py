@@ -9,6 +9,9 @@ for n in range(config.leptons):
     Leaf('lep{0}_eta'.format(n + 1), 'f', 'result = leptons[{0}].p4().Eta()'.format(n))
     Leaf('lep{0}_phi'.format(n + 1), 'f', 'result = leptons[{0}].p4().Phi()'.format(n))
 
+    Leaf('lep{0}_genpt'.format(n + 1), 'f', 'result = leptons[{0}].genP4().Pt()'.format(n))
+    Leaf('lep{0}_geneta'.format(n + 1), 'f', 'result = leptons[{0}].genP4().Eta()'.format(n))
+
     # Kinematics
     Plot(
         name="leptons/kinematic/L{0}_Pt".format(n + 1),
@@ -27,6 +30,19 @@ for n in range(config.leptons):
         values=["lep{0}_phi".format(n + 1)],
         labels=[lbl + "#Phi", "Events"],
         binning=[20, -3.2, 3.2]
+    )
+
+    Plot(
+        name="leptons/kinematic/L{0}_GenPt".format(n + 1),
+        values=["lep{0}_genpt".format(n + 1)],
+        labels=[lbl + "gen P_{T}", "Events"],
+        binning=[20, 0, 150]
+    )
+    Plot(
+        name="leptons/kinematic/L{0}_GenEta".format(n + 1),
+        values=["lep{0}_geneta".format(n + 1)],
+        labels=[lbl + "gen #eta", "Events"],
+        binning=[20, -3, 3]
     )
 
     Leaf('lep{0}_match'.format(n + 1), 'i', 'result = leptons[{0}].match()'.format(n))

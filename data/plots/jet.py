@@ -46,11 +46,14 @@ for mode, fltr in pspace:
     Leaf('{0}jet_eta'.format(mode.lower()), '[f]', return_list.format(fltr, 'p4().Eta()'))
     Leaf('{0}jet_csv'.format(mode.lower()), '[f]', return_list.format(fltr, 'csv()'))
 
+    Leaf('{0}jet_genpt'.format(mode.lower()), '[f]', return_list.format(fltr, 'genP4().Pt()'))
+    Leaf('{0}jet_geneta'.format(mode.lower()), '[f]', return_list.format(fltr, 'genP4().Eta()'))
+
     Plot(
         name="jets/kinematic/{0}J_Pt".format(mode),
         values=['{0}jet_pt'.format(mode.lower())],
         labels=["{0} jet P_{{T}}".format(mode), "Events"],
-        binning=[20, 30, 250]
+        binning=[20, 20, 250]
     )
     Plot(
         name="jets/kinematic/{0}J_Eta".format(mode),
@@ -63,6 +66,19 @@ for mode, fltr in pspace:
         values=['{0}jet_csv'.format(mode.lower())],
         labels=["{0} jet CSV".format(mode), "Events"],
         binning=[30, 0, 1]
+    )
+
+    Plot(
+        name="jets/kinematic/{0}J_GenPt".format(mode),
+        values=['{0}jet_genpt'.format(mode.lower())],
+        labels=["{0} jet gen P_{{T}}".format(mode), "Events"],
+        binning=[20, 0, 100]
+    )
+    Plot(
+        name="jets/kinematic/{0}J_GenEta".format(mode),
+        values=['{0}jet_geneta'.format(mode.lower())],
+        labels=["{0} jet gen #eta".format(mode), "Events"],
+        binning=[40, -3, 3]
     )
 
     for n, (short, long) in enumerate(jspace):
