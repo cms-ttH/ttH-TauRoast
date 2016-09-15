@@ -4,7 +4,7 @@ channel: tll
 ntupledir: test/sync_multilepton
 outdir: test/sync_multilepton/out
 histformat: "{p}_{c}_{v}_TLL"
-sync: true
+mode: sync
 
 lumi: 1
 

@@ -46,15 +46,15 @@ def setup(cfg):
     setup_processes(cfg)
 
 
-def load_python(sync):
+def load_python(mode):
     import imp
     from glob import glob
 
     datadir = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data')
-    if sync:
-        magic = os.path.join(datadir, 'sync', '*.py')
-        for n, file in enumerate(glob(magic)):
-            imp.load_source("sync{0}".format(n), file)
+    if mode:
+        magic = os.path.join(datadir, mode, '*.py')
+        for n, fn in enumerate(glob(magic)):
+            imp.load_source("{0}{1}".format(mode, n), fn)
     else:
         magic = os.path.join(datadir, 'plots', '*.py')
         for n, file in enumerate(glob(magic)):

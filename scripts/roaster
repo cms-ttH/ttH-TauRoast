@@ -76,7 +76,7 @@ from ttH.TauRoast.actionable import analyze, dump_categories, dump_cuts, fill, p
 from ttH.TauRoast.variation import setup
 
 useful.setup(config)
-useful.load_python(config.get('sync', False))
+useful.load_python(config.get('mode'))
 stylish.setup()
 
 if not os.path.exists(config["outdir"]):
