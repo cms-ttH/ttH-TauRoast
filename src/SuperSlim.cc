@@ -3,6 +3,7 @@
 #include "DataFormats/BeamSpot/interface/BeamSpot.h"
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
+#include "DataFormats/JetReco/interface/GenJetCollection.h"
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/PatCandidates/interface/Jet.h"
@@ -297,7 +298,7 @@ namespace superslim {
       return false;
    };
 
-   Tau::Tau(const pat::Tau& t, const reco::Vertex& pv, const reco::GenParticleCollection& particles) :
+   Tau::Tau(const pat::Tau& t, const reco::Vertex& pv, const reco::GenParticleCollection& particles, const reco::GenJetCollection& jets) :
       PhysObject(t),
       decay_mode_(t.decayMode()),
       prongs_(t.signalChargedHadrCands().size()),
@@ -314,6 +315,14 @@ namespace superslim {
             gen_vis_p_ += d->p4();
          }
          setGenInfo(match);
+      } else {
+         std::vector<std::pair<float, const reco::GenJet*>> js;
+         for (const auto& j: jets)
+            js.push_back(std::make_pair(deltaR(p4(), j.p4()), &j));
+         std::sort(std::begin(js), std::end(js), [](const auto& a, const auto& b) { return a.first < b.first; });
+
+         if (js.size() > 0 and js[0].first < .4)
+            setGenJetInfo(*(js[0].second));
       }
 
       // for (auto& pair: t.tauIDs()) {
@@ -336,6 +345,21 @@ namespace superslim {
 
       veto_electron_ = getID("againstElectron", "MVA6", t);
       veto_muon_ = getID("againstMuon", "3", t);
+   }
+
+   void
+   Tau::setGenJetInfo(const reco::GenJet& j)
+   {
+      gen_jet_p_ = j.p4();
+      gen_jet_constituents_ = j.numberOfDaughters();
+
+      for (unsigned i = 0; i < j.numberOfDaughters(); ++i) {
+         const reco::Candidate* cand = j.daughter(i);
+         if (cand->charge() != 0) {
+            gen_jet_charged_p_ += cand->p4();
+            ++gen_jet_charged_constituents_;
+         }
+      }
    }
 
    superslim::id::value Tau::getID(const std::string& prefix, const std::string& suffix, const pat::Tau& t) const {

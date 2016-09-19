@@ -24,6 +24,8 @@ namespace pat {
 namespace reco {
    class BeamSpot;
    class Candidate;
+   class GenJet;
+   typedef std::vector<GenJet> GenJetCollection;
    class GenParticle;
    typedef std::vector<GenParticle> GenParticleCollection;
    class Vertex;
@@ -258,7 +260,7 @@ namespace superslim {
          enum id { All, Iso3Hits05, Iso3Hits03, IsoMVA05, IsoMVA03 };
 
          Tau() {};
-         Tau(const pat::Tau& t, const reco::Vertex& pv, const reco::GenParticleCollection& particles);
+         Tau(const pat::Tau& t, const reco::Vertex& pv, const reco::GenParticleCollection& particles, const reco::GenJetCollection& jets);
          virtual ~Tau() {};
 
          bool selected(Tau::id id_=Tau::All, superslim::id::value min=superslim::id::Preselected) const;
@@ -280,8 +282,14 @@ namespace superslim {
          float rawIsolationMVA05() const { return raw_isolation_mva05_; };
 
          LorentzVector genVisibleP4() const { return gen_vis_p_; };
+         LorentzVector genJetP4() const { return gen_jet_p_; };
+         LorentzVector genJetChargedP4() const { return gen_jet_charged_p_; };
+
+         int genJetConstituents() const { return gen_jet_constituents_; };
+         int genJetChargedConstituents() const { return gen_jet_charged_constituents_; };
       private:
          superslim::id::value getID(const std::string&, const std::string&, const pat::Tau&) const;
+         void setGenJetInfo(const reco::GenJet& j);
 
          int decay_mode_;
          int prongs_;
@@ -301,6 +309,11 @@ namespace superslim {
          float raw_isolation_mva05_;
 
          LorentzVector gen_vis_p_;
+         LorentzVector gen_jet_p_;
+         LorentzVector gen_jet_charged_p_;
+
+         int gen_jet_constituents_ = 0;
+         int gen_jet_charged_constituents_ = 0;
    };
 
    class Combination {

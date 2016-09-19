@@ -139,6 +139,7 @@ for channel in options.channels:
                           taus=cms.InputTag("ttHLeptons"),
                           # jets=cms.InputTag("patJetsReapplyJEC"),
                           jets=cms.InputTag("slimmedJets"),
+                          genJets=cms.InputTag("slimmedGenJets"),
                           minTaus=cms.uint32(taus[0]),
                           maxTaus=cms.uint32(taus[1]),
                           minLeptons=cms.uint32(leptons[0]),

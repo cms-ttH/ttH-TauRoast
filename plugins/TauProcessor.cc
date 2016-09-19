@@ -185,6 +185,7 @@ class TauProcessor : public edm::one::EDProducer<edm::BeginRunProducer, edm::End
       edm::EDGetTokenT<pat::TauCollection> taus_token_;
       edm::EDGetTokenT<pat::JetCollection> ak4jets_token_;
       edm::EDGetTokenT<reco::GenParticleCollection> gen_token_;
+      edm::EDGetTokenT<reco::GenJetCollection> gen_jets_token_;
       edm::EDGetTokenT<pat::METCollection> met_token_;
       edm::EDGetTokenT<edm::TriggerResults> trig_token_;
 
@@ -260,6 +261,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    taus_token_ = consumes<pat::TauCollection>(config.getParameter<edm::InputTag>("taus"));
    ak4jets_token_ = consumes<pat::JetCollection>(config.getParameter<edm::InputTag>("jets"));
    gen_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("prunedGenParticles"));
+   gen_jets_token_ = consumes<reco::GenJetCollection>(config.getParameter<edm::InputTag>("genJets"));
    met_token_ = consumes<pat::METCollection>(edm::InputTag("slimmedMETs"));
    trig_token_ = consumes<edm::TriggerResults>(edm::InputTag("TriggerResults", "", config.getParameter<bool>("reHLT") ? "HLT2" : "HLT"));
 
@@ -424,8 +426,11 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
    // auto old_jets_uncorrected = helper_.GetUncorrectedJets(old_jets);
 
    reco::GenParticleCollection particles;
-   if (!data_)
+   reco::GenJetCollection genjets;
+   if (!data_) {
          particles = *get_collection(*this, event, gen_token_);
+         genjets = *get_collection(*this, event, gen_jets_token_);
+   }
 
    std::vector<superslim::Lepton> all_leptons;
    for (const auto& lep: *electrons) {
@@ -445,7 +450,7 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
 
    std::vector<superslim::Tau> all_taus;
    for (const auto& tau: *taus) {
-      auto t = superslim::Tau(tau, rpv, particles);
+      auto t = superslim::Tau(tau, rpv, particles, genjets);
       if (t.loose())
          all_taus.push_back(t);
    }
