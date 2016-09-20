@@ -1,0 +1,25 @@
+# vim: set sw=4 sta et :
+
+channel: ttl
+generator: pow
+ntupledir: test/genfaketau
+outdir: test/genfaketau/out
+histformat: "{p}_{c}_{v}"
+mode: faketau
+
+# lumi: 2517
+lumi: 30000
+
+plot:
+  - ttjets
+
+limits: []
+discriminants: []
+default cuts: []
+default weights: []
+
+# List of systematics to run when `-s` is specified
+systematics: []
+
+categories:
+  - inclusive: ""
