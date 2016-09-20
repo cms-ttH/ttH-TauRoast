@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "DataFormats/Math/interface/deltaR.h"
+#include "DataFormats/Candidate/interface/Candidate.h"
 
 #include "Math/LorentzVector.h"
 #include "TH1F.h"
@@ -23,7 +24,6 @@ namespace pat {
 
 namespace reco {
    class BeamSpot;
-   class Candidate;
    class GenJet;
    typedef std::vector<GenJet> GenJetCollection;
    class GenParticle;
@@ -97,17 +97,66 @@ namespace superslim {
          int ndof_;
    };
 
-   class PhysObject {
+   class GenObject {
       public:
-         PhysObject() : p_() {};
+         GenObject() : p_() {};
+
+         template<typename T>
+         GenObject(const T& c) :
+            p_(c.p4()),
+            charge_(c.charge()),
+            pdg_id_(c.pdgId()) {};
+
+         const float pt() const { return p_.pt(); };
+         const float eta() const { return p_.eta(); };
+         const float phi() const { return p_.phi(); };
+         const LorentzVector& p4() const { return p_; };
+
+         int charge() const { return charge_; };
+         int pdgId() const { return pdg_id_; };
+      protected:
+         LorentzVector p_;
+         int charge_;
+         int pdg_id_;
+   };
+
+   class GenJet : public GenObject {
+      public:
+         GenJet() : GenObject() {};
+
+         template<typename T>
+         GenJet(const T& j) :
+            GenObject(j),
+            constituents_(j.numberOfDaughters())
+         {
+            for (unsigned i = 0; i < j.numberOfDaughters(); ++i) {
+               const reco::Candidate* cand = j.daughter(i);
+               if (cand->charge() != 0) {
+                  charged_p_ += cand->p4();
+                  ++charged_constituents_;
+               }
+            }
+         };
+
+         const LorentzVector& chargedP4() const { return charged_p_; };
+         int constituents() const { return constituents_; };
+         int chargedConstituents() const { return charged_constituents_; };
+
+      private:
+         LorentzVector charged_p_;
+         int constituents_ = 0;
+         int charged_constituents_ = 0;
+   };
+
+   class PhysObject : public GenObject {
+      public:
+         PhysObject() : GenObject() {};
          template<typename T>
          PhysObject(const T& c) :
-            charge_(c.charge()),
+            GenObject(c),
             dxy_(-9999.),
             dz_(-9999.),
-            p_(c.p4()),
             match_(6),
-            pdg_id_(c.pdgId()),
             gen_pdg_id_(0)
          {
             if (c.hasUserFloat("dxy") and c.hasUserFloat("dz")) {
@@ -117,10 +166,6 @@ namespace superslim {
          };
          virtual ~PhysObject() {};
 
-         const float pt() const { return p_.pt(); };
-         const float eta() const { return p_.eta(); };
-         const float phi() const { return p_.phi(); };
-         const LorentzVector& p4() const { return p_; };
          const LorentzVector& genP4() const { return gen_p_; };
          const std::vector<superslim::PhysObject>& parents() const { return parents_; };
          int parentId() const;
@@ -128,8 +173,6 @@ namespace superslim {
          float dxy() const { return dxy_; };
          float dz() const { return dz_; };
          float dR(const superslim::PhysObject& o) const { return reco::deltaR(*this, o); };
-         int charge() const { return charge_; };
-         int pdgId() const { return pdg_id_; };
          int genPdgId() const { return gen_pdg_id_; };
          // As per https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2015#MC_Matching
          // 1: prompt e
@@ -144,18 +187,15 @@ namespace superslim {
          const reco::Candidate* getFinal(const reco::Candidate* c);
          const reco::GenParticle* getMatch(const reco::Candidate& c, const reco::GenParticleCollection& coll);
          void setGenInfo(const reco::GenParticle* p, int level=2);
-         int charge_;
 
          float dxy_;
          float dz_;
 
       private:
-         LorentzVector p_;
          LorentzVector gen_p_;
          std::vector<superslim::PhysObject> parents_;
 
          int match_;
-         int pdg_id_;
          int gen_pdg_id_;
    };
 
@@ -282,14 +322,13 @@ namespace superslim {
          float rawIsolationMVA05() const { return raw_isolation_mva05_; };
 
          LorentzVector genVisibleP4() const { return gen_vis_p_; };
-         LorentzVector genJetP4() const { return gen_jet_p_; };
-         LorentzVector genJetChargedP4() const { return gen_jet_charged_p_; };
+         LorentzVector genJetP4() const { return gen_jet_.p4(); };
+         LorentzVector genJetChargedP4() const { return gen_jet_.chargedP4(); };
 
-         int genJetConstituents() const { return gen_jet_constituents_; };
-         int genJetChargedConstituents() const { return gen_jet_charged_constituents_; };
+         int genJetConstituents() const { return gen_jet_.constituents(); };
+         int genJetChargedConstituents() const { return gen_jet_.chargedConstituents(); };
       private:
          superslim::id::value getID(const std::string&, const std::string&, const pat::Tau&) const;
-         void setGenJetInfo(const reco::GenJet& j);
 
          int decay_mode_;
          int prongs_;
@@ -309,11 +348,7 @@ namespace superslim {
          float raw_isolation_mva05_;
 
          LorentzVector gen_vis_p_;
-         LorentzVector gen_jet_p_;
-         LorentzVector gen_jet_charged_p_;
-
-         int gen_jet_constituents_ = 0;
-         int gen_jet_charged_constituents_ = 0;
+         GenJet gen_jet_;
    };
 
    class Combination {
@@ -360,7 +395,7 @@ namespace superslim {
          Trigger(const edm::TriggerResults&, const edm::TriggerNames&);
          virtual ~Trigger() {};
 
-         bool accepted(const std::string& s) const { return std::binary_search(accepted_.begin(), accepted_.end(), s); };
+         bool accepted(const std::string& s) const;
 
       private:
          std::vector<std::string> accepted_;

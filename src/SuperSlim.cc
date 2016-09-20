@@ -103,12 +103,10 @@ namespace superslim {
 
    template<>
    PhysObject::PhysObject(const reco::GenParticle& c) :
-         charge_(c.charge()),
+         GenObject(c),
          dxy_(-9999.),
          dz_(-9999.),
-         p_(c.p4()),
          match_(6),
-         pdg_id_(c.pdgId()),
          gen_pdg_id_(0)
    {
    }
@@ -322,7 +320,7 @@ namespace superslim {
          std::sort(std::begin(js), std::end(js), [](const auto& a, const auto& b) { return a.first < b.first; });
 
          if (js.size() > 0 and js[0].first < .4)
-            setGenJetInfo(*(js[0].second));
+            gen_jet_ = GenJet(*(js[0].second));
       }
 
       // for (auto& pair: t.tauIDs()) {
@@ -345,21 +343,6 @@ namespace superslim {
 
       veto_electron_ = getID("againstElectron", "MVA6", t);
       veto_muon_ = getID("againstMuon", "3", t);
-   }
-
-   void
-   Tau::setGenJetInfo(const reco::GenJet& j)
-   {
-      gen_jet_p_ = j.p4();
-      gen_jet_constituents_ = j.numberOfDaughters();
-
-      for (unsigned i = 0; i < j.numberOfDaughters(); ++i) {
-         const reco::Candidate* cand = j.daughter(i);
-         if (cand->charge() != 0) {
-            gen_jet_charged_p_ += cand->p4();
-            ++gen_jet_charged_constituents_;
-         }
-      }
    }
 
    superslim::id::value Tau::getID(const std::string& prefix, const std::string& suffix, const pat::Tau& t) const {
@@ -432,6 +415,18 @@ namespace superslim {
             accepted_.push_back(name);
       }
       std::sort(accepted_.begin(), accepted_.end());
+   }
+
+   bool
+   Trigger::accepted(const std::string& s) const
+   {
+      return std::find_if(
+            accepted_.begin(),
+            accepted_.end(),
+            [&](const std::string& t) {
+               return s.compare(0, std::min(s.size(), t.size()), t) == 0;
+            }
+      ) != accepted_.end();
    }
 
    Event::Event(const std::vector<superslim::Combination>& cs,
