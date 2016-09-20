@@ -130,8 +130,8 @@ namespace superslim {
             constituents_(j.numberOfDaughters())
          {
             for (unsigned i = 0; i < j.numberOfDaughters(); ++i) {
-               const reco::Candidate* cand = j.daughter(i);
-               if (cand->charge() != 0) {
+               auto cand = j.daughterPtr(i);
+               if (cand.isNonnull() and cand->charge() != 0) {
                   charged_p_ += cand->p4();
                   ++charged_constituents_;
                }
