@@ -171,6 +171,7 @@ class TauProcessor : public edm::one::EDProducer<edm::BeginRunProducer, edm::End
 
       bool filter_pu_jets_;
       bool take_all_;
+      bool save_gen_;
       bool tau_combinatorics_;
 
       edm::EDGetTokenT<double> rho_token_;
@@ -230,6 +231,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    max_jet_eta_(config.getParameter<double>("maxJetEta")),
    filter_pu_jets_(config.getParameter<bool>("filterPUJets")),
    take_all_(config.getParameter<bool>("takeAll")),
+   save_gen_(config.getParameter<bool>("saveGenInfo")),
    tau_combinatorics_(config.getParameter<bool>("tauCombinatorics")),
    evt_list_(config.getParameter<std::vector<unsigned int>>("debugEvents")),
    m_triggerCache(
@@ -606,6 +608,23 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
                particles));
 
       ptr->setWeight("Generator", genweight);
+
+      if (save_gen_) {
+         std::vector<superslim::GenJet> gjets;
+         for (const auto& j: genjets)
+            gjets.push_back(j);
+
+         std::vector<superslim::GenObject> gparticles;
+         std::array<int, 3> ids{{11, 13, 15}};
+         for (const auto& p: particles) {
+            if (std::find(ids.begin(), ids.end(), abs(p.pdgId())) != ids.end() and
+                  (p.statusFlags().isPrompt() or p.isPromptFinalState() or p.statusFlags().isDirectPromptTauDecayProduct() or p.isDirectPromptTauDecayProductFinalState()))
+               gparticles.push_back(p);
+         }
+
+         ptr->setGenJets(gjets);
+         ptr->setGenParticles(gparticles);
+      }
 
       event.put(std::move(ptr));
    }

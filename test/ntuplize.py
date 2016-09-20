@@ -30,6 +30,10 @@ options.register("data", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
                  "Indicate if data is being used (or MC)")
+options.register("saveGenInfo", False,
+                 VarParsing.VarParsing.multiplicity.singleton,
+                 VarParsing.VarParsing.varType.bool,
+                 "Indicate if gen collections should be saved")
 options.register("reHLT", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
@@ -152,6 +156,7 @@ for channel in options.channels:
                           maxJetEta=cms.double(2.4),
                           filterPUJets=cms.bool(False),
                           takeAll=cms.bool(options.takeAll),
+                          saveGenInfo=cms.bool(options.saveGenInfo),
                           tauCombinatorics=cms.bool(build_combinations),
                           printPreselection=cms.bool(False),
                           reHLT=cms.bool(options.reHLT),
