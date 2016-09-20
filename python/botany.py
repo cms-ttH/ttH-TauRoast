@@ -10,7 +10,7 @@ class Leaf(object):
     __finals = {}
 
     def __init__(self, name, kind, code, final=False):
-        if kind.lower() not in ('i', 'f', '[f]'):
+        if kind.lower() not in ('i', 'f', '[f]', '[i]'):
             raise NotImplementedError
 
         if name in Leaf.__leaves or name in Leaf.__finals:
@@ -29,6 +29,8 @@ class Leaf(object):
             typename = 'int'
         elif kind.lower() == 'f':
             typename = 'float'
+        elif kind.lower() == '[i]':
+            typename = 'std::vector<int>'
 
         self._r = code2leaf(name, typename, code)
 
