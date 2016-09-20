@@ -420,6 +420,9 @@ namespace superslim {
          const std::vector<superslim::Tau>& taus() const { return taus_; };
          const std::map<std::string, float>& weights() const { return weights_; };
 
+         const std::vector<superslim::GenObject>& genParticles() const { return gen_particles_; };
+         const std::vector<superslim::GenJet>& genJets() const { return gen_jets_; };
+
          long run() const { return run_; };
          long lumi() const { return lumi_; };
          long event() const { return event_; };
@@ -436,10 +439,16 @@ namespace superslim {
          const Trigger& trigger() const { return trigger_; };
 
          void setWeight(const std::string& s, float f) { weights_[s] = f; };
+
+         void setGenParticles(const std::vector<GenObject>& v) { gen_particles_ = v; };
+         void setGenJets(const std::vector<GenJet>& v) { gen_jets_ = v; };
       private:
          std::vector<superslim::Combination> combos_;
          std::vector<superslim::Tau> taus_;
          std::vector<superslim::Lepton> leptons_;
+
+         std::vector<superslim::GenObject> gen_particles_;
+         std::vector<superslim::GenJet> gen_jets_;
 
          std::map<std::string, float> weights_;
 
