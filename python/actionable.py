@@ -4,7 +4,6 @@ from itertools import groupby
 import codecs
 import logging
 import os
-import pickle
 import yaml
 
 import ROOT as r
