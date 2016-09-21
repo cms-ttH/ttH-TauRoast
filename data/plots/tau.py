@@ -77,25 +77,25 @@ for n in range(config.taus):
     )
 
     Plot(
-        name="taus/kinematic/T{0}_GenPt".format(n + 1),
+        name="taus/generator/T{0}_GenPt".format(n + 1),
         values=["tau{0}_genpt".format(n + 1)],
         labels=[lbl + "gen P_{T}", "Events"],
         binning=[10, 0, 100 if n == 0 else 60]
     )
     Plot(
-        name="taus/kinematic/T{0}_GenEta".format(n + 1),
+        name="taus/generator/T{0}_GenEta".format(n + 1),
         values=["tau{0}_geneta".format(n + 1)],
         labels=[lbl + "gen #eta", "Events"],
         binning=[20, -3, 3]
     )
     Plot(
-        name="taus/kinematic/T{0}_GenVisPt".format(n + 1),
+        name="taus/generator/T{0}_GenVisPt".format(n + 1),
         values=["tau{0}_genvispt".format(n + 1)],
         labels=[lbl + "gen visible P_{T}", "Events"],
         binning=[10, 0, 100 if n == 0 else 60]
     )
     Plot(
-        name="taus/kinematic/T{0}_GenVisEta".format(n + 1),
+        name="taus/generator/T{0}_GenVisEta".format(n + 1),
         values=["tau{0}_genviseta".format(n + 1)],
         labels=[lbl + "gen visible #eta", "Events"],
         binning=[20, -3, 3]

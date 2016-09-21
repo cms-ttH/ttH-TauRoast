@@ -69,13 +69,13 @@ for mode, fltr in pspace:
     )
 
     Plot(
-        name="jets/kinematic/{0}J_GenPt".format(mode),
+        name="jets/generator/{0}J_GenPt".format(mode),
         values=['{0}jet_genpt'.format(mode.lower())],
         labels=["{0} jet gen P_{{T}}".format(mode), "Events"],
         binning=[20, 0, 100]
     )
     Plot(
-        name="jets/kinematic/{0}J_GenEta".format(mode),
+        name="jets/generator/{0}J_GenEta".format(mode),
         values=['{0}jet_geneta'.format(mode.lower())],
         labels=["{0} jet gen #eta".format(mode), "Events"],
         binning=[40, -3, 3]
