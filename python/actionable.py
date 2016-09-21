@@ -198,6 +198,7 @@ def fill(args, config):
     forest = Forest(fn)
 
     for category, definition in zip(categories, definitions):
+        logging.info("filling category: " + category)
         Plot.reset()
 
         systematics = config.get('systematics', [])
@@ -234,6 +235,7 @@ def fill(args, config):
         timing = sorted(Plot.plots(), key=lambda p: p._time)
         for p in timing[:10] + timing[-10:]:
             logging.debug("plot filling time for {0}: {1}".format(p, p._time))
+        logging.info("done filling category: " + category)
     del forest
 
 
