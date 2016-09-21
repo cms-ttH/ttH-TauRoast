@@ -251,6 +251,7 @@ def plot(args, config):
 
     categories, _ = get_categories(config)
     for category in categories:
+        logging.info("saving plots for category: " + category)
         Plot.reset()
 
         processes = sum(map(Process.expand, config['plot']), [])
