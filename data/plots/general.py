@@ -16,10 +16,13 @@ Leaf('npv', 'f', 'result = event.npv()')
 Leaf('nelectrons', 'f', 'int n = 0; for (const auto& l: leptons) n += l.electron(); result = n')
 Leaf('nmuons', 'f', 'int n = 0; for (const auto& l: leptons) n += l.muon(); result = n')
 Leaf('ntaus', 'i', 'result = len(taus)')
-Leaf('category', 'i',
-     'result = min(max(0, btags(jets) - 1), 1) * 3 + min(max(0, len(jets) - 2), 2)')
-Leaf('category_lj', 'i',
-     'result = min(max(0, btags(jets) - 2), 2) * 3 + min(max(0, len(jets) - 4), 2)')
+Leaf('ntausreal', 'i', 'result = std::count_if(taus.begin(), taus.end(), [](const auto& t) { return t.match() == 5; })')
+Leaf('ntausjetfake', 'i', 'result = std::count_if(taus.begin(), taus.end(), [](const auto& t) { return t.match() == 6; })')
+Leaf('nalltaus', 'i', 'result = len(all_taus)')
+Leaf('nalltausreal', 'i', 'result = std::count_if(all_taus.begin(), all_taus.end(), [](const auto& t) { return t.match() == 5; })')
+Leaf('nalltausjetfake', 'i', 'result = std::count_if(all_taus.begin(), all_taus.end(), [](const auto& t) { return t.match() == 6; })')
+Leaf('category', 'i', 'result = min(max(0, btags(jets) - 1), 1) * 3 + min(max(0, len(jets) - 2), 2)')
+Leaf('category_lj', 'i', 'result = min(max(0, btags(jets) - 2), 2) * 3 + min(max(0, len(jets) - 4), 2)')
 
 Leaf('bdt', 'f', 'result = 0.', final=True)
 Plot(
@@ -119,6 +122,43 @@ Plot(
     values=["nmuons"],
     labels=["Number of #mu", "Events"],
     binning=[3, 0, 3]
+)
+
+Plot(
+    name="general/NumTaus",
+    values=["ntaus"],
+    labels=["Number of selected #tau", "Events"],
+    binning=[10, 0, 10]
+)
+Plot(
+    name="general/NumTausReal",
+    values=["ntausreal"],
+    labels=["Number of selected real #tau", "Events"],
+    binning=[10, 0, 10]
+)
+Plot(
+    name="general/NumTausJetFakes",
+    values=["ntausjetfake"],
+    labels=["Number of selected fake #tau from jets", "Events"],
+    binning=[10, 0, 10]
+)
+Plot(
+    name="general/NumAllTaus",
+    values=["nalltaus"],
+    labels=["Number of #tau", "Events"],
+    binning=[10, 0, 10]
+)
+Plot(
+    name="general/NumAllTausReal",
+    values=["nalltausreal"],
+    labels=["Number of real #tau", "Events"],
+    binning=[10, 0, 10]
+)
+Plot(
+    name="general/NumAllTausJetFakes",
+    values=["nalltausjetfake"],
+    labels=["Number of fake #tau from jets", "Events"],
+    binning=[10, 0, 10]
 )
 
 Leaf('vtx_z', 'f', 'result = event.pv()[0].z()')
