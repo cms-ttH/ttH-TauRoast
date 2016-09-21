@@ -77,6 +77,7 @@ categories:
   - ttl_3j: "njets + ntags == 3"
   - ttl_3pj: "njets + ntags >= 3"
   - ttl_4pj: "njets + ntags >= 4"
+  - ttl_6pj2pt: "(njets + ntags >= 6) && (ntags >= 2)"
 
 mva:
     signals:
