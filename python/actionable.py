@@ -218,6 +218,8 @@ def fill(args, config):
         if args.systematics:
             uncertainties = list(systematics)
 
+        logging.info("writing out plots for category: " + category)
+
         fn = os.path.join(config["outdir"], "plots.root")
         with open_rootfile(fn) as f:
             for p in Plot.plots():
