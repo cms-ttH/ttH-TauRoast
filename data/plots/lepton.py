@@ -39,6 +39,12 @@ for n in range(config.leptons):
         binning=[20, 0, 150]
     )
     Plot(
+        name="leptons/generator/L{0}_GenPt_low".format(n + 1),
+        values=["lep{0}_genpt".format(n + 1)],
+        labels=[lbl + "gen P_{T}", "Events"],
+        binning=[25, 0, 50]
+    )
+    Plot(
         name="leptons/generator/L{0}_GenEta".format(n + 1),
         values=["lep{0}_geneta".format(n + 1)],
         labels=[lbl + "gen #eta", "Events"],
