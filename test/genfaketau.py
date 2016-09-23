@@ -57,3 +57,29 @@ fig = plt.figure()
 n, bins, patches = plt.hist([jets.genjet_chargedconstituents, selection.tau_genjetcharged_constituents], bins=nbins, normed=1)
 plt.legend(patches, labels)
 plt.savefig('jetfakes_genjet_chargedconstituents.png')
+
+nbins = [range(0, 100, 5), range(0, 20, 1)]
+
+fig = plt.figure()
+plt.hist2d(jets.genjet_chargedpt, jets.genjet_chargedconstituents, bins=nbins)
+plt.xlabel('genjet charged pt')
+plt.ylabel('genjet charged constituents')
+plt.savefig('genjet_chargedpt_vs_chargedconstituents.png')
+
+fig = plt.figure()
+plt.hist2d(selection.tau_genjetcharged_pt, selection.tau_genjetcharged_constituents, bins=nbins)
+plt.xlabel('fake tau charged pt')
+plt.ylabel('fake tau charged constituents')
+plt.savefig('faketau_chargedpt_vs_chargedconstituents.png')
+
+fig = plt.figure()
+plt.hist2d(jets.genjet_pt, jets.genjet_constituents, bins=nbins)
+plt.xlabel('genjet pt')
+plt.ylabel('genjet constituents')
+plt.savefig('genjet_pt_vs_constituents.png')
+
+fig = plt.figure()
+plt.hist2d(selection.tau_genjet_pt, selection.tau_genjet_constituents, bins=nbins)
+plt.xlabel('fake tau pt')
+plt.ylabel('fake tau constituents')
+plt.savefig('faketau_pt_vs_constituents.png')
