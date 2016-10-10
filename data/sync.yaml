@@ -3,7 +3,7 @@
 channel: tll
 ntupledir: test/sync_tau
 outdir: test/sync_tau/out
-sync: true
+mode: sync
 
 lumi: 2517
 
