@@ -21,7 +21,7 @@ EOF
    set -o xtrace
    git cms-init > /dev/null
 
-   git clone -b Framework-JEC git@github.com:cms-ttH/MiniAOD.git
+   git clone -b CMSSW_8_0_8_expICHEPLeptons git@github.com:cms-ttH/MiniAOD.git
    git clone git@github.com:cms-ttH/ttH-LeptonID.git ttH/LeptonID
    git clone git@github.com:cms-ttH/ttH-TauRoast.git ttH/TauRoast
 
