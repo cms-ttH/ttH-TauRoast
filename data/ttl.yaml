@@ -23,6 +23,8 @@ plot:
   - ttW
   - ttZ
   - ttjets_mad
+  - ttjets_semilept
+  - ttjets_fulllept
   - ewk
   - rares
   - singletop
@@ -77,7 +79,7 @@ categories:
   - ttl_3j: "njets + ntags == 3"
   - ttl_3pj: "njets + ntags >= 3"
   - ttl_4pj: "njets + ntags >= 4"
-  - ttl_6pj2pt: "(njets + ntags >= 6) && (ntags >= 2)"
+  - ttl_4pj2pt: "(njets + ntags >= 4) && (ntags >= 2)"
 
 mva:
     signals:
