@@ -4,7 +4,7 @@ from lobster.core import AdvancedOptions, Category, Config, StorageConfiguration
 
 from ttH.TauRoast.datasets import datasets, mctag
 
-version = "v32_scale_v2"
+version = "v32_scale_v3"
 tag = "all"
 
 globaltag_mc = "80X_mcRun2_asymptotic_2016_miniAODv2_v1"
@@ -14,8 +14,8 @@ lumimask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certificatio
 
 storage = StorageConfiguration(
     output=[
+        "hdfs://eddie.crc.nd.edu:19000/store/user/matze/ttH/{}".format(version),
         "file:///hadoop/store/user/matze/ttH/{}".format(version),
-        "hdfs:///store/user/matze/ttH/{}".format(version),
         "root://deepthought.crc.nd.edu//store/user/matze/ttH/{}".format(version),
         "chirp://eddie.crc.nd.edu:9094/store/user/matze/ttH/{}".format(version),
         "gsiftp://T3_US_NotreDame/store/user/matze/ttH/{}".format(version),
