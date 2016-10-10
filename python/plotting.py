@@ -525,8 +525,10 @@ class Plot(object):
             p.clear()
 
     @classmethod
-    def get_event_count(cls, f, proc, category, fmt):
+    def get_event_count(cls, f, proc, category, fmt, unweighed):
         p = cls.__plots['Events']
         p.clear()
         p.read(f, category, Process.expand(proc), fmt=fmt)
+        if unweighed:
+            return p._get_histogram(proc).GetEntries()
         return p._get_histogram(proc).GetBinContent(1)

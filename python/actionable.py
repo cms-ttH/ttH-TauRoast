@@ -66,6 +66,7 @@ def split_cuts(concatenated_cutflows):
 
 
 def dump_categories(args, config):
+    unweighed = config.get("mode") == "sync"
     categories, definitions = get_categories(config)
     counts = []
 
@@ -78,7 +79,7 @@ def dump_categories(args, config):
     for proc in config['plot']:
         count = StaticCut(proc)
         for cat in categories:
-            count[cat] = Plot.get_event_count(f, proc, cat, config['histformat'])
+            count[cat] = Plot.get_event_count(f, proc, cat, config['histformat'], unweighed)
         counts.append(count)
 
     try:
