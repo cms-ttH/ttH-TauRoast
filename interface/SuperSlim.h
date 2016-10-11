@@ -152,12 +152,13 @@ namespace superslim {
       public:
          PhysObject() : GenObject() {};
          template<typename T>
-         PhysObject(const T& c) :
+         PhysObject(const T& c, int rank=-666) :
             GenObject(c),
             dxy_(-9999.),
             dz_(-9999.),
             match_(6),
-            gen_pdg_id_(0)
+            gen_pdg_id_(0),
+            rank_(rank)
          {
             if (c.hasUserFloat("dxy") and c.hasUserFloat("dz")) {
                dxy_ = c.userFloat("dxy");
@@ -170,6 +171,8 @@ namespace superslim {
          const std::vector<superslim::PhysObject>& parents() const { return parents_; };
          int parentId() const;
          int grandParentId() const;
+         int rank() const { return rank_; };
+         void rank(int r) { rank_ = r; };
          float dxy() const { return dxy_; };
          float dz() const { return dz_; };
          float dR(const superslim::PhysObject& o) const { return reco::deltaR(*this, o); };
@@ -197,12 +200,13 @@ namespace superslim {
 
          int match_;
          int gen_pdg_id_;
+         int rank_;
    };
 
    class Jet : public PhysObject {
       public:
          Jet() {};
-         Jet(const pat::Jet& j, const reco::GenParticleCollection& particles);
+         Jet(const pat::Jet& j, const reco::GenParticleCollection& particles, int rank=-666);
          virtual ~Jet() {};
 
          float csv() const { return csv_; };
@@ -217,8 +221,8 @@ namespace superslim {
          enum id { All, Fakeable, MVA, LJ };
 
          Lepton() {};
-         Lepton(const pat::Electron& e, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles);
-         Lepton(const pat::Muon& m, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles);
+         Lepton(const pat::Electron& e, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles, int rank);
+         Lepton(const pat::Muon& m, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles, int rank);
          virtual ~Lepton() {};
 
          bool electron() const { return type_ == e; };
@@ -300,7 +304,7 @@ namespace superslim {
          enum id { All, Iso3Hits05, Iso3Hits03, IsoMVA05, IsoMVA03 };
 
          Tau() {};
-         Tau(const pat::Tau& t, const reco::Vertex& pv, const reco::GenParticleCollection& particles, const reco::GenJetCollection& jets);
+         Tau(const pat::Tau& t, const reco::Vertex& pv, const reco::GenParticleCollection& particles, const reco::GenJetCollection& jets, int rank);
          virtual ~Tau() {};
 
          bool selected(Tau::id id_=Tau::All, superslim::id::value min=superslim::id::Preselected) const;
@@ -468,7 +472,7 @@ namespace superslim {
 
    bool operator<(const PhysObject& lhs, const PhysObject& rhs);
 
-   template<> PhysObject::PhysObject(const reco::GenParticle&);
+   template<> PhysObject::PhysObject(const reco::GenParticle&, int rank);
 }
 
 #endif

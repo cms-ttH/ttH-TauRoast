@@ -437,22 +437,25 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
    std::vector<superslim::Lepton> all_leptons;
    for (const auto& lep: *electrons) {
       // auto l = superslim::Lepton(lep, helper_.GetElectronRelIso(lep, coneSize::R03, corrType::rhoEA, effAreaType::spring15), rpv, *bs, particles);
-      auto l = superslim::Lepton(lep, rpv, *bs, particles);
+      auto l = superslim::Lepton(lep, rpv, *bs, particles, -1);
       if (l.preselected())
          all_leptons.push_back(l);
    }
 
    for (const auto& lep: *muons) {
       // auto l = superslim::Lepton(lep, helper_.GetMuonRelIso(lep, coneSize::R04, corrType::deltaBeta), rpv, *bs, particles);
-      auto l = superslim::Lepton(lep, rpv, *bs, particles);
+      auto l = superslim::Lepton(lep, rpv, *bs, particles, -1);
       if (l.preselected())
          all_leptons.push_back(l);
    }
    std::sort(all_leptons.begin(), all_leptons.end());
+   for (unsigned int i = 0; i < all_leptons.size(); ++i)
+      all_leptons[i].rank(i);
 
+   int r = 0;
    std::vector<superslim::Tau> all_taus;
    for (const auto& tau: *taus) {
-      auto t = superslim::Tau(tau, rpv, particles, genjets);
+      auto t = superslim::Tau(tau, rpv, particles, genjets, r++);
       if (t.loose())
          all_taus.push_back(t);
    }

@@ -102,12 +102,13 @@ namespace superslim {
    }
 
    template<>
-   PhysObject::PhysObject(const reco::GenParticle& c) :
+   PhysObject::PhysObject(const reco::GenParticle& c, int rank) :
          GenObject(c),
          dxy_(-9999.),
          dz_(-9999.),
          match_(6),
-         gen_pdg_id_(0)
+         gen_pdg_id_(0),
+         rank_(rank)
    {
    }
 
@@ -176,8 +177,8 @@ namespace superslim {
       }
    }
 
-   Jet::Jet(const pat::Jet& j, const reco::GenParticleCollection& particles) :
-      PhysObject(j),
+   Jet::Jet(const pat::Jet& j, const reco::GenParticleCollection& particles, int rank) :
+      PhysObject(j, rank),
       csv_(j.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")),
       flavor_(j.hadronFlavour())
    {
@@ -185,8 +186,8 @@ namespace superslim {
       setGenInfo(j.genParton());
    }
 
-   Lepton::Lepton(const pat::Electron& e, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles) :
-      PhysObject(e),
+   Lepton::Lepton(const pat::Electron& e, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles, int rank) :
+      PhysObject(e, rank),
       type_(Lepton::e),
       charge_check_(e.isGsfCtfScPixChargeConsistent()),
       impact_parameter_(e.dB(pat::Electron::PV3D)),
@@ -218,8 +219,8 @@ namespace superslim {
       non_trig_id_ = e.userFloat("eleMvaId");
    }
 
-   Lepton::Lepton(const pat::Muon& m, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles) :
-      PhysObject(m),
+   Lepton::Lepton(const pat::Muon& m, const reco::Vertex& pv, const reco::BeamSpot& bs, const reco::GenParticleCollection& particles, int rank) :
+      PhysObject(m, rank),
       type_(Lepton::mu),
       charge_check_(false),
       impact_parameter_(m.dB(pat::Muon::PV3D)),
@@ -296,8 +297,8 @@ namespace superslim {
       return false;
    };
 
-   Tau::Tau(const pat::Tau& t, const reco::Vertex& pv, const reco::GenParticleCollection& particles, const reco::GenJetCollection& jets) :
-      PhysObject(t),
+   Tau::Tau(const pat::Tau& t, const reco::Vertex& pv, const reco::GenParticleCollection& particles, const reco::GenJetCollection& jets, int rank) :
+      PhysObject(t, rank),
       decay_mode_(t.decayMode()),
       prongs_(t.signalChargedHadrCands().size()),
       selected_(t.userFloat("idNonIsolated")),
