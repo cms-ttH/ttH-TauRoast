@@ -519,7 +519,7 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
                // Jet selection
                // auto jets_wo_lep = removeOverlap(corrected_jets, leptons, .4);
                auto jets_wo_lep = removeOverlap(raw_jets, cleaning_leptons, .4);
-               auto jets_no_taus = removeOverlap(jets_wo_lep, taus, .25);
+               auto jets_no_taus = removeOverlap(jets_wo_lep, taus, .4);
                auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, max_jet_eta_, jetID::none, '-');
                auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'M');
                auto selected_loose_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'L');
