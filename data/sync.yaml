@@ -39,7 +39,7 @@ ttl cuts:
         tau_id == superslim::Tau::IsoMVA03 and
         std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) >= 2
     - "jets": >
-        len(jets) >= 2 and
+        len(jets) >= 4 and
         (btags(jets) >= 1 or btags(jets, true) >= 2)
 
 ttl weights: []
