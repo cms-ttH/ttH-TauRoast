@@ -25,12 +25,14 @@ tr:nth-child(even) {{background-color: #f2f2f2}}
 </head>
 <body>
 <section>
+<h1>Event Differences</h1>
+{}
 <h1>Comparison Tables</h1>
-{0}
+{}
 </section>
 <section>
 <h1>Comparison Plots</h1>
-{1}
+{}
 </section>
 </body>
 </html>
@@ -108,6 +110,40 @@ def valid(data):
     return True
 
 
+def compare_quantities(joint, names):
+    if names:
+        rows = compare(joint, names[1:])
+        if len(rows) > 0:
+            yield ''.join(map(row.format, rows))
+    else:
+        objs = ['ele0', 'ele1', 'mu0', 'mu1', 'tau0', 'tau1', 'jet0', 'jet1', 'jet2', 'jet3']
+        for obj in objs:
+            quants = sorted([col for col in both if col.startswith(obj)])
+            rows = compare(joint, quants)
+            if len(rows) > 0:
+                yield ('Differences in {}'.format(obj), ''.join(map(row.format, rows)))
+
+
+def compare_events(joint, basename, baseframe, compname, compframe):
+    only_base = baseframe[~baseframe['nEvent'].isin(joint['nEvent'])]
+    only_comp = compframe[~compframe['nEvent'].isin(joint['nEvent'])]
+
+    print "# of events only in baseline:   {}".format(len(only_base))
+    print "# of events only in comparison: {}".format(len(only_comp))
+    print "# of events shared:             {}".format(len(joint))
+
+    voi = ['nEvent'] + ['n_presel_' + o for o in ('mu', 'ele', 'tau', 'jet')]
+
+    rows = [''.join([cell.format((h, '')) for h in voi])]
+    for _, e in only_base.iterrows():
+        rows.append(''.join([cell.format((e[v], '')) for v in voi]))
+    yield ('Only in ' + basename, ''.join([row.format(r) for r in rows]))
+
+    rows = [''.join([cell.format((h, '')) for h in voi])]
+    for _, e in only_comp.iterrows():
+        rows.append(''.join([cell.format((e[v], '')) for v in voi]))
+    yield ('Only in ' + compname, ''.join([row.format(r) for r in rows]))
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--names')
 parser.add_argument(dest='outdir')
@@ -140,23 +176,14 @@ compframe = pd.DataFrame(comptree)
 
 joint = pd.merge(baseframe, compframe, how='inner', on=['nEvent'], suffixes=('_b', '_c'))
 
-tables = []
-if names:
-    rows = compare(joint, names[1:])
-    if len(rows) > 0:
-        tables.append(''.join(map(row.format, rows)))
-else:
-    objs = ['ele0', 'ele1', 'mu0', 'mu1', 'tau0', 'tau1', 'jet0', 'jet1', 'jet2', 'jet3']
-    for obj in objs:
-        quants = sorted([col for col in both if col.startswith(obj)])
-        rows = compare(joint, quants)
-        if len(rows) > 0:
-            tables.append(('Differences in {}'.format(obj), ''.join(map(row.format, rows))))
+qcomparison = compare_quantities(joint, names)
+ecomparison = compare_events(joint, basename, baseframe, compname, compframe)
 
 with open(os.path.join(args.outdir, 'index.html'), 'w') as f:
     f.write(
         html.format(
-            '\n'.join([table.format(*t) for t in tables]),
+            '\n'.join([table.format(*t) for t in ecomparison]),
+            '\n'.join([table.format(*t) for t in qcomparison]),
             '\n'.join([img.format(c) for c in sorted(both) if c != 'nEvent'])
         ))
 
