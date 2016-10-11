@@ -25,9 +25,11 @@ tr:nth-child(even) {{background-color: #f2f2f2}}
 </head>
 <body>
 <section>
+<h1>Comparison Tables</h1>
 {0}
 </section>
 <section>
+<h1>Comparison Plots</h1>
 {1}
 </section>
 </body>
@@ -37,7 +39,7 @@ tr:nth-child(even) {{background-color: #f2f2f2}}
 img = '<a href="{0}.png"><img src="{0}.png" width="600" height="400"></img></a>'
 row = '<tr>{}</tr>'
 cell = '<td style="{0[1]}">{0[0]}</td>'
-table = '<table>{}</table>'
+table = '<h2>{}</h2><table>{}</table>'
 
 absolute_precision = 0.001
 relative_precision = 0.02
@@ -149,7 +151,7 @@ else:
         quants = sorted([col for col in both if col.startswith(obj)])
         rows = compare(joint, quants)
         if len(rows) > 0:
-            tables.append(''.join(map(row.format, rows)))
+            tables.append(('Differences in {}'.format(obj), ''.join(map(row.format, rows))))
 
 with open(os.path.join(args.outdir, 'index.html'), 'w') as f:
     f.write(html.format('\n'.join(map(table.format, tables)), '\n'.join([img.format(c) for c in sorted(both) if c != 'nEvent'])))
