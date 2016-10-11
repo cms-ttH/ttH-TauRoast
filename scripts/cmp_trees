@@ -204,17 +204,21 @@ for column in both:
         except AttributeError:
             pass
 
-    bins, groups_b = bin_it(data_b, mn, mx)
-    centers = [.5 * (a + b) for a, b in zip(bins, bins[1:])]
-    ax1.errorbar(x=centers, y=groups_b.count(), yerr=groups_b.std(), fmt='o', label=basename)
-    ax2.errorbar(x=centers, y=groups_b.count(), yerr=groups_b.std(), fmt='o')
+    try:
+        bins, groups_b = bin_it(data_b, mn, mx)
+        centers = [.5 * (a + b) for a, b in zip(bins, bins[1:])]
+        ax1.errorbar(x=centers, y=groups_b.count(), yerr=groups_b.std(), fmt='o', label=basename)
+        ax2.errorbar(x=centers, y=groups_b.count(), yerr=groups_b.std(), fmt='o')
 
-    bins, groups_c = bin_it(data_c, mn, mx)
-    centers = [.5 * (a + b) for a, b in zip(bins, bins[1:])]
-    ax1.errorbar(x=centers, y=groups_c.count(), yerr=groups_c.std(), fmt='o', label=compname)
-    ax2.errorbar(x=centers, y=groups_c.count(), yerr=groups_c.std(), fmt='o')
+        bins, groups_c = bin_it(data_c, mn, mx)
+        centers = [.5 * (a + b) for a, b in zip(bins, bins[1:])]
+        ax1.errorbar(x=centers, y=groups_c.count(), yerr=groups_c.std(), fmt='o', label=compname)
+        ax2.errorbar(x=centers, y=groups_c.count(), yerr=groups_c.std(), fmt='o')
 
-    ax3.errorbar(x=centers, y=groups_b.count() / groups_c.count(), fmt='o')
+        ax3.errorbar(x=centers, y=groups_b.count() / groups_c.count(), fmt='o')
+    except ValueError as e:
+        print "Skipping {}".format(column)
+        continue
 
     ax1.legend()
     ax1.set_ylim(ymin=0)
