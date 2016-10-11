@@ -237,9 +237,15 @@ for column in both:
     # ax2.set_ylim(ymin=0)
 
     if len(data_b) > 0 or len(data_c) > 0:
-        ax2.set_yscale('log')
+        try:
+            ax2.set_yscale('log')
+        except ValueError as e:
+            pass
     if len(diff) > 0:
-        ax5.set_yscale('log', nonposy='clip')
+        try:
+            ax5.set_yscale('log', nonposy='clip')
+        except ValueError as e:
+            pass
 
     plt.savefig(os.path.join(args.outdir, column + '.png'))
     plt.close()
