@@ -201,7 +201,7 @@ for column in both:
     data_b = data_b[data_b > -666]
     data_c = data_c[data_c > -666]
 
-    mn = -2
+    mn = -11
     mx = 0
     if len(data_b) > 0:
         mn = min(data_b.min(), mn)
