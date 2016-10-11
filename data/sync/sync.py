@@ -6,7 +6,15 @@ BasicProcess(
     name="ttH",
     paths=['ttH'],
     cross_section=45140,
-    events=45140
+    events=45611
+)
+
+BasicProcess(
+    name="syncTree_1l2tau",
+    paths=['ttH_skim'],
+    cross_section=45140,
+    events=45611,
+    cutflow='ttl'
 )
 
 BasicProcess(

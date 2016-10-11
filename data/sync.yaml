@@ -1,6 +1,6 @@
 # vim: set sw=4 sta et :
 
-channel: tll
+channel: ttl
 ntupledir: test/sync_tau
 outdir: test/sync_tau/out
 histformat: "{p}_{c}_{v}"
@@ -10,6 +10,7 @@ lumi: 2517
 
 plot:
   - ttH
+  - syncTree_1l2tau
   # - ttjets
 
 limits: []
@@ -25,4 +26,21 @@ default cuts:
     - "τ quality": "tau_id == superslim::Tau::IsoMVA03"
 
 default weights: []
+
+ttl cuts:
+    - "l pt": >
+        (leptons[0].electron() and leptons[0].pt() > 30) or
+        (leptons[0].muon() and leptons[0].pt() > 25)
+    - "1 l": >
+        lepton_id == superslim::Lepton::MVA and
+        leptons[0].mva() >= superslim::id::Loose and
+        std::count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Loose; }) == 1
+    - "τ": >
+        tau_id == superslim::Tau::IsoMVA03 and
+        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) >= 2
+    - "jets": >
+        len(jets) >= 2 and
+        (btags(jets) >= 1 or btags(jets, true) >= 2)
+
+ttl weights: []
 systematics: NA
