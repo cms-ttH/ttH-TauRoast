@@ -4,7 +4,6 @@ from ttH.TauRoast.processing import BasicProcess
 
 BasicProcess(
     name="ttH",
-    sample=9125,
     paths=['ttH'],
     cross_section=45140,
     events=45140
@@ -12,7 +11,6 @@ BasicProcess(
 
 BasicProcess(
     name="ttH_mva",
-    sample=9125,
     paths=['ttH'],
     cross_section=45140,
     events=45140,
@@ -21,7 +19,6 @@ BasicProcess(
 
 BasicProcess(
     name="ttH_signal",
-    sample=9125,
     paths=['ttH'],
     cross_section=45140,
     events=45140,
@@ -30,7 +27,6 @@ BasicProcess(
 
 BasicProcess(
     name="ttH_os",
-    sample=9125,
     paths=['ttH'],
     cross_section=45140,
     events=45140,
@@ -40,7 +36,6 @@ BasicProcess(
 
 BasicProcess(
     name="ttjets",
-    sample=9126,
     paths=['ttjets'],
     cross_section=45140,
     events=41812

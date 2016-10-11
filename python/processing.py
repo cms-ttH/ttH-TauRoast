@@ -60,12 +60,11 @@ class Process(object):
 
 class BasicProcess(Process):
 
-    def __init__(self, name, paths, events, fullname=None, limitname=None, sample=-1, cross_section=1, cutflow="default", additional_cuts=None):
+    def __init__(self, name, paths, events, fullname=None, limitname=None, cross_section=1, cutflow="default", additional_cuts=None):
         super(BasicProcess, self).__init__(name, fullname, limitname)
 
         self.__paths = paths
         self.__events = events
-        self.__sample = sample
         self.__cross_section = cross_section
         self.__cutflow = cutflow
         self.__add_cuts = additional_cuts if additional_cuts else []
@@ -86,7 +85,7 @@ class BasicProcess(Process):
     def copy(self, fct=lambda s: s):
         return BasicProcess(fct(self._name), self.__paths, self.__events,
                             fct(self._fullname), fct(self._limitname),
-                            self.__sample, self.__cross_section, self.__add_cuts)
+                            self.__cross_section, self.__add_cuts)
 
     def analyze(self, filename, counts, cuts, weights, systematics, basedir, limit=-1, debug=False):
         from ttH.TauRoast.useful import config

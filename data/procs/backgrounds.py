@@ -22,7 +22,6 @@ BasicProcess(
 
 BasicProcess(
     name="ttjets",
-    sample=2500,
     fullname="t#bar{t}",
     paths=["tt_pow", "tt_pow_ext3"],
     # paths=["ttjets_amc"],
@@ -32,7 +31,6 @@ BasicProcess(
 
 BasicProcess(
     name="ttjets_sl",
-    sample=2563,
     fullname="t #bar{t} SL",
     paths=["tt_sl_pow"],
     cross_section=831.76 * wleptonic * (1 - wleptonic),
@@ -41,7 +39,6 @@ BasicProcess(
 
 BasicProcess(
     name="ttjets_dl",
-    sample=2533,
     fullname="t #bar{t} DL",
     paths=["tt_dl_pow"],
     cross_section=831.76 * wleptonic ** 2,
@@ -50,7 +47,6 @@ BasicProcess(
 
 BasicProcess(
     name="ttbar_hadronic",
-    sample=2566,
     fullname="t #bar{t} H",
     paths=["ttbar_hadronic"],
     events=31223821
@@ -58,7 +54,6 @@ BasicProcess(
 
 BasicProcess(
     name="ttjets_semilept_tbar",
-    sample=2563,
     fullname="t #bar{t} SL",
     paths=[
         "TTJets_SingleLeptFromTbar_TuneCUETP8M1_13TeV_madgraphMLM_pythia8_v1",
@@ -71,7 +66,6 @@ BasicProcess(
 
 BasicProcess(
     name="ttjets_semilept_t",
-    sample=2563,
     fullname="t #bar{t} SL",
     paths=[
         "TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV_madgraphMLM_pythia8_v1",
@@ -90,7 +84,6 @@ CombinedProcess(
 
 BasicProcess(
     name="ttjets_fulllept",
-    sample=2533,
     fullname="t #bar{t} FL",
     paths=[
         "TTJets_DiLept_TuneCUETP8M1_13TeV_madgraphMLM_pythia8_v4",

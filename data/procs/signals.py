@@ -2,7 +2,6 @@ from ttH.TauRoast.processing import BasicProcess, CombinedProcess
 
 BasicProcess(
     name="ttH2TT_125_amc",
-    sample=9125,
     fullname="t#bar{t}H(125) #rightarrow #tau_{h} #tau_{h}",
     limitname="ttHTT125_amc",
     paths=['ttH2TT_125', 'ttH2TT_125_ext1', 'ttH2TT_125_ext2', 'ttH2TT_125_ext3'],
@@ -14,7 +13,6 @@ BasicProcess(
 
 BasicProcess(
     name="ttH2TT_125_real_amc",
-    sample=9125,
     fullname="t#bar{t}H(125) #rightarrow #tau_{h} #tau_{h} gen-match",
     paths=['ttH2TT_125', 'ttH2TT_125_ext1', 'ttH2TT_125_ext2', 'ttH2TT_125_ext3'],
     cross_section=0.5085 * 6.32e-2,
@@ -26,7 +24,6 @@ BasicProcess(
 
 BasicProcess(
     name="ttH2bb_125_amc",
-    sample=9125,
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
     limitname="ttHbb125",
     paths=['ttH2bb_125', 'ttH2bb_125_ext1', 'ttH2bb_125_ext2', 'ttH2bb_125_ext3'],
@@ -36,7 +33,6 @@ BasicProcess(
 
 BasicProcess(
     name="ttH2Nonbb_125_amc",
-    sample=9125,
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
     limitname="ttH2Nonbb125",
     paths=['ttH2Nonbb_125', 'ttH2Nonbb_125_ext1'],
@@ -46,7 +42,6 @@ BasicProcess(
 
 BasicProcess(
     name="ttH2Nonbbgg_125_amc",
-    sample=9125,
     fullname="t#bar{t}H(125) w/o b#bar{b}, gg",
     limitname="ttH2Nonbbgg125",
     paths=["ttH2Nonbbgg_125"],
