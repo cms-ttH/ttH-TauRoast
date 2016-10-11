@@ -97,6 +97,15 @@ def compare(joint, quants):
     return rows
 
 
+def valid(data):
+    if len(data) == 0:
+        return False
+    uniq = np.unique(data)
+    if len(uniq) == 1 and uniq[0] < -99.:
+        return False
+    return True
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--names')
 parser.add_argument(dest='outdir')
@@ -204,6 +213,10 @@ for column in both:
         except AttributeError:
             pass
 
+    if not (valid(data_b) or valid(data_c)):
+        print "Skipping!"
+        continue
+
     try:
         bins, groups_b = bin_it(data_b, mn, mx)
         centers = [.5 * (a + b) for a, b in zip(bins, bins[1:])]
@@ -217,8 +230,7 @@ for column in both:
 
         ax3.errorbar(x=centers, y=groups_b.count() / groups_c.count(), fmt='o')
     except ValueError as e:
-        print "Skipping {}".format(column)
-        continue
+        pass
 
     ax1.legend()
     ax1.set_ylim(ymin=0)
