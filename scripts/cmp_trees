@@ -154,7 +154,11 @@ else:
             tables.append(('Differences in {}'.format(obj), ''.join(map(row.format, rows))))
 
 with open(os.path.join(args.outdir, 'index.html'), 'w') as f:
-    f.write(html.format('\n'.join(map(table.format, tables)), '\n'.join([img.format(c) for c in sorted(both) if c != 'nEvent'])))
+    f.write(
+        html.format(
+            '\n'.join([table.format(*t) for t in tables]),
+            '\n'.join([img.format(c) for c in sorted(both) if c != 'nEvent'])
+        ))
 
 for column in both:
     if column == 'nEvent':
