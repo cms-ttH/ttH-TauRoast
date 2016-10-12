@@ -22,6 +22,7 @@ html = """
 tr:first-child {{background-color: #ccc}}
 tr:nth-child(even) {{background-color: #f2f2f2}}
 </style>
+<title>Comparing {b} and {c}</title>
 </head>
 <body>
 <section>
@@ -184,7 +185,8 @@ with open(os.path.join(args.outdir, 'index.html'), 'w') as f:
         html.format(
             '\n'.join([table.format(*t) for t in ecomparison]),
             '\n'.join([table.format(*t) for t in qcomparison]),
-            '\n'.join([img.format(c) for c in sorted(both) if c != 'nEvent'])
+            '\n'.join([img.format(c) for c in sorted(both) if c != 'nEvent']),
+            b=basename, c=compname
         ))
 
 for column in both:
