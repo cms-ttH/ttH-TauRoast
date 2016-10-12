@@ -42,7 +42,8 @@ tr:nth-child(even) {{background-color: #f2f2f2}}
 img = '<a href="{0}.png"><img src="{0}.png" width="600" height="400"></img></a>'
 row = '<tr>{}</tr>'
 cell = '<td style="{0[1]}">{0[0]}</td>'
-table = '<h2>{}</h2><table>{}</table>'
+table = '<h2>{}</h2>{}<table>{}</table>'
+line = '<p>{}</p>'
 
 absolute_precision = 0.001
 relative_precision = 0.02
@@ -115,14 +116,14 @@ def compare_quantities(joint, names):
     if names:
         rows = compare(joint, names[1:])
         if len(rows) > 0:
-            yield ''.join(map(row.format, rows))
+            yield ('Differences', '', ''.join(map(row.format, rows)))
     else:
         objs = ['ele0', 'ele1', 'mu0', 'mu1', 'tau0', 'tau1', 'jet0', 'jet1', 'jet2', 'jet3']
         for obj in objs:
             quants = sorted([col for col in both if col.startswith(obj)])
             rows = compare(joint, quants)
             if len(rows) > 0:
-                yield ('Differences in {}'.format(obj), ''.join(map(row.format, rows)))
+                yield ('Differences in {}'.format(obj), '', ''.join(map(row.format, rows)))
 
 
 def compare_events(joint, basename, baseframe, compname, compframe):
@@ -133,17 +134,20 @@ def compare_events(joint, basename, baseframe, compname, compframe):
     print "# of events only in comparison: {}".format(len(only_comp))
     print "# of events shared:             {}".format(len(joint))
 
+    e_base = 'Events in {}: {}'.format(basename, ', '.join([str(n) for n in only_base.nEvent]))
+    e_comp = 'Events in {}: {}'.format(compname, ', '.join([str(n) for n in only_comp.nEvent]))
+
     voi = ['nEvent'] + ['n_presel_' + o for o in ('mu', 'ele', 'tau', 'jet')]
 
     rows = [''.join([cell.format((h, '')) for h in voi])]
     for _, e in only_base.iterrows():
         rows.append(''.join([cell.format((e[v], '')) for v in voi]))
-    yield ('Only in ' + basename, ''.join([row.format(r) for r in rows]))
+    yield ('Only in ' + basename, line.format(e_base), ''.join([row.format(r) for r in rows]))
 
     rows = [''.join([cell.format((h, '')) for h in voi])]
     for _, e in only_comp.iterrows():
         rows.append(''.join([cell.format((e[v], '')) for v in voi]))
-    yield ('Only in ' + compname, ''.join([row.format(r) for r in rows]))
+    yield ('Only in ' + compname, line.format(e_comp), ''.join([row.format(r) for r in rows]))
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--names')
