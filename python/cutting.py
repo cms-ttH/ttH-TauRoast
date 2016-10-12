@@ -44,7 +44,7 @@ class Cutflows(dict):
 class Cut(object):
 
     def __init__(self, name, code=None):
-        self._r = code2cut(name.encode('ascii', 'ignore'), code) if code else None
+        self._r = code2cut(name.encode('utf-8', 'ignore'), code) if code else None
         self._name = name
         self._code = code
 
@@ -66,7 +66,7 @@ class Cut(object):
         self._name = name
         self._code = code
         if code:
-            self._r = code2cut(name.encode('ascii', 'ignore'), code)
+            self._r = code2cut(name.encode('utf-8', 'ignore'), code)
         else:
             self._r = r.fastlane.StaticCut(name.encode('ascii', 'ignore'))
         for p, count in counts.items():
