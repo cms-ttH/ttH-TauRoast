@@ -21,6 +21,7 @@ html = """
 <style>
 tr:first-child {{background-color: #ccc}}
 tr:nth-child(even) {{background-color: #f2f2f2}}
+table {{font-size: 80%}}
 </style>
 <title>Comparing {b} and {c}</title>
 </head>
