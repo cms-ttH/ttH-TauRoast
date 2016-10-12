@@ -31,12 +31,15 @@ ttl cuts:
     - "l pt": >
         (leptons[0].electron() and leptons[0].pt() > 30) or
         (leptons[0].muon() and leptons[0].pt() > 25)
+    - "l quality": >
+        lepton_id == superslim::Lepton::MVA
+    - "1st l": >
+        leptons[0].mva() >= superslim::id::Loose
     - "1 l": >
-        lepton_id == superslim::Lepton::MVA and
-        leptons[0].mva() >= superslim::id::Loose and
         std::count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Loose; }) == 1
-    - "τ": >
-        tau_id == superslim::Tau::IsoMVA03 and
+    - "τ ID": >
+        tau_id == superslim::Tau::IsoMVA03
+    - "τ quality": >
         std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) >= 2
     - "jets": >
         len(jets) >= 4 and
