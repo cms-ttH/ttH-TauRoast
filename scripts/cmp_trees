@@ -139,8 +139,8 @@ def compare_events(joint, basename, baseframe, compname, compframe):
     e_comp = 'Events in {}: {}'.format(compname, ', '.join([str(n) for n in only_comp.nEvent]))
 
     voi = ['nEvent'] + ['n_presel_' + o for o in ('mu', 'ele', 'tau', 'jet')]
-    voi += ['{}_{}'.format(o, v) for o, v in itertools.product(('mu0', 'ele0'), ('pt', 'jetCSV', 'leptonMVA'))]
-    voi += ['{}_{}'.format(o, v) for o, v in itertools.product(('tau0', 'tau1'), ('pt',))]
+    voi += ['{}_{}'.format(o, v) for o, v in itertools.product(('mu0', 'ele0'), ('pt', 'eta', 'phi', 'jetCSV', 'leptonMVA'))]
+    voi += ['{}_{}'.format(o, v) for o, v in itertools.product(('tau0', 'tau1'), ('pt', 'eta', 'phi'))]
 
     rows = [''.join([cell.format((h, '')) for h in voi])]
     for _, e in only_base.iterrows():
