@@ -9,7 +9,7 @@ mode: sync
 lumi: 2517
 
 plot:
-  - ttH
+  - syncTree
   - syncTree_1l2tau
   # - ttjets
 

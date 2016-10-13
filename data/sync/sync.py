@@ -3,7 +3,7 @@ from ttH.TauRoast.plotting import Plot
 from ttH.TauRoast.processing import BasicProcess
 
 BasicProcess(
-    name="ttH",
+    name="syncTree",
     paths=['ttH'],
     cross_section=45140,
     events=45611

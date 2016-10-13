@@ -15,5 +15,6 @@ cmsRun test/ntuplize.py inputFiles=root://cms-xrd-global.cern.ch/$ttHfile output
 wait
 
 scripts/roaster -af data/sync.yaml
-scripts/cmp_trees $syncdir/tau_llr $syncdir/syncNtuple_event_ttH_80X.root:syncTree_1l2tau:LLR test/sync_tau/out/ntuple.root:syncTree_1l2tau:ND
+scripts/cmp_trees $syncdir/tau_llr $syncdir/syncNtuple_ttH_80X.root:syncTree:LLR test/sync_tau/out/ntuple.root:syncTree:ND
+scripts/cmp_trees $syncdir/tau_llr_event $syncdir/syncNtuple_event_ttH_80X.root:syncTree_1l2tau:LLR test/sync_tau/out/ntuple.root:syncTree_1l2tau:ND
 # scripts/cmp_trees $syncdir/tau_cornell/ $syncdir/syncNtuple_event.root:syncTree:Cornell test/sync_tau/out/ntuple.root:ttH:ND
