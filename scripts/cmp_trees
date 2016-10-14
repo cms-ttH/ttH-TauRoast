@@ -153,20 +153,18 @@ def compare_events(joint, basename, baseframe, compname, compframe):
     yield ('Only in ' + compname, line.format(e_comp), ''.join([row.format(r) for r in rows]))
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--names')
-parser.add_argument(dest='outdir')
-parser.add_argument(dest='baseline')
-parser.add_argument(dest='comparison')
+parser.add_argument('--columnnames', metavar='FILE', help='column names, one per line')
+parser.add_argument(dest='outdir', help='directory to store output in')
+parser.add_argument(dest='baseline', help='either: rootfile:treename:label | textfile:label')
+parser.add_argument(dest='comparison', help='either: rootfile:treename:label | textfile:label')
 args = parser.parse_args()
-
-# print "  spec: rootfile:treename:label | textfile:label"
 
 if not os.path.exists(args.outdir):
     os.makedirs(args.outdir)
 
 names = None
-if args.names:
-    with open(args.names) as fd:
+if args.columnnames:
+    with open(args.columnnames) as fd:
         names = map(str.strip, fd.readlines())
 
 basename, basetree = load(args.baseline, names)
