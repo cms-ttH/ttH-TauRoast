@@ -115,7 +115,7 @@ def valid(data):
 
 
 def compare_quantities(joint, names, limit):
-    quantify = 'The first {} differences'.format(limit) if limit > 0 else ''
+    quantify = line.format('The first {} differences'.format(limit) if limit > 0 else 'All differences')
     if names:
         rows = compare(joint, names[1:], limit)
         if len(rows) > 0:
