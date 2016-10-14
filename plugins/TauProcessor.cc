@@ -469,7 +469,8 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
    // cut index bitmap
    int passed = 0;
 
-   for (const auto& lepton_id: {superslim::Lepton::LJ, superslim::Lepton::MVA}) {
+   // for (const auto& lepton_id: {superslim::Lepton::LJ, superslim::Lepton::MVA}) {
+   for (const auto& lepton_id: {superslim::Lepton::MVA}) {
       std::vector<superslim::Lepton> leptons;
       std::vector<superslim::Lepton> cleaning_leptons;
 
