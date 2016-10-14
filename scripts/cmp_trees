@@ -73,7 +73,7 @@ def load(spec, names):
         return load_txt(spec, names)
 
 
-def compare(joint, quants):
+def compare(joint, quants, limit):
     def highlight(a, b):
         return a != b and \
             abs(a - b) > relative_precision * a and \
@@ -97,7 +97,7 @@ def compare(joint, quants):
             continue
 
         count += 1
-        if count > 10:
+        if count > limit and limit > 0:
             break
 
         rows += [''.join(map(cell.format, [(series['nEvent'], ''), (index, '')] + [(v, '' if not highlight(t[0], t[1]) else 'color: #e00') for t in zip(values_b, values_c) for v in t]))]
@@ -113,18 +113,19 @@ def valid(data):
     return True
 
 
-def compare_quantities(joint, names):
+def compare_quantities(joint, names, limit):
+    quantify = 'The first {} differences'.format(limit) if limit > 0 else ''
     if names:
-        rows = compare(joint, names[1:])
+        rows = compare(joint, names[1:], limit)
         if len(rows) > 0:
-            yield ('Differences', '', ''.join(map(row.format, rows)))
+            yield ('Differences', quantify, ''.join(map(row.format, rows)))
     else:
         objs = ['ele0', 'ele1', 'mu0', 'mu1', 'tau0', 'tau1', 'jet0', 'jet1', 'jet2', 'jet3']
         for obj in objs:
             quants = sorted([col for col in both if col.startswith(obj)])
-            rows = compare(joint, quants)
+            rows = compare(joint, quants, limit)
             if len(rows) > 0:
-                yield ('Differences in {}'.format(obj), '', ''.join(map(row.format, rows)))
+                yield ('Differences in {}'.format(obj), quantify, ''.join(map(row.format, rows)))
 
 
 def compare_events(joint, basename, baseframe, compname, compframe):
@@ -153,6 +154,7 @@ def compare_events(joint, basename, baseframe, compname, compframe):
     yield ('Only in ' + compname, line.format(e_comp), ''.join([row.format(r) for r in rows]))
 
 parser = argparse.ArgumentParser()
+parser.add_argument('-n', metavar='EVENTS', default=10, type=int, help='number of events to limit comparison table to')
 parser.add_argument('--columnnames', metavar='FILE', help='column names, one per line')
 parser.add_argument(dest='outdir', help='directory to store output in')
 parser.add_argument(dest='baseline', help='either: rootfile:treename:label | textfile:label')
@@ -182,7 +184,7 @@ compframe = pd.DataFrame(comptree)
 
 joint = pd.merge(baseframe, compframe, how='inner', on=['nEvent'], suffixes=('_b', '_c'))
 
-qcomparison = compare_quantities(joint, names)
+qcomparison = compare_quantities(joint, names, args.n)
 ecomparison = compare_events(joint, basename, baseframe, compname, compframe)
 
 with open(os.path.join(args.outdir, 'index.html'), 'w') as f:
