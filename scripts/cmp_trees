@@ -22,6 +22,7 @@ html = """
 tr:first-child {{background-color: #ccc}}
 tr:nth-child(even) {{background-color: #f2f2f2}}
 table {{font-size: 80%}}
+.highlight {{color: #e00; font-weight: bold}};
 </style>
 <title>Comparing {b} and {c}</title>
 </head>
@@ -42,7 +43,7 @@ table {{font-size: 80%}}
 
 img = '<a href="{0}.png"><img src="{0}.png" width="600" height="400"></img></a>'
 row = '<tr>{}</tr>'
-cell = '<td style="{0[1]}">{0[0]}</td>'
+cell = '<td class="{0[1]}">{0[0]}</td>'
 table = '<h2>{}</h2>{}<table>{}</table>'
 line = '<p>{}</p>'
 
@@ -100,7 +101,7 @@ def compare(joint, quants, limit):
         if count > limit and limit > 0:
             break
 
-        rows += [''.join(map(cell.format, [(series['nEvent'], ''), (index, '')] + [(v, '' if not highlight(t[0], t[1]) else 'color: #e00') for t in zip(values_b, values_c) for v in t]))]
+        rows += [''.join(map(cell.format, [(series['nEvent'], ''), (index, '')] + [(v, '' if not highlight(t[0], t[1]) else 'highlight') for t in zip(values_b, values_c) for v in t]))]
     return rows
 
 
