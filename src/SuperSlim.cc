@@ -329,10 +329,8 @@ namespace superslim {
       // }
       // std::cout << "=== THE END ===" << std::endl;
 
-      if (t.leadChargedHadrCand().isNonnull()) {
+      if (t.leadChargedHadrCand().isNonnull())
          leading_track_pt_ = t.leadChargedHadrCand()->pt();
-         charge_ = t.leadChargedHadrCand()->charge();
-      }
 
       raw_isolation_3hits03_ = 0.; // NOT PRESENT: t.tauID("byCombinedIsolationDeltaBetaCorrRaw3HitsdR03");
       raw_isolation_3hits05_ = t.tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits");
