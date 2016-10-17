@@ -40,8 +40,8 @@ const_binning = range(0, 15) + [10000]
 with open('src/Fakes.cc', 'w') as dumpf:
     def dump(name, bins, edges):
         fmt = "std::vector<double> {}{{{}}};\n"
-        dumpf(fmt.format(name + "_bins", ", ".join(map(str, bins))))
-        dumpf(fmt.format(name + "_edges", ", ".join(map(str, edges[:-1]))))
+        dumpf.write(fmt.format(name + "_bins", ", ".join(map(str, bins))))
+        dumpf.write(fmt.format(name + "_edges", ", ".join(map(str, edges[:-1]))))
 
     bins, edges = np.histogram(selection.tau_genjet_pt, bins=pt_binning, density=True)
     dump("fake_pt", bins, edges)
