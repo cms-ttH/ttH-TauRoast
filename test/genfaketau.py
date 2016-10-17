@@ -37,39 +37,30 @@ selection = taus[(taus.tau_match == 6) & (taus.tau_isoMVA03 >= 5) & (taus.tau_pt
 pt_binning = range(0, 150, 10) + [10000]
 const_binning = range(0, 15) + [10000]
 
-bins, edges = np.histogram(selection.tau_genjet_pt, bins=pt_binning, density=True)
-print "fakes pt"
-print "\t{}".format(', '.join(map(str, edges)))
-print "\t{}".format(', '.join(map(str, bins)))
-bins, edges = np.histogram(selection.tau_genjetcharged_pt, bins=pt_binning, density=True)
-print "fakes charged pt"
-print "\t{}".format(', '.join(map(str, edges)))
-print "\t{}".format(', '.join(map(str, bins)))
-bins, edges = np.histogram(selection.tau_genjet_constituents, bins=const_binning, density=True)
-print "fakes constituents"
-print "\t{}".format(', '.join(map(str, edges)))
-print "\t{}".format(', '.join(map(str, bins)))
-bins, edges = np.histogram(selection.tau_genjetcharged_constituents, bins=const_binning, density=True)
-print "fakes charged constituents"
-print "\t{}".format(', '.join(map(str, edges)))
-print "\t{}".format(', '.join(map(str, bins)))
 
-bins, edges = np.histogram(jets.genjet_pt, bins=pt_binning, density=True)
-print "genjet pt"
-print "\t{}".format(', '.join(map(str, edges)))
-print "\t{}".format(', '.join(map(str, bins)))
-bins, edges = np.histogram(jets.genjet_chargedpt, bins=pt_binning, density=True)
-print "genjet charged pt"
-print "\t{}".format(', '.join(map(str, edges)))
-print "\t{}".format(', '.join(map(str, bins)))
-bins, edges = np.histogram(jets.genjet_constituents, bins=const_binning, density=True)
-print "genjet constituents"
-print "\t{}".format(', '.join(map(str, edges)))
-print "\t{}".format(', '.join(map(str, bins)))
-bins, edges = np.histogram(jets.genjet_chargedconstituents, bins=const_binning, density=True)
-print "genjet charged constituents"
-print "\t{}".format(', '.join(map(str, edges)))
-print "\t{}".format(', '.join(map(str, bins)))
+with open('src/Fakes.cc', 'w') as dumpf:
+    def dump(name, bins, edges):
+        fmt = "std::vector<double> {}{{{}}};\n"
+        dumpf(fmt.format(name + "_bins", ", ".join(map(str, bins))))
+        dumpf(fmt.format(name + "_edges", ", ".join(map(str, edges[:-1]))))
+
+    bins, edges = np.histogram(selection.tau_genjet_pt, bins=pt_binning, density=True)
+    dump("fake_pt", bins, edges)
+    bins, edges = np.histogram(selection.tau_genjetcharged_pt, bins=pt_binning, density=True)
+    dump("fake_charged_pt", bins, edges)
+    bins, edges = np.histogram(selection.tau_genjet_constituents, bins=const_binning, density=True)
+    dump("fake_constituents", bins, edges)
+    bins, edges = np.histogram(selection.tau_genjetcharged_constituents, bins=const_binning, density=True)
+    dump("fake_charged_constituents", bins, edges)
+
+    bins, edges = np.histogram(jets.genjet_pt, bins=pt_binning, density=True)
+    dump("jet_pt", bins, edges)
+    bins, edges = np.histogram(jets.genjet_chargedpt, bins=pt_binning, density=True)
+    dump("jet_charged_pt", bins, edges)
+    bins, edges = np.histogram(jets.genjet_constituents, bins=const_binning, density=True)
+    dump("jet_constituents", bins, edges)
+    bins, edges = np.histogram(jets.genjet_chargedconstituents, bins=const_binning, density=True)
+    dump("jet_charged_constituents", bins, edges)
 
 labels = ['genjets', u'genjet fakes']
 nbins = range(0, 201, 10)
