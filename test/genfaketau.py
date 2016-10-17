@@ -2,6 +2,7 @@
 
 import matplotlib.pyplot as plt
 # import pandas as pd
+import numpy as np
 from root_pandas import read_root
 
 numbers_in = ['nloosetaus', 'ntighttaus', 'nfaketaus', 'nfaketighttaus', 'nrealtaus', 'nrealtighttaus']
@@ -32,6 +33,43 @@ jets = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=gen_in, fl
 
 fakes = taus[(taus.tau_match == 6)]
 selection = taus[(taus.tau_match == 6) & (taus.tau_isoMVA03 >= 5) & (taus.tau_pt >= 20.)]
+
+pt_binning = range(0, 150, 10) + [10000]
+const_binning = range(0, 15) + [10000]
+
+bins, edges = np.histogram(selection.tau_genjet_pt, bins=pt_binning, density=True)
+print "fakes pt"
+print "\t{}".format(', '.join(map(str, edges)))
+print "\t{}".format(', '.join(map(str, bins)))
+bins, edges = np.histogram(selection.tau_genjetcharged_pt, bins=pt_binning, density=True)
+print "fakes charged pt"
+print "\t{}".format(', '.join(map(str, edges)))
+print "\t{}".format(', '.join(map(str, bins)))
+bins, edges = np.histogram(selection.tau_genjet_constituents, bins=const_binning, density=True)
+print "fakes constituents"
+print "\t{}".format(', '.join(map(str, edges)))
+print "\t{}".format(', '.join(map(str, bins)))
+bins, edges = np.histogram(selection.tau_genjetcharged_constituents, bins=const_binning, density=True)
+print "fakes charged constituents"
+print "\t{}".format(', '.join(map(str, edges)))
+print "\t{}".format(', '.join(map(str, bins)))
+
+bins, edges = np.histogram(jets.genjet_pt, bins=pt_binning, density=True)
+print "genjet pt"
+print "\t{}".format(', '.join(map(str, edges)))
+print "\t{}".format(', '.join(map(str, bins)))
+bins, edges = np.histogram(jets.genjet_chargedpt, bins=pt_binning, density=True)
+print "genjet charged pt"
+print "\t{}".format(', '.join(map(str, edges)))
+print "\t{}".format(', '.join(map(str, bins)))
+bins, edges = np.histogram(jets.genjet_constituents, bins=const_binning, density=True)
+print "genjet constituents"
+print "\t{}".format(', '.join(map(str, edges)))
+print "\t{}".format(', '.join(map(str, bins)))
+bins, edges = np.histogram(jets.genjet_chargedconstituents, bins=const_binning, density=True)
+print "genjet charged constituents"
+print "\t{}".format(', '.join(map(str, edges)))
+print "\t{}".format(', '.join(map(str, bins)))
 
 labels = ['genjets', u'genjet fakes']
 nbins = range(0, 201, 10)
