@@ -1,4 +1,5 @@
 #include "DataFormats/Common/interface/Wrapper.h"
+#include "ttH/TauRoast/interface/Fakes.h"
 #include "ttH/TauRoast/interface/Fastlane.h"
 #include "ttH/TauRoast/interface/SuperSlim.h"
 

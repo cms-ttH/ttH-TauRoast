@@ -37,7 +37,7 @@ selection = taus[(taus.tau_match == 6) & (taus.tau_isoMVA03 >= 5) & (taus.tau_pt
 pt_binning = range(0, 150, 10) + [10000]
 const_binning = range(0, 15) + [10000]
 
-with open('src/Fakes.cc', 'w') as dumpf:
+with open('src/FakeData.frag', 'w') as dumpf:
     def dump(name, bins, edges):
         fmt = "std::vector<double> {}{{{}}};\n"
         dumpf.write(fmt.format(name + "_bins", ", ".join(map(str, bins))))
