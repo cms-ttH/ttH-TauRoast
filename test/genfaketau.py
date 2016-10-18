@@ -23,11 +23,11 @@ for ax in fig.get_axes():
     ax.set_yscale('log', nonposy='clip')
 plt.savefig('jetfakes_numbers.png')
 
-taus_in = 'pt eta isoMVA03 genjet_pt genjet_eta genjetcharged_pt genjetcharged_eta match genjet_constituents genjetcharged_constituents'
+taus_in = 'pt eta isoMVA03 genjet_pt genjet_eta genjetcharged_pt genjetcharged_eta match genjet_constituents genjetcharged_constituents pfake pjet'
 taus_in = ['tau_' + v for v in taus_in.split()]
 taus = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=taus_in, flatten=True)
 
-gen_in = 'chargedconstituents constituents chargedpt pt eta'
+gen_in = 'chargedconstituents constituents chargedpt pt eta pjet pfake'
 gen_in = ['genjet_' + v for v in gen_in.split()]
 jets = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=gen_in, flatten=True)
 
@@ -85,6 +85,29 @@ fig = plt.figure()
 n, bins, patches = plt.hist([jets.genjet_chargedconstituents, selection.tau_genjetcharged_constituents], bins=nbins, normed=1)
 plt.legend(patches, labels)
 plt.savefig('jetfakes_genjet_chargedconstituents.png')
+
+# Probability for fakes/jet
+
+nbins = 10
+
+fig = plt.figure()
+n, bins, patches = plt.hist([jets.genjet_pfake, selection.tau_pfake], bins=nbins, normed=1)
+plt.legend(patches, labels)
+plt.savefig('jetfakes_genjet_pfake.png')
+
+fig = plt.figure()
+n, bins, patches = plt.hist([jets.genjet_pjet, selection.tau_pjet], bins=nbins, normed=1)
+plt.legend(patches, labels)
+plt.savefig('jetfakes_genjet_pjet.png')
+
+print jets.genjet_pfake / jets.genjet_pjet
+
+nbins = range(0, 30, 3)
+
+fig = plt.figure()
+n, bins, patches = plt.hist([jets.genjet_pfake / jets.genjet_pjet, selection.tau_pfake / selection.tau_pjet], bins=nbins, normed=1)
+plt.legend(patches, labels)
+plt.savefig('jetfakes_genjet_pfake_over_pjet.png')
 
 nbins = [range(0, 100, 5), range(0, 20, 1)]
 
