@@ -67,11 +67,12 @@ process.eventf = cms.EDFilter(
     jetEta=cms.double(2.7),
     tauPt=cms.double(18),
     tauEta=cms.double(2.7),
+    fakeCut=cms.double(-0.155),
     minLeptons=cms.int32(1),
-    minJets=cms.int32(2),
-    minTaus=cms.int32(0),
-    minTotal=cms.int32(7),
-    minTotalLeptons=cms.int32(1)
+    minJets=cms.int32(3),
+    minTaus=cms.int32(2),
+    minTotal=cms.int32(6),
+    minTotalLeptons=cms.int32(3)
 )
 
 process.dump = cms.EDAnalyzer("EventContentAnalyzer")

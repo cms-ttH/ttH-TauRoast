@@ -27,15 +27,21 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 
+#include "FWCore/ParameterSet/interface/FileInPath.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
 #include "DataFormats/JetReco/interface/GenJet.h"
 #include "DataFormats/JetReco/interface/GenJetCollection.h"
 #include "DataFormats/PatCandidates/interface/GenericParticle.h"
 
+#include "Math/LorentzVector.h"
+#include "TMVA/Reader.h"
+
 //
 // class declaration
 //
+
+typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > LorentzVector;
 
 class GenEventFilter : public edm::EDFilter {
    public:
@@ -48,6 +54,8 @@ class GenEventFilter : public edm::EDFilter {
       virtual void beginJob() override;
       virtual bool filter(edm::Event&, const edm::EventSetup&) override;
       virtual void endJob() override;
+
+      bool isFake(const reco::GenJet& j);
 
       // ----------member data ---------------------------
       edm::EDGetTokenT<reco::GenParticleCollection> particle_token_;
@@ -63,11 +71,20 @@ class GenEventFilter : public edm::EDFilter {
       double tau_pt_;
       double tau_eta_;
 
+      double fake_cut_;
+
       int lepton_count_;
       int jet_count_;
       int tau_count_;
       int total_count_;
       int total_lepton_count_;
+
+      float mva_pt_;
+      float mva_charged_pt_;
+      float mva_constituents_;
+      float mva_charged_constituents_;
+
+      TMVA::Reader* reader_;
 };
 
 //
@@ -89,6 +106,7 @@ GenEventFilter::GenEventFilter(const edm::ParameterSet& config) :
    jet_eta_(config.getParameter<double>("jetEta")),
    tau_pt_(config.getParameter<double>("tauPt")),
    tau_eta_(config.getParameter<double>("tauEta")),
+   fake_cut_(config.getParameter<double>("fakeCut")),
    lepton_count_(config.getParameter<int>("minLeptons")),
    jet_count_(config.getParameter<int>("minJets")),
    tau_count_(config.getParameter<int>("minTaus")),
@@ -97,11 +115,19 @@ GenEventFilter::GenEventFilter(const edm::ParameterSet& config) :
 {
    particle_token_ = consumes<reco::GenParticleCollection>(config.getParameter<edm::InputTag>("genParticles"));
    jet_token_ = consumes<reco::GenJetCollection>(config.getParameter<edm::InputTag>("genJets"));
+
+   reader_ = new TMVA::Reader();
+   reader_->AddVariable("pt", &mva_pt_);
+   reader_->AddVariable("chargedPt", &mva_charged_pt_);
+   reader_->AddVariable("constituents", &mva_constituents_);
+   reader_->AddVariable("chargedConstituents", &mva_charged_constituents_);
+   reader_->BookMVA("BDTG", edm::FileInPath("ttH/TauRoast/data/faketau.weights.xml").fullPath().c_str());
 }
 
 
 GenEventFilter::~GenEventFilter()
 {
+   delete reader_;
 }
 
 
@@ -128,6 +154,28 @@ mother(const T& p)
          return mother;
    }
    return 0;
+}
+
+bool
+GenEventFilter::isFake(const reco::GenJet& j)
+{
+   mva_pt_ = j.p4().Pt();
+   mva_constituents_ = j.numberOfDaughters();
+   mva_charged_constituents_ = 0;
+
+   LorentzVector charged_p;
+
+   for (unsigned i = 0; i < j.numberOfDaughters(); ++i) {
+      auto cand = j.daughterPtr(i);
+      if (cand.isNonnull() and cand->charge() != 0) {
+         charged_p += cand->p4();
+         ++mva_charged_constituents_;
+      }
+   }
+
+   mva_charged_pt_ = charged_p.Pt();
+
+   return reader_->EvaluateMVA("BDTG") > fake_cut_;
 }
 
 // ------------ method called on each new Event  ------------
@@ -168,6 +216,9 @@ GenEventFilter::filter(edm::Event& event, const edm::EventSetup& setup)
 
    jets = std::count_if(std::begin(*genjets), std::end(*genjets),
          [&](const auto& j) { return j.pt() > jet_pt_ and abs(j.eta()) < jet_eta_; });
+
+   taus += std::count_if(std::begin(*genjets), std::end(*genjets),
+         [&](const auto& j) { return this->isFake(j); });
 
    return (
          leptons + jets + taus >= total_count_ and
