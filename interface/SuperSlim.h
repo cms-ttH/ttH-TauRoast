@@ -100,6 +100,7 @@ namespace superslim {
    class GenObject {
       public:
          GenObject() : p_() {};
+         virtual ~GenObject() {};
 
          template<typename T>
          GenObject(const T& c) :
@@ -123,7 +124,7 @@ namespace superslim {
    class GenJet : public GenObject {
       public:
          GenJet() : GenObject() {};
-         ~GenJet() { if (closest_) delete closest_; };
+         virtual ~GenJet() { if (closest_) delete closest_; };
 
          template<typename T>
          GenJet(const T& j) :
