@@ -37,6 +37,23 @@ namespace superslim {
    {
    }
 
+   void
+   GenJet::findClosestGenJet(const reco::GenJetCollection& jets)
+   {
+      assert(closest_ == 0);
+
+      std::vector<std::pair<float, const reco::GenJet*>> js;
+      for (const auto& j: jets) {
+         auto dR = deltaR(p4(), j.p4());
+         if (dR > 0.0001)
+            js.push_back(std::make_pair(dR, &j));
+      }
+      std::sort(std::begin(js), std::end(js), [](const auto& a, const auto& b) { return a.first < b.first; });
+
+      if (js.size() > 0)
+         closest_ = new GenJet(*(js[0].second));
+   }
+
    const reco::Candidate *
    PhysObject::getFinal(const reco::Candidate * c)
    {
@@ -320,8 +337,10 @@ namespace superslim {
             js.push_back(std::make_pair(deltaR(p4(), j.p4()), &j));
          std::sort(std::begin(js), std::end(js), [](const auto& a, const auto& b) { return a.first < b.first; });
 
-         if (js.size() > 0 and js[0].first < .4)
+         if (js.size() > 0 and js[0].first < .4) {
             gen_jet_ = GenJet(*(js[0].second));
+            gen_jet_.findClosestGenJet(jets);
+         }
       }
 
       // for (auto& pair: t.tauIDs()) {

@@ -123,6 +123,7 @@ namespace superslim {
    class GenJet : public GenObject {
       public:
          GenJet() : GenObject() {};
+         ~GenJet() { if (closest_) delete closest_; };
 
          template<typename T>
          GenJet(const T& j) :
@@ -142,10 +143,15 @@ namespace superslim {
          int constituents() const { return constituents_; };
          int chargedConstituents() const { return charged_constituents_; };
 
+         const GenJet* closestGenJet() const { return closest_; };
+         void findClosestGenJet(const reco::GenJetCollection& jets);
+
       private:
          LorentzVector charged_p_;
          int constituents_ = 0;
          int charged_constituents_ = 0;
+
+         const GenJet* closest_ = 0;
    };
 
    class PhysObject : public GenObject {
