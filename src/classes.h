@@ -20,6 +20,10 @@ namespace {
       superslim::PhysObject dummy_object;
       superslim::Vertex dummy_vertex;
       std::vector<superslim::Vertex> dummy_vertex_vector;
+      superslim::GenObject dummy_genobject;
+      std::vector<superslim::GenObject> dummy_genobject_vector;
+      superslim::GenJet dummy_genjet;
+      std::vector<superslim::GenJet> dummy_genjet_vector;
       superslim::Jet dummy_jet;
       std::vector<superslim::Jet> dummy_jet_vector;
       std::map<std::string, std::vector<superslim::Jet>> dummy_jet_map;

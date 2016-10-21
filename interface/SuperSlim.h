@@ -123,13 +123,15 @@ namespace superslim {
 
    class GenJet : public GenObject {
       public:
-         GenJet() : GenObject() {};
+         GenJet() : GenObject(), closest_(0) {};
+         GenJet(const GenJet& other);
          virtual ~GenJet() { if (closest_) delete closest_; };
 
          template<typename T>
          GenJet(const T& j) :
             GenObject(j),
-            constituents_(j.numberOfDaughters())
+            constituents_(j.numberOfDaughters()),
+            closest_(0)
          {
             for (unsigned i = 0; i < j.numberOfDaughters(); ++i) {
                auto cand = j.daughterPtr(i);
@@ -152,7 +154,7 @@ namespace superslim {
          int constituents_ = 0;
          int charged_constituents_ = 0;
 
-         const GenJet* closest_ = 0;
+         GenJet* closest_ = 0;
    };
 
    class PhysObject : public GenObject {

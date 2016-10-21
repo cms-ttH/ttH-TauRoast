@@ -37,6 +37,23 @@ namespace superslim {
    {
    }
 
+   GenJet::GenJet(const GenJet& other)
+   {
+      p_ = other.p4();
+      charge_ = other.charge();
+      pdg_id_ = other.pdgId();
+
+      charged_p_ = other.chargedP4();
+      constituents_ = other.constituents();
+      charged_constituents_ = other.chargedConstituents();
+
+      auto j = other.closestGenJet();
+      if (j)
+         closest_ = new GenJet(*j);
+      else
+         closest_ = 0;
+   }
+
    void
    GenJet::findClosestGenJet(const reco::GenJetCollection& jets)
    {
