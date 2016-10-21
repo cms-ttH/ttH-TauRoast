@@ -31,16 +31,43 @@ script like this::
 
     scram b
     cd ../../
-    cmsDriver.py Configuration/GenProduction/python/HIG-RunIISummer15wmLHEGS-00482-fragment.py --fileout file:HIG-RunIISummer15wmLHEGS-00482.root --mc --eventcontent RAWSIM,LHE --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1,Configuration/DataProcessing/Utils.addMonitoring --datatier GEN-SIM,LHE --conditions MCRUN2_71_V1::All --beamspot Realistic50ns13TeVCollision --step LHE,GEN,SIM --magField 38T_PostLS1 --python_filename HIG-RunIISummer15wmLHEGS-00482_1_cfg.py --no_exec -n 42 || exit $? ;
+    cmsDriver.py Configuration/GenProduction/python/HIG-RunIISummer15wmLHEGS-00482-fragment.py \
+      --fileout file:HIG-RunIISummer15wmLHEGS-00482.root \
+      --mc --eventcontent RAWSIM,LHE \
+      --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1,Configuration/DataProcessing/Utils.addMonitoring \
+      --datatier GEN-SIM,LHE --conditions MCRUN2_71_V1::All --beamspot Realistic50ns13TeVCollision \
+      --step LHE,GEN,SIM --magField 38T_PostLS1 \
+      --python_filename HIG-RunIISummer15wmLHEGS-00482_1_cfg.py --no_exec -n 42 || exit $? ;
 
 Repeat this for the `DR` step to see the following lines::
 
-    cmsDriver.py step1 --filein "dbs:/TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/RunIISummer15wmLHEGS-MCRUN2_71_V1-v1/GEN-SIM" --fileout file:HIG-RunIISpring16DR80-01830_step1.root  --pileup_input "dbs:/Neutrino_E-10_gun/RunIISpring15PrePremix-PU2016_80X_mcRun2_asymptotic_v14-v2/GEN-SIM-DIGI-RAW" --mc --eventcontent PREMIXRAW --datatier GEN-SIM-RAW --conditions 80X_mcRun2_asymptotic_v14 --step DIGIPREMIX_S2,DATAMIX,L1,DIGI2RAW,HLT:25ns10e33_v2 --nThreads 4 --datamix PreMix --era Run2_2016 --python_filename HIG-RunIISpring16DR80-01830_1_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring -n 960 || exit $? ;
+    cmsDriver.py step1 \
+      --filein "dbs:/TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/RunIISummer15wmLHEGS-MCRUN2_71_V1-v1/GEN-SIM" \
+      --fileout file:HIG-RunIISpring16DR80-01830_step1.root \
+      --pileup_input "dbs:/Neutrino_E-10_gun/RunIISpring15PrePremix-PU2016_80X_mcRun2_asymptotic_v14-v2/GEN-SIM-DIGI-RAW" \
+      --mc --eventcontent PREMIXRAW --datatier GEN-SIM-RAW --conditions 80X_mcRun2_asymptotic_v14 \
+      --step DIGIPREMIX_S2,DATAMIX,L1,DIGI2RAW,HLT:25ns10e33_v2 --nThreads 4 --datamix PreMix --era Run2_2016 \
+      --python_filename HIG-RunIISpring16DR80-01830_1_cfg.py --no_exec \
+      --customise Configuration/DataProcessing/Utils.addMonitoring -n 960 || exit $? ;
 
-    cmsDriver.py step2 --filein file:HIG-RunIISpring16DR80-01830_step1.root --fileout file:HIG-RunIISpring16DR80-01830.root --mc --eventcontent AODSIM,DQM --runUnscheduled --datatier AODSIM,DQMIO --conditions 80X_mcRun2_asymptotic_v14 --step RAW2DIGI,RECO,EI,DQM:DQMOfflinePOGMC --nThreads 4 --era Run2_2016 --python_filename HIG-RunIISpring16DR80-01830_2_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring -n 960 || exit $? ;
+    cmsDriver.py step2 \
+      --filein file:HIG-RunIISpring16DR80-01830_step1.root \
+      --fileout file:HIG-RunIISpring16DR80-01830.root \
+      --mc --eventcontent AODSIM,DQM --runUnscheduled --datatier AODSIM,DQMIO \
+      --conditions 80X_mcRun2_asymptotic_v14 \
+      --step RAW2DIGI,RECO,EI,DQM:DQMOfflinePOGMC --nThreads 4 --era Run2_2016 \
+      --python_filename HIG-RunIISpring16DR80-01830_2_cfg.py --no_exec \
+      --customise Configuration/DataProcessing/Utils.addMonitoring -n 960 || exit $? ;
 
 Note that this step is happening in `CMSSW_8_0_14`.
 
 And for the `MiniAOD` step (note again the used release, which is equivalent to the `DR` step)::
 
-  cmsDriver.py step1 --filein "dbs:/TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/RunIISpring16DR80-premix_withHLT_80X_mcRun2_asymptotic_v14-v1/AODSIM" --fileout file:HIG-RunIISpring16MiniAODv2-02983.root --mc --eventcontent MINIAODSIM --runUnscheduled --datatier MINIAODSIM --conditions 80X_mcRun2_asymptotic_v14 --step PAT --era Run2_2016 --python_filename HIG-RunIISpring16MiniAODv2-02983_1_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring -n 960 || exit $? ;
+  cmsDriver.py step1 \
+    --filein "dbs:/TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/RunIISpring16DR80-premix_withHLT_80X_mcRun2_asymptotic_v14-v1/AODSIM" \
+    --fileout file:HIG-RunIISpring16MiniAODv2-02983.root \
+    --mc --eventcontent MINIAODSIM --runUnscheduled --datatier MINIAODSIM \
+    --conditions 80X_mcRun2_asymptotic_v14 \
+    --step PAT --era Run2_2016 \
+    --python_filename HIG-RunIISpring16MiniAODv2-02983_1_cfg.py --no_exec \
+    --customise Configuration/DataProcessing/Utils.addMonitoring -n 960 || exit $? ;
