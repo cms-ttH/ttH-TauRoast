@@ -28,22 +28,22 @@ data = Category(
     cores=2,
     runtime=90 * 60,
     disk=1000,
-    memory=1200
+    memory=1300
 )
 
 tth = Category(
     name='ttH',
     cores=2,
     runtime=90 * 60,
-    disk=1000,
-    memory=1200
+    disk=1100,
+    memory=1500
 )
 
 mc = Category(
     name='mc',
     cores=2,
     runtime=90 * 60,
-    disk=1000,
+    disk=1200,
     memory=1200
 )
 
