@@ -30,7 +30,8 @@ taus = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=taus_in, f
 
 gen_in = 'chargedconstituents constituents chargedpt pt eta pjet pfake closestpt closestdr'
 gen_in = ['genjet_' + v for v in gen_in.split()]
-jets = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=gen_in, flatten=True)
+alljets = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=gen_in, flatten=True)
+jets = alljets[(alljets.genjet_pt > 18) & (alljets.genjet_eta > -2.5) & (alljets.genjet_eta < 2.5)]
 
 fakes = taus[(taus.tau_match == 6)]
 selection = taus[(taus.tau_match == 6) & (taus.tau_isoMVA03 >= 5) & (taus.tau_pt >= 20.)]
@@ -64,12 +65,13 @@ with open('src/FakeData.frag', 'w') as dumpf:
 
 labels = ['genjets', u'genjet fakes']
 pspace = [
-    ('pt', range(0, 201, 10)),
-    ('chargedpt', range(0, 201, 10)),
+    ('pt', range(0, 201, 5)),
+    ('eta', np.array(range(-50, 51, 2)) * 0.1),
+    ('chargedpt', range(0, 201, 5)),
     ('constituents', range(0, 31, 1)),
     ('chargedconstituents', range(0, 31, 1)),
-    ('closestpt', range(0, 201, 10)),
-    ('closestdr', np.array(range(21)) * 0.1 * math.pi)
+    ('closestpt', range(0, 201, 5)),
+    ('closestdr', np.array(range(41)) * 0.05 * math.pi)
 ]
 
 for name, nbins in pspace:
@@ -81,7 +83,7 @@ for name, nbins in pspace:
 
 # Probability for fakes/jet
 
-nbins = 10
+nbins = 30
 
 fig = plt.figure()
 n, bins, patches = plt.hist([jets.genjet_pfake, selection.tau_pfake], bins=nbins, normed=1)
@@ -93,7 +95,7 @@ n, bins, patches = plt.hist([jets.genjet_pjet, selection.tau_pjet], bins=nbins, 
 plt.legend(patches, labels)
 plt.savefig('jetfakes_genjet_pjet.png')
 
-nbins = range(0, 30, 3)
+nbins = range(31)
 
 fig = plt.figure()
 n, bins, patches = plt.hist([jets.genjet_pfake / jets.genjet_pjet, selection.tau_pfake / selection.tau_pjet], bins=nbins, normed=1)
