@@ -109,6 +109,9 @@ for i in range(2):
     Leaf('mu{}_segmentCompatibility'.format(i), 'f',
          'result = len(muons) <= {0} ? -9999 : muons[{0}].segmentCompatibility()'.format(i))
 
+    # Leaf('mu{}_ismvasel'.format(i), 'i',
+    #      'result = len(muons) <= {0} ? 0 : muons[{0}].mva() >= superslim::id::Loose'.format(i))
+
 for i in range(2):
     Leaf('ele{}_pdgID'.format(i), 'f',
          'result = len(electrons) <= {0} ? -9999 : electrons[{0}].pdgId()'.format(i))
@@ -149,6 +152,9 @@ for i in range(2):
          'result = len(electrons) <= {0} ? -9999 : electrons[{0}].mvaRaw()'.format(i))
     Leaf('ele{}_eleMVA'.format(i), 'f',
          'result = len(electrons) <= {0} ? -9999 : electrons[{0}].nonTriggeringId()'.format(i))
+
+    # Leaf('ele{}_ismvasel'.format(i), 'i',
+    #      'result = len(electrons) <= {0} ? 0 : electrons[{0}].mva() >= superslim::id::Loose'.format(i))
 
 for i in range(2):
     Leaf('tau{}_pt'.format(i), 'f',
