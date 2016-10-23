@@ -47,12 +47,27 @@ Leaf('tau_eta', '[f]', return_list.format('taus', 'p4().Eta()'))
 Leaf('tau_isoMVA03', '[f]', return_list.format('taus', 'isolationMVA03()'))
 Leaf('tau_genjet_pt', '[f]', return_list.format('taus', 'genJetP4().Pt()'))
 Leaf('tau_genjet_eta', '[f]', return_list.format('taus', 'genJetP4().Eta()'))
-Leaf('tau_genjetcharged_pt', '[f]', return_list.format('taus', 'genJetChargedP4().Pt()'))
-Leaf('tau_genjetcharged_eta', '[f]', return_list.format('taus', 'genJetChargedP4().Eta()'))
+Leaf('tau_genjet_chargedpt', '[f]', return_list.format('taus', 'genJetChargedP4().Pt()'))
+Leaf('tau_genjet_chargedeta', '[f]', return_list.format('taus', 'genJetChargedP4().Eta()'))
+
+Leaf('tau_genjet_closestpt', '[f]', """
+     for (const auto& tau: taus) {
+         auto j = tau.genJet().closestGenJet();
+         if (j) result.push_back(j->pt());
+         else result.push_back(-666.);
+     }
+     """)
+Leaf('tau_genjet_closestdr', '[f]', """
+     for (const auto& tau: taus) {
+         auto j = tau.genJet().closestGenJet();
+         if (j) result.push_back(dR(j->p4(), tau.genJet().p4()));
+         else result.push_back(-666.);
+     }
+     """)
 
 Leaf('tau_match', '[f]', return_list.format('taus', 'match()'))
 Leaf('tau_genjet_constituents', '[f]', return_list.format('taus', 'genJetConstituents()'))
-Leaf('tau_genjetcharged_constituents', '[f]', return_list.format('taus', 'genJetChargedConstituents()'))
+Leaf('tau_genjet_chargedconstituents', '[f]', return_list.format('taus', 'genJetChargedConstituents()'))
 
 Leaf('tau_pjet', '[f]', map_list.format('taus', 'fakeable::pjet'))
 Leaf('tau_pfake', '[f]', map_list.format('taus', 'fakeable::pfake'))
@@ -65,3 +80,18 @@ Leaf('genjet_chargedconstituents', '[i]', return_list.format('event.genJets()', 
 
 Leaf('genjet_pjet', '[f]', map_list.format('event.genJets()', 'fakeable::pjet'))
 Leaf('genjet_pfake', '[f]', map_list.format('event.genJets()', 'fakeable::pfake'))
+
+Leaf('genjet_closestpt', '[f]', """
+     for (const auto& jet: event.genJets()) {
+         auto j = jet.closestGenJet();
+         if (j) result.push_back(j->pt());
+         else result.push_back(-666.);
+     }
+     """)
+Leaf('genjet_closestdr', '[f]', """
+     for (const auto& jet: event.genJets()) {
+         auto j = jet.closestGenJet();
+         if (j) result.push_back(dR(j->p4(), jet.p4()));
+         else result.push_back(-666.);
+     }
+     """)

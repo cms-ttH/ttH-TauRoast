@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import math
 import matplotlib.pyplot as plt
 # import pandas as pd
 import numpy as np
@@ -23,11 +24,11 @@ for ax in fig.get_axes():
     ax.set_yscale('log', nonposy='clip')
 plt.savefig('jetfakes_numbers.png')
 
-taus_in = 'pt eta isoMVA03 genjet_pt genjet_eta genjetcharged_pt genjetcharged_eta match genjet_constituents genjetcharged_constituents pfake pjet'
+taus_in = 'pt eta isoMVA03 genjet_pt genjet_eta genjet_chargedpt genjet_chargedeta match genjet_constituents genjet_chargedconstituents genjet_closestpt genjet_closestdr pfake pjet'
 taus_in = ['tau_' + v for v in taus_in.split()]
 taus = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=taus_in, flatten=True)
 
-gen_in = 'chargedconstituents constituents chargedpt pt eta pjet pfake'
+gen_in = 'chargedconstituents constituents chargedpt pt eta pjet pfake closestpt closestdr'
 gen_in = ['genjet_' + v for v in gen_in.split()]
 jets = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=gen_in, flatten=True)
 
@@ -45,11 +46,11 @@ with open('src/FakeData.frag', 'w') as dumpf:
 
     bins, edges = np.histogram(selection.tau_genjet_pt, bins=pt_binning, density=True)
     dump("fake_pt", bins, edges)
-    bins, edges = np.histogram(selection.tau_genjetcharged_pt, bins=pt_binning, density=True)
+    bins, edges = np.histogram(selection.tau_genjet_chargedpt, bins=pt_binning, density=True)
     dump("fake_charged_pt", bins, edges)
     bins, edges = np.histogram(selection.tau_genjet_constituents, bins=const_binning, density=True)
     dump("fake_constituents", bins, edges)
-    bins, edges = np.histogram(selection.tau_genjetcharged_constituents, bins=const_binning, density=True)
+    bins, edges = np.histogram(selection.tau_genjet_chargedconstituents, bins=const_binning, density=True)
     dump("fake_charged_constituents", bins, edges)
 
     bins, edges = np.histogram(jets.genjet_pt, bins=pt_binning, density=True)
@@ -62,29 +63,21 @@ with open('src/FakeData.frag', 'w') as dumpf:
     dump("jet_charged_constituents", bins, edges)
 
 labels = ['genjets', u'genjet fakes']
-nbins = range(0, 201, 10)
+pspace = [
+    ('pt', range(0, 201, 10)),
+    ('chargedpt', range(0, 201, 10)),
+    ('constituents', range(0, 31, 1)),
+    ('chargedconstituents', range(0, 31, 1)),
+    ('closestpt', range(0, 201, 10)),
+    ('closestdr', np.array(range(21)) * 0.1 * math.pi)
+]
 
-fig = plt.figure()
-n, bins, patches = plt.hist([jets.genjet_pt, selection.tau_genjet_pt], bins=nbins, normed=1)
-plt.legend(patches, labels)
-plt.savefig('jetfakes_genjet_pt.png')
-
-fig = plt.figure()
-n, bins, patches = plt.hist([jets.genjet_chargedpt, selection.tau_genjetcharged_pt], bins=nbins, normed=1)
-plt.legend(patches, labels)
-plt.savefig('jetfakes_genjet_chargedpt.png')
-
-nbins = range(0, 31, 1)
-
-fig = plt.figure()
-n, bins, patches = plt.hist([jets.genjet_constituents, selection.tau_genjet_constituents], bins=nbins, normed=1)
-plt.legend(patches, labels)
-plt.savefig('jetfakes_genjet_constituents.png')
-
-fig = plt.figure()
-n, bins, patches = plt.hist([jets.genjet_chargedconstituents, selection.tau_genjetcharged_constituents], bins=nbins, normed=1)
-plt.legend(patches, labels)
-plt.savefig('jetfakes_genjet_chargedconstituents.png')
+for name, nbins in pspace:
+    print 'Processing', name
+    fig = plt.figure()
+    n, bins, patches = plt.hist([jets['genjet_' + name], selection['tau_genjet_' + name]], bins=nbins, normed=1)
+    plt.legend(patches, labels)
+    plt.savefig('jetfakes_genjet_{}.png'.format(name))
 
 # Probability for fakes/jet
 
@@ -99,8 +92,6 @@ fig = plt.figure()
 n, bins, patches = plt.hist([jets.genjet_pjet, selection.tau_pjet], bins=nbins, normed=1)
 plt.legend(patches, labels)
 plt.savefig('jetfakes_genjet_pjet.png')
-
-print jets.genjet_pfake / jets.genjet_pjet
 
 nbins = range(0, 30, 3)
 
@@ -118,7 +109,7 @@ plt.ylabel('genjet charged constituents')
 plt.savefig('genjet_chargedpt_vs_chargedconstituents.png')
 
 fig = plt.figure()
-plt.hist2d(selection.tau_genjetcharged_pt, selection.tau_genjetcharged_constituents, bins=nbins)
+plt.hist2d(selection.tau_genjet_chargedpt, selection.tau_genjet_chargedconstituents, bins=nbins)
 plt.xlabel('fake tau charged pt')
 plt.ylabel('fake tau charged constituents')
 plt.savefig('faketau_chargedpt_vs_chargedconstituents.png')

@@ -334,6 +334,8 @@ namespace superslim {
          float rawIsolationMVA03() const { return raw_isolation_mva03_; };
          float rawIsolationMVA05() const { return raw_isolation_mva05_; };
 
+         const superslim::GenJet& genJet() const { return gen_jet_; };
+
          LorentzVector genVisibleP4() const { return gen_vis_p_; };
          LorentzVector genJetP4() const { return gen_jet_.p4(); };
          LorentzVector genJetChargedP4() const { return gen_jet_.chargedP4(); };
