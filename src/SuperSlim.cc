@@ -47,17 +47,54 @@ namespace superslim {
       constituents_ = other.constituents();
       charged_constituents_ = other.chargedConstituents();
 
+      auto p = other.closestGenParticle();
+      if (p)
+         closest_particle_ = new GenObject(*p);
+      else
+         closest_particle_ = 0;
+
       auto j = other.closestGenJet();
       if (j)
-         closest_ = new GenJet(*j);
+         closest_jet_ = new GenJet(*j);
       else
-         closest_ = 0;
+         closest_jet_ = 0;
+   }
+
+   GenJet::~GenJet()
+   {
+      if (closest_particle_)
+         delete closest_particle_;
+      if (closest_jet_)
+         delete closest_jet_;
+   }
+
+   void
+   GenJet::findClosestGenParticle(const reco::GenParticleCollection& particles)
+   {
+      assert(closest_particle_ == 0);
+
+      const std::vector<int> allowed{11, 13};
+      std::vector<std::pair<float, const reco::GenParticle*>> ps;
+      for (const auto& p: particles) {
+         auto dR = deltaR(p4(), p.p4());
+         if (dR > 0.0001
+               and std::find(allowed.begin(), allowed.end(), abs(p.pdgId())) != allowed.end()
+               and (p.statusFlags().isPrompt() or
+                  p.isPromptFinalState() or
+                  p.statusFlags().isDirectPromptTauDecayProduct() or
+                  p.isDirectPromptTauDecayProductFinalState()))
+            ps.push_back(std::make_pair(dR, &p));
+      }
+      std::sort(std::begin(ps), std::end(ps), [](const auto& a, const auto& b) { return a.first < b.first; });
+
+      if (ps.size() > 0)
+         closest_particle_ = new GenObject(*(ps[0].second));
    }
 
    void
    GenJet::findClosestGenJet(const reco::GenJetCollection& jets)
    {
-      assert(closest_ == 0);
+      assert(closest_jet_ == 0);
 
       std::vector<std::pair<float, const reco::GenJet*>> js;
       for (const auto& j: jets) {
@@ -68,7 +105,7 @@ namespace superslim {
       std::sort(std::begin(js), std::end(js), [](const auto& a, const auto& b) { return a.first < b.first; });
 
       if (js.size() > 0)
-         closest_ = new GenJet(*(js[0].second));
+         closest_jet_ = new GenJet(*(js[0].second));
    }
 
    const reco::Candidate *
@@ -357,6 +394,7 @@ namespace superslim {
          if (js.size() > 0 and js[0].first < .4) {
             gen_jet_ = GenJet(*(js[0].second));
             gen_jet_.findClosestGenJet(jets);
+            gen_jet_.findClosestGenParticle(particles);
          }
       }
 

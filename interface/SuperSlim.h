@@ -123,15 +123,16 @@ namespace superslim {
 
    class GenJet : public GenObject {
       public:
-         GenJet() : GenObject(), closest_(0) {};
+         GenJet() : GenObject(), closest_particle_(0), closest_jet_(0) {};
          GenJet(const GenJet& other);
-         virtual ~GenJet() { if (closest_) delete closest_; };
+         virtual ~GenJet();
 
          template<typename T>
          GenJet(const T& j) :
             GenObject(j),
             constituents_(j.numberOfDaughters()),
-            closest_(0)
+            closest_particle_(0),
+            closest_jet_(0)
          {
             for (unsigned i = 0; i < j.numberOfDaughters(); ++i) {
                auto cand = j.daughterPtr(i);
@@ -146,15 +147,19 @@ namespace superslim {
          int constituents() const { return constituents_; };
          int chargedConstituents() const { return charged_constituents_; };
 
-         const GenJet* closestGenJet() const { return closest_; };
+         const GenJet* closestGenJet() const { return closest_jet_; };
          void findClosestGenJet(const reco::GenJetCollection& jets);
+
+         const GenObject* closestGenParticle() const { return closest_particle_; };
+         void findClosestGenParticle(const reco::GenParticleCollection& particles);
 
       private:
          LorentzVector charged_p_;
          int constituents_ = 0;
          int charged_constituents_ = 0;
 
-         GenJet* closest_ = 0;
+         GenObject* closest_particle_ = 0;
+         GenJet* closest_jet_ = 0;
    };
 
    class PhysObject : public GenObject {

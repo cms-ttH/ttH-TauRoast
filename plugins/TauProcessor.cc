@@ -618,6 +618,7 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
          for (const auto& j: genjets) {
             gjets.push_back(j);
             gjets.back().findClosestGenJet(genjets);
+            gjets.back().findClosestGenParticle(particles);
          }
 
          std::vector<superslim::GenObject> gparticles;
