@@ -4,26 +4,31 @@ import ROOT as r
 
 from root_pandas import read_root
 
-taus_in = 'pt eta isoMVA03 genjet_pt genjet_eta genjetcharged_pt genjetcharged_eta match genjet_constituents genjetcharged_constituents pfake pjet'
+taus_in = 'pt eta isoMVA03 genjet_pt genjet_eta genjet_chargedpt genjet_chargedeta match genjet_constituents genjet_chargedconstituents pfake pjet genjet_closestpt genjet_closestdr'
 taus_in = ['tau_' + v for v in taus_in.split()]
 taus = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=taus_in, flatten=True)
 
 fakes = taus[(taus.tau_match == 6)]
 selection = taus[(taus.tau_match == 6) & (taus.tau_isoMVA03 >= 5) & (taus.tau_pt >= 20.)]
 
-gen_in = 'chargedconstituents constituents chargedpt pt eta pjet pfake'
+gen_in = 'chargedconstituents constituents chargedpt pt eta pjet pfake closestdr closestpt'
 gen_in = ['genjet_' + v for v in gen_in.split()]
-jets = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=gen_in, flatten=True)
+alljets = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=gen_in, flatten=True)
+jets = alljets[(alljets.genjet_pt > 18) & (alljets.genjet_eta > -2.5) & (alljets.genjet_eta < 2.5)]
 
 selection['pt'] = selection.tau_genjet_pt
-selection['chargedPt'] = selection.tau_genjetcharged_pt
+selection['chargedPt'] = selection.tau_genjet_chargedpt
 selection['constituents'] = selection.tau_genjet_constituents
-selection['chargedConstituents'] = selection.tau_genjetcharged_constituents
+selection['chargedConstituents'] = selection.tau_genjet_chargedconstituents
+selection['closestPt'] = selection.tau_genjet_closestpt
+selection['closestDr'] = selection.tau_genjet_closestdr
 
 jets['pt'] = jets.genjet_pt
 jets['chargedPt'] = jets.genjet_chargedpt
 jets['constituents'] = jets.genjet_constituents
 jets['chargedConstituents'] = jets.genjet_chargedconstituents
+jets['closestPt'] = jets.genjet_closestpt
+jets['closestDr'] = jets.genjet_closestdr
 
 selection.to_root("test/genfaketau/out/train.root", "signal", "w")
 jets.to_root("test/genfaketau/out/train.root", "background", "a")
@@ -39,17 +44,23 @@ factory.AddVariable("pt", "f")
 factory.AddVariable("chargedPt", "f")
 factory.AddVariable("constituents", "i")
 factory.AddVariable("chargedConstituents", "i")
+factory.AddVariable("closestPt", "f")
+factory.AddVariable("closestDr", "f")
 
 factory.AddSignalTree(infile.Get("signal"))
 factory.AddBackgroundTree(infile.Get("background"))
 
 factory.PrepareTrainingAndTestTree(r.TCut(), "SplitMode=Random:NormMode=NumEvents:!V")
 
-factory.BookMethod(
+result = factory.BookMethod(
     r.TMVA.Types.kBDT,
     "BDTG",
-    "!H:!V:NTrees=1000:BoostType=Grad:Shrinkage=0.10:UseBaggedGrad:GradBaggingFraction=0.5:nCuts=20:NNodesMax=5"
+    "!H:!V:NTrees=1000:BoostType=Grad:Shrinkage=0.10:UseBaggedBoost:GradBaggingFraction=0.5:nCuts=20:MaxDepth=2"
 )
+
+factory.TrainAllMethods()
+factory.TestAllMethods()
+factory.EvaluateAllMethods()
 
 # From https://dbaumgartel.wordpress.com/tag/tmva/
 
@@ -105,6 +116,8 @@ Histo_testing_B.SetMarkerStyle(20)
 # Set titles
 Histo_training_S.GetXaxis().SetTitle("Classifier, BDT")
 Histo_training_S.GetYaxis().SetTitle("Counts/Bin")
+
+r.gROOT.SetBatch()
 
 # Draw the objects
 c1 = r.TCanvas("c1", "", 800, 600)
