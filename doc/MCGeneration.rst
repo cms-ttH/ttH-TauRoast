@@ -17,7 +17,7 @@ script like this::
     #!/bin/bash
     source  /afs/cern.ch/cms/cmsset_default.sh
     export SCRAM_ARCH=slc6_amd64_gcc481
-    if [ -r CMSSW_7_1_25/src ] ; then 
+    if [ -r CMSSW_7_1_25/src ] ; then
      echo release CMSSW_7_1_25 already exists
     else
     scram p CMSSW CMSSW_7_1_25
@@ -26,7 +26,7 @@ script like this::
     eval `scram runtime -sh`
 
     export X509_USER_PROXY=$HOME/private/personal/voms_proxy.cert
-    curl -s --insecure https://cms-pdmv.cern.ch/mcm/public/restapi/requests/get_fragment/HIG-RunIISummer15wmLHEGS-00482 --retry 2 --create-dirs -o Configuration/GenProduction/python/HIG-RunIISummer15wmLHEGS-00482-fragment.py 
+    curl -s --insecure https://cms-pdmv.cern.ch/mcm/public/restapi/requests/get_fragment/HIG-RunIISummer15wmLHEGS-00482 --retry 2 --create-dirs -o Configuration/GenProduction/python/HIG-RunIISummer15wmLHEGS-00482-fragment.py
     [ -s Configuration/GenProduction/python/HIG-RunIISummer15wmLHEGS-00482-fragment.py ] || exit $?;
 
     scram b
@@ -89,6 +89,6 @@ Note the following from the `FastSim TWiki`_ about `runTheMatrix.py` workflows:
 
       * remove ,EI,VALIDATION from the -s option
       * replace --eventcontent RECOSIM,DQM with --eventcontent AODSIM
-      * replace --datatier GEN-SIM-DIGI-RECO,DQMIO with --datatier AODSIM 
+      * replace --datatier GEN-SIM-DIGI-RECO,DQMIO with --datatier AODSIM
 
 .. _FastSim TWiki: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideFastSimulationExamples
