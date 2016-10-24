@@ -71,3 +71,21 @@ And for the `MiniAOD` step (note again the used release, which is equivalent to 
     --step PAT --era Run2_2016 \
     --python_filename HIG-RunIISpring16MiniAODv2-02983_1_cfg.py --no_exec \
     --customise Configuration/DataProcessing/Utils.addMonitoring -n 960 || exit $? ;
+
+Setup for FastSim
+-----------------
+
+Note the following from the `FastSim TWiki`_ about `runTheMatrix.py` workflows:
+
+    FullSim:
+
+    * do not run harvesting (the 4th command printed by runTheMatrix.py)
+    * do not run the ALCA step (the 5th command printed by runTheMatrix.py)
+    * in the 2nd command printed by runTheMatrix.py
+      *  replace the DIGI:pdigi_valid with DIGI (do not produce the truth collection 'trackingParticles')
+    * in the 3rd command
+      * remove ,EI,VALIDATION from the -s option
+      * replace --eventcontent RECOSIM,DQM with --eventcontent AODSIM
+      * replace --datatier GEN-SIM-DIGI-RECO,DQMIO with --datatier AODSIM 
+
+.. _FastSim TWiki: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideFastSimulationExamples
