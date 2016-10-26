@@ -9,8 +9,6 @@ cmsDriver.py Configuration/GenProduction/python/HIG-RunIISummer15wmLHEGS-00482-f
    --step LHE,GEN,SIM --magField 38T_PostLS1 \
    --python_filename HIG-RunIISummer15wmLHEGS-00482_1_cfg_full.py --no_exec -n 50
 
-cmsRun HIG-RunIISummer15wmLHEGS-00482_1_cfg_full.py
-
 cd CMSSW_8_0_14/src
 eval `scram runtime -sh`
 cd ../..
@@ -24,8 +22,6 @@ cmsDriver.py step1 \
    --python_filename HIG-RunIISpring16DR80-01830_1_cfg_full.py --no_exec \
    --customise Configuration/DataProcessing/Utils.addMonitoring -n 960
 
-cmsRun HIG-RunIISpring16DR80-01830_1_cfg_full.py
-
 cmsDriver.py step2 \
    --filein file:HIG-RunIISpring16DR80-01830_step1_full.root \
    --fileout file:HIG-RunIISpring16MiniAODv2-02983_full.root \
@@ -34,5 +30,3 @@ cmsDriver.py step2 \
    --step RAW2DIGI,RECO,PAT --nThreads 4 --era Run2_2016 \
    --python_filename HIG-RunIISpring16MiniAODv2-02983_1_cfg_full.py --no_exec \
    --customise Configuration/DataProcessing/Utils.addMonitoring -n 960 || exit $? ;
-
-cmsRun HIG-RunIISpring16MiniAODv2-02983_1_cfg_full.py
