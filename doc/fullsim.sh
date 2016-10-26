@@ -1,4 +1,7 @@
+scram p CMSSW CMSSW_7_1_25
 cd CMSSW_7_1_25/src
+curl -s --insecure https://cms-pdmv.cern.ch/mcm/public/restapi/requests/get_fragment/HIG-RunIISummer15wmLHEGS-00482 --retry 2 --create-dirs -o Configuration/GenProduction/python/HIG-RunIISummer15wmLHEGS-00482-fragment.py
+scram b
 eval `scram runtime -sh`
 cd ../..
 cmsDriver.py Configuration/GenProduction/python/HIG-RunIISummer15wmLHEGS-00482-fragment.py \
@@ -9,8 +12,10 @@ cmsDriver.py Configuration/GenProduction/python/HIG-RunIISummer15wmLHEGS-00482-f
    --step LHE,GEN,SIM --magField 38T_PostLS1 \
    --python_filename HIG-RunIISummer15wmLHEGS-00482_1_cfg_full.py --no_exec -n 50
 
+scram p CMSSW CMSSW_8_0_14
 cd CMSSW_8_0_14/src
 eval `scram runtime -sh`
+scram b
 cd ../..
 
 cmsDriver.py step1 \
