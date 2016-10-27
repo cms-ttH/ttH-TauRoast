@@ -18,6 +18,10 @@ options.register("channels", "",
                  VarParsing.VarParsing.multiplicity.list,
                  VarParsing.VarParsing.varType.string,
                  "Which channel(s) to run")
+options.register("events", "",
+                 VarParsing.VarParsing.multiplicity.list,
+                 VarParsing.VarParsing.varType.string,
+                 "Selected events to run over")
 options.register("takeAll", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
@@ -66,8 +70,10 @@ process.GlobalTag.globaltag = options.globalTag
 process.source = cms.Source(
     "PoolSource",
     fileNames=cms.untracked.vstring(options.inputFiles),
-    # eventsToProcess=cms.untracked.VEventRange('1:13410637')
 )
+
+if len(options.events) > 0:
+    process.source.eventsToProcess = cms.untracked.VEventRange(options.events)
 
 process.patJetCorrFactorsReapplyJEC = updatedPatJetCorrFactors.clone(
     src=cms.InputTag("slimmedJets"),
