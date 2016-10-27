@@ -7,6 +7,10 @@ options.register("globalTag", "80X_mcRun2_asymptotic_2016_miniAODv2_v1",
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.string,
                  "Global tag to use")
+options.register("events", "",
+                 VarParsing.VarParsing.multiplicity.list,
+                 VarParsing.VarParsing.varType.string,
+                 "Selected events to run over")
 options.parseArguments()
 
 process = cms.Process("Filter")
@@ -29,6 +33,9 @@ process.source = cms.Source(
     "PoolSource",
     fileNames=cms.untracked.vstring(options.inputFiles)
 )
+
+if len(options.events) > 0:
+    process.source.eventsToProcess = cms.untracked.VEventRange(options.events)
 
 process.njets = cms.EDFilter(
     "GenJetFilter",
