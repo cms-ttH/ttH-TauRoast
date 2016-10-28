@@ -13,7 +13,7 @@ def customizeForGenFiltering(process):
         jetEta=cms.double(2.7),
         tauPt=cms.double(18),
         tauEta=cms.double(2.7),
-        useFakes=cms.bool(False),
+        useFakeTaus=cms.bool(False),
         fakeCut=cms.double(-0.155),
         minLeptons=cms.int32(1),
         minJets=cms.int32(3),
