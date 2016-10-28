@@ -107,7 +107,7 @@ GenEventFilter::GenEventFilter(const edm::ParameterSet& config) :
    jet_eta_(config.getParameter<double>("jetEta")),
    tau_pt_(config.getParameter<double>("tauPt")),
    tau_eta_(config.getParameter<double>("tauEta")),
-   use_fakes_(config.getParameter<double>("useFakeTaus")),
+   use_fakes_(config.getParameter<bool>("useFakeTaus")),
    fake_cut_(config.getParameter<double>("fakeCut")),
    lepton_count_(config.getParameter<int>("minLeptons")),
    jet_count_(config.getParameter<int>("minJets")),
