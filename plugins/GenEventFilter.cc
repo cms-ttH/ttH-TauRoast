@@ -71,6 +71,7 @@ class GenEventFilter : public edm::EDFilter {
       double tau_pt_;
       double tau_eta_;
 
+      bool use_fakes_;
       double fake_cut_;
 
       int lepton_count_;
@@ -106,6 +107,7 @@ GenEventFilter::GenEventFilter(const edm::ParameterSet& config) :
    jet_eta_(config.getParameter<double>("jetEta")),
    tau_pt_(config.getParameter<double>("tauPt")),
    tau_eta_(config.getParameter<double>("tauEta")),
+   use_fakes_(config.getParameter<double>("useFakeTaus")),
    fake_cut_(config.getParameter<double>("fakeCut")),
    lepton_count_(config.getParameter<int>("minLeptons")),
    jet_count_(config.getParameter<int>("minJets")),
@@ -217,8 +219,9 @@ GenEventFilter::filter(edm::Event& event, const edm::EventSetup& setup)
    jets = std::count_if(std::begin(*genjets), std::end(*genjets),
          [&](const auto& j) { return j.pt() > jet_pt_ and abs(j.eta()) < jet_eta_; });
 
-   taus += std::count_if(std::begin(*genjets), std::end(*genjets),
-         [&](const auto& j) { return this->isFake(j); });
+   if (use_fakes_)
+      taus += std::count_if(std::begin(*genjets), std::end(*genjets),
+            [&](const auto& j) { return this->isFake(j); });
 
    return (
          leptons + jets + taus >= total_count_ and
