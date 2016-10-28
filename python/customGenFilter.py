@@ -4,8 +4,8 @@ import FWCore.ParameterSet.Config as cms
 def customizeForGenFiltering(process):
     process.ttHGenFilter = cms.EDFilter(
         "GenEventFilter",
-        genParticles=cms.InputTag('prunedGenParticles'),
-        genJets=cms.InputTag('slimmedGenJets'),
+        genParticles=cms.InputTag('genParticles'),
+        genJets=cms.InputTag('ak4GenJetsNoNu'),
         leptonID=cms.vint32(11, 13),
         leptonPt=cms.vdouble(25, 20),
         leptonEta=cms.vdouble(2.7, 2.7),
