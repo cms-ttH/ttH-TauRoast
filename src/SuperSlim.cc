@@ -132,14 +132,18 @@ namespace superslim {
    {
       static const auto veto = {11, 12, 13, 14, 16};
 
-      typedef std::pair<double, const reco::GenParticle*> Match;
+      typedef std::tuple<double, int, const reco::GenParticle*> Match;
       std::vector<Match> cands;
 
       for (auto& p: coll) {
          reco::Candidate::LorentzVector p4;
          if (abs(p.pdgId()) == 15) {
+            if (not p.statusFlags().isPrompt())
+               continue;
+            if (p.pt() < 15)
+               continue;
             for (unsigned int i = 0; i < p.numberOfDaughters(); ++i) {
-               auto d = getFinal(p.daughter(i));
+               auto d = p.daughter(i);
                if (std::find(veto.begin(), veto.end(), abs(d->pdgId())) != veto.end())
                   continue;
                p4 += d->p4();
@@ -147,28 +151,43 @@ namespace superslim {
          } else {
             p4 = p.p4();
          }
+
          auto dR = deltaR(p4, c.p4());
          if (dR > 0.2)
             continue;
 
+         if (abs(p.pdgId()) == 11 or abs(p.pdgId()) == 13) {
+            if (p.pt() < 8)
+               continue;
+            if (not (p.statusFlags().isPrompt() or p.statusFlags().isDirectPromptTauDecayProduct()))
+               continue;
+         }
+
+         int match;
          if (abs(p.pdgId()) == 11 and p.statusFlags().isPrompt())
-            match_ = 1;
-         else if (abs(p.pdgId()) == 13 and p.isPromptFinalState())
-            match_ = 2;
+            match = 1;
+         else if (abs(p.pdgId()) == 13 and p.statusFlags().isPrompt())
+            match = 2;
          else if (abs(p.pdgId()) == 11 and p.statusFlags().isDirectPromptTauDecayProduct())
-            match_ = 3;
-         else if (abs(p.pdgId()) == 13 and p.isDirectPromptTauDecayProductFinalState())
-            match_ = 4;
+            match = 3;
+         else if (abs(p.pdgId()) == 13 and p.statusFlags().isDirectPromptTauDecayProduct())
+            match = 4;
          else if (abs(p.pdgId()) == 15)
-            match_ = 5;
+            match = 5;
          else
             continue;
 
-         cands.push_back(std::make_pair(dR, &p));
+         cands.push_back(std::make_tuple(dR, match, &p));
       }
-      auto min = std::min_element(cands.begin(), cands.end(), [](const Match& a, const Match& b) { return a.first < b.first; });
-      if (min != cands.end() and min->first < 0.5)
-         return min->second;
+
+      auto min = std::min_element(cands.begin(), cands.end(), [](const Match& a, const Match& b) { return std::get<0>(a) < std::get<0>(b); });
+      if (min != cands.end()) {
+         match_ = std::get<1>(*min);
+         return std::get<2>(*min);
+      }
+
+      // default
+      match_ = 6;
       return 0;
    }
 
