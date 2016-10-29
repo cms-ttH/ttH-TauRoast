@@ -24,11 +24,11 @@ for ax in fig.get_axes():
     ax.set_yscale('log', nonposy='clip')
 plt.savefig('jetfakes_numbers.png')
 
-taus_in = 'pt eta isoMVA03 genjet_pt genjet_eta genjet_chargedpt genjet_chargedeta match genjet_constituents genjet_chargedconstituents genjet_closestpt genjet_closestdr pfake pjet'
+taus_in = 'pt eta isoMVA03 genjet_pt genjet_eta genjet_chargedpt genjet_chargedeta match genjet_constituents genjet_chargedconstituents genjet_neutralconstituents genjet_closestpt genjet_closestdr pfake pjet'
 taus_in = ['tau_' + v for v in taus_in.split()]
 taus = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=taus_in, flatten=True)
 
-gen_in = 'chargedconstituents constituents chargedpt pt eta pjet pfake closestpt closestdr'
+gen_in = 'chargedconstituents neutralconstituents constituents chargedpt pt eta pjet pfake closestpt closestdr'
 gen_in = ['genjet_' + v for v in gen_in.split()]
 alljets = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=gen_in, flatten=True)
 jets = alljets[(alljets.genjet_pt > 18) & (alljets.genjet_eta > -2.5) & (alljets.genjet_eta < 2.5)]
@@ -70,6 +70,7 @@ pspace = [
     ('chargedpt', range(0, 201, 5)),
     ('constituents', range(0, 31, 1)),
     ('chargedconstituents', range(0, 31, 1)),
+    ('neutralconstituents', range(0, 31, 1)),
     ('closestpt', range(0, 201, 5)),
     ('closestdr', np.array(range(41)) * 0.05 * math.pi)
 ]

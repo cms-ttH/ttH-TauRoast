@@ -68,6 +68,11 @@ Leaf('tau_genjet_closestdr', '[f]', """
 Leaf('tau_match', '[f]', return_list.format('taus', 'match()'))
 Leaf('tau_genjet_constituents', '[f]', return_list.format('taus', 'genJetConstituents()'))
 Leaf('tau_genjet_chargedconstituents', '[f]', return_list.format('taus', 'genJetChargedConstituents()'))
+Leaf('tau_genjet_neutralconstituents', '[f]', """
+     for (const auto& tau: taus) {
+         result.push_back(tau.genJetConstituents() - tau.genJetChargedConstituents());
+     }
+     """)
 
 Leaf('tau_pjet', '[f]', map_list.format('taus', 'fakeable::pjet'))
 Leaf('tau_pfake', '[f]', map_list.format('taus', 'fakeable::pfake'))
@@ -77,6 +82,11 @@ Leaf('genjet_eta', '[f]', return_list.format('event.genJets()', 'p4().Eta()'))
 Leaf('genjet_constituents', '[i]', return_list.format('event.genJets()', 'constituents()'))
 Leaf('genjet_chargedpt', '[f]', return_list.format('event.genJets()', 'chargedP4().Pt()'))
 Leaf('genjet_chargedconstituents', '[i]', return_list.format('event.genJets()', 'chargedConstituents()'))
+Leaf('genjet_neutralconstituents', '[f]', """
+     for (const auto& jet: event.genJets()) {
+         result.push_back(jet.constituents() - jet.chargedConstituents());
+     }
+     """)
 
 Leaf('genjet_pjet', '[f]', map_list.format('event.genJets()', 'fakeable::pjet'))
 Leaf('genjet_pfake', '[f]', map_list.format('event.genJets()', 'fakeable::pfake'))
