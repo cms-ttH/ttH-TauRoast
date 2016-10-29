@@ -191,7 +191,7 @@ namespace superslim {
          float dz() const { return dz_; };
          float dR(const superslim::PhysObject& o) const { return reco::deltaR(*this, o); };
          int genPdgId() const { return gen_pdg_id_; };
-         // As per https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2015#MC_Matching
+         // As per https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2016#MC_Matching
          // 1: prompt e
          // 2: prompt μ
          // 3: τ → e
