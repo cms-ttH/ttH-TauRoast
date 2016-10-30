@@ -4,31 +4,29 @@ import ROOT as r
 
 from root_pandas import read_root
 
-taus_in = 'pt eta isoMVA03 genjet_pt genjet_eta genjet_chargedpt genjet_chargedeta match genjet_constituents genjet_chargedconstituents pfake pjet genjet_closestpt genjet_closestdr'
-taus_in = ['tau_' + v for v in taus_in.split()]
+quants = 'eta pt chargedPt constituents chargedConstituents closestPt closestDr'.split()
+quants += 'signalPt signalChargedPt signalConstituents signalChargedConstituents'.split()
+quants += 'isoPt isoChargedPt isoConstituents isoChargedConstituents'.split()
+
+taus_in = ['genjet_' + q.lower() for q in quants] + ['isoMVA03', 'match', 'pt']
+taus_in = ['tau_' + v for v in taus_in]
 taus = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=taus_in, flatten=True)
 
 fakes = taus[(taus.tau_match == 6)]
 selection = taus[(taus.tau_match == 6) & (taus.tau_isoMVA03 >= 5) & (taus.tau_pt >= 20.)]
 
-gen_in = 'chargedconstituents constituents chargedpt pt eta pjet pfake closestdr closestpt'
-gen_in = ['genjet_' + v for v in gen_in.split()]
+gen_in = [q.lower() for q in quants]
+gen_in = ['genjet_' + v for v in gen_in]
 alljets = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=gen_in, flatten=True)
 jets = alljets[(alljets.genjet_pt > 18) & (alljets.genjet_eta > -2.5) & (alljets.genjet_eta < 2.5)]
 
-selection['pt'] = selection.tau_genjet_pt
-selection['chargedPt'] = selection.tau_genjet_chargedpt
-selection['constituents'] = selection.tau_genjet_constituents
-selection['chargedConstituents'] = selection.tau_genjet_chargedconstituents
-selection['closestPt'] = selection.tau_genjet_closestpt
-selection['closestDr'] = selection.tau_genjet_closestdr
+quants = 'pt chargedPt constituents chargedConstituents closestPt closestDr'.split()
+quants += 'signalPt signalChargedPt signalConstituents signalChargedConstituents'.split()
+quants += 'isoPt isoChargedPt isoConstituents isoChargedConstituents'.split()
 
-jets['pt'] = jets.genjet_pt
-jets['chargedPt'] = jets.genjet_chargedpt
-jets['constituents'] = jets.genjet_constituents
-jets['chargedConstituents'] = jets.genjet_chargedconstituents
-jets['closestPt'] = jets.genjet_closestpt
-jets['closestDr'] = jets.genjet_closestdr
+for q in quants:
+    selection[q] = selection['tau_genjet_' + q.lower()]
+    jets[q] = jets['genjet_' + q.lower()]
 
 selection.to_root("test/genfaketau/out/train.root", "signal", "w")
 jets.to_root("test/genfaketau/out/train.root", "background", "a")
@@ -44,8 +42,14 @@ factory.AddVariable("pt", "f")
 factory.AddVariable("chargedPt", "f")
 factory.AddVariable("constituents", "i")
 factory.AddVariable("chargedConstituents", "i")
-factory.AddVariable("closestPt", "f")
-factory.AddVariable("closestDr", "f")
+factory.AddVariable("signalPt", "f")
+factory.AddVariable("signalChargedPt", "f")
+factory.AddVariable("signalConstituents", "i")
+factory.AddVariable("signalChargedConstituents", "i")
+factory.AddVariable("isoPt", "f")
+factory.AddVariable("isoChargedPt", "f")
+factory.AddVariable("isoConstituents", "i")
+factory.AddVariable("isoChargedConstituents", "i")
 
 factory.AddSignalTree(infile.Get("signal"))
 factory.AddBackgroundTree(infile.Get("background"))
