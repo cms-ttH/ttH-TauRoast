@@ -11,7 +11,7 @@ class Leaf(object):
 
     def __init__(self, name, kind, code, final=False):
         if kind.lower() not in ('i', 'f', '[f]', '[i]'):
-            raise NotImplementedError
+            raise NotImplementedError("'{}' is not a valid type".format(kind))
 
         if name in Leaf.__leaves or name in Leaf.__finals:
             raise KeyError("Leaf {0} defined twice".format(name))
