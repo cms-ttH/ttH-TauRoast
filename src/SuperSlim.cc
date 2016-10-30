@@ -195,7 +195,7 @@ namespace superslim {
          }
 
          // parentage requirement: needs to be from Z, W, H
-         auto mother = getMother(p);
+         auto mother = getMother(&p);
          if (not mother)
             continue;
          if (std::find(parents.begin(), parents.end(), abs(mother->pdgId())) == parents.end())
