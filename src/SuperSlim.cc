@@ -127,10 +127,32 @@ namespace superslim {
       return c;
    }
 
+   const reco::Candidate *
+   PhysObject::getMother(const reco::Candidate * c)
+   {
+      auto id = c->pdgId();
+
+      const reco::Candidate *radstate = 0;
+      for (unsigned int i = 0; i < c->numberOfMothers(); ++i) {
+         if (c->mother(i) and c->mother(i)->pdgId() == id) {
+            radstate = c->mother(i);
+            break;
+         }
+      }
+
+      if (radstate)
+         return getMother(radstate);
+
+      if (c->numberOfMothers() > 0)
+         return c->mother(0);
+      return 0
+   }
+
    const reco::GenParticle*
    PhysObject::getMatch(const reco::Candidate& c, const reco::GenParticleCollection& coll)
    {
       static const auto veto = {11, 12, 13, 14, 16};
+      static const auto parents = {23, 24, 25};
 
       typedef std::tuple<double, int, const reco::GenParticle*> Match;
       std::vector<Match> cands;
@@ -144,6 +166,7 @@ namespace superslim {
                continue;
             for (unsigned int i = 0; i < p.numberOfDaughters(); ++i) {
                auto d = p.daughter(i);
+               // only visible particles excluding e, μ
                if (std::find(veto.begin(), veto.end(), abs(d->pdgId())) != veto.end())
                   continue;
                p4 += d->p4();
@@ -156,12 +179,27 @@ namespace superslim {
          if (dR > 0.2)
             continue;
 
+         // pT and status flags requirements
          if (abs(p.pdgId()) == 11 or abs(p.pdgId()) == 13) {
             if (p.pt() < 8)
                continue;
             if (not (p.statusFlags().isPrompt() or p.statusFlags().isDirectPromptTauDecayProduct()))
                continue;
+         } else if (abs(p.pdgId()) == 15) {
+            if (p4.pt() < 15)
+               continue;
+            if (not p.statusFlags().isPrompt())
+               continue;
+         } else {
+            continue;
          }
+
+         // parentage requirement: needs to be from Z, W, H
+         auto mother = getMother(p);
+         if (not mother)
+            continue;
+         if (std::find(parents.begin(), parents.end(), abs(mother->pdgId())) == parents.end())
+            continue;
 
          int match;
          if (abs(p.pdgId()) == 11 and p.statusFlags().isPrompt())

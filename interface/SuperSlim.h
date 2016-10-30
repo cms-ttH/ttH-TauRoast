@@ -202,6 +202,7 @@ namespace superslim {
 
       protected:
          const reco::Candidate* getFinal(const reco::Candidate* c);
+         const reco::Candidate* getMother(const reco::Candidate* c);
          const reco::GenParticle* getMatch(const reco::Candidate& c, const reco::GenParticleCollection& coll);
          void setGenInfo(const reco::GenParticle* p, int level=2);
 
