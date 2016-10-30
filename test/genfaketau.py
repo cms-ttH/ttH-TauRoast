@@ -75,9 +75,9 @@ pspace = [
     ('signalconstituents', range(0, 31, 1)),
     ('isochargedconstituents', range(0, 31, 1)),
     ('signalchargedconstituents', range(0, 31, 1)),
-    ('isopt', range(0, 101, 2)),
+    ('isopt', range(0, 26, 1)),
     ('signalpt', range(0, 101, 2)),
-    ('isochargedpt', range(0, 101, 2)),
+    ('isochargedpt', range(0, 26, 1)),
     ('signalchargedpt', range(0, 101, 2)),
     ('closestpt', range(0, 201, 5)),
     ('closestdr', np.array(range(41)) * 0.05 * math.pi)
