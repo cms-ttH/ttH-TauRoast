@@ -39,13 +39,23 @@ namespace superslim {
 
    GenJet::GenJet(const GenJet& other)
    {
-      p_ = other.p4();
       charge_ = other.charge();
       pdg_id_ = other.pdgId();
 
-      charged_p_ = other.chargedP4();
+      p_ = other.p4();
       constituents_ = other.constituents();
+      charged_p_ = other.chargedP4();
       charged_constituents_ = other.chargedConstituents();
+
+      iso_p_ = other.isoP4();
+      iso_constituents_ = other.isoConstituents();
+      iso_charged_p_ = other.isoChargedP4();
+      iso_charged_constituents_ = other.isoChargedConstituents();
+
+      signal_p_ = other.signalP4();
+      signal_constituents_ = other.signalConstituents();
+      signal_charged_p_ = other.signalChargedP4();
+      signal_charged_constituents_ = other.signalChargedConstituents();
 
       auto p = other.closestGenParticle();
       if (p)

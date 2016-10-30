@@ -50,6 +50,16 @@ Leaf('tau_genjet_eta', '[f]', return_list.format('taus', 'genJetP4().Eta()'))
 Leaf('tau_genjet_chargedpt', '[f]', return_list.format('taus', 'genJetChargedP4().Pt()'))
 Leaf('tau_genjet_chargedeta', '[f]', return_list.format('taus', 'genJetChargedP4().Eta()'))
 
+Leaf('tau_genjet_signalpt', '[f]', return_list.format('taus', 'genJet().signalP4().Pt()'))
+Leaf('tau_genjet_signalconstituents', '[i]', return_list.format('taus', 'genJet().signalConstituents()'))
+Leaf('tau_genjet_signalchargedpt', '[f]', return_list.format('taus', 'genJet().signalChargedP4().Pt()'))
+Leaf('tau_genjet_signalchargedconstituents', '[i]', return_list.format('taus', 'genJet().signalChargedConstituents()'))
+
+Leaf('tau_genjet_isopt', '[f]', return_list.format('taus', 'genJet().isoP4().Pt()'))
+Leaf('tau_genjet_isoconstituents', '[i]', return_list.format('taus', 'genJet().isoConstituents()'))
+Leaf('tau_genjet_isochargedpt', '[f]', return_list.format('taus', 'genJet().isoChargedP4().Pt()'))
+Leaf('tau_genjet_isochargedconstituents', '[i]', return_list.format('taus', 'genJet().isoChargedConstituents()'))
+
 Leaf('tau_genjet_closestpt', '[f]', """
      for (const auto& tau: taus) {
          auto j = tau.genJet().closestGenJet();
@@ -87,6 +97,16 @@ Leaf('genjet_neutralconstituents', '[f]', """
          result.push_back(jet.constituents() - jet.chargedConstituents());
      }
      """)
+
+Leaf('genjet_signalpt', '[f]', return_list.format('event.genJets()', 'signalP4().Pt()'))
+Leaf('genjet_signalconstituents', '[i]', return_list.format('event.genJets()', 'signalConstituents()'))
+Leaf('genjet_signalchargedpt', '[f]', return_list.format('event.genJets()', 'signalChargedP4().Pt()'))
+Leaf('genjet_signalchargedconstituents', '[i]', return_list.format('event.genJets()', 'signalChargedConstituents()'))
+
+Leaf('genjet_isopt', '[f]', return_list.format('event.genJets()', 'isoP4().Pt()'))
+Leaf('genjet_isoconstituents', '[i]', return_list.format('event.genJets()', 'isoConstituents()'))
+Leaf('genjet_isochargedpt', '[f]', return_list.format('event.genJets()', 'isoChargedP4().Pt()'))
+Leaf('genjet_isochargedconstituents', '[i]', return_list.format('event.genJets()', 'isoChargedConstituents()'))
 
 Leaf('genjet_pjet', '[f]', map_list.format('event.genJets()', 'fakeable::pjet'))
 Leaf('genjet_pfake', '[f]', map_list.format('event.genJets()', 'fakeable::pfake'))

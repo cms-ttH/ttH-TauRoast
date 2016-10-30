@@ -24,11 +24,11 @@ for ax in fig.get_axes():
     ax.set_yscale('log', nonposy='clip')
 plt.savefig('jetfakes_numbers.png')
 
-taus_in = 'pt eta isoMVA03 genjet_pt genjet_eta genjet_chargedpt genjet_chargedeta match genjet_constituents genjet_chargedconstituents genjet_neutralconstituents genjet_closestpt genjet_closestdr pfake pjet'
+taus_in = 'pt eta isoMVA03 genjet_pt genjet_eta genjet_chargedpt genjet_chargedeta match genjet_constituents genjet_chargedconstituents genjet_neutralconstituents genjet_closestpt genjet_closestdr pfake pjet genjet_signalpt genjet_signalconstituents genjet_signalchargedpt genjet_signalchargedconstituents genjet_isopt genjet_isoconstituents genjet_isochargedpt genjet_isochargedconstituents'
 taus_in = ['tau_' + v for v in taus_in.split()]
 taus = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=taus_in, flatten=True)
 
-gen_in = 'chargedconstituents neutralconstituents constituents chargedpt pt eta pjet pfake closestpt closestdr'
+gen_in = 'chargedconstituents neutralconstituents constituents chargedpt pt eta pjet pfake closestpt closestdr isopt isoconstituents isochargedpt isochargedconstituents signalpt signalconstituents signalchargedpt signalchargedconstituents'
 gen_in = ['genjet_' + v for v in gen_in.split()]
 alljets = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=gen_in, flatten=True)
 jets = alljets[(alljets.genjet_pt > 18) & (alljets.genjet_eta > -2.5) & (alljets.genjet_eta < 2.5)]
@@ -71,6 +71,14 @@ pspace = [
     ('constituents', range(0, 31, 1)),
     ('chargedconstituents', range(0, 31, 1)),
     ('neutralconstituents', range(0, 31, 1)),
+    ('isoconstituents', range(0, 31, 1)),
+    ('signalconstituents', range(0, 31, 1)),
+    ('isochargedconstituents', range(0, 31, 1)),
+    ('signalchargedconstituents', range(0, 31, 1)),
+    ('isopt', range(0, 101, 2)),
+    ('signalpt', range(0, 101, 2)),
+    ('isochargedpt', range(0, 101, 2)),
+    ('signalchargedpt', range(0, 101, 2)),
     ('closestpt', range(0, 201, 5)),
     ('closestdr', np.array(range(41)) * 0.05 * math.pi)
 ]

@@ -136,9 +136,27 @@ namespace superslim {
          {
             for (unsigned i = 0; i < j.numberOfDaughters(); ++i) {
                auto cand = j.daughterPtr(i);
-               if (cand.isNonnull() and cand->charge() != 0) {
-                  charged_p_ += cand->p4();
-                  ++charged_constituents_;
+               if (cand.isNonnull()) {
+                  auto dR = deltaR(j.p4(), cand->p4());
+                  if (cand->charge() != 0) {
+                     charged_p_ += cand->p4();
+                     ++charged_constituents_;
+                     if (dR < .12) {
+                        ++signal_charged_constituents_;
+                        signal_charged_p_ += cand->p4();
+                     } else if (dR < .3) {
+                        ++iso_charged_constituents_;
+                        iso_charged_p_ += cand->p4();
+                     }
+                  }
+
+                  if (dR < .12) {
+                     ++signal_constituents_;
+                     signal_p_ += cand->p4();
+                  } else if (dR < .3) {
+                     ++iso_constituents_;
+                     iso_p_ += cand->p4();
+                  }
                }
             }
          };
@@ -146,6 +164,16 @@ namespace superslim {
          const LorentzVector& chargedP4() const { return charged_p_; };
          int constituents() const { return constituents_; };
          int chargedConstituents() const { return charged_constituents_; };
+
+         const LorentzVector& signalP4() const { return signal_p_; };
+         int signalConstituents() const { return signal_constituents_; };
+         const LorentzVector& signalChargedP4() const { return signal_charged_p_; };
+         int signalChargedConstituents() const { return signal_charged_constituents_; };
+
+         const LorentzVector& isoP4() const { return iso_p_; };
+         int isoConstituents() const { return iso_constituents_; };
+         const LorentzVector& isoChargedP4() const { return iso_charged_p_; };
+         int isoChargedConstituents() const { return iso_charged_constituents_; };
 
          const GenJet* closestGenJet() const { return closest_jet_; };
          void findClosestGenJet(const reco::GenJetCollection& jets);
@@ -157,6 +185,16 @@ namespace superslim {
          LorentzVector charged_p_;
          int constituents_ = 0;
          int charged_constituents_ = 0;
+
+         int iso_constituents_ = 0;
+         int iso_charged_constituents_ = 0;
+         int signal_constituents_ = 0;
+         int signal_charged_constituents_ = 0;
+
+         LorentzVector iso_p_;
+         LorentzVector iso_charged_p_;
+         LorentzVector signal_p_;
+         LorentzVector signal_charged_p_;
 
          GenObject* closest_particle_ = 0;
          GenJet* closest_jet_ = 0;
