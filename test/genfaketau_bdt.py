@@ -8,17 +8,30 @@ quants = 'eta pt chargedPt constituents chargedConstituents closestPt closestDr'
 quants += 'signalPt signalChargedPt signalConstituents signalChargedConstituents'.split()
 quants += 'isoPt isoChargedPt isoConstituents isoChargedConstituents'.split()
 
-taus_in = ['genjet_' + q.lower() for q in quants] + ['isoMVA03', 'match', 'pt']
+taus_in = ['genjet_' + q.lower() for q in quants] + ['isoMVA03', 'antiElectron', 'antiMuon', 'match', 'pt']
 taus_in = ['tau_' + v for v in taus_in]
 taus = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=taus_in, flatten=True)
 
 fakes = taus[(taus.tau_match == 6)]
-selection = taus[(taus.tau_match == 6) & (taus.tau_isoMVA03 >= 5) & (taus.tau_pt >= 20.)]
+selection = taus[
+    (taus.tau_match == 6)
+    & (taus.tau_isoMVA03 >= 5)
+    & (taus.tau_antiElectron >= 3)
+    & (taus.tau_antiMuon >= 3)
+    & (taus.tau_pt >= 20.)
+]
 
 gen_in = [q.lower() for q in quants]
 gen_in = ['genjet_' + v for v in gen_in]
 alljets = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=gen_in, flatten=True)
-jets = alljets[(alljets.genjet_pt > 18) & (alljets.genjet_eta > -2.5) & (alljets.genjet_eta < 2.5)]
+jets = alljets[
+    (alljets.genjet_pt > 18)
+    & (alljets.genjet_eta > -2.5)
+    & (alljets.genjet_eta < 2.5)
+    & (alljets.genjet_constituents <= 20)
+    & (alljets.genjet_isoconstituents <= 11)
+    & (alljets.genjet_signalpt > 15)
+]
 
 quants = 'pt chargedPt constituents chargedConstituents closestPt closestDr'.split()
 quants += 'signalPt signalChargedPt signalConstituents signalChargedConstituents'.split()
