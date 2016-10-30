@@ -4,7 +4,8 @@ import ROOT as r
 
 from root_pandas import read_root
 
-quants = 'eta pt chargedPt constituents chargedConstituents closestPt closestDr'.split()
+quants = 'eta pt chargedPt constituents chargedConstituents'.split()
+quants += 'closestdr closestpt closestparticledr closestparticlept'.split()
 quants += 'signalPt signalChargedPt signalConstituents signalChargedConstituents'.split()
 quants += 'isoPt isoChargedPt isoConstituents isoChargedConstituents'.split()
 
@@ -31,6 +32,7 @@ jets = alljets[
     & (alljets.genjet_constituents <= 20)
     & (alljets.genjet_isoconstituents <= 11)
     & (alljets.genjet_signalpt > 15)
+    & (alljets.genjet_closestparticledr > 0.1)
 ]
 
 for q in quants:

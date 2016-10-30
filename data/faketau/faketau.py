@@ -76,6 +76,20 @@ Leaf('tau_genjet_closestdr', '[f]', """
          else result.push_back(-666.);
      }
      """)
+Leaf('tau_genjet_closestparticlept', '[f]', """
+     for (const auto& tau: taus) {
+         auto j = tau.genJet().closestGenParticle();
+         if (j) result.push_back(j->pt());
+         else result.push_back(-666.);
+     }
+     """)
+Leaf('tau_genjet_closestparticledr', '[f]', """
+     for (const auto& tau: taus) {
+         auto j = tau.genJet().closestGenParticle();
+         if (j) result.push_back(dR(j->p4(), tau.genJet().p4()));
+         else result.push_back(-666.);
+     }
+     """)
 
 Leaf('tau_match', '[f]', return_list.format('taus', 'match()'))
 Leaf('tau_genjet_constituents', '[f]', return_list.format('taus', 'genJetConstituents()'))
@@ -123,6 +137,20 @@ Leaf('genjet_closestpt', '[f]', """
 Leaf('genjet_closestdr', '[f]', """
      for (const auto& jet: event.genJets()) {
          auto j = jet.closestGenJet();
+         if (j) result.push_back(dR(j->p4(), jet.p4()));
+         else result.push_back(-666.);
+     }
+     """)
+Leaf('genjet_closestparticlept', '[f]', """
+     for (const auto& jet: event.genJets()) {
+         auto j = jet.closestGenParticle();
+         if (j) result.push_back(j->pt());
+         else result.push_back(-666.);
+     }
+     """)
+Leaf('genjet_closestparticledr', '[f]', """
+     for (const auto& jet: event.genJets()) {
+         auto j = jet.closestGenParticle();
          if (j) result.push_back(dR(j->p4(), jet.p4()));
          else result.push_back(-666.);
      }
