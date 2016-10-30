@@ -40,9 +40,10 @@ jets = alljets[
     (alljets.genjet_pt > 18)
     & (alljets.genjet_eta > -2.5)
     & (alljets.genjet_eta < 2.5)
-    & (alljets.genjet_constituents <= 20)
+    & (alljets.genjet_constituents <= 19)
+    & (alljets.genjet_chargedconstituents <= 9)
     & (alljets.genjet_isoconstituents <= 11)
-    & (alljets.genjet_signalpt > 15)
+    & (alljets.genjet_signalpt > 18)
     & (alljets.genjet_closestparticledr > 0.1)
 ]
 
