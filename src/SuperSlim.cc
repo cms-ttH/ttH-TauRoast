@@ -145,7 +145,7 @@ namespace superslim {
 
       if (c->numberOfMothers() > 0)
          return c->mother(0);
-      return 0
+      return 0;
    }
 
    const reco::GenParticle*
