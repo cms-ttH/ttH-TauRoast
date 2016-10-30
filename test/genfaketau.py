@@ -24,12 +24,16 @@ for ax in fig.get_axes():
     ax.set_yscale('log', nonposy='clip')
 plt.savefig('jetfakes_numbers.png')
 
-taus_in = 'pt eta isoMVA03 genjet_pt genjet_eta genjet_chargedpt genjet_chargedeta match genjet_constituents genjet_chargedconstituents genjet_neutralconstituents genjet_closestpt genjet_closestdr pfake pjet genjet_signalpt genjet_signalconstituents genjet_signalchargedpt genjet_signalchargedconstituents genjet_isopt genjet_isoconstituents genjet_isochargedpt genjet_isochargedconstituents antiElectron antiMuon'
-taus_in = ['tau_' + v for v in taus_in.split()]
+quants = 'eta pt chargedPt constituents chargedConstituents closestPt closestDr'.split()
+quants += 'signalPt signalChargedPt signalConstituents signalChargedConstituents'.split()
+quants += 'isoPt isoChargedPt isoConstituents isoChargedConstituents'.split()
+
+taus_in = ['genjet_' + q.lower() for q in quants] + ['isoMVA03', 'antiElectron', 'antiMuon', 'match', 'pt']
+taus_in = ['tau_' + v for v in taus_in]
 taus = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=taus_in, flatten=True)
 
-gen_in = 'chargedconstituents neutralconstituents constituents chargedpt pt eta pjet pfake closestpt closestdr isopt isoconstituents isochargedpt isochargedconstituents signalpt signalconstituents signalchargedpt signalchargedconstituents'
-gen_in = ['genjet_' + v for v in gen_in.split()]
+gen_in = [q.lower() for q in quants]
+gen_in = ['genjet_' + v for v in gen_in]
 alljets = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=gen_in, flatten=True)
 jets = alljets[
     (alljets.genjet_pt > 18)

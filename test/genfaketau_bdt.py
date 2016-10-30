@@ -33,10 +33,6 @@ jets = alljets[
     & (alljets.genjet_signalpt > 15)
 ]
 
-quants = 'pt chargedPt constituents chargedConstituents closestPt closestDr'.split()
-quants += 'signalPt signalChargedPt signalConstituents signalChargedConstituents'.split()
-quants += 'isoPt isoChargedPt isoConstituents isoChargedConstituents'.split()
-
 for q in quants:
     selection[q] = selection['tau_genjet_' + q.lower()]
     jets[q] = jets['genjet_' + q.lower()]
