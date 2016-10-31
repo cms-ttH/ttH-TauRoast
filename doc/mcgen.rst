@@ -1,18 +1,35 @@
+.. contents::
+
 MC Generation
 =============
 
 Pulling in basic steps from MCM
 -------------------------------
 
-We need the basic setup scripts to generate `LHE` inputs for the `GenSim`
-step.  Go to the MCM page, select the `Requests` tab and click on
-`Navigation` to search for the dataset to clone.  This should bring you to
-a page like this one::
+To clone workflows from `MCM`_, select a dataset to clone, i.e.::
 
-    https://cms-pdmv.cern.ch/mcm/requests?page=0&prepid=HIG-RunIISummer15wmLHEGS-00482
+    /TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/RunIISpring16MiniAODv2-premix_withHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM
 
-Now we can click the second icon from the left, which will download a setup
-script like this
+Then visit the `MCM`_ homepage, and click the “Request” item at the top of
+the page, and select “Output Dataset” below to paste the dataset to clone:
+
+.. figure:: search.png
+
+   Searching for workflows to produce a dataset.
+
+By selecting the link in the column “Dataset name” in the search results,
+all steps to reproduce the original dataset can be obtained:
+
+.. figure:: results.png
+
+   Workflows to completely reproduce a dataset.
+
+Now the second to left icon |icon| in the search results can be used to download
+the setup scripts.  For the `LHEGS` step:
+
+.. |icon| image:: icon.png
+
+.. _MCM: https://cms-pdmv.cern.ch/mcm/
 
 .. code-block:: shell
 
@@ -100,7 +117,26 @@ Note the following from the `FastSim TWiki`_ about `runTheMatrix.py` workflows:
 .. _FastSim TWiki: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideFastSimulationExamples
 
 Unfortunately, these steps don't work well with the MCM workflows.  First,
-a pile-up sample needs to be produced
+a pile-up sample needs to be produced.  To set up the environment
+
+.. code-block:: shell
+
+    scram p CMSSW CMSSW_8_0_20
+    cd CMSSW_8_0_20/src
+    curl -s --insecure https://cms-pdmv.cern.ch/mcm/public/restapi/requests/get_fragment/HIG-RunIISummer15wmLHEGS-00482 --retry 2 --create-dirs -o Configuration/GenProduction/python/HIG-RunIISummer15wmLHEGS-00482-fragment.py
+
+    # Download GenFilter + BuildFile and remove some dependencies
+    curl -s --insecure https://raw.githubusercontent.com/cms-ttH/ttH-TauRoast/master/plugins/GenEventFilter.cc --retry 2 --create-dirs -o ttH/TauRoast/plugins/GenEventFilter.cc
+    curl -s --insecure https://raw.githubusercontent.com/cms-ttH/ttH-TauRoast/master/plugins/BuildFile.xml --retry 2 --create-dirs -o ttH/TauRoast/plugins/BuildFile.xml
+    sed -i.bak -e '/MiniAOD/d' -e '/TauRoast/d' ttH/TauRoast/plugins/BuildFile.xml
+
+    # Modifications to hook up GenFilter
+    curl -s --insecure https://raw.githubusercontent.com/cms-ttH/ttH-TauRoast/master/python/customGenFilter.py --retry 2 --create-dirs -o ttH/TauRoast/python/customGenFilter.py
+
+    eval `scram runtime -sh`
+    scram b
+    cd ../..
+
 
 .. code-block:: shell
 
