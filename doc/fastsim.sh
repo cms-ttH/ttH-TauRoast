@@ -19,12 +19,9 @@ cd ../..
 # =============
 
 cmsDriver.py MinBias_13TeV_pythia8_TuneCUETP8M1_cfi \
-   --conditions auto:run2_mc \
-   --fast \
-   -n 500 \
-   --era Run2_2016 \
-   --eventcontent FASTPU \ --relval 100000,1000 \
-   -s GEN,SIM,RECOBEFMIX \ --datatier GEN-SIM-RECO \ --beamspot Realistic50ns13TeVCollision \
+   --conditions auto:run2_mc --fast -n 500 --era Run2_2016 \
+   --eventcontent FASTPU --relval 100000,1000 \
+   -s GEN,SIM,RECOBEFMIX --datatier GEN-SIM-RECO --beamspot Realistic50ns13TeVCollision \
    --fileout file:pu_fast.root \
    --python_filename pu_fast.py --no_exec
 
