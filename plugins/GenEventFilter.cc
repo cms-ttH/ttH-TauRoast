@@ -118,12 +118,14 @@ GenEventFilter::GenEventFilter(const edm::ParameterSet& config) :
    particle_token_ = consumes<reco::GenParticleCollection>(config.getParameter<edm::InputTag>("genParticles"));
    jet_token_ = consumes<reco::GenJetCollection>(config.getParameter<edm::InputTag>("genJets"));
 
-   reader_ = new TMVA::Reader();
-   reader_->AddVariable("pt", &mva_pt_);
-   reader_->AddVariable("chargedPt", &mva_charged_pt_);
-   reader_->AddVariable("constituents", &mva_constituents_);
-   reader_->AddVariable("chargedConstituents", &mva_charged_constituents_);
-   reader_->BookMVA("BDTG", edm::FileInPath("ttH/TauRoast/data/faketau.weights.xml").fullPath().c_str());
+   if (use_fakes_) {
+      reader_ = new TMVA::Reader();
+      reader_->AddVariable("pt", &mva_pt_);
+      reader_->AddVariable("chargedPt", &mva_charged_pt_);
+      reader_->AddVariable("constituents", &mva_constituents_);
+      reader_->AddVariable("chargedConstituents", &mva_charged_constituents_);
+      reader_->BookMVA("BDTG", edm::FileInPath("ttH/TauRoast/data/faketau.weights.xml").fullPath().c_str());
+   }
 }
 
 
