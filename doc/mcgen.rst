@@ -12,7 +12,9 @@ a page like this one::
     https://cms-pdmv.cern.ch/mcm/requests?page=0&prepid=HIG-RunIISummer15wmLHEGS-00482
 
 Now we can click the second icon from the left, which will download a setup
-script like this::
+script like this
+
+.. code-block:: shell
 
     #!/bin/bash
     source  /afs/cern.ch/cms/cmsset_default.sh
@@ -39,7 +41,9 @@ script like this::
       --step LHE,GEN,SIM --magField 38T_PostLS1 \
       --python_filename HIG-RunIISummer15wmLHEGS-00482_1_cfg.py --no_exec -n 42 || exit $? ;
 
-Repeat this for the `DR` step to see the following lines::
+Repeat this for the `DR` step to see the following lines
+
+.. code-block:: shell
 
     cmsDriver.py step1 \
       --filein "dbs:/TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/RunIISummer15wmLHEGS-MCRUN2_71_V1-v1/GEN-SIM" \
@@ -61,7 +65,9 @@ Repeat this for the `DR` step to see the following lines::
 
 Note that this step is happening in `CMSSW_8_0_14`.
 
-And for the `MiniAOD` step (note again the used release, which is equivalent to the `DR` step)::
+And for the `MiniAOD` step (note again the used release, which is equivalent to the `DR` step)
+
+.. code-block:: shell
 
   cmsDriver.py step1 \
     --filein "dbs:/TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/RunIISpring16DR80-premix_withHLT_80X_mcRun2_asymptotic_v14-v1/AODSIM" \
@@ -92,3 +98,8 @@ Note the following from the `FastSim TWiki`_ about `runTheMatrix.py` workflows:
       * replace --datatier GEN-SIM-DIGI-RECO,DQMIO with --datatier AODSIM
 
 .. _FastSim TWiki: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideFastSimulationExamples
+
+Now with this in mind, set up the environment as done in the first script.
+Execute the ``cmsDriver.py`` command, adding a ``--fast`` option to the
+command line to activate `FastSim`.  This should produce a first output
+file with `LHEGS` content.
