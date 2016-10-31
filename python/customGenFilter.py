@@ -21,6 +21,12 @@ def customizeForGenFiltering(process):
         minTotal=cms.int32(6),
         minTotalLeptons=cms.int32(1)
     )
-    if hasattr(process, 'generation_step'):
-        process.generation_step *= process.ttHGenFilter
+    for path in process.paths:
+        if path in ['generation_step', 'lhe_step']:
+            continue
+        sequence = getattr(process, path)
+        if path in ['digitisation_step']:
+            sequence *= process.ttHGenFilter
+        else:
+            sequence.insert(1, process.ttHGenFilter)
     return process
