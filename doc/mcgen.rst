@@ -69,14 +69,14 @@ And for the `MiniAOD` step (note again the used release, which is equivalent to 
 
 .. code-block:: shell
 
-  cmsDriver.py step1 \
-    --filein "dbs:/TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/RunIISpring16DR80-premix_withHLT_80X_mcRun2_asymptotic_v14-v1/AODSIM" \
-    --fileout file:HIG-RunIISpring16MiniAODv2-02983.root \
-    --mc --eventcontent MINIAODSIM --runUnscheduled --datatier MINIAODSIM \
-    --conditions 80X_mcRun2_asymptotic_v14 \
-    --step PAT --era Run2_2016 \
-    --python_filename HIG-RunIISpring16MiniAODv2-02983_1_cfg.py --no_exec \
-    --customise Configuration/DataProcessing/Utils.addMonitoring -n 960 || exit $? ;
+    cmsDriver.py step1 \
+      --filein "dbs:/TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/RunIISpring16DR80-premix_withHLT_80X_mcRun2_asymptotic_v14-v1/AODSIM" \
+      --fileout file:HIG-RunIISpring16MiniAODv2-02983.root \
+      --mc --eventcontent MINIAODSIM --runUnscheduled --datatier MINIAODSIM \
+      --conditions 80X_mcRun2_asymptotic_v14 \
+      --step PAT --era Run2_2016 \
+      --python_filename HIG-RunIISpring16MiniAODv2-02983_1_cfg.py --no_exec \
+      --customise Configuration/DataProcessing/Utils.addMonitoring -n 960 || exit $? ;
 
 Setup for FastSim
 -----------------
@@ -99,7 +99,50 @@ Note the following from the `FastSim TWiki`_ about `runTheMatrix.py` workflows:
 
 .. _FastSim TWiki: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideFastSimulationExamples
 
-Now with this in mind, set up the environment as done in the first script.
-Execute the ``cmsDriver.py`` command, adding a ``--fast`` option to the
-command line to activate `FastSim`.  This should produce a first output
-file with `LHEGS` content.
+Unfortunately, these steps don't work well with the MCM workflows.  First,
+a pile-up sample needs to be produced
+
+.. code-block:: shell
+
+    cmsDriver.py MinBias_13TeV_pythia8_TuneCUETP8M1_cfi \
+       --conditions auto:run2_mc --fast -n 500 --era Run2_2016 \
+       --eventcontent FASTPU --relval 100000,1000 \
+       -s GEN,SIM,RECOBEFMIX --datatier GEN-SIM-RECO --beamspot Realistic50ns13TeVCollision \
+       --fileout file:pu_fast.root \
+       --python_filename pu_fast.py --no_exec
+
+And from that, a premixed pile-up sample
+
+.. code-block:: shell
+
+    cmsDriver.py SingleNuE10_cfi \
+       --fileout file:premix_fast.root \
+       --pileup_input file:pu_fast.root \
+       --pileup AVE_35_BX_25ns \
+       --mc --eventcontent PREMIX --datatier GEN-SIM-DIGI-RAW --conditions auto:run2_mc \
+       --step GEN,SIM,RECOBEFMIX,DIGIPREMIX,L1,DIGI2RAW --era Run2_2016 \
+       --python_filename premix_fast.py --no_exec \
+       --fast
+
+This can be then finally used to produce the real sample of interest up to
+AODSIM
+
+.. code-block:: shell
+
+    cmsDriver.py Configuration/GenProduction/python/HIG-RunIISummer15wmLHEGS-00482-fragment.py \
+       -n 500 \
+       --python_filename all_fast.py \
+       --fileout file:all_fast.root \
+       --pileup_input file:premix_fast.root \
+       --mc \
+       --eventcontent AODSIM \
+       --fast \
+       --customise SimGeneral/DataMixingModule/customiseForPremixingInput.customiseForPreMixingInput \
+       --customise ttH/TauRoast/customGenFilter.customizeForGenFiltering \
+       --datatier AODSIM \
+       --conditions auto:run2_mc \
+       --beamspot Realistic50ns13TeVCollision \
+       --step LHE,GEN,SIM,RECOBEFMIX,DIGIPREMIX_S2,DATAMIX,L1,DIGI2RAW,L1Reco,RECO,HLT:@fake1 \
+       --datamix PreMix \
+       --era Run2_25ns \
+       --no_exec \
