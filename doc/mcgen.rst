@@ -63,7 +63,7 @@ Repeat this for the `DR` step to see the following lines
       --python_filename HIG-RunIISpring16DR80-01830_2_cfg.py --no_exec \
       --customise Configuration/DataProcessing/Utils.addMonitoring -n 960 || exit $? ;
 
-Note that this step is happening in `CMSSW_8_0_14`.
+Note that this step is happening in ``CMSSW_8_0_14``.
 
 And for the `MiniAOD` step (note again the used release, which is equivalent to the `DR` step)
 
