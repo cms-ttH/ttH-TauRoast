@@ -1,6 +1,4 @@
 <lcgdict>
-	<function name="fakeable::pjet"/>
-	<function name="fakeable::pfake"/>
 	<function name="fastlane::process"/>
 	<class name="fastlane::Leaf<int>"/>
 	<class name="fastlane::Leaf<float>"/>

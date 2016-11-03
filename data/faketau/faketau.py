@@ -100,9 +100,6 @@ Leaf('tau_genjet_neutralconstituents', '[f]', """
      }
      """)
 
-Leaf('tau_pjet', '[f]', map_list.format('taus', 'fakeable::pjet'))
-Leaf('tau_pfake', '[f]', map_list.format('taus', 'fakeable::pfake'))
-
 Leaf('genjet_pt', '[f]', return_list.format('event.genJets()', 'p4().Pt()'))
 Leaf('genjet_eta', '[f]', return_list.format('event.genJets()', 'p4().Eta()'))
 Leaf('genjet_constituents', '[i]', return_list.format('event.genJets()', 'constituents()'))
@@ -123,9 +120,6 @@ Leaf('genjet_isopt', '[f]', return_list.format('event.genJets()', 'isoP4().Pt()'
 Leaf('genjet_isoconstituents', '[i]', return_list.format('event.genJets()', 'isoConstituents()'))
 Leaf('genjet_isochargedpt', '[f]', return_list.format('event.genJets()', 'isoChargedP4().Pt()'))
 Leaf('genjet_isochargedconstituents', '[i]', return_list.format('event.genJets()', 'isoChargedConstituents()'))
-
-Leaf('genjet_pjet', '[f]', map_list.format('event.genJets()', 'fakeable::pjet'))
-Leaf('genjet_pfake', '[f]', map_list.format('event.genJets()', 'fakeable::pfake'))
 
 Leaf('genjet_closestpt', '[f]', """
      for (const auto& jet: event.genJets()) {
