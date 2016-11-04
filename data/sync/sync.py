@@ -201,8 +201,8 @@ for i in range(2):
          'result = len(taus) <= {0} ? -9999 : taus[{0}].isolationMVA03() >= superslim::id::Medium'.format(i))
     Leaf('tau{}_byTightIsolationMVArun2v1DBdR03oldDMwLT'.format(i), 'i',
          'result = len(taus) <= {0} ? -9999 : taus[{0}].isolationMVA03() >= superslim::id::Tight'.format(i))
-    Leaf('tau{}_byVTightIsolationMVArun2v1DBdR03oldDMwLT'.format(i), 'i',
-         'result = len(taus) <= {0} ? -9999 : taus[{0}].isolationMVA03() >= superslim::id::VTight'.format(i))
+    # Leaf('tau{}_byVTightIsolationMVArun2v1DBdR03oldDMwLT'.format(i), 'i',
+    #      'result = len(taus) <= {0} ? -9999 : taus[{0}].isolationMVA03() >= superslim::id::VTight'.format(i))
 
     Leaf('tau{}_againstMuonLoose3'.format(i), 'i',
          'result = len(taus) <= {0} ? -9999 : taus[{0}].vetoMuon() >= superslim::id::Loose'.format(i))
