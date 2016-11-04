@@ -10,11 +10,19 @@ BasicProcess(
 )
 
 BasicProcess(
-    name="syncTree_1l2tau",
+    name="syncTree_1l2tau_SR",
     paths=['ttH_skim'],
     cross_section=45140,
     events=45611,
-    cutflow='ttl'
+    cutflow='signal'
+)
+
+BasicProcess(
+    name="syncTree_1l2tau_Fake",
+    paths=['ttH_skim'],
+    cross_section=45140,
+    events=45611,
+    cutflow='fake'
 )
 
 BasicProcess(
