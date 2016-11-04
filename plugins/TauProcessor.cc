@@ -490,7 +490,7 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
       if (not take_all_ and (loose_leptons < min_leptons_ or loose_leptons > max_leptons_))
          continue;
 
-      auto selected_taus = removeOverlap(all_taus, leptons, .4);
+      auto selected_taus = removeOverlap(all_taus, leptons, .3);
       passComboCut(event_cut, 0, passed, "Leptons in combo");
 
       for (const auto& tau_id: {superslim::Tau::IsoMVA03}) {
