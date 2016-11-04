@@ -498,65 +498,63 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
          std::copy_if(selected_taus.begin(), selected_taus.end(), std::back_inserter(all_taus),
                [&](const superslim::Tau& t) -> bool { return t.loose(tau_id); });
 
+         bool pass_jets = false;
+         bool pass_tags = false;
+         std::map<std::string, std::vector<superslim::Jet>> sjets;
+         std::map<std::string, superslim::LorentzVector> smets;
+         for (auto& sys: systematics_) {
+            // auto corrected_jets = helper_.GetCorrectedJets(uncorrected_jets, event, setup, sys.second);
+            // corrected_jets = helper_.GetSelectedJets(corrected_jets, std::min(min_jet_pt_, min_tag_pt_), max_jet_eta_, jetID::none, '-');
+            // corrected_jets = helper_.GetSelectedJets(raw_jets, std::min(min_jet_pt_, min_tag_pt_), max_jet_eta_, jetID::none, '-');
+            // corrected_jets = helper_.GetSortedByPt(corrected_jets);
+
+            // Jet selection
+            // auto jets_wo_lep = removeOverlap(corrected_jets, leptons, .4);
+            auto jets_wo_lep = removeOverlap(raw_jets, cleaning_leptons, .4);
+            auto jets_no_taus = removeOverlap(jets_wo_lep, all_taus, .4);
+            auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, max_jet_eta_, jetID::none, '-');
+            auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'M');
+            auto selected_loose_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'L');
+
+            if (filter_pu_jets_) {
+               selected_jets = get_non_pileup(selected_jets);
+               selected_tags = get_non_pileup(selected_tags);
+               selected_loose_tags = get_non_pileup(selected_loose_tags);
+            };
+
+            if (selected_jets.size() >= min_jets_ and selected_tags.size() >= min_tags_) {
+               pass_jets = true;
+            } else if (selected_jets.size() >= min_jets_ and selected_loose_tags.size() >= std::max(min_tags_, 2u)) {
+               pass_jets = true;
+            }
+
+            if (max_tags_ < 0 or selected_tags.size() <= (unsigned int) max_tags_)
+               pass_tags = true;
+
+            // auto new_jets = helper_.GetCorrectedJets(old_jets_uncorrected, event, setup, sys.second);
+            // auto corrected_mets = helper_.CorrectMET(old_jets, new_jets, *mets);
+
+            sjets[sys.first] = {};
+            for (const auto& jet: selected_jets)
+               sjets[sys.first].push_back(superslim::Jet(jet, particles));
+
+            // smets[sys.first] = corrected_mets[0].p4();
+            smets[sys.first] = mets->at(0).p4();
+         }
+
+         if (not (pass_jets and pass_tags) and not take_all_) {
+            continue;
+         }
+
+         passComboCut(event_cut, 1, passed, "Jet requirements");
+
          std::vector<std::vector<superslim::Tau>> combinations = {all_taus};
          if (tau_combinatorics_)
             combinations = build_permutations(all_taus, min_taus_, max_taus_);
 
          for (const auto& taus: combinations) {
-            int combo_cut = 1;
-
-            passComboCut(event_cut, combo_cut++, passed, "Taus in combo");
-
-            bool pass_jets = false;
-            bool pass_tags = false;
-            std::map<std::string, std::vector<superslim::Jet>> sjets;
-            std::map<std::string, superslim::LorentzVector> smets;
-            for (auto& sys: systematics_) {
-               // auto corrected_jets = helper_.GetCorrectedJets(uncorrected_jets, event, setup, sys.second);
-               // corrected_jets = helper_.GetSelectedJets(corrected_jets, std::min(min_jet_pt_, min_tag_pt_), max_jet_eta_, jetID::none, '-');
-               // corrected_jets = helper_.GetSelectedJets(raw_jets, std::min(min_jet_pt_, min_tag_pt_), max_jet_eta_, jetID::none, '-');
-               // corrected_jets = helper_.GetSortedByPt(corrected_jets);
-
-               // Jet selection
-               // auto jets_wo_lep = removeOverlap(corrected_jets, leptons, .4);
-               auto jets_wo_lep = removeOverlap(raw_jets, cleaning_leptons, .4);
-               auto jets_no_taus = removeOverlap(jets_wo_lep, all_taus, .4);
-               auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, max_jet_eta_, jetID::none, '-');
-               auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'M');
-               auto selected_loose_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'L');
-
-               if (filter_pu_jets_) {
-                  selected_jets = get_non_pileup(selected_jets);
-                  selected_tags = get_non_pileup(selected_tags);
-                  selected_loose_tags = get_non_pileup(selected_loose_tags);
-               };
-
-               if (selected_jets.size() >= min_jets_ and selected_tags.size() >= min_tags_) {
-                  pass_jets = true;
-               } else if (selected_jets.size() >= min_jets_ and selected_loose_tags.size() >= std::max(min_tags_, 2u)) {
-                  pass_jets = true;
-               }
-
-               if (max_tags_ < 0 or selected_tags.size() <= (unsigned int) max_tags_)
-                  pass_tags = true;
-
-               // auto new_jets = helper_.GetCorrectedJets(old_jets_uncorrected, event, setup, sys.second);
-               // auto corrected_mets = helper_.CorrectMET(old_jets, new_jets, *mets);
-
-               sjets[sys.first] = {};
-               for (const auto& jet: selected_jets)
-                  sjets[sys.first].push_back(superslim::Jet(jet, particles));
-
-               // smets[sys.first] = corrected_mets[0].p4();
-               smets[sys.first] = mets->at(0).p4();
-            }
-
-            if (not (pass_jets and pass_tags) and not take_all_) {
-               continue;
-            }
-
-            passComboCut(event_cut, combo_cut++, passed, "Jet requirements");
-            passComboCut(event_cut, combo_cut++, passed, "Ntuple");
+            passComboCut(event_cut, 2, passed, "Taus in combo");
+            passComboCut(event_cut, 3, passed, "Ntuple");
 
             auto c = superslim::Combination(taus, tau_id, leptons, lepton_id, sjets, smets);
             combos.push_back(c);
