@@ -386,7 +386,7 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
    // Lepton selection
    // ================
 
-   auto lepton_id= superslim::Lepton::MVA;
+   auto lepton_id = superslim::Lepton::MVA;
    std::vector<superslim::Lepton> cleaning_leptons;
 
    std::vector<superslim::Lepton> leptons;
