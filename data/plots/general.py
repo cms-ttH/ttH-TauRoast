@@ -8,8 +8,6 @@ Leaf('lumi', 'i', 'result = event.lumi()')
 Leaf('event', 'i', 'result = event.event()')
 
 Leaf('events', 'f', 'result = .5')
-# Leaf('combos', 'f', 'return combos.size()')
-Leaf('allcombos', 'f', 'result = event.combos().size()')
 Leaf('njets', 'f', 'result = jets.size() - btags(jets)')
 Leaf('ntags', 'f', 'result = btags(jets)')
 Leaf('npv', 'f', 'result = event.npv()')
@@ -37,19 +35,6 @@ Plot(
     values=["events"],
     labels=["", "Events"],
     binning=[1, 0, 1]
-)
-
-# Plot(
-#         name="general/Combos",
-#         values=["combos"],
-# labels=["Number of passed #tau combinations", "Events"],
-#         binning=[5, 0, 5]
-# )
-Plot(
-    name="general/AllCombos",
-    values=['allcombos'],
-    labels=["Number of all #tau combinations", "Events"],
-    binning=[5, 0, 5]
 )
 
 Plot(

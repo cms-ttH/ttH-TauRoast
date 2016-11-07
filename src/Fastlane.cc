@@ -21,9 +21,9 @@ lower(const std::string& s)
 }
 
 bool
-fastlane::Cut::operator()(const std::string& process, const superslim::Event& e, const superslim::Combination& c, const std::string& sys)
+fastlane::Cut::operator()(const std::string& process, const superslim::Event& e, const std::string& sys)
 {
-   auto passed = fct_(e, c.taus(), e.taus(), c.tauId(), c.leptons(), c.electrons(), c.muons(), c.leptonId() ,c.jets(sys), c.met(sys));
+   auto passed = fct_(e, e.taus(), e.allTaus(), e.tauId(), e.leptons(), e.leptonId(), e.jets(sys), e.met(sys));
 
    if (passed) {
       event_t id = std::make_tuple(e.run(), e.lumi(), e.event());
@@ -35,20 +35,16 @@ fastlane::Cut::operator()(const std::string& process, const superslim::Event& e,
       counts_[process]++;
       if (callback_) {
          auto event = superslim::Event(e);
-         auto combo = superslim::Combination(c);
 
          std::unordered_map<std::string, double> ws;
          for (const auto& w: e.weights())
             ws[lower(w.first)] = w.second;
-         for (const auto& w: c.weights())
-            ws[lower(w.first)] = w.second;
          if (process.compare(0, 10, "collisions"))
-            fastlane::update_weights(ws, e, c, sys);
+            fastlane::update_weights(ws, e, sys);
 
          auto py_e = TPython::ObjectProxy_FromVoidPtr(dynamic_cast<void*>(&event), "superslim::Event");
-         auto py_c = TPython::ObjectProxy_FromVoidPtr(dynamic_cast<void*>(&combo), "superslim::Combination");
          auto py_w = TPython::ObjectProxy_FromVoidPtr(static_cast<void*>(&ws), "std::unordered_map<std::string,double>");
-         std::vector<TPyArg> args = {py_e, py_c, py_w};
+         std::vector<TPyArg> args = {py_e, py_w};
          TPyArg::CallMethod(callback_, args);
       }
    }
@@ -74,22 +70,47 @@ fastlane::StaticCut::processes() const
 }
 
 std::vector<fastlane::BasicLeaf*> fastlane::BasicLeaf::leaves_;
+std::vector<superslim::Lepton> fastlane::BasicLeaf::cached_electrons_;
+std::vector<superslim::Lepton> fastlane::BasicLeaf::cached_muons_;
 
 namespace fastlane {
-   template<> void Leaf<std::vector<float>>::pick(const superslim::Event& e, const superslim::Combination& c, std::unordered_map<std::string, double>& w, const std::string& sys)
+   void
+   BasicLeaf::updateCache(const superslim::Event& e)
    {
-      val_.clear();
-      fct_(e, c.taus(), e.taus(), c.leptons(), c.electrons(), c.muons(), c.jets(sys), c.met(sys), w, val_);
+      static int run = -1;
+      static int lumi = -1;
+      static int event = -1;
+
+      if (e.run() == run and e.lumi() == lumi and e.event() == event)
+         return;
+
+      run = e.run();
+      lumi = e.lumi();
+      event = e.event();
+
+      cached_electrons_.clear();
+      cached_muons_.clear();
+
+      std::copy_if(e.leptons().begin(), e.leptons().end(), std::back_inserter(cached_electrons_),
+            [](const superslim::Lepton& l) -> bool { return l.electron(); });
+      std::copy_if(e.leptons().begin(), e.leptons().end(), std::back_inserter(cached_muons_),
+            [](const superslim::Lepton& l) -> bool { return l.muon(); });
    }
-   template<> void Leaf<std::vector<int>>::pick(const superslim::Event& e, const superslim::Combination& c, std::unordered_map<std::string, double>& w, const std::string& sys)
+
+   template<> void Leaf<std::vector<float>>::pick(const superslim::Event& e, std::unordered_map<std::string, double>& w, const std::string& sys)
    {
       val_.clear();
-      fct_(e, c.taus(), e.taus(), c.leptons(), c.electrons(), c.muons(), c.jets(sys), c.met(sys), w, val_);
+      fct_(e, e.taus(), e.allTaus(), e.leptons(), cached_electrons_, cached_muons_, e.jets(sys), e.met(sys), w, val_);
+   }
+   template<> void Leaf<std::vector<int>>::pick(const superslim::Event& e, std::unordered_map<std::string, double>& w, const std::string& sys)
+   {
+      val_.clear();
+      fct_(e, e.taus(), e.allTaus(), e.leptons(), cached_electrons_, cached_muons_, e.jets(sys), e.met(sys), w, val_);
    }
 }
 
 void
-fastlane::update_weights(std::unordered_map<std::string, double>& ws, const superslim::Event& e, const superslim::Combination& combo, const std::string& sys)
+fastlane::update_weights(std::unordered_map<std::string, double>& ws, const superslim::Event& e, const std::string& sys)
 {
    // =====================
    // Constants for weights
@@ -133,7 +154,7 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
    std::vector<double> jetpt, jeteta, jetcsv;
    std::vector<int> jetflv;
 
-   for (const auto& j: combo.jets(sys)) {
+   for (const auto& j: e.jets(sys)) {
       jetpt.push_back(j.p4().pt());
       jeteta.push_back(j.p4().eta());
       jetcsv.push_back(j.csv());
@@ -162,7 +183,7 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
    // τ related weights
    // =================
 
-   auto taus = combo.taus();
+   auto taus = e.taus();
    int real_taus = std::count_if(std::begin(taus), std::end(taus),
          [](const superslim::Tau& t) { return t.match() == 5; });
    // int real_electrons = std::count_if(std::begin(taus), std::end(taus),
@@ -196,34 +217,40 @@ fastlane::process(const std::string& process, const std::string& channel, const 
 
       handle.getByLabel(events, label.c_str());
 
+      static const std::vector<int> debug{};
+
       const auto e = handle.ptr();
-      const auto& combos = e->combos();
-      std::vector<superslim::Combination> passed;
-      for (const auto& combo: combos) {
-         bool failed = false;
-         for (auto& cut: cuts) {
-            if (not (*cut)(process, *e, combo, sys)) {
-               failed = true;
-               break;
+      bool failed = false;
+      for (auto& cut: cuts) {
+         if (not (*cut)(process, *e, sys)) {
+            auto it = std::find(debug.begin(), debug.end(), e->event());
+            if (it != debug.end()) {
+               std::cout << "FAILED: " << *it << " MISSED " << cut->name() << std::endl;
+               std::cout << "\tl  pt " << e->leptons()[0].pt()
+                  << "\tl  mva " << e->leptons()[0].mvaRaw()
+                  << "\tl  id " << e->leptons()[0].mva()
+                  << "\tl  csv " << e->leptons()[0].nearestJetCSV()
+                  << std::endl;
+               std::cout << "\tτ₁ pt " << e->taus()[0].pt()
+                  << "\tτ₁ mva " << e->taus()[0].isolationMVA03()
+                  << std::endl;
+               std::cout << "\tτ₂ pt " << e->taus()[1].pt()
+                  << "\tτ₂ mva " << e->taus()[1].isolationMVA03()
+                  << std::endl;
             }
-         }
-         if (not failed) {
-            passed.push_back(combo);
+            failed = true;
+            break;
          }
       }
 
-      if (passed.size() == 0)
+      if (failed)
          continue;
-
-      auto& selected = passed[0];
 
       std::unordered_map<std::string, double> ws;
       for (const auto& w: e->weights())
          ws[lower(w.first)] = w.second;
-      for (const auto& w: selected.weights())
-         ws[lower(w.first)] = w.second;
       if (process.compare(0, 10, "collisions"))
-         fastlane::update_weights(ws, *e, selected, sys);
+         fastlane::update_weights(ws, *e, sys);
 
       double weight = 1.;
       for (auto& w: weights) {
@@ -232,10 +259,11 @@ fastlane::process(const std::string& process, const std::string& channel, const 
          (*w)[process] += weight;
       }
 
+      BasicLeaf::updateCache(*e);
       for (auto& leaf: BasicLeaf::leaves()) {
          // std::cout << leaf->name() << std::endl;
          try {
-            leaf->pick(*e, selected, ws, sys);
+            leaf->pick(*e, ws, sys);
          } catch (const std::out_of_range& e) {
          }
       }

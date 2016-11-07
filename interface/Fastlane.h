@@ -38,8 +38,6 @@ namespace fastlane {
                const std::vector<superslim::Tau>&,
                superslim::Tau::id,
                const std::vector<superslim::Lepton>&,
-               const std::vector<superslim::Lepton>&,
-               const std::vector<superslim::Lepton>&,
                superslim::Lepton::id,
                const std::vector<superslim::Jet>&,
                const superslim::LorentzVector&);
@@ -48,7 +46,7 @@ namespace fastlane {
          Cut(const std::string& name, fct_t eval) : BasicCut(name), fct_(eval), last_(std::make_tuple(-1, -1, -1)), callback_(0) {};
          virtual ~Cut() {};
 
-         bool operator()(const std::string& process, const superslim::Event& e, const superslim::Combination& c, const std::string& sys);
+         bool operator()(const std::string& process, const superslim::Event& e, const std::string& sys);
 
          void setCallback(PyObject* callback) { callback_ = callback; };
 
@@ -81,14 +79,17 @@ namespace fastlane {
          BasicLeaf(const std::string& name) : name_(name) {};
          virtual ~BasicLeaf() {};
 
-         virtual void pick(const superslim::Event& e, const superslim::Combination& c, std::unordered_map<std::string, double>& w, const std::string& sys) = 0;
+         virtual void pick(const superslim::Event& e, std::unordered_map<std::string, double>& w, const std::string& sys) = 0;
          const std::string& name() const { return name_; };
 
          static std::vector<BasicLeaf*>& leaves() { return leaves_; };
+         static void updateCache(const superslim::Event& e);
       protected:
          std::string name_;
 
          static std::vector<BasicLeaf*> leaves_;
+         static std::vector<superslim::Lepton> cached_electrons_;
+         static std::vector<superslim::Lepton> cached_muons_;
    };
 
    template<typename T>
@@ -111,9 +112,9 @@ namespace fastlane {
          virtual ~Leaf() {};
 
          void grow(TTree& t) { t.Branch(name_.c_str(), &val_); };
-         virtual void pick(const superslim::Event& e, const superslim::Combination& c, std::unordered_map<std::string, double>& w, const std::string& sys) override {
+         virtual void pick(const superslim::Event& e, std::unordered_map<std::string, double>& w, const std::string& sys) override {
             val_ = T();
-            fct_(e, c.taus(), e.taus(), c.leptons(), c.electrons(), c.muons(), c.jets(sys), c.met(sys), w, val_);
+            fct_(e, e.taus(), e.allTaus(), e.leptons(), cached_electrons_, cached_muons_, e.jets(sys), e.met(sys), w, val_);
          };
 
       private:
@@ -121,12 +122,12 @@ namespace fastlane {
          T val_;
    };
 
-   template<> void Leaf<std::vector<float>>::pick(const superslim::Event& e, const superslim::Combination& c, std::unordered_map<std::string, double>& w, const std::string& sys);
-   template<> void Leaf<std::vector<int>>::pick(const superslim::Event& e, const superslim::Combination& c, std::unordered_map<std::string, double>& w, const std::string& sys);
+   template<> void Leaf<std::vector<float>>::pick(const superslim::Event& e, std::unordered_map<std::string, double>& w, const std::string& sys);
+   template<> void Leaf<std::vector<int>>::pick(const superslim::Event& e, std::unordered_map<std::string, double>& w, const std::string& sys);
 
    const TH1* get_cuts(const std::string& label, const std::vector<std::string>& files);
    void process(const std::string& process, const std::string& channel, const std::vector<std::string>& files, TTree& t, std::vector<fastlane::Cut*>& cuts, std::vector<fastlane::StaticCut*>& weights, const std::string& sys, PyObject* log, int max);
-   void update_weights(std::unordered_map<std::string, double>& ws, const superslim::Event& e, const superslim::Combination& combo, const std::string& sys);
+   void update_weights(std::unordered_map<std::string, double>& ws, const superslim::Event& e, const std::string& sys);
 }
 
 #endif

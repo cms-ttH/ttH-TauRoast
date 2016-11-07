@@ -30,8 +30,6 @@ namespace {
       std::vector<superslim::Lepton> dummy_lepton_vector;
       superslim::Tau dummy_tau;
       std::vector<superslim::Tau> dummy_tau_vector;
-      superslim::Combination dummy_combination;
-      std::vector<superslim::Combination> dummy_combination_vector;
       superslim::Trigger dummy_trigger;
       superslim::Event dummy_event;
       edm::Wrapper<superslim::Event> dummy_event_wrapper;

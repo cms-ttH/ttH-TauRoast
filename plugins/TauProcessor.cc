@@ -51,45 +51,6 @@
 #include "MiniAOD/MiniAODHelper/interface/MiniAODHelper.h"
 #include "ttH/TauRoast/interface/SuperSlim.h"
 
-template<typename T>
-std::vector<std::vector<T>>
-build_permutations(const std::vector<T>& things, unsigned int min, unsigned int max)
-{
-   std::vector<std::vector<T>> res;
-
-   if (min == 0) {
-      res.push_back({});
-      ++min;
-   }
-
-   for (unsigned int num = min; num <= max and num <= things.size(); ++num) {
-      std::vector<unsigned int> indices;
-      for (unsigned int i = 0; i < num; ++i)
-         indices.push_back(i);
-
-      do {
-         std::vector<T> perm;
-         for (const auto& i: indices)
-            perm.push_back(things[i]);
-         res.push_back(perm);
-
-         for (int i = indices.size() - 1; i >= 0; --i) {
-            // increase indices, starting with the back
-            indices[i] += 1;
-            if (indices[i] <= things.size() - indices.size() + i) {
-               // if an index is smaller than the # of things (minus room
-               // for the other indices), we need to reset the
-               // remaining ones and stop increasing lower indices.
-               for (unsigned int j = 1; i + j < indices.size(); ++j)
-                  indices[i + j] = indices[i] + j;
-               break;
-            }
-         }
-      } while (indices.front() < things.size() && indices.back() < things.size());
-   }
-
-   return res;
-}
 
 template<typename T>
 edm::Handle<T>
@@ -150,7 +111,6 @@ class TauProcessor : public edm::one::EDProducer<edm::BeginRunProducer, edm::End
       removeOverlap(const std::vector<T1>& v1, const std::vector<T2>& v2, double dR = 0.02);
 
       void passCut(unsigned int cut, const std::string& name, float w = 1.0);
-      void passComboCut(unsigned int event_cut, unsigned int combo_cut, int& passed, const std::string& name);
 
       MiniAODHelper helper_;
 
@@ -159,7 +119,6 @@ class TauProcessor : public edm::one::EDProducer<edm::BeginRunProducer, edm::End
       unsigned int min_leptons_;
       unsigned int max_leptons_;
       unsigned int min_taus_;
-      unsigned int max_taus_;
 
       unsigned int min_jets_;
       unsigned int min_tags_;
@@ -222,7 +181,6 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    min_leptons_(config.getParameter<unsigned int>("minLeptons")),
    max_leptons_(config.getParameter<unsigned int>("maxLeptons")),
    min_taus_(config.getParameter<unsigned int>("minTaus")),
-   max_taus_(config.getParameter<unsigned int>("maxTaus")),
    min_jets_(config.getParameter<unsigned int>("minJets")),
    min_tags_(config.getParameter<unsigned int>("minTags")),
    max_tags_(config.getParameter<int>("maxTags")),
@@ -338,16 +296,6 @@ TauProcessor::passCut(unsigned int cut, const std::string& name, float w)
 
 
 void
-TauProcessor::passComboCut(unsigned int event_cut, unsigned int combo_cut, int& passed, const std::string& name)
-{
-   if (not (passed & (1 << combo_cut))) {
-      passed |= 1 << combo_cut;
-      passCut(event_cut + combo_cut, name);
-   }
-}
-
-
-void
 TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
 {
    using namespace edm;
@@ -452,187 +400,183 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
    for (unsigned int i = 0; i < all_leptons.size(); ++i)
       all_leptons[i].rank(i);
 
+   // ================
+   // Lepton selection
+   // ================
+
+   auto lepton_id= superslim::Lepton::MVA;
+   std::vector<superslim::Lepton> leptons;
+   std::vector<superslim::Lepton> cleaning_leptons;
+
+   std::copy_if(all_leptons.begin(), all_leptons.end(), std::back_inserter(leptons),
+         [&](const auto& l) { return l.preselected(lepton_id); });
+
+   auto loose_leptons = std::count_if(all_leptons.begin(), all_leptons.end(),
+         [&](const auto& l) { return l.loose(lepton_id); });
+
+   if (lepton_id == superslim::Lepton::MVA) {
+      std::copy_if(all_leptons.begin(), all_leptons.end(), std::back_inserter(cleaning_leptons),
+            [&](const auto& l) { return l.loose(superslim::Lepton::Fakeable); });
+   } else {
+      cleaning_leptons = leptons;
+   }
+
+   if (not take_all_ and (loose_leptons < min_leptons_ or loose_leptons > max_leptons_))
+      return;
+
+   passCut(event_cut++, "Leptons");
+
+   // =============
+   // Tau Selection
+   // =============
+
+   auto tau_id = superslim::Tau::IsoMVA03;
+
    int r = 0;
-   std::vector<superslim::Tau> all_taus;
+   std::vector<superslim::Tau> staus;
    for (const auto& tau: *taus) {
       auto t = superslim::Tau(tau, rpv, particles, genjets, r++);
-      if (t.loose())
-         all_taus.push_back(t);
+      if (t.loose(tau_id))
+         staus.push_back(t);
+   }
+   auto all_taus = removeOverlap(staus, leptons, .3);
+
+   if (not take_all_ and all_taus.size() < min_taus_)
+      return;
+
+   // Select tight τ.  If not enough tight τ are available, select the
+   // first n τ — for the fake background.
+   std::vector<superslim::Tau> chosen_taus;
+   std::copy_if(all_taus.begin(), all_taus.end(), std::back_inserter(chosen_taus),
+         [&](const superslim::Tau& t) -> bool { return t.selected(tau_id, superslim::id::Tight); });
+   if (not take_all_ and chosen_taus.size() < min_taus_) {
+      std::vector<superslim::Tau>().swap(chosen_taus);
+      std::copy(all_taus.begin(), all_taus.begin() + min_taus_, std::back_inserter(chosen_taus));
    }
 
-   // =========================
-   // Tau combination selection
-   // =========================
+   passCut(event_cut++, "Taus");
 
-   std::vector<superslim::Combination> combos;
+   // =============
+   // Jet Selection
+   // =============
 
-   // cut index bitmap
-   int passed = 0;
+   bool pass_jets = false;
+   bool pass_tags = false;
+   std::map<std::string, std::vector<superslim::Jet>> sjets;
+   std::map<std::string, superslim::LorentzVector> smets;
+   for (auto& sys: systematics_) {
+      // auto corrected_jets = helper_.GetCorrectedJets(uncorrected_jets, event, setup, sys.second);
+      // corrected_jets = helper_.GetSelectedJets(corrected_jets, std::min(min_jet_pt_, min_tag_pt_), max_jet_eta_, jetID::none, '-');
+      // corrected_jets = helper_.GetSelectedJets(raw_jets, std::min(min_jet_pt_, min_tag_pt_), max_jet_eta_, jetID::none, '-');
+      // corrected_jets = helper_.GetSortedByPt(corrected_jets);
 
-   // for (const auto& lepton_id: {superslim::Lepton::LJ, superslim::Lepton::MVA}) {
-   for (const auto& lepton_id: {superslim::Lepton::MVA}) {
-      std::vector<superslim::Lepton> leptons;
-      std::vector<superslim::Lepton> cleaning_leptons;
+      // Jet selection
+      // auto jets_wo_lep = removeOverlap(corrected_jets, leptons, .4);
+      auto jets_wo_lep = removeOverlap(raw_jets, cleaning_leptons, .4);
+      auto jets_no_taus = removeOverlap(jets_wo_lep, all_taus, .4);
+      auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, max_jet_eta_, jetID::none, '-');
+      auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'M');
+      auto selected_loose_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'L');
 
-      std::copy_if(all_leptons.begin(), all_leptons.end(), std::back_inserter(leptons),
-            [&](const auto& l) { return l.preselected(lepton_id); });
+      if (filter_pu_jets_) {
+         selected_jets = get_non_pileup(selected_jets);
+         selected_tags = get_non_pileup(selected_tags);
+         selected_loose_tags = get_non_pileup(selected_loose_tags);
+      };
 
-      auto loose_leptons = std::count_if(all_leptons.begin(), all_leptons.end(),
-            [&](const auto& l) { return l.loose(lepton_id); });
-
-      if (lepton_id == superslim::Lepton::MVA) {
-         std::copy_if(all_leptons.begin(), all_leptons.end(), std::back_inserter(cleaning_leptons),
-               [&](const auto& l) { return l.loose(superslim::Lepton::Fakeable); });
-      } else {
-         cleaning_leptons = leptons;
+      if (selected_jets.size() >= min_jets_ and selected_tags.size() >= min_tags_) {
+         pass_jets = true;
+      } else if (selected_jets.size() >= min_jets_ and selected_loose_tags.size() >= std::max(min_tags_, 2u)) {
+         pass_jets = true;
       }
 
-      if (not take_all_ and (loose_leptons < min_leptons_ or loose_leptons > max_leptons_))
-         continue;
+      if (max_tags_ < 0 or selected_tags.size() <= (unsigned int) max_tags_)
+         pass_tags = true;
 
-      auto selected_taus = removeOverlap(all_taus, leptons, .3);
-      passComboCut(event_cut, 0, passed, "Leptons in combo");
+      // auto new_jets = helper_.GetCorrectedJets(old_jets_uncorrected, event, setup, sys.second);
+      // auto corrected_mets = helper_.CorrectMET(old_jets, new_jets, *mets);
 
-      for (const auto& tau_id: {superslim::Tau::IsoMVA03}) {
-         std::vector<superslim::Tau> all_taus;
-         std::copy_if(selected_taus.begin(), selected_taus.end(), std::back_inserter(all_taus),
-               [&](const superslim::Tau& t) -> bool { return t.loose(tau_id); });
+      sjets[sys.first] = {};
+      for (const auto& jet: selected_jets)
+         sjets[sys.first].push_back(superslim::Jet(jet, particles));
 
-         bool pass_jets = false;
-         bool pass_tags = false;
-         std::map<std::string, std::vector<superslim::Jet>> sjets;
-         std::map<std::string, superslim::LorentzVector> smets;
-         for (auto& sys: systematics_) {
-            // auto corrected_jets = helper_.GetCorrectedJets(uncorrected_jets, event, setup, sys.second);
-            // corrected_jets = helper_.GetSelectedJets(corrected_jets, std::min(min_jet_pt_, min_tag_pt_), max_jet_eta_, jetID::none, '-');
-            // corrected_jets = helper_.GetSelectedJets(raw_jets, std::min(min_jet_pt_, min_tag_pt_), max_jet_eta_, jetID::none, '-');
-            // corrected_jets = helper_.GetSortedByPt(corrected_jets);
+      // smets[sys.first] = corrected_mets[0].p4();
+      smets[sys.first] = mets->at(0).p4();
+   }
 
-            // Jet selection
-            // auto jets_wo_lep = removeOverlap(corrected_jets, leptons, .4);
-            auto jets_wo_lep = removeOverlap(raw_jets, cleaning_leptons, .4);
-            auto jets_no_taus = removeOverlap(jets_wo_lep, all_taus, .4);
-            auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, max_jet_eta_, jetID::none, '-');
-            auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'M');
-            auto selected_loose_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'L');
+   if (not (pass_jets and pass_tags) and not take_all_)
+      return;
 
-            if (filter_pu_jets_) {
-               selected_jets = get_non_pileup(selected_jets);
-               selected_tags = get_non_pileup(selected_tags);
-               selected_loose_tags = get_non_pileup(selected_loose_tags);
-            };
+   passCut(event_cut++, "Jet requirements");
+   passCut(event_cut++, "Ntuple");
 
-            if (selected_jets.size() >= min_jets_ and selected_tags.size() >= min_tags_) {
-               pass_jets = true;
-            } else if (selected_jets.size() >= min_jets_ and selected_loose_tags.size() >= std::max(min_tags_, 2u)) {
-               pass_jets = true;
-            }
+   int category = 0;
+   int ntv = -1;
 
-            if (max_tags_ < 0 or selected_tags.size() <= (unsigned int) max_tags_)
-               pass_tags = true;
+   if (!data_) {
+      // HF categorization
+      auto genJets = get_collection(*this, event, genJetsToken_);
+      auto genBHadFlavour = get_collection(*this, event, genBHadFlavourToken_);
+      auto genBHadJetIndex = get_collection(*this, event, genBHadJetIndexToken_);
+      auto genBHadFromTopWeakDecay = get_collection(*this, event, genBHadFromTopWeakDecayToken_);
+      auto genBHadPlusMothers = get_collection(*this, event, genBHadPlusMothersToken_);
+      auto genBHadPlusMothersIndices = get_collection(*this, event, genBHadPlusMothersIndicesToken_);
+      auto genBHadIndex = get_collection(*this, event, genBHadIndexToken_);
+      auto genBHadLeptonHadronIndex = get_collection(*this, event, genBHadLeptonHadronIndexToken_);
+      auto genBHadLeptonViaTau = get_collection(*this, event, genBHadLeptonViaTauToken_);
+      auto genCHadFlavour = get_collection(*this, event, genCHadFlavourToken_);
+      auto genCHadJetIndex = get_collection(*this, event, genCHadJetIndexToken_);
+      auto genCHadFromTopWeakDecay = get_collection(*this, event, genCHadFromTopWeakDecayToken_);
+      auto genCHadBHadronId = get_collection(*this, event, genCHadBHadronIdToken_);
 
-            // auto new_jets = helper_.GetCorrectedJets(old_jets_uncorrected, event, setup, sys.second);
-            // auto corrected_mets = helper_.CorrectMET(old_jets, new_jets, *mets);
+      category = helper_.ttHFCategorization(*genJets,
+         *genBHadIndex, *genBHadJetIndex, *genBHadFlavour, *genBHadFromTopWeakDecay,
+         *genBHadPlusMothers, *genBHadPlusMothersIndices, *genBHadLeptonHadronIndex, *genBHadLeptonViaTau,
+         *genCHadFlavour, *genCHadJetIndex, *genCHadFromTopWeakDecay, *genCHadBHadronId, 20., 2.4);
 
-            sjets[sys.first] = {};
-            for (const auto& jet: selected_jets)
-               sjets[sys.first].push_back(superslim::Jet(jet, particles));
-
-            // smets[sys.first] = corrected_mets[0].p4();
-            smets[sys.first] = mets->at(0).p4();
-         }
-
-         if (not (pass_jets and pass_tags) and not take_all_) {
-            continue;
-         }
-
-         passComboCut(event_cut, 1, passed, "Jet requirements");
-
-         std::vector<std::vector<superslim::Tau>> combinations = {all_taus};
-         if (tau_combinatorics_)
-            combinations = build_permutations(all_taus, min_taus_, max_taus_);
-
-         for (const auto& taus: combinations) {
-            passComboCut(event_cut, 2, passed, "Taus in combo");
-            passComboCut(event_cut, 3, passed, "Ntuple");
-
-            auto c = superslim::Combination(taus, tau_id, leptons, lepton_id, sjets, smets);
-            combos.push_back(c);
+      auto infos = get_collection(*this, event, pu_token_);
+      for (const auto& info: *infos) {
+         if (info.getBunchCrossing() == 0) {
+            ntv = info.getTrueNumInteractions();
+            break;
          }
       }
    }
 
-   if (combos.size() > 0) {
-      int category = 0;
-      int ntv = -1;
+   auto trigger_results = get_collection(*this, event, trig_token_);
+   auto trigger_names = event.triggerNames(*trigger_results);
 
-      if (!data_) {
-         // HF categorization
-         auto genJets = get_collection(*this, event, genJetsToken_);
-         auto genBHadFlavour = get_collection(*this, event, genBHadFlavourToken_);
-         auto genBHadJetIndex = get_collection(*this, event, genBHadJetIndexToken_);
-         auto genBHadFromTopWeakDecay = get_collection(*this, event, genBHadFromTopWeakDecayToken_);
-         auto genBHadPlusMothers = get_collection(*this, event, genBHadPlusMothersToken_);
-         auto genBHadPlusMothersIndices = get_collection(*this, event, genBHadPlusMothersIndicesToken_);
-         auto genBHadIndex = get_collection(*this, event, genBHadIndexToken_);
-         auto genBHadLeptonHadronIndex = get_collection(*this, event, genBHadLeptonHadronIndexToken_);
-         auto genBHadLeptonViaTau = get_collection(*this, event, genBHadLeptonViaTauToken_);
-         auto genCHadFlavour = get_collection(*this, event, genCHadFlavourToken_);
-         auto genCHadJetIndex = get_collection(*this, event, genCHadJetIndexToken_);
-         auto genCHadFromTopWeakDecay = get_collection(*this, event, genCHadFromTopWeakDecayToken_);
-         auto genCHadBHadronId = get_collection(*this, event, genCHadBHadronIdToken_);
+   std::auto_ptr<superslim::Event> ptr(new superslim::Event(
+            chosen_taus, all_taus, all_leptons, sjets, smets,
+            tau_id, lepton_id,
+            event.id().run(), event.id().luminosityBlock(), event.id().event(),
+            npv, ntv, pv,
+            category,
+            superslim::Trigger(*trigger_results, trigger_names),
+            particles));
 
-         category = helper_.ttHFCategorization(*genJets,
-            *genBHadIndex, *genBHadJetIndex, *genBHadFlavour, *genBHadFromTopWeakDecay,
-            *genBHadPlusMothers, *genBHadPlusMothersIndices, *genBHadLeptonHadronIndex, *genBHadLeptonViaTau,
-            *genCHadFlavour, *genCHadJetIndex, *genCHadFromTopWeakDecay, *genCHadBHadronId, 20., 2.4);
+   ptr->setWeight("Generator", genweight);
 
-         auto infos = get_collection(*this, event, pu_token_);
-         for (const auto& info: *infos) {
-            if (info.getBunchCrossing() == 0) {
-               ntv = info.getTrueNumInteractions();
-               break;
-            }
-         }
+   if (save_gen_) {
+      std::vector<superslim::GenJet> gjets;
+      for (const auto& j: genjets) {
+         gjets.push_back(j);
+         gjets.back().findClosestGenJet(genjets);
+         gjets.back().findClosestGenParticle(particles);
       }
 
-      auto trigger_results = get_collection(*this, event, trig_token_);
-      auto trigger_names = event.triggerNames(*trigger_results);
-
-      std::auto_ptr<superslim::Event> ptr(new superslim::Event(
-               combos,
-               all_taus,
-               all_leptons,
-               event.id().run(), event.id().luminosityBlock(), event.id().event(),
-               npv, ntv, pv,
-               category,
-               superslim::Trigger(*trigger_results, trigger_names),
-               particles));
-
-      ptr->setWeight("Generator", genweight);
-
-      if (save_gen_) {
-         std::vector<superslim::GenJet> gjets;
-         for (const auto& j: genjets) {
-            gjets.push_back(j);
-            gjets.back().findClosestGenJet(genjets);
-            gjets.back().findClosestGenParticle(particles);
-         }
-
-         std::vector<superslim::GenObject> gparticles;
-         std::array<int, 3> ids{{11, 13, 15}};
-         for (const auto& p: particles) {
-            if (std::find(ids.begin(), ids.end(), abs(p.pdgId())) != ids.end() and
-                  (p.statusFlags().isPrompt() or p.isPromptFinalState() or p.statusFlags().isDirectPromptTauDecayProduct() or p.isDirectPromptTauDecayProductFinalState()))
-               gparticles.push_back(p);
-         }
-
-         ptr->setGenJets(gjets);
-         ptr->setGenParticles(gparticles);
+      std::vector<superslim::GenObject> gparticles;
+      std::array<int, 3> ids{{11, 13, 15}};
+      for (const auto& p: particles) {
+         if (std::find(ids.begin(), ids.end(), abs(p.pdgId())) != ids.end() and
+               (p.statusFlags().isPrompt() or p.isPromptFinalState() or p.statusFlags().isDirectPromptTauDecayProduct() or p.isDirectPromptTauDecayProductFinalState()))
+            gparticles.push_back(p);
       }
 
-      event.put(std::move(ptr));
+      ptr->setGenJets(gjets);
+      ptr->setGenParticles(gparticles);
    }
+   event.put(std::move(ptr));
 }
 
 void

@@ -410,44 +410,6 @@ namespace superslim {
          GenJet gen_jet_;
    };
 
-   class Combination {
-      public:
-         Combination() {};
-         Combination(
-               const std::vector<superslim::Tau>&,
-               superslim::Tau::id,
-               const std::vector<superslim::Lepton>&,
-               superslim::Lepton::id,
-               const std::map<std::string, std::vector<superslim::Jet>>&,
-               const std::map<std::string, LorentzVector>& met);
-         virtual ~Combination() {};
-
-         const std::vector<superslim::Jet>& jets(const std::string& s="NA") const { return jets_.find(s)->second; };
-         const std::vector<superslim::Lepton>& leptons() const { return leptons_; };
-         const std::vector<superslim::Lepton>& electrons() const { return electrons_; };
-         const std::vector<superslim::Lepton>& muons() const { return muons_; };
-         const std::vector<superslim::Tau>& taus() const { return taus_; };
-         const LorentzVector& met(const std::string& s="NA") const { return met_.find(s)->second; };
-         const std::map<std::string, float>& weights() const { return weights_; };
-
-         superslim::Tau::id tauId() const { return tau_id_; };
-         superslim::Lepton::id leptonId() const { return lepton_id_; };
-
-         void setWeight(const std::string& s, float f) { weights_[s] = f; };
-      private:
-         std::map<std::string, std::vector<superslim::Jet>> jets_;
-         std::vector<superslim::Lepton> leptons_;
-         std::vector<superslim::Lepton> electrons_;
-         std::vector<superslim::Lepton> muons_;
-         std::vector<superslim::Tau> taus_;
-         std::map<std::string, LorentzVector> met_;
-
-         superslim::Tau::id tau_id_;
-         superslim::Lepton::id lepton_id_;
-
-         std::map<std::string, float> weights_;
-   };
-
    class Trigger {
       public:
          Trigger() {};
@@ -463,9 +425,13 @@ namespace superslim {
    class Event {
       public:
          Event() {};
-         Event(const std::vector<superslim::Combination>& cs,
+         Event(const std::vector<superslim::Tau>&,
                const std::vector<superslim::Tau>&,
                const std::vector<superslim::Lepton>&,
+               const std::map<std::string, std::vector<superslim::Jet>>&,
+               const std::map<std::string, LorentzVector>& met,
+               superslim::Tau::id,
+               superslim::Lepton::id,
                long run, long lumi, long event,
                int npv, int ntv,
                const std::vector<superslim::Vertex>& pv,
@@ -474,10 +440,17 @@ namespace superslim {
                const reco::GenParticleCollection& genparticles);
          virtual ~Event() {};
 
-         const std::vector<superslim::Combination>& combos() const { return combos_; };
          const std::vector<superslim::Lepton>& leptons() const { return leptons_; };
          const std::vector<superslim::Tau>& taus() const { return taus_; };
+         const std::vector<superslim::Tau>& allTaus() const { return all_taus_; };
+
+         const std::vector<superslim::Jet>& jets(const std::string& s="NA") const { return jets_.find(s)->second; };
+         const LorentzVector& met(const std::string& s="NA") const { return met_.find(s)->second; };
+
          const std::map<std::string, float>& weights() const { return weights_; };
+
+         superslim::Tau::id tauId() const { return tau_id_; };
+         superslim::Lepton::id leptonId() const { return lepton_id_; };
 
          const std::vector<superslim::GenObject>& genParticles() const { return gen_particles_; };
          const std::vector<superslim::GenJet>& genJets() const { return gen_jets_; };
@@ -502,9 +475,15 @@ namespace superslim {
          void setGenParticles(const std::vector<GenObject>& v) { gen_particles_ = v; };
          void setGenJets(const std::vector<GenJet>& v) { gen_jets_ = v; };
       private:
-         std::vector<superslim::Combination> combos_;
          std::vector<superslim::Tau> taus_;
+         std::vector<superslim::Tau> all_taus_;
          std::vector<superslim::Lepton> leptons_;
+
+         std::map<std::string, std::vector<superslim::Jet>> jets_;
+         std::map<std::string, LorentzVector> met_;
+
+         superslim::Tau::id tau_id_;
+         superslim::Lepton::id lepton_id_;
 
          std::vector<superslim::GenObject> gen_particles_;
          std::vector<superslim::GenJet> gen_jets_;

@@ -491,29 +491,6 @@ namespace superslim {
       return false;
    };
 
-
-   Combination::Combination(
-         const std::vector<Tau>& taus,
-         superslim::Tau::id tau_id,
-         const std::vector<Lepton>& leptons,
-         superslim::Lepton::id lepton_id,
-         const std::map<std::string, std::vector<Jet>>& jets,
-         const std::map<std::string, LorentzVector>& met) :
-      jets_(jets),
-      leptons_(leptons),
-      taus_(taus),
-      met_(met),
-      tau_id_(tau_id),
-      lepton_id_(lepton_id)
-   {
-      for (const auto& l: leptons_) {
-         if (l.electron())
-            electrons_.push_back(l);
-         else
-            muons_.push_back(l);
-      }
-   }
-
    bool
    operator<(const PhysObject& lhs, const PhysObject& rhs)
    {
@@ -542,17 +519,21 @@ namespace superslim {
       ) != accepted_.end();
    }
 
-   Event::Event(const std::vector<superslim::Combination>& cs,
-         const std::vector<superslim::Tau>& taus,
-         const std::vector<superslim::Lepton>& leps,
-         long run, long lumi, long event,
-         int npv, int ntv,
-         const std::vector<superslim::Vertex>& pv,
-         int category,
-         const superslim::Trigger& trigger,
-         const reco::GenParticleCollection& genparticles) :
-      combos_(cs),
-      taus_(taus), leptons_(leps),
+   Event::Event(const std::vector<superslim::Tau>& taus,
+               const std::vector<superslim::Tau>& all_taus,
+               const std::vector<superslim::Lepton>& leps,
+               const std::map<std::string, std::vector<superslim::Jet>>& jets,
+               const std::map<std::string, LorentzVector>& met,
+               superslim::Tau::id tid,
+               superslim::Lepton::id lid,
+               long run, long lumi, long event,
+               int npv, int ntv,
+               const std::vector<superslim::Vertex>& pv,
+               int category,
+               const superslim::Trigger& trigger,
+               const reco::GenParticleCollection& genparticles) :
+      taus_(taus), all_taus_(all_taus), leptons_(leps),
+      jets_(jets), met_(met), tau_id_(tid), lepton_id_(lid),
       run_(run), lumi_(lumi), event_(event),
       npv_(npv), ntv_(ntv),
       hfcat_(category),
