@@ -219,7 +219,7 @@ fastlane::process(const std::string& process, const std::string& channel, const 
 
       // Event numbers in this vector will trigger debug output, printing
       // when they fail a cut.
-      static const std::vector<int> debug{1587527, 7287692, 3965093, 6161245, 5941128, 11227510, 13027800, 16536261, 16547608};
+      static const std::vector<int> debug{};
 
       const auto e = handle.ptr();
       bool failed = false;
