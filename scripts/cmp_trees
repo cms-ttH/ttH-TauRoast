@@ -142,7 +142,7 @@ def compare_events(joint, basename, baseframe, compname, compframe):
 
     voi = ['nEvent'] + ['n_presel_' + o for o in ('mu', 'ele', 'tau', 'jet')]
     voi += ['{}_{}'.format(o, v) for o, v in itertools.product(('mu0', 'ele0'), ('pt', 'eta', 'phi', 'jetCSV', 'leptonMVA'))]
-    voi += ['{}_{}'.format(o, v) for o, v in itertools.product(('tau0', 'tau1'), ('pt', 'eta', 'phi'))]
+    voi += ['{}_{}'.format(o, v) for o, v in itertools.product(('tau0', 'tau1'), ('pt', 'eta', 'phi', 'charge'))]
 
     rows = [''.join([cell.format((h, '')) for h in voi])]
     for _, e in only_base.iterrows():
