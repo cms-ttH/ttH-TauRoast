@@ -428,6 +428,7 @@ namespace superslim {
          Event(const std::vector<superslim::Tau>&,
                const std::vector<superslim::Tau>&,
                const std::vector<superslim::Lepton>&,
+               const std::vector<superslim::Lepton>&,
                const std::map<std::string, std::vector<superslim::Jet>>&,
                const std::map<std::string, LorentzVector>& met,
                superslim::Tau::id,
@@ -441,6 +442,7 @@ namespace superslim {
          virtual ~Event() {};
 
          const std::vector<superslim::Lepton>& leptons() const { return leptons_; };
+         const std::vector<superslim::Lepton>& allLeptons() const { return all_leptons_; };
          const std::vector<superslim::Tau>& taus() const { return taus_; };
          const std::vector<superslim::Tau>& allTaus() const { return all_taus_; };
 
@@ -478,6 +480,7 @@ namespace superslim {
          std::vector<superslim::Tau> taus_;
          std::vector<superslim::Tau> all_taus_;
          std::vector<superslim::Lepton> leptons_;
+         std::vector<superslim::Lepton> all_leptons_;
 
          std::map<std::string, std::vector<superslim::Jet>> jets_;
          std::map<std::string, LorentzVector> met_;

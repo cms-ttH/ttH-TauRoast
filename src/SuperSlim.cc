@@ -522,6 +522,7 @@ namespace superslim {
    Event::Event(const std::vector<superslim::Tau>& taus,
                const std::vector<superslim::Tau>& all_taus,
                const std::vector<superslim::Lepton>& leps,
+               const std::vector<superslim::Lepton>& all_leps,
                const std::map<std::string, std::vector<superslim::Jet>>& jets,
                const std::map<std::string, LorentzVector>& met,
                superslim::Tau::id tid,
@@ -532,7 +533,7 @@ namespace superslim {
                int category,
                const superslim::Trigger& trigger,
                const reco::GenParticleCollection& genparticles) :
-      taus_(taus), all_taus_(all_taus), leptons_(leps),
+      taus_(taus), all_taus_(all_taus), leptons_(leps), all_leptons_(all_leps),
       jets_(jets), met_(met), tau_id_(tid), lepton_id_(lid),
       run_(run), lumi_(lumi), event_(event),
       npv_(npv), ntv_(ntv),

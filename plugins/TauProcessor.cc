@@ -387,37 +387,33 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
    // ================
 
    auto lepton_id = superslim::Lepton::MVA;
-   std::vector<superslim::Lepton> cleaning_leptons;
 
-   std::vector<superslim::Lepton> leptons;
+   std::vector<superslim::Lepton> all_leptons;
+   std::vector<superslim::Lepton> chosen_leptons;
+
    for (const auto& lep: *electrons) {
-      // auto l = superslim::Lepton(lep, helper_.GetElectronRelIso(lep, coneSize::R03, corrType::rhoEA, effAreaType::spring15), rpv, *bs, particles);
       auto l = superslim::Lepton(lep, rpv, *bs, particles, -1);
       if (l.preselected(lepton_id))
-         leptons.push_back(l);
+         all_leptons.push_back(l);
    }
 
    for (const auto& lep: *muons) {
-      // auto l = superslim::Lepton(lep, helper_.GetMuonRelIso(lep, coneSize::R04, corrType::deltaBeta), rpv, *bs, particles);
       auto l = superslim::Lepton(lep, rpv, *bs, particles, -1);
       if (l.preselected(lepton_id))
-         leptons.push_back(l);
+         all_leptons.push_back(l);
    }
-   std::sort(leptons.begin(), leptons.end());
-   for (unsigned int i = 0; i < leptons.size(); ++i)
-      leptons[i].rank(i);
-
-   auto loose_leptons = std::count_if(leptons.begin(), leptons.end(),
-         [&](const auto& l) { return l.loose(lepton_id); });
+   std::sort(all_leptons.begin(), all_leptons.end());
+   for (unsigned int i = 0; i < all_leptons.size(); ++i)
+      all_leptons[i].rank(i);
 
    if (lepton_id == superslim::Lepton::MVA) {
-      std::copy_if(leptons.begin(), leptons.end(), std::back_inserter(cleaning_leptons),
+      std::copy_if(all_leptons.begin(), all_leptons.end(), std::back_inserter(chosen_leptons),
             [&](const auto& l) { return l.loose(superslim::Lepton::Fakeable); });
    } else {
-      cleaning_leptons = leptons;
+      chosen_leptons = all_leptons;
    }
 
-   if (not take_all_ and (loose_leptons < min_leptons_ or loose_leptons > max_leptons_))
+   if (not take_all_ and chosen_leptons.size() < min_leptons_)
       return;
 
    passCut(event_cut++, "Leptons");
@@ -435,7 +431,7 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
       if (t.loose(tau_id))
          staus.push_back(t);
    }
-   auto all_taus = removeOverlap(staus, leptons, .3);
+   auto all_taus = removeOverlap(staus, all_leptons, .3);
 
    if (not take_all_ and all_taus.size() < min_taus_)
       return;
@@ -472,7 +468,7 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
 
       // Jet selection
       // auto jets_wo_lep = removeOverlap(corrected_jets, leptons, .4);
-      auto jets_wo_lep = removeOverlap(raw_jets, cleaning_leptons, .4);
+      auto jets_wo_lep = removeOverlap(raw_jets, chosen_leptons, .4);
       auto jets_no_taus = removeOverlap(jets_wo_lep, all_taus, .4);
       auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, max_jet_eta_, jetID::none, '-');
       auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'M');
@@ -547,7 +543,7 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
    auto trigger_names = event.triggerNames(*trigger_results);
 
    std::auto_ptr<superslim::Event> ptr(new superslim::Event(
-            chosen_taus, all_taus, leptons, sjets, smets,
+            chosen_taus, all_taus, chosen_leptons, all_leptons, sjets, smets,
             tau_id, lepton_id,
             event.id().run(), event.id().luminosityBlock(), event.id().event(),
             npv, ntv, pv,
