@@ -219,7 +219,7 @@ fastlane::process(const std::string& process, const std::string& channel, const 
 
       // Event numbers in this vector will trigger debug output, printing
       // when they fail a cut.
-      static const std::vector<int> debug{};
+      static const std::vector<int> debug{1587527, 7287692, 3965093, 6161245, 5941128, 11227510, 13027800, 16536261, 16547608};
 
       const auto e = handle.ptr();
       bool failed = false;
@@ -228,11 +228,17 @@ fastlane::process(const std::string& process, const std::string& channel, const 
             auto it = std::find(debug.begin(), debug.end(), e->event());
             if (it != debug.end()) {
                std::cout << "FAILED: " << *it << " MISSED " << cut->name() << std::endl;
-               std::cout << "\tl  pt " << e->leptons()[0].pt()
-                  << "\tl  mva " << e->leptons()[0].mvaRaw()
-                  << "\tl  id " << e->leptons()[0].mva()
-                  << "\tl  csv " << e->leptons()[0].nearestJetCSV()
-                  << std::endl;
+               const std::string labels("₁₂₃₄₅₆");
+               int i = 0;
+               for (const auto& l: e->leptons()) {
+                  std::cout << "\tl" << labels.substr(i * 3, 3) << " pt " << l.pt()
+                     << " :: l" << labels.substr(i * 3, 3) << " mva " << l.mvaRaw()
+                     << " :: l" << labels.substr(i * 3, 3) << " id " << l.mva()
+                     << " :: l" << labels.substr(i * 3, 3) << " csv " << l.nearestJetCSV()
+                     << " :: l" << labels.substr(i * 3, 3) << " pdg " << l.pdgId()
+                     << std::endl;
+                  i += 1;
+               }
                std::cout << "\tτ₁ pt " << e->taus()[0].pt()
                   << "\tτ₁ mva " << e->taus()[0].isolationMVA03()
                   << std::endl;
