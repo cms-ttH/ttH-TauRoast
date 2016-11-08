@@ -23,7 +23,7 @@ lower(const std::string& s)
 bool
 fastlane::Cut::operator()(const std::string& process, const superslim::Event& e, const std::string& sys)
 {
-   auto passed = fct_(e, e.taus(), e.allTaus(), e.tauId(), e.leptons(), e.leptonId(), e.jets(sys), e.met(sys));
+   auto passed = fct_(e, e.taus(), e.allTaus(), e.tauId(), e.leptons(), e.allLeptons(), e.leptonId(), e.jets(sys), e.met(sys));
 
    if (passed) {
       event_t id = std::make_tuple(e.run(), e.lumi(), e.event());
@@ -100,12 +100,12 @@ namespace fastlane {
    template<> void Leaf<std::vector<float>>::pick(const superslim::Event& e, std::unordered_map<std::string, double>& w, const std::string& sys)
    {
       val_.clear();
-      fct_(e, e.taus(), e.allTaus(), e.leptons(), cached_electrons_, cached_muons_, e.jets(sys), e.met(sys), w, val_);
+      fct_(e, e.taus(), e.allTaus(), e.leptons(), cached_electrons_, cached_muons_, e.allLeptons(), e.jets(sys), e.met(sys), w, val_);
    }
    template<> void Leaf<std::vector<int>>::pick(const superslim::Event& e, std::unordered_map<std::string, double>& w, const std::string& sys)
    {
       val_.clear();
-      fct_(e, e.taus(), e.allTaus(), e.leptons(), cached_electrons_, cached_muons_, e.jets(sys), e.met(sys), w, val_);
+      fct_(e, e.taus(), e.allTaus(), e.leptons(), cached_electrons_, cached_muons_, e.allLeptons(), e.jets(sys), e.met(sys), w, val_);
    }
 }
 

@@ -38,6 +38,7 @@ namespace fastlane {
                const std::vector<superslim::Tau>&,
                superslim::Tau::id,
                const std::vector<superslim::Lepton>&,
+               const std::vector<superslim::Lepton>&,
                superslim::Lepton::id,
                const std::vector<superslim::Jet>&,
                const superslim::LorentzVector&);
@@ -102,6 +103,7 @@ namespace fastlane {
                const std::vector<superslim::Lepton>&,
                const std::vector<superslim::Lepton>&,
                const std::vector<superslim::Lepton>&,
+               const std::vector<superslim::Lepton>&,
                const std::vector<superslim::Jet>&,
                const superslim::LorentzVector&,
                std::unordered_map<std::string, double>&,
@@ -114,7 +116,7 @@ namespace fastlane {
          void grow(TTree& t) { t.Branch(name_.c_str(), &val_); };
          virtual void pick(const superslim::Event& e, std::unordered_map<std::string, double>& w, const std::string& sys) override {
             val_ = T();
-            fct_(e, e.taus(), e.allTaus(), e.leptons(), cached_electrons_, cached_muons_, e.jets(sys), e.met(sys), w, val_);
+            fct_(e, e.taus(), e.allTaus(), e.leptons(), cached_electrons_, cached_muons_, e.allLeptons(), e.jets(sys), e.met(sys), w, val_);
          };
 
       private:

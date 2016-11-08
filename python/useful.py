@@ -145,6 +145,7 @@ def code2cut(name, code):
                 const std::vector<superslim::Tau>& all_taus,
                 superslim::Tau::id tau_id,
                 const std::vector<superslim::Lepton>& leptons,
+                const std::vector<superslim::Lepton>& all_leptons,
                 superslim::Lepton::id lepton_id,
                 const std::vector<superslim::Jet>& jets,
                 const superslim::LorentzVector& met) {{ return {c}; }}
@@ -166,6 +167,7 @@ def code2leaf(name, typename, code):
                 const std::vector<superslim::Lepton>& leptons,
                 const std::vector<superslim::Lepton>& electrons,
                 const std::vector<superslim::Lepton>& muons,
+                const std::vector<superslim::Lepton>& all_leptons,
                 const std::vector<superslim::Jet>& jets,
                 const superslim::LorentzVector& met,
                 std::unordered_map<std::string, double>& weights,
