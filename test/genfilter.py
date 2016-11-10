@@ -37,16 +37,14 @@ process.source = cms.Source(
 if len(options.events) > 0:
     process.source.eventsToProcess = cms.untracked.VEventRange(options.events)
 
-process.load('ttH.TauMCGeneration.eventFilter_cfi')
+process.load('ttH.TauMCGeneration.eventFilterMAOD_cfi')
 process.ttHGenFilter.useFakeTaus = cms.bool(True)
 process.ttHGenFilter.minTaus = cms.int32(2)
 process.ttHGenFilter.fakeCut = cms.double(0.)
-process.ttHGenFilter.genParticles = cms.InputTag('prunedGenParticles')
-process.ttHGenFilter.genJets = cms.InputTag('slimmedGenJets')
 
 process.dump = cms.EDAnalyzer("EventContentAnalyzer")
 
-process.evpath = cms.Path(process.ttHGenFilter)
+process.evpath = cms.Path(process.ttHfilter)
 
 process.output = cms.OutputModule(
     "PoolOutputModule",
