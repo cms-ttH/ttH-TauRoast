@@ -101,6 +101,7 @@ template<> void fastlane::Leaf<std::vector<float>>::pick(const superslim::Event&
    val_.clear();
    fct_(e, e.taus(), e.allTaus(), e.leptons(), cached_electrons_, cached_muons_, e.allLeptons(), e.jets(sys), e.met(sys), w, val_);
 }
+
 template<> void fastlane::Leaf<std::vector<int>>::pick(const superslim::Event& e, std::unordered_map<std::string, double>& w, const std::string& sys)
 {
    val_.clear();
