@@ -73,40 +73,38 @@ std::vector<fastlane::BasicLeaf*> fastlane::BasicLeaf::leaves_;
 std::vector<superslim::Lepton> fastlane::BasicLeaf::cached_electrons_;
 std::vector<superslim::Lepton> fastlane::BasicLeaf::cached_muons_;
 
-namespace fastlane {
-   void
-   BasicLeaf::updateCache(const superslim::Event& e)
-   {
-      static int run = -1;
-      static int lumi = -1;
-      static int event = -1;
+void
+fastlane::BasicLeaf::updateCache(const superslim::Event& e)
+{
+   static int run = -1;
+   static int lumi = -1;
+   static int event = -1;
 
-      if (e.run() == run and e.lumi() == lumi and e.event() == event)
-         return;
+   if (e.run() == run and e.lumi() == lumi and e.event() == event)
+      return;
 
-      run = e.run();
-      lumi = e.lumi();
-      event = e.event();
+   run = e.run();
+   lumi = e.lumi();
+   event = e.event();
 
-      cached_electrons_.clear();
-      cached_muons_.clear();
+   cached_electrons_.clear();
+   cached_muons_.clear();
 
-      std::copy_if(e.leptons().begin(), e.leptons().end(), std::back_inserter(cached_electrons_),
-            [](const superslim::Lepton& l) -> bool { return l.electron(); });
-      std::copy_if(e.leptons().begin(), e.leptons().end(), std::back_inserter(cached_muons_),
-            [](const superslim::Lepton& l) -> bool { return l.muon(); });
-   }
+   std::copy_if(e.leptons().begin(), e.leptons().end(), std::back_inserter(cached_electrons_),
+         [](const superslim::Lepton& l) -> bool { return l.electron(); });
+   std::copy_if(e.leptons().begin(), e.leptons().end(), std::back_inserter(cached_muons_),
+         [](const superslim::Lepton& l) -> bool { return l.muon(); });
+}
 
-   template<> void Leaf<std::vector<float>>::pick(const superslim::Event& e, std::unordered_map<std::string, double>& w, const std::string& sys)
-   {
-      val_.clear();
-      fct_(e, e.taus(), e.allTaus(), e.leptons(), cached_electrons_, cached_muons_, e.allLeptons(), e.jets(sys), e.met(sys), w, val_);
-   }
-   template<> void Leaf<std::vector<int>>::pick(const superslim::Event& e, std::unordered_map<std::string, double>& w, const std::string& sys)
-   {
-      val_.clear();
-      fct_(e, e.taus(), e.allTaus(), e.leptons(), cached_electrons_, cached_muons_, e.allLeptons(), e.jets(sys), e.met(sys), w, val_);
-   }
+template<> void fastlane::Leaf<std::vector<float>>::pick(const superslim::Event& e, std::unordered_map<std::string, double>& w, const std::string& sys)
+{
+   val_.clear();
+   fct_(e, e.taus(), e.allTaus(), e.leptons(), cached_electrons_, cached_muons_, e.allLeptons(), e.jets(sys), e.met(sys), w, val_);
+}
+template<> void fastlane::Leaf<std::vector<int>>::pick(const superslim::Event& e, std::unordered_map<std::string, double>& w, const std::string& sys)
+{
+   val_.clear();
+   fct_(e, e.taus(), e.allTaus(), e.leptons(), cached_electrons_, cached_muons_, e.allLeptons(), e.jets(sys), e.met(sys), w, val_);
 }
 
 void
