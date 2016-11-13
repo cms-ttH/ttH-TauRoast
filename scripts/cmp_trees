@@ -127,10 +127,10 @@ def compare_quantities(joint, names, limit):
             rows = compare(joint, quants, limit)
             if len(rows) > 0:
                 yield ('Differences in {}'.format(obj), quantify, ''.join(map(row.format, rows)))
-        quants = sorted([col for col in both if col.endswith('weight')])
+        quants = sorted([col for col in both if col.endswith('weight') or col.startswith('n_')])
         rows = compare(joint, quants, limit)
         if len(rows) > 0:
-            yield ('Differences in weights', quantify, ''.join(map(row.format, rows)))
+            yield ('Differences in events', quantify, ''.join(map(row.format, rows)))
 
 
 def compare_events(joint, basename, baseframe, compname, compframe):
@@ -144,7 +144,9 @@ def compare_events(joint, basename, baseframe, compname, compframe):
     e_base = 'Events in {}: {}'.format(basename, ', '.join([str(n) for n in only_base.nEvent]))
     e_comp = 'Events in {}: {}'.format(compname, ', '.join([str(n) for n in only_comp.nEvent]))
 
-    voi = ['nEvent'] + ['n_presel_' + o for o in ('mu', 'ele', 'tau', 'jet')]
+    voi = ['nEvent'] + \
+        ['n_fakeablesel_' + o for o in ('mu', 'ele')] + \
+        ['n_presel_' + o for o in ('tau', 'jet')]
     voi += ['{}_{}'.format(o, v) for o, v in itertools.product(('mu0', 'ele0'), ('pt', 'eta', 'phi', 'jetCSV', 'leptonMVA'))]
     voi += ['{}_{}'.format(o, v) for o, v in itertools.product(('tau0', 'tau1'), ('pt', 'eta', 'phi', 'charge'))]
 

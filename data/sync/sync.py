@@ -72,9 +72,23 @@ Leaf('nmuons', 'f', 'result =  leptons.size() > 1 ? leptons[0].muon() + leptons[
 Leaf('ntaus', 'i', 'result = std::count_if(std::begin(taus), std::end(taus), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Medium; })')
 
 Leaf('nEvent', 'i', 'result = event.event()')
-Leaf('n_presel_mu', 'i', 'result = len(muons)')
-Leaf('n_presel_ele', 'i', 'result = len(electrons)')
-Leaf('n_presel_tau', 'i', 'result = len(taus)')
+Leaf('n_mvasel_mu', 'i', 'result = len(muons)')
+Leaf('n_mvasel_ele', 'i', 'result = len(electrons)')
+Leaf('n_fakeablesel_ele', 'i', """
+    result = std::count_if(
+        std::begin(all_leptons),
+        std::end(all_leptons),
+        [](const superslim::Lepton& l) -> bool { return l.electron(); }
+    )
+""")
+Leaf('n_fakeablesel_mu', 'i', """
+    result = std::count_if(
+        std::begin(all_leptons),
+        std::end(all_leptons),
+        [](const superslim::Lepton& l) -> bool { return l.muon(); }
+    )
+""")
+Leaf('n_presel_tau', 'i', 'result = len(all_taus)')
 Leaf('n_presel_jet', 'i', 'result = len(jets)')
 Leaf('PFMET', 'f', 'result = met.pt()')
 Leaf('PFMETphi', 'f', 'result = met.phi()')
