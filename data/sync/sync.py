@@ -57,6 +57,8 @@ BasicProcess(
     events=41812
 )
 
+Leaf('FR_weight', 'f', 'result = weights["fake"]')
+
 Leaf('events', 'f', 'result = .5')
 Plot(
     name="general/Events",

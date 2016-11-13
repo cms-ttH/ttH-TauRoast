@@ -127,6 +127,10 @@ def compare_quantities(joint, names, limit):
             rows = compare(joint, quants, limit)
             if len(rows) > 0:
                 yield ('Differences in {}'.format(obj), quantify, ''.join(map(row.format, rows)))
+        quants = sorted([col for col in both if col.endswith('weight')])
+        rows = compare(joint, quants, limit)
+        if len(rows) > 0:
+            yield ('Differences in weights', quantify, ''.join(map(row.format, rows)))
 
 
 def compare_events(joint, basename, baseframe, compname, compframe):

@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "TF1.h"
 #include "TTree.h"
 
 #include "SuperSlim.h"
@@ -17,6 +18,20 @@ struct _object;
 typedef _object PyObject;
 
 namespace fastlane {
+   class FakeHelper {
+      public:
+         enum { central = 0, up = 1, down = 2 } sys;
+         FakeHelper();
+         FakeHelper(const FakeHelper& other);
+         virtual ~FakeHelper() {};
+
+         float weight(const std::vector<superslim::Tau>&,
+                      const std::vector<superslim::Lepton>&);
+      private:
+         std::array<std::array<std::auto_ptr<TH1F>, 3>, 2> tau;
+         std::array<TF1, 2> ratio;
+   };
+
    class BasicCut {
       public:
          BasicCut() {};

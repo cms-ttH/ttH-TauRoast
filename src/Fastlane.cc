@@ -1,11 +1,13 @@
 #include <cctype>
 #include <cstdlib>
 
+#include "TGraphAsymmErrors.h"
 #include "TPython.h"
 #include "TPyArg.h"
 
 #include "DataFormats/FWLite/interface/ChainEvent.h"
 #include "DataFormats/FWLite/interface/Handle.h"
+#include "FWCore/ParameterSet/interface/FileInPath.h"
 
 #include "MiniAOD/MiniAODHelper/interface/CSVHelper.h"
 #include "MiniAOD/MiniAODHelper/interface/PUWeightProducer.h"
@@ -18,6 +20,88 @@ lower(const std::string& s)
    for (unsigned i = 0; i < res.size(); ++i)
       res[i] = std::tolower(res[i]);
    return res;
+}
+
+void
+graph_to_hists(const TGraphAsymmErrors* g, std::array<std::auto_ptr<TH1F>, 3>& a, const std::string& name)
+{
+   int n = g->GetN();
+   double *xs = g->GetX();
+   double *ys = g->GetY();
+   double *ex_up = g->GetEXhigh();
+   double *ex_down = g->GetEXlow();
+   double *ey_up = g->GetEYhigh();
+   double *ey_down = g->GetEYlow();
+
+   std::vector<double> bins(n + 1);
+   for (int i = 0; i < n; ++i)
+      bins[i] = xs[i] + ex_down[i];
+   bins[n] = xs[n - 1] + ex_up[n - 1];
+
+   a[0].reset(new TH1F((name + "_central").c_str(), "", n, bins.data()));
+   a[1].reset(new TH1F((name + "_up").c_str(), "", n, bins.data()));
+   a[2].reset(new TH1F((name + "_down").c_str(), "", n, bins.data()));
+
+   for (int i = 0; i < n; ++i) {
+      a[0]->SetBinContent(i + 1, ys[i]);
+      a[1]->SetBinContent(i + 1, ys[i] + ey_up[i]);
+      a[2]->SetBinContent(i + 1, ys[i] + ey_down[i]);
+   }
+
+   a[0]->SetDirectory(0);
+   a[1]->SetDirectory(0);
+   a[2]->SetDirectory(0);
+}
+
+fastlane::FakeHelper::FakeHelper()
+{
+   static const std::vector<std::string> dets{
+      "jetToTauFakeRate/dR03mvaTight/absEtaLt1_5/",
+      "jetToTauFakeRate/dR03mvaTight/absEta1_5to9_9/"
+   };
+   static const std::vector<std::string> labels{"barrel", "endcap"};
+   static const std::string fakerate = "jetToTauFakeRate_mc_hadTaus_pt";
+   static const std::string correction = "fitFunction_data_div_mc_hadTaus_pt";
+
+   TFile f(edm::FileInPath("ttH/TauRoast/data/weights.root").fullPath().c_str());
+   for (unsigned int i = 0; i < dets.size(); ++i) {
+      TGraphAsymmErrors *graph;
+      f.GetObject((dets[i] + fakerate).c_str(), graph);
+      graph_to_hists(graph, tau[i], labels[i]);
+      TF1 *fct;
+      f.GetObject((dets[i] + correction).c_str(), fct);
+      fct->Copy(ratio[i]);
+   }
+}
+
+fastlane::FakeHelper::FakeHelper(const FakeHelper& other)
+{
+   for (unsigned int i = 0; i < tau.size(); ++i) {
+      for (unsigned int j = 0; j < tau[i].size(); ++j) {
+         tau[i][j].reset(dynamic_cast<TH1F*>(other.tau[i][j]->Clone()));
+         tau[i][j]->SetDirectory(0);
+      }
+      other.ratio[i].Copy(ratio[i]);
+   }
+}
+
+float
+fastlane::FakeHelper::weight(const std::vector<superslim::Tau>& taus,
+                             const std::vector<superslim::Lepton>& leptons)
+{
+   static const float barrel_cut = 1.5;
+
+   float w = 1.;
+
+   for (const auto& t: taus) {
+      if (t.match() < 6)
+         continue;
+      int idx = abs(t.eta()) > barrel_cut;
+      w *= tau[idx][0]->GetBinContent(tau[idx][0]->FindBin(t.pt()));
+      w *= ratio[idx].Eval(t.pt());
+   }
+
+   return w;
 }
 
 bool
@@ -197,6 +281,13 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
    ws[lower("jetTauFakeDown")] = 1;
    ws[lower("eTauFakeUp")] = 1;
    ws[lower("eTauFakeDown")] = 1;
+
+   static auto fakerate = FakeHelper();
+
+   auto staus = taus;
+   staus.resize(std::min({staus.size(), 2ul}));
+
+   ws[lower("fake")] = fakerate.weight(staus, {});
 }
 
 void
