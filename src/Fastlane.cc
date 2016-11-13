@@ -63,7 +63,7 @@ fastlane::FakeHelper::FakeHelper()
    static const std::string fakerate = "jetToTauFakeRate_mc_hadTaus_pt";
    static const std::string correction = "fitFunction_data_div_mc_hadTaus_pt";
 
-   TFile f(edm::FileInPath("ttH/TauRoast/data/weights.root").fullPath().c_str());
+   TFile f(edm::FileInPath("ttH/TauRoast/data/tau_weights.root").fullPath().c_str());
    for (unsigned int i = 0; i < dets.size(); ++i) {
       TGraphAsymmErrors *graph;
       f.GetObject((dets[i] + fakerate).c_str(), graph);
@@ -99,6 +99,11 @@ fastlane::FakeHelper::weight(const std::vector<superslim::Tau>& taus,
       int idx = abs(t.eta()) > barrel_cut;
       w *= tau[idx][0]->GetBinContent(tau[idx][0]->FindBin(t.pt()));
       w *= ratio[idx].Eval(t.pt());
+   }
+
+   for (const auto& l: leptons) {
+      if (l.match() < 6)
+         continue;
    }
 
    return w;
