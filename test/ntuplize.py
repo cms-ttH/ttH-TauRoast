@@ -34,6 +34,14 @@ options.register("data", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
                  "Indicate if data is being used (or MC)")
+options.register("genFilter", False,
+                 VarParsing.VarParsing.multiplicity.singleton,
+                 VarParsing.VarParsing.varType.bool,
+                 "Filter the input dataset")
+options.register("genFilterWithFakes", False,
+                 VarParsing.VarParsing.multiplicity.singleton,
+                 VarParsing.VarParsing.varType.bool,
+                 "Use fake taus when filtering the input dataset")
 options.register("saveGenInfo", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
@@ -97,7 +105,11 @@ process.jetPath = cms.Path(
 process.load("RecoEgamma.ElectronIdentification.ElectronMVAValueMapProducer_cfi")
 process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
 process.load("ttH.LeptonID.ttHLeptons_cfi")
+process.load('ttH.TauMCGeneration.eventFilterMAOD_cfi')
 process.load("ttH.TauRoast.genHadronMatching_cfi")
+
+if options.genFilterWithFakes:
+    process.ttHGenFilter.useFakeTaus = cms.bool(True)
 
 process.lepPath = cms.Path(
     process.electronMVAValueMapProducer *
@@ -188,6 +200,8 @@ for channel in options.channels:
     setattr(process, channel + "Output", output)
 
     path = cms.Path()
+    if options.genFilter:
+        path *= process.ttHfilter
     path *= getattr(process, channel + "Taus")
     path *= getattr(process, channel + "Selector")
 
