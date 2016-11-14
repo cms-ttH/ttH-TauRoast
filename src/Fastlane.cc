@@ -163,7 +163,7 @@ std::vector<superslim::Lepton> fastlane::BasicLeaf::cached_electrons_;
 std::vector<superslim::Lepton> fastlane::BasicLeaf::cached_muons_;
 
 void
-fastlane::BasicLeaf::updateCache(const superslim::Event& e)
+fastlane::BasicLeaf::update_cache(const superslim::Event& e)
 {
    static int run = -1;
    static int lumi = -1;
@@ -362,7 +362,7 @@ fastlane::process(const std::string& process, const std::string& channel, const 
          (*w)[process] += weight;
       }
 
-      BasicLeaf::updateCache(*e);
+      BasicLeaf::update_cache(*e);
       for (auto& leaf: BasicLeaf::leaves()) {
          // std::cout << leaf->name() << std::endl;
          try {

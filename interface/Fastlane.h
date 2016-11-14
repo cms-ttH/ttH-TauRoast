@@ -99,7 +99,7 @@ namespace fastlane {
          const std::string& name() const { return name_; };
 
          static std::vector<BasicLeaf*>& leaves() { return leaves_; };
-         static void updateCache(const superslim::Event& e);
+         static void update_cache(const superslim::Event& e);
       protected:
          std::string name_;
 
