@@ -16,11 +16,7 @@ plot:
 
 limits: []
 
-categories:
-  - "tau": "n_presel_tau >= 1"
-  - "jet": "n_presel_jet >= 1"
-  - "ele": "n_presel_ele >= 1"
-  - "mu": "n_presel_mu >= 1"
+categories: []
 
 default cuts:
     - "e/μ quality": "lepton_id == superslim::Lepton::MVA"
