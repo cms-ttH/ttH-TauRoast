@@ -110,6 +110,7 @@ process.load("ttH.TauRoast.genHadronMatching_cfi")
 
 if options.genFilterWithFakes:
     process.ttHGenFilter.useFakeTaus = cms.bool(True)
+    process.ttHGenFilter.minTaus = cms.int32(2)
 
 process.lepPath = cms.Path(
     process.electronMVAValueMapProducer *
