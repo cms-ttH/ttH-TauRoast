@@ -283,6 +283,8 @@ namespace superslim {
 
          bool chargeConsistent() const { return charge_check_; };
 
+         float conePt() const;
+
          float impactParameter() const { return impact_parameter_; };
          float impactParameterError() const { return impact_parameter_error_; };
          float relativeIsolation() const { return iso_rel_; };

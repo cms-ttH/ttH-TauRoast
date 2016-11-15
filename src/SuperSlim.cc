@@ -369,6 +369,14 @@ namespace superslim {
       medium_ = (m.userFloat("validFraction") >= 0.8 && m.segmentCompatibility() >= (global ? 0.303 : 0.451));
    }
 
+   float
+   Lepton::conePt() const
+   {
+      if (lep_mva_ < .75)
+         return .85 * pt() / jet_pt_ratio_;
+      return pt();
+   }
+
    template<typename T>
    id::value Lepton::getID(const std::string& suffix, const T& t, bool range, bool preselected) const {
       if (range) {
