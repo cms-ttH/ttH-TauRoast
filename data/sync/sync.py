@@ -58,6 +58,9 @@ BasicProcess(
 )
 
 Leaf('FR_weight', 'f', 'result = weights["fake"]')
+Leaf('PU_weight', 'f', 'result = weights["puweight"]')
+Leaf('MC_weight', 'f', 'result = weights["generator"]')
+Leaf('bTagSF_weight', 'f', 'result = weights["csvweight"]')
 
 Leaf('events', 'f', 'result = .5')
 Plot(

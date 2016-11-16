@@ -35,7 +35,7 @@ graph_to_hists(const TGraphAsymmErrors* g, std::array<std::auto_ptr<TH1F>, 3>& a
 
    std::vector<double> bins(n + 1);
    for (int i = 0; i < n; ++i)
-      bins[i] = xs[i] + ex_down[i];
+      bins[i] = xs[i] - ex_down[i];
    bins[n] = xs[n - 1] + ex_up[n - 1];
 
    a[0].reset(new TH1F((name + "_central").c_str(), "", n, bins.data()));
@@ -45,7 +45,7 @@ graph_to_hists(const TGraphAsymmErrors* g, std::array<std::auto_ptr<TH1F>, 3>& a
    for (int i = 0; i < n; ++i) {
       a[0]->SetBinContent(i + 1, ys[i]);
       a[1]->SetBinContent(i + 1, ys[i] + ey_up[i]);
-      a[2]->SetBinContent(i + 1, ys[i] + ey_down[i]);
+      a[2]->SetBinContent(i + 1, ys[i] - ey_down[i]);
    }
 
    a[0]->SetDirectory(0);
@@ -63,14 +63,27 @@ fastlane::FakeHelper::FakeHelper()
    static const std::string fakerate = "jetToTauFakeRate_mc_hadTaus_pt";
    static const std::string correction = "fitFunction_data_div_mc_hadTaus_pt";
 
-   TFile f(edm::FileInPath("ttH/TauRoast/data/tau_weights.root").fullPath().c_str());
-   for (unsigned int i = 0; i < dets.size(); ++i) {
-      TGraphAsymmErrors *graph;
-      f.GetObject((dets[i] + fakerate).c_str(), graph);
-      graph_to_hists(graph, tau[i], labels[i]);
-      TF1 *fct;
-      f.GetObject((dets[i] + correction).c_str(), fct);
-      fct->Copy(ratio[i]);
+   {
+      TFile f(edm::FileInPath("ttH/TauRoast/data/tau_weights.root").fullPath().c_str());
+      for (unsigned int i = 0; i < dets.size(); ++i) {
+         TGraphAsymmErrors *graph;
+         f.GetObject((dets[i] + fakerate).c_str(), graph);
+         graph_to_hists(graph, tau[i], labels[i]);
+         TF1 *fct;
+         f.GetObject((dets[i] + correction).c_str(), fct);
+         fct->Copy(ratio[i]);
+      }
+   }
+
+   {
+      TFile f(edm::FileInPath("ttH/TauRoast/data/lepton_weights.root").fullPath().c_str());
+      TH2F *hele, *hmu;
+      f.GetObject("FR_mva075_el_data_comb", hele);
+      f.GetObject("FR_mva075_mu_data_comb", hmu);
+      ele_fake.reset(hele);
+      ele_fake->SetDirectory(0);
+      mu_fake.reset(hmu);
+      mu_fake->SetDirectory(0);
    }
 }
 
@@ -83,6 +96,8 @@ fastlane::FakeHelper::FakeHelper(const FakeHelper& other)
       }
       other.ratio[i].Copy(ratio[i]);
    }
+   ele_fake.reset(dynamic_cast<TH2F*>(other.ele_fake->Clone()));
+   mu_fake.reset(dynamic_cast<TH2F*>(other.mu_fake->Clone()));
 }
 
 float
@@ -93,18 +108,29 @@ fastlane::FakeHelper::weight(const std::vector<superslim::Tau>& taus,
 
    float w = 1.;
 
+   int fake_count = 0;
    for (const auto& t: taus) {
       if (t.match() < 6)
          continue;
       int idx = abs(t.eta()) > barrel_cut;
-      w *= tau[idx][0]->GetBinContent(tau[idx][0]->FindBin(t.pt()));
-      w *= ratio[idx].Eval(t.pt());
+      float factor = tau[idx][0]->GetBinContent(tau[idx][0]->FindBin(t.pt())) * ratio[idx].Eval(t.pt());
+      w *= factor / (1. - factor);
+      fake_count += 1;
    }
 
    for (const auto& l: leptons) {
-      if (l.match() < 6)
+      if (l.mva() >= superslim::id::Loose)
          continue;
+      float f = 0.;
+      if (l.muon())
+         f = mu_fake->GetBinContent(mu_fake->FindBin(l.conePt(), abs(l.eta())));
+      else
+         f = ele_fake->GetBinContent(ele_fake->FindBin(l.conePt(), abs(l.eta())));
+      w *= f / (1. - f);
+      fake_count += 1;
    }
+
+   w *= pow(-1., fake_count + 1);
 
    return w;
 }
@@ -289,10 +315,10 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
 
    static auto fakerate = FakeHelper();
 
-   auto staus = taus;
-   staus.resize(std::min({staus.size(), 2ul}));
+   // auto staus = taus;
+   // staus.resize(std::min({staus.size(), 2ul}));
 
-   ws[lower("fake")] = fakerate.weight(staus, {});
+   ws[lower("fake")] = fakerate.weight(e.allTaus(), e.allLeptons());
 }
 
 void
