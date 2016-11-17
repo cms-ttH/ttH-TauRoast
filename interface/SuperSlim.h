@@ -139,6 +139,8 @@ namespace superslim {
                if (cand.isNonnull()) {
                   auto dR = deltaR(j.p4(), cand->p4());
                   if (cand->charge() != 0) {
+                     if (cand->p4().pt() > leading_p_.pt())
+                        leading_p_ = cand->p4();
                      charged_p_ += cand->p4();
                      ++charged_constituents_;
                      if (dR < .12) {
@@ -160,6 +162,8 @@ namespace superslim {
                }
             }
          };
+
+         const LorentzVector& leadingP4() const { return leading_p_; };
 
          const LorentzVector& chargedP4() const { return charged_p_; };
          int constituents() const { return constituents_; };
@@ -191,6 +195,7 @@ namespace superslim {
          int signal_constituents_ = 0;
          int signal_charged_constituents_ = 0;
 
+         LorentzVector leading_p_;
          LorentzVector iso_p_;
          LorentzVector iso_charged_p_;
          LorentzVector signal_p_;
