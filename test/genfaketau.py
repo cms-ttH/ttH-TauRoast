@@ -1,10 +1,14 @@
 #!/usr/bin/env python
+# vim: set fileencoding=utf-8 :
 
 import math
+import matplotlib
 import matplotlib.pyplot as plt
 # import pandas as pd
 import numpy as np
 from root_pandas import read_root
+
+matplotlib.rc('font', **{'sans-serif': 'Liberation Sans', 'family': 'sans-serif'})
 
 numbers_in = ['nloosetaus', 'ntighttaus', 'nfaketaus', 'nfaketighttaus', 'nrealtaus', 'nrealtighttaus']
 numbers = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=numbers_in)
@@ -26,7 +30,7 @@ plt.savefig('jetfakes_numbers.png')
 
 quants = 'eta pt chargedPt constituents chargedConstituents'.split()
 quants += 'closestdr closestpt closestparticledr closestparticlept'.split()
-quants += 'signalPt signalChargedPt signalConstituents signalChargedConstituents'.split()
+quants += 'lpt signalPt signalChargedPt signalConstituents signalChargedConstituents'.split()
 quants += 'isoPt isoChargedPt isoConstituents isoChargedConstituents'.split()
 
 taus_in = ['genjet_' + q.lower() for q in quants] + ['isoMVA03', 'antiElectron', 'antiMuon', 'match', 'pt']
@@ -36,6 +40,10 @@ taus = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=taus_in, f
 gen_in = [q.lower() for q in quants]
 gen_in = ['genjet_' + v for v in gen_in]
 alljets = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=gen_in, flatten=True)
+loosejets = alljets[
+    (alljets.genjet_pt > 18)
+    & (alljets.genjet_closestparticledr > 0.1)
+]
 jets = alljets[
     (alljets.genjet_pt > 18)
     & (alljets.genjet_eta > -2.5)
@@ -48,14 +56,15 @@ jets = alljets[
 ]
 
 print "before", len(alljets)
+print "preselected", len(loosejets)
 print "after", len(jets)
 
 fakes = taus[(taus.tau_match == 6)]
 selection = taus[
     (taus.tau_match == 6)
-    & (taus.tau_isoMVA03 >= 5)
-    & (taus.tau_antiElectron >= 3)
-    & (taus.tau_antiMuon >= 3)
+    & (taus.tau_isoMVA03 >= 4)
+    # & (taus.tau_antiElectron >= 3)
+    # & (taus.tau_antiMuon >= 3)
     & (taus.tau_pt >= 20.)
 ]
 
@@ -91,29 +100,35 @@ with open('src/FakeData.frag', 'w') as dumpf:
 
 labels = ['genjets', u'genjet fakes']
 pspace = [
-    ('pt', range(0, 201, 5)),
-    ('eta', np.array(range(-50, 51, 2)) * 0.1),
-    ('chargedpt', range(0, 201, 5)),
-    ('constituents', range(0, 31, 1)),
-    ('chargedconstituents', range(0, 31, 1)),
+    ('pt', 'pt [GeV]', range(0, 201, 5)),
+    ('eta', 'eta', np.array(range(-50, 51, 2)) * 0.1),
+    ('lpt', 'leading track pt [GeV]', range(0, 201, 5)),
+    ('chargedpt', 'charged pt component [GeV]', range(0, 201, 5)),
+    ('constituents', 'constituent count', range(0, 31, 1)),
+    ('chargedconstituents', 'charged constituent count', range(0, 31, 1)),
     # ('neutralconstituents', range(0, 31, 1)),
-    ('isoconstituents', range(0, 31, 1)),
-    ('signalconstituents', range(0, 31, 1)),
-    ('isochargedconstituents', range(0, 31, 1)),
-    ('signalchargedconstituents', range(0, 31, 1)),
-    ('isopt', range(0, 26, 1)),
-    ('signalpt', range(0, 101, 2)),
-    ('isochargedpt', range(0, 26, 1)),
-    ('signalchargedpt', range(0, 101, 2)),
-    ('closestpt', range(0, 201, 5)),
-    ('closestdr', np.array(range(41)) * 0.05 * math.pi),
-    ('closestparticlept', range(0, 201, 5)),
-    ('closestparticledr', np.array(range(41)) * 0.05 * math.pi)
+    ('isoconstituents', u'constintuent count within 0.12 < ΔR < 0.3', range(0, 31, 1)),
+    ('signalconstituents', u'constituent count within ΔR < 0.12', range(0, 31, 1)),
+    ('isochargedconstituents', u'charged constintuent count within 0.12 < ΔR < 0.3', range(0, 31, 1)),
+    ('signalchargedconstituents', u'charged constituent count within ΔR < 0.12', range(0, 31, 1)),
+    ('isopt', u'pt component within 0.12 < ΔR < 0.3', range(0, 26, 1)),
+    ('signalpt', u'pt component within ΔR < 0.12', range(0, 101, 2)),
+    ('isochargedpt', u'charged pt component within 0.12 < ΔR < 0.3', range(0, 26, 1)),
+    ('signalchargedpt', u'pt charged component within ΔR < 0.12', range(0, 101, 2)),
+    ('closestpt', 'pt of closest genjet', range(0, 201, 5)),
+    ('closestdr', u'ΔR of closest genjet', np.array(range(41)) * 0.05 * math.pi),
+    ('closestparticlept', 'pt of closest particle', range(0, 201, 5)),
+    ('closestparticledr', u'ΔR of closest particle', np.array(range(41)) * 0.05 * math.pi)
 ]
 
-for name, nbins in pspace:
+for name, title, nbins in pspace:
     print 'Processing', name
     fig = plt.figure()
-    n, bins, patches = plt.hist([jets['genjet_' + name], selection['tau_genjet_' + name]], bins=nbins, normed=1)
-    plt.legend(patches, labels)
+    plt.title(title)
+    plt.hist([loosejets['genjet_' + name]], bins=nbins, normed=1, alpha=0.2, label=['genjets'])
+    plt.hist([jets['genjet_' + name]], bins=nbins, normed=1, alpha=0.5, label=['selected genjets'])
+    plt.hist([selection['tau_genjet_' + name]], bins=nbins, normed=1, alpha=0.7, label=[u'genjets of τ fakes'])
+    # n, bins, patches = plt.hist([jets['genjet_' + name], selection['tau_genjet_' + name]], bins=nbins, normed=1)
+    # plt.legend(patches, labels)
+    plt.legend()
     plt.savefig('jetfakes_genjet_{}.png'.format(name))
