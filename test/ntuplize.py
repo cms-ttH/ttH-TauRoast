@@ -118,6 +118,7 @@ process.lepPath = cms.Path(
 )
 
 process.ttHLeptons.rhoParam = "fixedGridRhoFastjetCentralNeutral"
+process.ttHLeptons.tightObjects = cms.bool(True)
 # process.ttHLeptons.jets = cms.InputTag("patJetsReapplyJEC")
 # process.ttHLeptons.useReappliedJEC = cms.bool(False)
 
