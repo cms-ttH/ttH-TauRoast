@@ -245,6 +245,7 @@ def plot(args, config):
     datadir = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data')
     with open(os.path.join(datadir, 'plot.yaml')) as f:
         plotconfig = yaml.load(f)
+    plotconfig.update(config.get('plot override', {}))
 
     systematics = []
     if args.systematics:

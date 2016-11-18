@@ -13,6 +13,9 @@ plot:
   - ttH2Nonbb_tranche3
   - ttH2Nonbb_tranche3_fast
 
+plot override:
+    show ratio: false
+
 limits: []
 discriminants: []
 

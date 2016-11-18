@@ -350,9 +350,13 @@ class Plot(object):
 
         return graph
 
-    def _draw_ratio(self, config, rel_err):
+    def _draw_ratio(self, config, base_histo, rel_err):
         background = self._get_background_sum(config)
         collisions = self._get_data(config)
+
+        lower = base_histo.Clone()
+        stylish.setup_lower_axis(lower)
+        lower.Draw("axis")
 
         rel_err.SetMarkerSize(0)
         rel_err.SetFillColor(r.kGreen)
@@ -367,6 +371,17 @@ class Plot(object):
         else:
             err = None
 
+        lower.Draw("axis same")
+
+        line = r.TLine()
+        line.SetLineColor(1)
+        line.SetLineWidth(1)
+        line.DrawLineNDC(
+            r.gPad.GetLeftMargin(),
+            r.gPad.GetBottomMargin() + (1 / stylish.ratio_plot_max) * (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin()),
+            1 - r.gPad.GetRightMargin(),
+            r.gPad.GetBottomMargin() + (1 / stylish.ratio_plot_max) * (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin()))
+
         return err, rel_err
 
     def _save1d(self, config, outdir, systematics=None):
@@ -374,12 +389,17 @@ class Plot(object):
         max_y = min_y
         scale = 1.15
         factor = config.get("scale factor", "auto")
+        split = config.get("show ratio", True)
 
         canvas = r.TCanvas(self.__name, self.__name, 600, 700)
-        canvas.Divide(1, 2)
 
-        stylish.setup_upper_pad(canvas.GetPad(1))
-        stylish.setup_lower_pad(canvas.GetPad(2))
+        if split:
+            canvas.Divide(1, 2)
+            stylish.setup_upper_pad(canvas.GetPad(1))
+            stylish.setup_lower_pad(canvas.GetPad(2))
+        else:
+            canvas.Divide(1, 1)
+            stylish.setup_pad(canvas.GetPad(1))
 
         args = list(self.__args)
         args[0] += "_base"
@@ -396,8 +416,7 @@ class Plot(object):
                 for n, label in enumerate(self.__labels, 1):
                     base_histo.GetXaxis().SetBinLabel(n, label)
 
-        stylish.setup_upper_axis(base_histo)
-
+        stylish.setup_upper_axis(base_histo, split=split)
         canvas.cd(1)
 
         bkg_sum = self._get_background_sum(config)
@@ -450,29 +469,9 @@ class Plot(object):
         if self.__log:
             canvas.GetPad(1).SetLogy()
 
-        canvas.cd(2)
-
-        lower = base_histo.Clone()
-        stylish.setup_lower_axis(lower)
-
-        lower.Draw("axis")
-
-        self._draw_ratio(config, err_rel)
-
-        lower.Draw("axis same")
-
-        line = r.TLine()
-        line.SetLineColor(1)
-        line.SetLineWidth(1)
-        line.DrawLineNDC(
-            r.gPad.GetLeftMargin(),
-            r.gPad.GetBottomMargin() +
-            (1 / stylish.ratio_plot_max) *
-            (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin()),
-            1 - r.gPad.GetRightMargin(),
-            r.gPad.GetBottomMargin() +
-            (1 / stylish.ratio_plot_max) *
-            (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin()))
+        if split:
+            canvas.cd(2)
+            self._draw_ratio(config, base_histo, err_rel)
 
         subdir = os.path.dirname(os.path.join(outdir, self.__name))
         if not os.path.exists(subdir) and subdir != '':
