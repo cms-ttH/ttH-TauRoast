@@ -28,6 +28,9 @@ class Plot(object):
         self.__hists = {}
 
         self.__log = log
+        self.__backgrounds_present = set()
+        self.__signals_present = set()
+        self.__collisions_present = set()
 
         if len(values) == 1:
             self.__class = r.TH1F
@@ -60,19 +63,25 @@ class Plot(object):
 
     def _add_legend(self, config, factor):
         l = Legend(0.05, 4, 0.03)
-        for cfg in config['backgrounds']:
-            bkg, color = cfg.items()[0]
-            l.draw_box(1001, self._eval(color), Process.get(bkg).fullname)
-        l.draw_box(3654, r.kBlack, "Bkg. err.", True)
-        # TODO add collisions
-        l.new_row()
-        for cfg in config['signals']:
-            sig, color = cfg.items()[0]
-            label = Process.get(sig).fullname
-            if factor != 1:
-                label += " (#times {0:.1f})".format(factor)
-            l.draw_line(2, self._eval(color), label)
+        if len(self.__backgrounds_present) > 0:
+            for cfg in config['backgrounds']:
+                bkg, color = cfg.items()[0]
+                if bkg not in self.__backgrounds_present:
+                    continue
+                l.draw_box(1001, self._eval(color), Process.get(bkg).fullname)
+            l.draw_box(3654, r.kBlack, "Bkg. err.", True)
+            # TODO add collisions
             l.new_row()
+        if len(self.__signals_present) > 0:
+            for cfg in config['signals']:
+                sig, color = cfg.items()[0]
+                if sig not in self.__signals_present:
+                    continue
+                label = Process.get(sig).fullname
+                if factor != 1:
+                    label += " (#times {0:.1f})".format(factor)
+                l.draw_line(2, self._eval(color), label)
+                l.new_row()
         return l
 
     def _eval(self, color):
@@ -165,6 +174,7 @@ class Plot(object):
                 h.SetFillStyle(1001)
                 h.SetLineWidth(0)
                 res.Add(h)
+                self.__backgrounds_present.add(background)
             except KeyError:
                 pass
         return res
@@ -180,6 +190,7 @@ class Plot(object):
                 h.SetMarkerStyle(20)
                 h.SetMarkerSize(1)
                 res.append(h)
+                self.__collisions_present.add(data)
             except KeyError:
                 pass
         return res
@@ -193,6 +204,7 @@ class Plot(object):
                 h.SetLineColor(self._eval(color))
                 h.SetLineWidth(4)
                 res.append(h)
+                self.__signals_present.add(signal)
             except KeyError:
                 pass
         return res
