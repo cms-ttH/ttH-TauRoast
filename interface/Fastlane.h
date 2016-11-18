@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "TF1.h"
+#include "TH2F.h"
 #include "TTree.h"
 
 #include "SuperSlim.h"
@@ -30,6 +31,8 @@ namespace fastlane {
       private:
          std::array<std::array<std::auto_ptr<TH1F>, 3>, 2> tau;
          std::array<TF1, 2> ratio;
+         std::auto_ptr<TH2F> ele_fake;
+         std::auto_ptr<TH2F> mu_fake;
    };
 
    class BasicCut {

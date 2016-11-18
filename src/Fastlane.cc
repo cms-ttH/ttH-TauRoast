@@ -28,7 +28,6 @@ graph_to_hists(const TGraphAsymmErrors* g, std::array<std::auto_ptr<TH1F>, 3>& a
    int n = g->GetN();
    double *xs = g->GetX();
    double *ys = g->GetY();
-   double *ex_up = g->GetEXhigh();
    double *ex_down = g->GetEXlow();
    double *ey_up = g->GetEYhigh();
    double *ey_down = g->GetEYlow();
@@ -36,7 +35,7 @@ graph_to_hists(const TGraphAsymmErrors* g, std::array<std::auto_ptr<TH1F>, 3>& a
    std::vector<double> bins(n + 1);
    for (int i = 0; i < n; ++i)
       bins[i] = xs[i] - ex_down[i];
-   bins[n] = xs[n - 1] + ex_up[n - 1];
+   bins[n] = 1000000;
 
    a[0].reset(new TH1F((name + "_central").c_str(), "", n, bins.data()));
    a[1].reset(new TH1F((name + "_up").c_str(), "", n, bins.data()));
@@ -104,17 +103,17 @@ float
 fastlane::FakeHelper::weight(const std::vector<superslim::Tau>& taus,
                              const std::vector<superslim::Lepton>& leptons)
 {
-   static const float barrel_cut = 1.5;
+   static const float barrel_cut = 1.479;
 
    float w = 1.;
 
    int fake_count = 0;
    for (const auto& t: taus) {
-      if (t.match() < 6)
+      if (t.isolationMVA03() >= superslim::id::Tight)
          continue;
-      int idx = abs(t.eta()) > barrel_cut;
-      float factor = tau[idx][0]->GetBinContent(tau[idx][0]->FindBin(t.pt())) * ratio[idx].Eval(t.pt());
-      w *= factor / (1. - factor);
+      int idx = std::abs(t.eta()) > barrel_cut;
+      float f = tau[idx][0]->GetBinContent(tau[idx][0]->FindBin(t.pt())) * ratio[idx].Eval(t.pt());
+      w *= f / (1. - f);
       fake_count += 1;
    }
 
@@ -123,14 +122,15 @@ fastlane::FakeHelper::weight(const std::vector<superslim::Tau>& taus,
          continue;
       float f = 0.;
       if (l.muon())
-         f = mu_fake->GetBinContent(mu_fake->FindBin(l.conePt(), abs(l.eta())));
+         f = mu_fake->GetBinContent(mu_fake->FindBin(std::min({l.conePt(), 99.99f}), std::abs(l.eta())));
       else
-         f = ele_fake->GetBinContent(ele_fake->FindBin(l.conePt(), abs(l.eta())));
+         f = ele_fake->GetBinContent(ele_fake->FindBin(std::min({l.conePt(), 99.99f}), std::abs(l.eta())));
       w *= f / (1. - f);
       fake_count += 1;
    }
 
-   w *= pow(-1., fake_count + 1);
+   if (fake_count > 0)
+      w *= pow(-1., fake_count + 1);
 
    return w;
 }
@@ -238,8 +238,8 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
    // ===========
 
    static auto csvhelper = CSVHelper(
-         "MiniAOD/MiniAODHelper/data/csv_rwt_fit_hf_76x_2016_02_08.root",
-         "MiniAOD/MiniAODHelper/data/csv_rwt_fit_lf_76x_2016_02_08.root", 5);
+         "MiniAOD/MiniAODHelper/data/csv_rwt_fit_hf_v2_final_2016_09_7test.root",
+         "MiniAOD/MiniAODHelper/data/csv_rwt_fit_lf_v2_final_2016_09_7test.root", 5);
 
    static std::unordered_map<std::string, int> csvsys = {
       {"NA", 0},
@@ -289,7 +289,7 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
    static auto puhelper = PUWeightProducer(
          "MiniAOD/MiniAODHelper/data/puweights/MC/Spring16_25nsV1_NumTruePU.root",
          "hNumTruePUPdf",
-         "MiniAOD/MiniAODHelper/data/puweights/Run2016/DataPileupHistogram_Run2016B-PromptReco-271036-275125_MinBias71300.root",
+         "MiniAOD/MiniAODHelper/data/puweights/Run2016/DataPileupHistogram_Run2016-PromptReco-271036-276811_ICHEP_MinBias69200.root",
          "pileup");
    ws[lower("PUWeight")] = puhelper(e.ntv());
 
@@ -315,10 +315,12 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
 
    static auto fakerate = FakeHelper();
 
-   // auto staus = taus;
-   // staus.resize(std::min({staus.size(), 2ul}));
+   auto wtaus = e.allTaus();
+   wtaus.resize(std::min({wtaus.size(), 2ul}));
+   auto wleptons = e.leptons();
+   wleptons.resize(std::min({wleptons.size(), 1ul}));
 
-   ws[lower("fake")] = fakerate.weight(e.allTaus(), e.allLeptons());
+   ws[lower("fake")] = fakerate.weight(wtaus, wleptons);
 }
 
 void
