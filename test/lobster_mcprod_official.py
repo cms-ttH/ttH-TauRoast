@@ -17,7 +17,7 @@ storage = StorageConfiguration(
         "hdfs://eddie.crc.nd.edu:19000/store/user/matze/ttH/{}".format(version),
         "file:///hadoop/store/user/matze/ttH/{}".format(version),
         "root://deepthought.crc.nd.edu//store/user/matze/ttH/{}".format(version),
-        "chirp://eddie.crc.nd.edu:9094/store/user/matze/ttH/{}".format(version),
+        # "chirp://eddie.crc.nd.edu:9094/store/user/matze/ttH/{}".format(version),
         "gsiftp://T3_US_NotreDame/store/user/matze/ttH/{}".format(version),
         "srm://T3_US_NotreDame/store/user/matze/ttH/{}".format(version)
     ]
@@ -68,21 +68,21 @@ for path in datasets(tag):
         # params += ['reHLT=True']
         category = tth
 
-    workflows.append(Workflow(
-        label=label,
-        dataset=cmssw.Dataset(
-            dataset=path,
-            events_per_task=150000,
-            lumi_mask=mask,
-            dbs_instance=instance
-        ),
-        category=category,
-        pset='ntuplize.py',
-        arguments=params
-    ))
+    # workflows.append(Workflow(
+    #     label=label,
+    #     dataset=cmssw.Dataset(
+    #         dataset=path,
+    #         events_per_task=150000,
+    #         lumi_mask=mask,
+    #         dbs_instance=instance
+    #     ),
+    #     category=category,
+    #     pset='ntuplize.py',
+    #     arguments=params
+    # ))
 
     workflows.append(Workflow(
-        label=label + '_filtered',
+        label=label + '_filtered_1t2l',
         dataset=cmssw.Dataset(
             dataset=path,
             events_per_task=150000,
@@ -95,17 +95,32 @@ for path in datasets(tag):
     ))
 
     workflows.append(Workflow(
-        label=label + '_filtered_more',
+        label=label + '_filtered_1t3l',
         dataset=cmssw.Dataset(
             dataset=path,
             events_per_task=150000,
             lumi_mask=mask,
-            dbs_instance=instance,
+            dbs_instance=instance
         ),
         category=category,
         pset='ntuplize.py',
-        arguments=params + ['genFilter=true', 'genFilterWithFakes=true']
+        arguments=params + ['genFilter=true', 'genFilter3l=true']
     ))
+
+    # workflows.append(Workflow(
+    #     label=label + '_filtered_more',
+    #     dataset=cmssw.Dataset(
+    #         dataset=path,
+    #         events_per_task=150000,
+    #         lumi_mask=mask,
+    #         dbs_instance=instance,
+    #     ),
+    #     category=category,
+    #     pset='ntuplize.py',
+    #     arguments=params + ['genFilter=true', 'genFilterWithFakes=true']
+    # ))
+
+tag += '_filter'
 
 config = Config(
     label='tau_{}_{}'.format(version, tag),
@@ -119,8 +134,8 @@ config = Config(
         log_level=1,
         xrootd_servers=[
             'ndcms.crc.nd.edu',
+            'deepthought.crc.nd.edu',
             'cmsxrootd.fnal.gov',
-            'deepthought.crc.nd.edu'
         ],
         email='mwolf3@nd.edu'
     )

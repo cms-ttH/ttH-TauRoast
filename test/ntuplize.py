@@ -38,10 +38,10 @@ options.register("genFilter", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
                  "Filter the input dataset")
-options.register("genFilterWithFakes", False,
+options.register("genFilter3l", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
-                 "Use fake taus when filtering the input dataset")
+                 "Filter the input dataset with 3 leptons")
 options.register("saveGenInfo", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
@@ -108,9 +108,9 @@ process.load("ttH.LeptonID.ttHLeptons_cfi")
 process.load('ttH.TauMCGeneration.eventFilterMAOD_cfi')
 process.load("ttH.TauRoast.genHadronMatching_cfi")
 
-if options.genFilterWithFakes:
+if options.genFilter:
     process.ttHGenFilter.useFakeTaus = cms.bool(True)
-    process.ttHGenFilter.minTaus = cms.int32(2)
+    process.ttHGenFilter.minTotalLeptons = cms.int32(3)
 
 process.lepPath = cms.Path(
     process.electronMVAValueMapProducer *
