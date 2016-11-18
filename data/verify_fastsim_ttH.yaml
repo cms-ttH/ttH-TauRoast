@@ -1,0 +1,43 @@
+# vim: set sw=4 sta et :
+
+channel: ttl
+generator: pow
+ntupledir: /hadoop/store/user/matze/ttH/mcprod_v1/
+outdir: ~/www/ttH/mcprod_v1/fast_ttH2Nonbb
+histformat: "{p}_{c}_{v}"
+
+# lumi: 2517
+lumi: 30000
+
+plot:
+  - ttH2Nonbb_tranche3
+  - ttH2Nonbb_tranche3_fast
+
+limits: []
+discriminants: []
+
+default cuts:
+    - "l ID": lepton_id == superslim::Lepton::MVA
+    - "τ ID": tau_id == superslim::Tau::IsoMVA03
+    - "l pt": >
+        (leptons[0].electron() and leptons[0].pt() > 30) or
+        (leptons[0].muon() and leptons[0].pt() > 25)
+    - "1 l": >
+        std::count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Loose; }) == 1
+    - "1st l": >
+        leptons[0].mva() >= superslim::id::Loose
+    - "τ quality": >
+        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) >= 2
+    - "τ OS": >
+        taus[0].charge() * taus[1].charge() < 0
+    - "jets": >
+        len(jets) >= 4 and
+        (btags(jets) >= 1 or btags(jets, true) >= 2)
+
+default weights: []
+
+# List of systematics to run when `-s` is specified
+systematics: []
+
+categories:
+  - inclusive: ""
