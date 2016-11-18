@@ -134,13 +134,16 @@ namespace superslim {
             closest_particle_(0),
             closest_jet_(0)
          {
+            bool leading_set = false;
             for (unsigned i = 0; i < j.numberOfDaughters(); ++i) {
                auto cand = j.daughterPtr(i);
                if (cand.isNonnull()) {
                   auto dR = deltaR(j.p4(), cand->p4());
                   if (cand->charge() != 0) {
-                     if (cand->p4().pt() > leading_p_.pt())
+                     if ((not leading_set) or cand->p4().pt() > leading_p_.pt()) {
                         leading_p_ = cand->p4();
+                        leading_set = true;
+                     }
                      charged_p_ += cand->p4();
                      ++charged_constituents_;
                      if (dR < .12) {

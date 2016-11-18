@@ -43,6 +43,7 @@ namespace superslim {
       pdg_id_ = other.pdgId();
 
       p_ = other.p4();
+      leading_p_ = other.leadingP4();
       constituents_ = other.constituents();
       charged_p_ = other.chargedP4();
       charged_constituents_ = other.chargedConstituents();
