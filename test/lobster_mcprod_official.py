@@ -82,7 +82,7 @@ for path in datasets(tag):
     # ))
 
     workflows.append(Workflow(
-        label=label + '_filtered_1t2l',
+        label=label + '_filtered_0t1l',
         dataset=cmssw.Dataset(
             dataset=path,
             events_per_task=150000,
@@ -95,7 +95,7 @@ for path in datasets(tag):
     ))
 
     workflows.append(Workflow(
-        label=label + '_filtered_1t3l',
+        label=label + '_filtered_1t2l2',
         dataset=cmssw.Dataset(
             dataset=path,
             events_per_task=150000,
@@ -104,7 +104,7 @@ for path in datasets(tag):
         ),
         category=category,
         pset='ntuplize.py',
-        arguments=params + ['genFilter=true', 'genFilter3l=true']
+        arguments=params + ['genFilter=true', 'genFilter1t2l=true']
     ))
 
     # workflows.append(Workflow(
@@ -120,7 +120,7 @@ for path in datasets(tag):
     #     arguments=params + ['genFilter=true', 'genFilterWithFakes=true']
     # ))
 
-tag += '_filter'
+tag += '_filter2'
 
 config = Config(
     label='tau_{}_{}'.format(version, tag),
