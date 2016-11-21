@@ -1,6 +1,7 @@
 #include <cctype>
 #include <cstdlib>
 
+#include "TFile.h"
 #include "TGraphAsymmErrors.h"
 #include "TPython.h"
 #include "TPyArg.h"
@@ -9,7 +10,8 @@
 #include "DataFormats/FWLite/interface/Handle.h"
 #include "FWCore/ParameterSet/interface/FileInPath.h"
 
-#include "MiniAOD/MiniAODHelper/interface/CSVHelper.h"
+#include "CondFormats/BTauObjects/interface/BTagCalibration.h"
+
 #include "MiniAOD/MiniAODHelper/interface/PUWeightProducer.h"
 #include "ttH/TauRoast/interface/Fastlane.h"
 
@@ -20,6 +22,37 @@ lower(const std::string& s)
    for (unsigned i = 0; i < res.size(); ++i)
       res[i] = std::tolower(res[i]);
    return res;
+}
+
+fastlane::CSVHelper::CSVHelper()
+   : reader_(BTagEntry::OP_RESHAPING, "central", {})
+{
+   edm::FileInPath fn("ttH/TauRoast/data/CSVv2_ichep.csv");
+   BTagCalibration calib("csvv2", fn.fullPath());
+
+   reader_.load(calib, BTagEntry::FLAV_B, "iterativefit");
+   reader_.load(calib, BTagEntry::FLAV_C, "iterativefit");
+   reader_.load(calib, BTagEntry::FLAV_UDSG, "iterativefit");
+}
+
+float
+fastlane::CSVHelper::weight(const std::vector<superslim::Jet>& jets)
+{
+   float w = 1.;
+
+   for (const auto& j: jets) {
+      float jw = 1.;
+      if (std::abs(j.flavor()) == 5) {
+         jw = reader_.eval_auto_bounds("central", BTagEntry::FLAV_B, j.eta(), j.pt(), j.csv());
+      } else if (std::abs(j.flavor()) == 4) {
+         jw = reader_.eval_auto_bounds("central", BTagEntry::FLAV_C, j.eta(), j.pt(), j.csv());
+      } else {
+         jw = reader_.eval_auto_bounds("central", BTagEntry::FLAV_UDSG, j.eta(), j.pt(), j.csv());
+      }
+      w *= jw;
+   }
+
+   return w;
 }
 
 void
@@ -237,51 +270,9 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
    // CSV weights
    // ===========
 
-   static auto csvhelper = CSVHelper(
-         "MiniAOD/MiniAODHelper/data/csv_rwt_fit_hf_v2_final_2016_09_7test.root",
-         "MiniAOD/MiniAODHelper/data/csv_rwt_fit_lf_v2_final_2016_09_7test.root", 5);
+   static auto csvhelper = CSVHelper();
 
-   static std::unordered_map<std::string, int> csvsys = {
-      {"NA", 0},
-      {"JERUp", 0},
-      {"JERDown", 0},
-      {"JESUp", 7},
-      {"JESDown", 8},
-      {"LFContUp", 9},
-      {"LFContDown", 10},
-      {"HFContUp", 11},
-      {"HFContDown", 12},
-      {"HFStats1Up", 13},
-      {"HFStats1Down", 14},
-      {"HFStats2Up", 15},
-      {"HFStats2Down", 16},
-      {"LFStats1Up", 17},
-      {"LFStats1Down", 18},
-      {"LFStats2Up", 19},
-      {"LFStats2Down", 20},
-      {"CharmErr1Up", 21},
-      {"CharmErr1Down", 22},
-      {"CharmErr2Up", 23},
-      {"CharmErr2Down", 24}
-   };
-
-   std::vector<double> jetpt, jeteta, jetcsv;
-   std::vector<int> jetflv;
-
-   for (const auto& j: e.jets(sys)) {
-      jetpt.push_back(j.p4().pt());
-      jeteta.push_back(j.p4().eta());
-      jetcsv.push_back(j.csv());
-      jetflv.push_back(j.flavor());
-   }
-
-   double hf, lf, cf;
-   double csv = csvhelper.getCSVWeight(jetpt, jeteta, jetcsv, jetflv, csvsys[sys], hf, lf, cf);
-
-   ws[lower("HFWeight")] = hf;
-   ws[lower("LFWeight")] = lf;
-   ws[lower("CFWeight")] = cf;
-   ws[lower("CSVWeight")] = std::min(csv, 1.);
+   ws[lower("CSVWeight")] = csvhelper.weight(e.jets());
 
    // =========
    // PU weight

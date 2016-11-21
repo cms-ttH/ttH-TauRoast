@@ -4,6 +4,8 @@
 // Components to process the slim event trees (with superslim components)
 // faster than possible in python
 
+#include "CondTools/BTau/interface/BTagCalibrationReader.h"
+
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -19,6 +21,17 @@ struct _object;
 typedef _object PyObject;
 
 namespace fastlane {
+   class CSVHelper {
+      public:
+         CSVHelper();
+         virtual ~CSVHelper() {};
+
+         float weight(const std::vector<superslim::Jet>&);
+
+      private:
+         BTagCalibrationReader reader_;
+   };
+
    class FakeHelper {
       public:
          enum { central = 0, up = 1, down = 2 } sys;

@@ -1,3 +1,5 @@
+<use name="CondFormats/BTauObjects"/>
+<use name="CondTools/BTau"/>
 <use name="DataFormats/Common"/>
 <use name="DataFormats/Math"/>
 <use name="DataFormats/PatCandidates"/>
