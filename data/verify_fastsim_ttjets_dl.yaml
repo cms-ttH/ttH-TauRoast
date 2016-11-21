@@ -25,20 +25,6 @@ discriminants: []
 default cuts:
     - "l ID": lepton_id == superslim::Lepton::MVA
     - "τ ID": tau_id == superslim::Tau::IsoMVA03
-    - "l pt": >
-        (leptons[0].electron() and leptons[0].pt() > 30) or
-        (leptons[0].muon() and leptons[0].pt() > 25)
-    - "1 l": >
-        std::count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Loose; }) == 1
-    - "1st l": >
-        leptons[0].mva() >= superslim::id::Loose
-    - "τ quality": >
-        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) >= 2
-    - "τ OS": >
-        taus[0].charge() * taus[1].charge() < 0
-    - "jets": >
-        len(jets) >= 4 and
-        (btags(jets) >= 1 or btags(jets, true) >= 2)
 
 default weights: []
 

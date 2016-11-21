@@ -3,7 +3,7 @@
 channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/mcprod_v1/
-outdir: ~/www/ttH/mcprod_v1/fast_ttH2Nonbb
+outdir: ~/www/ttH/mcprod_v1/filter_ttH2Nonbb
 histformat: "{p}_{c}_{v}"
 
 # lumi: 2517
@@ -11,13 +11,17 @@ lumi: 30000
 
 plot:
   - ttH2Nonbb_tranche3
-  - ttH2Nonbb_tranche3_fast
+  - ttH2Nonbb_tranche3_filtered_0t1l
+  - ttH2Nonbb_tranche3_filtered_1t2l2
+  - ttH2Nonbb_tranche3_filtered_1t3l
 
 plot override:
     show ratio: false
     signals:
-      - ttH2Nonbb_tranche3: r.kBlue
-      - ttH2Nonbb_tranche3_fast: r.kRed
+      - ttH2Nonbb_tranche3: r.kBlack
+      - ttH2Nonbb_tranche3_filtered_0t1l: r.kBlue
+      - ttH2Nonbb_tranche3_filtered_1t2l2: r.kGreen
+      - ttH2Nonbb_tranche3_filtered_1t3l: r.kRed
 
 limits: []
 discriminants: []
