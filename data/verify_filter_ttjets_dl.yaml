@@ -17,6 +17,7 @@ plot:
 
 plot override:
     show ratio: false
+    scale factor: norm
     signals:
       - ttjets_DL_tranche3: r.kBlack
       - ttjets_DL_tranche3_filtered_0t1l: r.kBlue

@@ -17,6 +17,7 @@ plot:
 
 plot override:
     show ratio: false
+    scale factor: norm
     signals:
       - ttH2Nonbb_tranche3: r.kBlack
       - ttH2Nonbb_tranche3_filtered_0t1l: r.kBlue

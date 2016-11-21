@@ -231,6 +231,10 @@ class Plot(object):
             factor = 0. if denom == 0. else cutflows[proc.cutflow][-1][proc] / denom
             hist.Scale(factor)
 
+    def _normalize_to_unity(self, hists):
+        for h in hists:
+            h.Scale(1. / h.Integral())
+
     def read(self, file, category, procs, systematics=None, fmt="{p}_{c}_{v}"):
         if systematics is None:
             systematics = []
@@ -429,6 +433,10 @@ class Plot(object):
 
         if factor == "auto":
             factor = self._get_scale_factor(bkg_sum, signals)
+        elif factor == "norm":
+            factor = 1.
+            self._normalize_to_unity(signals)
+            base_histo.GetYaxis().SetTitle("")
 
         if config.get("legend", True):
             scale = 1.175 + 0.05 * (
