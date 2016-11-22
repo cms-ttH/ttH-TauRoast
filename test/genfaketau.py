@@ -54,9 +54,9 @@ jets = alljets[
     & (alljets.genjet_constituents <= 22)
     & (alljets.genjet_chargedconstituents <= 11)
     & (alljets.genjet_isoconstituents <= 12)
-    & (alljets.genjet_isochargedpt < 11)
-    & (alljets.genjet_signalpt > 12)
-    & (alljets.genjet_signalchargedconstituents <= 6)
+    & (alljets.genjet_isochargedpt < 10)
+    & (alljets.genjet_signalpt > 16)
+    & (alljets.genjet_signalchargedconstituents <= 5)
 ]
 
 print "before", len(alljets)
