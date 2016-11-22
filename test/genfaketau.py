@@ -42,17 +42,21 @@ gen_in = ['genjet_' + v for v in gen_in]
 alljets = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=gen_in, flatten=True)
 loosejets = alljets[
     (alljets.genjet_pt > 18)
+    & (alljets.genjet_eta > -2.5)
+    & (alljets.genjet_eta < 2.5)
     & (alljets.genjet_closestparticledr > 0.1)
 ]
 jets = alljets[
     (alljets.genjet_pt > 18)
     & (alljets.genjet_eta > -2.5)
     & (alljets.genjet_eta < 2.5)
-    & (alljets.genjet_constituents <= 19)
-    & (alljets.genjet_chargedconstituents <= 9)
-    & (alljets.genjet_isoconstituents <= 11)
-    & (alljets.genjet_signalpt > 18)
     & (alljets.genjet_closestparticledr > 0.1)
+    & (alljets.genjet_constituents <= 22)
+    & (alljets.genjet_chargedconstituents <= 11)
+    & (alljets.genjet_isoconstituents <= 12)
+    & (alljets.genjet_isochargedpt < 11)
+    & (alljets.genjet_signalpt > 12)
+    & (alljets.genjet_signalchargedconstituents <= 6)
 ]
 
 print "before", len(alljets)
@@ -102,7 +106,7 @@ labels = ['genjets', u'genjet fakes']
 pspace = [
     ('pt', 'pt [GeV]', range(0, 201, 5)),
     ('eta', 'eta', np.array(range(-50, 51, 2)) * 0.1),
-    ('lpt', 'leading track pt [GeV]', range(0, 201, 5)),
+    ('lpt', 'leading track pt [GeV]', range(0, 81, 2)),
     ('chargedpt', 'charged pt component [GeV]', range(0, 201, 5)),
     ('constituents', 'constituent count', range(0, 31, 1)),
     ('chargedconstituents', 'charged constituent count', range(0, 31, 1)),
