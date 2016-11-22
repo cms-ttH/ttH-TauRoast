@@ -233,7 +233,9 @@ class Plot(object):
 
     def _normalize_to_unity(self, hists):
         for h in hists:
-            h.Scale(1. / h.Integral())
+            norm = h.Integral()
+            if norm != 0.:
+                h.Scale(1. / h.Integral())
 
     def read(self, file, category, procs, systematics=None, fmt="{p}_{c}_{v}"):
         if systematics is None:
