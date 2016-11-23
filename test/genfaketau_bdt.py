@@ -31,7 +31,7 @@ jets = alljets[
     & (alljets.genjet_constituents <= 22)
     & (alljets.genjet_chargedconstituents <= 10)
     & (alljets.genjet_isochargedpt < 10)
-    & (alljets.genjet_signalpt > 18)
+    & (alljets.genjet_signalpt > 16)
     & (alljets.genjet_signalchargedconstituents <= 5)
 ]
 
@@ -39,8 +39,10 @@ for q in quants:
     selection[q] = selection['tau_genjet_' + q.lower()]
     jets[q] = jets['genjet_' + q.lower()]
 
-selection.to_root("test/genfaketau/out/train.root", "signal", "w")
-jets.to_root("test/genfaketau/out/train.root", "background", "a")
+count = 300000
+
+selection.head(count).to_root("test/genfaketau/out/train.root", "signal", "w")
+jets.head(count).to_root("test/genfaketau/out/train.root", "background", "a")
 
 r.TMVA.gConfig().GetIONames().fWeightFileDir = "test/genfaketau/out/weights"
 

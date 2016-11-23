@@ -54,7 +54,7 @@ jets = alljets[
     & (alljets.genjet_constituents <= 22)
     & (alljets.genjet_chargedconstituents <= 10)
     & (alljets.genjet_isochargedpt < 10)
-    & (alljets.genjet_signalpt > 18)
+    & (alljets.genjet_signalpt > 16)
     & (alljets.genjet_signalchargedconstituents <= 5)
 ]
 
