@@ -33,7 +33,7 @@ fake cuts:
     - "1 l": >
         std::count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Loose; }) <= 1
     - "jets": >
-        len(jets) >= 4 and
+        len(jets) >= 3 and
         (btags(jets) >= 1 or btags(jets, true) >= 2)
     - "fake": >
         leptons[0].mva() < superslim::id::Loose or
@@ -56,7 +56,7 @@ signal cuts:
     - "τ OS": >
         taus[0].charge() * taus[1].charge() < 0
     - "jets": >
-        len(jets) >= 4 and
+        len(jets) >= 3 and
         (btags(jets) >= 1 or btags(jets, true) >= 2)
     - "MC truth": >
         taus[0].match() < 6 and taus[1].match() < 6 and (
