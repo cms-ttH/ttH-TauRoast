@@ -12,8 +12,8 @@ lumi: 30000
 plot:
   - ttjets_DL_tranche3
   - ttjets_DL_tranche3_filtered_0t1l
-  - ttjets_DL_tranche3_filtered_1t2l2
-  - ttjets_DL_tranche3_filtered_1t3l
+  - ttjets_DL_tranche3_filtered_1t2l3
+  - ttjets_DL_tranche3_filtered_1t3l3
 
 plot override:
     show ratio: false
@@ -21,8 +21,8 @@ plot override:
     signals:
       - ttjets_DL_tranche3: r.kBlack
       - ttjets_DL_tranche3_filtered_0t1l: r.kBlue
-      - ttjets_DL_tranche3_filtered_1t2l2: r.kGreen
-      - ttjets_DL_tranche3_filtered_1t3l: r.kRed
+      - ttjets_DL_tranche3_filtered_1t2l3: r.kGreen
+      - ttjets_DL_tranche3_filtered_1t3l3: r.kRed
 
 limits: []
 discriminants: []

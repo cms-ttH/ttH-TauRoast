@@ -59,6 +59,7 @@ for path in datasets(tag):
     if 'fast' in path:
         instance = 'phys03'
         label += '_fast'
+        continue
 
     if '/Run2016' in path and path.endswith('MINIAOD'):
         mask = lumimask
@@ -81,21 +82,21 @@ for path in datasets(tag):
     #     arguments=params
     # ))
 
-    workflows.append(Workflow(
-        label=label + '_filtered_0t1l',
-        dataset=cmssw.Dataset(
-            dataset=path,
-            events_per_task=150000,
-            lumi_mask=mask,
-            dbs_instance=instance
-        ),
-        category=category,
-        pset='ntuplize.py',
-        arguments=params + ['genFilter=true']
-    ))
+    # workflows.append(Workflow(
+    #     label=label + '_filtered_0t1l',
+    #     dataset=cmssw.Dataset(
+    #         dataset=path,
+    #         events_per_task=150000,
+    #         lumi_mask=mask,
+    #         dbs_instance=instance
+    #     ),
+    #     category=category,
+    #     pset='ntuplize.py',
+    #     arguments=params + ['genFilter=true']
+    # ))
 
     workflows.append(Workflow(
-        label=label + '_filtered_1t2l2',
+        label=label + '_filtered_1t2l3',
         dataset=cmssw.Dataset(
             dataset=path,
             events_per_task=150000,
@@ -107,20 +108,20 @@ for path in datasets(tag):
         arguments=params + ['genFilter=true', 'genFilter1t2l=true']
     ))
 
-    # workflows.append(Workflow(
-    #     label=label + '_filtered_more',
-    #     dataset=cmssw.Dataset(
-    #         dataset=path,
-    #         events_per_task=150000,
-    #         lumi_mask=mask,
-    #         dbs_instance=instance,
-    #     ),
-    #     category=category,
-    #     pset='ntuplize.py',
-    #     arguments=params + ['genFilter=true', 'genFilterWithFakes=true']
-    # ))
+    workflows.append(Workflow(
+        label=label + '_filtered_1t3l3',
+        dataset=cmssw.Dataset(
+            dataset=path,
+            events_per_task=150000,
+            lumi_mask=mask,
+            dbs_instance=instance
+        ),
+        category=category,
+        pset='ntuplize.py',
+        arguments=params + ['genFilter=true', 'genFilter1t3l=true']
+    ))
 
-tag += '_filter2'
+tag += '_filter3'
 
 config = Config(
     label='tau_{}_{}'.format(version, tag),
