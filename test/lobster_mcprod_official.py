@@ -53,7 +53,7 @@ for path in datasets(tag):
     minor = mctag.sub('', minor)
     label = (major + '_' + minor).replace('-', '_')
     mask = None
-    params = ['globalTag=' + globaltag_mc]
+    params = ['globalTag=' + globaltag_mc, 'channels=ttl']
     category = mc
     instance = 'global'
     if 'fast' in path:
@@ -96,7 +96,7 @@ for path in datasets(tag):
     # ))
 
     workflows.append(Workflow(
-        label=label + '_filtered_1t2l3',
+        label=label + '_filtered_1t2l_mva',
         dataset=cmssw.Dataset(
             dataset=path,
             events_per_task=150000,
@@ -104,12 +104,13 @@ for path in datasets(tag):
             dbs_instance=instance
         ),
         category=category,
+        merge_size='2g',
         pset='ntuplize.py',
         arguments=params + ['genFilter=true', 'genFilter1t2l=true']
     ))
 
     workflows.append(Workflow(
-        label=label + '_filtered_1t3l3',
+        label=label + '_filtered_1t3l_mva',
         dataset=cmssw.Dataset(
             dataset=path,
             events_per_task=150000,
@@ -117,11 +118,12 @@ for path in datasets(tag):
             dbs_instance=instance
         ),
         category=category,
+        merge_size='2g',
         pset='ntuplize.py',
         arguments=params + ['genFilter=true', 'genFilter1t3l=true']
     ))
 
-tag += '_filter3'
+tag += '_filter4'
 
 config = Config(
     label='tau_{}_{}'.format(version, tag),

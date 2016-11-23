@@ -113,13 +113,12 @@ process.load('ttH.TauMCGeneration.eventFilterMAOD_cfi')
 process.load("ttH.TauRoast.genHadronMatching_cfi")
 
 if options.genFilter:
+    process.ttHGenFilter.useFakeTaus = cms.bool(True)
+    process.ttHGenFilter.useFakeTauMVA = cms.bool(True)
+    process.ttHGenFilter.minTaus = cms.int32(1)
     if options.genFilter1t2l:
-        process.ttHGenFilter.useFakeTaus = cms.bool(True)
-        process.ttHGenFilter.minTaus = cms.int32(1)
         process.ttHGenFilter.minTotalLeptons = cms.int32(2)
     if options.genFilter1t3l:
-        process.ttHGenFilter.useFakeTaus = cms.bool(True)
-        process.ttHGenFilter.minTaus = cms.int32(1)
         process.ttHGenFilter.minTotalLeptons = cms.int32(3)
 
 process.lepPath = cms.Path(
