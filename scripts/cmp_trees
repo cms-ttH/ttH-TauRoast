@@ -162,6 +162,7 @@ def compare_events(joint, basename, baseframe, compname, compframe):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-n', metavar='EVENTS', default=10, type=int, help='number of events to limit comparison table to')
+parser.add_argument('-p', default=False, type=bool, help='produce comparison plots')
 parser.add_argument('--columnnames', metavar='FILE', help='column names, one per line')
 parser.add_argument(dest='outdir', help='directory to store output in')
 parser.add_argument(dest='baseline', help='either: rootfile:treename:label | textfile:label')
@@ -199,102 +200,103 @@ with open(os.path.join(args.outdir, 'index.html'), 'w') as f:
         html.format(
             '\n'.join([table.format(*t) for t in ecomparison]),
             '\n'.join([table.format(*t) for t in qcomparison]),
-            '\n'.join([img.format(c) for c in sorted(both) if c != 'nEvent']),
+            '' if not args.p else '\n'.join([img.format(c) for c in sorted(both) if c != 'nEvent']),
             b=basename, c=compname
         ))
 
-for column in both:
-    if column == 'nEvent':
-        continue
-    print "Processing {}".format(column)
-    data_b = joint[column + '_b']
-    data_c = joint[column + '_c']
+if args.p:
+    for column in both:
+        if column == 'nEvent':
+            continue
+        print "Processing {}".format(column)
+        data_b = joint[column + '_b']
+        data_c = joint[column + '_c']
 
-    fig = plt.figure(figsize=(15, 10))
+        fig = plt.figure(figsize=(15, 10))
 
-    g1 = gs.GridSpec(3, 1, height_ratios=[2, 2, 1])
-    g1.update(top=0.95, bottom=0.05, left=0.05, right=0.59, hspace=0)
+        g1 = gs.GridSpec(3, 1, height_ratios=[2, 2, 1])
+        g1.update(top=0.95, bottom=0.05, left=0.05, right=0.59, hspace=0)
 
-    ax1 = plt.subplot(g1[0, 0])
-    ax2 = plt.subplot(g1[1, 0], sharex=ax1)
-    ax3 = plt.subplot(g1[2, 0], sharex=ax2)
+        ax1 = plt.subplot(g1[0, 0])
+        ax2 = plt.subplot(g1[1, 0], sharex=ax1)
+        ax3 = plt.subplot(g1[2, 0], sharex=ax2)
 
-    ax1.set_title(column)
-    ax3.set_ylabel('({c} - {b}) / {b}'.format(c=compname, b=basename))
+        ax1.set_title(column)
+        ax3.set_ylabel('({c} - {b}) / {b}'.format(c=compname, b=basename))
 
-    plt.setp(ax1.get_xticklabels(), visible=False)
-    plt.setp(ax2.get_xticklabels(), visible=False)
+        plt.setp(ax1.get_xticklabels(), visible=False)
+        plt.setp(ax2.get_xticklabels(), visible=False)
 
-    g2 = gs.GridSpec(2, 1)
-    g2.update(top=0.95, bottom=0.05, left=0.61, right=0.95, hspace=0)
+        g2 = gs.GridSpec(2, 1)
+        g2.update(top=0.95, bottom=0.05, left=0.61, right=0.95, hspace=0)
 
-    ax4 = plt.subplot(g2[0, 0])
-    ax5 = plt.subplot(g2[1, 0], sharex=ax4)
+        ax4 = plt.subplot(g2[0, 0])
+        ax5 = plt.subplot(g2[1, 0], sharex=ax4)
 
-    ax4.set_title('{c} - {b}'.format(c=compname, b=basename))
-    ax4.yaxis.tick_right()
-    ax4.yaxis.set_ticks_position('both')
-    ax5.yaxis.tick_right()
-    ax5.yaxis.set_ticks_position('both')
+        ax4.set_title('{c} - {b}'.format(c=compname, b=basename))
+        ax4.yaxis.tick_right()
+        ax4.yaxis.set_ticks_position('both')
+        ax5.yaxis.tick_right()
+        ax5.yaxis.set_ticks_position('both')
 
-    plt.setp(ax4.get_xticklabels(), visible=False)
+        plt.setp(ax4.get_xticklabels(), visible=False)
 
-    diff = (data_c - data_b)[(data_b > -666) & (data_c > -666)]
+        diff = (data_c - data_b)[(data_b > -666) & (data_c > -666)]
 
-    data_b = data_b[data_b > -666]
-    data_c = data_c[data_c > -666]
+        data_b = data_b[data_b > -666]
+        data_c = data_c[data_c > -666]
 
-    mn = -11
-    mx = 0
-    if len(data_b) > 0:
-        mn = min(data_b.min(), mn)
-        mx = max(data_b.max(), mx)
-    if len(data_c) > 0:
-        mn = min(data_c.min(), mn)
-        mx = max(data_c.max(), mx)
+        mn = -11
+        mx = 0
+        if len(data_b) > 0:
+            mn = min(data_b.min(), mn)
+            mx = max(data_b.max(), mx)
+        if len(data_c) > 0:
+            mn = min(data_c.min(), mn)
+            mx = max(data_c.max(), mx)
 
-    if len(diff) > 0:
+        if len(diff) > 0:
+            try:
+                ax4.hist(diff, bins=20)
+                ax5.hist(diff, bins=20)
+            except KeyError:
+                pass
+            except AttributeError:
+                pass
+
+        if not (valid(data_b) or valid(data_c)):
+            print "Skipping!"
+            continue
+
         try:
-            ax4.hist(diff, bins=20)
-            ax5.hist(diff, bins=20)
-        except KeyError:
-            pass
-        except AttributeError:
-            pass
+            bins, groups_b = bin_it(data_b, mn, mx)
+            centers = [.5 * (a + b) for a, b in zip(bins, bins[1:])]
+            ax1.errorbar(x=centers, y=groups_b.count(), yerr=groups_b.std(), fmt='o', label=basename)
+            ax2.errorbar(x=centers, y=groups_b.count(), yerr=groups_b.std(), fmt='o')
 
-    if not (valid(data_b) or valid(data_c)):
-        print "Skipping!"
-        continue
+            bins, groups_c = bin_it(data_c, mn, mx)
+            centers = [.5 * (a + b) for a, b in zip(bins, bins[1:])]
+            ax1.errorbar(x=centers, y=groups_c.count(), yerr=groups_c.std(), fmt='o', label=compname)
+            ax2.errorbar(x=centers, y=groups_c.count(), yerr=groups_c.std(), fmt='o')
 
-    try:
-        bins, groups_b = bin_it(data_b, mn, mx)
-        centers = [.5 * (a + b) for a, b in zip(bins, bins[1:])]
-        ax1.errorbar(x=centers, y=groups_b.count(), yerr=groups_b.std(), fmt='o', label=basename)
-        ax2.errorbar(x=centers, y=groups_b.count(), yerr=groups_b.std(), fmt='o')
-
-        bins, groups_c = bin_it(data_c, mn, mx)
-        centers = [.5 * (a + b) for a, b in zip(bins, bins[1:])]
-        ax1.errorbar(x=centers, y=groups_c.count(), yerr=groups_c.std(), fmt='o', label=compname)
-        ax2.errorbar(x=centers, y=groups_c.count(), yerr=groups_c.std(), fmt='o')
-
-        ax3.errorbar(x=centers, y=groups_b.count() / groups_c.count(), fmt='o')
-    except ValueError as e:
-        pass
-
-    ax1.legend()
-    ax1.set_ylim(ymin=0)
-    # ax2.set_ylim(ymin=0)
-
-    if len(data_b) > 0 or len(data_c) > 0:
-        try:
-            ax2.set_yscale('log')
-        except ValueError as e:
-            pass
-    if len(diff) > 0:
-        try:
-            ax5.set_yscale('log', nonposy='clip')
+            ax3.errorbar(x=centers, y=groups_b.count() / groups_c.count(), fmt='o')
         except ValueError as e:
             pass
 
-    plt.savefig(os.path.join(args.outdir, column + '.png'))
-    plt.close()
+        ax1.legend()
+        ax1.set_ylim(ymin=0)
+        # ax2.set_ylim(ymin=0)
+
+        if len(data_b) > 0 or len(data_c) > 0:
+            try:
+                ax2.set_yscale('log')
+            except ValueError as e:
+                pass
+        if len(diff) > 0:
+            try:
+                ax5.set_yscale('log', nonposy='clip')
+            except ValueError as e:
+                pass
+
+        plt.savefig(os.path.join(args.outdir, column + '.png'))
+        plt.close()
