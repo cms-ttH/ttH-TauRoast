@@ -52,10 +52,9 @@ jets = alljets[
     & (alljets.genjet_eta < 2.5)
     & (alljets.genjet_closestparticledr > 0.1)
     & (alljets.genjet_constituents <= 22)
-    & (alljets.genjet_chargedconstituents <= 11)
-    & (alljets.genjet_isoconstituents <= 12)
+    & (alljets.genjet_chargedconstituents <= 10)
     & (alljets.genjet_isochargedpt < 10)
-    & (alljets.genjet_signalpt > 16)
+    & (alljets.genjet_signalpt > 18)
     & (alljets.genjet_signalchargedconstituents <= 5)
 ]
 
@@ -66,9 +65,7 @@ print "after", len(jets)
 fakes = taus[(taus.tau_match == 6)]
 selection = taus[
     (taus.tau_match == 6)
-    & (taus.tau_isoMVA03 >= 4)
-    # & (taus.tau_antiElectron >= 3)
-    # & (taus.tau_antiMuon >= 3)
+    & (taus.tau_isoMVA03 >= 3)
     & (taus.tau_pt >= 20.)
 ]
 

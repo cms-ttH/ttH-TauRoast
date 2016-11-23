@@ -16,9 +16,7 @@ taus = read_root("test/genfaketau/out/ntuple.root", "ttjets", columns=taus_in, f
 fakes = taus[(taus.tau_match == 6)]
 selection = taus[
     (taus.tau_match == 6)
-    & (taus.tau_isoMVA03 >= 5)
-    & (taus.tau_antiElectron >= 3)
-    & (taus.tau_antiMuon >= 3)
+    & (taus.tau_isoMVA03 >= 3)
     & (taus.tau_pt >= 20.)
 ]
 
@@ -29,11 +27,12 @@ jets = alljets[
     (alljets.genjet_pt > 18)
     & (alljets.genjet_eta > -2.5)
     & (alljets.genjet_eta < 2.5)
-    & (alljets.genjet_constituents <= 19)
-    & (alljets.genjet_chargedconstituents <= 9)
-    & (alljets.genjet_isoconstituents <= 11)
-    & (alljets.genjet_signalpt > 18)
     & (alljets.genjet_closestparticledr > 0.1)
+    & (alljets.genjet_constituents <= 22)
+    & (alljets.genjet_chargedconstituents <= 10)
+    & (alljets.genjet_isochargedpt < 10)
+    & (alljets.genjet_signalpt > 18)
+    & (alljets.genjet_signalchargedconstituents <= 5)
 ]
 
 for q in quants:
@@ -92,6 +91,8 @@ TestTree = outfile.Get("TestTree")
 # Cutting on these objects in the trees will allow to separate true S/B SCut_Tree = 'classID>0.5'
 BCut_Tree = 'classID<0.5'
 SCut_Tree = 'classID>0.5'
+
+r.TH1.SetDefaultSumw2()
 
 # Now lets project the tree information into those histograms
 TrainTree.Project("Histo_training_S", "BDTG", SCut_Tree)

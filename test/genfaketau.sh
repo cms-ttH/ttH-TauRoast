@@ -1,6 +1,6 @@
 set -e
 
-MAXEVENTS=800000
+MAXEVENTS=100000
 
 mkdir -p test/genfaketau/ttjets
 rm -f test/genfaketau/ttjets/*.root
