@@ -2,7 +2,6 @@
 #include <cstdlib>
 
 #include "TFile.h"
-#include "TGraphAsymmErrors.h"
 #include "TPython.h"
 #include "TPyArg.h"
 
@@ -12,6 +11,7 @@
 
 #include "CondFormats/BTauObjects/interface/BTagCalibration.h"
 
+#include "MiniAOD/MiniAODHelper/interface/LeptonSFHelper.h"
 #include "MiniAOD/MiniAODHelper/interface/PUWeightProducer.h"
 #include "ttH/TauRoast/interface/Fastlane.h"
 
@@ -83,6 +83,15 @@ graph_to_hists(const TGraphAsymmErrors* g, std::array<std::auto_ptr<TH1F>, 3>& a
    a[0]->SetDirectory(0);
    a[1]->SetDirectory(0);
    a[2]->SetDirectory(0);
+}
+
+void
+get_hist(TFile& f, std::auto_ptr<TH2F>& ptr, const std::string& name)
+{
+   TH2F *h;
+   f.GetObject(name.c_str(), h);
+   ptr.reset(h);
+   ptr->SetDirectory(0);
 }
 
 fastlane::FakeHelper::FakeHelper()
@@ -166,6 +175,113 @@ fastlane::FakeHelper::weight(const std::vector<superslim::Tau>& taus,
       w *= pow(-1., fake_count + 1);
 
    return w;
+}
+
+fastlane::LeptonHelper::LeptonHelper()
+{
+   {
+      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/lepMVAEffSF_e_3l.root").fullPath().c_str());
+      get_hist(f, tight_el_, "sf");
+   }
+   {
+      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/lepMVAEffSF_m_3l.root").fullPath().c_str());
+      get_hist(f, tight_mu_, "sf");
+   }
+
+   {
+      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/leptonSF/el_scaleFactors_20160724.root").fullPath().c_str());
+      get_hist(f, reco_el1_, "GsfElectronToFOID2D");
+      get_hist(f, reco_el2_, "MVAVLooseElectronToMini4");
+      get_hist(f, reco_el3_, "MVAVLooseElectronToConvIHit1");
+   }
+   {
+      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/leptonSF/el_scaleFactors_gsf.root").fullPath().c_str());
+      get_hist(f, reco_el4_, "EGamma_SF2D");
+   }
+   {
+      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/leptonSF/mu_ttH_presel_barrel.root").fullPath().c_str());
+      TGraphAsymmErrors *g;
+      f.GetObject("ratio", g);
+      reco_mu1b_.reset(g);
+   }
+   {
+      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/leptonSF/mu_ttH_presel_endcap.root").fullPath().c_str());
+      TGraphAsymmErrors *g;
+      f.GetObject("ratio", g);
+      reco_mu1e_.reset(g);
+   }
+   {
+      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/leptonSF/MuonID_Z_RunBCD_prompt80X_7p65_looseID.root").fullPath().c_str());
+      get_hist(f, reco_mu2_, "pt_abseta_ratio_MC_NUM_LooseID_DEN_genTracks_PAR_pt_spliteta_bin1");
+   }
+   {
+      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/leptonSF/ratios_HIP_trkEff.root").fullPath().c_str());
+      TGraphAsymmErrors *g;
+      f.GetObject("ratio_eta", g);
+      reco_mu3_.reset(g);
+   }
+}
+
+fastlane::LeptonHelper::LeptonHelper(const LeptonHelper& other)
+{
+   tight_el_.reset(dynamic_cast<TH2F*>(tight_el_->Clone()));
+   tight_mu_.reset(dynamic_cast<TH2F*>(tight_mu_->Clone()));
+
+   reco_mu1b_.reset(dynamic_cast<TGraphAsymmErrors*>(reco_mu1b_->Clone()));
+   reco_mu1e_.reset(dynamic_cast<TGraphAsymmErrors*>(reco_mu1e_->Clone()));
+   reco_mu2_.reset(dynamic_cast<TH2F*>(reco_mu2_->Clone()));
+   reco_mu3_.reset(dynamic_cast<TGraphAsymmErrors*>(reco_mu3_->Clone()));
+
+   reco_el1_.reset(dynamic_cast<TH2F*>(reco_el1_->Clone()));
+   reco_el2_.reset(dynamic_cast<TH2F*>(reco_el2_->Clone()));
+   reco_el3_.reset(dynamic_cast<TH2F*>(reco_el3_->Clone()));
+   reco_el4_.reset(dynamic_cast<TH2F*>(reco_el4_->Clone()));
+}
+
+float
+get_factor(std::auto_ptr<TH2F>& h, const superslim::Lepton& l, bool swapped=false)
+{
+   int x = std::max(1, std::min(h->GetNbinsX(), h->GetXaxis()->FindBin(swapped ? l.eta() : l.pt())));
+   int y = std::max(1, std::min(h->GetNbinsY(), h->GetYaxis()->FindBin(swapped ? l.pt() : std::abs(l.eta()))));
+   return h->GetBinContent(x, y);
+}
+
+float
+get_factor(std::auto_ptr<TGraphAsymmErrors>& g, float v)
+{
+   float x = std::max(float(g->GetXaxis()->GetXmin() + 1e-5),
+         std::min(float(g->GetXaxis()->GetXmax() - 1e-5), v));
+   return g->Eval(x);
+}
+
+float
+fastlane::LeptonHelper::weight(const superslim::Lepton& l)
+{
+   return recoSF(l) * tightSF(l);
+}
+
+float
+fastlane::LeptonHelper::recoSF(const superslim::Lepton& l)
+{
+   if (l.electron()) {
+      return
+         get_factor(reco_el1_, l) *
+         get_factor(reco_el2_, l) *
+         get_factor(reco_el3_, l) *
+         get_factor(reco_el4_, l, true);
+   } else {
+      return
+         (std::abs(l.eta()) < 1.2 ? get_factor(reco_mu1b_, l.pt()) : get_factor(reco_mu1e_, l.pt())) *
+         get_factor(reco_mu2_, l) *
+         get_factor(reco_mu3_, l.eta());
+   }
+}
+
+float
+fastlane::LeptonHelper::tightSF(const superslim::Lepton& l)
+{
+   auto& h = l.electron() ? tight_el_ : tight_mu_;
+   return get_factor(h, l);
 }
 
 bool
@@ -265,6 +381,28 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
 
    static const float tau_efficiency_scale = 0.83;
    static const float tau_efficiency = 0.06;
+
+   // =====================
+   // Lepton and Trigger SF
+   // =====================
+
+   static auto triggerhelper = LeptonSFHelper();
+   static auto leptonhelper = LeptonHelper();
+
+   for (const auto& l: e.leptons()) {
+      float trig_sf = 0.;
+
+      if (l.electron()) {
+         trig_sf = triggerhelper.GetElectronSF(l.pt(), l.eta(), 0, "Trigger");
+      } else {
+         trig_sf = triggerhelper.GetMuonSF(l.pt(), l.eta(), 0, "Trigger");
+      }
+
+      ws[lower("LeptonSF")] = leptonhelper.weight(l);
+      ws[lower("TriggerSF")] = trig_sf;
+
+      break;
+   }
 
    // ===========
    // CSV weights
