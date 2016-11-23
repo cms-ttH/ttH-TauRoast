@@ -90,9 +90,9 @@ Histo_testing_B = r.TH1D('Histo_testing_B', 'B (Test)', 40, -1.0, 1.0)
 TrainTree = outfile.Get("TrainTree")
 TestTree = outfile.Get("TestTree")
 
-# Cutting on these objects in the trees will allow to separate true S/B SCut_Tree = 'classID>0.5'
-BCut_Tree = 'classID<0.5'
-SCut_Tree = 'classID>0.5'
+# Cutting on these objects in the trees will allow to separate true S/B
+BCut_Tree = 'classID>0.5'
+SCut_Tree = 'classID<0.5'
 
 r.TH1.SetDefaultSumw2()
 

@@ -96,7 +96,7 @@ for path in datasets(tag):
     # ))
 
     workflows.append(Workflow(
-        label=label + '_filtered_1t2l_mva',
+        label=label + '_filtered_1t2l_mva2',
         dataset=cmssw.Dataset(
             dataset=path,
             events_per_task=150000,
@@ -110,7 +110,7 @@ for path in datasets(tag):
     ))
 
     workflows.append(Workflow(
-        label=label + '_filtered_1t3l_mva',
+        label=label + '_filtered_1t3l_mva2',
         dataset=cmssw.Dataset(
             dataset=path,
             events_per_task=150000,
@@ -123,7 +123,7 @@ for path in datasets(tag):
         arguments=params + ['genFilter=true', 'genFilter1t3l=true']
     ))
 
-tag += '_filter4'
+tag += '_filter5'
 
 config = Config(
     label='tau_{}_{}'.format(version, tag),
