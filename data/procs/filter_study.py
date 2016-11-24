@@ -27,6 +27,6 @@ for suffix in ['', '_fast', '_filtered_0t1l', '_filtered_1t2l_mva2', '_filtered_
             "TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_v1" + suffix,
         ],
         # cross_section=831.76 * wleptonic * (1 - wleptonic),
-        cross_section=182,
+        cross_section=182 * 2,
         events=1000000 if suffix == '_fast' else 157387260
     )
