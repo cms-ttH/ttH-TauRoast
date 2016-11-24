@@ -12,8 +12,8 @@ lumi: 30000
 plot:
   - ttH2Nonbb_tranche3
   - ttH2Nonbb_tranche3_filtered_0t1l
-  - ttH2Nonbb_tranche3_filtered_1t2l3
-  - ttH2Nonbb_tranche3_filtered_1t3l3
+  - ttH2Nonbb_tranche3_filtered_1t2l_mva2
+  - ttH2Nonbb_tranche3_filtered_1t3l_mva2
 
 plot override:
     show ratio: false
@@ -21,8 +21,8 @@ plot override:
     signals:
       - ttH2Nonbb_tranche3: r.kBlack
       - ttH2Nonbb_tranche3_filtered_0t1l: r.kBlue
-      - ttH2Nonbb_tranche3_filtered_1t2l3: r.kGreen
-      - ttH2Nonbb_tranche3_filtered_1t3l3: r.kRed
+      - ttH2Nonbb_tranche3_filtered_1t2l_mva2: r.kGreen
+      - ttH2Nonbb_tranche3_filtered_1t3l_mva2: r.kRed
 
 limits: []
 discriminants: []
