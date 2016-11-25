@@ -1,6 +1,6 @@
 from ttH.TauRoast.processing import BasicProcess
 
-for suffix in ['', '_fast', '_filtered_0t1l', '_filtered_1t2l_mva2', '_filtered_1t3l_mva2']:
+for suffix in ['', '_fast', '_filtered_0t1l', '_filtered_1t2l_mva3', '_filtered_1t3l_mva3']:
     BasicProcess(
         name="ttH2Nonbb_tranche3" + suffix,
         fullname="t#bar{t}H(125) #rightarrow #tau_{h} #tau_{h}" + suffix.replace('_', ' '),
