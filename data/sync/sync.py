@@ -72,6 +72,8 @@ Plot(
     binning=[1, 0, 1]
 )
 
+Leaf('ntv', 'f', 'result = event.ntv()')
+
 Leaf('nelectrons', 'f', 'result = leptons.size() > 1 ? leptons[0].electron() + leptons[1].electron() : 0')
 Leaf('nmuons', 'f', 'result =  leptons.size() > 1 ? leptons[0].muon() + leptons[1].muon() : 0')
 Leaf('ntaus', 'i', 'result = std::count_if(std::begin(taus), std::end(taus), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Medium; })')
