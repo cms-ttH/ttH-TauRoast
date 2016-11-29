@@ -38,11 +38,11 @@ options.register("genFilter", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
                  "Filter the input dataset")
-options.register("genFilter1t2l", False,
+options.register("genFilter0t2l", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
                  "Filter the input dataset with 2 leptons")
-options.register("genFilter1t3l", False,
+options.register("genFilter0t3l", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
                  "Filter the input dataset with 3 leptons")
@@ -115,10 +115,9 @@ process.load("ttH.TauRoast.genHadronMatching_cfi")
 if options.genFilter:
     process.ttHGenFilter.useFakeTaus = cms.bool(True)
     process.ttHGenFilter.useFakeTauMVA = cms.bool(True)
-    process.ttHGenFilter.minTaus = cms.int32(1)
-    if options.genFilter1t2l:
+    if options.genFilter0t2l:
         process.ttHGenFilter.minTotalLeptons = cms.int32(2)
-    if options.genFilter1t3l:
+    if options.genFilter0t3l:
         process.ttHGenFilter.minTotalLeptons = cms.int32(3)
 
 process.lepPath = cms.Path(
