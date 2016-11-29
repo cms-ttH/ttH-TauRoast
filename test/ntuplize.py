@@ -155,7 +155,7 @@ for channel in options.channels:
     if channel == 'ttl':
         taus = (2, 2)
         leptons = (1, 1)
-        jets = (2,)
+        jets = (3,)
         tags = (1, -1)
     elif channel == 'tll':
         taus = (0, 1)
