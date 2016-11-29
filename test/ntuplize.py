@@ -22,6 +22,10 @@ options.register("events", "",
                  VarParsing.VarParsing.multiplicity.list,
                  VarParsing.VarParsing.varType.string,
                  "Selected events to run over")
+options.register("takeVLoose", False,
+                 VarParsing.VarParsing.multiplicity.singleton,
+                 VarParsing.VarParsing.varType.bool,
+                 "Take very loose taus")
 options.register("takeAll", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
@@ -182,7 +186,7 @@ for channel in options.channels:
                           filterPUJets=cms.bool(False),
                           takeAll=cms.bool(options.takeAll),
                           saveGenInfo=cms.bool(options.saveGenInfo),
-                          tauVLoose=cms.bool(False),
+                          tauVLoose=cms.bool(options.takeVLoose),
                           printPreselection=cms.bool(False),
                           reHLT=cms.bool(options.reHLT),
                           debugEvents=cms.vuint32()
