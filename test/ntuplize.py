@@ -187,6 +187,7 @@ for channel in options.channels:
                           takeAll=cms.bool(options.takeAll),
                           saveGenInfo=cms.bool(options.saveGenInfo),
                           tauCombinatorics=cms.bool(build_combinations),
+                          tauVLoose=cms.bool(False),
                           printPreselection=cms.bool(False),
                           reHLT=cms.bool(options.reHLT),
                           debugEvents=cms.vuint32()

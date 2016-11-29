@@ -132,6 +132,7 @@ class TauProcessor : public edm::one::EDProducer<edm::BeginRunProducer, edm::End
       bool take_all_;
       bool save_gen_;
       bool tau_combinatorics_;
+      bool tau_vloose_;
 
       edm::EDGetTokenT<double> rho_token_;
       edm::EDGetTokenT<GenEventInfoProduct> geninfo_token_;
@@ -191,6 +192,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    take_all_(config.getParameter<bool>("takeAll")),
    save_gen_(config.getParameter<bool>("saveGenInfo")),
    tau_combinatorics_(config.getParameter<bool>("tauCombinatorics")),
+   tau_vloose_(config.getParameter<bool>("tauVLoose")),
    evt_list_(config.getParameter<std::vector<unsigned int>>("debugEvents")),
    m_triggerCache(
          edm::InputTag("TriggerResults", "", config.getParameter<bool>("reHLT") ? "HLT2" : "HLT"),
@@ -428,7 +430,7 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
    std::vector<superslim::Tau> staus;
    for (const auto& tau: *taus) {
       auto t = superslim::Tau(tau, rpv, particles, genjets, r++);
-      if (t.loose(tau_id))
+      if (t.selected(tau_id, tau_vloose_ ? superslim::id::VLoose : superslim::id::Loose))
          staus.push_back(t);
    }
    auto all_taus = removeOverlap(staus, all_leptons, .3);
