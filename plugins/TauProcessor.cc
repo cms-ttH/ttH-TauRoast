@@ -131,7 +131,6 @@ class TauProcessor : public edm::one::EDProducer<edm::BeginRunProducer, edm::End
       bool filter_pu_jets_;
       bool take_all_;
       bool save_gen_;
-      bool tau_combinatorics_;
       bool tau_vloose_;
 
       edm::EDGetTokenT<double> rho_token_;
@@ -191,7 +190,6 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    filter_pu_jets_(config.getParameter<bool>("filterPUJets")),
    take_all_(config.getParameter<bool>("takeAll")),
    save_gen_(config.getParameter<bool>("saveGenInfo")),
-   tau_combinatorics_(config.getParameter<bool>("tauCombinatorics")),
    tau_vloose_(config.getParameter<bool>("tauVLoose")),
    evt_list_(config.getParameter<std::vector<unsigned int>>("debugEvents")),
    m_triggerCache(
@@ -208,7 +206,6 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    if (take_all_) {
       min_leptons_ = 0;
       max_leptons_ = 99999;
-      tau_combinatorics_ = false;
    }
 
    rho_token_ = consumes<double>(edm::InputTag("fixedGridRhoFastjetAll"));

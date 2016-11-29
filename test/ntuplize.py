@@ -153,15 +153,11 @@ for channel in options.channels:
         leptons = (1, 1)
         jets = (2,)
         tags = (1, -1)
-
-        build_combinations = True
     elif channel == 'tll':
         taus = (0, 1)
         leptons = (2, 2)
         jets = (4,)
         tags = (1, -1)
-
-        build_combinations = False
     else:
         raise ValueError("channel needs to be either tll or ttl")
 
@@ -186,7 +182,6 @@ for channel in options.channels:
                           filterPUJets=cms.bool(False),
                           takeAll=cms.bool(options.takeAll),
                           saveGenInfo=cms.bool(options.saveGenInfo),
-                          tauCombinatorics=cms.bool(build_combinations),
                           tauVLoose=cms.bool(False),
                           printPreselection=cms.bool(False),
                           reHLT=cms.bool(options.reHLT),
