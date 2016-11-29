@@ -115,7 +115,7 @@ datasets_collisions = """
 
 def datasets(tag):
     if tag == 'all':
-        dsets = datasets_ttH + datasets_mc + datasets_collisions
+        dsets = datasets_ttH + datasets_mc + datasets_collisions + datasets_tranche3
     elif tag == 'ttH':
         dsets = datasets_ttH
     elif tag == 'mc':
