@@ -1,0 +1,73 @@
+# vim: set sw=4 sta et :
+
+channel: ttl
+generator: pow
+ntupledir: /hadoop/store/user/matze/ttH/mcprod_v1/
+outdir: ~/www/ttH/mcprod_v1/filter_id_variation_ttjets_sl
+histformat: "{p}_{c}_{v}"
+
+# lumi: 2517
+lumi: 30000
+
+plot:
+  - ttjets_SL_tranche3
+  - ttjets_SL_tranche3_filtered_1t2l_mva3
+  - ttjets_SL_tranche3_loose
+  - ttjets_SL_tranche3_filtered_1t2l_mva3_loose
+
+plot override:
+    show ratio: false
+    scale factor: norm
+    signals:
+      - ttjets_SL_tranche3: r.kBlack
+      - ttjets_SL_tranche3_filtered_1t2l_mva3: r.kGreen
+      - ttjets_SL_tranche3_loose: r.kRed
+      - ttjets_SL_tranche3_filtered_1t2l_mva3_loose: r.kBlue
+
+limits: []
+discriminants: []
+
+default cuts:
+    - "l ID": lepton_id == superslim::Lepton::MVA
+    - "τ ID": tau_id == superslim::Tau::IsoMVA03
+    - "l pt": >
+        (leptons[0].electron() and leptons[0].pt() > 30) or
+        (leptons[0].muon() and leptons[0].pt() > 25)
+    - "1 l": >
+        std::count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Loose; }) == 1
+    - "1st l": >
+        leptons[0].mva() >= superslim::id::Loose
+    - "τ quality": >
+        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) >= 2
+    - "τ OS": >
+        taus[0].charge() * taus[1].charge() < 0
+    - "jets": >
+        len(jets) >= 3 and
+        (btags(jets) >= 1 or btags(jets, true) >= 2)
+
+loose cuts:
+    - "l ID": lepton_id == superslim::Lepton::MVA
+    - "τ ID": tau_id == superslim::Tau::IsoMVA03
+    - "l pt": >
+        (leptons[0].electron() and leptons[0].pt() > 30) or
+        (leptons[0].muon() and leptons[0].pt() > 25)
+    - "1 l": >
+        std::count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Loose; }) == 1
+    - "1st l": >
+        leptons[0].mva() >= superslim::id::Loose
+    - "τ quality": >
+        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Loose; }) >= 2
+    - "τ OS": >
+        taus[0].charge() * taus[1].charge() < 0
+    - "jets": >
+        len(jets) >= 3 and
+        (btags(jets) >= 1 or btags(jets, true) >= 2)
+
+default weights: []
+loose weights: []
+
+# List of systematics to run when `-s` is specified
+systematics: []
+
+categories:
+  - inclusive: ""
