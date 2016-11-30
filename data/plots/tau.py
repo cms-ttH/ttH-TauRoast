@@ -61,7 +61,7 @@ for n in range(config.taus):
         name="taus/kinematic/T{0}_LTPt".format(n + 1),
         values=["tau{0}_leadingtrackpt".format(n + 1)],
         labels=[lbl + " leading track P_{T}", "Events"],
-        binning=[40, 0, 120]
+        binning=[40, 0, 80 if n > 0 else 120]
     )
     Plot(
         name="taus/kinematic/T{0}_Eta".format(n + 1),
