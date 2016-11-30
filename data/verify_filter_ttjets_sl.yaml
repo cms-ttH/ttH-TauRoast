@@ -3,7 +3,7 @@
 channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/mcprod_v1/
-outdir: ~/www/ttH/mcprod_v1/filter_ttjets_sl
+outdir: ~/www/ttH/mcprod_v1/filter_ttjets_sl_v2
 histformat: "{p}_{c}_{v}"
 
 # lumi: 2517
@@ -12,8 +12,8 @@ lumi: 30000
 plot:
   - ttjets_SL_tranche3
   - ttjets_SL_tranche3_filtered_0t1l
-  - ttjets_SL_tranche3_filtered_1t2l_mva3
-  - ttjets_SL_tranche3_filtered_1t3l_mva3
+  - ttjets_SL_tranche3_filtered_0t2l_mva3
+  - ttjets_SL_tranche3_filtered_0t3l_mva3
 
 plot override:
     show ratio: false
@@ -21,8 +21,8 @@ plot override:
     signals:
       - ttjets_SL_tranche3: r.kBlack
       - ttjets_SL_tranche3_filtered_0t1l: r.kBlue
-      - ttjets_SL_tranche3_filtered_1t2l_mva3: r.kGreen
-      - ttjets_SL_tranche3_filtered_1t3l_mva3: r.kRed
+      - ttjets_SL_tranche3_filtered_0t2l_mva3: r.kGreen
+      - ttjets_SL_tranche3_filtered_0t3l_mva3: r.kRed
 
 limits: []
 discriminants: []
