@@ -2,7 +2,7 @@
 
 channel: ttl
 generator: pow
-ntupledir: /hadoop/store/user/matze/ttH/mcprod_v1/
+ntupledir: /hadoop/store/user/matze/ttH/mcprod_v2/
 outdir: ~/www/ttH/mcprod_v1/filter_id_variation_ttH2Nonbb
 histformat: "{p}_{c}_{v}"
 
@@ -14,15 +14,19 @@ plot:
   - ttH2Nonbb_tranche3_filtered_1t2l_mva3
   - ttH2Nonbb_tranche3_loose
   - ttH2Nonbb_tranche3_filtered_1t2l_mva3_loose
+  - ttH2Nonbb_tranche3_vloose
+  - ttH2Nonbb_tranche3_filtered_1t2l_mva3_vloose
 
 plot override:
     show ratio: false
     scale factor: norm
     signals:
       - ttH2Nonbb_tranche3: r.kBlack
-      - ttH2Nonbb_tranche3_filtered_1t2l_mva3: r.kGreen
+      - ttH2Nonbb_tranche3_filtered_1t2l_mva3: r.kGray
       - ttH2Nonbb_tranche3_loose: r.kRed
-      - ttH2Nonbb_tranche3_filtered_1t2l_mva3_loose: r.kBlue
+      - ttH2Nonbb_tranche3_filtered_1t2l_mva3_loose: r.kMagenta
+      - ttH2Nonbb_tranche3_vloose: r.kBlue
+      - ttH2Nonbb_tranche3_filtered_1t2l_mva3_vloose: r.kCyan
 
 limits: []
 discriminants: []
@@ -63,8 +67,27 @@ loose cuts:
         len(jets) >= 3 and
         (btags(jets) >= 1 or btags(jets, true) >= 2)
 
+vloose cuts:
+    - "l ID": lepton_id == superslim::Lepton::MVA
+    - "τ ID": tau_id == superslim::Tau::IsoMVA03
+    - "l pt": >
+        (leptons[0].electron() and leptons[0].pt() > 30) or
+        (leptons[0].muon() and leptons[0].pt() > 25)
+    - "1 l": >
+        std::count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Loose; }) == 1
+    - "1st l": >
+        leptons[0].mva() >= superslim::id::Loose
+    - "τ quality": >
+        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::VLoose; }) >= 2
+    - "τ OS": >
+        taus[0].charge() * taus[1].charge() < 0
+    - "jets": >
+        len(jets) >= 3 and
+        (btags(jets) >= 1 or btags(jets, true) >= 2)
+
 default weights: []
 loose weights: []
+vloose weights: []
 
 # List of systematics to run when `-s` is specified
 systematics: []

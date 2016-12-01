@@ -3,30 +3,30 @@
 channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/mcprod_v2/
-outdir: ~/www/ttH/mcprod_v1/filter_id_variation_ttjets_sl
+outdir: ~/www/ttH/mcprod_v1/filter_id_variation_ttjets_dl
 histformat: "{p}_{c}_{v}"
 
 # lumi: 2517
 lumi: 30000
 
 plot:
-  - ttjets_SL_tranche3
-  - ttjets_SL_tranche3_filtered_1t2l_mva3
-  - ttjets_SL_tranche3_loose
-  - ttjets_SL_tranche3_filtered_1t2l_mva3_loose
-  - ttjets_SL_tranche3_vloose
-  - ttjets_SL_tranche3_filtered_1t2l_mva3_vloose
+  - ttjets_DL_tranche3
+  - ttjets_DL_tranche3_filtered_1t2l_mva3
+  - ttjets_DL_tranche3_loose
+  - ttjets_DL_tranche3_filtered_1t2l_mva3_loose
+  - ttjets_DL_tranche3_vloose
+  - ttjets_DL_tranche3_filtered_1t2l_mva3_vloose
 
 plot override:
     show ratio: false
     scale factor: norm
     signals:
-      - ttjets_SL_tranche3: r.kBlack
-      - ttjets_SL_tranche3_filtered_1t2l_mva3: r.kGray
-      - ttjets_SL_tranche3_loose: r.kRed
-      - ttjets_SL_tranche3_filtered_1t2l_mva3_loose: r.kMagenta
-      - ttjets_SL_tranche3_vloose: r.kBlue
-      - ttjets_SL_tranche3_filtered_1t2l_mva3_vloose: r.kCyan
+      - ttjets_DL_tranche3: r.kBlack
+      - ttjets_DL_tranche3_filtered_1t2l_mva3: r.kGray
+      - ttjets_DL_tranche3_loose: r.kRed
+      - ttjets_DL_tranche3_filtered_1t2l_mva3_loose: r.kMagenta
+      - ttjets_DL_tranche3_vloose: r.kBlue
+      - ttjets_DL_tranche3_filtered_1t2l_mva3_vloose: r.kCyan
 
 limits: []
 discriminants: []

@@ -3,7 +3,7 @@ from ttH.TauRoast.processing import BasicProcess
 for suffix in ['', '_fast', '_filtered_0t1l',
                '_filtered_0t2l_mva3', '_filtered_0t3l_mva3',
                '_filtered_1t2l_mva3', '_filtered_1t3l_mva3']:
-    for cuts in ['default', 'loose']:
+    for cuts in ['default', 'loose', 'vloose']:
         nsuffix = suffix + ('_' + cuts if cuts != 'default' else '')
         BasicProcess(
             name="ttH2Nonbb_tranche3" + nsuffix,
