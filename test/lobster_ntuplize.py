@@ -53,7 +53,7 @@ for path in datasets(tag):
     minor = mctag.sub('', minor)
     label = (major + '_' + minor).replace('-', '_')
     mask = None
-    params = ['globalTag=' + globaltag_mc]
+    params = ['globalTag=' + globaltag_mc, 'channels=ttl']
     category = mc
 
     if '/Run2016' in path and path.endswith('MINIAOD'):
@@ -61,7 +61,8 @@ for path in datasets(tag):
         params = ['data=True', 'globalTag=' + globaltag_data]
         category = data
     elif label.startswith('ttH'):
-        params += ['reHLT=True']
+        if 'tranche3' not in label:
+            params += ['reHLT=True']
         category = tth
 
     workflows.append(Workflow(
@@ -72,6 +73,7 @@ for path in datasets(tag):
             lumi_mask=mask
         ),
         category=category,
+        merge_size='3g',
         pset='ntuplize.py',
         arguments=params
     ))
