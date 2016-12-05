@@ -58,7 +58,7 @@ for path in datasets(tag):
 
     if '/Run2016' in path and path.endswith('MINIAOD'):
         mask = lumimask
-        params = ['data=True', 'globalTag=' + globaltag_data]
+        params = ['data=True', 'globalTag=' + globaltag_data, 'channels=ttl']
         category = data
     elif label.startswith('ttH'):
         if 'tranche3' not in label:
