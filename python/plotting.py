@@ -362,7 +362,7 @@ class Plot(object):
 
         lower = base_histo.Clone()
         stylish.setup_lower_axis(lower)
-        lower.Draw("axis")
+        lower.DrawCopy("axis")
 
         rel_err.SetMarkerSize(0)
         rel_err.SetFillColor(r.kGreen)
@@ -377,7 +377,7 @@ class Plot(object):
         else:
             err = None
 
-        lower.Draw("axis same")
+        lower.DrawCopy("axis same")
 
         line = r.TLine()
         line.SetLineColor(1)
@@ -481,7 +481,7 @@ class Plot(object):
 
         if split:
             canvas.cd(2)
-            self._draw_ratio(config, base_histo, err_rel)
+            err, rel_err = self._draw_ratio(config, base_histo, err_rel)
 
         subdir = os.path.dirname(os.path.join(outdir, self.__name))
         if not os.path.exists(subdir) and subdir != '':
