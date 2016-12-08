@@ -211,7 +211,7 @@ class Plot(object):
 
     def _get_scale_factor(self, background, signals):
         bsum = background.Integral()
-        ssum = max(sig.Integral() for sig in signals)
+        ssum = max([sig.Integral() for sig in signals] + [0])
 
         return (bsum / float(ssum) if ssum > 0 and bsum > 0 else 1)
 
