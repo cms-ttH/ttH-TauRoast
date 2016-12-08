@@ -426,7 +426,7 @@ namespace superslim {
          Trigger(const edm::TriggerResults&, const edm::TriggerNames&);
          virtual ~Trigger() {};
 
-         bool accepted(const std::string& s) const;
+         bool accepted(const std::vector<std::string>&) const;
 
       private:
          std::vector<std::string> accepted_;

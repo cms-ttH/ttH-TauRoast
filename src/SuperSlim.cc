@@ -517,15 +517,19 @@ namespace superslim {
    }
 
    bool
-   Trigger::accepted(const std::string& s) const
+   Trigger::accepted(const std::vector<std::string>& triggers) const
    {
-      return std::find_if(
-            accepted_.begin(),
-            accepted_.end(),
-            [&](const std::string& t) {
-               return s.compare(0, std::min(s.size(), t.size()), t) == 0;
-            }
-      ) != accepted_.end();
+      for (auto& s: triggers) {
+         if (std::find_if(
+                  accepted_.begin(),
+                  accepted_.end(),
+                  [&](const std::string& t) {
+                     return t.compare(0, s.size(), s) == 0;
+                  }
+               ) != accepted_.end())
+            return true;
+      }
+      return false;
    }
 
    Event::Event(const std::vector<superslim::Tau>& taus,
