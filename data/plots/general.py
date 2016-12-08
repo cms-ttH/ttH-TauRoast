@@ -203,7 +203,7 @@ Plot(
     binning=[20, 0, 200]
 )
 
-ws = ["generator", "csvweight", "puweight"]
+ws = ["generator", "csvweight", "puweight", "fake"]
 ws += map(''.join, itertools.product(["tauideff"], ["", "up", "down"]))
 ws += map(''.join, itertools.product(["jettaufake", "etaufake"], ["up", "down"]))
 ws += map(''.join, itertools.product(["lfcont", "hfcont", "hfstats1",
