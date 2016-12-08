@@ -94,12 +94,16 @@ def dump_categories(args, config):
 def dump_cuts(args, config):
     cutflows = load_cutflows(config)
     for name, cuts in cutflows.items():
+        if name.endswith('Up') or name.endswith('Down'):
+            continue
+
         normalize(cuts, config["lumi"], config.get("event limit"))
         try:
             cutflow(cuts, config["plot"])
         except UnicodeEncodeError:
             pass
 
+        name = name.replace(' ', '_')
         with codecs.open(os.path.join(config["outdir"], "cuts_{}.txt").format(name), "w", encoding="utf8") as fd:
             cutflow(cuts, config["plot"], f=fd)
         with codecs.open(os.path.join(config["outdir"], "cuts_{}_relative.txt").format(name), "w", encoding="utf8") as fd:
