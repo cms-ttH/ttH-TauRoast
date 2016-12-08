@@ -304,7 +304,7 @@ fastlane::Cut::operator()(const std::string& process, const superslim::Event& e,
          for (const auto& w: e.weights())
             ws[lower(w.first)] = w.second;
          if (process.compare(0, 10, "collisions"))
-            fastlane::update_weights(ws, e, sys);
+            fastlane::update_weights(process, ws, e, sys);
 
          auto py_e = TPython::ObjectProxy_FromVoidPtr(dynamic_cast<void*>(&event), "superslim::Event");
          auto py_w = TPython::ObjectProxy_FromVoidPtr(static_cast<void*>(&ws), "std::unordered_map<std::string,double>");
@@ -373,7 +373,7 @@ template<> void fastlane::Leaf<std::vector<int>>::pick(const superslim::Event& e
 }
 
 void
-fastlane::update_weights(std::unordered_map<std::string, double>& ws, const superslim::Event& e, const std::string& sys)
+fastlane::update_weights(const std::string& process, std::unordered_map<std::string, double>& ws, const superslim::Event& e, const std::string& sys)
 {
    // =====================
    // Constants for weights
@@ -420,7 +420,8 @@ fastlane::update_weights(std::unordered_map<std::string, double>& ws, const supe
          "hNumTruePUPdf",
          "MiniAOD/MiniAODHelper/data/puweights/Run2016/DataPileupHistogram_Run2016-PromptReco-271036-276811_ICHEP_MinBias69200.root",
          "pileup");
-   ws[lower("PUWeight")] = puhelper(e.ntv());
+   if (process.compare(0, 5, "fakes"))
+      ws[lower("PUWeight")] = puhelper(e.ntv());
 
    // =================
    // τ related weights
@@ -510,7 +511,7 @@ fastlane::process(const std::string& process, const std::string& channel, const 
       for (const auto& w: e->weights())
          ws[lower(w.first)] = w.second;
       if (process.compare(0, 10, "collisions"))
-         fastlane::update_weights(ws, *e, sys);
+         fastlane::update_weights(process, ws, *e, sys);
 
       double weight = 1.;
       for (auto& w: weights) {
