@@ -1,14 +1,13 @@
 from ttH.TauRoast.processing import BasicProcess, CombinedProcess
 
-wleptonic = (10.71 + 10.63 + 11.38) * 0.01
-
 BasicProcess(
     name="ttW",
     fullname="t#bar{t}W",
     limitname="ttw",
     paths=["TTWJetsToLNu_TuneCUETP8M1_13TeV_amcatnloFXFX_madspin_pythia8_v1"],
     cross_section=0.2043,
-    events=252673
+    events=252673,
+    cutflow='signal'
 )
 
 BasicProcess(
@@ -17,88 +16,8 @@ BasicProcess(
     limitname="ttz",
     paths=["TTZToLLNuNu_M_10_TuneCUETP8M1_13TeV_amcatnlo_pythia8_v1"],
     cross_section=0.2529,
-    events=398600
-)
-
-BasicProcess(
-    name="ttjets",
-    fullname="t#bar{t}",
-    paths=["tt_pow", "tt_pow_ext3"],
-    # paths=["ttjets_amc"],
-    cross_section=831.76,
-    events=97994442
-)
-
-BasicProcess(
-    name="ttjets_sl",
-    fullname="t #bar{t} SL",
-    paths=["tt_sl_pow"],
-    cross_section=831.76 * wleptonic * (1 - wleptonic),
-    events=353216236
-)
-
-BasicProcess(
-    name="ttjets_dl",
-    fullname="t #bar{t} DL",
-    paths=["tt_dl_pow"],
-    cross_section=831.76 * wleptonic ** 2,
-    events=4995600
-)
-
-BasicProcess(
-    name="ttbar_hadronic",
-    fullname="t #bar{t} H",
-    paths=["ttbar_hadronic"],
-    events=31223821
-)
-
-BasicProcess(
-    name="ttjets_semilept_tbar",
-    fullname="t #bar{t} SL",
-    paths=[
-        "TTJets_SingleLeptFromTbar_TuneCUETP8M1_13TeV_madgraphMLM_pythia8_v1",
-        "TTJets_SingleLeptFromTbar_TuneCUETP8M1_13TeV_madgraphMLM_pythia8_ext1_v1"
-    ],
-    # cross_section=831.76 * wleptonic * (1 - wleptonic),
-    cross_section=182,
-    events=11947951 + 48546872
-)
-
-BasicProcess(
-    name="ttjets_semilept_t",
-    fullname="t #bar{t} SL",
-    paths=[
-        "TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV_madgraphMLM_pythia8_v1",
-        "TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV_madgraphMLM_pythia8_ext1_v1"
-    ],
-    # cross_section=831.76 * wleptonic * (1 - wleptonic),
-    cross_section=182,
-    events=11926538 + 43588107
-)
-
-CombinedProcess(
-    name="ttjets_semilept",
-    fullname="t #bar{t} SL",
-    subprocesses=["ttjets_semilept_t", "ttjets_semilept_tbar"]
-)
-
-BasicProcess(
-    name="ttjets_fulllept",
-    fullname="t #bar{t} FL",
-    paths=[
-        "TTJets_DiLept_TuneCUETP8M1_13TeV_madgraphMLM_pythia8_v4",
-        "TTJets_DiLept_TuneCUETP8M1_13TeV_madgraphMLM_pythia8_ext1_v1"
-    ],
-    # cross_section=831.76 * wleptonic ** 2,
-    cross_section=87.3,
-    events=6058236 + 24623997
-)
-
-CombinedProcess(
-    name="ttjets_mad",
-    fullname="t#bar{t}",
-    limitname="ttjets",
-    subprocesses=["ttjets_semilept", "ttjets_fulllept"]
+    events=398600,
+    cutflow='signal'
 )
 
 BasicProcess(
@@ -176,7 +95,8 @@ BasicProcess(
     paths=["DYJetsToLL_M_10to50_TuneCUETP8M1_13TeV_madgraphMLM_pythia8_v1"],
     # cross_section=3 * 7545.03,
     cross_section=18610,
-    events=35079788
+    events=35079788,
+    cutflow='signal'
 )
 
 BasicProcess(
@@ -184,7 +104,8 @@ BasicProcess(
     fullname="Z + jets M50+",
     paths=["DYJetsToLL_M_50_TuneCUETP8M1_13TeV_madgraphMLM_pythia8_ext1_v1"],
     cross_section=6025.2,
-    events=49877138
+    events=49877138,
+    cutflow='signal'
 )
 
 CombinedProcess(
@@ -198,7 +119,8 @@ BasicProcess(
     fullname="W + jets",
     paths=["WJetsToLNu_TuneCUETP8M1_13TeV_amcatnloFXFX_pythia8_v1"],
     cross_section=61526.7,
-    events=9908534
+    events=9908534,
+    cutflow='signal'
 )
 
 BasicProcess(
@@ -206,7 +128,8 @@ BasicProcess(
     fullname="W + W",
     paths=["WWTo2L2Nu_13TeV_powheg_v1"],
     cross_section=10.481,
-    events=1996600
+    events=1996600,
+    cutflow='signal'
 )
 
 BasicProcess(
@@ -214,7 +137,8 @@ BasicProcess(
     fullname="W + Z",
     paths=["WZTo3LNu_TuneCUETP8M1_13TeV_powheg_pythia8_v1"],
     cross_section=4.102,
-    events=2000000
+    events=2000000,
+    cutflow='signal'
 )
 
 BasicProcess(
@@ -222,7 +146,8 @@ BasicProcess(
     fullname="Z + Z",
     paths=["ZZTo4L_13TeV_powheg_pythia8_v1"],
     cross_section=1.256,
-    events=6638328
+    events=6638328,
+    cutflow='signal'
 )
 
 CombinedProcess(
