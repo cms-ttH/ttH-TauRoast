@@ -427,6 +427,7 @@ namespace superslim {
          virtual ~Trigger() {};
 
          bool accepted(const std::vector<std::string>&) const;
+         const std::vector<std::string>& triggers() const { return accepted_; };
 
       private:
          std::vector<std::string> accepted_;
