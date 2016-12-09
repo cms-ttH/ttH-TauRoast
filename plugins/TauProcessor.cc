@@ -412,9 +412,7 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
       chosen_leptons = all_leptons;
    }
 
-   if (take_all_)
-      chosen_leptons = all_leptons;
-   else if (chosen_leptons.size() < min_leptons_)
+   if (not take_all_ and chosen_leptons.size() < min_leptons_)
       return;
 
    passCut(event_cut++, "Leptons");
@@ -503,6 +501,10 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
 
    if (not (pass_jets and pass_tags) and not take_all_)
       return;
+
+   // Set leptons *after* jet-cleaning!
+   if (take_all_)
+      chosen_leptons = all_leptons;
 
    passCut(event_cut++, "Jet requirements");
    passCut(event_cut++, "Ntuple");
