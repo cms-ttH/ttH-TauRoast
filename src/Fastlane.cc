@@ -472,7 +472,7 @@ fastlane::process(const std::string& process, const std::string& channel, const 
 
       // Event numbers in this vector will trigger debug output, printing
       // when they fail a cut.
-      static const std::vector<int> debug{};
+      static const std::vector<long> debug{};
 
       const auto e = handle.ptr();
       bool failed = false;
@@ -483,7 +483,7 @@ fastlane::process(const std::string& process, const std::string& channel, const 
                std::cout << "FAILED: " << *it << " MISSED " << cut->name() << std::endl;
                const std::string labels("₁₂₃₄₅₆");
                int i = 0;
-               for (const auto& l: e->leptons()) {
+               for (const auto& l: e->allLeptons()) {
                   std::cout << "\tl" << labels.substr(i * 3, 3) << " pt " << l.pt()
                      << " :: l" << labels.substr(i * 3, 3) << " mva " << l.mvaRaw()
                      << " :: l" << labels.substr(i * 3, 3) << " id " << l.mva()
@@ -492,12 +492,17 @@ fastlane::process(const std::string& process, const std::string& channel, const 
                      << std::endl;
                   i += 1;
                }
-               std::cout << "\tτ₁ pt " << e->taus()[0].pt()
-                  << "\tτ₁ mva " << e->taus()[0].isolationMVA03()
-                  << std::endl;
-               std::cout << "\tτ₂ pt " << e->taus()[1].pt()
-                  << "\tτ₂ mva " << e->taus()[1].isolationMVA03()
-                  << std::endl;
+               i = 0;
+               for (const auto& t: e->allTaus()) {
+                  std::cout << "\tτ" << labels.substr(i * 3, 3) << " pt " << t.pt()
+                     << " :: τ" << labels.substr(i * 3, 3) << " mva " << t.isolationMVA03()
+                     << " :: τ" << labels.substr(i * 3, 3) << " pdg " << t.pdgId()
+                     << std::endl;
+                  i += 1;
+               }
+               std::cout << "\tTriggers:" << std::endl;
+               for (const auto& t: e->trigger().triggers())
+                  std::cout << "\t\t" << t << std::endl;
             }
             failed = true;
             break;
