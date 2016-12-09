@@ -120,7 +120,7 @@ def normalize(cuts, lumi, limit=None):
     dsetnorm = StaticCut("Dataset norm")
     luminorm = StaticCut("Luminosity norm")
     for proc in cuts[-1].processes():
-        if str(proc).startswith("collisions"):
+        if str(proc).startswith("collisions") or str(proc).startswith("fakes"):
             dsetnorm[proc] = cuts[-1][proc]
             luminorm[proc] = cuts[-1][proc]
         else:
