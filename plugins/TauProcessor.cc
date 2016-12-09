@@ -412,7 +412,9 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
       chosen_leptons = all_leptons;
    }
 
-   if (not take_all_ and chosen_leptons.size() < min_leptons_)
+   if (take_all_)
+      chosen_leptons = all_leptons;
+   else if (chosen_leptons.size() < min_leptons_)
       return;
 
    passCut(event_cut++, "Leptons");

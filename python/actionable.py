@@ -63,6 +63,7 @@ def split_cuts(concatenated_cutflows):
     cutflows = Cutflows()
     for name, all_cuts in concatenated_cutflows.items():
         cutflows[name] = tuple(list(g) for k, g in groupby(all_cuts, key=type))
+    return cutflows
 
 
 def dump_categories(args, config):
