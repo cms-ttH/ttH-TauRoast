@@ -62,7 +62,12 @@ def load_cutflows(config):
 def split_cuts(concatenated_cutflows):
     cutflows = Cutflows()
     for name, all_cuts in concatenated_cutflows.items():
-        cutflows[name] = tuple(list(g) for k, g in groupby(all_cuts, key=type))
+        cuts = tuple(list(g) for k, g in groupby(all_cuts, key=type))
+        if len(cuts) == 1:
+            cuts = ([], cuts[0], [])
+        elif len(cuts) == 2:
+            cuts = ([], cuts[0], cuts[1])
+        cutflows[name] = cuts
     return cutflows
 
 

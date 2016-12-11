@@ -182,7 +182,7 @@ for n in range(config.taus):
         name="taus/id/T{0}_IsolationMVA03_Raw".format(n + 1),
         values=["tau{0}_isoMVA03_raw".format(n + 1)],
         labels=[lbl + " Raw Isolation for MVA, #Delta R = 0.3", "Events"],
-        binning=[30, -1, 1]
+        binning=[30, 0, 2]
     )
     Plot(
         name="taus/id/T{0}_IsolationMVA05".format(n + 1),

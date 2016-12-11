@@ -20,9 +20,9 @@ datasets_ttH = """
 /ttHJetTobb_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14_ext3-v1/MINIAODSIM
 /ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM
 
-/ttHToNonbb_M125_13TeV_powheg_pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM
-/ttHTobb_M125_13TeV_powheg_pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM
-/ttHToTT_M125_13TeV_powheg_pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM
+# /ttHToNonbb_M125_13TeV_powheg_pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM
+# /ttHTobb_M125_13TeV_powheg_pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM
+# /ttHToTT_M125_13TeV_powheg_pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM
 """
 
 datasets_mc = """
@@ -75,7 +75,27 @@ datasets_mc = """
 /ZZTo4L_13TeV_powheg_pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM
 """
 
-datasets_collisions = """
+datasets_collisions_prompt = """
+/SingleElectron/Run2016B-PromptReco-v2/MINIAOD
+/SingleElectron/Run2016C-PromptReco-v2/MINIAOD
+/SingleElectron/Run2016D-PromptReco-v2/MINIAOD
+/SingleElectron/Run2016E-PromptReco-v2/MINIAOD
+/SingleElectron/Run2016F-PromptReco-v1/MINIAOD
+/SingleElectron/Run2016G-PromptReco-v1/MINIAOD
+/SingleElectron/Run2016H-PromptReco-v2/MINIAOD
+/SingleElectron/Run2016H-PromptReco-v3/MINIAOD
+
+/SingleMuon/Run2016B-PromptReco-v2/MINIAOD
+/SingleMuon/Run2016C-PromptReco-v2/MINIAOD
+/SingleMuon/Run2016D-PromptReco-v2/MINIAOD
+/SingleMuon/Run2016E-PromptReco-v2/MINIAOD
+/SingleMuon/Run2016F-PromptReco-v1/MINIAOD
+/SingleMuon/Run2016G-PromptReco-v1/MINIAOD
+/SingleMuon/Run2016H-PromptReco-v2/MINIAOD
+/SingleMuon/Run2016H-PromptReco-v3/MINIAOD
+"""
+
+datasets_collisions_rereco = """
 /SingleElectron/Run2016B-23Sep2016-v3/MINIAOD
 /SingleElectron/Run2016C-23Sep2016-v1/MINIAOD
 /SingleElectron/Run2016D-23Sep2016-v1/MINIAOD
@@ -94,38 +114,38 @@ datasets_collisions = """
 /SingleMuon/Run2016H-PromptReco-v2/MINIAOD
 /SingleMuon/Run2016H-PromptReco-v3/MINIAOD
 
-/DoubleEG/Run2016B-23Sep2016-v3/MINIAOD
-/DoubleEG/Run2016C-23Sep2016-v1/MINIAOD
-/DoubleEG/Run2016D-23Sep2016-v1/MINIAOD
-/DoubleEG/Run2016E-23Sep2016-v1/MINIAOD
-/DoubleEG/Run2016F-23Sep2016-v1/MINIAOD
-/DoubleEG/Run2016G-23Sep2016-v1/MINIAOD
-/DoubleEG/Run2016H-PromptReco-v2/MINIAOD
-/DoubleEG/Run2016H-PromptReco-v3/MINIAOD
+# /DoubleEG/Run2016B-23Sep2016-v3/MINIAOD
+# /DoubleEG/Run2016C-23Sep2016-v1/MINIAOD
+# /DoubleEG/Run2016D-23Sep2016-v1/MINIAOD
+# /DoubleEG/Run2016E-23Sep2016-v1/MINIAOD
+# /DoubleEG/Run2016F-23Sep2016-v1/MINIAOD
+# /DoubleEG/Run2016G-23Sep2016-v1/MINIAOD
+# /DoubleEG/Run2016H-PromptReco-v2/MINIAOD
+# /DoubleEG/Run2016H-PromptReco-v3/MINIAOD
 
-/DoubleMuon/Run2016B-23Sep2016-v3/MINIAOD
-/DoubleMuon/Run2016C-23Sep2016-v1/MINIAOD
-/DoubleMuon/Run2016D-23Sep2016-v1/MINIAOD
-/DoubleMuon/Run2016E-23Sep2016-v1/MINIAOD
-/DoubleMuon/Run2016F-23Sep2016-v1/MINIAOD
-/DoubleMuon/Run2016G-23Sep2016-v1/MINIAOD
-/DoubleMuon/Run2016H-PromptReco-v2/MINIAOD
-/DoubleMuon/Run2016H-PromptReco-v3/MINIAOD
+# /DoubleMuon/Run2016B-23Sep2016-v3/MINIAOD
+# /DoubleMuon/Run2016C-23Sep2016-v1/MINIAOD
+# /DoubleMuon/Run2016D-23Sep2016-v1/MINIAOD
+# /DoubleMuon/Run2016E-23Sep2016-v1/MINIAOD
+# /DoubleMuon/Run2016F-23Sep2016-v1/MINIAOD
+# /DoubleMuon/Run2016G-23Sep2016-v1/MINIAOD
+# /DoubleMuon/Run2016H-PromptReco-v2/MINIAOD
+# /DoubleMuon/Run2016H-PromptReco-v3/MINIAOD
 
-/MuonEG/Run2016B-23Sep2016-v3/MINIAOD
-/MuonEG/Run2016C-23Sep2016-v1/MINIAOD
-/MuonEG/Run2016D-23Sep2016-v1/MINIAOD
-/MuonEG/Run2016E-23Sep2016-v1/MINIAOD
-/MuonEG/Run2016F-23Sep2016-v1/MINIAOD
-/MuonEG/Run2016G-23Sep2016-v1/MINIAOD
-/MuonEG/Run2016H-PromptReco-v2/MINIAOD
-/MuonEG/Run2016H-PromptReco-v3/MINIAOD
+# /MuonEG/Run2016B-23Sep2016-v3/MINIAOD
+# /MuonEG/Run2016C-23Sep2016-v1/MINIAOD
+# /MuonEG/Run2016D-23Sep2016-v1/MINIAOD
+# /MuonEG/Run2016E-23Sep2016-v1/MINIAOD
+# /MuonEG/Run2016F-23Sep2016-v1/MINIAOD
+# /MuonEG/Run2016G-23Sep2016-v1/MINIAOD
+# /MuonEG/Run2016H-PromptReco-v2/MINIAOD
+# /MuonEG/Run2016H-PromptReco-v3/MINIAOD
 """
 
 
 def datasets(tag):
     if tag == 'all':
-        dsets = datasets_ttH + datasets_mc + datasets_collisions + datasets_tranche3
+        dsets = datasets_ttH + datasets_mc + datasets_collisions_prompt + datasets_tranche3
     elif tag == 'ttH':
         dsets = datasets_ttH
     elif tag == 'mc':

@@ -4,20 +4,25 @@ from lobster.core import AdvancedOptions, Category, Config, StorageConfiguration
 
 from ttH.TauRoast.datasets import datasets, mctag
 
-version = "v34"
+version = "v35"
 tag = "all"
 
-globaltag_mc = "80X_mcRun2_asymptotic_2016_TrancheIV_v6"
-globaltag_data = "80X_dataRun2_2016SeptRepro_v4"
+# globaltag_mc = "80X_mcRun2_asymptotic_2016_TrancheIV_v6"
+# globaltag_data = "80X_dataRun2_2016SeptRepro_v4"
 
-lumimask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/ReReco/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt'
+# lumimask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/ReReco/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt'
+
+globaltag_mc = "80X_mcRun2_asymptotic_2016_miniAODv2_v1"
+globaltag_data = "80X_dataRun2_Prompt_ICHEP16JEC_v0"
+
+lumimask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/Final/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON.txt'
 
 storage = StorageConfiguration(
     output=[
         "hdfs://eddie.crc.nd.edu:19000/store/user/matze/ttH/{}".format(version),
         "file:///hadoop/store/user/matze/ttH/{}".format(version),
         "root://deepthought.crc.nd.edu//store/user/matze/ttH/{}".format(version),
-        "chirp://eddie.crc.nd.edu:9094/store/user/matze/ttH/{}".format(version),
+        # "chirp://eddie.crc.nd.edu:9094/store/user/matze/ttH/{}".format(version),
         "gsiftp://T3_US_NotreDame/store/user/matze/ttH/{}".format(version),
         "srm://T3_US_NotreDame/store/user/matze/ttH/{}".format(version)
     ]
