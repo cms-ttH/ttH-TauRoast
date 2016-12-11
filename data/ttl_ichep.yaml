@@ -4,10 +4,11 @@ channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v35
 # ntupledir: /scratch365/mwolf3/ttH/v32
-outdir: ~/www/ttH/v35/ttl
+outdir: ~/www/ttH/v35/ttl_ichep
 histformat: "{p}_{c}_{v}"
 
-lumi: 36300
+lumi: 12900
+# lumi: 36300
 
 plot:
   - collisions_single
@@ -98,6 +99,7 @@ signal weights:
   - tauIdEff
 
 data fake cuts:
+    - "ichep": event.run() <= 276811
     - "l ID": lepton_id == superslim::Lepton::MVA
     - "τ ID": tau_id == superslim::Tau::IsoMVA03
     - "l trigger": >
@@ -121,6 +123,7 @@ data fake weights:
   - Fake
 
 data signal cuts:
+    - "ichep": event.run() <= 276811
     - "l ID": lepton_id == superslim::Lepton::MVA
     - "τ ID": tau_id == superslim::Tau::IsoMVA03
     - "l trigger": >
