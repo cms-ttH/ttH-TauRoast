@@ -58,38 +58,9 @@ Always use `-h` to find a comprehensive overview.
 | `-f`   | fill histograms (produces `combine` compatible output) |
 | `-p`   | save plots                                             |
 
-### Producing meaningful output
+### Limits
 
-To evaluate ntuples with a given configuration including systematics,
-modify the following steps, which will use [Makeflow][makeflow] to process
-data in a distributed fashion (removing the need to deal with Condor et al
-directly):
-
-    mk_configurations data/ttl.yaml ~/www/ttH/ttl/v8_2015-12-25/
-    cd ~/www/ttH/ttl/v8_2015-12-25/
-    makeflow -T wq -M taus_FTW --wrapper ./w.sh --wrapper-input w.sh
-
-Where `taus_FTW` is a reference and can be freely chosen.  In a new
-terminal, issue this command to start workers processing the steps:
-
-    work_queue_pool -T condor -M taus_FTW -w 0 -W 100
-
-Again, `taus_FTW` can be modified, but has to match with what was passed to
-the `makeflow` command.
-
-To create limits, now create a new release (thank you CMS folks):
-
-    cd /somewhere/where/I/create/releases
-    export SCRAM_ARCH=slc6_amd64_gcc481
-    scram project CMSSW CMSSW_7_1_5
-    cd CMSSW_7_1_5/src
-    cmsenv
-    git clone https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
-    git clone https://github.com/cms-analysis/CombineHarvester.git CombineHarvester
-    git clone git@github.com:cms-ttH/ttH-TauRoast.git ttH/TauRoast
-    scram b -j 16
-
-And then run the following command to create a datacard and run a limit:
+Run the following command to create a datacard and run a limit:
 
     mk_datacard -d HT ~/www/ttH/ttl/v8_2015-12-25/_ttl/limits.root
     combine -M Asymptotic -m 125 limits/125/ttH_ttl.txt
