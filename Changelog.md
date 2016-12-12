@@ -1,5 +1,18 @@
 # Ntuple History
 
+## v35
+
+* Non-re-reco datasets
+
+## v34
+
+* Ntuple post sync
+* Flat structure, no more combinations
+
+## v33
+
+* Garbage
+
 ## v32
 
 * Run with 80X triggers
