@@ -37,26 +37,12 @@ namespace superslim {
    {
    }
 
-   GenJet::GenJet(const GenJet& other)
+   GenObject::GenObject(const GenObject& other)
    {
       charge_ = other.charge();
       pdg_id_ = other.pdgId();
 
       p_ = other.p4();
-      leading_p_ = other.leadingP4();
-      constituents_ = other.constituents();
-      charged_p_ = other.chargedP4();
-      charged_constituents_ = other.chargedConstituents();
-
-      iso_p_ = other.isoP4();
-      iso_constituents_ = other.isoConstituents();
-      iso_charged_p_ = other.isoChargedP4();
-      iso_charged_constituents_ = other.isoChargedConstituents();
-
-      signal_p_ = other.signalP4();
-      signal_constituents_ = other.signalConstituents();
-      signal_charged_p_ = other.signalChargedP4();
-      signal_charged_constituents_ = other.signalChargedConstituents();
 
       auto p = other.closestGenParticle();
       if (p)
@@ -71,7 +57,7 @@ namespace superslim {
          closest_jet_ = 0;
    }
 
-   GenJet::~GenJet()
+   GenObject::~GenObject()
    {
       if (closest_particle_)
          delete closest_particle_;
@@ -80,7 +66,7 @@ namespace superslim {
    }
 
    void
-   GenJet::findClosestGenParticle(const reco::GenParticleCollection& particles)
+   GenObject::findClosestGenParticle(const reco::GenParticleCollection& particles)
    {
       assert(closest_particle_ == 0);
 
@@ -88,7 +74,7 @@ namespace superslim {
       std::vector<std::pair<float, const reco::GenParticle*>> ps;
       for (const auto& p: particles) {
          auto dR = deltaR(p4(), p.p4());
-         if (dR > 0.0001
+         if (dR > 0.05
                and std::find(allowed.begin(), allowed.end(), abs(p.pdgId())) != allowed.end()
                and (p.statusFlags().isPrompt() or
                   p.isPromptFinalState() or
@@ -103,20 +89,38 @@ namespace superslim {
    }
 
    void
-   GenJet::findClosestGenJet(const reco::GenJetCollection& jets)
+   GenObject::findClosestGenJet(const reco::GenJetCollection& jets)
    {
       assert(closest_jet_ == 0);
 
       std::vector<std::pair<float, const reco::GenJet*>> js;
       for (const auto& j: jets) {
          auto dR = deltaR(p4(), j.p4());
-         if (dR > 0.0001)
+         if (dR > 0.05)
             js.push_back(std::make_pair(dR, &j));
       }
       std::sort(std::begin(js), std::end(js), [](const auto& a, const auto& b) { return a.first < b.first; });
 
       if (js.size() > 0)
          closest_jet_ = new GenJet(*(js[0].second));
+   }
+
+   GenJet::GenJet(const GenJet& other) : GenObject(other)
+   {
+      leading_p_ = other.leadingP4();
+      constituents_ = other.constituents();
+      charged_p_ = other.chargedP4();
+      charged_constituents_ = other.chargedConstituents();
+
+      iso_p_ = other.isoP4();
+      iso_constituents_ = other.isoConstituents();
+      iso_charged_p_ = other.isoChargedP4();
+      iso_charged_constituents_ = other.isoChargedConstituents();
+
+      signal_p_ = other.signalP4();
+      signal_constituents_ = other.signalConstituents();
+      signal_charged_p_ = other.signalChargedP4();
+      signal_charged_constituents_ = other.signalChargedConstituents();
    }
 
    const reco::Candidate *
@@ -219,7 +223,6 @@ namespace superslim {
          dxy_(-9999.),
          dz_(-9999.),
          match_(6),
-         gen_pdg_id_(0),
          rank_(rank)
    {
    }
@@ -262,8 +265,9 @@ namespace superslim {
       if (!p)
          return;
 
-      gen_p_ = p->p4();
-      gen_pdg_id_ = p->pdgId();
+      assert(particle_ == 0);
+
+      particle_ = new GenObject(*p);
 
       if (level <= 0)
          return;
