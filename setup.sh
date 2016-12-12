@@ -14,12 +14,14 @@ EOF
    set -o xtrace
 
    export SCRAM_ARCH=slc6_amd64_gcc530
-   scramv1 project CMSSW CMSSW_8_0_15
-   cd CMSSW_8_0_15/src
+   scramv1 project CMSSW CMSSW_8_0_21
+   cd CMSSW_8_0_21/src
    set +o xtrace
    eval $(scramv1 runtime -sh)
    set -o xtrace
    git cms-init > /dev/null
+
+   git cms-merge-topic cms-met:METRecipe_8020
 
    git clone -b CMSSW_8_0_8_expICHEPLeptons git@github.com:cms-ttH/MiniAOD.git
    git clone git@github.com:cms-ttH/ttH-LeptonID.git ttH/LeptonID
