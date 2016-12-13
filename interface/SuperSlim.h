@@ -97,21 +97,16 @@ namespace superslim {
          int ndof_;
    };
 
-   class GenJet;
-
    class GenObject {
       public:
-         GenObject() : p_(), closest_particle_(0), closest_jet_(0) {};
-         GenObject(const GenObject& other);
-         virtual ~GenObject();
+         GenObject() : p_() {};
+         virtual ~GenObject() {};
 
          template<typename T>
          GenObject(const T& c) :
             p_(c.p4()),
             charge_(c.charge()),
-            pdg_id_(c.pdgId()),
-            closest_particle_(0),
-            closest_jet_(0) {};
+            pdg_id_(c.pdgId()) {};
 
          const float pt() const { return p_.pt(); };
          const float eta() const { return p_.eta(); };
@@ -120,31 +115,24 @@ namespace superslim {
 
          int charge() const { return charge_; };
          int pdgId() const { return pdg_id_; };
-
-         const GenJet* closestGenJet() const { return closest_jet_; };
-         void findClosestGenJet(const reco::GenJetCollection& jets);
-
-         const GenObject* closestGenParticle() const { return closest_particle_; };
-         void findClosestGenParticle(const reco::GenParticleCollection& particles);
       protected:
          LorentzVector p_;
          int charge_;
          int pdg_id_;
-
-         GenObject* closest_particle_ = 0;
-         GenJet* closest_jet_ = 0;
    };
 
    class GenJet : public GenObject {
       public:
-         GenJet() : GenObject() {};
+         GenJet() : GenObject(), closest_particle_(0), closest_jet_(0) {};
          GenJet(const GenJet& other);
-         virtual ~GenJet() {};
+         virtual ~GenJet();
 
          template<typename T>
          GenJet(const T& j) :
             GenObject(j),
-            constituents_(j.numberOfDaughters())
+            constituents_(j.numberOfDaughters()),
+            closest_particle_(0),
+            closest_jet_(0)
          {
             bool leading_set = false;
             for (unsigned i = 0; i < j.numberOfDaughters(); ++i) {
@@ -194,6 +182,12 @@ namespace superslim {
          const LorentzVector& isoChargedP4() const { return iso_charged_p_; };
          int isoChargedConstituents() const { return iso_charged_constituents_; };
 
+         const GenJet* closestGenJet() const { return closest_jet_; };
+         void findClosestGenJet(const reco::GenJetCollection& jets);
+
+         const GenObject* closestGenParticle() const { return closest_particle_; };
+         void findClosestGenParticle(const reco::GenParticleCollection& particles);
+
       private:
          LorentzVector charged_p_;
          int constituents_ = 0;
@@ -209,6 +203,9 @@ namespace superslim {
          LorentzVector iso_charged_p_;
          LorentzVector signal_p_;
          LorentzVector signal_charged_p_;
+
+         GenObject* closest_particle_ = 0;
+         GenJet* closest_jet_ = 0;
    };
 
    class PhysObject : public GenObject {
@@ -220,6 +217,7 @@ namespace superslim {
             dxy_(-9999.),
             dz_(-9999.),
             match_(6),
+            gen_pdg_id_(0),
             rank_(rank)
          {
             if (c.hasUserFloat("dxy") and c.hasUserFloat("dz")) {
@@ -229,7 +227,7 @@ namespace superslim {
          };
          virtual ~PhysObject() {};
 
-         const LorentzVector& genP4() const { return particle_->p4(); };
+         const LorentzVector& genP4() const { return gen_p_; };
          const std::vector<superslim::PhysObject>& parents() const { return parents_; };
          int parentId() const;
          int grandParentId() const;
@@ -238,10 +236,7 @@ namespace superslim {
          float dxy() const { return dxy_; };
          float dz() const { return dz_; };
          float dR(const superslim::PhysObject& o) const { return reco::deltaR(*this, o); };
-         int genPdgId() const { return particle_->pdgId(); };
-
-         const GenObject* genParticle() const { return particle_; }
-         GenObject* genParticle() { return particle_; }
+         int genPdgId() const { return gen_pdg_id_; };
          // As per https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2016#MC_Matching
          // 1: prompt e
          // 2: prompt μ
@@ -261,10 +256,11 @@ namespace superslim {
          float dz_;
 
       private:
-         GenObject *particle_ = 0;
+         LorentzVector gen_p_;
          std::vector<superslim::PhysObject> parents_;
 
          int match_;
+         int gen_pdg_id_;
          int rank_;
    };
 

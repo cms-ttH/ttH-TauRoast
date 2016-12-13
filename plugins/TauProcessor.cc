@@ -569,18 +569,8 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
       std::array<int, 3> ids{{11, 13, 15}};
       for (const auto& p: particles) {
          if (std::find(ids.begin(), ids.end(), abs(p.pdgId())) != ids.end() and
-               (p.statusFlags().isPrompt() or p.isPromptFinalState() or p.statusFlags().isDirectPromptTauDecayProduct() or p.isDirectPromptTauDecayProductFinalState())) {
+               (p.statusFlags().isPrompt() or p.isPromptFinalState() or p.statusFlags().isDirectPromptTauDecayProduct() or p.isDirectPromptTauDecayProductFinalState()))
             gparticles.push_back(p);
-            gparticles.back().findClosestGenJet(genjets);
-            gparticles.back().findClosestGenParticle(particles);
-         }
-      }
-
-      for (auto& l: all_leptons) {
-         if (l.genParticle()) {
-            l.genParticle()->findClosestGenJet(genjets);
-            l.genParticle()->findClosestGenParticle(particles);
-         }
       }
 
       ptr->setGenJets(gjets);
