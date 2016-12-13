@@ -62,6 +62,8 @@ fake weights:
   - Generator
   - CSVWeight
   - PUWeight
+  - LeptonSF
+  - TriggerSF
   - tauIdEff
   - Fake
 
@@ -95,6 +97,8 @@ signal weights:
   - Generator
   - CSVWeight
   - PUWeight
+  - LeptonSF
+  - TriggerSF
   - tauIdEff
 
 data fake cuts:

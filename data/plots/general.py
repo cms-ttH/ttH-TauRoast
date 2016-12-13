@@ -204,6 +204,8 @@ Plot(
 )
 
 ws = ["generator", "csvweight", "puweight", "fake"]
+ws += ["leptonsf"]
+ws += ["triggersf"]
 ws += map(''.join, itertools.product(["tauideff"], ["", "up", "down"]))
 ws += map(''.join, itertools.product(["jettaufake", "etaufake"], ["up", "down"]))
 ws += map(''.join, itertools.product(["lfcont", "hfcont", "hfstats1",
