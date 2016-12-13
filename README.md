@@ -62,8 +62,8 @@ Always use `-h` to find a comprehensive overview.
 
 Run the following command to create a datacard and run a limit:
 
-    mk_datacard -d HT ~/www/ttH/ttl/v8_2015-12-25/_ttl/limits.root
-    combine -M Asymptotic -m 125 limits/125/ttH_ttl.txt
+    roaster -d --discriminant NumInclusiveJets data/ttl_ichep.yaml
+    combine -M Asymptotic -m 125 limits/125/ttH_inclusive.txt
 
 Again, fix all paths to desired values.
 
