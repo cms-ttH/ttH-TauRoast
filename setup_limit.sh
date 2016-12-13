@@ -27,9 +27,8 @@ EOF
    git clone git@github.com:cms-ttH/MiniAOD.git
    git clone git@github.com:cms-ttH/ttH-LeptonID.git ttH/LeptonID
    git clone git@github.com:cms-ttH/ttH-TauRoast.git ttH/TauRoast
-   rm -rf ttH/TauRoast/plugins/*
 
-   scram b -j 8
+   scram b USER_CXXFLAGS="-DOLDCRAP" -j 8
 ) > setup_limit.log
 
 
