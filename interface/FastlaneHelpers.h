@@ -7,6 +7,8 @@
 #include "TGraphAsymmErrors.h"
 #include "TH2F.h"
 
+#include "SuperSlim.h"
+
 namespace fastlane {
    class CSVHelper {
       public:
