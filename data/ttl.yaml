@@ -12,7 +12,7 @@ lumi: 36300
 plot:
   - collisions_single
   - fakes_single
-  - ttH_125
+  - ttH_125_signal
   - ttjets_pow
   - ttW
   - ttZ
@@ -23,7 +23,7 @@ plot:
 limits:
   - collisions_single
   - fakes_single
-  - ttH_125
+  - ttH_125_signal
   - ttjets_pow
   # - collisions_fake
   # - ttH_125_pow

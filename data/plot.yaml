@@ -14,6 +14,7 @@ backgrounds:
   - ttjets_pow: r.kRed
 signals:
   - ttH_125: r.kBlue
+  - ttH_125_signal: r.kBlue
   - ttH_125_pow: r.kBlue
   - ttH2bb_125_pow: r.kBlack
   - ttH2TT_125_pow: r.kGreen + 1
