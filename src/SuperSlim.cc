@@ -71,7 +71,8 @@ namespace superslim {
       assert(closest_particle_ == 0);
 
       const std::vector<int> allowed{11, 13};
-      std::vector<std::pair<float, const reco::GenParticle*>> ps;
+      typedef std::pair<float, const reco::GenParticle*> P;
+      std::vector<P> ps;
       for (const auto& p: particles) {
          auto dR = deltaR(p4(), p.p4());
          if (dR > 0.05
@@ -82,7 +83,7 @@ namespace superslim {
                   p.isDirectPromptTauDecayProductFinalState()))
             ps.push_back(std::make_pair(dR, &p));
       }
-      std::sort(std::begin(ps), std::end(ps), [](const auto& a, const auto& b) { return a.first < b.first; });
+      std::sort(std::begin(ps), std::end(ps), [](const P& a, const P& b) { return a.first < b.first; });
 
       if (ps.size() > 0)
          closest_particle_ = new GenObject(*(ps[0].second));
@@ -93,13 +94,14 @@ namespace superslim {
    {
       assert(closest_jet_ == 0);
 
-      std::vector<std::pair<float, const reco::GenJet*>> js;
+      typedef std::pair<float, const reco::GenJet*> P;
+      std::vector<P> js;
       for (const auto& j: jets) {
          auto dR = deltaR(p4(), j.p4());
          if (dR > 0.05)
             js.push_back(std::make_pair(dR, &j));
       }
-      std::sort(std::begin(js), std::end(js), [](const auto& a, const auto& b) { return a.first < b.first; });
+      std::sort(std::begin(js), std::end(js), [](const P& a, const P& b) { return a.first < b.first; });
 
       if (js.size() > 0)
          closest_jet_ = new GenJet(*(js[0].second));
@@ -439,10 +441,11 @@ namespace superslim {
          }
          setGenInfo(match);
       } else {
-         std::vector<std::pair<float, const reco::GenJet*>> js;
+         typedef std::pair<float, const reco::GenJet*> P;
+         std::vector<P> js;
          for (const auto& j: jets)
             js.push_back(std::make_pair(deltaR(p4(), j.p4()), &j));
-         std::sort(std::begin(js), std::end(js), [](const auto& a, const auto& b) { return a.first < b.first; });
+         std::sort(std::begin(js), std::end(js), [](const P& a, const P& b) { return a.first < b.first; });
 
          if (js.size() > 0 and js[0].first < .4) {
             gen_jet_ = GenJet(*(js[0].second));

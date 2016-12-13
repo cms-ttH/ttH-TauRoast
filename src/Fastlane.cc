@@ -11,8 +11,12 @@
 
 #include "CondFormats/BTauObjects/interface/BTagCalibration.h"
 
+#ifndef OLDCRAP
 #include "MiniAOD/MiniAODHelper/interface/LeptonSFHelper.h"
 #include "MiniAOD/MiniAODHelper/interface/PUWeightProducer.h"
+#include "ttH/TauRoast/interface/FastlaneHelpers.h"
+#endif
+
 #include "ttH/TauRoast/interface/Fastlane.h"
 
 std::string
@@ -24,6 +28,7 @@ lower(const std::string& s)
    return res;
 }
 
+#ifndef OLDCRAP
 fastlane::CSVHelper::CSVHelper()
    : reader_(BTagEntry::OP_RESHAPING, "central", {})
 {
@@ -283,6 +288,7 @@ fastlane::LeptonHelper::tightSF(const superslim::Lepton& l)
    auto& h = l.electron() ? tight_el_ : tight_mu_;
    return get_factor(h, l);
 }
+#endif
 
 bool
 fastlane::Cut::operator()(const std::string& process, const superslim::Event& e, const std::string& sys)
@@ -375,6 +381,7 @@ template<> void fastlane::Leaf<std::vector<int>>::pick(const superslim::Event& e
 void
 fastlane::update_weights(const std::string& process, std::unordered_map<std::string, double>& ws, const superslim::Event& e, const std::string& sys)
 {
+#ifndef OLDCRAP
    // =====================
    // Constants for weights
    // =====================
@@ -451,6 +458,7 @@ fastlane::update_weights(const std::string& process, std::unordered_map<std::str
    wleptons.resize(std::min({wleptons.size(), 1ul}));
 
    ws[lower("fake")] = fakerate.weight(wtaus, wleptons);
+#endif
 }
 
 void

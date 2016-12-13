@@ -1,3 +1,4 @@
+#ifndef OLDCRAP
 // -*- C++ -*-
 //
 // Package:    ttH/TauProcessor
@@ -620,3 +621,4 @@ TauProcessor::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
 
 //define this as a plug-in
 DEFINE_FWK_MODULE(TauProcessor);
+#endif
