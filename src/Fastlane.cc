@@ -110,7 +110,7 @@ fastlane::FakeHelper::FakeHelper()
    static const std::string correction = "fitFunction_data_div_mc_hadTaus_pt";
 
    {
-      TFile f(edm::FileInPath("ttH/TauRoast/data/tau_weights.root").fullPath().c_str());
+      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/tau_weights.root").fullPath().c_str());
       for (unsigned int i = 0; i < dets.size(); ++i) {
          TGraphAsymmErrors *graph;
          f.GetObject((dets[i] + fakerate).c_str(), graph);
@@ -122,7 +122,7 @@ fastlane::FakeHelper::FakeHelper()
    }
 
    {
-      TFile f(edm::FileInPath("ttH/TauRoast/data/lepton_weights.root").fullPath().c_str());
+      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/lepton_weights.root").fullPath().c_str());
       TH2F *hele, *hmu;
       f.GetObject("FR_mva075_el_data_comb", hele);
       f.GetObject("FR_mva075_mu_data_comb", hmu);
