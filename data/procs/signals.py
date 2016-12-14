@@ -26,18 +26,20 @@ BasicProcess(
     name="ttH2bb_125_amc",
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
     limitname="ttHbb125",
-    paths=['ttH2bb_125', 'ttH2bb_125_ext1', 'ttH2bb_125_ext2', 'ttH2bb_125_ext3'],
+    paths=['ttHJetTobb_M125_13TeV_amcatnloFXFX_madspin_pythia8_ext3_v1'],
     cross_section=0.5085 * 0.577,
-    events=20605280
+    events=9827285,
+    cutflow='signal'
 )
 
 BasicProcess(
     name="ttH2Nonbb_125_amc",
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
     limitname="ttH2Nonbb125",
-    paths=['ttH2Nonbb_125', 'ttH2Nonbb_125_ext1'],
+    paths=['ttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix_ext1_v1'],
     cross_section=0.2586,  # 0.5085 * (1 - 0.577),
-    events=17594172
+    events=9992683,
+    cutflow='signal'
 )
 
 BasicProcess(
@@ -149,6 +151,7 @@ BasicProcess(
 CombinedProcess(
     name="ttH_125_signal",
     fullname="t#bar{t}H(125)",
+    limitname="ttH125",
     subprocesses=["ttH2bb_125_signal", "ttH2Nonbb_125_signal"]
 )
 
@@ -168,7 +171,7 @@ CombinedProcess(
 CombinedProcess(
     name="ttH_125_amc",
     fullname="t#bar{t}H(125)",
-    limitname="ttH125_amc",
+    limitname="ttH125",
     subprocesses=["ttH2bb_125_amc", "ttH2Nonbb_125_amc"]
 )
 
