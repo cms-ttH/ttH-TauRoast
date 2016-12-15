@@ -326,3 +326,12 @@ def datacard(args, config):
                            '$TAG/common/$ANALYSIS_$BIN.root')
     writer.SetVerbosity(1)
     writer.WriteCards('limits', cb)
+
+def train(args, config):
+    import training
+
+    datadir = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data')
+    with open(os.path.join(datadir, 'mva.yaml')) as f:
+        setup = yaml.load(f)
+
+    training.train(config, setup)

@@ -22,6 +22,8 @@ ag.add_argument('-p', '--plot', action='store_true', default=False,
                 help="save histograms")
 ag.add_argument('-d', '--datacard', action='store_true', default=False,
                 help="save datacard")
+ag.add_argument('-t', '--train', action='store_true', default=False,
+                help="train MVA")
 ag = parser.add_argument_group('general options')
 ag.add_argument('-i', '--input', type=str, default=None,
                 help="change input directory")
@@ -43,8 +45,8 @@ args = parser.parse_args()
 if 'LOCALRT' not in os.environ:
     parser.error("need to do a `cmsenv` first")
 
-if not any([args.analyze, args.fill, args.plot, args.datacard]):
-    parser.error("need to either analyze, fill, plot, or datacard")
+if not any([args.analyze, args.fill, args.plot, args.datacard, args.train]):
+    parser.error("need to either analyze, fill, plot, train, or datacard")
 
 # Logging setup
 logging.basicConfig(
@@ -72,7 +74,7 @@ r.gErrorIgnoreLevel = 1001
 r.gSystem.Load("libttHTauRoast")
 
 from ttH.TauRoast import stylish, useful
-from ttH.TauRoast.actionable import analyze, dump_categories, dump_cuts, fill, plot, datacard
+from ttH.TauRoast.actionable import analyze, dump_categories, dump_cuts, fill, plot, datacard, train
 from ttH.TauRoast.variation import setup
 
 useful.setup(config)
@@ -100,6 +102,8 @@ if args.plot:
     actions.append(plot)
 if args.datacard:
     actions.append(datacard)
+if args.train:
+    actions.append(train)
 
 for action in actions:
     action(args, config)

@@ -113,3 +113,34 @@ CombinedProcess(
     limitname="ttjets",
     subprocesses=["ttjets_sl_pow", "ttjets_dl_pow"]
 )
+
+BasicProcess(
+    name="ttjets_sl_pow_train",
+    fullname="t #bar{t} SL",
+    paths=[
+        "TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_v1",
+    ],
+    # cross_section=831.76 * wleptonic * (1 - wleptonic),
+    cross_section=182 * 2,
+    events=157387260,
+    cutflow='training'
+)
+
+BasicProcess(
+    name="ttjets_dl_pow_train",
+    fullname="t #bar{t} FL",
+    paths=[
+        "TTTo2L2Nu_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_v1",
+    ],
+    # cross_section=831.76 * wleptonic ** 2,
+    cross_section=87.3,
+    events=75383000,
+    cutflow='training'
+)
+
+CombinedProcess(
+    name="ttjets_pow_train",
+    fullname="t#bar{t}",
+    limitname="ttjets",
+    subprocesses=["ttjets_sl_pow_train", "ttjets_dl_pow_train"]
+)

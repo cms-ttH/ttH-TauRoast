@@ -1,0 +1,9 @@
+signals:
+  - ttH2Nonbb_125_signal
+backgrounds:
+  - ttjets_pow_train
+variables:
+  - ht
+  - tau1_pt
+  - tau2_pt
+  - lep1_pt
