@@ -63,7 +63,7 @@ if args.output:
 if args.input:
     config['indir'] = args.input
 
-for k in ('indir', 'outdir', 'ntupledir'):
+for k in ('indir', 'outdir', 'mvadir', 'ntupledir'):
     if k in config:
         config[k] = os.path.expanduser(os.path.expandvars(config[k]))
 

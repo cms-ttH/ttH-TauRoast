@@ -7,6 +7,7 @@ import time
 import ROOT as r
 r.gSystem.Load("libttHTauRoast")
 
+from ttH.TauRoast import training
 from ttH.TauRoast.botany import Tree
 from ttH.TauRoast.useful import vectorize
 
@@ -87,9 +88,12 @@ class BasicProcess(Process):
                             fct(self._fullname), fct(self._limitname),
                             self.__cross_section, self.__add_cuts)
 
-    def analyze(self, filename, counts, cuts, weights, systematics, basedir, limit=-1, debug=False):
+    def analyze(self, cfg, filename, counts, cuts, weights, systematics, debug=False):
         from ttH.TauRoast.useful import config
         from ttH.TauRoast.printable import SyncSaver
+
+        basedir = cfg['ntupledir']
+        limit = cfg.get('event limit', -1)
 
         if str(self).startswith("collisions"):
             systematics = "NA"
@@ -125,6 +129,11 @@ class BasicProcess(Process):
             logging.info("processing {0}, event {1}".format(str(self), i))
         now = time.clock()
         r.fastlane.process(str(self), config.channel, cfiles, tree.raw(), ccuts, cweights, systematics, log, limit)
+        logging.info("evaluating MVA")
+        try:
+            tree.mva(training.evaluate(cfg, tree.raw()))
+        except IOError as e:
+            logging.error("can't evaluate MVA: {}".format(e))
         logging.debug("time spent processing: {0}".format(time.clock() - now))
 
     def process(self):

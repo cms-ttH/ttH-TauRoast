@@ -147,10 +147,7 @@ def analyze(args, config):
             for cfg in proc.additional_cuts:
                 local_cuts.insert(0, Cut(*cfg))
 
-            proc.analyze(fn, counts, local_cuts, weights, unc,
-                         config['ntupledir'],
-                         config.get('event limit', -1),
-                         args.debug_cuts)
+            proc.analyze(config, fn, counts, local_cuts, weights, unc, args.debug_cuts)
 
     concatenated_cutflows = Cutflows()
     for name, (counts, cuts, weights) in cutflows.items():
@@ -327,11 +324,7 @@ def datacard(args, config):
     writer.SetVerbosity(1)
     writer.WriteCards('limits', cb)
 
+
 def train(args, config):
     import training
-
-    datadir = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data')
-    with open(os.path.join(datadir, 'mva.yaml')) as f:
-        setup = yaml.load(f)
-
-    training.train(config, setup)
+    training.train(config)

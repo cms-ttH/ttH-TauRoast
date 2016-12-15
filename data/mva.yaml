@@ -4,6 +4,12 @@ backgrounds:
   - ttjets_pow_train
 variables:
   - ht
+  - tt_visiblemass
   - tau1_pt
+  - tau1_eta
+  - tau1_leadingtrackpt
   - tau2_pt
+  - tau2_eta
+  - tau2_leadingtrackpt
   - lep1_pt
+  - lep1_eta

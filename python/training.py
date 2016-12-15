@@ -1,28 +1,41 @@
 #  vim: set fileencoding=utf-8 :
 import logging
 import os
+import yaml
 
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import seaborn as sns
 
-from sklearn import datasets, cross_validation
+from sklearn import cross_validation
 from sklearn.cross_validation import train_test_split
 from sklearn.externals import joblib
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import AdaBoostClassifier, GradientBoostingClassifier
-from sklearn.metrics import classification_report, roc_auc_score, roc_curve, auc
+# from sklearn.tree import DecisionTreeClassifier
+# from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.metrics import roc_curve, auc
 
-from root_numpy import root2array, rec2array
+from root_numpy import array2tree, root2array, rec2array, tree2array
 
-from ttH.TauRoast.processing import Process
+from ttH.TauRoast.external.sklearn_to_tmva import gbr_to_tmva
 
 matplotlib.style.use('ggplot')
 
 
-def train(config, setup):
+def load(config):
+    datadir = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data')
+    with open(os.path.join(datadir, 'mva.yaml')) as f:
+        setup = yaml.load(f)
+    return setup
+
+
+def train(config):
+    from ttH.TauRoast.processing import Process
+
+    setup = load(config)
     fn = os.path.join(config.get("indir", config["outdir"]), "ntuple.root")
 
     signal = None
@@ -72,8 +85,22 @@ def train(config, setup):
         os.makedirs(os.path.dirname(fn))
     joblib.dump(bdt, fn)
 
+    df = pd.DataFrame(x_train, columns=setup["variables"])
+    gbr_to_tmva(bdt, df, os.path.join(config["outdir"], "weights.xml"))
+
     plot_roc(config["outdir"], bdt, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')])
     plot_output(config["outdir"], bdt, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')])
+
+
+def evaluate(config, tree):
+    setup = load(config)
+    data = rec2array(tree2array(tree, setup["variables"]))
+
+    fn = os.path.join(config.get("mvadir", config.get("indir", config["outdir"])), "sklearn", "bdt", "bdt.pkl")
+    bdt = joblib.load(fn)
+    scores = bdt.decision_function(data)
+    scores = np.array([(s,) for s in scores], [('mva', 'float32')])
+    return array2tree(scores)
 
 
 def plot_inputs(outdir, vars, sig, bkg):

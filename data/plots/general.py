@@ -29,6 +29,12 @@ Plot(
     labels=["BDT value", "Events"],
     binning=[20, -1, 1]
 )
+Plot(
+    name="general/MVA",
+    values=["mva"],
+    labels=["BDT value", "Events"],
+    binning=[20, -1, 1]
+)
 
 Plot(
     name="general/Events",

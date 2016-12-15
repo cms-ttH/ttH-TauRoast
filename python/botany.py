@@ -68,13 +68,20 @@ class Tree(object):
     def __init__(self, filename, name):
         self.__f = r.TFile(filename, 'UPDATE')
         self.__t = r.TTree(str(name), 'ntuple')
+        self.__b = None
         for l in Leaf.leaves():
             l.grow(self.__t)
 
     def raw(self):
         return self.__t
 
+    def mva(self, mvatree):
+        self.__b = mvatree
+        self.__b.SetName(self.__b.GetName() + "_mva")
+
     def __del__(self):
+        if self.__b:
+            self.__f.WriteObject(self.__b, self.__b.GetName())
         self.__f.WriteObject(self.__t, self.__t.GetName())
         self.__f.Close()
 
@@ -95,7 +102,9 @@ class Forest(object):
     def _draw(self, name, *args, **kwargs):
         logging.debug("Generating histogram for {0} with: {1}".format(name, args))
         try:
-            self.__f.Get(name).Draw(*args, **kwargs)
+            tree = self.__f.Get(name)
+            tree.AddFriend(name + "_mva")
+            tree.Draw(*args, **kwargs)
         except ReferenceError:
             self.__f.ls()
             raise ValueError("Can't access tree for {0}.".format(name))
