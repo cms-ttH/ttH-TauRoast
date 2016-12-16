@@ -56,6 +56,7 @@ def train(config):
         else:
             background = b
 
+    plot_correlations(config["outdir"], setup["variables"], signal, background)
     plot_inputs(config["outdir"], setup["variables"], signal, background)
 
     x = np.concatenate((signal, background))
@@ -103,6 +104,20 @@ def evaluate(config, tree):
         scores = bdt.decision_function(data)
     scores = np.array([(s,) for s in scores], [('bdt', 'float64')])
     tree.mva(array2tree(scores))
+
+
+def plot_correlations(outdir, vars, sig, bkg):
+    outdir = os.path.join(outdir, 'sklearn')
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
+
+    for data, label in ((sig, "Signal"), (bkg, "Background")):
+        d = pd.DataFrame(data, columns=vars)
+        sns.heatmap(d.corr(), annot=True, fmt=".2f", linewidth=.5)
+        plt.title(label + " Correlations")
+        plt.tight_layout()
+        plt.savefig(os.path.join(outdir, 'correlations_{}.png'.format(label.lower())))
+        plt.close()
 
 
 def plot_inputs(outdir, vars, sig, bkg):
