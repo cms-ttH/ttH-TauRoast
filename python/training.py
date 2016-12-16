@@ -11,11 +11,12 @@ import pandas as pd
 import seaborn as sns
 
 from sklearn import cross_validation
-from sklearn.cross_validation import train_test_split
+from sklearn.cross_validation import ShuffleSplit, train_test_split
 from sklearn.externals import joblib
 # from sklearn.tree import DecisionTreeClassifier
 # from sklearn.ensemble import AdaBoostClassifier
 from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.learning_curve import learning_curve
 from sklearn.metrics import roc_curve, auc
 
 from root_numpy import array2tree, root2array, rec2array, tree2array
@@ -70,13 +71,15 @@ def train(config):
     #                          n_estimators=800,
     #                          learning_rate=0.5)
     bdt = GradientBoostingClassifier(n_estimators=200,
-                                     max_depth=3,
+                                     max_depth=2,
                                      subsample=0.5,
                                      max_features=0.5,
                                      learning_rate=0.02)
 
     scores = cross_validation.cross_val_score(bdt, x, y, scoring="roc_auc", n_jobs=6, cv=5)
     logging.info(u'training accuracy: {} ± {}'.format(scores.mean(), scores.std()))
+
+    plot_learning_curve(config["outdir"], bdt, x, y)
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=.2)
     bdt.fit(x_train, y_train)
@@ -132,6 +135,39 @@ def plot_inputs(outdir, vars, sig, bkg):
         plt.legend()
         plt.savefig(os.path.join(outdir, 'input_{}.png'.format(var)))
         plt.close()
+
+
+def plot_learning_curve(outdir, cls, x, y):
+    outdir = os.path.join(outdir, 'sklearn')
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
+    train_sizes, train_scores, test_scores = learning_curve(cls, x, y,
+                                                            cv=ShuffleSplit(len(x), n_iter=100, test_size=0.2),
+                                                            n_jobs=24,
+                                                            train_sizes=np.linspace(.1, .9, 5),
+                                                            scoring='roc_auc')
+    train_scores_mean = np.mean(train_scores, axis=1)
+    train_scores_std = np.std(train_scores, axis=1)
+    test_scores_mean = np.mean(test_scores, axis=1)
+    test_scores_std = np.std(test_scores, axis=1)
+
+    plt.fill_between(train_sizes,
+                     train_scores_mean - train_scores_std,
+                     train_scores_mean + train_scores_std,
+                     alpha=.2, color='r')
+    plt.fill_between(train_sizes,
+                     test_scores_mean - test_scores_std,
+                     test_scores_mean + test_scores_std,
+                     alpha=.2, color='g')
+    plt.plot(train_sizes, train_scores_mean, 'o-', color='r', label='Training score')
+    plt.plot(train_sizes, test_scores_mean, 'o-', color='g', label='Cross-validation score')
+
+    plt.xlabel("Sample size")
+    plt.ylabel("Score (ROC area)")
+
+    plt.legend()
+    plt.savefig(os.path.join(outdir, 'learning_curve.png'))
+    plt.close()
 
 
 def plot_output(outdir, cls, data):
