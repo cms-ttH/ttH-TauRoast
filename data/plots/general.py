@@ -22,18 +22,11 @@ Leaf('nalltausjetfake', 'i', 'result = std::count_if(all_taus.begin(), all_taus.
 Leaf('category', 'i', 'result = min(max(0, btags(jets) - 1), 1) * 3 + min(max(0, len(jets) - 2), 2)')
 Leaf('category_lj', 'i', 'result = min(max(0, btags(jets) - 2), 2) * 3 + min(max(0, len(jets) - 4), 2)')
 
-Leaf('bdt', 'f', 'result = 0.', final=True)
 Plot(
     name="general/BDT",
     values=["bdt"],
     labels=["BDT value", "Events"],
-    binning=[20, -1, 1]
-)
-Plot(
-    name="general/MVA",
-    values=["mva"],
-    labels=["BDT value", "Events"],
-    binning=[20, -1, 1]
+    binning=[20, -4, 2.5]
 )
 
 Plot(

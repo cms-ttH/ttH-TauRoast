@@ -94,13 +94,15 @@ def train(config):
 
 def evaluate(config, tree):
     setup = load(config)
-    data = rec2array(tree2array(tree, setup["variables"]))
+    data = rec2array(tree2array(tree.raw(), setup["variables"]))
 
     fn = os.path.join(config.get("mvadir", config.get("indir", config["outdir"])), "sklearn", "bdt", "bdt.pkl")
     bdt = joblib.load(fn)
-    scores = bdt.decision_function(data)
-    scores = np.array([(s,) for s in scores], [('mva', 'float32')])
-    return array2tree(scores)
+    scores = []
+    if len(data) > 0:
+        scores = bdt.decision_function(data)
+    scores = np.array([(s,) for s in scores], [('bdt', 'float64')])
+    tree.mva(array2tree(scores))
 
 
 def plot_inputs(outdir, vars, sig, bkg):
@@ -125,7 +127,9 @@ def plot_output(outdir, cls, data):
         sig = cls.decision_function(x[y > .5]).ravel()
         bkg = cls.decision_function(x[y < .5]).ravel()
 
-        bins = np.linspace(-1, 1, 40)
+        bins = np.linspace(min(np.min(v) for v in (sig, bkg)),
+                           max(np.max(v) for v in (sig, bkg)),
+                           40)
         if label == 'training':
             sns.distplot(bkg, bins=bins, color='r', kde=False, norm_hist=True, label='background (training)')
             sns.distplot(sig, bins=bins, color='b', kde=False, norm_hist=True, label='signal (training)')

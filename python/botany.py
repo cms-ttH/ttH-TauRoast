@@ -10,7 +10,7 @@ class Leaf(object):
     __finals = {}
 
     def __init__(self, name, kind, code, final=False):
-        if kind.lower() not in ('i', 'f', '[f]', '[i]'):
+        if kind.lower() not in ('d', 'i', 'f', '[d]', '[f]', '[i]'):
             raise NotImplementedError("'{}' is not a valid type".format(kind))
 
         if name in Leaf.__leaves or name in Leaf.__finals:
@@ -27,10 +27,14 @@ class Leaf(object):
         typename = 'std::vector<float>'
         if kind.lower() == 'i':
             typename = 'int'
-        elif kind.lower() == 'f':
-            typename = 'float'
         elif kind.lower() == '[i]':
             typename = 'std::vector<int>'
+        elif kind.lower() == 'f':
+            typename = 'float'
+        elif kind.lower() == 'd':
+            typename = 'double'
+        elif kind.lower() == '[d]':
+            typename = 'std::vector<double>'
 
         self._r = code2leaf(name, typename, code)
 
@@ -75,9 +79,15 @@ class Tree(object):
     def raw(self):
         return self.__t
 
-    def mva(self, mvatree):
-        self.__b = mvatree
-        self.__b.SetName(self.__b.GetName() + "_mva")
+    def reset(self, tree):
+        name = self.__t.GetName()
+        self.__t.SetName("foo")
+        self.__t = tree
+        self.__t.SetName(name)
+
+    def mva(self, tree):
+        self.__b = tree
+        self.__b.SetName(self.__t.GetName() + "_mva")
 
     def __del__(self):
         if self.__b:

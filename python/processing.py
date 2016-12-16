@@ -131,7 +131,7 @@ class BasicProcess(Process):
         r.fastlane.process(str(self), config.channel, cfiles, tree.raw(), ccuts, cweights, systematics, log, limit)
         logging.info("evaluating MVA")
         try:
-            tree.mva(training.evaluate(cfg, tree.raw()))
+            training.evaluate(cfg, tree)
         except IOError as e:
             logging.error("can't evaluate MVA: {}".format(e))
         logging.debug("time spent processing: {0}".format(time.clock() - now))
