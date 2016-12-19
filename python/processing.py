@@ -132,7 +132,7 @@ class BasicProcess(Process):
         logging.info("evaluating MVA")
         try:
             training.evaluate(cfg, tree)
-        except IOError as e:
+        except (IOError, ValueError) as e:
             logging.error("can't evaluate MVA: {}".format(e))
         logging.debug("time spent processing: {0}".format(time.clock() - now))
 
