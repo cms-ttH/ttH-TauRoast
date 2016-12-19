@@ -1,4 +1,5 @@
 #  vim: set fileencoding=utf-8 :
+import codecs
 import logging
 import os
 import yaml
@@ -16,6 +17,7 @@ from sklearn.externals import joblib
 # from sklearn.tree import DecisionTreeClassifier
 # from sklearn.ensemble import AdaBoostClassifier
 from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.feature_selection import RFECV
 from sklearn.learning_curve import learning_curve
 from sklearn.metrics import roc_curve, auc
 
@@ -39,6 +41,10 @@ def train(config):
     setup = load(config)
     fn = os.path.join(config.get("indir", config["outdir"]), "ntuple.root")
 
+    outdir = os.path.join(config["outdir"], 'sklearn')
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
+
     signal = None
     for p in sum([Process.expand(n) for n in setup['signals']], []):
         logging.debug('reading {}'.format(p))
@@ -57,8 +63,8 @@ def train(config):
         else:
             background = b
 
-    plot_correlations(config["outdir"], setup["variables"], signal, background)
-    plot_inputs(config["outdir"], setup["variables"], signal, background)
+    plot_correlations(outdir, setup["variables"], signal, background)
+    plot_inputs(outdir, setup["variables"], signal, background)
 
     x = np.concatenate((signal, background))
     y = np.concatenate((np.ones(signal.shape[0]),
@@ -71,29 +77,39 @@ def train(config):
     #                          n_estimators=800,
     #                          learning_rate=0.5)
     bdt = GradientBoostingClassifier(n_estimators=200,
-                                     max_depth=2,
+                                     max_depth=1,
                                      subsample=0.5,
                                      max_features=0.5,
                                      learning_rate=0.02)
 
-    scores = cross_validation.cross_val_score(bdt, x, y, scoring="roc_auc", n_jobs=6, cv=5)
-    logging.info(u'training accuracy: {} ± {}'.format(scores.mean(), scores.std()))
+    rfecv = RFECV(estimator=bdt, step=1, cv=5, scoring='accuracy')
+    rfecv.fit(x, y)
 
-    plot_learning_curve(config["outdir"], bdt, x, y)
+    scores = cross_validation.cross_val_score(bdt, x, y, scoring="roc_auc", n_jobs=6, cv=5)
+
+    with codecs.open(os.path.join(outdir, "log.txt"), "w", encoding="utf8") as fd:
+        fd.write(u'training accuracy: {} ± {}\n\n'.format(scores.mean(), scores.std()))
+        fd.write(u'Feature selection\n=================\n\n')
+        fd.write(u'optimal feature count: {}\n\nranking\n-------\n'.format(rfecv.n_features_))
+        for n, v in enumerate(setup["variables"]):
+            fd.write(u'{:30}: {:>5}\n'.format(v, rfecv.ranking_[n]))
+
+    plot_feature_elimination(outdir, rfecv)
+    plot_learning_curve(outdir, bdt, x, y)
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=.2)
     bdt.fit(x_train, y_train)
 
-    fn = os.path.join(config["outdir"], "sklearn", "bdt", "bdt.pkl")
+    fn = os.path.join(outdir, "bdt", "bdt.pkl")
     if not os.path.exists(os.path.dirname(fn)):
         os.makedirs(os.path.dirname(fn))
     joblib.dump(bdt, fn)
 
     df = pd.DataFrame(x_train, columns=setup["variables"])
-    gbr_to_tmva(bdt, df, os.path.join(config["outdir"], "weights.xml"))
+    gbr_to_tmva(bdt, df, os.path.join(outdir, "weights.xml"))
 
-    plot_roc(config["outdir"], bdt, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')])
-    plot_output(config["outdir"], bdt, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')])
+    plot_roc(outdir, bdt, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')])
+    plot_output(outdir, bdt, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')])
 
 
 def evaluate(config, tree):
@@ -110,10 +126,6 @@ def evaluate(config, tree):
 
 
 def plot_correlations(outdir, vars, sig, bkg):
-    outdir = os.path.join(outdir, 'sklearn')
-    if not os.path.exists(outdir):
-        os.makedirs(outdir)
-
     for data, label in ((sig, "Signal"), (bkg, "Background")):
         d = pd.DataFrame(data, columns=vars)
         sns.heatmap(d.corr(), annot=True, fmt=".2f", linewidth=.5)
@@ -123,10 +135,14 @@ def plot_correlations(outdir, vars, sig, bkg):
         plt.close()
 
 
+def plot_feature_elimination(outdir, cls):
+    plt.plot(range(1, len(cls.grid_scores_) + 1), cls.grid_scores_)
+    plt.xlabel('# features')
+    plt.ylabel('Score (ROC auc)')
+    plt.savefig(os.path.join(outdir, 'feature_elimination.png'))
+
+
 def plot_inputs(outdir, vars, sig, bkg):
-    outdir = os.path.join(outdir, 'sklearn')
-    if not os.path.exists(outdir):
-        os.makedirs(outdir)
     for n, var in enumerate(vars):
         _, bins = np.histogram(np.concatenate((sig[:, n], bkg[:, n])), bins=40)
         sns.distplot(bkg[:, n], bins=bins, kde=False, norm_hist=True, label='background')
@@ -138,9 +154,6 @@ def plot_inputs(outdir, vars, sig, bkg):
 
 
 def plot_learning_curve(outdir, cls, x, y):
-    outdir = os.path.join(outdir, 'sklearn')
-    if not os.path.exists(outdir):
-        os.makedirs(outdir)
     train_sizes, train_scores, test_scores = learning_curve(cls, x, y,
                                                             cv=ShuffleSplit(len(x), n_iter=100, test_size=0.2),
                                                             n_jobs=24,
@@ -171,9 +184,6 @@ def plot_learning_curve(outdir, cls, x, y):
 
 
 def plot_output(outdir, cls, data):
-    outdir = os.path.join(outdir, 'sklearn')
-    if not os.path.exists(outdir):
-        os.makedirs(outdir)
     for x, y, label in data:
         sig = cls.decision_function(x[y > .5]).ravel()
         bkg = cls.decision_function(x[y < .5]).ravel()
@@ -198,10 +208,6 @@ def plot_output(outdir, cls, data):
 
 
 def plot_roc(outdir, cls, data):
-    outdir = os.path.join(outdir, 'sklearn')
-    if not os.path.exists(outdir):
-        os.makedirs(outdir)
-
     for x, y, label in data:
         decisions = cls.decision_function(x)
         fpr, tpr, thresholds = roc_curve(y, decisions)
