@@ -5,6 +5,7 @@ from ttH.TauRoast.useful import config
 if config.taus >= 2:
     Leaf('tt_deltaR', 'f', 'result = dR(taus[0], taus[1])')
     Leaf('tt_visiblemass', 'f', 'result = (taus[0].p4() + taus[1].p4()).M()')
+    Leaf('tt_cosDeltaPhi', 'f', 'result = std::cos(taus[0].p4().Phi() - taus[1].p4().Phi())')
 
     Plot(
         name="taus/TT_DeltaR",
@@ -12,6 +13,13 @@ if config.taus >= 2:
         labels=["#DeltaR #tau_{1,2}", "Events"],
         binning=[15, 0, 6.28]
     )
+    Plot(
+        name="taus/TT_CosDeltaPhi",
+        values=["tt_cosDeltaPhi"],
+        labels=["cos(#Delta #phi) #tau_{1,2}", "Events"],
+        binning=[15, -1, 1]
+    )
+
     Plot(
         name="taus/TT_VisibleMass",
         values=["tt_visiblemass"],
@@ -29,7 +37,6 @@ for n in range(config.taus):
     lbl = "#tau_{{{0}}} ".format(n + 1)
 
     for l in range(config.leptons):
-        lbl = "#tau_{{{0}}} ".format(n + 1)
         Leaf('tau{}lep{}_deltaR'.format(n + 1, l + 1), 'f',
              'result = dR(leptons.at({0}), taus.at({1}))'.format(l, n))
 
@@ -40,8 +47,21 @@ for n in range(config.taus):
             binning=[15, 0, 6.28]
         )
 
+    Leaf('tau{}jet_deltaRmin'.format(n + 1), 'f',
+         '''std::vector<float> drs(jets.size());
+            std::transform(jets.begin(), jets.end(), drs.begin(),
+                           [&](const superslim::Jet& j) {{ return dR(taus.at({}), j); }});
+            result = *std::min_element(drs.begin(), drs.end())'''.format(n))
+    Plot(
+        name="taus/T{}J_MinDeltaR".format(n + 1),
+        values=["tau{}jet_deltaRmin".format(n + 1)],
+        labels=["Min #DeltaR {}, jet".format(lbl), "Events"],
+        binning=[15, 0, 6.28]
+    )
+
     Leaf('tau{0}_pt'.format(n + 1), 'f', 'result = taus.at({0}).p4().Pt()'.format(n))
     Leaf('tau{0}_eta'.format(n + 1), 'f', 'result = taus.at({0}).p4().Eta()'.format(n))
+    Leaf('tau{0}_abseta'.format(n + 1), 'f', 'result = std::abs(taus.at({0}).p4().Eta())'.format(n))
     Leaf('tau{0}_phi'.format(n + 1), 'f', 'result = taus.at({0}).p4().Phi()'.format(n))
     Leaf('tau{0}_leadingtrackpt'.format(n + 1), 'f', 'result = taus.at({0}).leadingTrackPt()'.format(n))
 

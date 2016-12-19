@@ -7,10 +7,68 @@ for n in range(config.leptons):
 
     Leaf('lep{0}_pt'.format(n + 1), 'f', 'result = leptons[{0}].p4().Pt()'.format(n))
     Leaf('lep{0}_eta'.format(n + 1), 'f', 'result = leptons[{0}].p4().Eta()'.format(n))
+    Leaf('lep{0}_abseta'.format(n + 1), 'f', 'result = std::abs(leptons[{0}].p4().Eta())'.format(n))
     Leaf('lep{0}_phi'.format(n + 1), 'f', 'result = leptons[{0}].p4().Phi()'.format(n))
 
     Leaf('lep{0}_genpt'.format(n + 1), 'f', 'result = leptons[{0}].genP4().Pt()'.format(n))
     Leaf('lep{0}_geneta'.format(n + 1), 'f', 'result = leptons[{0}].genP4().Eta()'.format(n))
+
+    if (config.taus) == 2:
+        Leaf('lep{0}tauOS_deltaR'.format(n + 1), 'f',
+             'result = dR(leptons.at({0}), taus.at(0).charge() * leptons.at({0}).charge() < 0 ? taus.at(0) : taus.at(1))')
+        Leaf('lep{0}tauSS_deltaR'.format(n + 1), 'f',
+             'result = dR(leptons.at({0}), taus.at(0).charge() * leptons.at({0}).charge() > 0 ? taus.at(0) : taus.at(1))')
+        Plot(
+            name="leptons/L{}TOS_DeltaR".format(n + 1),
+            values=["lep{}tauOS_deltaR".format(n + 1)],
+            labels=["#DeltaR {}, #tau_{{OS}}".format(lbl), "Events"],
+            binning=[15, 0, 6.28]
+        )
+        Plot(
+            name="leptons/L{}TSS_DeltaR".format(n + 1),
+            values=["lep{}tauSS_deltaR".format(n + 1)],
+            labels=["#DeltaR {}, #tau_{{SS}}".format(lbl), "Events"],
+            binning=[15, 0, 6.28]
+        )
+
+        Leaf('lep{0}tauOS_cosDeltaPhi'.format(n + 1), 'f',
+             'result = std::cos(leptons.at({0}).p4().Phi() - (taus.at(0).charge() * leptons.at({0}).charge() < 0 ? taus.at(0) : taus.at(1)).p4().Phi())')
+        Leaf('lep{0}tauSS_cosDeltaPhi'.format(n + 1), 'f',
+             'result = std::cos(leptons.at({0}).p4().Phi() - (taus.at(0).charge() * leptons.at({0}).charge() > 0 ? taus.at(0) : taus.at(1)).p4().Phi())')
+        Plot(
+            name="leptons/L{}TOS_CosDeltaPhi".format(n + 1),
+            values=["lep{}tauOS_cosDeltaPhi".format(n + 1)],
+            labels=["cos(#Delta #phi) {}, #tau_{{OS}}".format(lbl), "Events"],
+            binning=[15, -1, 1]
+        )
+        Plot(
+            name="leptons/L{}TSS_CosDeltaPhi".format(n + 1),
+            values=["lep{}tauSS_cosDeltaPhi".format(n + 1)],
+            labels=["cos(#Delta #phi {}, #tau_{{SS}}".format(lbl), "Events"],
+            binning=[15, -1, 1]
+        )
+
+    Leaf('lep{}jet_deltaRmin'.format(n + 1), 'f',
+         '''std::vector<float> drs(jets.size());
+            std::transform(jets.begin(), jets.end(), drs.begin(),
+                           [&](const superslim::Jet& j) {{ return dR(leptons.at({}), j); }});
+            result = *std::min_element(drs.begin(), drs.end())'''.format(n))
+    Plot(
+        name="leptons/L{}J_MinDeltaR".format(n + 1),
+        values=["lep{}jet_deltaRmin".format(n + 1)],
+        labels=["Min #DeltaR {}, jet".format(lbl), "Events"],
+        binning=[15, 0, 6.28]
+    )
+
+    Leaf('lep{0}_mt'.format(n + 1), 'f',
+         '''result = std::sqrt(2 * leptons[{0}].p4().Pt() * event.met().Pt()
+                               * (1 - std::cos(leptons[{0}].p4().Phi() - event.met().Phi())))'''.format(n))
+    Plot(
+        name="leptons/L{0}_Mt".format(n + 1),
+        values=["lep{0}_mt".format(n + 1)],
+        labels=[lbl + "M_{T}", "Events"],
+        binning=[40, 0, 120]
+    )
 
     # Kinematics
     Plot(

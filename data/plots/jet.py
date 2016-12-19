@@ -22,6 +22,19 @@ from ttH.TauRoast.plotting import Plot
 #         binning=[40, 0, 400]
 # )
 
+Leaf('jet_deltaRavg', 'f',
+     '''std::vector<float> drs;
+        for (auto i = 0; i < jets.size(); ++i)
+            for (auto j = i + 1; j < jets.size(); ++j)
+                drs.push_back(dR(jets[i], jets[j]));
+        result = std::accumulate(drs.begin(), drs.end(), 0.) / drs.size()''')
+Plot(
+    name="jets/JJ_AvgDeltaR",
+    values=["jet_deltaRavg"],
+    labels=["Avg #DeltaR jet, jet", "Events"],
+    binning=[15, 0, 6.28]
+)
+
 pspace = [
     ("", "jets"),
     ("Untagged", "notags(jets)"),

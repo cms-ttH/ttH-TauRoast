@@ -4,12 +4,25 @@ backgrounds:
   - ttjets_pow_train
 variables:
   - ht
+  - met
+  - tt_cosDeltaPhi
+  - tt_deltaR
   - tt_visiblemass
   - tau1_pt
-  - tau1_eta
+  - tau1_abseta
   - tau1_leadingtrackpt
+  - tau1jet_deltaRmin
   - tau2_pt
-  - tau2_eta
+  - tau2_abseta
   - tau2_leadingtrackpt
+  - tau2jet_deltaRmin
   - lep1_pt
-  - lep1_eta
+  - lep1_abseta
+  - lep1jet_deltaRmin
+  - lep1tauOS_deltaR
+  - lep1tauSS_deltaR
+  - lep1tauOS_cosDeltaPhi
+  - lep1tauSS_cosDeltaPhi
+  - lep1_mt
+  - lep1_mva
+  - jet_deltaRavg
