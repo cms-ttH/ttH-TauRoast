@@ -1,6 +1,10 @@
 import re
 
-mctag = re.compile(r'RunIISpring16MiniAODv2.*80X_mcRun2_asymptotic_(v14|2016_miniAODv2_v0).|matze-.*_([0-9a-f]+).')
+
+def mctag(dset):
+    dset = re.sub(r'RunII(?:Spring|Summer)16MiniAODv2.*80X_mcRun2_asymptotic_(?:v14|2016_miniAODv2_v0|2016_TrancheIV_v6).', '', dset)
+    dset = re.sub(r'matze-(faster_v[0-9]+_).*_(?:[0-9a-f]+).', r'\1', dset)
+    return dset
 
 datasets_tranche3 = """
 /TTTo2L2Nu_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/RunIISpring16MiniAODv2-premix_withHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM
@@ -9,10 +13,18 @@ datasets_tranche3 = """
 /ttHTobb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/RunIISpring16MiniAODv2-premix_withHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM
 """
 
-datasets_tranche3_fast = """
-/TTTo2L2Nu_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/matze-fast_ttjets_dl_MiniAOD_6b57d231e28e4ebd8065fc7621fa1f5b-v1/USER
-/TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/matze-fast_ttjets_sl_MiniAOD_6b57d231e28e4ebd8065fc7621fa1f5b-v1/USER
-/ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/matze-fast_ttH_MiniAOD_6b57d231e28e4ebd8065fc7621fa1f5b-v1/USER
+datasets_train = """
+/TTTo2L2Nu_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM
+/ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM
+/ttHTobb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM
+
+/TTTo2L2Nu_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/matze-faster_v5_ttjets_dl_maod_777fc0041cce4fac803f2dbb53a837f5-v1/USER
+/TTTo2L2Nu_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/matze-faster_v6_ttjets_dl_maod_5f67423d861446de8e222e7a6ba53e0e-v1/USER
+/TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/matze-faster_v5_ttjets_sl_maod_777fc0041cce4fac803f2dbb53a837f5-v1/USER
+/TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/matze-faster_v5_ttjets_sl_maod_777fc0041cce4fac803f2dbb53a837f5-v2/USER
+/TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/matze-faster_v6_ttjets_sl_maod_5f67423d861446de8e222e7a6ba53e0e-v1/USER
+/ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/matze-faster_v5_ttH_maod_777fc0041cce4fac803f2dbb53a837f5-v1/USER
+/ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8/matze-faster_v6_ttH_maod_5f67423d861446de8e222e7a6ba53e0e-v1/USER
 """
 
 datasets_ttH = """
@@ -151,15 +163,15 @@ def datasets(tag):
     elif tag == 'mc':
         dsets = datasets_ttH + datasets_mc
     elif tag == 'data':
-        dsets = datasets_collisions
+        dsets = datasets_collisions_prompt
     elif tag == 'bkgs':
         dsets = datasets_mc
     elif tag == 'tranche3':
-        dsets = datasets_tranche3 + datasets_tranche3_fast
-    elif tag == 'tranche3_fast':
-        dsets = datasets_tranche3_fast
+        dsets = datasets_tranche3
     elif tag == 'tranche3_full':
         dsets = datasets_tranche3
+    elif tag == 'train':
+        dsets = datasets_train
     else:
         raise ValueError("invalid tag '{}'".format(tag))
     return [ds.strip() for ds in dsets.split('\n') if len(ds) > 0 and not ds.startswith('#')]

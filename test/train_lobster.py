@@ -1,13 +1,12 @@
 from lobster import cmssw
 from lobster.core import AdvancedOptions, Category, Config, StorageConfiguration, Workflow
-# from lobster.monitor.elk import ElkInterface
 
 from ttH.TauRoast.datasets import datasets, mctag
 
-version = "mcprod_v2"
-tag = "tranche3"
+version = "v1"
+tag = "train"
 
-globaltag_mc = "80X_mcRun2_asymptotic_2016_miniAODv2_v1"
+globaltag_mc = "80X_mcRun2_asymptotic_2016_TrancheIV_v6"
 globaltag_data = "80X_dataRun2_Prompt_ICHEP16JEC_v0"
 
 lumimask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/Cert_271036-277148_13TeV_PromptReco_Collisions16_JSON.txt'
@@ -50,7 +49,7 @@ mc = Category(
 workflows = []
 for path in datasets(tag):
     _, major, minor, _ = path.split('/')
-    minor = mctag.sub('', minor)
+    minor = mctag(minor)
     label = (major + '_' + minor).replace('-', '_')
     mask = None
     params = ['globalTag=' + globaltag_mc, 'channels=ttl', 'takeVLoose=true']
@@ -58,8 +57,6 @@ for path in datasets(tag):
     instance = 'global'
     if 'fast' in path:
         instance = 'phys03'
-        label += '_fast'
-        continue
 
     if '/Run2016' in path and path.endswith('MINIAOD'):
         mask = lumimask
@@ -83,52 +80,10 @@ for path in datasets(tag):
         arguments=params
     ))
 
-    # workflows.append(Workflow(
-    #     label=label + '_filtered_0t1l',
-    #     dataset=cmssw.Dataset(
-    #         dataset=path,
-    #         events_per_task=150000,
-    #         lumi_mask=mask,
-    #         dbs_instance=instance
-    #     ),
-    #     category=category,
-    #     pset='ntuplize.py',
-    #     arguments=params + ['genFilter=true']
-    # ))
-
-    workflows.append(Workflow(
-        label=label + '_filtered_1t2l_mva3',
-        dataset=cmssw.Dataset(
-            dataset=path,
-            events_per_task=150000,
-            lumi_mask=mask,
-            dbs_instance=instance
-        ),
-        category=category,
-        merge_size='2g',
-        pset='ntuplize.py',
-        arguments=params + ['genFilter=true', 'genFilter1t2l=true']
-    ))
-
-    workflows.append(Workflow(
-        label=label + '_filtered_0t3l_mva3',
-        dataset=cmssw.Dataset(
-            dataset=path,
-            events_per_task=150000,
-            lumi_mask=mask,
-            dbs_instance=instance
-        ),
-        category=category,
-        merge_size='2g',
-        pset='ntuplize.py',
-        arguments=params + ['genFilter=true', 'genFilter0t3l=true']
-    ))
-
 config = Config(
     label='tau_{}_{}'.format(version, tag),
     workdir='/tmpscratch/users/matze/ttH/{}_{}'.format(version, tag),
     plotdir='/afs/crc.nd.edu/user/m/mwolf3/www/lobster/ttH/{}_{}'.format(version, tag),
-    # elk=ElkInterface('elk.crc.nd.edu', 9200, 'elk.crc.nd.edu', 5601, 'ttH_{}_{}'.format(version, tag).lower()),
     storage=storage,
     workflows=workflows,
     advanced=AdvancedOptions(
