@@ -130,6 +130,19 @@ BasicProcess(
 )
 
 BasicProcess(
+    name="ttH2Nonbb_125_train",
+    fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
+    paths=[
+        "ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_faster_v5_v1",
+        "ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_faster_v6_v1",
+    ],
+    # cross_section=0.5085 * (1 - 0.577),
+    cross_section=0.2586,
+    events=3975854,
+    cutflow='signal'
+)
+
+BasicProcess(
     name="ttH2bb_125_fake",
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
     paths=['ttHTobb_M125_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_v1'],

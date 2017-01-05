@@ -1,5 +1,5 @@
 signals:
-  - ttH2Nonbb_125_signal
+  - ttH2Nonbb_125_train
 backgrounds:
   - ttjets_pow_train
 variables:
