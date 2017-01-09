@@ -1,3 +1,6 @@
+features: []
+  # - selection
+
 signals:
   - ttH2Nonbb_125_train
 backgrounds:

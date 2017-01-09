@@ -86,19 +86,23 @@ def train(config):
 
     logging.info("starting cross validation")
     scores = cross_validation.cross_val_score(bdt, x, y, scoring="roc_auc", n_jobs=NJOBS, cv=5)
+    out = u'training accuracy: {} ± {}\n\n'.format(scores.mean(), scores.std())
 
-    logging.info("starting feature selection")
-    rfecv = RFECV(estimator=bdt, step=1, cv=5, scoring='accuracy')  # new in 18.1: , n_jobs=NJOBS)
-    rfecv.fit(x, y)
+    if 'selection' in setup.get('features', []):
+        logging.info("starting feature selection")
+        rfecv = RFECV(estimator=bdt, step=1, cv=5, scoring='roc_auc')  # new in 18.1: , n_jobs=NJOBS)
+        rfecv.fit(x, y)
+
+        plot_feature_elimination(outdir, rfecv)
+
+        out += u'Feature selection\n=================\n\n'
+        out += u'optimal feature count: {}\n\nranking\n-------\n'.format(rfecv.n_features_)
+        for n, v in enumerate(setup["variables"]):
+            out += u'{:30}: {:>5}\n'.format(v, rfecv.ranking_[n])
 
     with codecs.open(os.path.join(outdir, "log.txt"), "w", encoding="utf8") as fd:
-        fd.write(u'training accuracy: {} ± {}\n\n'.format(scores.mean(), scores.std()))
-        fd.write(u'Feature selection\n=================\n\n')
-        fd.write(u'optimal feature count: {}\n\nranking\n-------\n'.format(rfecv.n_features_))
-        for n, v in enumerate(setup["variables"]):
-            fd.write(u'{:30}: {:>5}\n'.format(v, rfecv.ranking_[n]))
+        fd.write(out)
 
-    plot_feature_elimination(outdir, rfecv)
     plot_learning_curve(outdir, bdt, x, y)
 
     logging.info("training bdt")
