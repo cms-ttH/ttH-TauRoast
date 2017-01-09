@@ -3,7 +3,7 @@ from lobster.core import AdvancedOptions, Category, Config, StorageConfiguration
 
 from ttH.TauRoast.datasets import datasets, mctag
 
-version = "v1"
+version = "v2"
 tag = "train"
 
 globaltag_mc = "80X_mcRun2_asymptotic_2016_TrancheIV_v6"
@@ -90,9 +90,7 @@ config = Config(
         bad_exit_codes=[127, 169],
         log_level=1,
         xrootd_servers=[
-            'ndcms.crc.nd.edu',
-            'deepthought.crc.nd.edu',
-            'cmsxrootd.fnal.gov',
+            'deepthought.crc.nd.edu'
         ],
         email='mwolf3@nd.edu'
     )

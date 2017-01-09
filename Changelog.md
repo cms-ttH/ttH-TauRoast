@@ -126,3 +126,13 @@
 ### v11.2
 
 * More powheg samples
+
+# Training Ntuple History
+
+## v2
+
+* Full FastSim stats
+
+## v1
+
+* Basic version of FastSim
