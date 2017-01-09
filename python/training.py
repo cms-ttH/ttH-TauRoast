@@ -27,6 +27,8 @@ from ttH.TauRoast.external.sklearn_to_tmva import gbr_to_tmva
 
 matplotlib.style.use('ggplot')
 
+NJOBS = 32
+
 
 def load(config):
     datadir = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data')
@@ -76,16 +78,18 @@ def train(config):
     #                          algorithm='SAMME',
     #                          n_estimators=800,
     #                          learning_rate=0.5)
-    bdt = GradientBoostingClassifier(n_estimators=200,
-                                     max_depth=1,
+    bdt = GradientBoostingClassifier(n_estimators=500,
+                                     max_depth=3,
                                      subsample=0.5,
                                      max_features=0.5,
                                      learning_rate=0.02)
 
-    rfecv = RFECV(estimator=bdt, step=1, cv=5, scoring='accuracy')
-    rfecv.fit(x, y)
+    logging.info("starting cross validation")
+    scores = cross_validation.cross_val_score(bdt, x, y, scoring="roc_auc", n_jobs=NJOBS, cv=5)
 
-    scores = cross_validation.cross_val_score(bdt, x, y, scoring="roc_auc", n_jobs=6, cv=5)
+    logging.info("starting feature selection")
+    rfecv = RFECV(estimator=bdt, step=1, cv=5, scoring='accuracy')  # new in 18.1: , n_jobs=NJOBS)
+    rfecv.fit(x, y)
 
     with codecs.open(os.path.join(outdir, "log.txt"), "w", encoding="utf8") as fd:
         fd.write(u'training accuracy: {} ± {}\n\n'.format(scores.mean(), scores.std()))
@@ -97,6 +101,7 @@ def train(config):
     plot_feature_elimination(outdir, rfecv)
     plot_learning_curve(outdir, bdt, x, y)
 
+    logging.info("training bdt")
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=.2)
     bdt.fit(x_train, y_train)
 
@@ -108,6 +113,7 @@ def train(config):
     df = pd.DataFrame(x_train, columns=setup["variables"])
     gbr_to_tmva(bdt, df, os.path.join(outdir, "weights.xml"))
 
+    logging.info("creating roc, output")
     plot_roc(outdir, bdt, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')])
     plot_output(outdir, bdt, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')])
 
@@ -154,9 +160,10 @@ def plot_inputs(outdir, vars, sig, bkg):
 
 
 def plot_learning_curve(outdir, cls, x, y):
+    logging.info("creating learning curve")
     train_sizes, train_scores, test_scores = learning_curve(cls, x, y,
                                                             cv=ShuffleSplit(len(x), n_iter=100, test_size=0.2),
-                                                            n_jobs=24,
+                                                            n_jobs=NJOBS,
                                                             train_sizes=np.linspace(.1, .9, 5),
                                                             scoring='roc_auc')
     train_scores_mean = np.mean(train_scores, axis=1)
