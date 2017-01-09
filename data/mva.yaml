@@ -1,4 +1,5 @@
-features: []
+features:
+  - parameters
   # - selection
 
 signals:

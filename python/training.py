@@ -20,6 +20,7 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.feature_selection import RFECV
 from sklearn.learning_curve import learning_curve
 from sklearn.metrics import roc_curve, auc
+from sklearn import grid_search
 
 from root_numpy import array2tree, root2array, rec2array, tree2array
 
@@ -86,7 +87,7 @@ def train(config):
 
     logging.info("starting cross validation")
     scores = cross_validation.cross_val_score(bdt, x, y, scoring="roc_auc", n_jobs=NJOBS, cv=5)
-    out = u'training accuracy: {} ± {}\n\n'.format(scores.mean(), scores.std())
+    out = u'training accuracy: {} ± {}\n'.format(scores.mean(), scores.std())
 
     if 'selection' in setup.get('features', []):
         logging.info("starting feature selection")
@@ -95,10 +96,29 @@ def train(config):
 
         plot_feature_elimination(outdir, rfecv)
 
-        out += u'Feature selection\n=================\n\n'
+        out += u'\nFeature selection\n=================\n\n'
         out += u'optimal feature count: {}\n\nranking\n-------\n'.format(rfecv.n_features_)
         for n, v in enumerate(setup["variables"]):
             out += u'{:30}: {:>5}\n'.format(v, rfecv.ranking_[n])
+
+    if 'parameters' in setup.get('features', []):
+        logging.info('starting hyper-parameter optimization')
+        param_grid = {
+            "n_estimators": [50, 200, 500, 1000],
+            "max_depth": [1, 2, 3, 4, 5, 6],
+            "learning_rate": [.02, .1, .2, .5, 1.]
+        }
+
+        clf = grid_search.GridSearchCV(bdt, param_grid, cv=5, scoring='roc_auc', n_jobs=NJOBS)
+        clf.fit(x, y)
+
+        out += '\nHyper-parameter optimization\n'
+        out += '============================\n\n'
+        out += 'Best estimator: {}\n'.format(clf.best_estimator_)
+        out += '\nFull Scores\n'
+        out += '-----------\n\n'
+        for params, mean_score, scores in clf.grid_scores_:
+            out += u'{:0.4f} (±{:0.4f}) for {}\n'.format(mean_score, scores.std(), params)
 
     with codecs.open(os.path.join(outdir, "log.txt"), "w", encoding="utf8") as fd:
         fd.write(out)
