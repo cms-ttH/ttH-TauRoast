@@ -91,42 +91,17 @@ def train(config):
     logging.info("starting cross validation")
     scores = cross_validation.cross_val_score(bdt, x, y, scoring="roc_auc", n_jobs=NJOBS, cv=CV)
     out = u'training accuracy: {} ± {}\n'.format(scores.mean(), scores.std())
-
-    if 'selection' in setup.get('features', []):
-        logging.info("starting feature selection")
-        rfecv = RFECV(estimator=bdt, step=1, cv=CV, scoring='roc_auc')  # new in 18.1: , n_jobs=NJOBS)
-        rfecv.fit(x, y)
-
-        plot_feature_elimination(outdir, rfecv)
-
-        out += u'\nFeature selection\n=================\n\n'
-        out += u'optimal feature count: {}\n\nranking\n-------\n'.format(rfecv.n_features_)
-        for n, v in enumerate(setup["variables"]):
-            out += u'{:30}: {:>5}\n'.format(v, rfecv.ranking_[n])
-
-    if 'parameters' in setup.get('features', []):
-        logging.info('starting hyper-parameter optimization')
-        param_grid = {
-            "n_estimators": [500, 1000, 2000, 5000],
-            "max_depth": [3, 4, 5, 6, 7, 8],
-            "learning_rate": [.002, .005, .01, .02, .1, .2]
-        }
-
-        clf = grid_search.GridSearchCV(bdt, param_grid, cv=CV, scoring='roc_auc', n_jobs=NJOBS)
-        clf.fit(x, y)
-
-        out += '\nHyper-parameter optimization\n'
-        out += '============================\n\n'
-        out += 'Best estimator: {}\n'.format(clf.best_estimator_)
-        out += '\nFull Scores\n'
-        out += '-----------\n\n'
-        for params, mean_score, scores in clf.grid_scores_:
-            out += u'{:0.4f} (±{:0.4f}) for {}\n'.format(mean_score, scores.std(), params)
-
-    with codecs.open(os.path.join(outdir, "log.txt"), "w", encoding="utf8") as fd:
+    with codecs.open(os.path.join(outdir, "log-accuracy.txt"), "w", encoding="utf8") as fd:
         fd.write(out)
 
-    plot_learning_curve(outdir, bdt, x, y)
+    if 'selection' in setup.get('features', []):
+        run_feature_elimination(outdir, bdt, x, y, setup)
+
+    if 'parameters' in setup.get('features', []):
+        run_grid_search(outdir, bdt, x, y)
+
+    if 'learning' in setup.get('features', []):
+        plot_learning_curve(outdir, bdt, x, y)
 
     logging.info("training bdt")
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=.2)
@@ -156,6 +131,43 @@ def evaluate(config, tree):
         scores = bdt.decision_function(data)
     scores = np.array([(s,) for s in scores], [('bdt', 'float64')])
     tree.mva(array2tree(scores))
+
+
+def run_feature_elimination(outdir, bdt, x, y, setup):
+    logging.info("starting feature selection")
+    rfecv = RFECV(estimator=bdt, step=1, cv=CV, scoring='roc_auc')  # new in 18.1: , n_jobs=NJOBS)
+    rfecv.fit(x, y)
+
+    plot_feature_elimination(outdir, rfecv)
+
+    out = u'\nFeature selection\n=================\n\n'
+    out += u'optimal feature count: {}\n\nranking\n-------\n'.format(rfecv.n_features_)
+    for n, v in enumerate(setup["variables"]):
+        out += u'{:30}: {:>5}\n'.format(v, rfecv.ranking_[n])
+    with codecs.open(os.path.join(outdir, "log-feature-elimination.txt"), "w", encoding="utf8") as fd:
+        fd.write(out)
+
+
+def run_grid_search(outdir, bdt, x, y):
+    logging.info('starting hyper-parameter optimization')
+    param_grid = {
+        "n_estimators": [500, 1000, 2000, 5000],
+        "max_depth": [3, 4, 5, 6, 7, 8],
+        "learning_rate": [.002, .005, .01, .02, .1, .2]
+    }
+
+    clf = grid_search.GridSearchCV(bdt, param_grid, cv=CV, scoring='roc_auc', n_jobs=NJOBS)
+    clf.fit(x, y)
+
+    out = '\nHyper-parameter optimization\n'
+    out += '============================\n\n'
+    out += 'Best estimator: {}\n'.format(clf.best_estimator_)
+    out += '\nFull Scores\n'
+    out += '-----------\n\n'
+    for params, mean_score, scores in clf.grid_scores_:
+        out += u'{:0.4f} (±{:0.4f}) for {}\n'.format(mean_score, scores.std(), params)
+    with codecs.open(os.path.join(outdir, "log-hyper-parameters.txt"), "w", encoding="utf8") as fd:
+        fd.write(out)
 
 
 def plot_correlations(outdir, vars, sig, bkg):
