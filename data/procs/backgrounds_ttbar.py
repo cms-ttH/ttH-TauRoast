@@ -121,6 +121,7 @@ BasicProcess(
         "TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_faster_v5_v1",
         "TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_faster_v5_v2",
         "TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_faster_v6_v1",
+        "TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_faster_v7_v1",
     ],
     # cross_section=831.76 * wleptonic * (1 - wleptonic),
     cross_section=182 * 2,
@@ -134,6 +135,7 @@ BasicProcess(
     paths=[
         "TTTo2L2Nu_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_faster_v5_v1",
         "TTTo2L2Nu_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_faster_v6_v1",
+        "TTTo2L2Nu_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_faster_v7_v1",
     ],
     # cross_section=831.76 * wleptonic ** 2,
     cross_section=87.3,

@@ -135,6 +135,7 @@ BasicProcess(
     paths=[
         "ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_faster_v5_v1",
         "ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_faster_v6_v1",
+        "ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_faster_v7_v1",
     ],
     # cross_section=0.5085 * (1 - 0.577),
     cross_section=0.2586,
