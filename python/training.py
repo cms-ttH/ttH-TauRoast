@@ -28,6 +28,7 @@ from ttH.TauRoast.external.sklearn_to_tmva import gbr_to_tmva
 
 matplotlib.style.use('ggplot')
 
+CV = 4
 NJOBS = 32
 
 
@@ -79,19 +80,21 @@ def train(config):
     #                          algorithm='SAMME',
     #                          n_estimators=800,
     #                          learning_rate=0.5)
-    bdt = GradientBoostingClassifier(n_estimators=500,
-                                     max_depth=3,
+    bdt = GradientBoostingClassifier(n_estimators=2000,
+                                     max_depth=6,
                                      subsample=0.5,
                                      max_features=0.5,
-                                     learning_rate=0.02)
+                                     min_samples_leaf=10,
+                                     min_samples_split=20,
+                                     learning_rate=0.01)
 
     logging.info("starting cross validation")
-    scores = cross_validation.cross_val_score(bdt, x, y, scoring="roc_auc", n_jobs=NJOBS, cv=5)
+    scores = cross_validation.cross_val_score(bdt, x, y, scoring="roc_auc", n_jobs=NJOBS, cv=CV)
     out = u'training accuracy: {} ± {}\n'.format(scores.mean(), scores.std())
 
     if 'selection' in setup.get('features', []):
         logging.info("starting feature selection")
-        rfecv = RFECV(estimator=bdt, step=1, cv=5, scoring='roc_auc')  # new in 18.1: , n_jobs=NJOBS)
+        rfecv = RFECV(estimator=bdt, step=1, cv=CV, scoring='roc_auc')  # new in 18.1: , n_jobs=NJOBS)
         rfecv.fit(x, y)
 
         plot_feature_elimination(outdir, rfecv)
@@ -104,12 +107,12 @@ def train(config):
     if 'parameters' in setup.get('features', []):
         logging.info('starting hyper-parameter optimization')
         param_grid = {
-            "n_estimators": [50, 200, 500, 1000],
-            "max_depth": [1, 2, 3, 4, 5, 6],
-            "learning_rate": [.02, .1, .2, .5, 1.]
+            "n_estimators": [500, 1000, 2000, 5000],
+            "max_depth": [3, 4, 5, 6, 7, 8],
+            "learning_rate": [.002, .005, .01, .02, .1, .2]
         }
 
-        clf = grid_search.GridSearchCV(bdt, param_grid, cv=5, scoring='roc_auc', n_jobs=NJOBS)
+        clf = grid_search.GridSearchCV(bdt, param_grid, cv=CV, scoring='roc_auc', n_jobs=NJOBS)
         clf.fit(x, y)
 
         out += '\nHyper-parameter optimization\n'
@@ -186,7 +189,7 @@ def plot_inputs(outdir, vars, sig, bkg):
 def plot_learning_curve(outdir, cls, x, y):
     logging.info("creating learning curve")
     train_sizes, train_scores, test_scores = learning_curve(cls, x, y,
-                                                            cv=ShuffleSplit(len(x), n_iter=100, test_size=0.2),
+                                                            cv=ShuffleSplit(len(x), n_iter=100, test_size=1.0 / CV),
                                                             n_jobs=NJOBS,
                                                             train_sizes=np.linspace(.1, .9, 5),
                                                             scoring='roc_auc')
