@@ -29,7 +29,7 @@ from ttH.TauRoast.external.sklearn_to_tmva import gbr_to_tmva
 matplotlib.style.use('ggplot')
 
 CV = 4
-NJOBS = 32
+NJOBS = 48
 
 
 def load(config):
@@ -80,13 +80,13 @@ def train(config):
     #                          algorithm='SAMME',
     #                          n_estimators=800,
     #                          learning_rate=0.5)
-    bdt = GradientBoostingClassifier(n_estimators=2000,
-                                     max_depth=6,
+    bdt = GradientBoostingClassifier(n_estimators=500,
+                                     max_depth=3,
                                      subsample=0.5,
                                      max_features=0.5,
                                      min_samples_leaf=10,
                                      min_samples_split=20,
-                                     learning_rate=0.01)
+                                     learning_rate=0.02)
 
     logging.info("starting cross validation")
     scores = cross_validation.cross_val_score(bdt, x, y, scoring="roc_auc", n_jobs=NJOBS, cv=CV)
