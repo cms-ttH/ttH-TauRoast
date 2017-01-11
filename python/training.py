@@ -107,6 +107,12 @@ def train(config):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=.2)
     bdt.fit(x_train, y_train)
 
+    out = u'Feature importance\n===================\n\n'
+    for var, score in sorted(zip(setup['variables'], bdt.feature_importances_), key=lambda (x, y): y):
+        out += '{:30}: {:>10.4f}\n'.format(var, score)
+    with codecs.open(os.path.join(outdir, "log-feature-importance.txt"), "w", encoding="utf8") as fd:
+        fd.write(out)
+
     fn = os.path.join(outdir, "bdt", "bdt.pkl")
     if not os.path.exists(os.path.dirname(fn)):
         os.makedirs(os.path.dirname(fn))
@@ -140,7 +146,7 @@ def run_feature_elimination(outdir, bdt, x, y, setup):
 
     plot_feature_elimination(outdir, rfecv)
 
-    out = u'\nFeature selection\n=================\n\n'
+    out = u'Feature selection\n=================\n\n'
     out += u'optimal feature count: {}\n\nranking\n-------\n'.format(rfecv.n_features_)
     for n, v in enumerate(setup["variables"]):
         out += u'{:30}: {:>5}\n'.format(v, rfecv.ranking_[n])
