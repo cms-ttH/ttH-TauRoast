@@ -230,13 +230,17 @@ def plot_learning_curve(outdir, cls, x, y):
 
 
 def plot_output(outdir, cls, data):
+    outputs = []
     for x, y, label in data:
         sig = cls.decision_function(x[y > .5]).ravel()
         bkg = cls.decision_function(x[y < .5]).ravel()
+        outputs.append((sig, bkg, label))
 
-        bins = np.linspace(min(np.min(v) for v in (sig, bkg)),
-                           max(np.max(v) for v in (sig, bkg)),
-                           40)
+    bins = np.linspace(min(np.min(v) for v in (sig, bkg) for (sig, bkg, _) in outputs),
+                       max(np.max(v) for v in (sig, bkg) for (sig, bkg, _) in outputs),
+                       40)
+
+    for sig, bkg, label in outputs:
         if label == 'training':
             sns.distplot(bkg, bins=bins, color='r', kde=False, norm_hist=True, label='background (training)')
             sns.distplot(sig, bins=bins, color='b', kde=False, norm_hist=True, label='signal (training)')
