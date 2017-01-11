@@ -88,18 +88,12 @@ def train(config):
                                      min_samples_split=20,
                                      learning_rate=0.02)
 
-    logging.info("starting cross validation")
-    scores = cross_validation.cross_val_score(bdt, x, y, scoring="roc_auc", n_jobs=NJOBS, cv=CV)
-    out = u'training accuracy: {} ± {}\n'.format(scores.mean(), scores.std())
-    with codecs.open(os.path.join(outdir, "log-accuracy.txt"), "w", encoding="utf8") as fd:
-        fd.write(out)
-
+    if 'validation' in setup.get('features', []):
+        run_cross_validation(outdir, bdt, x, y)
     if 'selection' in setup.get('features', []):
         run_feature_elimination(outdir, bdt, x, y, setup)
-
     if 'parameters' in setup.get('features', []):
         run_grid_search(outdir, bdt, x, y)
-
     if 'learning' in setup.get('features', []):
         plot_learning_curve(outdir, bdt, x, y)
 
@@ -137,6 +131,14 @@ def evaluate(config, tree):
         scores = bdt.decision_function(data)
     scores = np.array([(s,) for s in scores], [('bdt', 'float64')])
     tree.mva(array2tree(scores))
+
+
+def run_cross_validation(outdir, bdt, x, y):
+    logging.info("starting cross validation")
+    scores = cross_validation.cross_val_score(bdt, x, y, scoring="roc_auc", n_jobs=NJOBS, cv=CV)
+    out = u'training accuracy: {} ± {}\n'.format(scores.mean(), scores.std())
+    with codecs.open(os.path.join(outdir, "log-accuracy.txt"), "w", encoding="utf8") as fd:
+        fd.write(out)
 
 
 def run_feature_elimination(outdir, bdt, x, y, setup):
