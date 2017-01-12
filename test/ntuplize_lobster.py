@@ -76,7 +76,11 @@ for path in datasets(tag):
         category=category,
         merge_size='3g',
         pset='ntuplize.py',
-        arguments=params
+        arguments=params,
+        sandbox=[
+            cmssw.Sandbox(release='/afs/crc.nd.edu/user/m/mwolf3/work/ttH/releases/CMSSW_8_0_21'),
+            cmssw.Sandbox(release='/afs/crc.nd.edu/user/m/mwolf3/work/ttH/releases/CMSSW_8_0_21_rh7')
+        ]
     ))
 
 config = Config(
