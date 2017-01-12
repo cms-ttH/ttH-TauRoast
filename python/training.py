@@ -116,8 +116,10 @@ def train(config):
         out = u'Feature importance\n===================\n\n'
         for var, score in sorted(zip(setup['variables'], bdt.feature_importances_), key=lambda (x, y): y):
             out += '{:30}: {:>10.4f}\n'.format(var, score)
-        with codecs.open(os.path.join(outdir, "log-feature-importance-{}.txt".format(n)), "w", encoding="utf8") as fd:
+        with codecs.open(os.path.join(outdir, "bdt-{}".format(n), "log-feature-importance.txt"), "w", encoding="utf8") as fd:
             fd.write(out)
+        with codecs.open(os.path.join(outdir, "bdt-{}".format(n), "configuration.txt"), "w", encoding="utf8") as fd:
+            fd.write('{}\n'.format(setup['trees'][n]))
 
         fn = os.path.join(outdir, "bdt-{}".format(n), "bdt.pkl")
         if not os.path.exists(os.path.dirname(fn)):
@@ -149,7 +151,7 @@ def run_cross_validation(outdir, bdts, x, y):
     for n, bdt in enumerate(bdts):
         scores = cross_validation.cross_val_score(bdt, x, y, scoring="roc_auc", n_jobs=NJOBS, cv=CV)
         out = u'training accuracy: {} ± {}\n'.format(scores.mean(), scores.std())
-        with codecs.open(os.path.join(outdir, "log-accuracy-{}.txt".format(n)), "w", encoding="utf8") as fd:
+        with codecs.open(os.path.join(outdir, "bdt-{}".format(n), "log-accuracy.txt"), "w", encoding="utf8") as fd:
             fd.write(out)
 
 
@@ -164,14 +166,14 @@ def run_validation_curve(outdir, bdts, x_train, y_train, x_test, y_test):
             train_score[i] = 1 - roc_auc_score(y_train, pred)
 
         best = np.argmin(test_score)
-        line = plt.plot(test_score, label='configuration {}'.format(n))
+        line = plt.plot(test_score, label='BDT {}'.format(n))
         plt.plot(train_score, '--', color=line[-1].get_color())
 
         plt.xlabel("Number of boosting iterations")
         plt.ylabel("1 - area under ROC")
         plt.axvline(x=best, color=line[-1].get_color())
     plt.legend(loc='best')
-    plt.savefig(os.path.join(outdir, 'validation_curve.png'))
+    plt.savefig(os.path.join(outdir, 'validation-curve.png'))
     plt.close()
 
 
@@ -300,7 +302,7 @@ def plot_output(outdir, bdts, data):
         plt.xlabel('BDT output')
 
         plt.legend(loc='best')
-        plt.savefig(os.path.join(outdir, 'output-{}.png'.format(n)))
+        plt.savefig(os.path.join(outdir, 'bdt-{}'.format(n), 'output.png'.format(n)))
         plt.close()
 
 
@@ -309,7 +311,7 @@ def plot_roc(outdir, bdts, x_train, y_train, x_test, y_test):
         decisions = cls.decision_function(x_test)
         fpr, tpr, thresholds = roc_curve(y_test, decisions)
         roc_auc = auc(fpr, tpr)
-        line = plt.plot(fpr, tpr, lw=1, label='ROC for {} (area = {:0.2f})'.format(n, roc_auc))
+        line = plt.plot(fpr, tpr, lw=1, label='ROC for BDT {} (area = {:0.2f})'.format(n, roc_auc))
 
         decisions = cls.decision_function(x_train)
         fpr, tpr, thresholds = roc_curve(y_train, decisions)
