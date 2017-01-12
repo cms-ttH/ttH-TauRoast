@@ -19,7 +19,7 @@ from sklearn.externals import joblib
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.feature_selection import RFECV
 from sklearn.learning_curve import learning_curve
-from sklearn.metrics import roc_curve, auc
+from sklearn.metrics import roc_curve, auc, roc_auc_score
 from sklearn import grid_search
 
 from root_numpy import array2tree, root2array, rec2array, tree2array
@@ -80,12 +80,12 @@ def train(config):
     #                          algorithm='SAMME',
     #                          n_estimators=800,
     #                          learning_rate=0.5)
-    bdt = GradientBoostingClassifier(n_estimators=500,
+    leaf_size = int(0.05 * len(x) * (CV - 1) / float(CV))
+    bdt = GradientBoostingClassifier(n_estimators=5000,
                                      max_depth=3,
-                                     subsample=0.5,
-                                     max_features=0.5,
-                                     min_samples_leaf=10,
-                                     min_samples_split=20,
+                                     # subsample=0.5,
+                                     max_features='sqrt',
+                                     min_samples_leaf=leaf_size,
                                      learning_rate=0.02)
 
     if 'validation' in setup.get('features', []):
@@ -100,6 +100,9 @@ def train(config):
     logging.info("training bdt")
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=.2)
     bdt.fit(x_train, y_train)
+
+    if 'validation_curve' in setup.get('features', []):
+        run_validation_curve(outdir, [bdt], x_train, y_train, x_test, y_test)
 
     out = u'Feature importance\n===================\n\n'
     for var, score in sorted(zip(setup['variables'], bdt.feature_importances_), key=lambda (x, y): y):
@@ -139,6 +142,28 @@ def run_cross_validation(outdir, bdt, x, y):
     out = u'training accuracy: {} ± {}\n'.format(scores.mean(), scores.std())
     with codecs.open(os.path.join(outdir, "log-accuracy.txt"), "w", encoding="utf8") as fd:
         fd.write(out)
+
+
+def run_validation_curve(outdir, bdts, x_train, y_train, x_test, y_test):
+    logging.info("saving validation curve")
+    for n, bdt in enumerate(bdts):
+        test_score, train_score = np.empty(len(bdt.estimators_)), np.empty(len(bdt.estimators_))
+
+        for i, pred in enumerate(bdt.staged_decision_function(x_test)):
+            test_score[i] = 1 - roc_auc_score(y_test, pred)
+        for i, pred in enumerate(bdt.staged_decision_function(x_train)):
+            train_score[i] = 1 - roc_auc_score(y_train, pred)
+
+        best = np.argmin(test_score)
+        line = plt.plot(test_score, label='BDT')
+        plt.plot(train_score, '--', color=line[-1].get_color())
+
+        plt.xlabel("Number of boosting iterations")
+        plt.ylabel("1 - area under ROC")
+        plt.axvline(x=best, color=line[-1].get_color())
+    plt.legend('best')
+    plt.savefig(os.path.join(outdir, 'validation_curve.png'))
+    plt.close()
 
 
 def run_feature_elimination(outdir, bdt, x, y, setup):
