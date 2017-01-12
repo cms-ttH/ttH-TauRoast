@@ -222,7 +222,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    ak4jets_token_ = consumes<pat::JetCollection>(config.getParameter<edm::InputTag>("jets"));
    gen_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("prunedGenParticles"));
    gen_jets_token_ = consumes<reco::GenJetCollection>(config.getParameter<edm::InputTag>("genJets"));
-   met_token_ = consumes<pat::METCollection>(edm::InputTag("pfMet"));
+   met_token_ = consumes<pat::METCollection>(edm::InputTag("slimmedMETs"));
    trig_token_ = consumes<edm::TriggerResults>(edm::InputTag("TriggerResults", "", config.getParameter<bool>("reHLT") ? "HLT2" : "HLT"));
 
    genJetsToken_ = consumes<reco::GenJetCollection>(edm::InputTag("ak4GenJetsCustom"));
