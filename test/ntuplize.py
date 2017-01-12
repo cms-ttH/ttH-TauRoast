@@ -46,7 +46,7 @@ options.register("reHLT", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
                  "Indicate if the HLT has been re-run.")
-options.register("globalTag", "80X_mcRun2_asymptotic_2016_miniAODv2_v1",
+options.register("globalTag", "80X_mcRun2_asymptotic_2016_TrancheIV_v7",
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.string,
                  "Global tag to use")
@@ -98,12 +98,26 @@ process.jetPath = cms.Path(
     process.patJetsReapplyJEC
 )
 
+from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
+
+# If you only want to re-correct and get the proper uncertainties
+runMetCorAndUncFromMiniAOD(process,
+                           isData=options.data)
+
+# If you would like to re-cluster and get the proper uncertainties
+# runMetCorAndUncFromMiniAOD(process,
+#                        isData=True (or False),
+#                        pfCandColl=cms.InputTag("packedPFCandidates"),
+#                        recoMetFromPFCs=True,
+#                        )
+
 process.load("RecoEgamma.ElectronIdentification.ElectronMVAValueMapProducer_cfi")
 process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
 process.load("ttH.LeptonID.ttHLeptons_cfi")
 process.load("ttH.TauRoast.genHadronMatching_cfi")
 
 process.lepPath = cms.Path(
+    process.fullPatMetSequence *
     process.electronMVAValueMapProducer *
     process.ttHLeptons
 )
