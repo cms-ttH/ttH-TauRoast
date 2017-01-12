@@ -2,28 +2,28 @@
 
 channel: ttl
 generator: pow
-ntupledir: /hadoop/store/user/matze/ttH/mcprod_v1/
-outdir: ~/www/ttH/mcprod_v1/fast_ttH2Nonbb
+ntupledir: /hadoop/store/user/matze/ttH/v1
+outdir: ~/www/ttH/v1/verify_ttH2Nonbb
 histformat: "{p}_{c}_{v}"
 
 # lumi: 2517
 lumi: 30000
 
 plot:
-  - ttH2Nonbb_tranche3
-  - ttH2Nonbb_tranche3_fast
+  - ttH2Nonbb_125_signal
+  - ttH2Nonbb_125_train
 
 plot override:
     show ratio: false
     scale factor: norm
     signals:
-      - ttH2Nonbb_tranche3: r.kBlue
-      - ttH2Nonbb_tranche3_fast: r.kRed
+      - ttH2Nonbb_125_signal: r.kBlue
+      - ttH2Nonbb_125_train: r.kRed
 
 limits: []
 discriminants: []
 
-default cuts:
+signal cuts:
     - "l ID": lepton_id == superslim::Lepton::MVA
     - "τ ID": tau_id == superslim::Tau::IsoMVA03
     - "l pt": >
@@ -41,7 +41,7 @@ default cuts:
         len(jets) >= 3 and
         (btags(jets) >= 1 or btags(jets, true) >= 2)
 
-default weights: []
+signal weights: []
 
 # List of systematics to run when `-s` is specified
 systematics: []
