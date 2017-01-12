@@ -39,15 +39,10 @@ def load(config):
     return setup
 
 
-def train(config):
+def read_inputs(config, setup):
     from ttH.TauRoast.processing import Process
 
-    setup = load(config)
     fn = os.path.join(config.get("indir", config["outdir"]), "ntuple.root")
-
-    outdir = os.path.join(config["outdir"], 'sklearn')
-    if not os.path.exists(outdir):
-        os.makedirs(outdir)
 
     signal = None
     for p in sum([Process.expand(n) for n in setup['signals']], []):
@@ -66,6 +61,17 @@ def train(config):
             background = np.concatenate((background, b))
         else:
             background = b
+
+    return signal, background
+
+
+def train(config):
+    setup = load(config)
+    signal, background = read_inputs(config, setup)
+
+    outdir = os.path.join(config["outdir"], 'sklearn')
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
 
     plot_correlations(outdir, setup["variables"], signal, background)
     plot_inputs(outdir, setup["variables"], signal, background)
