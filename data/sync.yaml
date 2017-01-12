@@ -16,7 +16,8 @@ plot:
 
 limits: []
 
-categories: []
+categories:
+  - inclusive: ""
 
 default cuts:
     - "e/μ quality": "lepton_id == superslim::Lepton::MVA"
