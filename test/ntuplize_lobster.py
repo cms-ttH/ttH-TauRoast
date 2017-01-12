@@ -51,7 +51,7 @@ mc = Category(
 workflows = []
 for path in datasets(tag):
     _, major, minor, _ = path.split('/')
-    minor = mctag.sub('', minor)
+    minor = mctag(minor)
     label = (major + '_' + minor).replace('-', '_')
     mask = None
     params = ['globalTag=' + globaltag_mc, 'channels=ttl']
