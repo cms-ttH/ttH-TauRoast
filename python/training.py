@@ -2,6 +2,7 @@
 import codecs
 import logging
 import os
+import pickle
 import yaml
 
 import matplotlib
@@ -65,6 +66,17 @@ def read_inputs(config, setup):
     return signal, background
 
 
+def create_bdts(setup):
+    # dt = DecisionTreeClassifier(max_depth=3,
+    #                             min_samples_leaf=500)
+    # bdt = AdaBoostClassifier(dt,
+    #                          algorithm='SAMME',
+    #                          n_estimators=800,
+    #                          learning_rate=0.5)
+    for cfg in setup['trees']:
+        yield(GradientBoostingClassifier(**cfg))
+
+
 def train(config):
     setup = load(config)
     signal, background = read_inputs(config, setup)
@@ -80,53 +92,43 @@ def train(config):
     y = np.concatenate((np.ones(signal.shape[0]),
                         np.zeros(background.shape[0])))
 
-    # dt = DecisionTreeClassifier(max_depth=3,
-    #                             min_samples_leaf=500)
-    # bdt = AdaBoostClassifier(dt,
-    #                          algorithm='SAMME',
-    #                          n_estimators=800,
-    #                          learning_rate=0.5)
-    leaf_size = int(0.05 * len(x) * (CV - 1) / float(CV))
-    bdt = GradientBoostingClassifier(n_estimators=5000,
-                                     max_depth=3,
-                                     # subsample=0.5,
-                                     max_features='sqrt',
-                                     min_samples_leaf=leaf_size,
-                                     learning_rate=0.02)
+    bdts = list(create_bdts(setup))
 
     if 'validation' in setup.get('features', []):
-        run_cross_validation(outdir, bdt, x, y)
+        run_cross_validation(outdir, bdts, x, y)
     if 'selection' in setup.get('features', []):
-        run_feature_elimination(outdir, bdt, x, y, setup)
+        run_feature_elimination(outdir, bdts, x, y, setup)
     if 'parameters' in setup.get('features', []):
-        run_grid_search(outdir, bdt, x, y)
+        run_grid_search(outdir, bdts[0], x, y)
     if 'learning' in setup.get('features', []):
-        plot_learning_curve(outdir, bdt, x, y)
+        plot_learning_curve(outdir, bdts, x, y)
 
-    logging.info("training bdt")
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=.2)
-    bdt.fit(x_train, y_train)
+    logging.info("training bdt(s)")
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=1.0 / CV)
+    for bdt in bdts:
+        bdt.fit(x_train, y_train)
 
     if 'validation_curve' in setup.get('features', []):
-        run_validation_curve(outdir, [bdt], x_train, y_train, x_test, y_test)
-
-    out = u'Feature importance\n===================\n\n'
-    for var, score in sorted(zip(setup['variables'], bdt.feature_importances_), key=lambda (x, y): y):
-        out += '{:30}: {:>10.4f}\n'.format(var, score)
-    with codecs.open(os.path.join(outdir, "log-feature-importance.txt"), "w", encoding="utf8") as fd:
-        fd.write(out)
-
-    fn = os.path.join(outdir, "bdt", "bdt.pkl")
-    if not os.path.exists(os.path.dirname(fn)):
-        os.makedirs(os.path.dirname(fn))
-    joblib.dump(bdt, fn)
+        run_validation_curve(outdir, bdts, x_train, y_train, x_test, y_test)
 
     df = pd.DataFrame(x_train, columns=setup["variables"])
-    gbr_to_tmva(bdt, df, os.path.join(outdir, "weights.xml"))
+    for n, bdt in enumerate(bdts):
+        out = u'Feature importance\n===================\n\n'
+        for var, score in sorted(zip(setup['variables'], bdt.feature_importances_), key=lambda (x, y): y):
+            out += '{:30}: {:>10.4f}\n'.format(var, score)
+        with codecs.open(os.path.join(outdir, "log-feature-importance-{}.txt".format(n)), "w", encoding="utf8") as fd:
+            fd.write(out)
+
+        fn = os.path.join(outdir, "bdt-{}".format(n), "bdt.pkl")
+        if not os.path.exists(os.path.dirname(fn)):
+            os.makedirs(os.path.dirname(fn))
+        with open(fn, 'wb') as fd:
+            pickle.dump(bdt, fd)
+        gbr_to_tmva(bdt, df, os.path.join(outdir, "bdt-{}".format(n), "weights.xml"))
 
     logging.info("creating roc, output")
-    plot_roc(outdir, bdt, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')])
-    plot_output(outdir, bdt, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')])
+    plot_roc(outdir, bdts, x_train, y_train, x_test, y_test)
+    plot_output(outdir, bdts, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')])
 
 
 def evaluate(config, tree):
@@ -142,12 +144,13 @@ def evaluate(config, tree):
     tree.mva(array2tree(scores))
 
 
-def run_cross_validation(outdir, bdt, x, y):
+def run_cross_validation(outdir, bdts, x, y):
     logging.info("starting cross validation")
-    scores = cross_validation.cross_val_score(bdt, x, y, scoring="roc_auc", n_jobs=NJOBS, cv=CV)
-    out = u'training accuracy: {} ± {}\n'.format(scores.mean(), scores.std())
-    with codecs.open(os.path.join(outdir, "log-accuracy.txt"), "w", encoding="utf8") as fd:
-        fd.write(out)
+    for n, bdt in enumerate(bdts):
+        scores = cross_validation.cross_val_score(bdt, x, y, scoring="roc_auc", n_jobs=NJOBS, cv=CV)
+        out = u'training accuracy: {} ± {}\n'.format(scores.mean(), scores.std())
+        with codecs.open(os.path.join(outdir, "log-accuracy-{}.txt".format(n)), "w", encoding="utf8") as fd:
+            fd.write(out)
 
 
 def run_validation_curve(outdir, bdts, x_train, y_train, x_test, y_test):
@@ -161,30 +164,31 @@ def run_validation_curve(outdir, bdts, x_train, y_train, x_test, y_test):
             train_score[i] = 1 - roc_auc_score(y_train, pred)
 
         best = np.argmin(test_score)
-        line = plt.plot(test_score, label='BDT')
+        line = plt.plot(test_score, label='configuration {}'.format(n))
         plt.plot(train_score, '--', color=line[-1].get_color())
 
         plt.xlabel("Number of boosting iterations")
         plt.ylabel("1 - area under ROC")
         plt.axvline(x=best, color=line[-1].get_color())
-    plt.legend('best')
+    plt.legend(loc='best')
     plt.savefig(os.path.join(outdir, 'validation_curve.png'))
     plt.close()
 
 
-def run_feature_elimination(outdir, bdt, x, y, setup):
+def run_feature_elimination(outdir, bdts, x, y, setup):
     logging.info("starting feature selection")
-    rfecv = RFECV(estimator=bdt, step=1, cv=CV, scoring='roc_auc')  # new in 18.1: , n_jobs=NJOBS)
-    rfecv.fit(x, y)
+    for n, bdt in enumerate(bdts):
+        rfecv = RFECV(estimator=bdt, step=1, cv=CV, scoring='roc_auc')  # new in 18.1: , n_jobs=NJOBS)
+        rfecv.fit(x, y)
 
-    plot_feature_elimination(outdir, rfecv)
+        plot_feature_elimination(outdir, rfecv, n)
 
-    out = u'Feature selection\n=================\n\n'
-    out += u'optimal feature count: {}\n\nranking\n-------\n'.format(rfecv.n_features_)
-    for n, v in enumerate(setup["variables"]):
-        out += u'{:30}: {:>5}\n'.format(v, rfecv.ranking_[n])
-    with codecs.open(os.path.join(outdir, "log-feature-elimination.txt"), "w", encoding="utf8") as fd:
-        fd.write(out)
+        out = u'Feature selection\n=================\n\n'
+        out += u'optimal feature count: {}\n\nranking\n-------\n'.format(rfecv.n_features_)
+        for n, v in enumerate(setup["variables"]):
+            out += u'{:30}: {:>5}\n'.format(v, rfecv.ranking_[n])
+        with codecs.open(os.path.join(outdir, "log-feature-elimination-{}.txt".format(n)), "w", encoding="utf8") as fd:
+            fd.write(out)
 
 
 def run_grid_search(outdir, bdt, x, y):
@@ -219,11 +223,11 @@ def plot_correlations(outdir, vars, sig, bkg):
         plt.close()
 
 
-def plot_feature_elimination(outdir, cls):
+def plot_feature_elimination(outdir, cls, n):
     plt.plot(range(1, len(cls.grid_scores_) + 1), cls.grid_scores_)
     plt.xlabel('# features')
     plt.ylabel('Score (ROC auc)')
-    plt.savefig(os.path.join(outdir, 'feature_elimination.png'))
+    plt.savefig(os.path.join(outdir, 'feature_elimination-{}.png'.format(n)))
 
 
 def plot_inputs(outdir, vars, sig, bkg):
@@ -237,72 +241,80 @@ def plot_inputs(outdir, vars, sig, bkg):
         plt.close()
 
 
-def plot_learning_curve(outdir, cls, x, y):
+def plot_learning_curve(outdir, bdts, x, y):
     logging.info("creating learning curve")
-    train_sizes, train_scores, test_scores = learning_curve(cls, x, y,
-                                                            cv=ShuffleSplit(len(x), n_iter=100, test_size=1.0 / CV),
-                                                            n_jobs=NJOBS,
-                                                            train_sizes=np.linspace(.1, .9, 5),
-                                                            scoring='roc_auc')
-    train_scores_mean = np.mean(train_scores, axis=1)
-    train_scores_std = np.std(train_scores, axis=1)
-    test_scores_mean = np.mean(test_scores, axis=1)
-    test_scores_std = np.std(test_scores, axis=1)
+    for n, cls in enumerate(bdts):
+        train_sizes, train_scores, test_scores = learning_curve(cls, x, y,
+                                                                cv=ShuffleSplit(len(x),
+                                                                                n_iter=100,
+                                                                                test_size=1.0 / CV),
+                                                                n_jobs=NJOBS,
+                                                                train_sizes=np.linspace(.1, .9, 5),
+                                                                scoring='roc_auc')
+        train_scores_mean = np.mean(train_scores, axis=1)
+        train_scores_std = np.std(train_scores, axis=1)
+        test_scores_mean = np.mean(test_scores, axis=1)
+        test_scores_std = np.std(test_scores, axis=1)
 
-    plt.fill_between(train_sizes,
-                     train_scores_mean - train_scores_std,
-                     train_scores_mean + train_scores_std,
-                     alpha=.2, color='r')
-    plt.fill_between(train_sizes,
-                     test_scores_mean - test_scores_std,
-                     test_scores_mean + test_scores_std,
-                     alpha=.2, color='g')
-    plt.plot(train_sizes, train_scores_mean, 'o-', color='r', label='Training score')
-    plt.plot(train_sizes, test_scores_mean, 'o-', color='g', label='Cross-validation score')
+        plt.fill_between(train_sizes,
+                         train_scores_mean - train_scores_std,
+                         train_scores_mean + train_scores_std,
+                         alpha=.2, color='r')
+        plt.fill_between(train_sizes,
+                         test_scores_mean - test_scores_std,
+                         test_scores_mean + test_scores_std,
+                         alpha=.2, color='g')
+        plt.plot(train_sizes, train_scores_mean, 'o-', color='r', label='Training score')
+        plt.plot(train_sizes, test_scores_mean, 'o-', color='g', label='Cross-validation score')
 
-    plt.xlabel("Sample size")
-    plt.ylabel("Score (ROC area)")
+        plt.xlabel("Sample size")
+        plt.ylabel("Score (ROC area)")
 
-    plt.legend()
-    plt.savefig(os.path.join(outdir, 'learning_curve.png'))
-    plt.close()
-
-
-def plot_output(outdir, cls, data):
-    outputs = []
-    for x, y, label in data:
-        sig = cls.decision_function(x[y > .5]).ravel()
-        bkg = cls.decision_function(x[y < .5]).ravel()
-        outputs.append((sig, bkg, label))
-
-    bins = np.linspace(min(np.min(v) for v in (sig, bkg) for (sig, bkg, _) in outputs),
-                       max(np.max(v) for v in (sig, bkg) for (sig, bkg, _) in outputs),
-                       40)
-
-    for sig, bkg, label in outputs:
-        if label == 'training':
-            sns.distplot(bkg, bins=bins, color='r', kde=False, norm_hist=True, label='background (training)')
-            sns.distplot(sig, bins=bins, color='b', kde=False, norm_hist=True, label='signal (training)')
-        else:
-            centers = (bins[:-1] + bins[1:]) * .5
-            bcounts, _ = np.histogram(bkg, bins=bins, density=True)
-            plt.plot(centers, bcounts, 'o', color='r', label='background (testing)')
-            scounts, _ = np.histogram(sig, bins=bins, density=True)
-            plt.plot(centers, scounts, 'o', color='b', label='signal (testing)')
-    plt.xlabel('BDT output')
-
-    plt.legend(loc='best')
-    plt.savefig(os.path.join(outdir, 'output.png'))
-    plt.close()
+        plt.legend()
+        plt.savefig(os.path.join(outdir, 'learning-curve-{}.png'.format(n)))
+        plt.close()
 
 
-def plot_roc(outdir, cls, data):
-    for x, y, label in data:
-        decisions = cls.decision_function(x)
-        fpr, tpr, thresholds = roc_curve(y, decisions)
+def plot_output(outdir, bdts, data):
+    for n, cls in enumerate(bdts):
+        outputs = []
+        for x, y, label in data:
+            sig = cls.decision_function(x[y > .5]).ravel()
+            bkg = cls.decision_function(x[y < .5]).ravel()
+            outputs.append((sig, bkg, label))
+
+        bins = np.linspace(min(np.min(v) for v in (sig, bkg) for (sig, bkg, _) in outputs),
+                           max(np.max(v) for v in (sig, bkg) for (sig, bkg, _) in outputs),
+                           40)
+
+        for sig, bkg, label in outputs:
+            if label == 'training':
+                sns.distplot(bkg, bins=bins, color='r', kde=False, norm_hist=True, label='background (training)')
+                sns.distplot(sig, bins=bins, color='b', kde=False, norm_hist=True, label='signal (training)')
+            else:
+                centers = (bins[:-1] + bins[1:]) * .5
+                bcounts, _ = np.histogram(bkg, bins=bins, density=True)
+                plt.plot(centers, bcounts, 'o', color='r', label='background (testing)')
+                scounts, _ = np.histogram(sig, bins=bins, density=True)
+                plt.plot(centers, scounts, 'o', color='b', label='signal (testing)')
+        plt.xlabel('BDT output')
+
+        plt.legend(loc='best')
+        plt.savefig(os.path.join(outdir, 'output-{}.png'.format(n)))
+        plt.close()
+
+
+def plot_roc(outdir, bdts, x_train, y_train, x_test, y_test):
+    for n, cls in enumerate(bdts):
+        decisions = cls.decision_function(x_test)
+        fpr, tpr, thresholds = roc_curve(y_test, decisions)
         roc_auc = auc(fpr, tpr)
+        line = plt.plot(fpr, tpr, lw=1, label='ROC for {} (area = {:0.2f})'.format(n, roc_auc))
 
-        plt.plot(fpr, tpr, lw=1, label='ROC for {} (area = {:0.2f})'.format(label, roc_auc))
+        decisions = cls.decision_function(x_train)
+        fpr, tpr, thresholds = roc_curve(y_train, decisions)
+        plt.plot(fpr, tpr, '--', lw=1, color=line[-1].get_color())
+
     plt.xlabel('Background efficiency')
     plt.ylabel('Signal efficiency')
 
