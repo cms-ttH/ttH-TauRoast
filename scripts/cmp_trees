@@ -5,6 +5,7 @@ from root_numpy import root2array
 import argparse
 import itertools
 import matplotlib
+matplotlib.use('Agg')
 import matplotlib.gridspec as gs
 import matplotlib.pyplot as plt
 import numpy as np
