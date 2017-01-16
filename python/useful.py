@@ -83,7 +83,7 @@ def dR(one, two):
 
 
 def btag(jet):
-    return jet.csv() > 0.80
+    return jet.csv() > 0.8484
 
 __mva = None
 
@@ -104,7 +104,7 @@ r.gInterpreter.Declare("""
         }
 
         template<typename T> int len(T t) { return t.size(); }
-        template<typename T> bool btag(T j, bool loose=false) { return j.csv() > (loose ? 0.46 : 0.80); }
+        template<typename T> bool btag(T j, bool loose=false) { return j.csv() > (loose ? 0.5426 : 0.8484); }
         template<typename T> int btags(T js, bool loose=false) {
             int res = 0;
             for (const auto& j: js)
