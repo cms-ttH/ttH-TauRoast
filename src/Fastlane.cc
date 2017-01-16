@@ -30,7 +30,17 @@ lower(const std::string& s)
 
 #ifndef OLDCRAP
 fastlane::CSVHelper::CSVHelper()
-   : reader_(BTagEntry::OP_RESHAPING, "central", {})
+   : reader_(BTagEntry::OP_RESHAPING, "central", {
+         "up_jes", "down_jes",
+         "up_hf", "down_hf",
+         "up_hfstats1", "down_hfstats1",
+         "up_hfstats2", "down_hfstats2",
+         "up_lf", "down_lf",
+         "up_lfstats1", "down_lfstats1",
+         "up_lfstats2", "down_lfstats2",
+         "up_cferr1", "down_cferr1",
+         "up_cferr2", "down_cferr2"
+     })
 {
    edm::FileInPath fn("ttH/TauRoast/data/CSVv2_ichep.csv");
    BTagCalibration calib("csvv2", fn.fullPath());
@@ -41,18 +51,18 @@ fastlane::CSVHelper::CSVHelper()
 }
 
 float
-fastlane::CSVHelper::weight(const std::vector<superslim::Jet>& jets)
+fastlane::CSVHelper::weight(const std::vector<superslim::Jet>& jets, const std::string& sys)
 {
    float w = 1.;
 
    for (const auto& j: jets) {
       float jw = 1.;
       if (std::abs(j.flavor()) == 5) {
-         jw = reader_.eval_auto_bounds("central", BTagEntry::FLAV_B, j.eta(), j.pt(), j.csv());
+         jw = reader_.eval_auto_bounds(sys, BTagEntry::FLAV_B, j.eta(), j.pt(), j.csv());
       } else if (std::abs(j.flavor()) == 4) {
-         jw = reader_.eval_auto_bounds("central", BTagEntry::FLAV_C, j.eta(), j.pt(), j.csv());
+         jw = reader_.eval_auto_bounds(sys, BTagEntry::FLAV_C, j.eta(), j.pt(), j.csv());
       } else {
-         jw = reader_.eval_auto_bounds("central", BTagEntry::FLAV_UDSG, j.eta(), j.pt(), j.csv());
+         jw = reader_.eval_auto_bounds(sys, BTagEntry::FLAV_UDSG, j.eta(), j.pt(), j.csv());
       }
       w *= jw;
    }
@@ -417,7 +427,24 @@ fastlane::update_weights(const std::string& process, std::unordered_map<std::str
 
    static auto csvhelper = CSVHelper();
 
-   ws[lower("CSVWeight")] = csvhelper.weight(e.jets());
+   std::string csv_sys = "central";
+   if (lower(sys) == "jesup") {
+      csv_sys = "up_jes";
+   } else if (lower(sys) == "jesdown") {
+      csv_sys = "down_jes";
+   }
+
+   ws[lower("CSVWeight")] = csvhelper.weight(e.jets(), csv_sys);
+   for (const std::string& dir: {"up", "down"}) {
+      ws[lower("CMS_ttHl_btag_HF") + dir] = csvhelper.weight(e.jets(), dir + "_hf");
+      ws[lower("CMS_ttHl_btag_HFStats1") + dir] = csvhelper.weight(e.jets(), dir + "_hfstats1");
+      ws[lower("CMS_ttHl_btag_HFStats2") + dir] = csvhelper.weight(e.jets(), dir + "_hfstats2");
+      ws[lower("CMS_ttHl_btag_LF") + dir] = csvhelper.weight(e.jets(), dir + "_lf");
+      ws[lower("CMS_ttHl_btag_LFStats1") + dir] = csvhelper.weight(e.jets(), dir + "_lfstats1");
+      ws[lower("CMS_ttHl_btag_LFStats2") + dir] = csvhelper.weight(e.jets(), dir + "_lfstats2");
+      ws[lower("CMS_ttHl_btag_cErr1") + dir] = csvhelper.weight(e.jets(), dir + "_cferr1");
+      ws[lower("CMS_ttHl_btag_cErr2") + dir] = csvhelper.weight(e.jets(), dir + "_cferr2");
+   }
 
    // =========
    // PU weight

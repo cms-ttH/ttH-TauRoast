@@ -15,7 +15,7 @@ namespace fastlane {
          CSVHelper();
          virtual ~CSVHelper() {};
 
-         float weight(const std::vector<superslim::Jet>&);
+         float weight(const std::vector<superslim::Jet>&, const std::string& sys="central");
 
       private:
          BTagCalibrationReader reader_;
