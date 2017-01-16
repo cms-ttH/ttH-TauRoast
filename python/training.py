@@ -66,14 +66,17 @@ def read_inputs(config, setup):
     return signal, background
 
 
-def create_bdts(setup):
+def create_bdts(outdir, setup):
     # dt = DecisionTreeClassifier(max_depth=3,
     #                             min_samples_leaf=500)
     # bdt = AdaBoostClassifier(dt,
     #                          algorithm='SAMME',
     #                          n_estimators=800,
     #                          learning_rate=0.5)
-    for cfg in setup['trees']:
+    for n, cfg in enumerate(setup['trees']):
+        dirname = os.path.join(outdir, 'bdt-{}'.format(n))
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
         yield(GradientBoostingClassifier(**cfg))
 
 
@@ -92,7 +95,7 @@ def train(config):
     y = np.concatenate((np.ones(signal.shape[0]),
                         np.zeros(background.shape[0])))
 
-    bdts = list(create_bdts(setup))
+    bdts = list(create_bdts(outdir, setup))
 
     if 'validation' in setup.get('features', []):
         run_cross_validation(outdir, bdts, x, y)
