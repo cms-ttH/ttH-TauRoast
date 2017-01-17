@@ -276,21 +276,23 @@ def plot_learning_curve(outdir, bdts, x, y):
         plt.ylabel("Score (ROC area)")
 
         plt.legend()
-        plt.savefig(os.path.join(outdir, 'learning-curve-{}.png'.format(n)))
+        plt.savefig(os.path.join(outdir, 'bdt-{}'.format(n), 'learning-curve.png'.format(n)))
         plt.close()
 
 
 def plot_output(outdir, bdts, data):
     for n, cls in enumerate(bdts):
         outputs = []
+        scores = []
         for x, y, label in data:
             sig = cls.decision_function(x[y > .5]).ravel()
             bkg = cls.decision_function(x[y < .5]).ravel()
             outputs.append((sig, bkg, label))
+            sig2 = cls.predict_proba(x[y > .5])[:, 1].ravel()
+            bkg2 = cls.predict_proba(x[y < .5])[:, 1].ravel()
+            scores.append((sig2, bkg2, label))
 
-        bins = np.linspace(min(np.min(v) for v in (sig, bkg) for (sig, bkg, _) in outputs),
-                           max(np.max(v) for v in (sig, bkg) for (sig, bkg, _) in outputs),
-                           40)
+        bins = np.linspace(-10, 10, 40)
 
         for sig, bkg, label in outputs:
             if label == 'training':
@@ -302,10 +304,28 @@ def plot_output(outdir, bdts, data):
                 plt.plot(centers, bcounts, 'o', color='r', label='background (testing)')
                 scounts, _ = np.histogram(sig, bins=bins, density=True)
                 plt.plot(centers, scounts, 'o', color='b', label='signal (testing)')
-        plt.xlabel('BDT output')
+        plt.xlabel('BDT decision-function')
 
         plt.legend(loc='best')
-        plt.savefig(os.path.join(outdir, 'bdt-{}'.format(n), 'output.png'.format(n)))
+        plt.savefig(os.path.join(outdir, 'bdt-{}'.format(n), 'decision-function.png'.format(n)))
+        plt.close()
+
+        bins = np.linspace(0, 1, 40)
+
+        for sig, bkg, label in scores:
+            if label == 'training':
+                sns.distplot(bkg, bins=bins, color='r', kde=False, norm_hist=True, label='background (training)')
+                sns.distplot(sig, bins=bins, color='b', kde=False, norm_hist=True, label='signal (training)')
+            else:
+                centers = (bins[:-1] + bins[1:]) * .5
+                bcounts, _ = np.histogram(bkg, bins=bins, density=True)
+                plt.plot(centers, bcounts, 'o', color='r', label='background (testing)')
+                scounts, _ = np.histogram(sig, bins=bins, density=True)
+                plt.plot(centers, scounts, 'o', color='b', label='signal (testing)')
+        plt.xlabel('BDT score')
+
+        plt.legend(loc='best')
+        plt.savefig(os.path.join(outdir, 'bdt-{}'.format(n), 'score.png'.format(n)))
         plt.close()
 
 
