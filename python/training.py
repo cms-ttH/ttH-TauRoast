@@ -106,10 +106,18 @@ def train(config):
     if 'learning' in setup.get('features', []):
         plot_learning_curve(outdir, bdts, x, y)
 
-    logging.info("training bdt(s)")
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=1.0 / CV)
-    for bdt in bdts:
-        bdt.fit(x_train, y_train)
+    if 'training' in setup.get('features', []):
+        logging.info("training bdt(s)")
+        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=1.0 / CV)
+        for bdt in bdts:
+            bdt.fit(x_train, y_train)
+    else:
+        count = len(bdts)
+        bdts = []
+        for n in range(count):
+            fn = os.path.join(outdir, "bdt-{}".format(n), "bdt.pkl")
+            with open(fn, 'rb') as fd:
+                bdts.append(pickle.load(fd))
 
     if 'validation_curve' in setup.get('features', []):
         run_validation_curve(outdir, bdts, x_train, y_train, x_test, y_test)
