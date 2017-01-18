@@ -116,6 +116,9 @@ process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
 process.load("ttH.LeptonID.ttHLeptons_cfi")
 process.load("ttH.TauRoast.genHadronMatching_cfi")
 
+process.ttHLeptons.LooseCSVWP = cms.double(0.5426)
+process.ttHLeptons.MediumCSVWP = cms.double(0.8484)
+
 process.lepPath = cms.Path(
     process.fullPatMetSequence *
     process.electronMVAValueMapProducer *
