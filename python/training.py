@@ -33,6 +33,16 @@ CV = 4
 NJOBS = 48
 
 
+def tmva_like(cls):
+    def fun(data):
+        ret = 0
+        for t in cls.estimators_[:, 0]:
+            r = t.tree_.predict(np.array([list(data)], dtype="float32")) / cls.n_estimators * 2
+            ret += r[0, 0]
+        return 2.0 / (1.0 + np.exp(-2.0 * ret)) - 1
+    return fun
+
+
 def load(config):
     datadir = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data')
     with open(os.path.join(datadir, 'mva.yaml')) as f:
@@ -106,9 +116,9 @@ def train(config):
     if 'learning' in setup.get('features', []):
         plot_learning_curve(outdir, bdts, x, y)
 
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=1.0 / CV)
     if 'training' in setup.get('features', []):
         logging.info("training bdt(s)")
-        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=1.0 / CV)
         for bdt in bdts:
             bdt.fit(x_train, y_train)
     else:
@@ -137,11 +147,16 @@ def train(config):
             os.makedirs(os.path.dirname(fn))
         with open(fn, 'wb') as fd:
             pickle.dump(bdt, fd)
-        gbr_to_tmva(bdt, df, os.path.join(outdir, "bdt-{}".format(n), "weights.xml"))
+        gbr_to_tmva(bdt, df, os.path.join(outdir, "bdt-{}".format(n), "weights.xml"), coef=2)
 
     logging.info("creating roc, output")
     plot_roc(outdir, bdts, x_train, y_train, x_test, y_test)
-    plot_output(outdir, bdts, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')])
+    plot_output(outdir, bdts, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')],
+                'decision-function.png', np.linspace(-7, 7, 40), lambda cls, data: cls.decision_function(data))
+    plot_output(outdir, bdts, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')],
+                'signal-probability.png', np.linspace(0, 1, 40), lambda cls, data: cls.predict_proba(data)[:, 1])
+    # plot_output(outdir, bdts, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')],
+    #             'tmva-like.png', np.linspace(-1, 1, 40), lambda cls, data: np.apply_along_axis(tmva_like(cls), 1, data))
 
 
 def evaluate(config, tree):
@@ -288,39 +303,15 @@ def plot_learning_curve(outdir, bdts, x, y):
         plt.close()
 
 
-def plot_output(outdir, bdts, data):
+def plot_output(outdir, bdts, data, filename, bins, fct):
     for n, cls in enumerate(bdts):
         outputs = []
-        scores = []
         for x, y, label in data:
-            sig = cls.decision_function(x[y > .5]).ravel()
-            bkg = cls.decision_function(x[y < .5]).ravel()
+            sig = fct(cls, x[y > .5]).ravel()
+            bkg = fct(cls, x[y < .5]).ravel()
             outputs.append((sig, bkg, label))
-            sig2 = cls.predict_proba(x[y > .5])[:, 1].ravel()
-            bkg2 = cls.predict_proba(x[y < .5])[:, 1].ravel()
-            scores.append((sig2, bkg2, label))
-
-        bins = np.linspace(-10, 10, 40)
 
         for sig, bkg, label in outputs:
-            if label == 'training':
-                sns.distplot(bkg, bins=bins, color='r', kde=False, norm_hist=True, label='background (training)')
-                sns.distplot(sig, bins=bins, color='b', kde=False, norm_hist=True, label='signal (training)')
-            else:
-                centers = (bins[:-1] + bins[1:]) * .5
-                bcounts, _ = np.histogram(bkg, bins=bins, density=True)
-                plt.plot(centers, bcounts, 'o', color='r', label='background (testing)')
-                scounts, _ = np.histogram(sig, bins=bins, density=True)
-                plt.plot(centers, scounts, 'o', color='b', label='signal (testing)')
-        plt.xlabel('BDT decision-function')
-
-        plt.legend(loc='best')
-        plt.savefig(os.path.join(outdir, 'bdt-{}'.format(n), 'decision-function.png'.format(n)))
-        plt.close()
-
-        bins = np.linspace(0, 1, 40)
-
-        for sig, bkg, label in scores:
             if label == 'training':
                 sns.distplot(bkg, bins=bins, color='r', kde=False, norm_hist=True, label='background (training)')
                 sns.distplot(sig, bins=bins, color='b', kde=False, norm_hist=True, label='signal (training)')
@@ -333,7 +324,7 @@ def plot_output(outdir, bdts, data):
         plt.xlabel('BDT score')
 
         plt.legend(loc='best')
-        plt.savefig(os.path.join(outdir, 'bdt-{}'.format(n), 'score.png'.format(n)))
+        plt.savefig(os.path.join(outdir, 'bdt-{}'.format(n), filename))
         plt.close()
 
 
