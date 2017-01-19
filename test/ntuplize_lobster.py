@@ -4,7 +4,7 @@ from lobster.core import AdvancedOptions, Category, Config, StorageConfiguration
 
 from ttH.TauRoast.datasets import datasets, mctag
 
-version = "v36"
+version = "v37"
 tag = "all"
 
 globaltag_mc = "80X_mcRun2_asymptotic_2016_TrancheIV_v7"
@@ -58,8 +58,12 @@ for path in datasets(tag):
     category = mc
 
     if '/Run2016' in path and path.endswith('MINIAOD'):
+        if '/Run2016H' in path:
+            gt = globaltag_data_h
+        else:
+            gt = globaltag_data
         mask = lumimask
-        params = ['data=True', 'globalTag=' + globaltag_data, 'channels=ttl']
+        params = ['data=True', 'globalTag=' + gt, 'channels=ttl']
         category = data
     elif label.startswith('ttH'):
         if 'tranche3' not in label:
