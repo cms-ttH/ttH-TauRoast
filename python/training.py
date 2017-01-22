@@ -170,7 +170,7 @@ def evaluate(config, tree):
     scores = []
     tmva = []
     if len(data) > 0:
-        scores = bdt.decision_function(data)
+        scores = bdt.predict_proba(data)[:, 1]
         tmva = np.apply_along_axis(tmva_like(bdt), 1, data)
     output = np.array(zip(scores, tmva), [('bdt', 'float64'), ('tmva', 'float64')])
     tree.mva(array2tree(output))
