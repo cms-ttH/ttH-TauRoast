@@ -31,13 +31,14 @@ matplotlib.style.use('ggplot')
 
 CV = 4
 NJOBS = 48
+COEF = 6
 
 
 def tmva_like(cls):
     def fun(data):
         ret = 0
         for t in cls.estimators_[:, 0]:
-            r = t.tree_.predict(np.array([list(data)], dtype="float32")) / cls.n_estimators * 2
+            r = t.tree_.predict(np.array([list(data)], dtype="float32")) / cls.n_estimators * COEF
             ret += r[0, 0]
         return 2.0 / (1.0 + np.exp(-2.0 * ret)) - 1
     return fun
@@ -147,7 +148,7 @@ def train(config):
             os.makedirs(os.path.dirname(fn))
         with open(fn, 'wb') as fd:
             pickle.dump(bdt, fd)
-        gbr_to_tmva(bdt, df, os.path.join(outdir, "bdt-{}".format(n), "weights.xml"), coef=2)
+        gbr_to_tmva(bdt, df, os.path.join(outdir, "bdt-{}".format(n), "weights.xml"), coef=COEF)
 
     logging.info("creating roc, output")
     plot_roc(outdir, bdts, x_train, y_train, x_test, y_test)
