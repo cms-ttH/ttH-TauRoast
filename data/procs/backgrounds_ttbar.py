@@ -110,7 +110,7 @@ BasicProcess(
 CombinedProcess(
     name="ttjets_pow",
     fullname="t#bar{t}",
-    limitname="ttjets",
+    limitname="TT",
     subprocesses=["ttjets_sl_pow", "ttjets_dl_pow"]
 )
 

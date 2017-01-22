@@ -3,7 +3,7 @@ from ttH.TauRoast.processing import BasicProcess, CombinedProcess
 BasicProcess(
     name="ttW",
     fullname="t#bar{t}W",
-    limitname="ttw",
+    limitname="TTW",
     paths=["TTWJetsToLNu_TuneCUETP8M1_13TeV_amcatnloFXFX_madspin_pythia8_v1"],
     cross_section=0.2043,
     events=252673,
@@ -13,7 +13,7 @@ BasicProcess(
 BasicProcess(
     name="ttZ",
     fullname="t#bar{t}Z",
-    limitname="ttz",
+    limitname="TTZ",
     paths=["TTZToLLNuNu_M_10_TuneCUETP8M1_13TeV_amcatnlo_pythia8_v1"],
     cross_section=0.2529,
     events=398600,
@@ -25,7 +25,8 @@ BasicProcess(
     fullname="tttt",
     paths=["TTTT_TuneCUETP8M1_13TeV_amcatnlo_pythia8_ext1_v1"],
     cross_section=0.009103,
-    events=989025
+    events=989025,
+    cutflow='signal'
 )
 
 BasicProcess(
@@ -33,7 +34,8 @@ BasicProcess(
     fullname="tZq",
     paths=["tZq_ll_4f_13TeV_amcatnlo_pythia8_TuneCUETP8M1_v1"],
     cross_section=0.0758,
-    events=2973639
+    events=2973639,
+    cutflow='signal'
 )
 
 BasicProcess(
@@ -41,7 +43,8 @@ BasicProcess(
     fullname="WW Double Scattering",
     paths=["WW_DoubleScattering_13TeV_pythia8_v1"],
     cross_section=1.64,
-    events=844954
+    events=844954,
+    cutflow='signal'
 )
 
 BasicProcess(
@@ -49,12 +52,14 @@ BasicProcess(
     fullname="WZZ",
     paths=["WZZ_TuneCUETP8M1_13TeV_amcatnlo_pythia8_v1"],
     cross_section=0.05565,
-    events=249800
+    events=249800,
+    cutflow='signal'
 )
 
 CombinedProcess(
     name="rares",
     fullname="Rares",
+    limitname="Rares",
     subprocesses=["tttt", "tZq", "ww_ds", "wzz"]
 )
 
@@ -153,6 +158,7 @@ BasicProcess(
 CombinedProcess(
     name="ewk",
     fullname="EWK",
+    limitname="EWK",
     subprocesses=["dyjets", "wjets", "diboson"]
 )
 

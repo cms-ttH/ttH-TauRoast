@@ -143,7 +143,7 @@ BasicProcess(
 CombinedProcess(
     name="fakes_single",
     fullname="Fakes",
-    limitname="fakes",
+    limitname="fakes_data",
     subprocesses=["fakes_single_e", "fakes_single_mu"]
 )
 

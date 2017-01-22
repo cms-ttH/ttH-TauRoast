@@ -130,6 +130,48 @@ BasicProcess(
 )
 
 BasicProcess(
+    name="ttH2TT_125_signal",
+    fullname="t#bar{t}H(125) #rightarrow #tau#tau",
+    limitname="ttH_htt",
+    paths=['ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_v1'],
+    # cross_section=0.5085 * (1 - 0.577),
+    cross_section=0.2586,
+    events=3975854,
+    cutflow='signal',
+    additional_cuts=[
+        ('process', 'abs(event.higgsDecay()) == 15')
+    ]
+)
+
+BasicProcess(
+    name="ttH2WW_125_signal",
+    fullname="t#bar{t}H(125) #rightarrow WW",
+    limitname="ttH_hww",
+    paths=['ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_v1'],
+    # cross_section=0.5085 * (1 - 0.577),
+    cross_section=0.2586,
+    events=3975854,
+    cutflow='signal',
+    additional_cuts=[
+        ('process', 'abs(event.higgsDecay()) == 24')
+    ]
+)
+
+BasicProcess(
+    name="ttH2ZZ_125_signal",
+    fullname="t#bar{t}H(125) #rightarrow ZZ",
+    limitname="ttH_hzz",
+    paths=['ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_v1'],
+    # cross_section=0.5085 * (1 - 0.577),
+    cross_section=0.2586,
+    events=3975854,
+    cutflow='signal',
+    additional_cuts=[
+        ('process', 'abs(event.higgsDecay()) == 23')
+    ]
+)
+
+BasicProcess(
     name="ttH2Nonbb_125_train",
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
     paths=[

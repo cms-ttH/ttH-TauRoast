@@ -4,9 +4,9 @@ channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v35
 # ntupledir: /scratch365/mwolf3/ttH/v32
-mvadir: ~/www/ttH/v35/ttl_train
+mvadir: ~/www/ttH/v2/ttl_train/sklearn/bdt-1
 outdir: ~/www/ttH/v35/ttl_ichep
-histformat: "{p}_{c}_{v}"
+histformat: "{v}_{c}_{p}"
 
 lumi: 12900
 # lumi: 36300
@@ -15,18 +15,24 @@ plot:
   - collisions_single
   - fakes_single
   - ttH_125_signal
+  - ttH2TT_125_signal
+  - ttH2WW_125_signal
+  - ttH2ZZ_125_signal
   - ttH_125_amc
   - ttjets_pow
   - ttW
   - ttZ
   - ewk
-  # - rares
+  - rares
   # - singletop
 
 limits:
   - collisions_single
   - fakes_single
-  - ttH_125_amc
+  # - ttH_125_amc
+  - ttH2TT_125_signal
+  - ttH2WW_125_signal
+  - ttH2ZZ_125_signal
   - ttjets_pow
   # - collisions_fake
   # - ttH_125_pow
@@ -34,12 +40,14 @@ limits:
   - ttZ
   # - ttjets_mad
   - ewk
-  # - rares
+  - rares
   # - singletop
 
 discriminants:
   - NumInclusiveJets
   - TT_VisibleMass
+  - BDT
+  - TMVA
 
 fake cuts:
     - "l ID": lepton_id == superslim::Lepton::MVA
