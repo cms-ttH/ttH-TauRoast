@@ -14,7 +14,6 @@ import seaborn as sns
 
 from sklearn import cross_validation
 from sklearn.cross_validation import ShuffleSplit, train_test_split
-from sklearn.externals import joblib
 # from sklearn.tree import DecisionTreeClassifier
 # from sklearn.ensemble import AdaBoostClassifier
 from sklearn.ensemble import GradientBoostingClassifier
@@ -282,7 +281,7 @@ def plot_learning_curve(outdir, bdts, x, y):
                                                                                 n_iter=100,
                                                                                 test_size=1.0 / CV),
                                                                 n_jobs=NJOBS,
-                                                                train_sizes=np.linspace(.1, .9, 5),
+                                                                train_sizes=np.linspace(.1, 1., 7),
                                                                 scoring='roc_auc')
         train_scores_mean = np.mean(train_scores, axis=1)
         train_scores_std = np.std(train_scores, axis=1)
