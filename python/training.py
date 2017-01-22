@@ -164,13 +164,17 @@ def evaluate(config, tree):
     setup = load(config)
     data = rec2array(tree2array(tree.raw(), setup["variables"]))
 
-    fn = os.path.join(config.get("mvadir", config.get("indir", config["outdir"])), "sklearn", "bdt", "bdt.pkl")
-    bdt = joblib.load(fn)
+    default = os.path.join(config.get("indir", config["outdir"]), "sklearn", "bdt-0")
+    fn = os.path.join(config.get("mvadir", default), "bdt.pkl")
+    with open(fn, 'rb') as fd:
+        bdt = pickle.load(fd)
     scores = []
+    tmva = []
     if len(data) > 0:
         scores = bdt.decision_function(data)
-    scores = np.array([(s,) for s in scores], [('bdt', 'float64')])
-    tree.mva(array2tree(scores))
+        tmva = np.vectorize(tmva_like(bdt))(data)
+    output = np.array(zip(scores, tmva), [('bdt', 'float64'), ('tmva', 'float64')])
+    tree.mva(array2tree(output))
 
 
 def run_cross_validation(outdir, bdts, x, y):

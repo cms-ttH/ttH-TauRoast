@@ -25,8 +25,14 @@ Leaf('category_lj', 'i', 'result = min(max(0, btags(jets) - 2), 2) * 3 + min(max
 Plot(
     name="general/BDT",
     values=["bdt"],
-    labels=["BDT value", "Events"],
-    binning=[20, -4, 2.5]
+    labels=["BDT value (signal prob)", "Events"],
+    binning=[10, 0, 1]
+)
+Plot(
+    name="general/TMVA",
+    values=["tmva"],
+    labels=["BDT value (TMVA)", "Events"],
+    binning=[10, -1, 1]
 )
 
 Plot(
