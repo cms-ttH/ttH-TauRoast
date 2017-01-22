@@ -171,7 +171,7 @@ def evaluate(config, tree):
     tmva = []
     if len(data) > 0:
         scores = bdt.decision_function(data)
-        tmva = np.vectorize(tmva_like(bdt))(data)
+        tmva = np.apply_along_axis(tmva_like(bdt), 1, data)
     output = np.array(zip(scores, tmva), [('bdt', 'float64'), ('tmva', 'float64')])
     tree.mva(array2tree(output))
 
