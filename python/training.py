@@ -1,5 +1,6 @@
 #  vim: set fileencoding=utf-8 :
 import codecs
+from glob import glob
 import logging
 import os
 import pickle
@@ -76,18 +77,26 @@ def read_inputs(config, setup):
     return signal, background
 
 
-def create_bdts(outdir, setup):
+def create_bdts(outdir, setup, x_train, y_train):
     # dt = DecisionTreeClassifier(max_depth=3,
     #                             min_samples_leaf=500)
     # bdt = AdaBoostClassifier(dt,
     #                          algorithm='SAMME',
     #                          n_estimators=800,
     #                          learning_rate=0.5)
-    for n, cfg in enumerate(setup['trees']):
-        dirname = os.path.join(outdir, 'bdt-{}'.format(n))
-        if not os.path.exists(dirname):
-            os.makedirs(dirname)
-        yield(GradientBoostingClassifier(**cfg))
+    if 'training' in setup.get('features', []):
+        logging.info("training bdt(s)")
+        for n, cfg in enumerate(setup['trees']):
+            dirname = os.path.join(outdir, 'bdt-{}'.format(n))
+            if not os.path.exists(dirname):
+                os.makedirs(dirname)
+            bdt = GradientBoostingClassifier(**cfg)
+            bdt.fit(x_train, y_train)
+            yield bdt
+    else:
+        for dirname in glob(os.path.join(outdir, "bdt-*")):
+            with open(os.path.join(dirname, "bdt.pkl"), "rb") as fd:
+                yield pickle.load(fd)
 
 
 def train(config):
@@ -105,7 +114,8 @@ def train(config):
     y = np.concatenate((np.ones(signal.shape[0]),
                         np.zeros(background.shape[0])))
 
-    bdts = list(create_bdts(outdir, setup))
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=1.0 / CV)
+    bdts = list(create_bdts(outdir, setup, x_train, y_train))
 
     if 'validation' in setup.get('features', []):
         run_cross_validation(outdir, bdts, x, y)
@@ -115,20 +125,6 @@ def train(config):
         run_grid_search(outdir, bdts[0], x, y)
     if 'learning' in setup.get('features', []):
         plot_learning_curve(outdir, bdts, x, y)
-
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=1.0 / CV)
-    if 'training' in setup.get('features', []):
-        logging.info("training bdt(s)")
-        for bdt in bdts:
-            bdt.fit(x_train, y_train)
-    else:
-        count = len(bdts)
-        bdts = []
-        for n in range(count):
-            fn = os.path.join(outdir, "bdt-{}".format(n), "bdt.pkl")
-            with open(fn, 'rb') as fd:
-                bdts.append(pickle.load(fd))
-
     if 'validation_curve' in setup.get('features', []):
         run_validation_curve(outdir, bdts, x_train, y_train, x_test, y_test)
 
