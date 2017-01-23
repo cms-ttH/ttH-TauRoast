@@ -92,6 +92,10 @@ def create_bdts(outdir, setup, x_train, y_train):
                 os.makedirs(dirname)
             bdt = GradientBoostingClassifier(**cfg)
             bdt.fit(x_train, y_train)
+            with open(os.path.join(dirname, "bdt.pkl"), 'wb') as fd:
+                pickle.dump(bdt, fd)
+            with codecs.open(os.path.join(dirname, "configuration.txt"), "w", encoding="utf8") as fd:
+                fd.write('{}\n'.format(cfg))
             yield bdt
     else:
         for dirname in glob(os.path.join(outdir, "bdt-*")):
@@ -135,14 +139,7 @@ def train(config):
             out += '{:30}: {:>10.4f}\n'.format(var, score)
         with codecs.open(os.path.join(outdir, "bdt-{}".format(n), "log-feature-importance.txt"), "w", encoding="utf8") as fd:
             fd.write(out)
-        with codecs.open(os.path.join(outdir, "bdt-{}".format(n), "configuration.txt"), "w", encoding="utf8") as fd:
-            fd.write('{}\n'.format(setup['trees'][n]))
 
-        fn = os.path.join(outdir, "bdt-{}".format(n), "bdt.pkl")
-        if not os.path.exists(os.path.dirname(fn)):
-            os.makedirs(os.path.dirname(fn))
-        with open(fn, 'wb') as fd:
-            pickle.dump(bdt, fd)
         gbr_to_tmva(bdt, df, os.path.join(outdir, "bdt-{}".format(n), "weights.xml"), coef=COEF)
 
     logging.info("creating roc, output")
