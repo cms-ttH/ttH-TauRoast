@@ -13,11 +13,30 @@ for n in range(config.leptons):
     Leaf('lep{0}_genpt'.format(n + 1), 'f', 'result = leptons[{0}].genP4().Pt()'.format(n))
     Leaf('lep{0}_geneta'.format(n + 1), 'f', 'result = leptons[{0}].genP4().Eta()'.format(n))
 
+    for t in range(config.taus):
+        Leaf('lep{0}tau{1}_deltaR'.format(n + 1, t + 1), 'f',
+             'result = dR(leptons.at({0}), taus.at({1}))'.format(n, t))
+        Leaf('lep{0}tau{1}_cosDeltaPhi'.format(n + 1, t + 1), 'f',
+             'result = std::cos(leptons.at({0}).p4().phi() - taus.at({1}).p4().phi())'.format(n, t))
+
+        Plot(
+            name="leptons/L{}T{}_DeltaR".format(n + 1, t + 1),
+            values=["lep{}tau{}_deltaR".format(n + 1, t + 1)],
+            labels=["#DeltaR {}, #tau_{{{}}}".format(lbl, t + 1), "Events"],
+            binning=[15, 0, 6.28]
+        )
+        Plot(
+            name="leptons/L{}T{}_cosDeltaPhi".format(n + 1, t + 1),
+            values=["lep{}tau{}_cosDeltaPhi".format(n + 1, t + 1)],
+            labels=["#DeltaR {}, #tau_{{{}}}".format(lbl, t + 1), "Events"],
+            binning=[15, -1, 1]
+        )
+
     if (config.taus) == 2:
         Leaf('lep{0}tauOS_deltaR'.format(n + 1), 'f',
-             'result = dR(leptons.at({0}), taus.at(0).charge() * leptons.at({0}).charge() < 0 ? taus.at(0) : taus.at(1))')
+             'result = dR(leptons.at({0}), taus.at(0).charge() * leptons.at({0}).charge() < 0 ? taus.at(0) : taus.at(1))'.format(n))
         Leaf('lep{0}tauSS_deltaR'.format(n + 1), 'f',
-             'result = dR(leptons.at({0}), taus.at(0).charge() * leptons.at({0}).charge() > 0 ? taus.at(0) : taus.at(1))')
+             'result = dR(leptons.at({0}), taus.at(0).charge() * leptons.at({0}).charge() > 0 ? taus.at(0) : taus.at(1))'.format(n))
         Plot(
             name="leptons/L{}TOS_DeltaR".format(n + 1),
             values=["lep{}tauOS_deltaR".format(n + 1)],
@@ -32,9 +51,9 @@ for n in range(config.leptons):
         )
 
         Leaf('lep{0}tauOS_cosDeltaPhi'.format(n + 1), 'f',
-             'result = std::cos(leptons.at({0}).p4().Phi() - (taus.at(0).charge() * leptons.at({0}).charge() < 0 ? taus.at(0) : taus.at(1)).p4().Phi())')
+             'result = std::cos(leptons.at({0}).p4().Phi() - (taus.at(0).charge() * leptons.at({0}).charge() < 0 ? taus.at(0) : taus.at(1)).p4().Phi())'.format(n))
         Leaf('lep{0}tauSS_cosDeltaPhi'.format(n + 1), 'f',
-             'result = std::cos(leptons.at({0}).p4().Phi() - (taus.at(0).charge() * leptons.at({0}).charge() > 0 ? taus.at(0) : taus.at(1)).p4().Phi())')
+             'result = std::cos(leptons.at({0}).p4().Phi() - (taus.at(0).charge() * leptons.at({0}).charge() > 0 ? taus.at(0) : taus.at(1)).p4().Phi())'.format(n))
         Plot(
             name="leptons/L{}TOS_CosDeltaPhi".format(n + 1),
             values=["lep{}tauOS_cosDeltaPhi".format(n + 1)],

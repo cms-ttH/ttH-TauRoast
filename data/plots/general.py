@@ -178,6 +178,14 @@ for (const auto& l: leptons)
     ht += l.p4().Pt();
 result = ht
 """)
+Leaf('ht_notau', 'f', """
+float ht = 0.;
+for (const auto& j: jets)
+    ht += j.p4().Pt();
+for (const auto& l: leptons)
+    ht += l.p4().Pt();
+result = ht
+""")
 Leaf('mht', 'f', """
 auto ht = superslim::LorentzVector();
 for (const auto& j: jets)
@@ -198,6 +206,12 @@ Plot(
 Plot(
     name="general/HT",
     values=["ht"],
+    labels=["HT", "Events"],
+    binning=[20, 200, 1000]
+)
+Plot(
+    name="general/HT_NoTau",
+    values=["ht_notau"],
     labels=["HT", "Events"],
     binning=[20, 200, 1000]
 )
