@@ -35,6 +35,32 @@ Plot(
     binning=[15, 0, 6.28]
 )
 
+Leaf('jet_deltaRmin', 'f',
+     '''std::vector<float> drs;
+        for (auto i = 0; i < jets.size(); ++i)
+            for (auto j = i + 1; j < jets.size(); ++j)
+                drs.push_back(dR(jets[i], jets[j]));
+        result = *std::min_element(drs.begin(), drs.end())''')
+Plot(
+    name="jets/JJ_MinDeltaR",
+    values=["jet_deltaRmin"],
+    labels=["Min #DeltaR jet, jet", "Events"],
+    binning=[15, 0, 6.28]
+)
+
+Leaf('jet_deltaRmax', 'f',
+     '''std::vector<float> drs;
+        for (auto i = 0; i < jets.size(); ++i)
+            for (auto j = i + 1; j < jets.size(); ++j)
+                drs.push_back(dR(jets[i], jets[j]));
+        result = *std::max_element(drs.begin(), drs.end())''')
+Plot(
+    name="jets/JJ_MaxDeltaR",
+    values=["jet_deltaRmin"],
+    labels=["Min #DeltaR jet, jet", "Events"],
+    binning=[15, 0, 6.28]
+)
+
 pspace = [
     ("", "jets"),
     ("Untagged", "notags(jets)"),
