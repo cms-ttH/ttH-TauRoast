@@ -74,7 +74,10 @@ def read_inputs(config, setup):
         else:
             background = b
 
-    return signal, background
+    events = min(len(signal), len(background))
+    logging.info("using only {} events from signal, background".format(events))
+
+    return signal[:events, :], background[:events, :]
 
 
 def create_bdts(outdir, setup, x_train, y_train):
