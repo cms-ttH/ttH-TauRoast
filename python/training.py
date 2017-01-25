@@ -215,7 +215,7 @@ def run_feature_elimination(outdir, bdts, x, y, setup):
         out += u'optimal feature count: {}\n\nranking\n-------\n'.format(rfecv.n_features_)
         for n, v in enumerate(setup["variables"]):
             out += u'{:30}: {:>5}\n'.format(v, rfecv.ranking_[n])
-        with codecs.open(os.path.join(outdir, "log-feature-elimination-{}.txt".format(n)), "w", encoding="utf8") as fd:
+        with codecs.open(os.path.join(outdir, "bdt-{}".format(n), "log-feature-elimination.txt"), "w", encoding="utf8") as fd:
             fd.write(out)
 
 
@@ -255,7 +255,7 @@ def plot_feature_elimination(outdir, cls, n):
     plt.plot(range(1, len(cls.grid_scores_) + 1), cls.grid_scores_)
     plt.xlabel('# features')
     plt.ylabel('Score (ROC auc)')
-    plt.savefig(os.path.join(outdir, 'feature_elimination-{}.png'.format(n)))
+    plt.savefig(os.path.join(outdir, 'bdt-{}'.format(n), 'feature-elimination.png'))
 
 
 def plot_inputs(outdir, vars, sig, bkg):
