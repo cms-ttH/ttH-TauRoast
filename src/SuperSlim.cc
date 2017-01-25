@@ -71,6 +71,34 @@ namespace superslim {
          closest_jet_ = 0;
    }
 
+   GenJet&
+   GenJet::operator=(GenJet j)
+   {
+      std::swap(charge_, j.charge_);
+      std::swap(pdg_id_, j.pdg_id_);
+
+      std::swap(p_, j.p_);
+      std::swap(leading_p_, j.leading_p_);
+      std::swap(constituents_, j.constituents_);
+      std::swap(charged_p_, j.charged_p_);
+      std::swap(charged_constituents_, j.charged_constituents_);
+
+      std::swap(iso_p_, j.iso_p_);
+      std::swap(iso_constituents_, j.iso_constituents_);
+      std::swap(iso_charged_p_, j.iso_charged_p_);
+      std::swap(iso_charged_constituents_, j.iso_charged_constituents_);
+
+      std::swap(signal_p_, j.signal_p_);
+      std::swap(signal_constituents_, j.signal_constituents_);
+      std::swap(signal_charged_p_, j.signal_charged_p_);
+      std::swap(signal_charged_constituents_, j.signal_charged_constituents_);
+
+      std::swap(closest_particle_, j.closest_particle_);
+      std::swap(closest_jet_, j.closest_jet_);
+
+      return *this;
+   }
+
    GenJet::~GenJet()
    {
       if (closest_particle_)
@@ -535,8 +563,8 @@ namespace superslim {
       return false;
    }
 
-   Event::Event(const std::vector<superslim::Tau>& taus,
-               const std::vector<superslim::Tau>& all_taus,
+   Event::Event(const std::map<std::string, std::vector<superslim::Tau>>& taus,
+               const std::map<std::string, std::vector<superslim::Tau>>& all_taus,
                const std::vector<superslim::Lepton>& leps,
                const std::vector<superslim::Lepton>& all_leps,
                const std::map<std::string, std::vector<superslim::Jet>>& jets,

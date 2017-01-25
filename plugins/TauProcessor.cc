@@ -107,6 +107,11 @@ class TauProcessor : public edm::one::EDProducer<edm::BeginRunProducer, edm::End
       virtual void produce(edm::Event&, const edm::EventSetup&) override;
       virtual void endJob() override;
 
+      pat::JetCollection
+      scaleJets(const pat::JetCollection& jets, const std::string& sys);
+      std::vector<superslim::Tau>
+      scaleTaus(const std::vector<superslim::Tau>& taus, const std::string& sys);
+
       template<typename T1, typename T2>
       std::vector<T1>
       removeOverlap(const std::vector<T1>& v1, const std::vector<T2>& v2, double dR = 0.02);
@@ -114,6 +119,7 @@ class TauProcessor : public edm::one::EDProducer<edm::BeginRunProducer, edm::End
       void passCut(unsigned int cut, const std::string& name, float w = 1.0);
 
       MiniAODHelper helper_;
+      std::auto_ptr<JetCorrectionUncertainty> junc_;
 
       bool data_;
 
@@ -172,7 +178,7 @@ class TauProcessor : public edm::one::EDProducer<edm::BeginRunProducer, edm::End
       edm::EDGetTokenT<std::vector<int>> genCHadBHadronIdToken_;
 
       std::vector<std::string> cutnames_;
-      std::map<std::string, sysType::sysType> systematics_;
+      std::vector<std::string> systematics_;
 
       std::auto_ptr<superslim::CutHistogram> cuts_;
 };
@@ -240,14 +246,14 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    genCHadBHadronIdToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenCHadron", "genCHadBHadronId"));
 
    if (data_) {
-      systematics_ = {{"NA", sysType::NA}};
+      systematics_ = {"NA"};
    } else {
       systematics_ = {
-         {"NA", sysType::NA},
-         {"CMS_res_jUp", sysType::JERup},
-         {"CMS_res_jDown", sysType::JERdown},
-         {"CMS_scale_jUp", sysType::JESup},
-         {"CMS_scale_jDown", sysType::JESdown}
+         "NA",
+         "CMS_ttHl_JESUp",
+         "CMS_ttHl_JESDown",
+         "CMS_ttHl_tauESUp",
+         "CMS_ttHl_tauESDown"
       };
    }
 
@@ -260,6 +266,51 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
 
 TauProcessor::~TauProcessor()
 {
+}
+
+
+std::vector<superslim::Tau>
+TauProcessor::scaleTaus(const std::vector<superslim::Tau>& taus, const std::string& sys)
+{
+   const auto unc = .03;
+   auto dir = 0.;
+   if (sys == "CMS_ttHl_tauESUp")
+      dir = 1.;
+   else if (sys == "CMS_ttHl_tauESDown")
+      dir = -1.;
+
+   std::vector<superslim::Tau> result;
+   for (auto t: taus) {
+      t.p4() *= (1 + unc * dir);
+      if (t.pt() >= 20.)
+         result.push_back(t);
+   }
+
+   return helper_.GetSortedByPt(result);
+}
+
+
+pat::JetCollection
+TauProcessor::scaleJets(const pat::JetCollection& jets, const std::string& sys)
+{
+   auto dir = 0.;
+   if (sys == "CMS_ttHl_JESUp")
+      dir = 1.;
+   else if (sys == "CMS_ttHl_JESDown")
+      dir = -1.;
+   else
+      return jets;
+
+   pat::JetCollection result;
+   for (auto j: jets) {
+      junc_->setJetEta(j.eta());
+      junc_->setJetPt(j.pt());
+      auto unc = junc_->getUncertainty(true);
+      j.scaleEnergy(1 + unc * dir);
+      result.push_back(j);
+   }
+
+   return helper_.GetSortedByPt(result);
 }
 
 
@@ -368,6 +419,11 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
    // ================
    // Jet preselection
    // ================
+   edm::ESHandle<JetCorrectorParametersCollection> JetCorParColl;
+   setup.get<JetCorrectionsRecord>().get("AK5PF", JetCorParColl);
+   const JetCorrectorParameters& JetCorPar = (*JetCorParColl)["Uncertainty"];
+   junc_.reset(new JetCorrectionUncertainty(JetCorPar));
+
    auto raw_jets = helper_.GetSelectedJets(*ak4jets, 0., 666., jetID::jetLoose, '-');
    // auto uncorrected_jets = helper_.GetUncorrectedJets(raw_jets);
 
@@ -418,57 +474,59 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
 
    passCut(event_cut++, "Leptons");
 
-   // =============
-   // Tau Selection
-   // =============
-
    auto tau_id = superslim::Tau::IsoMVA03;
 
    int r = 0;
-   std::vector<superslim::Tau> staus;
+   std::vector<superslim::Tau> raw_taus;
    for (const auto& tau: *taus) {
       auto t = superslim::Tau(tau, rpv, particles, genjets, r++);
       if (t.selected(tau_id, tau_vloose_ ? superslim::id::VLoose : superslim::id::Loose))
-         staus.push_back(t);
+         raw_taus.push_back(t);
    }
-   auto all_taus = removeOverlap(staus, all_leptons, .3);
+   auto all_taus = removeOverlap(raw_taus, all_leptons, .3);
 
-   if (not take_all_ and all_taus.size() < min_taus_)
-      return;
-
-   // Select tight τ.  If not enough tight τ are available, select the
-   // first n τ — for the fake background.
-   std::vector<superslim::Tau> chosen_taus;
-   if (take_all_) {
-      chosen_taus = all_taus;
-   } else {
-      std::copy_if(all_taus.begin(), all_taus.end(), std::back_inserter(chosen_taus),
-            [&](const superslim::Tau& t) -> bool { return t.selected(tau_id, superslim::id::Tight); });
-      if (chosen_taus.size() < min_taus_) {
-         std::vector<superslim::Tau>().swap(chosen_taus);
-         std::copy(all_taus.begin(), all_taus.begin() + min_taus_, std::back_inserter(chosen_taus));
-      }
-   }
-
-   passCut(event_cut++, "Taus");
-
-   // =============
-   // Jet Selection
-   // =============
-
+   bool pass_taus = false;
    bool pass_jets = false;
    bool pass_tags = false;
+
+   std::map<std::string, std::vector<superslim::Tau>> staus;
+   std::map<std::string, std::vector<superslim::Tau>> all_staus;
+
    std::map<std::string, std::vector<superslim::Jet>> sjets;
    std::map<std::string, superslim::LorentzVector> smets;
    for (auto& sys: systematics_) {
-      // auto corrected_jets = helper_.GetCorrectedJets(uncorrected_jets, event, setup, sys.second);
-      // corrected_jets = helper_.GetSelectedJets(corrected_jets, std::min(min_jet_pt_, min_tag_pt_), max_jet_eta_, jetID::none, '-');
-      // corrected_jets = helper_.GetSelectedJets(raw_jets, std::min(min_jet_pt_, min_tag_pt_), max_jet_eta_, jetID::none, '-');
-      // corrected_jets = helper_.GetSortedByPt(corrected_jets);
+      // =============
+      // Tau Selection
+      // =============
 
-      // Jet selection
-      // auto jets_wo_lep = removeOverlap(corrected_jets, leptons, .4);
-      auto jets_wo_lep = removeOverlap(raw_jets, chosen_leptons, .4);
+      auto taus_updown = scaleTaus(all_taus, sys);
+
+      if (taus_updown.size() >= min_taus_)
+         pass_taus = true;
+
+      // Select tight τ.  If not enough tight τ are available, select the
+      // first n τ — for the fake background.
+      std::vector<superslim::Tau> chosen_taus;
+      if (take_all_) {
+         chosen_taus = taus_updown;
+      } else {
+         std::copy_if(taus_updown.begin(), taus_updown.end(), std::back_inserter(chosen_taus),
+               [&](const superslim::Tau& t) -> bool { return t.selected(tau_id, superslim::id::Tight); });
+         if (chosen_taus.size() < min_taus_) {
+            std::vector<superslim::Tau>().swap(chosen_taus);
+            std::copy(taus_updown.begin(), taus_updown.begin() + min_taus_, std::back_inserter(chosen_taus));
+         }
+      }
+
+      staus[sys] = chosen_taus;
+      all_staus[sys] = taus_updown;
+
+      // =============
+      // Jet Selection
+      // =============
+
+      auto jets_updown = scaleJets(raw_jets, sys);
+      auto jets_wo_lep = removeOverlap(jets_updown, chosen_leptons, .4);
       auto jets_no_taus = removeOverlap(jets_wo_lep, all_taus, .4);
       auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, max_jet_eta_, jetID::none, '-');
       auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'M');
@@ -492,15 +550,15 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
       // auto new_jets = helper_.GetCorrectedJets(old_jets_uncorrected, event, setup, sys.second);
       // auto corrected_mets = helper_.CorrectMET(old_jets, new_jets, *mets);
 
-      sjets[sys.first] = {};
+      sjets[sys] = {};
       for (const auto& jet: selected_jets)
-         sjets[sys.first].push_back(superslim::Jet(jet, particles));
+         sjets[sys].push_back(superslim::Jet(jet, particles));
 
       // smets[sys.first] = corrected_mets[0].p4();
-      smets[sys.first] = mets->at(0).p4();
+      smets[sys] = mets->at(0).p4();
    }
 
-   if (not (pass_jets and pass_tags) and not take_all_)
+   if (not (pass_taus and pass_jets and pass_tags) and not take_all_)
       return;
 
    // Set leptons *after* jet-cleaning!
@@ -547,7 +605,7 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
    auto trigger_names = event.triggerNames(*trigger_results);
 
    std::auto_ptr<superslim::Event> ptr(new superslim::Event(
-            chosen_taus, all_taus, chosen_leptons, all_leptons, sjets, smets,
+            staus, all_staus, chosen_leptons, all_leptons, sjets, smets,
             tau_id, lepton_id,
             event.id().run(), event.id().luminosityBlock(), event.id().event(),
             npv, ntv, pv,

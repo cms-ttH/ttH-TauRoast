@@ -25,6 +25,7 @@
 	<class name="std::vector<superslim::Lepton>"/>
 	<class name="superslim::Tau"/>
 	<class name="std::vector<superslim::Tau>"/>
+	<class name="std::map<std::string, std::vector<superslim::Tau>>"/>
 	<class name="superslim::Trigger"/>
 	<class name="superslim::Event"/>
 	<class name="edm::Wrapper<superslim::Event>"/>

@@ -112,6 +112,7 @@ namespace superslim {
          const float eta() const { return p_.eta(); };
          const float phi() const { return p_.phi(); };
          const LorentzVector& p4() const { return p_; };
+         LorentzVector& p4() { return p_; };
 
          int charge() const { return charge_; };
          int pdgId() const { return pdg_id_; };
@@ -126,6 +127,8 @@ namespace superslim {
          GenJet() : GenObject(), closest_particle_(0), closest_jet_(0) {};
          GenJet(const GenJet& other);
          virtual ~GenJet();
+
+         GenJet& operator=(GenJet j);
 
          template<typename T>
          GenJet(const T& j) :
@@ -436,8 +439,8 @@ namespace superslim {
    class Event {
       public:
          Event() {};
-         Event(const std::vector<superslim::Tau>&,
-               const std::vector<superslim::Tau>&,
+         Event(const std::map<std::string, std::vector<superslim::Tau>>&,
+               const std::map<std::string, std::vector<superslim::Tau>>&,
                const std::vector<superslim::Lepton>&,
                const std::vector<superslim::Lepton>&,
                const std::map<std::string, std::vector<superslim::Jet>>&,
@@ -454,8 +457,8 @@ namespace superslim {
 
          const std::vector<superslim::Lepton>& leptons() const { return leptons_; };
          const std::vector<superslim::Lepton>& allLeptons() const { return all_leptons_; };
-         const std::vector<superslim::Tau>& taus() const { return taus_; };
-         const std::vector<superslim::Tau>& allTaus() const { return all_taus_; };
+         const std::vector<superslim::Tau>& taus(const std::string& s="NA") const { return taus_.find(s)->second; };
+         const std::vector<superslim::Tau>& allTaus(const std::string& s="NA") const { return all_taus_.find(s)->second; };
 
          const std::vector<superslim::Jet>& jets(const std::string& s="NA") const { return jets_.find(s)->second; };
          const LorentzVector& met(const std::string& s="NA") const { return met_.find(s)->second; };
@@ -488,8 +491,8 @@ namespace superslim {
          void setGenParticles(const std::vector<GenObject>& v) { gen_particles_ = v; };
          void setGenJets(const std::vector<GenJet>& v) { gen_jets_ = v; };
       private:
-         std::vector<superslim::Tau> taus_;
-         std::vector<superslim::Tau> all_taus_;
+         std::map<std::string, std::vector<superslim::Tau>> taus_;
+         std::map<std::string, std::vector<superslim::Tau>> all_taus_;
          std::vector<superslim::Lepton> leptons_;
          std::vector<superslim::Lepton> all_leptons_;
 
