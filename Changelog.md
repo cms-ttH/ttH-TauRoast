@@ -1,5 +1,13 @@
 # Ntuple History
 
+## v37
+
+* Re-RECO, new b-tag cuts
+
+## v36
+
+* Garbage
+
 ## v35
 
 * Non-re-reco datasets
@@ -128,6 +136,10 @@
 * More powheg samples
 
 # Training Ntuple History
+
+## v3
+
+* New b-tag cuts
 
 ## v2
 
