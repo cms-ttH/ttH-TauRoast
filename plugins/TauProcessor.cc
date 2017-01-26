@@ -503,6 +503,8 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
 
       if (taus_updown.size() >= min_taus_)
          pass_taus = true;
+      else
+         continue;
 
       // Select tight τ.  If not enough tight τ are available, select the
       // first n τ — for the fake background.
