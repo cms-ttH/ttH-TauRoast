@@ -170,8 +170,8 @@ systematics:
 
 categories:
   - inclusive: ""
-  - electron: "nelectrons == 1"
-  - muon: "nmuons == 1"
-  - ttl_3j: "njets + ntags == 3"
-  - ttl_4pj: "njets + ntags >= 4"
-  - ttl_4pj2pt: "(njets + ntags >= 4) && (ntags >= 2)"
+  # - electron: "nelectrons == 1"
+  # - muon: "nmuons == 1"
+  # - ttl_3j: "njets + ntags == 3"
+  # - ttl_4pj: "njets + ntags >= 4"
+  # - ttl_4pj2pt: "(njets + ntags >= 4) && (ntags >= 2)"
