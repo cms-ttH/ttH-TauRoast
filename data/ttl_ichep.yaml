@@ -15,9 +15,9 @@ plot:
   - collisions_single
   - fakes_single
   - ttH_125_signal
-  - ttH2TT_125_signal
-  - ttH2WW_125_signal
-  - ttH2ZZ_125_signal
+  - ttH2TT_125_amc
+  - ttH2WW_125_amc
+  - ttH2ZZ_125_amc
   - ttH_125_amc
   - ttjets_pow
   - ttW
@@ -30,9 +30,9 @@ limits:
   - collisions_single
   - fakes_single
   # - ttH_125_amc
-  - ttH2TT_125_signal
-  - ttH2WW_125_signal
-  - ttH2ZZ_125_signal
+  - ttH2TT_125_amc
+  - ttH2WW_125_amc
+  - ttH2ZZ_125_amc
   - ttjets_pow
   # - collisions_fake
   # - ttH_125_pow
