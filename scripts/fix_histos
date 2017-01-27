@@ -1,0 +1,50 @@
+#!/usr/bin/env python
+
+import argparse
+import ROOT as r
+from rootpy.io import root_open
+
+
+r.gROOT.SetBatch()
+
+
+def integral(hist, under, over):
+    total = 0
+    start = 0 if under else 1
+    end = hist.GetNbinsX() + (1 if over else 0)
+    for n in range(start, end + 1):
+        total += hist.GetBinContent(n)
+    return total
+
+
+def makepositive(hist):
+    norm_orig = max(integral(hist, True, True), 0.)
+
+    for n in range(1, hist.GetNbinsX() + 1):
+        val = hist.GetBinContent(n)
+        err = hist.GetBinError(n) ** 2
+        if val < 0.:
+            val_new = 0.
+            err_new = err + (val - val_new) ** 2
+            assert(err_new > 0.)
+            hist.SetBinContent(n, val_new)
+            hist.SetBinError(n, err_new)
+    norm_new = max(integral(hist, True, True), 0.)
+    if norm_new > 0:
+        if norm_orig != 0.:
+            renorm = norm_new / norm_orig
+            if renorm != 1.:
+                print "scaling {} by {}".format(hist.GetName(), norm_orig / norm_new)
+                hist.Scale(norm_orig / norm_new)
+    else:
+        for n in range(0, hist.GetNbinsX() + 2):
+            hist.SetBinContent(n, 0)
+    return hist
+
+parser = argparse.ArgumentParser("remove negative bins from histograms")
+parser.add_argument("filename", help="file to modify")
+args = parser.parse_args()
+
+with root_open(args.filename, 'update') as fd:
+    for k in fd.keys():
+        makepositive(k.read_obj()).Write(k.get_name(), r.TObject.kWriteDelete)
