@@ -217,8 +217,8 @@ def run_feature_elimination(outdir, bdts, x, y, setup):
 
         out = u'Feature selection\n=================\n\n'
         out += u'optimal feature count: {}\n\nranking\n-------\n'.format(rfecv.n_features_)
-        for n, v in enumerate(setup["variables"]):
-            out += u'{:30}: {:>5}\n'.format(v, rfecv.ranking_[n])
+        for i, v in enumerate(setup["variables"]):
+            out += u'{:30}: {:>5}\n'.format(v, rfecv.ranking_[i])
         with codecs.open(os.path.join(outdir, "bdt-{}".format(n), "log-feature-elimination.txt"), "w", encoding="utf8") as fd:
             fd.write(out)
 
