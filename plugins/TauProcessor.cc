@@ -503,8 +503,6 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
 
       if (taus_updown.size() >= min_taus_)
          pass_taus = true;
-      else
-         continue;
 
       // Select tight τ.  If not enough tight τ are available, select the
       // first n τ — for the fake background.
@@ -515,8 +513,9 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
          std::copy_if(taus_updown.begin(), taus_updown.end(), std::back_inserter(chosen_taus),
                [&](const superslim::Tau& t) -> bool { return t.selected(tau_id, superslim::id::Tight); });
          if (chosen_taus.size() < min_taus_) {
+            int count = std::min({size_t(min_taus_), taus_updown.size()});
             std::vector<superslim::Tau>().swap(chosen_taus);
-            std::copy(taus_updown.begin(), taus_updown.begin() + min_taus_, std::back_inserter(chosen_taus));
+            std::copy(taus_updown.begin(), taus_updown.begin() + count, std::back_inserter(chosen_taus));
          }
       }
 
