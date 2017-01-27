@@ -260,6 +260,7 @@ def plot_feature_elimination(outdir, cls, n):
     plt.xlabel('# features')
     plt.ylabel('Score (ROC auc)')
     plt.savefig(os.path.join(outdir, 'bdt-{}'.format(n), 'feature-elimination.png'))
+    plt.close()
 
 
 def plot_inputs(outdir, vars, sig, bkg):
