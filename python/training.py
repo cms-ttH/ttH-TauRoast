@@ -93,7 +93,9 @@ def create_bdts(outdir, setup, x_train, y_train):
             dirname = os.path.join(outdir, 'bdt-{}'.format(n))
             if not os.path.exists(dirname):
                 os.makedirs(dirname)
+            label = cfg.pop('label', 'bdt-{}'.format(n))
             bdt = GradientBoostingClassifier(**cfg)
+            bdt.label = label
             bdt.fit(x_train, y_train)
             with open(os.path.join(dirname, "bdt.pkl"), 'wb') as fd:
                 pickle.dump(bdt, fd)
@@ -183,7 +185,7 @@ def run_cross_validation(outdir, bdts, x, y):
 
 def run_validation_curve(outdir, bdts, x_train, y_train, x_test, y_test):
     logging.info("saving validation curve")
-    for n, bdt in enumerate(bdts):
+    for bdt in bdts:
         test_score, train_score = np.empty(len(bdt.estimators_)), np.empty(len(bdt.estimators_))
 
         for i, pred in enumerate(bdt.staged_decision_function(x_test)):
@@ -192,7 +194,7 @@ def run_validation_curve(outdir, bdts, x_train, y_train, x_test, y_test):
             train_score[i] = 1 - roc_auc_score(y_train, pred)
 
         best = np.argmin(test_score)
-        line = plt.plot(test_score, label='BDT {}'.format(n))
+        line = plt.plot(test_score, label=bdt.label)
         plt.plot(train_score, '--', color=line[-1].get_color())
 
         plt.xlabel("Number of boosting iterations")
@@ -329,11 +331,11 @@ def plot_output(outdir, bdts, data, filename, bins, fct):
 
 
 def plot_roc(outdir, bdts, x_train, y_train, x_test, y_test):
-    for n, cls in enumerate(bdts):
+    for cls in bdts:
         decisions = cls.decision_function(x_test)
         fpr, tpr, thresholds = roc_curve(y_test, decisions)
         roc_auc = auc(fpr, tpr)
-        line = plt.plot(fpr, tpr, lw=1, label='ROC for BDT {} (area = {:0.2f})'.format(n, roc_auc))
+        line = plt.plot(fpr, tpr, lw=1, label='ROC for {} (area = {:0.2f})'.format(cls.label, roc_auc))
 
         decisions = cls.decision_function(x_train)
         fpr, tpr, thresholds = roc_curve(y_train, decisions)
