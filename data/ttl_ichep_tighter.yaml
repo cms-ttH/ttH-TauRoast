@@ -4,7 +4,7 @@ channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v35
 # ntupledir: /scratch365/mwolf3/ttH/v32
-mvadir: ~/www/ttH/v2/ttl_train.03/sklearn/bdt-1
+mvadir: ~/www/ttH/v2/ttl_train/sklearn/bdt-1
 outdir: ~/www/ttH/v35/ttl_ichep_tighter
 histformat: "{v}_{c}_{p}"
 
