@@ -98,14 +98,16 @@ def create_bdts(outdir, setup, x_train, y_train):
             bdt.label = label
             bdt.fit(x_train, y_train)
             with open(os.path.join(dirname, "bdt.pkl"), 'wb') as fd:
-                pickle.dump(bdt, fd)
+                pickle.dump((bdt, label), fd)
             with codecs.open(os.path.join(dirname, "configuration.txt"), "w", encoding="utf8") as fd:
                 fd.write('{}\n'.format(cfg))
             yield bdt
     else:
         for dirname in glob(os.path.join(outdir, "bdt-*")):
             with open(os.path.join(dirname, "bdt.pkl"), "rb") as fd:
-                yield pickle.load(fd)
+                bdt, label = pickle.load(fd)
+                bdt.label = label
+                yield bdt
 
 
 def train(config):
@@ -148,7 +150,7 @@ def train(config):
         gbr_to_tmva(bdt, df, os.path.join(outdir, "bdt-{}".format(n), "weights.xml"), coef=COEF)
 
     logging.info("creating roc, output")
-    plot_roc(outdir, bdts, x_train, y_train, x_test, y_test)
+    plot_roc(outdir, bdts, x_train, y_train, x_test, y_test, setup['variables'].index('tt_visiblemass'))
     plot_output(outdir, bdts, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')],
                 'decision-function.png', np.linspace(-7, 7, 40), lambda cls, data: cls.decision_function(data))
     plot_output(outdir, bdts, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')],
@@ -330,7 +332,7 @@ def plot_output(outdir, bdts, data, filename, bins, fct):
         plt.close()
 
 
-def plot_roc(outdir, bdts, x_train, y_train, x_test, y_test):
+def plot_roc(outdir, bdts, x_train, y_train, x_test, y_test, vismass):
     for cls in bdts:
         decisions = cls.decision_function(x_test)
         fpr, tpr, thresholds = roc_curve(y_test, decisions)
@@ -340,6 +342,13 @@ def plot_roc(outdir, bdts, x_train, y_train, x_test, y_test):
         decisions = cls.decision_function(x_train)
         fpr, tpr, thresholds = roc_curve(y_train, decisions)
         plt.plot(fpr, tpr, '--', lw=1, color=line[-1].get_color())
+
+    fpr, tpr, thresholds = roc_curve(y_test, x_test[:, vismass])
+    roc_auc = auc(fpr, tpr)
+    line = plt.plot(fpr, tpr, lw=1, label='ROC for visible mass (area = {:0.2f})'.format(roc_auc))
+
+    fpr, tpr, thresholds = roc_curve(y_train, x_train[:, vismass])
+    plt.plot(fpr, tpr, '--', lw=1, color=line[-1].get_color())
 
     plt.xlabel('Background efficiency')
     plt.ylabel('Signal efficiency')
