@@ -22,8 +22,9 @@ EOF
    git cms-init > /dev/null
 
    git cms-merge-topic cms-met:METRecipe_8020
+   git cms-merge-topic ikrav:egm_id_80X_v2
 
-   git clone -b CMSSW_8_0_8_expICHEPLeptons git@github.com:cms-ttH/MiniAOD.git
+   git clone -b CMSSW_8_0_24_v1_sync git@github.com:cms-ttH/MiniAOD.git
    git clone git@github.com:cms-ttH/ttH-LeptonID.git ttH/LeptonID
    git clone git@github.com:cms-ttH/ttH-TauRoast.git ttH/TauRoast
 
@@ -39,6 +40,9 @@ EOF
    cd -
 
    scram b -j 8
+
+   cd $CMSSW_BASE/external/$SCRAM_ARCH/
+   git clone -b egm_id_80X_v1 https://github.com/ikrav/RecoEgamma-ElectronIdentification.git data/RecoEgamma/ElectronIdentification/data
 ) > setup.log
 
 

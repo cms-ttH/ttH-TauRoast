@@ -401,11 +401,11 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
    auto rho = get_collection(*this, event, rho_token_);
    helper_.SetRho(*rho);
 
-   edm::ESHandle<JetCorrectorParametersCollection> jetcorr;
-   setup.get<JetCorrectionsRecord>().get("AK4PF", jetcorr);
+   // edm::ESHandle<JetCorrectorParametersCollection> jetcorr;
+   // setup.get<JetCorrectionsRecord>().get("AK4PF", jetcorr);
 
-   const JetCorrectorParameters& params = (*jetcorr)["Uncertainty"];
-   helper_.SetJetCorrectorUncertainty(params);
+   // const JetCorrectorParameters& params = (*jetcorr)["Uncertainty"];
+   // helper_.SetJetCorrectorUncertainty(params);
 
    // ===============
    // Basic selection
