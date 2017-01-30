@@ -428,9 +428,9 @@ fastlane::update_weights(const std::string& process, std::unordered_map<std::str
    static auto csvhelper = CSVHelper();
 
    std::string csv_sys = "central";
-   if (lower(sys) == "jesup") {
+   if (lower(sys) == "cms_tthl_jesup") {
       csv_sys = "up_jes";
-   } else if (lower(sys) == "jesdown") {
+   } else if (lower(sys) == "cms_tthl_jesdown") {
       csv_sys = "down_jes";
    }
 
