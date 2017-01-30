@@ -50,6 +50,10 @@ options.register("reHLT", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
                  "Indicate if the HLT has been re-run.")
+options.register("hip", True,
+                 VarParsing.VarParsing.multiplicity.singleton,
+                 VarParsing.VarParsing.varType.bool,
+                 "Indicate if HIP safe mu ID is to be used.")
 options.register("globalTag", "80X_mcRun2_asymptotic_2016_TrancheIV_v7",
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.string,
@@ -122,6 +126,7 @@ process.load("ttH.TauRoast.genHadronMatching_cfi")
 
 process.ttHLeptons.LooseCSVWP = cms.double(0.5426)
 process.ttHLeptons.MediumCSVWP = cms.double(0.8484)
+process.ttHLeptons.IsHIPSafe = cms.bool(options.hip)
 
 process.lepPath = cms.Path(
     process.fullPatMetSequence *

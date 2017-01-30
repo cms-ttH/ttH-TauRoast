@@ -65,6 +65,8 @@ for path in datasets(tag):
         mask = lumimask
         params = ['data=True', 'globalTag=' + gt, 'channels=ttl']
         category = data
+        if '/Run2016G' in path or '/Run2017H' in path:
+            params += ['hip=false']
     elif label.startswith('ttH'):
         if 'tranche3' not in label:
             params += ['reHLT=True']
