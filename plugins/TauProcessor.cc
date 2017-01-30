@@ -46,6 +46,7 @@
 
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
+#include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
 
 #include "TH1F.h"
 
@@ -121,6 +122,8 @@ class TauProcessor : public edm::one::EDProducer<edm::BeginRunProducer, edm::End
       MiniAODHelper helper_;
       std::auto_ptr<JetCorrectionUncertainty> junc_;
 
+      std::string sample_;
+
       bool data_;
 
       unsigned int min_leptons_;
@@ -142,6 +145,7 @@ class TauProcessor : public edm::one::EDProducer<edm::BeginRunProducer, edm::End
 
       edm::EDGetTokenT<double> rho_token_;
       edm::EDGetTokenT<GenEventInfoProduct> geninfo_token_;
+      edm::EDGetTokenT<LHEEventProduct> lheinfo_token_;
       edm::EDGetTokenT<reco::BeamSpot> bs_token_;
       edm::EDGetTokenT<reco::ConversionCollection> cc_token_;
       edm::EDGetTokenT<std::vector<PileupSummaryInfo>> pu_token_;
@@ -184,6 +188,7 @@ class TauProcessor : public edm::one::EDProducer<edm::BeginRunProducer, edm::End
 };
 
 TauProcessor::TauProcessor(const edm::ParameterSet& config) :
+   sample_(config.getParameter<std::string>("sample")),
    data_(config.getParameter<bool>("data")),
    min_leptons_(config.getParameter<unsigned int>("minLeptons")),
    max_leptons_(config.getParameter<unsigned int>("maxLeptons")),
@@ -217,6 +222,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
 
    rho_token_ = consumes<double>(edm::InputTag("fixedGridRhoFastjetAll"));
    geninfo_token_ = consumes<GenEventInfoProduct>(edm::InputTag("generator"));
+   lheinfo_token_ = consumes<LHEEventProduct>(edm::InputTag("externalLHEProducer"));
    bs_token_ = consumes<reco::BeamSpot>(edm::InputTag("offlineBeamSpot"));
    cc_token_ = consumes<reco::ConversionCollection>(edm::InputTag("reducedEgamma", "reducedConversions", ""));
    pu_token_ = consumes<std::vector<PileupSummaryInfo>>(edm::InputTag("slimmedAddPileupInfo"));
@@ -615,6 +621,16 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
             particles));
 
    ptr->setWeight("Generator", genweight);
+
+   if (!data_) {
+      auto lheinfo = get_collection(*this, event, lheinfo_token_);
+      if (lheinfo->weights().size() > 6) {
+         ptr->setWeight("CMS_ttHl_thu_shape_" + sample_ + "_x1Down", genweight * lheinfo->weights()[2].wgt / lheinfo->originalXWGTUP());
+         ptr->setWeight("CMS_ttHl_thu_shape_" + sample_ + "_x1Up", genweight * lheinfo->weights()[1].wgt / lheinfo->originalXWGTUP());
+         ptr->setWeight("CMS_ttHl_thu_shape_" + sample_ + "_x1Down", genweight * lheinfo->weights()[6].wgt / lheinfo->originalXWGTUP());
+         ptr->setWeight("CMS_ttHl_thu_shape_" + sample_ + "_x1Up", genweight * lheinfo->weights()[3].wgt / lheinfo->originalXWGTUP());
+      }
+   }
 
    if (save_gen_) {
       std::vector<superslim::GenJet> gjets;

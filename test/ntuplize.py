@@ -34,6 +34,10 @@ options.register("dump", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
                  "Dump event content and quit after one event.")
+options.register("sample", "",
+                 VarParsing.VarParsing.multiplicity.singleton,
+                 VarParsing.VarParsing.varType.string,
+                 "Sample name to use")
 options.register("data", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
@@ -162,6 +166,7 @@ for channel in options.channels:
         raise ValueError("channel needs to be either tll or ttl")
 
     prod = cms.EDProducer("TauProcessor",
+                          sample=cms.string(options.sample),
                           data=cms.bool(options.data),
                           electrons=cms.InputTag("ttHLeptons"),
                           muons=cms.InputTag("ttHLeptons"),

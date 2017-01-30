@@ -70,6 +70,14 @@ for path in datasets(tag):
             params += ['reHLT=True']
         category = tth
 
+    if 'amcatnlo' in path:
+        if label.startswith('ttH'):
+            params += ['sample=ttH']
+        if label.startswith('TTW'):
+            params += ['sample=ttW']
+        if label.startswith('TTZ'):
+            params += ['sample=ttZ']
+
     workflows.append(Workflow(
         label=label,
         dataset=cmssw.Dataset(
