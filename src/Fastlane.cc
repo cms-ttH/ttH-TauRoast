@@ -42,7 +42,7 @@ fastlane::CSVHelper::CSVHelper()
          "up_cferr2", "down_cferr2"
      })
 {
-   edm::FileInPath fn("ttH/TauRoast/data/CSVv2_ichep.csv");
+   edm::FileInPath fn("ttH/TauRoast/data/weights/CSVv2Moriond17_2017_1_26_BtoH.csv");
    BTagCalibration calib("csvv2", fn.fullPath());
 
    reader_.load(calib, BTagEntry::FLAV_B, "iterativefit");
