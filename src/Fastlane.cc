@@ -450,9 +450,9 @@ fastlane::update_weights(const std::string& process, std::unordered_map<std::str
    // PU weight
    // =========
    static auto puhelper = PUWeightProducer(
-         "MiniAODHelper/data/puweights/MC/Summer16_NumTruePU.root",
+         "MiniAOD/MiniAODHelper/data/puweights/MC/Summer16_NumTruePU.root",
          "hNumTruePUPdf",
-         "MiniAODHelper/data/puweights/Run2016/DataPileupHistogram_Run2016-Complete_MinBias69200.root",
+         "MiniAOD/MiniAODHelper/data/puweights/Run2016/DataPileupHistogram_Run2016-Complete_MinBias69200.root",
          "pileup");
    if (process.compare(0, 5, "fakes"))
       ws[lower("PUWeight")] = puhelper(e.ntv());
