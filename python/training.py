@@ -344,12 +344,12 @@ def plot_roc(outdir, bdts, x_train, y_train, x_test, y_test, vismass):
         fpr, tpr, thresholds = roc_curve(y_train, decisions)
         plt.plot(fpr, tpr, '--', lw=1, color=line[-1].get_color())
 
-    fpr, tpr, thresholds = roc_curve(y_test, x_test[:, vismass])
+    fpr, tpr, thresholds = roc_curve(
+        np.concatenate((y_test, y_train)),
+        np.concatenate((x_test[:, vismass], x_train[:, vismass]))
+    )
     roc_auc = auc(fpr, tpr)
     line = plt.plot(fpr, tpr, lw=1, label='ROC for visible mass (area = {:0.2f})'.format(roc_auc))
-
-    fpr, tpr, thresholds = roc_curve(y_train, x_train[:, vismass])
-    plt.plot(fpr, tpr, '--', lw=1, color=line[-1].get_color())
 
     plt.xlabel('Background efficiency')
     plt.ylabel('Signal efficiency')
