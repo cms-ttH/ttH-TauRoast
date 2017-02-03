@@ -93,17 +93,21 @@ def create_bdts(outdir, setup, x_train, y_train):
             dirname = os.path.join(outdir, 'bdt-{}'.format(n))
             if not os.path.exists(dirname):
                 os.makedirs(dirname)
+            label = cfg.pop('label', 'bdt-{}'.format(n))
             bdt = GradientBoostingClassifier(**cfg)
+            bdt.label = label
             bdt.fit(x_train, y_train)
             with open(os.path.join(dirname, "bdt.pkl"), 'wb') as fd:
-                pickle.dump(bdt, fd)
+                pickle.dump((bdt, label), fd)
             with codecs.open(os.path.join(dirname, "configuration.txt"), "w", encoding="utf8") as fd:
                 fd.write('{}\n'.format(cfg))
             yield bdt
     else:
         for dirname in glob(os.path.join(outdir, "bdt-*")):
             with open(os.path.join(dirname, "bdt.pkl"), "rb") as fd:
-                yield pickle.load(fd)
+                bdt, label = pickle.load(fd)
+                bdt.label = label
+                yield bdt
 
 
 def train(config):
@@ -146,7 +150,7 @@ def train(config):
         gbr_to_tmva(bdt, df, os.path.join(outdir, "bdt-{}".format(n), "weights.xml"), coef=COEF)
 
     logging.info("creating roc, output")
-    plot_roc(outdir, bdts, x_train, y_train, x_test, y_test)
+    plot_roc(outdir, bdts, x_train, y_train, x_test, y_test, setup['variables'].index('tt_visiblemass'))
     plot_output(outdir, bdts, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')],
                 'decision-function.png', np.linspace(-7, 7, 40), lambda cls, data: cls.decision_function(data))
     plot_output(outdir, bdts, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')],
@@ -183,7 +187,7 @@ def run_cross_validation(outdir, bdts, x, y):
 
 def run_validation_curve(outdir, bdts, x_train, y_train, x_test, y_test):
     logging.info("saving validation curve")
-    for n, bdt in enumerate(bdts):
+    for bdt in bdts:
         test_score, train_score = np.empty(len(bdt.estimators_)), np.empty(len(bdt.estimators_))
 
         for i, pred in enumerate(bdt.staged_decision_function(x_test)):
@@ -192,7 +196,7 @@ def run_validation_curve(outdir, bdts, x_train, y_train, x_test, y_test):
             train_score[i] = 1 - roc_auc_score(y_train, pred)
 
         best = np.argmin(test_score)
-        line = plt.plot(test_score, label='BDT {}'.format(n))
+        line = plt.plot(test_score, label=bdt.label)
         plt.plot(train_score, '--', color=line[-1].get_color())
 
         plt.xlabel("Number of boosting iterations")
@@ -213,8 +217,8 @@ def run_feature_elimination(outdir, bdts, x, y, setup):
 
         out = u'Feature selection\n=================\n\n'
         out += u'optimal feature count: {}\n\nranking\n-------\n'.format(rfecv.n_features_)
-        for n, v in enumerate(setup["variables"]):
-            out += u'{:30}: {:>5}\n'.format(v, rfecv.ranking_[n])
+        for i, v in enumerate(setup["variables"]):
+            out += u'{:30}: {:>5}\n'.format(v, rfecv.ranking_[i])
         with codecs.open(os.path.join(outdir, "bdt-{}".format(n), "log-feature-elimination.txt"), "w", encoding="utf8") as fd:
             fd.write(out)
 
@@ -256,6 +260,7 @@ def plot_feature_elimination(outdir, cls, n):
     plt.xlabel('# features')
     plt.ylabel('Score (ROC auc)')
     plt.savefig(os.path.join(outdir, 'bdt-{}'.format(n), 'feature-elimination.png'))
+    plt.close()
 
 
 def plot_inputs(outdir, vars, sig, bkg):
@@ -328,16 +333,23 @@ def plot_output(outdir, bdts, data, filename, bins, fct):
         plt.close()
 
 
-def plot_roc(outdir, bdts, x_train, y_train, x_test, y_test):
-    for n, cls in enumerate(bdts):
+def plot_roc(outdir, bdts, x_train, y_train, x_test, y_test, vismass):
+    for cls in bdts:
         decisions = cls.decision_function(x_test)
         fpr, tpr, thresholds = roc_curve(y_test, decisions)
         roc_auc = auc(fpr, tpr)
-        line = plt.plot(fpr, tpr, lw=1, label='ROC for BDT {} (area = {:0.2f})'.format(n, roc_auc))
+        line = plt.plot(fpr, tpr, lw=1, label='ROC for {} (area = {:0.2f})'.format(cls.label, roc_auc))
 
         decisions = cls.decision_function(x_train)
         fpr, tpr, thresholds = roc_curve(y_train, decisions)
         plt.plot(fpr, tpr, '--', lw=1, color=line[-1].get_color())
+
+    fpr, tpr, thresholds = roc_curve(
+        np.concatenate((y_test, y_train)),
+        np.concatenate((x_test[:, vismass], x_train[:, vismass]))
+    )
+    roc_auc = auc(fpr, tpr)
+    line = plt.plot(fpr, tpr, lw=1, label='ROC for visible mass (area = {:0.2f})'.format(roc_auc))
 
     plt.xlabel('Background efficiency')
     plt.ylabel('Signal efficiency')

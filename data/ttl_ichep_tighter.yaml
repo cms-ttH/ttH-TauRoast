@@ -5,7 +5,7 @@ generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v35
 # ntupledir: /scratch365/mwolf3/ttH/v32
 mvadir: ~/www/ttH/v2/ttl_train/sklearn/bdt-1
-outdir: ~/www/ttH/v35/ttl_ichep
+outdir: ~/www/ttH/v35/ttl_ichep_tighter
 histformat: "{v}_{c}_{p}"
 
 lumi: 12900
@@ -15,9 +15,9 @@ plot:
   - collisions_single
   - fakes_single
   - ttH_125_signal
-  - ttH2TT_125_amc
-  - ttH2WW_125_amc
-  - ttH2ZZ_125_amc
+  - ttH2TT_125_signal
+  - ttH2WW_125_signal
+  - ttH2ZZ_125_signal
   - ttH_125_amc
   - ttjets_pow
   - ttW
@@ -30,9 +30,9 @@ limits:
   - collisions_single
   - fakes_single
   # - ttH_125_amc
-  - ttH2TT_125_amc
-  - ttH2WW_125_amc
-  - ttH2ZZ_125_amc
+  - ttH2TT_125_signal
+  - ttH2WW_125_signal
+  - ttH2ZZ_125_signal
   - ttjets_pow
   # - collisions_fake
   # - ttH_125_pow
@@ -66,6 +66,8 @@ fake cuts:
     - "fake": >
         leptons[0].mva() < superslim::id::Loose or
         std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) <= 1
+    - "τ pT": >
+        taus[0].pt() >= 30 and taus[1].pt() >= 20
     - "τ OS": >
         taus[0].charge() * taus[1].charge() < 0
 
@@ -93,6 +95,8 @@ signal cuts:
         leptons[0].mva() >= superslim::id::Loose
     - "τ quality": >
         std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) >= 2
+    - "τ pT": >
+        taus[0].pt() >= 30 and taus[1].pt() >= 20
     - "τ OS": >
         taus[0].charge() * taus[1].charge() < 0
     - "jets": >
@@ -130,6 +134,8 @@ data fake cuts:
     - "fake": >
         leptons[0].mva() < superslim::id::Loose or
         std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) <= 1
+    - "τ pT": >
+        taus[0].pt() >= 30 and taus[1].pt() >= 20
     - "τ OS": >
         taus[0].charge() * taus[1].charge() < 0
 
@@ -155,6 +161,8 @@ data signal cuts:
         leptons[0].mva() >= superslim::id::Loose
     - "τ quality": >
         std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) >= 2
+    - "τ pT": >
+        taus[0].pt() >= 30 and taus[1].pt() >= 20
     - "τ OS": >
         taus[0].charge() * taus[1].charge() < 0
 

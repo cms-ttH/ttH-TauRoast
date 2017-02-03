@@ -3,7 +3,7 @@
 channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v2
-outdir: ~/www/ttH/v2/ttl_train
+outdir: ~/www/ttH/v2/ttl_train.03
 histformat: "{p}_{c}_{v}"
 
 lumi: 12900
@@ -30,6 +30,8 @@ signal cuts:
         leptons[0].mva() >= superslim::id::Loose
     - "τ quality": >
         std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Loose; }) >= 2
+    - "τ pT": >
+        taus[0].pt() >= 30 and taus[1].pt() >= 20
     - "τ OS": >
         taus[0].charge() * taus[1].charge() < 0
     - "jets": >
@@ -61,6 +63,8 @@ training cuts:
         leptons[0].mva() >= superslim::id::Loose
     - "τ quality": >
         std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Loose; }) >= 2
+    - "τ pT": >
+        taus[0].pt() >= 30 and taus[1].pt() >= 20
     - "τ OS": >
         taus[0].charge() * taus[1].charge() < 0
 
