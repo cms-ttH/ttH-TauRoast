@@ -4,7 +4,7 @@ from lobster.core import AdvancedOptions, Category, Config, StorageConfiguration
 
 from ttH.TauRoast.datasets import datasets, mctag
 
-version = "v37"
+version = "v38"
 tag = "all"
 
 globaltag_mc = "80X_mcRun2_asymptotic_2016_TrancheIV_v8"
@@ -90,11 +90,7 @@ for path in datasets(tag):
         category=category,
         merge_size='3g',
         pset='ntuplize.py',
-        arguments=params,
-        sandbox=[
-            cmssw.Sandbox(release='/afs/crc.nd.edu/user/m/mwolf3/work/ttH/releases/CMSSW_8_0_21'),
-            cmssw.Sandbox(release='/afs/crc.nd.edu/user/m/mwolf3/work/ttH/releases/CMSSW_8_0_21_rh7')
-        ]
+        arguments=params
     ))
 
 config = Config(
