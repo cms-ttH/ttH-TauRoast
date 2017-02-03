@@ -1,12 +1,14 @@
+import re
+
 from lobster import cmssw
 from lobster.core import AdvancedOptions, Category, Config, StorageConfiguration, Workflow
 
 from ttH.TauRoast.datasets import datasets, mctag
 
-version = "v3"
+version = "v4"
 tag = "train"
 
-globaltag_mc = "80X_mcRun2_asymptotic_2016_TrancheIV_v6"
+globaltag_mc = "80X_mcRun2_asymptotic_2016_TrancheIV_v8"
 globaltag_data = "80X_dataRun2_Prompt_ICHEP16JEC_v0"
 
 lumimask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/Cert_271036-277148_13TeV_PromptReco_Collisions16_JSON.txt'
@@ -46,6 +48,8 @@ mc = Category(
     memory=1200
 )
 
+part = re.compile(r'maod(_p\d)')
+
 workflows = []
 for path in datasets(tag):
     _, major, minor, _ = path.split('/')
@@ -58,13 +62,22 @@ for path in datasets(tag):
     if 'fast' in path:
         instance = 'phys03'
 
-    if '/Run2016' in path and path.endswith('MINIAOD'):
-        mask = lumimask
-        params = ['data=True', 'globalTag=' + globaltag_data]
-        category = data
-    elif label.startswith('ttH'):
-        # params += ['reHLT=True']
+    m = part.search(path)
+    if m:
+        label += m.group(1)
+
+    if label.startswith('ttH'):
+        if 'tranche3' not in label:
+            params += ['reHLT=True']
         category = tth
+
+    if 'amcatnlo' in path:
+        if label.startswith('ttH'):
+            params += ['sample=ttH']
+        if label.startswith('TTW'):
+            params += ['sample=ttW']
+        if label.startswith('TTZ'):
+            params += ['sample=ttZ']
 
     workflows.append(Workflow(
         label=label,
@@ -75,14 +88,12 @@ for path in datasets(tag):
             dbs_instance=instance
         ),
         category=category,
-        merge_size='2g',
+        merge_size='3g',
         pset='ntuplize.py',
-        arguments=params,
-        sandbox=[
-            cmssw.Sandbox(release='/afs/crc.nd.edu/user/m/mwolf3/work/ttH/releases/CMSSW_8_0_21'),
-            cmssw.Sandbox(release='/afs/crc.nd.edu/user/m/mwolf3/work/ttH/releases/CMSSW_8_0_21_rh7')
-        ]
+        arguments=params
     ))
+
+    print label
 
 config = Config(
     label='tau_{}_{}'.format(version, tag),
