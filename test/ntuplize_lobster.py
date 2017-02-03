@@ -7,9 +7,9 @@ from ttH.TauRoast.datasets import datasets, mctag
 version = "v37"
 tag = "all"
 
-globaltag_mc = "80X_mcRun2_asymptotic_2016_TrancheIV_v7"
-globaltag_data = "80X_dataRun2_2016SeptRepro_v6"
-globaltag_data_h = "80X_dataRun2_Prompt_v15"
+globaltag_mc = "80X_mcRun2_asymptotic_2016_TrancheIV_v8"
+globaltag_data = "80X_dataRun2_2016SeptRepro_v7"
+globaltag_data_h = "80X_dataRun2_Prompt_v16"
 
 lumimask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt'
 

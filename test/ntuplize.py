@@ -54,7 +54,7 @@ options.register("hip", True,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
                  "Indicate if HIP safe mu ID is to be used.")
-options.register("globalTag", "80X_mcRun2_asymptotic_2016_TrancheIV_v7",
+options.register("globalTag", "80X_mcRun2_asymptotic_2016_TrancheIV_v8",
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.string,
                  "Global tag to use")
