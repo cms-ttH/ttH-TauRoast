@@ -2,8 +2,8 @@
 
 channel: ttl
 generator: pow
-ntupledir: /hadoop/store/user/matze/ttH/v2
-outdir: ~/www/ttH/v2/ttl_train.03
+ntupledir: /hadoop/store/user/matze/ttH/v4
+outdir: ~/www/ttH/v4/ttl_train
 histformat: "{p}_{c}_{v}"
 
 lumi: 12900
@@ -12,6 +12,9 @@ lumi: 12900
 plot:
   - ttH2Nonbb_125_train
   - ttjets_pow_train
+  - ttW_train
+  - ttZ_train
+  - WZ_train
 
 limits: []
 
