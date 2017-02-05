@@ -29,9 +29,9 @@ from ttH.TauRoast.external.sklearn_to_tmva import gbr_to_tmva
 
 matplotlib.style.use('ggplot')
 
-CV = 4
+CV = 5
 NJOBS = 48
-COEF = 6
+COEF = 4
 
 
 def tmva_like(cls):
@@ -155,8 +155,8 @@ def train(config):
                 'decision-function.png', np.linspace(-7, 7, 40), lambda cls, data: cls.decision_function(data))
     plot_output(outdir, bdts, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')],
                 'signal-probability.png', np.linspace(0, 1, 40), lambda cls, data: cls.predict_proba(data)[:, 1])
-    # plot_output(outdir, bdts, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')],
-    #             'tmva-like.png', np.linspace(-1, 1, 40), lambda cls, data: np.apply_along_axis(tmva_like(cls), 1, data))
+    plot_output(outdir, bdts, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')],
+                'tmva-like.png', np.linspace(-1, 1, 40), lambda cls, data: np.apply_along_axis(tmva_like(cls), 1, data))
 
 
 def evaluate(config, tree):
