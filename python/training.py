@@ -166,7 +166,7 @@ def evaluate(config, tree):
     default = os.path.join(config.get("indir", config["outdir"]), "sklearn", "bdt-0")
     fn = os.path.join(config.get("mvadir", default), "bdt.pkl")
     with open(fn, 'rb') as fd:
-        bdt = pickle.load(fd)
+        bdt, label = pickle.load(fd)
     scores = []
     tmva = []
     if len(data) > 0:
