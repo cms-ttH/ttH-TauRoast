@@ -338,11 +338,12 @@ def plot_roc(outdir, bdts, x_train, y_train, x_test, y_test, vismass):
         decisions = cls.decision_function(x_test)
         fpr, tpr, thresholds = roc_curve(y_test, decisions)
         roc_auc = auc(fpr, tpr)
-        line = plt.plot(fpr, tpr, lw=1, label='ROC for {} (area = {:0.2f})'.format(cls.label, roc_auc))
+        line = plt.plot(fpr, tpr, lw=1, label='ROC for {} (area = {:0.3f})'.format(cls.label, roc_auc))
 
         decisions = cls.decision_function(x_train)
         fpr, tpr, thresholds = roc_curve(y_train, decisions)
-        plt.plot(fpr, tpr, '--', lw=1, color=line[-1].get_color())
+        roc_auc = auc(fpr, tpr)
+        plt.plot(fpr, tpr, '--', lw=1, color=line[-1].get_color(), label='ROC for {} training (area = {:0.3f})'.format(cls.label, roc_auc))
 
     fpr, tpr, thresholds = roc_curve(
         np.concatenate((y_test, y_train)),
