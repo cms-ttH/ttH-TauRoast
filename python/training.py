@@ -31,7 +31,7 @@ matplotlib.style.use('ggplot')
 
 CV = 5
 NJOBS = 48
-COEF = 4
+COEF = 3
 
 
 def tmva_like(cls):
