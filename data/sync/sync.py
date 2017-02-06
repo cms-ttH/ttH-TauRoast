@@ -96,10 +96,8 @@ Leaf('jet_deltaRavg', 'f',
             for (auto j = i + 1; j < jets.size(); ++j)
                 drs.push_back(dR(jets[i], jets[j]));
         result = std::accumulate(drs.begin(), drs.end(), 0.) / drs.size()''')
-Leaf('tt_deltaR', 'f', 'result = dR(taus[0], taus[1])')
-Leaf('tt_visiblemass', 'f', 'result = (taus[0].p4() + taus[1].p4()).M()')
-Leaf('tau0_pt', 'f', 'result = taus[0].p4().Pt()')
-Leaf('tau1_pt', 'f', 'result = taus[1].p4().Pt()')
+Leaf('tt_deltaR', 'f', 'result = dR(taus.at(0), taus.at(1))')
+Leaf('tt_visiblemass', 'f', 'result = (taus.at(0).p4() + taus.at(1).p4()).M()')
 
 Leaf('nEvent', 'i', 'result = event.event()')
 Leaf(
