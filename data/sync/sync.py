@@ -86,7 +86,7 @@ for (const auto& j: jets)
     ht += j.p4().Pt();
 for (const auto& t: all_taus)
     ht += t.p4().Pt();
-for (const auto& l: all_leptons)
+for (const auto& l: leptons)
     ht += l.p4().Pt();
 result = ht
 """)
@@ -96,7 +96,7 @@ for (const auto& j: jets)
     HT += j.p4().Pt();
 for (const auto& t: all_taus)
     HT += t.p4().Pt();
-for (const auto& l: all_leptons)
+for (const auto& l: leptons)
     HT += l.p4().Pt();
 result = HT
 """)
