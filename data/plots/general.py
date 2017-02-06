@@ -9,7 +9,9 @@ Leaf('event', 'i', 'result = event.event()')
 
 Leaf('events', 'f', 'result = .5')
 Leaf('njets', 'f', 'result = jets.size() - btags(jets)')
+Leaf('njets_inclusive', 'f', 'result = jets.size()')
 Leaf('ntags', 'f', 'result = btags(jets)')
+Leaf('ntags_loose', 'f', 'result = btags(jets, true)')
 Leaf('npv', 'f', 'result = event.npv()')
 Leaf('nelectrons', 'f', 'int n = 0; for (const auto& l: leptons) n += l.electron(); result = n')
 Leaf('nmuons', 'f', 'int n = 0; for (const auto& l: leptons) n += l.muon(); result = n')
@@ -58,6 +60,12 @@ Plot(
     name="general/NumTags",
     values=["ntags"],
     labels=["Number of tags", "Events"],
+    binning=[10, 0, 10]
+)
+Plot(
+    name="general/NumTagsLoose",
+    values=["ntags_loose"],
+    labels=["Number of tags (loose)", "Events"],
     binning=[10, 0, 10]
 )
 
@@ -168,13 +176,23 @@ Plot(
 )
 
 Leaf('met', 'f', 'result = met.Pt()')
-Leaf('ht', 'f', """
+Leaf('ht_old', 'f', """
 float ht = 0.;
 for (const auto& j: jets)
     ht += j.p4().Pt();
 for (const auto& t: taus)
     ht += t.p4().Pt();
 for (const auto& l: leptons)
+    ht += l.p4().Pt();
+result = ht
+""")
+Leaf('ht', 'f', """
+float ht = 0.;
+for (const auto& j: jets)
+    ht += j.p4().Pt();
+for (const auto& t: all_taus)
+    ht += t.p4().Pt();
+for (const auto& l: all_leptons)
     ht += l.p4().Pt();
 result = ht
 """)
@@ -202,6 +220,12 @@ Plot(
     values=["met"],
     labels=["MET", "Events"],
     binning=[20, 0, 300]
+)
+Plot(
+    name="general/HT_old",
+    values=["ht_old"],
+    labels=["HT", "Events"],
+    binning=[20, 200, 1000]
 )
 Plot(
     name="general/HT",

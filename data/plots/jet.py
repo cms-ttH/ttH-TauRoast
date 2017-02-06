@@ -80,6 +80,31 @@ for (const auto& j: {0})
     result.push_back(j.{1});
 """
 
+for i in range(2):
+    Leaf('jet{}_pt'.format(i + 1), 'f', 'result = jets.at({}).p4().Pt()'.format(i))
+    Plot(
+        name="jets/kinematic/Jet{}_Pt".format(i + 1),
+        values=['jet{}_pt'.format(i + 1)],
+        labels=["Jet_{{{}}} P_{{T}}".format(i + 1), "Events"],
+        binning=[20, 20, 250]
+    )
+
+    Leaf('tag{}_pt'.format(i + 1), 'f', 'result = tags(jets).at({}).p4().Pt()'.format(i))
+    Plot(
+        name="jets/kinematic/Tag{}_Pt".format(i + 1),
+        values=['tag{}_pt'.format(i + 1)],
+        labels=["b-Jet_{{{}}} P_{{T}}".format(i + 1), "Events"],
+        binning=[20, 20, 250]
+    )
+
+    Leaf('notag{}_pt'.format(i + 1), 'f', 'result = notags(jets).at({}).p4().Pt()'.format(i))
+    Plot(
+        name="jets/kinematic/NTag{}_Pt".format(i + 1),
+        values=['notag{}_pt'.format(i + 1)],
+        labels=["non b-Jet_{{{}}} P_{{T}}".format(i + 1), "Events"],
+        binning=[20, 20, 250]
+    )
+
 for mode, fltr in pspace:
     Leaf('{0}jet_pt'.format(mode.lower()), '[f]', return_list.format(fltr, 'p4().Pt()'))
     Leaf('{0}jet_eta'.format(mode.lower()), '[f]', return_list.format(fltr, 'p4().Eta()'))
