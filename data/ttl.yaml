@@ -2,10 +2,10 @@
 
 channel: ttl
 generator: pow
-ntupledir: /hadoop/store/user/matze/ttH/v35
+ntupledir: /hadoop/store/user/matze/ttH/v38
 # ntupledir: /scratch365/mwolf3/ttH/v32
-outdir: ~/www/ttH/v35/ttl
-mvadir: ~/www/ttH/v35/ttl_train
+outdir: ~/www/ttH/v38/ttl
+mvadir: data/bdt
 histformat: "{p}_{c}_{v}"
 
 lumi: 36300
@@ -56,6 +56,8 @@ fake cuts:
     - "fake": >
         leptons[0].mva() < superslim::id::Loose or
         std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) <= 1
+    - "τ pT": >
+        taus[0].pt() >= 20 and taus[1].pt() >= 20
     - "τ OS": >
         taus[0].charge() * taus[1].charge() < 0
 
@@ -78,11 +80,13 @@ signal cuts:
         (leptons[0].electron() and leptons[0].pt() > 30) or
         (leptons[0].muon() and leptons[0].pt() > 25)
     - "1 l": >
-        std::count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Loose; }) <= 1
+        std::count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Loose; }) == 1
     - "1st l": >
         leptons[0].mva() >= superslim::id::Loose
     - "τ quality": >
         std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) >= 2
+    - "τ pT": >
+        taus[0].pt() >= 20 and taus[1].pt() >= 20
     - "τ OS": >
         taus[0].charge() * taus[1].charge() < 0
     - "jets": >
@@ -150,28 +154,22 @@ data signal weights: []
 
 # List of systematics to run when `-s` is specified
 systematics:
-  - CMS_scale_j
-  - CMS_res_j
-  - jetTauFake
-  - eTauFake
-  - tauIdEff
+  - CMS_ttHl_JES
+  - CMS_ttHl_tauES
+  - CMS_ttHl_HF
+  - CMS_ttHl_HFStats1
+  - CMS_ttHl_HFStats2
+  - CMS_ttHl_LF
+  - CMS_ttHl_LFStats1
+  - CMS_ttHl_LFStats2
+  - CMS_ttHl_cErr1
+  - CMS_ttHl_cErr2
+  - CMS_ttHl_thu_shape_ttH_x1
+  - CMS_ttHl_thu_shape_ttH_y1
+  - CMS_ttHl_thu_shape_ttW_x1
+  - CMS_ttHl_thu_shape_ttW_y1
+  - CMS_ttHl_thu_shape_ttZ_x1
+  - CMS_ttHl_thu_shape_ttZ_y1
 
 categories:
   - inclusive: ""
-  - electron: "nelectrons == 1"
-  - muon: "nmuons == 1"
-  - ttl_3j: "njets + ntags == 3"
-  - ttl_4pj: "njets + ntags >= 4"
-  - ttl_4pj2pt: "(njets + ntags >= 4) && (ntags >= 2)"
-
-mva:
-    signals:
-      - ttH2TT_125_real
-    backgrounds:
-      - ttjets
-    variables:
-      - met
-      - ht
-      - tau1_pt
-      - tau2_pt
-      - lep1_pt

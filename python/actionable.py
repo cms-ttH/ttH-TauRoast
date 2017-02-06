@@ -18,8 +18,10 @@ from ttH.TauRoast.processing import Process
 def expand_systematics(systematics, weights):
     all_systematics = [('NA', weights)]
     for unc in set(systematics) - set(['NA']):
-        if unc not in ('CMS_scale_j', 'CMS_res_j'):
+        if unc not in ('CMS_ttHl_JES', 'CMS_ttH_tauES'):
             new_weights = weights[:]
+            if 'btag' in unc:
+                new_weights = [w for w in new_weights if w != 'CSVWeight']
             if unc in new_weights:
                 new_weights.remove(unc)
             all_systematics.append(('NA', new_weights + [unc + 'Up']))

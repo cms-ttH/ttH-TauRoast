@@ -249,10 +249,12 @@ Plot(
 ws = ["generator", "csvweight", "puweight", "fake"]
 ws += ["leptonsf"]
 ws += ["triggersf"]
-ws += map(''.join, itertools.product(["tauideff"], ["", "up", "down"]))
-ws += map(''.join, itertools.product(["jettaufake", "etaufake"], ["up", "down"]))
-ws += map(''.join, itertools.product(["lfcont", "hfcont", "hfstats1",
-                                      "hfstats2", "lfstats1", "lfstats2", "charmerr1", "charmerr2"], ["up", "down"]))
+ws += ["CMS_ttHl_" + w for w in
+       map(''.join, itertools.product(["lf", "hf", "hfstats1",
+                                       "hfstats2", "lfstats1",
+                                       "lfstats2", "cerr1", "cerr2"], ["up", "down"]))]
+ws += ["CMS_ttHl_thu_shape_tt" + w for w in
+       map(''.join, itertools.product("HWZ", ["_x1", "_y1"], ["up", "down"]))]
 for w in ws:
     Leaf('w_' + w, 'f', 'result = weights["{0}"]'.format(w))
 
