@@ -195,11 +195,11 @@ fastlane::FakeHelper::weight(const std::vector<superslim::Tau>& taus,
 fastlane::LeptonHelper::LeptonHelper()
 {
    {
-      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/lepMVAEffSF_e_3l.root").fullPath().c_str());
+      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/leptonSF/lepMVAEffSF_e_3l.root").fullPath().c_str());
       get_hist(f, tight_el_, "sf");
    }
    {
-      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/lepMVAEffSF_m_3l.root").fullPath().c_str());
+      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/leptonSF/lepMVAEffSF_m_3l.root").fullPath().c_str());
       get_hist(f, tight_mu_, "sf");
    }
 
