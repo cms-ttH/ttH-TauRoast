@@ -3,7 +3,7 @@
 channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v4
-outdir: ~/www/ttH/v4/ttl_train
+outdir: ~/www/ttH/v4/ttl_train.02
 histformat: "{p}_{c}_{v}"
 
 lumi: 12900
