@@ -1,0 +1,17 @@
+#!/usr/bin/env python
+
+from root_pandas import read_root
+
+import os
+import ROOT as r
+
+r.gROOT.SetBatch()
+
+if os.path.exists("test/sync_tau/out/ntuple_mva.root"):
+    os.unlink("test/sync_tau/out/ntuple_mva.root")
+
+for treename in "syncTree_1l2tau_SR", "syncTree_1l2tau_Fake":
+    base = read_root("test/sync_tau/out/ntuple.root", treename)
+    tmva = read_root("test/sync_tau/out/ntuple.root", treename + "_mva")
+    base["MVA_1l2tau_ttbar"] = tmva["tmva"]
+    base.to_root("test/sync_tau/out/ntuple_mva.root", treename, mode="a")

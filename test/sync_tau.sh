@@ -33,14 +33,15 @@ fi
 
 if [ $trees -gt 0 ]; then
    scripts/roaster -af data/sync.yaml
+   scripts/merge_trees
 fi
 
 if [ $comparison -gt 0 ]; then
    scripts/cmp_trees -n 100 $syncdir/tau_llr /afs/cern.ch/work/t/tstreble/public/syncNtuple_ttH_Htautau/syncNtuple_ttH_80X_Summer16.root:syncTree:LLR test/sync_tau/out/ntuple.root:syncTree:ND &
    tree=syncTree_1l2tau_SR
-   scripts/cmp_trees -n -1 $syncdir/tau_llr_event_signal /afs/cern.ch/work/t/tstreble/public/syncNtuple_ttH_Htautau/syncNtuple_event_ttH_80X_Summer16.root:$tree:LLR test/sync_tau/out/ntuple.root:$tree:ND &
+   scripts/cmp_trees -n -1 $syncdir/tau_llr_event_signal /afs/cern.ch/work/t/tstreble/public/syncNtuple_ttH_Htautau/syncNtuple_event_ttH_80X_Summer16.root:$tree:LLR test/sync_tau/out/ntuple_mva.root:$tree:ND &
    tree=syncTree_1l2tau_Fake
-   scripts/cmp_trees -n -1 $syncdir/tau_llr_event_fake /afs/cern.ch/work/t/tstreble/public/syncNtuple_ttH_Htautau/syncNtuple_event_ttH_80X_Summer16.root:$tree:LLR test/sync_tau/out/ntuple.root:$tree:ND &
+   scripts/cmp_trees -n -1 $syncdir/tau_llr_event_fake /afs/cern.ch/work/t/tstreble/public/syncNtuple_ttH_Htautau/syncNtuple_event_ttH_80X_Summer16.root:$tree:LLR test/sync_tau/out/ntuple_mva.root:$tree:ND &
    scripts/cmp_trees -n 100 $syncdir/tau_cornell/  /afs/cern.ch/work/z/ztao/public/ttHTT_syncNtuple/80X/Summer16/syncNtuple.root:syncTree:Cornell test/sync_tau/out/ntuple.root:syncTree:ND &
 
    wait

@@ -128,7 +128,11 @@ def compare_quantities(joint, names, limit):
             rows = compare(joint, quants, limit)
             if len(rows) > 0:
                 yield ('Differences in {}'.format(obj), quantify, ''.join(map(row.format, rows)))
-        quants = sorted([col for col in both if col.endswith('weight') or col.startswith('n_')])
+        quants = sorted(
+            [col for col in both if col.endswith('weight') or col.startswith('n_')] +
+            ['ntags_loose', 'avg_dr_jet', 'tt_deltaR', 'tt_mvis', 'MVA_1l2tau_ttbar']
+        )
+        quants = [q for q in quants if q in list(joint)]
         rows = compare(joint, quants, limit)
         if len(rows) > 0:
             yield ('Differences in events', quantify, ''.join(map(row.format, rows)))

@@ -2,6 +2,7 @@
 
 channel: ttl
 ntupledir: test/sync_tau
+mvadir: data/bdt
 outdir: test/sync_tau/out
 histformat: "{p}_{c}_{v}"
 mode: sync

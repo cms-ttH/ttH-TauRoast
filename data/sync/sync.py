@@ -90,14 +90,31 @@ for (const auto& l: all_leptons)
     ht += l.p4().Pt();
 result = ht
 """)
+Leaf('HT', 'f', """
+float HT = 0.;
+for (const auto& j: jets)
+    HT += j.p4().Pt();
+for (const auto& t: all_taus)
+    HT += t.p4().Pt();
+for (const auto& l: all_leptons)
+    HT += l.p4().Pt();
+result = HT
+""")
+Leaf('avg_dr_jet', 'f',
+     '''std::vector<float> drs;
+        for (auto i = 0; i < jets.size(); ++i)
+            for (auto j = i + 1; j < jets.size(); ++j)
+                drs.push_back(dR(jets[i], jets[j]));
+        result = std::accumulate(drs.begin(), drs.end(), 0.) / drs.size()''')
 Leaf('jet_deltaRavg', 'f',
      '''std::vector<float> drs;
         for (auto i = 0; i < jets.size(); ++i)
             for (auto j = i + 1; j < jets.size(); ++j)
                 drs.push_back(dR(jets[i], jets[j]));
         result = std::accumulate(drs.begin(), drs.end(), 0.) / drs.size()''')
-Leaf('tt_deltaR', 'f', 'result = dR(taus.at(0), taus.at(1))')
-Leaf('tt_visiblemass', 'f', 'result = (taus.at(0).p4() + taus.at(1).p4()).M()')
+Leaf('tt_deltaR', 'f', 'result = taus.size() >= 2 ? dR(taus.at(0), taus.at(1)) : -9999.')
+Leaf('tt_mvis', 'f', 'result = taus.size() >= 2 ? (taus.at(0).p4() + taus.at(1).p4()).M() : -9999.')
+Leaf('tt_visiblemass', 'f', 'result = taus.size() >= 2 ? (taus.at(0).p4() + taus.at(1).p4()).M() : -9999.')
 
 Leaf('nEvent', 'i', 'result = event.event()')
 Leaf(
