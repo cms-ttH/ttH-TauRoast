@@ -78,6 +78,29 @@ Leaf('nelectrons', 'f', 'result = leptons.size() > 1 ? leptons[0].electron() + l
 Leaf('nmuons', 'f', 'result = leptons.size() > 1 ? leptons[0].muon() + leptons[1].muon() : 0')
 Leaf('ntaus', 'i', 'result = std::count_if(std::begin(taus), std::end(taus), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Medium; })')
 
+Leaf('njets_inclusive', 'f', 'result = jets.size()')
+Leaf('ntags_loose', 'f', 'result = btags(jets, true)')
+Leaf('ht', 'f', """
+float ht = 0.;
+for (const auto& j: jets)
+    ht += j.p4().Pt();
+for (const auto& t: all_taus)
+    ht += t.p4().Pt();
+for (const auto& l: all_leptons)
+    ht += l.p4().Pt();
+result = ht
+""")
+Leaf('jet_deltaRavg', 'f',
+     '''std::vector<float> drs;
+        for (auto i = 0; i < jets.size(); ++i)
+            for (auto j = i + 1; j < jets.size(); ++j)
+                drs.push_back(dR(jets[i], jets[j]));
+        result = std::accumulate(drs.begin(), drs.end(), 0.) / drs.size()''')
+Leaf('tt_deltaR', 'f', 'result = dR(taus[0], taus[1])')
+Leaf('tt_visiblemass', 'f', 'result = (taus[0].p4() + taus[1].p4()).M()')
+Leaf('tau0_pt', 'f', 'result = taus[0].p4().Pt()')
+Leaf('tau1_pt', 'f', 'result = taus[1].p4().Pt()')
+
 Leaf('nEvent', 'i', 'result = event.event()')
 Leaf(
     'n_fakeablesel_ele', 'i', """
