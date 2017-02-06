@@ -132,7 +132,7 @@ fastlane::FakeHelper::FakeHelper()
    }
 
    {
-      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/lepton_weights.root").fullPath().c_str());
+      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/FR_data_ttH_mva.root").fullPath().c_str());
       TH2F *hele, *hmu;
       f.GetObject("FR_mva075_el_data_comb", hele);
       f.GetObject("FR_mva075_mu_data_comb", hmu);
