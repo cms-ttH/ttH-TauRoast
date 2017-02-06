@@ -627,8 +627,8 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
       if (lheinfo->weights().size() > 6) {
          ptr->setWeight("CMS_ttHl_thu_shape_" + sample_ + "_x1Down", genweight * lheinfo->weights()[2].wgt / lheinfo->originalXWGTUP());
          ptr->setWeight("CMS_ttHl_thu_shape_" + sample_ + "_x1Up", genweight * lheinfo->weights()[1].wgt / lheinfo->originalXWGTUP());
-         ptr->setWeight("CMS_ttHl_thu_shape_" + sample_ + "_x1Down", genweight * lheinfo->weights()[6].wgt / lheinfo->originalXWGTUP());
-         ptr->setWeight("CMS_ttHl_thu_shape_" + sample_ + "_x1Up", genweight * lheinfo->weights()[3].wgt / lheinfo->originalXWGTUP());
+         ptr->setWeight("CMS_ttHl_thu_shape_" + sample_ + "_y1Down", genweight * lheinfo->weights()[6].wgt / lheinfo->originalXWGTUP());
+         ptr->setWeight("CMS_ttHl_thu_shape_" + sample_ + "_y1Up", genweight * lheinfo->weights()[3].wgt / lheinfo->originalXWGTUP());
       }
    }
 
