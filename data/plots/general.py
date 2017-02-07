@@ -247,7 +247,7 @@ Plot(
 )
 
 ws = ["generator", "csvweight", "puweight", "fake"]
-ws += ["leptonsf"]
+ws += ["leptonsf", "tauideff"]
 ws += ["triggersf"]
 ws += ["CMS_ttHl_" + w for w in
        map(''.join, itertools.product(["lf", "hf", "hfstats1",
@@ -256,7 +256,7 @@ ws += ["CMS_ttHl_" + w for w in
 ws += ["CMS_ttHl_thu_shape_tt" + w for w in
        map(''.join, itertools.product("HWZ", ["_x1", "_y1"], ["up", "down"]))]
 for w in ws:
-    Leaf('w_' + w, 'f', 'result = weights["{0}"]'.format(w))
+    Leaf('w_' + w.lower(), 'f', 'result = weights["{0}"]'.format(w.lower()))
 
 Plot(
     name="weights/Generator",

@@ -3,38 +3,6 @@ from ttH.TauRoast.processing import BasicProcess, CombinedProcess
 wleptonic = (10.71 + 10.63 + 11.38) * 0.01
 
 BasicProcess(
-    name="ttjets",
-    fullname="t#bar{t}",
-    paths=["tt_pow", "tt_pow_ext3"],
-    # paths=["ttjets_amc"],
-    cross_section=831.76,
-    events=97994442
-)
-
-BasicProcess(
-    name="ttjets_sl",
-    fullname="t #bar{t} SL",
-    paths=["tt_sl_pow"],
-    cross_section=831.76 * wleptonic * (1 - wleptonic),
-    events=353216236
-)
-
-BasicProcess(
-    name="ttjets_dl",
-    fullname="t #bar{t} DL",
-    paths=["tt_dl_pow"],
-    cross_section=831.76 * wleptonic ** 2,
-    events=4995600
-)
-
-BasicProcess(
-    name="ttbar_hadronic",
-    fullname="t #bar{t} H",
-    paths=["ttbar_hadronic"],
-    events=31223821
-)
-
-BasicProcess(
     name="ttjets_semilept_tbar",
     fullname="t #bar{t} SL",
     paths=[
@@ -43,7 +11,7 @@ BasicProcess(
     ],
     # cross_section=831.76 * wleptonic * (1 - wleptonic),
     cross_section=182,
-    events=11947951 + 48546872
+    events=11944041 + 48266353
 )
 
 BasicProcess(
@@ -55,7 +23,7 @@ BasicProcess(
     ],
     # cross_section=831.76 * wleptonic * (1 - wleptonic),
     cross_section=182,
-    events=11926538 + 43588107
+    events=11957043 + 50016934
 )
 
 CombinedProcess(
@@ -73,7 +41,7 @@ BasicProcess(
     ],
     # cross_section=831.76 * wleptonic ** 2,
     cross_section=87.3,
-    events=6058236 + 24623997
+    events=6094476 + 24350202
 )
 
 CombinedProcess(
@@ -91,7 +59,7 @@ BasicProcess(
     ],
     # cross_section=831.76 * wleptonic * (1 - wleptonic),
     cross_section=182 * 2,
-    events=157387260,
+    events=152720952,
     cutflow='signal'
 )
 
@@ -103,7 +71,7 @@ BasicProcess(
     ],
     # cross_section=831.76 * wleptonic ** 2,
     cross_section=87.3,
-    events=75383000,
+    events=79092400,
     cutflow='signal'
 )
 

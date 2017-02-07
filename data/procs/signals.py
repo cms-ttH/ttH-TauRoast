@@ -28,7 +28,7 @@ BasicProcess(
     limitname="ttHbb125",
     paths=['ttHJetTobb_M125_13TeV_amcatnloFXFX_madspin_pythia8_ext3_v1'],
     cross_section=0.5085 * 0.577,
-    events=9827285,
+    events=9794226,
     cutflow='signal'
 )
 
@@ -38,7 +38,7 @@ BasicProcess(
     limitname="ttH2Nonbb125",
     paths=['ttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix_ext1_v1'],
     cross_section=0.2586,  # 0.5085 * (1 - 0.577),
-    events=9992683,
+    events=10045633,
     cutflow='signal'
 )
 
@@ -48,7 +48,7 @@ BasicProcess(
     limitname="ttH_htt",
     paths=['ttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix_ext1_v1'],
     cross_section=0.2586,  # 0.5085 * (1 - 0.577),
-    events=9992683,
+    events=10045633,
     cutflow='signal',
     additional_cuts=[
         ('process', 'abs(event.higgsDecay()) == 15')
@@ -61,7 +61,7 @@ BasicProcess(
     limitname="ttH_hww",
     paths=['ttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix_ext1_v1'],
     cross_section=0.2586,  # 0.5085 * (1 - 0.577),
-    events=9992683,
+    events=10045633,
     cutflow='signal',
     additional_cuts=[
         ('process', 'abs(event.higgsDecay()) == 24')
@@ -74,20 +74,11 @@ BasicProcess(
     limitname="ttH_hzz",
     paths=['ttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix_ext1_v1'],
     cross_section=0.2586,  # 0.5085 * (1 - 0.577),
-    events=9992683,
+    events=10045633,
     cutflow='signal',
     additional_cuts=[
         ('process', 'abs(event.higgsDecay()) == 23')
     ]
-)
-
-BasicProcess(
-    name="ttH2Nonbbgg_125_amc",
-    fullname="t#bar{t}H(125) w/o b#bar{b}, gg",
-    limitname="ttH2Nonbbgg125",
-    paths=["ttH2Nonbbgg_125"],
-    cross_section=0.5085 * (1 - (0.577 + 0.2)),
-    events=36000
 )
 
 BasicProcess(
@@ -154,7 +145,7 @@ BasicProcess(
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
     paths=['ttHTobb_M125_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_v1'],
     cross_section=0.5085 * 0.577,
-    events=3993304,
+    events=3845992,
     cutflow='signal'
 )
 
@@ -164,7 +155,7 @@ BasicProcess(
     paths=['ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_v1'],
     # cross_section=0.5085 * (1 - 0.577),
     cross_section=0.2586,
-    events=3975854,
+    events=3981250,
     cutflow='signal'
 )
 
@@ -175,7 +166,7 @@ BasicProcess(
     paths=['ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_v1'],
     # cross_section=0.5085 * (1 - 0.577),
     cross_section=0.2586,
-    events=3975854,
+    events=3981250,
     cutflow='signal',
     additional_cuts=[
         ('process', 'abs(event.higgsDecay()) == 15')
@@ -189,7 +180,7 @@ BasicProcess(
     paths=['ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_v1'],
     # cross_section=0.5085 * (1 - 0.577),
     cross_section=0.2586,
-    events=3975854,
+    events=3981250,
     cutflow='signal',
     additional_cuts=[
         ('process', 'abs(event.higgsDecay()) == 24')
@@ -203,7 +194,7 @@ BasicProcess(
     paths=['ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_v1'],
     # cross_section=0.5085 * (1 - 0.577),
     cross_section=0.2586,
-    events=3975854,
+    events=3981250,
     cutflow='signal',
     additional_cuts=[
         ('process', 'abs(event.higgsDecay()) == 23')
@@ -215,7 +206,7 @@ BasicProcess(
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
     paths=['ttHTobb_M125_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_v1'],
     cross_section=0.5085 * 0.577,
-    events=3993304,
+    events=3845992,
     cutflow='fake'
 )
 
@@ -225,7 +216,7 @@ BasicProcess(
     paths=['ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_v1'],
     # cross_section=0.5085 * (1 - 0.577),
     cross_section=0.2586,
-    events=3975854,
+    events=3981250,
     cutflow='fake'
 )
 

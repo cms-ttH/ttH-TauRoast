@@ -4,9 +4,12 @@ BasicProcess(
     name="ttW",
     fullname="t#bar{t}W",
     limitname="TTW",
-    paths=["TTWJetsToLNu_TuneCUETP8M1_13TeV_amcatnloFXFX_madspin_pythia8_v1"],
+    paths=[
+        "TTWJetsToLNu_TuneCUETP8M1_13TeV_amcatnloFXFX_madspin_pythia8_ext1_v3",
+        "TTWJetsToLNu_TuneCUETP8M1_13TeV_amcatnloFXFX_madspin_pythia8_ext2_v1"
+    ],
     cross_section=0.2043,
-    events=252673,
+    events=2160168 + 3120397,
     cutflow='signal'
 )
 
@@ -14,9 +17,9 @@ BasicProcess(
     name="ttZ",
     fullname="t#bar{t}Z",
     limitname="TTZ",
-    paths=["TTZToLLNuNu_M_10_TuneCUETP8M1_13TeV_amcatnlo_pythia8_v1"],
+    paths=["TTZToLLNuNu_M_10_TuneCUETP8M1_13TeV_amcatnlo_pythia8_ext1_v1"],
     cross_section=0.2529,
-    events=398600,
+    events=1992438,
     cutflow='signal'
 )
 
@@ -32,9 +35,9 @@ BasicProcess(
 BasicProcess(
     name="tZq",
     fullname="tZq",
-    paths=["tZq_ll_4f_13TeV_amcatnlo_pythia8_TuneCUETP8M1_v1"],
+    paths=["tZq_ll_4f_13TeV_amcatnlo_pythia8_ext1_v1"],
     cross_section=0.0758,
-    events=2973639,
+    events=14509520,
     cutflow='signal'
 )
 
@@ -52,7 +55,7 @@ BasicProcess(
     fullname="WZZ",
     paths=["WZZ_TuneCUETP8M1_13TeV_amcatnlo_pythia8_v1"],
     cross_section=0.05565,
-    events=249800,
+    events=246800,
     cutflow='signal'
 )
 
@@ -66,17 +69,17 @@ CombinedProcess(
 BasicProcess(
     name="st",
     fullname="t",
-    paths=["ST_tW_top_5f_inclusiveDecays_13TeV_powheg_pythia8_TuneCUETP8M1_v2"],
+    paths=["ST_tW_top_5f_inclusiveDecays_13TeV_powheg_pythia8_TuneCUETP8M1_ext1_v1"],
     cross_section=35.6,
-    events=998400
+    events=6952830
 )
 
 BasicProcess(
     name="stbar",
     fullname="#bar{t}",
-    paths=["ST_tW_antitop_5f_inclusiveDecays_13TeV_powheg_pythia8_TuneCUETP8M1_v1"],
+    paths=["ST_tW_antitop_5f_inclusiveDecays_13TeV_powheg_pythia8_TuneCUETP8M1_ext1_v1"],
     cross_section=35.6,
-    events=985000
+    events=6933094
 )
 
 BasicProcess(
@@ -100,16 +103,16 @@ BasicProcess(
     paths=["DYJetsToLL_M_10to50_TuneCUETP8M1_13TeV_madgraphMLM_pythia8_v1"],
     # cross_section=3 * 7545.03,
     cross_section=18610,
-    events=35079788,
+    events=35291566,
     cutflow='signal'
 )
 
 BasicProcess(
     name="dyjets_50",
     fullname="Z + jets M50+",
-    paths=["DYJetsToLL_M_50_TuneCUETP8M1_13TeV_madgraphMLM_pythia8_ext1_v1"],
+    paths=["DYJetsToLL_M_50_TuneCUETP8M1_13TeV_madgraphMLM_pythia8_ext1_v2"],
     cross_section=6025.2,
-    events=49877138,
+    events=49144274,
     cutflow='signal'
 )
 
@@ -124,7 +127,7 @@ BasicProcess(
     fullname="W + jets",
     paths=["WJetsToLNu_TuneCUETP8M1_13TeV_amcatnloFXFX_pythia8_v1"],
     cross_section=61526.7,
-    events=9908534,
+    events=24120319,
     cutflow='signal'
 )
 
@@ -133,7 +136,7 @@ BasicProcess(
     fullname="W + W",
     paths=["WWTo2L2Nu_13TeV_powheg_v1"],
     cross_section=10.481,
-    events=1996600,
+    events=1999000,
     cutflow='signal'
 )
 
@@ -142,7 +145,7 @@ BasicProcess(
     fullname="W + Z",
     paths=["WZTo3LNu_TuneCUETP8M1_13TeV_powheg_pythia8_v1"],
     cross_section=4.102,
-    events=2000000,
+    events=1993200,
     cutflow='signal'
 )
 
@@ -151,7 +154,7 @@ BasicProcess(
     fullname="Z + Z",
     paths=["ZZTo4L_13TeV_powheg_pythia8_v1"],
     cross_section=1.256,
-    events=6638328,
+    events=6669988,
     cutflow='signal'
 )
 
