@@ -18,7 +18,7 @@ from ttH.TauRoast.processing import Process
 def expand_systematics(systematics, weights):
     all_systematics = [('NA', weights)]
     for unc in set(systematics) - set(['NA']):
-        if unc not in ('CMS_ttHl_JES', 'CMS_ttH_tauES'):
+        if unc not in ('CMS_ttHl_JES', 'CMS_ttHl_tauES'):
             new_weights = weights[:]
             if 'btag' in unc:
                 new_weights = [w for w in new_weights if w != 'CSVWeight']
@@ -33,12 +33,11 @@ def expand_systematics(systematics, weights):
 
 
 def setup_cuts(config):
-    systematics = config.get('systematics', [])
-
     cutflows = Cutflows()
     cutflownames = [k.replace(' cuts', '') for k in config if k.endswith(' cuts')]
     for name in cutflownames:
         weights = config.get(name + ' weights')
+        systematics = config.get(name + ' systematics', [])
         for unc in [s for s, w in expand_systematics(systematics, weights)]:
             counts = []
             cuts = [Cut("Ntuple analyzed", "true")]
@@ -200,8 +199,7 @@ def fill(args, config):
             "the limit plots will not be saved for: {}".format(", ".join(not_processed)))
 
     if len(all_processes) != len(set([p.limitname for p in all_processes])):
-        logging.error(
-            "the limit names of the processes are not unique and will lead to collisions!")
+        logging.error("the limit names of the processes are not unique and will lead to collisions!")
 
     fn = os.path.join(config.get("indir", config["outdir"]), "ntuple.root")
     forest = Forest(fn)

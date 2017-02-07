@@ -153,7 +153,7 @@ data signal cuts:
 data signal weights: []
 
 # List of systematics to run when `-s` is specified
-systematics:
+signal systematics:
   - CMS_ttHl_JES
   - CMS_ttHl_tauES
   - CMS_ttHl_HF

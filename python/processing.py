@@ -95,7 +95,7 @@ class BasicProcess(Process):
         basedir = cfg['ntupledir']
         limit = cfg.get('event limit', -1)
 
-        if str(self).startswith("collisions"):
+        if str(self).startswith("collisions") or str(self).startswith("fakes"):
             systematics = "NA"
 
         if debug:

@@ -221,7 +221,7 @@ class Plot(object):
         self.__normalized = True
         for fullname, hist in self.__hists.items():
             if fullname.endswith('Up') or fullname.endswith('Down'):
-                name, _ = fullname.rsplit('_', 1)
+                name, _ = fullname.rsplit('_CMS', 1)
                 proc = Process.get(name)
             else:
                 proc = Process.get(fullname)
@@ -257,7 +257,7 @@ class Plot(object):
                 logging.debug("reading histogram {0}".format(histname))
                 h = file.Get(histname)
                 if h is None:
-                    logging.warning("histogram {0} not found in file".format(histname))
+                    logging.warning("histogram {} not found in file {}".format(histname, file.GetName()))
                 else:
                     h.SetDirectory(0)
                     self.__hists[str(proc) + suffix] = h
@@ -498,7 +498,7 @@ class Plot(object):
         for s in [systematics] + weights:
             if s.endswith('Up') or s.endswith('Down'):
                 suffix = '_' + s
-                if s not in weights:
+                if s not in weights and not (procname.startswith('collisions') or procname.startswith('fakes')):
                     procname += suffix
                 break
         fullname = str(process) + suffix
