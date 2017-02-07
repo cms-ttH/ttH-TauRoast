@@ -46,10 +46,10 @@ options.register("saveGenInfo", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
                  "Indicate if gen collections should be saved")
-options.register("reHLT", False,
+options.register("hlt", "",
                  VarParsing.VarParsing.multiplicity.singleton,
-                 VarParsing.VarParsing.varType.bool,
-                 "Indicate if the HLT has been re-run.")
+                 VarParsing.VarParsing.varType.string,
+                 "Indicate the HLT result label")
 options.register("hip", True,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
@@ -194,7 +194,7 @@ for channel in options.channels:
                           saveGenInfo=cms.bool(options.saveGenInfo),
                           tauVLoose=cms.bool(options.takeVLoose),
                           printPreselection=cms.bool(False),
-                          reHLT=cms.bool(options.reHLT),
+                          triggerResults=cms.string(options.hlt),
                           debugEvents=cms.vuint32()
                           )
 

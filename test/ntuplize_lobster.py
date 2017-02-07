@@ -4,8 +4,8 @@ from lobster.core import AdvancedOptions, Category, Config, StorageConfiguration
 
 from ttH.TauRoast.datasets import datasets, mctag
 
-version = "v38"
-tag = "all"
+version = "v40"
+tag = "ttH"
 
 globaltag_mc = "80X_mcRun2_asymptotic_2016_TrancheIV_v8"
 globaltag_data = "80X_dataRun2_2016SeptRepro_v7"
@@ -29,7 +29,7 @@ data = Category(
     cores=1,
     runtime=90 * 60,
     disk=400,
-    memory=1300
+    memory=2000
 )
 
 tth = Category(
@@ -37,7 +37,7 @@ tth = Category(
     cores=1,
     runtime=90 * 60,
     disk=400,
-    memory=1300
+    memory=2000
 )
 
 mc = Category(
@@ -45,7 +45,7 @@ mc = Category(
     cores=1,
     runtime=90 * 60,
     disk=400,
-    memory=1300
+    memory=2000
 )
 
 workflows = []

@@ -205,7 +205,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    tau_vloose_(config.getParameter<bool>("tauVLoose")),
    evt_list_(config.getParameter<std::vector<unsigned int>>("debugEvents")),
    m_triggerCache(
-         edm::InputTag("TriggerResults", "", config.getParameter<bool>("reHLT") ? "HLT2" : "HLT"),
+         edm::InputTag("TriggerResults", "", config.getParameter<std::string>("triggerResults")),
          edm::InputTag(""),
          false, false,
          edm::ConsumesCollector(consumesCollector())
@@ -235,7 +235,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    gen_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("prunedGenParticles"));
    gen_jets_token_ = consumes<reco::GenJetCollection>(config.getParameter<edm::InputTag>("genJets"));
    met_token_ = consumes<pat::METCollection>(edm::InputTag("slimmedMETs"));
-   trig_token_ = consumes<edm::TriggerResults>(edm::InputTag("TriggerResults", "", config.getParameter<bool>("reHLT") ? "HLT2" : "HLT"));
+   trig_token_ = consumes<edm::TriggerResults>(edm::InputTag("TriggerResults", "", config.getParameter<std::string>("triggerResults")));
 
    genJetsToken_ = consumes<reco::GenJetCollection>(edm::InputTag("ak4GenJetsCustom"));
    genBHadJetIndexToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenBHadron", "genBHadJetIndex"));
