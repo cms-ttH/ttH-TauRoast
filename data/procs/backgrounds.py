@@ -26,9 +26,9 @@ BasicProcess(
 BasicProcess(
     name="tttt",
     fullname="tttt",
-    paths=["TTTT_TuneCUETP8M1_13TeV_amcatnlo_pythia8_ext1_v1"],
+    paths=["TTTT_TuneCUETP8M1_13TeV_amcatnlo_pythia8_v1"],
     cross_section=0.009103,
-    events=989025,
+    events=250000,
     cutflow='signal'
 )
 
@@ -63,7 +63,8 @@ CombinedProcess(
     name="rares",
     fullname="Rares",
     limitname="Rares",
-    subprocesses=["tttt", "tZq", "ww_ds", "wzz"]
+    subprocesses=["tttt", "tZq", "wzz"]
+    # subprocesses=["tttt", "tZq", "ww_ds", "wzz"]
 )
 
 BasicProcess(

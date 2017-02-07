@@ -6,25 +6,30 @@ ntupledir: /hadoop/store/user/matze/ttH/v38
 # ntupledir: /scratch365/mwolf3/ttH/v32
 outdir: ~/www/ttH/v38/ttl
 mvadir: data/bdt
-histformat: "{p}_{c}_{v}"
+histformat: "{v}_{c}_{p}"
 
 lumi: 36300
 
 plot:
   - collisions_single
   - fakes_single
-  - ttH_125_signal
+  # - ttH_125_signal
+  - ttH2ZZ_125_amc
+  - ttH2WW_125_amc
+  - ttH2TT_125_amc
   - ttjets_pow
   - ttW
   - ttZ
   - ewk
-  # - rares
+  - rares
   # - singletop
 
 limits:
   - collisions_single
   - fakes_single
-  - ttH_125_signal
+  - ttH2ZZ_125_amc
+  - ttH2WW_125_amc
+  - ttH2TT_125_amc
   - ttjets_pow
   # - collisions_fake
   # - ttH_125_pow
@@ -32,12 +37,13 @@ limits:
   - ttZ
   # - ttjets_mad
   - ewk
-  # - rares
+  - rares
   # - singletop
 
 discriminants:
   - NumInclusiveJets
   - TT_VisibleMass
+  - TMVA
 
 fake cuts:
     - "l ID": lepton_id == superslim::Lepton::MVA
