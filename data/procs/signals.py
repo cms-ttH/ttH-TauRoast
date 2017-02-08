@@ -24,7 +24,7 @@ BasicProcess(
 
 BasicProcess(
     name="ttH2bb_125_amc",
-    fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
+    fullname="t#bar{t}H(125) #rightarrow #tau#tau",
     limitname="ttHbb125",
     paths=['ttHJetTobb_M125_13TeV_amcatnloFXFX_madspin_pythia8_ext3_v1'],
     cross_section=0.5085 * 0.577,

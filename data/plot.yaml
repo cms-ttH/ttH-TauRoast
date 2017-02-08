@@ -4,6 +4,10 @@ data:
   - collisions_double: r.kBlack
   - collisions_single: r.kBlack
 backgrounds:
+  - process: ttH2TT_125_amc
+    SetFillColor: r.kRed
+  - process: ttH_125_signal
+    SetFillColor: r.kRed
   - process: ttW
     SetFillColor: r.kGreen + 2
   - process: ttZ
@@ -12,19 +16,15 @@ backgrounds:
     SetFillColor: r.kMagenta
   - process: rares
     SetFillColor: r.kCyan
-  - process: fakes_single
-    SetFillColor: r.kBlack
-    SetFillStyle: 3005
   - process: singletop
     SetFillColor: r.kGreen
   - process: ttjets_mad
-    SetFillColor: r.kRed
+    SetFillColor: r.kGray
   - process: ttjets_pow
-    SetFillColor: r.kRed
-signals:
-  - ttH_125: r.kBlue
-  - ttH_125_signal: r.kBlue
-  - ttH_125_pow: r.kBlue
-  - ttH2bb_125_pow: r.kBlack
-  - ttH2TT_125_pow: r.kGreen + 1
-  - ttH2TT_125_real_pow: r.kGreen + 3
+    SetFillColor: r.kGray
+  - process: fakes_single
+    SetFillColor: r.kBlack
+    SetFillStyle: 3005
+signals: []
+  # - ttH_125_signal: r.kRed
+  # - ttH2TT_125_amc: r.kRed

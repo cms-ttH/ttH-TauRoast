@@ -80,7 +80,6 @@ Plot(
     name="general/Category_lj",
     values=["category_lj"],
     labels=["", "Events"],
-    log=True,
     binning=[9, 0, 9],
     binlabels=["4j2t", "5j2t", "6j2t", "4j3t", "5j3t", "6j3t", "4j4t", "5j4t", "6j4t"]
 )

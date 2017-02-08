@@ -15,7 +15,7 @@ from ttH.TauRoast.processing import Process
 class Plot(object):
     __plots = {}
 
-    def __init__(self, name, values, labels, binning, binlabels=None, limitname=None, weights=None, log=False):
+    def __init__(self, name, values, labels, binning, binlabels=None, limitname=None, weights=None):
         self.__name = name
         self.__limitname = limitname if limitname else os.path.basename(name)
         self.__normalized = False
@@ -27,7 +27,6 @@ class Plot(object):
         self.__labels = binlabels
         self.__hists = {}
 
-        self.__log = log
         self.__backgrounds_present = set()
         self.__signals_present = set()
         self.__collisions_present = set()
@@ -323,10 +322,9 @@ class Plot(object):
             if not os.path.exists(subdir) and subdir != '':
                 os.makedirs(subdir)
 
-            if self.__log:
-                canvas.SetLogz()
-
             canvas.SaveAs(os.path.join(outdir, "{0}_{1}.pdf".format(self.__name, label)))
+            canvas.SetLogz()
+            canvas.SaveAs(os.path.join(outdir, "{0}_{1}_log.pdf".format(self.__name, label)))
 
     def _build_ratio_errors(self, ratio, nom, div):
         graph = r.TGraphAsymmErrors(ratio)
@@ -370,7 +368,7 @@ class Plot(object):
         lower.DrawCopy("axis")
 
         rel_err.SetMarkerSize(0)
-        rel_err.SetFillColor(r.kGreen)
+        rel_err.SetFillColor(r.kGray)
         rel_err.SetFillStyle(1001)
         rel_err.Draw("2 same")
 
@@ -483,9 +481,6 @@ class Plot(object):
         if config.get("legend", True):
             legend = self._add_legend(config, factor)
 
-        if self.__log:
-            canvas.GetPad(1).SetLogy()
-
         if split:
             canvas.cd(2)
             err, rel_err = self._draw_ratio(config, base_histo, err_rel)
@@ -493,7 +488,11 @@ class Plot(object):
         subdir = os.path.dirname(os.path.join(outdir, self.__name))
         if not os.path.exists(subdir) and subdir != '':
             os.makedirs(subdir)
+
         canvas.SaveAs(os.path.join(outdir, self.__name + ".pdf"))
+        canvas.GetPad(1).SetLogy()
+        base_histo.GetYaxis().SetRangeUser(min_y, max_y * 20)
+        canvas.SaveAs(os.path.join(outdir, self.__name + "_log.pdf"))
 
         if legend:
             del legend
