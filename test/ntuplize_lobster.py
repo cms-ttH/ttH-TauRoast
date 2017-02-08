@@ -68,8 +68,8 @@ for path in datasets(tag):
         if '/Run2016G' in path or '/Run2017H' in path:
             params += ['hip=false']
     elif label.startswith('ttH'):
-        if 'tranche3' not in label:
-            params += ['reHLT=True']
+        # if 'tranche3' not in label:
+        #     params += ['hlt=HLT2']
         category = tth
 
     if 'amcatnlo' in path:
