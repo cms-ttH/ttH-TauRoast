@@ -6,7 +6,7 @@ small_number = 1e-5
 y_divide = 0.3
 
 
-def draw_channel_info(config, plot_ratio, is2d=False, proc=None):
+def draw_channel_info(pad, preliminary=True, plot_ratio=True, is2d=False, proc=None):
     """Draws channel information based on cuts and standard CMS labelling and
     lumi information.  The parameter `plot_ratio` determines the text size."""
     if plot_ratio:
@@ -14,31 +14,24 @@ def draw_channel_info(config, plot_ratio, is2d=False, proc=None):
     else:
         scale = .5 / .7
 
-    if config['analysis']['channel'] == 'll':
-        channel_label = "Dilepton + "
-    elif config['analysis']['channel'] == 'tl':
-        channel_label = "Lep + #tau_{h} + "
-    elif config['analysis']['channel'] == 'ttl':
-        channel_label = "Lep + #tau_{h}#tau_{h} + "
-    elif config['analysis']['channel'] == 'tll':
-        channel_label = "Dilepton + #tau_{h} + "
-
-    tex = r.TLatex()
+    tex = r.TLatex(-999, -999, "#sqrt{s} = 13 TeV, L = 36.8 fb^{-1}")
     tex.SetNDC()
     tex.SetTextFont(42)
-    tex.SetTextSize(0.05 * scale)
-    tex.SetTextAlign(31)
-    tex.DrawLatex(.99 - r.gPad.GetRightMargin(), .84,
-                  channel_label + "jets")
-    tex.SetTextSize(0.055 * scale)
+    tex.SetTextSize(0.03 * scale)
+
+    gap = 0.01
+    top = 1 - pad.GetTopMargin() + tex.GetYsize() + gap
+    left = pad.GetLeftMargin()
+    right = 1 - pad.GetRightMargin()
+
     tex.SetTextAlign(11)
     if is2d and proc:
-        tex.DrawLatex(0.14, 0.84, proc)
-    tex.DrawLatex(0.14, 0.91, "CMS Preliminary")
+        tex.DrawLatex(left, top, proc)
+    tex.DrawLatex(left, top, "CMS" + (" Preliminary" if preliminary else ""))
     # tex.DrawLatex(0.14, 0.91, "CMS ttH")
     # tex.DrawLatex(0.30, 0.92, "#tau_{h}#tau_{h}")
     tex.SetTextAlign(31)
-    tex.DrawLatex(1 - r.gPad.GetRightMargin(), 0.91, "#sqrt{s} = 8 TeV, L = 19.5 fb^{-1}")
+    tex.DrawLatex(right, top, "#sqrt{s} = 13 TeV, L = 36.8 fb^{-1}")
 
 
 def setup_upper_axis(histo, scale=True, split=True, is2d=False):

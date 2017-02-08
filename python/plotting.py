@@ -312,6 +312,7 @@ class Plot(object):
             canvas.SetRightMargin(0.14)
 
             stylish.setup_upper_axis(hist, scale=False, is2d=True)
+            stylish.draw_channel_info(canvas, plot_ratio=False)
             hist.Draw("COLZ")
 
             subdir = os.path.dirname(os.path.join(outdir, self.__name))
@@ -423,6 +424,8 @@ class Plot(object):
                     base_histo.GetXaxis().SetBinLabel(n, label)
 
         stylish.setup_upper_axis(base_histo, split=split)
+        stylish.draw_channel_info(canvas.GetPad(1), plot_ratio=split)
+
         canvas.cd(1)
 
         bkg_sum = self._get_background_sum(config)
