@@ -1,6 +1,8 @@
 import ROOT as r
 
+
 class Legend:
+
     def __init__(self, margin, ncols, topmargin=0):
         self.__current = 0
         self.__box_dx = 0.06
@@ -23,7 +25,8 @@ class Legend:
 
     def _to_ndc(self, x, y):
         new_x = r.gPad.GetLeftMargin() + x * (1 - r.gPad.GetLeftMargin() - r.gPad.GetRightMargin())
-        new_y = r.gPad.GetBottomMargin() + y * (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin())
+        new_y = r.gPad.GetBottomMargin() + y * \
+            (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin())
         return (new_x, new_y)
 
     def advance(self):
@@ -40,49 +43,49 @@ class Legend:
         self.__pos_x = self.__legend_x
         self.__pos_y -= self.__legend_dy
 
-    def draw_box(self, pattern, color, label, line=False):
+    def draw_box(self, cfg, label, line=False, centerline=False):
         (x1, y1) = self._to_ndc(self.__pos_x, self.__pos_y)
         (x2, y2) = self._to_ndc(self.__pos_x + self.__box_dx, self.__pos_y - self.__box_dy)
         pave = r.TPave(x1, y1, x2, y2, 0, "NDC")
-        pave.SetFillStyle(pattern)
-        pave.SetFillColor(color)
+        for k, v in cfg.items():
+            getattr(pave, k)(v)
         pave.SetBorderSize(0 if not line else 1)
         pave.Draw()
         self.__paves.append(pave)
 
-        (text_x, text_y) = self._to_ndc(
-                    self.__pos_x + 1.2 * self.__box_dx,
-                    self.__pos_y - 0.8 * self.__box_dy)
+        if centerline:
+            self.__line.SetLineWidth(1)
+            self.__line.DrawLineNDC(
+                *(self._to_ndc(self.__pos_x,
+                               self.__pos_y - self.__box_dy / 2)
+                  + self._to_ndc(self.__pos_x + self.__box_dx,
+                                 self.__pos_y - self.__box_dy / 2)))
+
+        (text_x, text_y) = self._to_ndc(self.__pos_x + 1.2 * self.__box_dx,
+                                        self.__pos_y - 0.8 * self.__box_dy)
         self.__tex.DrawLatex(text_x, text_y, label)
         self.advance()
 
     def draw_marker(self, style, color, label):
         self.__line.SetLineColor(color)
-        self.__line.SetLineWidth(1)
+        self.__line.SetLineWidth(3)
         self.__line.DrawLineNDC(
-                *(self._to_ndc(
-                    self.__pos_x,
-                    self.__pos_y - self.__box_dy / 2)
-                + self._to_ndc(
-                    self.__pos_x + self.__box_dx,
-                    self.__pos_y - self.__box_dy / 2)))
-        self.__line.DrawLineNDC(
-                *(self._to_ndc(
-                    self.__pos_x + self.__box_dx / 2,
-                    self.__pos_y)
-                + self._to_ndc(
-                    self.__pos_x + self.__box_dx / 2,
-                    self.__pos_y - self.__box_dy)))
-        (marker_x, marker_y) = self._to_ndc(self.__pos_x + self.__box_dx / 2, self.__pos_y - self.__box_dy / 2)
+            *(self._to_ndc(
+                self.__pos_x,
+                self.__pos_y - self.__box_dy / 2)
+              + self._to_ndc(
+                self.__pos_x + self.__box_dx,
+                self.__pos_y - self.__box_dy / 2)))
+        (marker_x, marker_y) = self._to_ndc(
+            self.__pos_x + self.__box_dx / 2, self.__pos_y - self.__box_dy / 2)
         marker = r.TMarker(marker_x, marker_y, style)
         marker.SetMarkerStyle(style)
         marker.SetMarkerColor(color)
         marker.SetNDC()
         marker.Draw()
         self.__markers.append(marker)
-        (text_x, text_y) = self._to_ndc(
-                    self.__pos_x + 1.2 * self.__box_dx,
-                    self.__pos_y - 0.8 * self.__box_dy)
+        (text_x, text_y) = self._to_ndc(self.__pos_x + 1.2 * self.__box_dx,
+                                        self.__pos_y - 0.8 * self.__box_dy)
         self.__tex.DrawLatex(text_x, text_y, label)
         self.advance()
 
@@ -90,14 +93,11 @@ class Legend:
         self.__line.SetLineColor(color)
         self.__line.SetLineWidth(width)
         self.__line.DrawLineNDC(
-                *(self._to_ndc(
-                    self.__pos_x,
-                    self.__pos_y - self.__box_dy / 2)
-                + self._to_ndc(
-                    self.__pos_x + self.__box_dx,
-                    self.__pos_y - self.__box_dy / 2)))
-        (text_x, text_y) = self._to_ndc(
-                    self.__pos_x + 1.2 * self.__box_dx,
-                    self.__pos_y - 0.8 * self.__box_dy)
+            *(self._to_ndc(self.__pos_x,
+                           self.__pos_y - self.__box_dy / 2)
+              + self._to_ndc(self.__pos_x + self.__box_dx,
+                             self.__pos_y - self.__box_dy / 2)))
+        (text_x, text_y) = self._to_ndc(self.__pos_x + 1.2 * self.__box_dx,
+                                        self.__pos_y - 0.8 * self.__box_dy)
         self.__tex.DrawLatex(text_x, text_y, label)
         self.advance()

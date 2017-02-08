@@ -4,14 +4,23 @@ data:
   - collisions_double: r.kBlack
   - collisions_single: r.kBlack
 backgrounds:
-  - fakes_single: r.kMagenta
-  - singletop: r.kGreen
-  - rares: r.kGray
-  - ewk: r.kBlue
-  - ttW: r.kAzure
-  - ttZ: r.kCyan
-  - ttjets_mad: r.kRed
-  - ttjets_pow: r.kRed
+  - process: ttW
+    SetFillColor: r.kGreen + 2
+  - process: ttZ
+    SetFillColor: r.kGreen + 1
+  - process: ewk
+    SetFillColor: r.kMagenta
+  - process: rares
+    SetFillColor: r.kCyan
+  - process: fakes_single
+    SetFillColor: r.kBlack
+    SetFillStyle: 3005
+  - process: singletop
+    SetFillColor: r.kGreen
+  - process: ttjets_mad
+    SetFillColor: r.kRed
+  - process: ttjets_pow
+    SetFillColor: r.kRed
 signals:
   - ttH_125: r.kBlue
   - ttH_125_signal: r.kBlue

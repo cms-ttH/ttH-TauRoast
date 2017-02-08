@@ -64,14 +64,14 @@ class Plot(object):
     def _add_legend(self, config, factor):
         l = Legend(0.05, 4, 0.03)
         if len(self.__backgrounds_present) > 0:
+            l.draw_marker(20, r.kBlack, "Data")
             for cfg in config['backgrounds']:
-                bkg, color = cfg.items()[0]
+                props = {'SetFillStyle': 1001}
+                props.update(cfg)
+                bkg = props.pop('process')
                 if bkg not in self.__backgrounds_present:
                     continue
-                l.draw_box(1001, self._eval(color), Process.get(bkg).fullname)
-            l.draw_box(3654, r.kBlack, "Bkg. err.", True)
-            # TODO add collisions
-            l.new_row()
+                l.draw_box({k: self._eval(v) for (k, v) in props.items()}, Process.get(bkg).fullname, centerline=True)
         if len(self.__signals_present) > 0:
             for cfg in config['signals']:
                 sig, color = cfg.items()[0]
@@ -85,6 +85,8 @@ class Plot(object):
         return l
 
     def _eval(self, color):
+        if not isinstance(color, basestring):
+            return color
         return eval(color, {}, {'r': r})
 
     def _get_histogram(self, process, systematic=None):
@@ -146,9 +148,8 @@ class Plot(object):
     def _get_background_sum(self, config, systematic=None):
         res = None
         for cfg in config['backgrounds']:
-            background, color = cfg.items()[0]
             try:
-                h = self._get_histogram(background, systematic)
+                h = self._get_histogram(cfg['process'], systematic)
                 if res is None:
                     res = h
                 else:
@@ -167,12 +168,15 @@ class Plot(object):
     def _get_backgrounds(self, config):
         res = r.THStack(self.__name + "_stack", self.__args[1])
         for cfg in config['backgrounds']:
-            background, color = cfg.items()[0]
+            cfg = dict(cfg.items())
+            background = cfg.pop('process')
             try:
                 h = self._get_histogram(background)
-                h.SetFillColor(self._eval(color))
                 h.SetFillStyle(1001)
-                h.SetLineWidth(0)
+                h.SetLineWidth(1)
+                h.SetLineColor(r.kBlack)
+                for attr, val in cfg.items():
+                    getattr(h, attr)(self._eval(val))
                 res.Add(h)
                 self.__backgrounds_present.add(background)
             except KeyError:
@@ -186,7 +190,7 @@ class Plot(object):
             try:
                 h = self._get_histogram(data)
                 h.SetLineColor(self._eval(color))
-                h.SetLineWidth(4)
+                h.SetLineWidth(3)
                 h.SetMarkerStyle(20)
                 h.SetMarkerSize(1)
                 res.append(h)
@@ -351,8 +355,8 @@ class Plot(object):
                 graph.SetPoint(i, x_coord, 999)
 
         graph.SetMarkerSize(1.)
-        graph.SetMarkerStyle(0)
-        graph.SetLineWidth(4)
+        graph.SetMarkerStyle(20)
+        graph.SetLineWidth(3)
         graph.SetLineColor(r.kBlack)
 
         return graph
