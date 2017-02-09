@@ -15,10 +15,11 @@ from ttH.TauRoast.processing import Process
 class Plot(object):
     __plots = {}
 
-    def __init__(self, name, values, labels, binning, binlabels=None, limitname=None, weights=None):
+    def __init__(self, name, values, labels, binning, binlabels=None, limitname=None, weights=None, blind=False):
         self.__name = name
         self.__limitname = limitname if limitname else os.path.basename(name)
         self.__normalized = False
+        self.__blind = blind
 
         self.__values = values
         self.__weights = weights
@@ -44,6 +45,11 @@ class Plot(object):
 
     def __str__(self):
         return self.__name
+
+    def blind(self, b=None):
+        if b is not None:
+            self.__blind = b
+        return self.__blind
 
     @property
     def limitname(self):
@@ -372,7 +378,7 @@ class Plot(object):
         rel_err.SetFillStyle(1001)
         rel_err.Draw("2 same")
 
-        if len(collisions) > 0:
+        if len(collisions) > 0 and not self.__blind:
             ratio = collisions[0].Clone()
             ratio.Divide(background)
             err = self._build_ratio_errors(ratio, collisions[0], background)
@@ -468,8 +474,9 @@ class Plot(object):
             sig.Scale(factor)
             sig.DrawCopy("hist same")
 
-        for data in collisions:
-            data.DrawCopy("E1 P same")
+        if not self.__blind:
+            for data in collisions:
+                data.DrawCopy("E1 P same")
 
         err_abs.Draw("2 same")
 
@@ -559,3 +566,8 @@ class Plot(object):
         if unweighed:
             return p._get_histogram(proc).GetEntries()
         return p._get_histogram(proc).GetBinContent(1)
+
+    @classmethod
+    def unblind(cls):
+        for p in cls.__plots.values():
+            p.blind(False)

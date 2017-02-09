@@ -34,7 +34,8 @@ Plot(
     name="general/TMVA",
     values=["tmva"],
     labels=["BDT value (TMVA)", "Events"],
-    binning=[10, -1, 1]
+    binning=[10, -1, 1],
+    blind=True
 )
 
 Plot(
