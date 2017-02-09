@@ -1,5 +1,17 @@
 # Ntuple History
 
+## v40
+
+* Fix HLT results for amc@NLO samples (different InputTag)
+
+## v39
+
+* Updated systematics for amc@NLO
+
+## v38
+
+* Re-RECO, Moriond17 event selection with new lepton MVA
+
 ## v37
 
 * Re-RECO, new b-tag cuts
@@ -136,6 +148,10 @@
 * More powheg samples
 
 # Training Ntuple History
+
+## v4
+
+* Moriond17 event selection with updated lepton MVA
 
 ## v3
 
