@@ -46,7 +46,7 @@ options.register("saveGenInfo", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
                  "Indicate if gen collections should be saved")
-options.register("hlt", "",
+options.register("hlt", "HLT",
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.string,
                  "Indicate the HLT result label")
