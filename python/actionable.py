@@ -133,7 +133,7 @@ def analyze(args, config):
         uncertainties = ['NA']
         if args.systematics:
             weights = config.get(proc.cutflow + ' weights')
-            systematics = config.get('systematics', [])
+            systematics = config.get(proc.cutflow + ' systematics', [])
             uncertainties = [s for s, w in expand_systematics(systematics, weights)]
         for unc in uncertainties:
             suffix = '' if unc == 'NA' else '_' + unc
