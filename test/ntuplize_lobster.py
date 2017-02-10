@@ -4,7 +4,7 @@ from lobster.core import AdvancedOptions, Category, Config, StorageConfiguration
 
 from ttH.TauRoast.datasets import datasets, mctag
 
-version = "v40"
+version = "v41"
 tag = "ttH"
 
 globaltag_mc = "80X_mcRun2_asymptotic_2016_TrancheIV_v8"
@@ -26,7 +26,7 @@ storage = StorageConfiguration(
 
 data = Category(
     name='data',
-    cores=1,
+    cores=2,
     runtime=90 * 60,
     disk=400,
     memory=2000
@@ -34,7 +34,7 @@ data = Category(
 
 tth = Category(
     name='ttH',
-    cores=1,
+    cores=2,
     runtime=90 * 60,
     disk=400,
     memory=2000
@@ -42,7 +42,7 @@ tth = Category(
 
 mc = Category(
     name='mc',
-    cores=1,
+    cores=2,
     runtime=90 * 60,
     disk=400,
     memory=2000
@@ -68,8 +68,6 @@ for path in datasets(tag):
         if '/Run2016G' in path or '/Run2017H' in path:
             params += ['hip=false']
     elif label.startswith('ttH'):
-        # if 'tranche3' not in label:
-        #     params += ['hlt=HLT2']
         category = tth
 
     if 'amcatnlo' in path:
