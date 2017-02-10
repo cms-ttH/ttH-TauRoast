@@ -298,7 +298,7 @@ class Plot(object):
                 histname += suffix
                 logging.debug("writing histogram {0}".format(histname))
                 hist = self._get_histogram(proc, uncertainty)
-                file.WriteObject(hist, histname)
+                file.WriteObject(hist, histname, r.TObject.kWriteDelete)
 
     def save(self, config, outdir, systematics=None):
         logging.debug("saving histogram {0}".format(self.__name))
