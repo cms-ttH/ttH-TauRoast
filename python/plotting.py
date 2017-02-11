@@ -15,11 +15,12 @@ from ttH.TauRoast.processing import Process
 class Plot(object):
     __plots = {}
 
-    def __init__(self, name, values, labels, binning, binlabels=None, limitname=None, weights=None, blind=False):
+    def __init__(self, name, values, labels, binning, binlabels=None, limitname=None, weights=None, blind=False, essential=False):
         self.__name = name
         self.__limitname = limitname if limitname else os.path.basename(name)
         self.__normalized = False
         self.__blind = blind
+        self.__essential = essential
 
         self.__values = values
         self.__weights = weights
@@ -50,6 +51,9 @@ class Plot(object):
         if b is not None:
             self.__blind = b
         return self.__blind
+
+    def essential(self):
+        return self.__essential
 
     @property
     def limitname(self):
@@ -297,8 +301,11 @@ class Plot(object):
                 histname = fmt.format(p=proc.limitname, v=self.__limitname, c=category)
                 histname += suffix
                 logging.debug("writing histogram {0}".format(histname))
-                hist = self._get_histogram(proc, uncertainty)
-                file.WriteObject(hist, histname, r.TObject.kWriteDelete)
+                try:
+                    hist = self._get_histogram(proc, uncertainty)
+                    file.WriteObject(hist, histname, "WriteDelete")
+                except KeyError:
+                    pass
 
     def save(self, config, outdir, systematics=None):
         logging.debug("saving histogram {0}".format(self.__name))

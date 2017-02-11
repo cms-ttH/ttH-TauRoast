@@ -208,26 +208,26 @@ def fill(args, config):
         logging.info("filling category: " + category)
         Plot.reset()
 
-        systematics = config.get('systematics', [])
         for proc in atomic_processes:
             logging.info("filling process: " + str(proc))
 
             weights = config.get(proc.cutflow + ' weights')
+            systematics = config.get(proc.cutflow + ' systematics', [])
             uncertainties = [('NA', weights)]
             if args.systematics:
                 uncertainties = expand_systematics(systematics, weights)
-            for systematic, weights in uncertainties:
+            for n, (systematic, weights) in enumerate(uncertainties):
                 logging.info("using systematics: " + systematic)
                 logging.info("using weights: " + ", ".join(weights))
                 for p in Plot.plots():
-                    p.fill(proc, systematic, weights, definition)
+                    if n == 0 or p.essential():
+                        p.fill(proc, systematic, weights, definition)
 
         uncertainties = None
         if args.systematics:
-            uncertainties = list(systematics)
+            uncertainties = list(set(sum((config.get(p.cutflow + ' systematics', []) for p in atomic_processes), [])))
 
         logging.info("writing out plots for category: " + category)
-
         fn = os.path.join(config["outdir"], "plots.root")
         with open_rootfile(fn) as f:
             for p in Plot.plots():

@@ -35,7 +35,8 @@ Plot(
     values=["tmva"],
     labels=["BDT value (TMVA)", "Events"],
     binning=[10, -1, 1],
-    blind=True
+    blind=True,
+    essential=True
 )
 
 Plot(
@@ -49,7 +50,8 @@ Plot(
     name="general/NumInclusiveJets",
     values=["njets+ntags"],
     labels=["Number of inclusive jets", "Events"],
-    binning=[10, 0, 10]
+    binning=[10, 0, 10],
+    essential=True
 )
 Plot(
     name="general/NumJets",
@@ -67,7 +69,8 @@ Plot(
     name="general/NumTagsLoose",
     values=["ntags_loose"],
     labels=["Number of tags (loose)", "Events"],
-    binning=[10, 0, 10]
+    binning=[10, 0, 10],
+    essential=True
 )
 
 Plot(
@@ -231,7 +234,8 @@ Plot(
     name="general/HT",
     values=["ht"],
     labels=["HT", "Events"],
-    binning=[20, 200, 1000]
+    binning=[20, 200, 1000],
+    essential=True
 )
 Plot(
     name="general/HT_NoTau",
@@ -249,7 +253,7 @@ Plot(
 ws = ["generator", "csvweight", "puweight", "fake"]
 ws += ["leptonsf", "tauideff"]
 ws += ["triggersf"]
-ws += ["CMS_ttHl_" + w for w in
+ws += ["CMS_ttHl_btag_" + w for w in
        map(''.join, itertools.product(["lf", "hf", "hfstats1",
                                        "hfstats2", "lfstats1",
                                        "lfstats2", "cerr1", "cerr2"], ["up", "down"]))]

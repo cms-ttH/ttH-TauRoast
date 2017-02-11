@@ -34,7 +34,7 @@ BasicProcess(
 
 BasicProcess(
     name="ttH2Nonbb_125_amc",
-    fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
+    fullname="t#bar{t}H(125)",
     limitname="ttH2Nonbb125",
     paths=['ttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix_ext1_v1'],
     cross_section=0.2586,  # 0.5085 * (1 - 0.577),

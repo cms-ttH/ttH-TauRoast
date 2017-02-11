@@ -11,7 +11,8 @@ if config.taus >= 2:
         name="taus/TT_DeltaR",
         values=["tt_deltaR"],
         labels=["#DeltaR #tau_{1,2}", "Events"],
-        binning=[15, 0, 6.28]
+        binning=[15, 0, 6.28],
+        essential=True
     )
     Plot(
         name="taus/TT_CosDeltaPhi",
@@ -24,7 +25,8 @@ if config.taus >= 2:
         name="taus/TT_VisibleMass",
         values=["tt_visiblemass"],
         labels=["Visible Mass #tau_{1,2}", "Events"],
-        binning=[30, 0, 200]
+        binning=[30, 0, 200],
+        essential=True
     )
     Plot(
         name="taus/TT_VisibleMass_coarse",
@@ -75,7 +77,8 @@ for n in range(config.taus):
         name="taus/kinematic/T{0}_Pt".format(n + 1),
         values=["tau{0}_pt".format(n + 1)],
         labels=[lbl + "P_{T}", "Events"],
-        binning=[10, 20, 100 if n == 0 else 60]
+        binning=[10, 20, 100 if n == 0 else 60],
+        essential=True
     )
     Plot(
         name="taus/kinematic/T{0}_LTPt".format(n + 1),

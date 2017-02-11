@@ -32,7 +32,8 @@ Plot(
     name="jets/JJ_AvgDeltaR",
     values=["jet_deltaRavg"],
     labels=["Avg #DeltaR jet, jet", "Events"],
-    binning=[15, 0, 6.28]
+    binning=[15, 0, 6.28],
+    essential=True
 )
 
 Leaf('jet_deltaRmin', 'f',
