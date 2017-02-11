@@ -8,7 +8,7 @@ outdir: ~/www/ttH/v39/ttl
 mvadir: data/bdt
 histformat: "{v}_{c}_{p}"
 
-lumi: 36300
+lumi: 35900
 
 plot:
   - collisions_single
