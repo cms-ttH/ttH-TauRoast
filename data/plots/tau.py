@@ -77,7 +77,7 @@ for n in range(config.taus):
         name="taus/kinematic/T{0}_Pt".format(n + 1),
         values=["tau{0}_pt".format(n + 1)],
         labels=[lbl + "P_{T}", "Events"],
-        binning=[10, 20, 100 if n == 0 else 60],
+        binning=[7, 20 if n != 0 else 30, 100 if n == 0 else 60],
         essential=True
     )
     Plot(
