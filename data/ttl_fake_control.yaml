@@ -167,14 +167,14 @@ data signal weights: []
 signal systematics:
   - CMS_ttHl_JES
   - CMS_ttHl_tauES
-  - CMS_ttHl_HF
-  - CMS_ttHl_HFStats1
-  - CMS_ttHl_HFStats2
-  - CMS_ttHl_LF
-  - CMS_ttHl_LFStats1
-  - CMS_ttHl_LFStats2
-  - CMS_ttHl_cErr1
-  - CMS_ttHl_cErr2
+  - CMS_ttHl_btag_HF
+  - CMS_ttHl_btag_HFStats1
+  - CMS_ttHl_btag_HFStats2
+  - CMS_ttHl_btag_LF
+  - CMS_ttHl_btag_LFStats1
+  - CMS_ttHl_btag_LFStats2
+  - CMS_ttHl_btag_cErr1
+  - CMS_ttHl_btag_cErr2
   - CMS_ttHl_thu_shape_ttH_x1
   - CMS_ttHl_thu_shape_ttH_y1
   - CMS_ttHl_thu_shape_ttW_x1
