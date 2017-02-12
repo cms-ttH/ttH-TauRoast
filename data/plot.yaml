@@ -4,9 +4,9 @@ data:
   - collisions_double: r.kBlack
   - collisions_single: r.kBlack
 backgrounds:
-  - process: ttH2TT_125_amc
-    SetFillColor: r.kRed
-  - process: ttH_125_signal
+  # - process: ttH2TT_125_amc
+  #   SetFillColor: r.kRed
+  - process: ttH2Nonbb_125_amc
     SetFillColor: r.kRed
   - process: ttW
     SetFillColor: r.kGreen + 2
