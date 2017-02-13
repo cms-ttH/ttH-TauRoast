@@ -396,7 +396,7 @@ fastlane::update_weights(const std::string& process, std::unordered_map<std::str
    // Constants for weights
    // =====================
 
-   static const float tau_efficiency_scale = 0.83;
+   static const float tau_efficiency_scale = 1.00;
    static const float tau_efficiency = 0.06;
 
    // =====================
