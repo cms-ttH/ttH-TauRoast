@@ -4,7 +4,7 @@ BasicProcess(
     name="collisions_single_e",
     fullname="Collisions",
     limitname="data_obs_e",
-    additional_cuts=[('trigger selection', 'event.trigger().accepted({"HLT_Ele27_eta2p1_WPLoose_Gsf_v"})')],
+    additional_cuts=[('trigger selection', 'leptons[0].electron() and event.trigger().accepted({"HLT_Ele27_eta2p1_WPLoose_Gsf_v"})')],
     paths=[
         'SingleElectron_Run2016B_23Sep2016_v3',
         'SingleElectron_Run2016C_23Sep2016_v1',
@@ -23,7 +23,7 @@ BasicProcess(
     name="collisions_single_mu",
     fullname="Collisions",
     limitname="data_obs_mu",
-    additional_cuts=[('trigger selection', 'event.trigger().accepted({"HLT_IsoMu22_v", "HLT_IsoTkMu22_v"})')],
+    additional_cuts=[('trigger selection', 'leptons[0].muon() and event.trigger().accepted({"HLT_IsoMu22_v", "HLT_IsoTkMu22_v", "HLT_IsoMu24_v", "HLT_IsoTkMu24_v"})')],
     paths=[
         'SingleMuon_Run2016B_23Sep2016_v3',
         'SingleMuon_Run2016C_23Sep2016_v1',
@@ -49,7 +49,7 @@ BasicProcess(
     name="fakes_single_e",
     fullname="Fakes",
     limitname="fake_e",
-    additional_cuts=[('trigger selection', 'event.trigger().accepted({"HLT_Ele27_eta2p1_WPLoose_Gsf_v"})')],
+    additional_cuts=[('trigger selection', 'leptons[0].electron() and event.trigger().accepted({"HLT_Ele27_eta2p1_WPLoose_Gsf_v"})')],
     paths=[
         'SingleElectron_Run2016B_23Sep2016_v3',
         'SingleElectron_Run2016C_23Sep2016_v1',
@@ -68,7 +68,7 @@ BasicProcess(
     name="fakes_single_mu",
     fullname="Fakes",
     limitname="fake_mu",
-    additional_cuts=[('trigger selection', 'event.trigger().accepted({"HLT_IsoMu22_v", "HLT_IsoTkMu22_v"})')],
+    additional_cuts=[('trigger selection', 'leptons[0].muon() and event.trigger().accepted({"HLT_IsoMu22_v", "HLT_IsoTkMu22_v", "HLT_IsoMu24_v", "HLT_IsoTkMu24_v"})')],
     paths=[
         'SingleMuon_Run2016B_23Sep2016_v3',
         'SingleMuon_Run2016C_23Sep2016_v1',
