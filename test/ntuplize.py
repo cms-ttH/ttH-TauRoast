@@ -168,8 +168,8 @@ process.lepPath = cms.Path(
 
 process.ttHLeptons.rhoParam = "fixedGridRhoFastjetCentralNeutral"
 process.ttHLeptons.tightObjects = cms.bool(True)
-# process.ttHLeptons.jets = cms.InputTag("patJetsReapplyJEC")
-# process.ttHLeptons.useReappliedJEC = cms.bool(False)
+process.ttHLeptons.jets = cms.InputTag("patJetsReapplyJEC")
+process.ttHLeptons.JECTag = "patJetCorrFactorsReapplyJEC"
 
 if options.dump:
     process.dump = cms.EDAnalyzer("EventContentAnalyzer")
