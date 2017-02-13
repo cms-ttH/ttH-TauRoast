@@ -110,7 +110,7 @@ class Plot(object):
         central = self._get_background_sum(config)
         result = [0] * central.GetNbinsX()
         for systematic in systematics:
-            error = self._get_background_sum(config, systematic + direction)
+            central, error = self._get_background_sum(config, systematic + direction)
             for n in range(len(result)):
                 result[n] += (central.GetBinContent(n + 1) -
                               error.GetBinContent(n + 1)) ** 2
@@ -156,9 +156,21 @@ class Plot(object):
 
     def _get_background_sum(self, config, systematic=None):
         res = None
+        err = None
         for cfg in config['backgrounds']:
             try:
-                h = self._get_histogram(cfg['process'], systematic)
+                if systematic:
+                    e = self._get_histogram(cfg['process'], systematic)
+                    if e.Integral() == 0:
+                        continue
+                    if err is None:
+                        err = e
+                    else:
+                        err.Add(e)
+            except KeyError:
+                pass
+            try:
+                h = self._get_histogram(cfg['process'])
                 if res is None:
                     res = h
                 else:
@@ -169,9 +181,13 @@ class Plot(object):
             args = list(self.__args)
             args[0] += "_bkg_sum_{0}".format(random.randint(0, 100000))
             res = self.__class(*args)
-        res.SetFillStyle(3654)
+        if not err:
+            err = res.Clone()
+        res.SetFillStyle(1001)
         res.SetFillColor(r.kBlack)
         res.SetMarkerStyle(0)
+        if systematic:
+            return res, err
         return res
 
     def _get_backgrounds(self, config):
@@ -251,7 +267,7 @@ class Plot(object):
                 h.Scale(1. / h.Integral())
 
     def read(self, file, category, procs, systematics=None, fmt="{p}_{c}_{v}"):
-        if systematics is None:
+        if systematics is None or not self.__essential:
             systematics = []
         systematics = set(systematics + ['NA'])
 
@@ -269,11 +285,12 @@ class Plot(object):
                 histname += suffix
                 logging.debug("reading histogram {0}".format(histname))
                 h = file.Get(histname)
-                if h is None:
-                    logging.warning("histogram {} not found in file {}".format(histname, file.GetName()))
-                else:
+                try:
                     h.SetDirectory(0)
                     self.__hists[str(proc) + suffix] = h
+                except AttributeError:
+                    if suffix != '':
+                        logging.warning("histogram {} not found in file {}".format(histname, file.GetName()))
 
     def write(self, file, cutflows, category, systematics=None, procs=None, fmt="{p}_{c}_{v}"):
         self._normalize(cutflows)

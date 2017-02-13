@@ -254,10 +254,6 @@ def plot(args, config):
         plotconfig = yaml.load(f)
     plotconfig.update(config.get('plot override', {}))
 
-    systematics = []
-    if args.systematics:
-        systematics = config['systematics']
-
     categories, _ = get_categories(config)
     for category in categories:
         logging.info("saving plots for category: " + category)
@@ -266,6 +262,10 @@ def plot(args, config):
         processes = sum(map(Process.expand, config['plot']), [])
         fn = os.path.join(config.get("indir", config["outdir"]), "plots.root")
         f = r.TFile(fn, "READ")
+
+        systematics = []
+        if args.systematics:
+            systematics = list(set(sum((config.get(p.cutflow + ' systematics', []) for p in processes), [])))
 
         if not f.IsOpen():
             raise IOError("Can't read file '{0}'".format(fn))

@@ -27,4 +27,4 @@ backgrounds:
     SetFillStyle: 3005
 signals: []
   # - ttH_125_signal: r.kRed
-  # - ttH2TT_125_amc: r.kRed
+  # - ttH2Nonbb_125_amc: r.kRed
