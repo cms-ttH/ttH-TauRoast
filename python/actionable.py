@@ -4,6 +4,7 @@ from itertools import groupby
 import codecs
 import logging
 import os
+import shutil
 import yaml
 
 import ROOT as r
@@ -200,6 +201,12 @@ def fill(args, config):
 
     if len(all_processes) != len(set([p.limitname for p in all_processes])):
         logging.error("the limit names of the processes are not unique and will lead to collisions!")
+
+    if 'indir' in config and config['indir'] != config['outdir']:
+        shutil.copy(
+            os.path.join(config['indir'], 'cutflow.pkl'),
+            os.path.join(config['outdir'], 'cutflow.pkl')
+        )
 
     fn = os.path.join(config.get("indir", config["outdir"]), "ntuple.root")
     forest = Forest(fn)
