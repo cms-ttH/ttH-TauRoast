@@ -113,4 +113,5 @@ if args.train:
 
 for action in actions:
     action(args, config)
-    config.pop('indir', None)
+    if action != dump_cuts and action != dump_categories:
+        config.pop('indir', None)
