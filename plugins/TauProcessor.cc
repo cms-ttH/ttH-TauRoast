@@ -159,6 +159,7 @@ class TauProcessor : public edm::one::EDProducer<edm::BeginRunProducer, edm::End
       edm::EDGetTokenT<reco::GenJetCollection> gen_jets_token_;
       edm::EDGetTokenT<pat::METCollection> met_token_;
       edm::EDGetTokenT<edm::TriggerResults> trig_token_;
+      edm::EDGetTokenT<int> badmu_token_;
 
       unsigned int evt_;
       std::vector<unsigned int> evt_list_;
@@ -566,13 +567,13 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
    auto trigger_results = get_collection(*this, event, trig_token_);
    auto trigger_names = event.triggerNames(*trigger_results);
 
-   int nmu = get_collection(*this, event, badmu_token_);
+   auto nmu = get_collection(*this, event, badmu_token_);
 
    std::auto_ptr<superslim::Event> ptr(new superslim::Event(
             staus, all_staus, chosen_leptons, all_leptons, sjets, smets,
             tau_id, lepton_id,
             event.id().run(), event.id().luminosityBlock(), event.id().event(),
-            npv, ntv, nmu, pv,
+            npv, ntv, *nmu, pv,
             superslim::Trigger(*trigger_results, trigger_names),
             particles));
 

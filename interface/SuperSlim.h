@@ -448,7 +448,7 @@ namespace superslim {
                superslim::Tau::id,
                superslim::Lepton::id,
                long run, long lumi, long event,
-               int npv, int ntv,
+               int npv, int ntv, int nmu,
                const std::vector<superslim::Vertex>& pv,
                const superslim::Trigger& trigger,
                const reco::GenParticleCollection& genparticles);
