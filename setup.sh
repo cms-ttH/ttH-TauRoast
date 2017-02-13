@@ -29,6 +29,16 @@ EOF
    git clone git@github.com:cms-ttH/ttH-LeptonID.git ttH/LeptonID
    git clone git@github.com:cms-ttH/ttH-TauRoast.git ttH/TauRoast
 
+   curl --create-dirs -o LLR/NtupleProducer/plugins/MuonRefPruner.cc https://raw.githubusercontent.com/LLRCMS/LLRHiggsTauTau/6d4d486beb11efc85d4d3d4184c4e00e85c1261f/NtupleProducer/plugins/MuonRefPruner.cc
+   cat <<EOB >LLR/NtupleProducer/plugins/BuildFile.xml
+<use name="FWCore/Framework"/>
+<use name="FWCore/MessageLogger"/>
+<use name="FWCore/ParameterSet"/>
+<use name="FWCore/Utilities"/>
+<use name="DataFormats/MuonReco"/>
+<use name="DataFormats/PatCandidates"/>
+EOB
+
    scram b -j 8
 
    cd $CMSSW_BASE/external/$SCRAM_ARCH/
