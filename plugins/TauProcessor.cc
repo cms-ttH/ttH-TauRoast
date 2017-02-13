@@ -167,19 +167,6 @@ class TauProcessor : public edm::one::EDProducer<edm::BeginRunProducer, edm::End
       triggerExpression::Data m_triggerCache;
 
       edm::EDGetTokenT<reco::GenJetCollection> genJetsToken_;
-      edm::EDGetTokenT<std::vector<int>> genBHadJetIndexToken_;
-      edm::EDGetTokenT<std::vector<int>> genBHadFlavourToken_;
-      edm::EDGetTokenT<std::vector<int>> genBHadFromTopWeakDecayToken_;
-      edm::EDGetTokenT<std::vector<reco::GenParticle>> genBHadPlusMothersToken_;
-      edm::EDGetTokenT<std::vector<std::vector<int>>> genBHadPlusMothersIndicesToken_;
-      edm::EDGetTokenT<std::vector<int>> genBHadIndexToken_;
-      edm::EDGetTokenT<std::vector<int>> genBHadLeptonHadronIndexToken_;
-      edm::EDGetTokenT<std::vector<int>> genBHadLeptonViaTauToken_;
-
-      edm::EDGetTokenT<std::vector<int>> genCHadJetIndexToken_;
-      edm::EDGetTokenT<std::vector<int>> genCHadFlavourToken_;
-      edm::EDGetTokenT<std::vector<int>> genCHadFromTopWeakDecayToken_;
-      edm::EDGetTokenT<std::vector<int>> genCHadBHadronIdToken_;
 
       std::vector<std::string> cutnames_;
       std::vector<std::string> systematics_;
@@ -236,20 +223,9 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    gen_jets_token_ = consumes<reco::GenJetCollection>(config.getParameter<edm::InputTag>("genJets"));
    met_token_ = consumes<pat::METCollection>(edm::InputTag("slimmedMETs"));
    trig_token_ = consumes<edm::TriggerResults>(edm::InputTag("TriggerResults", "", config.getParameter<std::string>("triggerResults")));
+   badmu_token_ = consumes<int>(edm::InputTag("removeBadAndCloneGlobalMuons"));
 
    genJetsToken_ = consumes<reco::GenJetCollection>(edm::InputTag("ak4GenJetsCustom"));
-   genBHadJetIndexToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenBHadron", "genBHadJetIndex"));
-   genBHadFlavourToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenBHadron", "genBHadFlavour"));
-   genBHadFromTopWeakDecayToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenBHadron", "genBHadFromTopWeakDecay"));
-   genBHadPlusMothersToken_ = consumes<std::vector<reco::GenParticle>>(edm::InputTag("matchGenBHadron", "genBHadPlusMothers"));
-   genBHadPlusMothersIndicesToken_ = consumes<std::vector<std::vector<int>> >(edm::InputTag("matchGenBHadron", "genBHadPlusMothersIndices"));
-   genBHadIndexToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenBHadron", "genBHadIndex"));
-   genBHadLeptonHadronIndexToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenBHadron", "genBHadLeptonHadronIndex"));
-   genBHadLeptonViaTauToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenBHadron", "genBHadLeptonViaTau"));
-   genCHadJetIndexToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenCHadron", "genCHadJetIndex"));
-   genCHadFlavourToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenCHadron", "genCHadFlavour"));
-   genCHadFromTopWeakDecayToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenCHadron", "genCHadFromTopWeakDecay"));
-   genCHadBHadronIdToken_ = consumes<std::vector<int>>(edm::InputTag("matchGenCHadron", "genCHadBHadronId"));
 
    if (data_) {
       systematics_ = {"NA"};
@@ -575,30 +551,9 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
    passCut(event_cut++, "Jet requirements");
    passCut(event_cut++, "Ntuple");
 
-   int category = 0;
    int ntv = -1;
 
    if (!data_) {
-      // HF categorization
-      auto genJets = get_collection(*this, event, genJetsToken_);
-      auto genBHadFlavour = get_collection(*this, event, genBHadFlavourToken_);
-      auto genBHadJetIndex = get_collection(*this, event, genBHadJetIndexToken_);
-      auto genBHadFromTopWeakDecay = get_collection(*this, event, genBHadFromTopWeakDecayToken_);
-      auto genBHadPlusMothers = get_collection(*this, event, genBHadPlusMothersToken_);
-      auto genBHadPlusMothersIndices = get_collection(*this, event, genBHadPlusMothersIndicesToken_);
-      auto genBHadIndex = get_collection(*this, event, genBHadIndexToken_);
-      auto genBHadLeptonHadronIndex = get_collection(*this, event, genBHadLeptonHadronIndexToken_);
-      auto genBHadLeptonViaTau = get_collection(*this, event, genBHadLeptonViaTauToken_);
-      auto genCHadFlavour = get_collection(*this, event, genCHadFlavourToken_);
-      auto genCHadJetIndex = get_collection(*this, event, genCHadJetIndexToken_);
-      auto genCHadFromTopWeakDecay = get_collection(*this, event, genCHadFromTopWeakDecayToken_);
-      auto genCHadBHadronId = get_collection(*this, event, genCHadBHadronIdToken_);
-
-      category = helper_.ttHFCategorization(*genJets,
-         *genBHadIndex, *genBHadJetIndex, *genBHadFlavour, *genBHadFromTopWeakDecay,
-         *genBHadPlusMothers, *genBHadPlusMothersIndices, *genBHadLeptonHadronIndex, *genBHadLeptonViaTau,
-         *genCHadFlavour, *genCHadJetIndex, *genCHadFromTopWeakDecay, *genCHadBHadronId, 20., 2.4);
-
       auto infos = get_collection(*this, event, pu_token_);
       for (const auto& info: *infos) {
          if (info.getBunchCrossing() == 0) {
@@ -611,12 +566,13 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
    auto trigger_results = get_collection(*this, event, trig_token_);
    auto trigger_names = event.triggerNames(*trigger_results);
 
+   int nmu = get_collection(*this, event, badmu_token_);
+
    std::auto_ptr<superslim::Event> ptr(new superslim::Event(
             staus, all_staus, chosen_leptons, all_leptons, sjets, smets,
             tau_id, lepton_id,
             event.id().run(), event.id().luminosityBlock(), event.id().event(),
-            npv, ntv, pv,
-            category,
+            npv, ntv, nmu, pv,
             superslim::Trigger(*trigger_results, trigger_names),
             particles));
 

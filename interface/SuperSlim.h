@@ -450,7 +450,6 @@ namespace superslim {
                long run, long lumi, long event,
                int npv, int ntv,
                const std::vector<superslim::Vertex>& pv,
-               int catergory,
                const superslim::Trigger& trigger,
                const reco::GenParticleCollection& genparticles);
          virtual ~Event() {};
@@ -480,7 +479,8 @@ namespace superslim {
          // true vertices
          int ntv() const { return ntv_; };
 
-         int hfCategory() const { return hfcat_; };
+         int nBadMuons() const { return nmu_; };
+
          int higgsDecay() const { return hdecay_; };
 
          const std::vector<superslim::Vertex>& pv() const { return pv_; };
@@ -513,8 +513,8 @@ namespace superslim {
 
          int npv_;
          int ntv_;
+         int nmu_;
 
-         int hfcat_;
          int hdecay_;
 
          std::vector<superslim::Vertex> pv_;

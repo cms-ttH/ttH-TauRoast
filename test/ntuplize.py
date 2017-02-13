@@ -87,6 +87,9 @@ process.source = cms.Source(
 if len(options.events) > 0:
     process.source.eventsToProcess = cms.untracked.VEventRange(options.events)
 
+# Jets
+# ----
+
 process.patJetCorrFactorsReapplyJEC = updatedPatJetCorrFactors.clone(
     src=cms.InputTag("slimmedJets"),
     levels=['L1FastJet', 'L2Relative', 'L3Absolute'],
@@ -94,7 +97,6 @@ process.patJetCorrFactorsReapplyJEC = updatedPatJetCorrFactors.clone(
 )
 if options.data:
     process.patJetCorrFactorsReapplyJEC.levels.append('L2L3Residual')
-
 
 process.patJetsReapplyJEC = updatedPatJets.clone(
     jetSource=cms.InputTag("slimmedJets"),
@@ -119,6 +121,36 @@ runMetCorAndUncFromMiniAOD(process,
 #                        recoMetFromPFCs=True,
 #                        )
 
+# Bad Muons
+# ---------
+
+process.badGlobalMuonTagger = cms.EDFilter(
+    "BadGlobalMuonTagger",
+    muons=cms.InputTag("slimmedMuons"),
+    vtx=cms.InputTag("offlineSlimmedPrimaryVertices"),
+    muonPtCut=cms.double(20),
+    selectClones=cms.bool(False),
+    taggingMode=cms.bool(True),
+    verbose=cms.untracked.bool(False)
+)
+process.cloneGlobalMuonTagger = process.badGlobalMuonTagger.clone(
+    selectClones=cms.bool(True)
+)
+
+process.removeBadAndCloneGlobalMuons = cms.EDProducer(
+    "MuonRefPruner",
+    input=cms.InputTag("slimmedMuons"),
+    toremove=cms.InputTag("badGlobalMuonTagger", "bad"),
+    toremove2=cms.InputTag("cloneGlobalMuonTagger", "bad")
+)
+
+process.noBadGlobalMuons = cms.Sequence(
+    process.cloneGlobalMuonTagger +
+    process.badGlobalMuonTagger +
+    process.removeBadAndCloneGlobalMuons
+)  # in tagging mode, these modules return always "true"
+
+
 process.load("RecoEgamma.ElectronIdentification.ElectronMVAValueMapProducer_cfi")
 process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
 process.load("ttH.LeptonID.ttHLeptons_cfi")
@@ -129,6 +161,7 @@ process.ttHLeptons.MediumCSVWP = cms.double(0.8484)
 process.ttHLeptons.IsHIPSafe = cms.bool(options.hip)
 
 process.lepPath = cms.Path(
+    process.noBadGlobalMuons *
     process.fullPatMetSequence *
     process.electronMVAValueMapProducer *
     process.ttHLeptons
@@ -143,16 +176,6 @@ if options.dump:
     process.dump = cms.EDAnalyzer("EventContentAnalyzer")
     process.dpath = cms.Path(process.dump)
     process.maxEvents.input = cms.untracked.int32(1)
-
-if not options.data:
-    process.matchPath = cms.Path(
-        process.genParticlesForJetsNoNu *
-        process.ak4GenJetsCustom *
-        process.selectedHadronsAndPartons *
-        process.genJetFlavourInfos *
-        process.matchGenBHadron *
-        process.matchGenCHadron
-    )
 
 process.end = cms.EndPath()
 
@@ -176,8 +199,8 @@ for channel in options.channels:
                           electrons=cms.InputTag("ttHLeptons"),
                           muons=cms.InputTag("ttHLeptons"),
                           taus=cms.InputTag("ttHLeptons"),
-                          # jets=cms.InputTag("patJetsReapplyJEC"),
-                          jets=cms.InputTag("slimmedJets"),
+                          jets=cms.InputTag("patJetsReapplyJEC"),
+                          # jets=cms.InputTag("slimmedJets"),
                           genJets=cms.InputTag("slimmedGenJets"),
                           minTaus=cms.uint32(taus[0]),
                           maxTaus=cms.uint32(taus[1]),

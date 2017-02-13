@@ -34,7 +34,7 @@ def expand_systematics(systematics, weights):
 
 def setup_cuts(config):
     cutflows = Cutflows()
-    cutflownames = [k.replace(' cuts', '') for k in config if k.endswith(' cuts')]
+    cutflownames = [k.replace(' cuts', '') for k in config if k.endswith(' cuts') and not k.startswith('baseline')]
     for name in cutflownames:
         weights = config.get(name + ' weights')
         systematics = config.get(name + ' systematics', [])
@@ -43,7 +43,7 @@ def setup_cuts(config):
             cuts = [Cut("Ntuple analyzed", "true")]
             weights = []
 
-            for cfg in config[name + ' cuts']:
+            for cfg in config.get('baseline cuts', []) + config[name + ' cuts']:
                 cuts.append(Cut(*cfg.items()[0]))
 
             for weight in config[name + ' weights']:

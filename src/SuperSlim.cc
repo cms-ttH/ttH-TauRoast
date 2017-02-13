@@ -572,16 +572,14 @@ namespace superslim {
                superslim::Tau::id tid,
                superslim::Lepton::id lid,
                long run, long lumi, long event,
-               int npv, int ntv,
+               int npv, int ntv, int nmu,
                const std::vector<superslim::Vertex>& pv,
-               int category,
                const superslim::Trigger& trigger,
                const reco::GenParticleCollection& genparticles) :
       taus_(taus), all_taus_(all_taus), leptons_(leps), all_leptons_(all_leps),
       jets_(jets), met_(met), tau_id_(tid), lepton_id_(lid),
       run_(run), lumi_(lumi), event_(event),
-      npv_(npv), ntv_(ntv),
-      hfcat_(category),
+      npv_(npv), ntv_(ntv), nmu_(nmu),
       hdecay_(-1),
       pv_(pv),
       trigger_(trigger)
