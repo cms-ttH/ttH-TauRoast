@@ -113,3 +113,4 @@ if args.train:
 
 for action in actions:
     action(args, config)
+    config.pop('indir', None)
