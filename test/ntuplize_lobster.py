@@ -4,8 +4,8 @@ from lobster.core import AdvancedOptions, Category, Config, StorageConfiguration
 
 from ttH.TauRoast.datasets import datasets, mctag
 
-version = "v41"
-tag = "ttH"
+version = "v42"
+tag = "all"
 
 globaltag_mc = "80X_mcRun2_asymptotic_2016_TrancheIV_v8"
 globaltag_data = "80X_dataRun2_2016SeptRepro_v7"

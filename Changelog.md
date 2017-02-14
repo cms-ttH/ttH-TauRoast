@@ -1,5 +1,13 @@
 # Ntuple History
 
+## v42
+
+* Activate JEC correctly
+
+## v41
+
+* Another HLT-rerun
+
 ## v40
 
 * Fix HLT results for amc@NLO samples (different InputTag)
