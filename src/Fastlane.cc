@@ -42,7 +42,7 @@ fastlane::CSVHelper::CSVHelper()
          "up_cferr2", "down_cferr2"
      })
 {
-   edm::FileInPath fn("ttH/TauRoast/data/weights/CSVv2Moriond17_2017_1_26_BtoH.csv");
+   edm::FileInPath fn("ttH/TauRoast/data/weights/CSVv2_Moriond17_B_H.csv");
    BTagCalibration calib("csvv2", fn.fullPath());
 
    reader_.load(calib, BTagEntry::FLAV_B, "iterativefit");
@@ -53,16 +53,38 @@ fastlane::CSVHelper::CSVHelper()
 float
 fastlane::CSVHelper::weight(const std::vector<superslim::Jet>& jets, const std::string& sys)
 {
+   static const std::vector<std::string> bsys{
+      "up_jes", "up_lf", "up_hfstats1", "up_hfstats2",
+      "down_jes", "down_lf", "down_hfstats1", "down_hfstats2"
+   };
+   static const std::vector<std::string> lsys{
+      "up_jes", "up_hf", "up_lfstats1", "up_lfstats2",
+      "down_jes", "down_hf", "down_lfstats1", "down_lfstats2"
+   };
+   static const std::vector<std::string> csys{
+      "up_cferr1", "up_cferr2",
+      "down_cferr1", "down_cferr2"
+   };
+
    float w = 1.;
 
    for (const auto& j: jets) {
       float jw = 1.;
       if (std::abs(j.flavor()) == 5) {
-         jw = reader_.eval_auto_bounds(sys, BTagEntry::FLAV_B, j.eta(), j.pt(), j.csv());
+         std::string use = sys;
+         if (std::find(bsys.begin(), bsys.end(), sys) == bsys.end())
+            use = "central";
+         jw = reader_.eval_auto_bounds(use, BTagEntry::FLAV_B, j.eta(), j.pt(), j.csv());
       } else if (std::abs(j.flavor()) == 4) {
-         jw = reader_.eval_auto_bounds(sys, BTagEntry::FLAV_C, j.eta(), j.pt(), j.csv());
+         std::string use = sys;
+         if (std::find(csys.begin(), csys.end(), sys) == csys.end())
+            use = "central";
+         jw = reader_.eval_auto_bounds(use, BTagEntry::FLAV_C, j.eta(), j.pt(), j.csv());
       } else {
-         jw = reader_.eval_auto_bounds(sys, BTagEntry::FLAV_UDSG, j.eta(), j.pt(), j.csv());
+         std::string use = sys;
+         if (std::find(lsys.begin(), lsys.end(), sys) == lsys.end())
+            use = "central";
+         jw = reader_.eval_auto_bounds(use, BTagEntry::FLAV_UDSG, j.eta(), j.pt(), j.csv());
       }
       w *= jw;
    }
