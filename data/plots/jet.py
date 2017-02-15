@@ -41,7 +41,7 @@ Leaf('jet_deltaRmin', 'f',
         for (auto i = 0; i < jets.size(); ++i)
             for (auto j = i + 1; j < jets.size(); ++j)
                 drs.push_back(dR(jets[i], jets[j]));
-        result = *std::min_element(drs.begin(), drs.end())''')
+        result = drs.size() > 0 ? *std::min_element(drs.begin(), drs.end()) : -666.''')
 Plot(
     name="jets/JJ_MinDeltaR",
     values=["jet_deltaRmin"],
@@ -54,7 +54,7 @@ Leaf('jet_deltaRmax', 'f',
         for (auto i = 0; i < jets.size(); ++i)
             for (auto j = i + 1; j < jets.size(); ++j)
                 drs.push_back(dR(jets[i], jets[j]));
-        result = *std::max_element(drs.begin(), drs.end())''')
+        result = drs.size() > 0 ? *std::max_element(drs.begin(), drs.end()) : -666.''')
 Plot(
     name="jets/JJ_MaxDeltaR",
     values=["jet_deltaRmin"],
