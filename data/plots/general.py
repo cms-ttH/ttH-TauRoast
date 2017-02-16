@@ -38,6 +38,14 @@ Plot(
     blind=True,
     essential=True
 )
+Plot(
+    name="general/TMVA_fine",
+    values=["tmva"],
+    labels=["BDT value (TMVA)", "Events"],
+    binning=[60, -1, 1],
+    blind=True,
+    essential=True
+)
 
 Plot(
     name="general/Events",
