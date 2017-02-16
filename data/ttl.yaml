@@ -2,9 +2,9 @@
 
 channel: ttl
 generator: pow
-ntupledir: /hadoop/store/user/matze/ttH/v39
+ntupledir: /hadoop/store/user/matze/ttH/v42
 # ntupledir: /scratch365/mwolf3/ttH/v32
-outdir: ~/www/ttH/v39/ttl
+outdir: ~/www/ttH/v42/ttl
 mvadir: data/bdt
 histformat: "{v}_{c}_{p}"
 
@@ -61,6 +61,7 @@ baseline cuts:
         len(jets) >= 3 and
         (btags(jets) >= 1 or btags(jets, true) >= 2)
     - "τ pT": >
+        taus.size() >= 2 and
         taus[0].pt() >= 30 and taus[1].pt() >= 20
     - "τ OS": >
         taus[0].charge() * taus[1].charge() < 0
