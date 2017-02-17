@@ -435,10 +435,10 @@ namespace superslim {
             return mva_ >= min or lj_ >= min;
             break;
          case Lepton::Fakeable:
-            return fakeable_ >= min;
+            return fakeable_ >= min and missing_hits_ == 0;
             break;
          case Lepton::MVA:
-            return mva_ >= min;
+            return mva_ >= min and missing_hits_ == 0;
             break;
          case Lepton::LJ:
             return lj_ >= min;
