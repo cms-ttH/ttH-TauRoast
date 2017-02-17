@@ -45,6 +45,7 @@ discriminants:
   - NumInclusiveJets
   - TT_VisibleMass
   - TMVA
+  - TMVA_fine
 
 baseline cuts:
     - "l ID": lepton_id == superslim::Lepton::MVA
@@ -76,7 +77,7 @@ fake weights:
   - CSVWeight
   - PUWeight
   - LeptonSF
-  - TriggerSF
+  # - TriggerSF
   - tauIdEff
   - Fake
 
@@ -96,7 +97,7 @@ signal weights:
   - CSVWeight
   - PUWeight
   - LeptonSF
-  - TriggerSF
+  # - TriggerSF
   - tauIdEff
 
 data fake cuts:
