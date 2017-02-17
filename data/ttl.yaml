@@ -107,6 +107,10 @@ data fake cuts:
 data fake weights:
   - Fake
 
+data fake systematics:
+  - CMS_ttHl_FRjt_norm
+  - CMS_ttHl_FRjt_shape
+
 data signal cuts:
     - "l quality": >
         leptons[0].mva() >= superslim::id::Loose

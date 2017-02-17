@@ -267,6 +267,8 @@ ws += ["CMS_ttHl_btag_" + w for w in
                                        "lfstats2", "cerr1", "cerr2"], ["up", "down"]))]
 ws += ["CMS_ttHl_thu_shape_tt" + w for w in
        map(''.join, itertools.product("HWZ", ["_x1", "_y1"], ["up", "down"]))]
+ws += ["CMS_ttHl_FRjt_" + w for w in
+       map(''.join, itertools.product(['norm', 'shape'], ["up", "down"]))]
 for w in ws:
     Leaf('w_' + w.lower(), 'f', 'result = weights["{0}"]'.format(w.lower()))
 

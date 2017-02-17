@@ -139,7 +139,13 @@ fastlane::FakeHelper::FakeHelper()
    };
    static const std::vector<std::string> labels{"barrel", "endcap"};
    static const std::string fakerate = "jetToTauFakeRate_mc_hadTaus_pt";
-   static const std::string correction = "fitFunction_data_div_mc_hadTaus_pt";
+   static const std::map<std::string, std::string> correction{
+      {"central", "fitFunction_data_div_mc_hadTaus_pt"},
+      {"normUp", "fitFunction_data_div_mc_hadTaus_pt_par1Up"},
+      {"normDown", "fitFunction_data_div_mc_hadTaus_pt_par1Down"},
+      {"shapeUp", "fitFunction_data_div_mc_hadTaus_pt_par2Up"},
+      {"shapeDown", "fitFunction_data_div_mc_hadTaus_pt_par2Down"}
+   };
 
    {
       TFile f(edm::FileInPath("ttH/TauRoast/data/weights/tau_weights.root").fullPath().c_str());
@@ -147,9 +153,11 @@ fastlane::FakeHelper::FakeHelper()
          TGraphAsymmErrors *graph;
          f.GetObject((dets[i] + fakerate).c_str(), graph);
          graph_to_hists(graph, tau[i], labels[i]);
-         TF1 *fct;
-         f.GetObject((dets[i] + correction).c_str(), fct);
-         fct->Copy(ratio[i]);
+         for (const auto& corr: correction) {
+            TF1 *fct;
+            f.GetObject((dets[i] + corr.second).c_str(), fct);
+            fct->Copy(ratio[i][corr.first]);
+         }
       }
    }
 
@@ -172,7 +180,9 @@ fastlane::FakeHelper::FakeHelper(const FakeHelper& other)
          tau[i][j].reset(dynamic_cast<TH1F*>(other.tau[i][j]->Clone()));
          tau[i][j]->SetDirectory(0);
       }
-      other.ratio[i].Copy(ratio[i]);
+      for (const auto& corr: ratio[i]) {
+         corr.second.Copy(ratio[i][corr.first]);
+      }
    }
    ele_fake.reset(dynamic_cast<TH2F*>(other.ele_fake->Clone()));
    mu_fake.reset(dynamic_cast<TH2F*>(other.mu_fake->Clone()));
@@ -180,7 +190,8 @@ fastlane::FakeHelper::FakeHelper(const FakeHelper& other)
 
 float
 fastlane::FakeHelper::weight(const std::vector<superslim::Tau>& taus,
-                             const std::vector<superslim::Lepton>& leptons)
+                             const std::vector<superslim::Lepton>& leptons,
+                             const std::string& sys)
 {
    static const float barrel_cut = 1.479;
 
@@ -191,7 +202,7 @@ fastlane::FakeHelper::weight(const std::vector<superslim::Tau>& taus,
       if (t.isolationMVA03() >= superslim::id::Tight)
          continue;
       int idx = std::abs(t.eta()) > barrel_cut;
-      float f = tau[idx][0]->GetBinContent(tau[idx][0]->FindBin(t.pt())) * ratio[idx].Eval(t.pt());
+      float f = tau[idx][0]->GetBinContent(tau[idx][0]->FindBin(t.pt())) * ratio[idx][sys].Eval(t.pt());
       w *= f / (1. - f);
       fake_count += 1;
    }
@@ -507,6 +518,10 @@ fastlane::update_weights(const std::string& process, std::unordered_map<std::str
    wleptons.resize(std::min({wleptons.size(), 1ul}));
 
    ws[lower("fake")] = fakerate.weight(wtaus, wleptons);
+   ws[lower("CMS_ttHl_FRjt_normUp")] = fakerate.weight(wtaus, wleptons, "normUp");
+   ws[lower("CMS_ttHl_FRjt_normDown")] = fakerate.weight(wtaus, wleptons, "normDown");
+   ws[lower("CMS_ttHl_FRjt_shapeUp")] = fakerate.weight(wtaus, wleptons, "shapeUp");
+   ws[lower("CMS_ttHl_FRjt_shapeDown")] = fakerate.weight(wtaus, wleptons, "shapeDown");
 #endif
 }
 
