@@ -43,8 +43,13 @@ def makepositive(hist):
 
 parser = argparse.ArgumentParser("remove negative bins from histograms")
 parser.add_argument("filename", help="file to modify")
+parser.add_argument("variable", help="variable name to use for limits")
 args = parser.parse_args()
 
 with root_open(args.filename, 'update') as fd:
     for k in fd.keys():
-        makepositive(k.read_obj()).Write(k.get_name(), r.TObject.kWriteDelete)
+        name = k.get_name()
+        hist = makepositive(k.read_obj())
+        hist.Write(name, r.TObject.kWriteDelete)
+        if name.startswith(args.variable):
+            hist.Write(name.replace(args.variable, 'x', 1), r.TObject.kWriteDelete)
