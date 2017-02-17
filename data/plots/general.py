@@ -277,5 +277,40 @@ Plot(
     values=["w_generator"],
     weights=[],
     labels=["Generator weight (unweighted)", "Events"],
-    binning=[20, -3, 5]
+    binning=[20, -4, 4]
+)
+Plot(
+    name="weights/CSV",
+    values=["w_csvweight"],
+    weights=[],
+    labels=["CSV weight (unweighted)", "Events"],
+    binning=[20, 0, 2]
+)
+Plot(
+    name="weights/PU",
+    values=["w_puweight"],
+    weights=[],
+    labels=["PU weight (unweighted)", "Events"],
+    binning=[20, 0, 1.5]
+)
+Plot(
+    name="weights/LeptonSF",
+    values=["w_leptonsf"],
+    weights=[],
+    labels=["Lepton SF weight (unweighted)", "Events"],
+    binning=[20, 0.8, 1.1]
+)
+Plot(
+    name="weights/TriggerSF",
+    values=["w_triggersf"],
+    weights=[],
+    labels=["Trigger SF weight (unweighted)", "Events"],
+    binning=[20, 0, 1.5]
+)
+Plot(
+    name="weights/TauIDEff",
+    values=["w_tauideff"],
+    weights=[],
+    labels=["#tau ID efficiency weight (unweighted)", "Events"],
+    binning=[20, 0, 1.1]
 )
