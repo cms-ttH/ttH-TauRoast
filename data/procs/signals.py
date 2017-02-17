@@ -37,7 +37,7 @@ BasicProcess(
     fullname="t#bar{t}H(125)",
     limitname="ttH2Nonbb125",
     paths=['ttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix_ext1_v1'],
-    cross_section=0.2586,  # 0.5085 * (1 - 0.577),
+    cross_section=0.2151,  # 0.5085 * (1 - 0.577),
     events=10045633,
     cutflow='signal'
 )
@@ -47,7 +47,7 @@ BasicProcess(
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
     limitname="ttH_htt",
     paths=['ttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix_ext1_v1'],
-    cross_section=0.2586,  # 0.5085 * (1 - 0.577),
+    cross_section=0.2151,  # 0.5085 * (1 - 0.577),
     events=10045633,
     cutflow='signal',
     additional_cuts=[
@@ -60,7 +60,7 @@ BasicProcess(
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
     limitname="ttH_hww",
     paths=['ttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix_ext1_v1'],
-    cross_section=0.2586,  # 0.5085 * (1 - 0.577),
+    cross_section=0.2151,  # 0.5085 * (1 - 0.577),
     events=10045633,
     cutflow='signal',
     additional_cuts=[
@@ -73,7 +73,7 @@ BasicProcess(
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
     limitname="ttH_hzz",
     paths=['ttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix_ext1_v1'],
-    cross_section=0.2586,  # 0.5085 * (1 - 0.577),
+    cross_section=0.2151,  # 0.5085 * (1 - 0.577),
     events=10045633,
     cutflow='signal',
     additional_cuts=[
@@ -118,7 +118,7 @@ BasicProcess(
     fullname="t#bar{t}H(125) #rightarrow #tau_{h} #tau_{h} gen-match",
     paths=['ttHToNonbb_M125_13TeV_powheg_pythia8_v1'],
     # cross_section=0.5085 * (1 - 0.577),
-    cross_section=0.2586,
+    cross_section=0.2151,
     events=3860872,
     additional_cuts=[
         (
@@ -135,7 +135,7 @@ BasicProcess(
     fullname="t#bar{t}H(125) #rightarrow #tau_{h} #tau_{h} gen-match",
     paths=['ttHToNonbb_M125_13TeV_powheg_pythia8_v1'],
     # cross_section=0.5085 * (1 - 0.577),
-    cross_section=0.2586,
+    cross_section=0.2151,
     events=3860872,
     additional_cuts=[('id', 'abs(taus[0].match()) == 5 and abs(taus[1].match()) == 5')]
 )
@@ -154,7 +154,7 @@ BasicProcess(
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
     paths=['ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_v1'],
     # cross_section=0.5085 * (1 - 0.577),
-    cross_section=0.2586,
+    cross_section=0.2151,
     events=3981250,
     cutflow='signal'
 )
@@ -165,7 +165,7 @@ BasicProcess(
     limitname="ttH_htt",
     paths=['ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_v1'],
     # cross_section=0.5085 * (1 - 0.577),
-    cross_section=0.2586,
+    cross_section=0.2151,
     events=3981250,
     cutflow='signal',
     additional_cuts=[
@@ -179,7 +179,7 @@ BasicProcess(
     limitname="ttH_hww",
     paths=['ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_v1'],
     # cross_section=0.5085 * (1 - 0.577),
-    cross_section=0.2586,
+    cross_section=0.2151,
     events=3981250,
     cutflow='signal',
     additional_cuts=[
@@ -193,7 +193,7 @@ BasicProcess(
     limitname="ttH_hzz",
     paths=['ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_v1'],
     # cross_section=0.5085 * (1 - 0.577),
-    cross_section=0.2586,
+    cross_section=0.2151,
     events=3981250,
     cutflow='signal',
     additional_cuts=[
@@ -215,7 +215,7 @@ BasicProcess(
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
     paths=['ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV_powheg_pythia8_v1'],
     # cross_section=0.5085 * (1 - 0.577),
-    cross_section=0.2586,
+    cross_section=0.2151,
     events=3981250,
     cutflow='fake'
 )
