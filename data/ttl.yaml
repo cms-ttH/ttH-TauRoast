@@ -4,7 +4,7 @@ channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v42
 # ntupledir: /scratch365/mwolf3/ttH/v32
-outdir: ~/www/ttH/v42/ttl
+outdir: ~/www/ttH/v42/ttl_2017-02-21
 mvadir: data/bdt
 histformat: "{v}_{c}_{p}"
 
@@ -54,8 +54,10 @@ baseline cuts:
         (leptons[0].electron() and event.trigger().accepted({"HLT_Ele27_eta2p1_WPLoose_Gsf_v"})) or
         (leptons[0].muon() and event.trigger().accepted({"HLT_IsoMu22_v", "HLT_IsoTkMu22_v", "HLT_IsoMu24_v", "HLT_IsoTkMu24_v"}))
     - "l pt": >
-        (leptons[0].electron() and leptons[0].pt() > 30) or
-        (leptons[0].muon() and leptons[0].pt() > 25)
+        (leptons[0].electron() and leptons[0].pt() > 25) or
+        (leptons[0].muon() and leptons[0].pt() > 20)
+    - "l η": >
+        std::abs(leptons[0].eta()) <= 2.1
     - "1 l": >
         std::count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Loose; }) <= 1
     - "jets": >
