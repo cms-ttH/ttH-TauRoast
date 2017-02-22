@@ -51,8 +51,22 @@ baseline cuts:
     - "l ID": lepton_id == superslim::Lepton::MVA
     - "τ ID": tau_id == superslim::Tau::IsoMVA03
     - "l trigger": >
-        (leptons[0].electron() and event.trigger().accepted({"HLT_Ele27_eta2p1_WPLoose_Gsf_v"})) or
-        (leptons[0].muon() and event.trigger().accepted({"HLT_IsoMu22_v", "HLT_IsoTkMu22_v", "HLT_IsoMu24_v", "HLT_IsoTkMu24_v"}))
+        (leptons[0].electron() and
+         event.trigger().accepted({
+             "HLT_Ele25_eta2p1_WPTight_Gsf_v",
+             "HLT_Ele45_WPLoose_Gsf_L1JetTauSeeded",
+             "HLT_Ele24_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v",
+             "HLT_Ele24_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_v",
+             "HLT_Ele24_eta2p1_WPLoose_Gsf_LooseIsoPFTau30_v"
+         })) or
+        (leptons[0].muon() and
+         event.trigger().accepted({
+             "HLT_IsoMu22_v",
+             "HLT_IsoTkMu22_v",
+             "HLT_IsoMu22_eta2p1_v",
+             "HLT_IsoTkMu22_eta2p1_v"
+             "HLT_IsoMu19_eta2p1_LooseIsoPFTau20_SingleL1_v"
+         }))
     - "l pt": >
         (leptons[0].electron() and leptons[0].pt() > 25) or
         (leptons[0].muon() and leptons[0].pt() > 20)
