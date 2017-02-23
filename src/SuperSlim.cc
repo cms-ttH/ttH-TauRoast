@@ -436,11 +436,11 @@ namespace superslim {
             break;
          case Lepton::Fakeable:
             return fakeable_ >= min and
-               (muon() or (missing_hits_ == 0 and passConversionVeto()));
+               (muon() or (missing_hits_ == 0 and passesConversionVeto()));
             break;
          case Lepton::MVA:
             return mva_ >= min and
-               (muon() or (missing_hits_ == 0 and passConversionVeto()));
+               (muon() or (missing_hits_ == 0 and passesConversionVeto()));
             break;
          case Lepton::LJ:
             return lj_ >= min;
