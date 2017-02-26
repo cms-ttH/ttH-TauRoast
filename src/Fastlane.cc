@@ -148,7 +148,7 @@ fastlane::FakeHelper::FakeHelper()
    };
 
    {
-      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/tau_weights.root").fullPath().c_str());
+      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/FR_tau_2016.root").fullPath().c_str());
       for (unsigned int i = 0; i < dets.size(); ++i) {
          TGraphAsymmErrors *graph;
          f.GetObject((dets[i] + fakerate).c_str(), graph);
