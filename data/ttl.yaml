@@ -4,7 +4,7 @@ channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v42
 # ntupledir: /scratch365/mwolf3/ttH/v32
-outdir: ~/www/ttH/v42/ttl_2017-02-21
+outdir: ~/www/ttH/v42/ttl_2017-02-27_trigger_sf
 mvadir: data/bdt
 histformat: "{v}_{c}_{p}"
 
@@ -44,7 +44,9 @@ limits:
 discriminants:
   - NumInclusiveJets
   - TT_VisibleMass
-  - TMVA
+  - TMVA6
+  - TMVA8
+  - TMVA10
   - TMVA_fine
 
 baseline cuts:
@@ -113,7 +115,7 @@ signal weights:
   - CSVWeight
   - PUWeight
   - LeptonSF
-  # - TriggerSF
+  - TriggerSF
   - tauIdEff
 
 data fake cuts:

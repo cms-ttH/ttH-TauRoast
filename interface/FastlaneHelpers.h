@@ -3,6 +3,7 @@
 
 #include "CondTools/BTau/interface/BTagCalibrationReader.h"
 
+#include "RooFunctor.h"
 #include "TF1.h"
 #include "TGraphAsymmErrors.h"
 #include "TH2F.h"
@@ -61,6 +62,27 @@ namespace fastlane {
          std::auto_ptr<TH2F> reco_el2_;
          std::auto_ptr<TH2F> reco_el3_;
          std::auto_ptr<TH2F> reco_el4_;
+   };
+
+   class TriggerHelper {
+      public:
+         TriggerHelper();
+         virtual ~TriggerHelper() {};
+
+         float weight(const superslim::Event&);
+      private:
+         std::array<std::auto_ptr<TGraphAsymmErrors>, 2> eff_et_tau_leg_mc_;
+         std::array<std::auto_ptr<TGraphAsymmErrors>, 2> eff_et_tau_leg_data_;
+         std::array<std::auto_ptr<TGraphAsymmErrors>, 2> eff_mt_tau_leg_mc_;
+         std::array<std::auto_ptr<TGraphAsymmErrors>, 2> eff_mt_tau_leg_data_;
+         std::array<std::auto_ptr<TGraphAsymmErrors>, 3> eff_et_lep_leg_mc_;
+         std::array<std::auto_ptr<TGraphAsymmErrors>, 3> eff_et_lep_leg_data_;
+         std::array<std::auto_ptr<TGraphAsymmErrors>, 3> eff_mt_lep_leg_mc_;
+         std::array<std::auto_ptr<TGraphAsymmErrors>, 3> eff_mt_lep_leg_data_;
+         std::array<std::auto_ptr<TGraphAsymmErrors>, 3> eff_e_mc_;
+         std::array<std::auto_ptr<TGraphAsymmErrors>, 3> eff_e_data_;
+         std::array<std::auto_ptr<TGraphAsymmErrors>, 3> eff_m_mc_;
+         std::array<std::auto_ptr<TGraphAsymmErrors>, 3> eff_m_data_;
    };
 }
 
