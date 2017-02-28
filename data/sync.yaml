@@ -10,7 +10,7 @@ mode: sync
 lumi: 2517
 
 plot:
-  - syncTree
+  # - syncTree
   - syncTree_1l2tau_SR
   - syncTree_1l2tau_Fake
   # - ttjets
@@ -32,6 +32,8 @@ fake cuts:
     - "l pt": >
         (leptons[0].electron() and leptons[0].pt() > 25) or
         (leptons[0].muon() and leptons[0].pt() > 20)
+    - "l η": >
+        std::abs(leptons[0].eta()) <= 2.1
     - "1 l": >
         std::count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Loose; }) <= 1
     - "jets": >
@@ -51,6 +53,8 @@ signal cuts:
     - "l pt": >
         (leptons[0].electron() and leptons[0].pt() > 25) or
         (leptons[0].muon() and leptons[0].pt() > 20)
+    - "l η": >
+        std::abs(leptons[0].eta()) <= 2.1
     - "1 l": >
         std::count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Loose; }) == 1
     - "1st l": >
