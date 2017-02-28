@@ -804,9 +804,9 @@ fastlane::process(const std::string& process, const std::string& channel, const 
                      << std::endl;
                   i += 1;
                }
-               std::cout << "\tTriggers:" << std::endl;
-               for (const auto& t: e->trigger().triggers())
-                  std::cout << "\t\t" << t << std::endl;
+               // std::cout << "\tTriggers:" << std::endl;
+               // for (const auto& t: e->trigger().triggers())
+               //    std::cout << "\t\t" << t << std::endl;
             }
             failed = true;
             break;
