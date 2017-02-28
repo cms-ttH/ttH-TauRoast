@@ -53,10 +53,10 @@ namespace fastlane {
          std::auto_ptr<TH2F> tight_el_;
          std::auto_ptr<TH2F> tight_mu_;
 
-         std::auto_ptr<TGraphAsymmErrors> reco_mu1b_;
-         std::auto_ptr<TGraphAsymmErrors> reco_mu1e_;
+         std::auto_ptr<TH2F> reco_mu1_;
          std::auto_ptr<TH2F> reco_mu2_;
-         std::auto_ptr<TGraphAsymmErrors> reco_mu3_;
+         std::auto_ptr<TH2F> reco_mu3_;
+         std::auto_ptr<TGraphAsymmErrors> reco_mu4_;
 
          std::auto_ptr<TH2F> reco_el1_;
          std::auto_ptr<TH2F> reco_el2_;

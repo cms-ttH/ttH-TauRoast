@@ -237,36 +237,32 @@ fastlane::LeptonHelper::LeptonHelper()
    }
 
    {
-      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/leptonSF/el_scaleFactors_20160724.root").fullPath().c_str());
-      get_hist(f, reco_el1_, "GsfElectronToFOID2D");
+      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/leptonSF/el_scaleFactors_Moriond17.root").fullPath().c_str());
+      get_hist(f, reco_el1_, "GsfElectronToMVAVLooseFOIDEmuTightIP2D");
       get_hist(f, reco_el2_, "MVAVLooseElectronToMini4");
-      get_hist(f, reco_el3_, "MVAVLooseElectronToConvIHit1");
+      get_hist(f, reco_el3_, "MVAVLooseElectronToConvVetoIHit1");
    }
    {
-      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/leptonSF/el_scaleFactors_gsf.root").fullPath().c_str());
+      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/leptonSF/egammaEffi.txt_EGM2D.root").fullPath().c_str());
       get_hist(f, reco_el4_, "EGamma_SF2D");
    }
    {
-      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/leptonSF/mu_ttH_presel_barrel.root").fullPath().c_str());
-      TGraphAsymmErrors *g;
-      f.GetObject("ratio", g);
-      reco_mu1b_.reset(g);
+      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/leptonSF/TnP_NUM_LooseID_DENOM_generalTracks_VAR_map_pt_eta.root").fullPath().c_str());
+      get_hist(f, reco_mu1_, "SF");
    }
    {
-      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/leptonSF/mu_ttH_presel_endcap.root").fullPath().c_str());
-      TGraphAsymmErrors *g;
-      f.GetObject("ratio", g);
-      reco_mu1e_.reset(g);
+      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/leptonSF/TnP_NUM_MiniIsoLoose_DENOM_LooseID_VAR_map_pt_eta.root").fullPath().c_str());
+      get_hist(f, reco_mu2_, "SF");
    }
    {
-      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/leptonSF/MuonID_Z_RunBCD_prompt80X_7p65_looseID.root").fullPath().c_str());
-      get_hist(f, reco_mu2_, "pt_abseta_ratio_MC_NUM_LooseID_DEN_genTracks_PAR_pt_spliteta_bin1");
+      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/leptonSF/TnP_NUM_TightIP2D_DENOM_MediumID_VAR_map_pt_eta.root").fullPath().c_str());
+      get_hist(f, reco_mu3_, "SF");
    }
    {
       TFile f(edm::FileInPath("ttH/TauRoast/data/weights/leptonSF/ratios_HIP_trkEff.root").fullPath().c_str());
       TGraphAsymmErrors *g;
       f.GetObject("ratio_eta", g);
-      reco_mu3_.reset(g);
+      reco_mu4_.reset(g);
    }
 }
 
@@ -275,10 +271,10 @@ fastlane::LeptonHelper::LeptonHelper(const LeptonHelper& other)
    tight_el_.reset(dynamic_cast<TH2F*>(tight_el_->Clone()));
    tight_mu_.reset(dynamic_cast<TH2F*>(tight_mu_->Clone()));
 
-   reco_mu1b_.reset(dynamic_cast<TGraphAsymmErrors*>(reco_mu1b_->Clone()));
-   reco_mu1e_.reset(dynamic_cast<TGraphAsymmErrors*>(reco_mu1e_->Clone()));
+   reco_mu1_.reset(dynamic_cast<TH2F*>(reco_mu1_->Clone()));
    reco_mu2_.reset(dynamic_cast<TH2F*>(reco_mu2_->Clone()));
-   reco_mu3_.reset(dynamic_cast<TGraphAsymmErrors*>(reco_mu3_->Clone()));
+   reco_mu3_.reset(dynamic_cast<TH2F*>(reco_mu3_->Clone()));
+   reco_mu4_.reset(dynamic_cast<TGraphAsymmErrors*>(reco_mu4_->Clone()));
 
    reco_el1_.reset(dynamic_cast<TH2F*>(reco_el1_->Clone()));
    reco_el2_.reset(dynamic_cast<TH2F*>(reco_el2_->Clone()));
@@ -319,9 +315,10 @@ fastlane::LeptonHelper::recoSF(const superslim::Lepton& l)
          get_factor(reco_el4_, l, true);
    } else {
       return
-         (std::abs(l.eta()) < 1.2 ? get_factor(reco_mu1b_, l.pt()) : get_factor(reco_mu1e_, l.pt())) *
+         get_factor(reco_mu1_, l) *
          get_factor(reco_mu2_, l) *
-         get_factor(reco_mu3_, l.eta());
+         get_factor(reco_mu3_, l) *
+         get_factor(reco_mu4_, l.eta());
    }
 }
 
