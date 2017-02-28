@@ -432,15 +432,13 @@ namespace superslim {
    bool Lepton::selected(Lepton::id id_, superslim::id::value min) const {
       switch (id_) {
          case Lepton::All:
-            return mva_ >= min or lj_ >= min;
+            return mva() >= min or lj_ >= min;
             break;
          case Lepton::Fakeable:
-            return fakeable_ >= min and
-               (muon() or (missing_hits_ == 0 and passesConversionVeto()));
+            return fakeable() >= min;
             break;
          case Lepton::MVA:
-            return mva_ >= min and
-               (muon() or (missing_hits_ == 0 and passesConversionVeto()));
+            return mva() >= min;
             break;
          case Lepton::LJ:
             return lj_ >= min;
