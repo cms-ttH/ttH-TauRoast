@@ -82,6 +82,7 @@ process.GlobalTag.globaltag = options.globalTag
 process.source = cms.Source(
     "PoolSource",
     fileNames=cms.untracked.vstring(options.inputFiles),
+    # eventsToProcess=cms.untracked.VEventRange('1:1952714')
 )
 
 if len(options.events) > 0:
