@@ -490,6 +490,8 @@ namespace superslim {
 
          void setGenParticles(const std::vector<GenObject>& v) { gen_particles_ = v; };
          void setGenJets(const std::vector<GenJet>& v) { gen_jets_ = v; };
+
+         bool dileptonVeto() const;
       private:
          std::map<std::string, std::vector<superslim::Tau>> taus_;
          std::map<std::string, std::vector<superslim::Tau>> all_taus_;

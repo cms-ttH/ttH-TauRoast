@@ -634,4 +634,21 @@ namespace superslim {
          }
       }
    }
+
+   bool
+   Event::dileptonVeto() const
+   {
+      for (unsigned int i = 0; i < all_leptons_.size(); ++i) {
+         for (unsigned int j = i; j < all_leptons_.size(); ++j) {
+            if (all_leptons_[i].fakeable() < superslim::id::Loose or
+                all_leptons_[j].fakeable() < superslim::id::Loose)
+               continue;
+
+            auto m = (all_leptons_[i].p4() + all_leptons_[j].p4()).M();
+            if (m < 12)
+               return true;
+         }
+      }
+      return false;
+   }
 }

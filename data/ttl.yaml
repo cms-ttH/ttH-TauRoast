@@ -69,6 +69,8 @@ baseline cuts:
              "HLT_IsoTkMu22_eta2p1_v"
              "HLT_IsoMu19_eta2p1_LooseIsoPFTau20_SingleL1_v"
          }))
+    - "ll mass": >
+        not event.dileptonVeto()
     - "l pt": >
         (leptons[0].electron() and leptons[0].pt() > 25) or
         (leptons[0].muon() and leptons[0].pt() > 20)
@@ -89,13 +91,18 @@ fake cuts:
     - "fake": >
         leptons[0].mva() < superslim::id::Loose or
         std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) <= 1
+    - "MC truth": >
+        taus[0].match() < 6 and taus[1].match() < 6 and (
+            (leptons[0].electron() and (leptons[0].match() == 1 or leptons[0].match() == 3)) or
+            (leptons[0].muon() and (leptons[0].match() == 2 or leptons[0].match() == 4))
+        )
 
 fake weights:
   - Generator
   - CSVWeight
   - PUWeight
   - LeptonSF
-  # - TriggerSF
+  - TriggerSF
   - tauIdEff
   - Fake
 
