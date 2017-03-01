@@ -145,7 +145,7 @@ BasicProcess(
     name="wz",
     fullname="W + Z",
     paths=["WZTo3LNu_TuneCUETP8M1_13TeV_powheg_pythia8_v1"],
-    cross_section=4.102,
+    cross_section=4.430,
     events=1993200,
     cutflow='signal'
 )
