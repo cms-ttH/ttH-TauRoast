@@ -429,15 +429,39 @@ namespace superslim {
       return superslim::id::None;
    };
 
+   int
+   Lepton::fakeable() const
+   {
+      if (muon() or fakeable_ == superslim::id::Preselected)
+         return fakeable_;
+      if (missing_hits_ == 0 and passesConversionVeto())
+         return fakeable_;
+      return superslim::id::None;
+   }
+
+   int
+   Lepton::mva() const
+   {
+      if (muon() or mva_ == superslim::id::Preselected)
+         return mva_;
+      if (missing_hits_ == 0 and passesConversionVeto())
+         return mva_;
+      return superslim::id::None;
+   }
+
    bool Lepton::selected(Lepton::id id_, superslim::id::value min) const {
       switch (id_) {
          case Lepton::All:
             return mva() >= min or lj_ >= min;
             break;
          case Lepton::Fakeable:
+            if (min == superslim::id::Preselected)
+               return fakeable_ >= min;
             return fakeable() >= min;
             break;
          case Lepton::MVA:
+            if (min == superslim::id::Preselected)
+               return mva_ >= min;
             return mva() >= min;
             break;
          case Lepton::LJ:

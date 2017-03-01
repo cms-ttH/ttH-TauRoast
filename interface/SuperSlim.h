@@ -318,8 +318,8 @@ namespace superslim {
          float missingHits() const { return missing_hits_; };
          float nonTriggeringId() const { return non_trig_id_; };
 
-         int fakeable() const { return (muon() or (missing_hits_ == 0 and passesConversionVeto())) ? fakeable_ : superslim::id::None; };
-         int mva() const { return (muon() or (missing_hits_ == 0 and passesConversionVeto())) ? mva_ : superslim::id::None; };
+         int fakeable() const;
+         int mva() const;
          int lj() const { return lj_; };
 
          bool selected(Lepton::id id_=Lepton::All, superslim::id::value min=superslim::id::Preselected) const;
