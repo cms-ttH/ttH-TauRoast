@@ -540,7 +540,8 @@ fastlane::TriggerHelper::weight(const superslim::Event& e)
    };
 
    auto l_bin = l_find_bin(e.leptons()[0].p4().eta());
-   auto l_pt = e.leptons()[0].p4().pt();
+   // auto l_pt = e.leptons()[0].p4().pt();
+   auto l_pt = e.leptons()[0].conePt();
 
    bool l_accepted = e.trigger().accepted(l_triggers);
    bool l_cross_accepted = e.trigger().accepted(l_cross_triggers);
@@ -548,30 +549,55 @@ fastlane::TriggerHelper::weight(const superslim::Event& e)
    float p_data = 0;
    float p_mc = 0;
 
+   float tau_leg_data = (1 - (1 - (*eff_lt_tau1_leg_data)[t1_bin]->Eval(t1_pt)) *
+                             (1 - (*eff_lt_tau2_leg_data)[t2_bin]->Eval(t2_pt)));
+   float tau_leg_mc = (1 - (1 - (*eff_lt_tau_leg_mc)[t1_bin]->Eval(t1_pt)) *
+                           (1 - (*eff_lt_tau_leg_mc)[t2_bin]->Eval(t2_pt)));
+
    if (l_accepted and not l_cross_accepted) {
-      p_data = (*eff_l_data)[l_bin]->Eval(l_pt) *
-               (1 - (*eff_lt_tau1_leg_data)[t1_bin]->Eval(t1_pt)) *
-               (1 - (*eff_lt_tau2_leg_data)[t2_bin]->Eval(t2_pt));
-      p_mc = (*eff_l_mc)[l_bin]->Eval(l_pt) *
-             (1 - (*eff_lt_tau_leg_mc)[t1_bin]->Eval(t1_pt)) *
-             (1 - (*eff_lt_tau_leg_mc)[t2_bin]->Eval(t2_pt));
+      p_data = (*eff_l_data)[l_bin]->Eval(l_pt) -
+               std::min((*eff_l_data)[l_bin]->Eval(l_pt),
+                       (*eff_lt_lep_leg_data)[l_bin]->Eval(l_pt)) *
+               tau_leg_data;
+      p_mc = (*eff_l_mc)[l_bin]->Eval(l_pt) -
+             std::min((*eff_l_mc)[l_bin]->Eval(l_pt),
+                     (*eff_lt_lep_leg_mc)[l_bin]->Eval(l_pt)) *
+             tau_leg_mc;
+      p_data = std::max(0.01f, p_data);
+      p_mc = std::max(0.01f, p_mc);
    } else if (l_cross_accepted and not l_accepted) {
       p_data = ((*eff_lt_lep_leg_data)[l_bin]->Eval(l_pt) - (*eff_l_data)[l_bin]->Eval(l_pt)) *
-               (1 - (1 - (*eff_lt_tau1_leg_data)[t1_bin]->Eval(t1_pt)) *
-                    (1 - (*eff_lt_tau2_leg_data)[t2_bin]->Eval(t2_pt)));
+               tau_leg_data;
       p_mc = ((*eff_lt_lep_leg_mc)[l_bin]->Eval(l_pt) - (*eff_l_mc)[l_bin]->Eval(l_pt)) *
-             (1 - (1 - (*eff_lt_tau_leg_mc)[t1_bin]->Eval(t1_pt)) *
-                  (1 - (*eff_lt_tau_leg_mc)[t2_bin]->Eval(t2_pt)));
+             tau_leg_mc;
+      p_data = std::max(0.01f, p_data);
+      p_mc = std::max(0.01f, p_mc);
    } else if (l_accepted and l_cross_accepted) {
-      p_data = (*eff_l_data)[l_bin]->Eval(l_pt) *
-               (1 - (1 - (*eff_lt_tau1_leg_data)[t1_bin]->Eval(t1_pt)) *
-                    (1 - (*eff_lt_tau2_leg_data)[t2_bin]->Eval(t2_pt)));
-      p_mc = (*eff_l_mc)[l_bin]->Eval(l_pt) *
-             (1 - (1 - (*eff_lt_tau_leg_mc)[t1_bin]->Eval(t1_pt)) *
-                  (1 - (*eff_lt_tau_leg_mc)[t2_bin]->Eval(t2_pt)));
+      p_data = std::min(
+                  (*eff_l_data)[l_bin]->Eval(l_pt),
+                  (*eff_lt_lep_leg_data)[l_bin]->Eval(l_pt)
+               ) * tau_leg_data;
+      p_mc = std::min(
+               (*eff_l_mc)[l_bin]->Eval(l_pt),
+               (*eff_lt_lep_leg_mc)[l_bin]->Eval(l_pt)
+             ) * tau_leg_mc;
    }
 
-   return p_mc != 0. ? p_data / p_mc : 0.;
+   // std::cout << e.event() << " :: " << l_accepted << ", " << l_cross_accepted << std::endl;
+
+   // std::cout << "t1_data " << (*eff_lt_tau1_leg_data)[t1_bin]->Eval(t1_pt) << std::endl;
+   // std::cout << "t2_data " << (*eff_lt_tau2_leg_data)[t2_bin]->Eval(t2_pt) << std::endl;
+   // std::cout << "t1_mc " << (*eff_lt_tau_leg_mc)[t1_bin]->Eval(t1_pt) << std::endl;
+   // std::cout << "t2_mc " << (*eff_lt_tau_leg_mc)[t2_bin]->Eval(t2_pt) << std::endl;
+   // std::cout << "l_data " << (*eff_l_data)[l_bin]->Eval(l_pt) << std::endl;
+   // std::cout << "L_data " << (*eff_lt_lep_leg_data)[l_bin]->Eval(l_pt) << std::endl;
+   // std::cout << "l_mc " << (*eff_l_mc)[l_bin]->Eval(l_pt) << std::endl;
+   // std::cout << "L_mc " << (*eff_lt_lep_leg_mc)[l_bin]->Eval(l_pt) << std::endl;
+
+   // std::cout << "eff_data " << p_data << std::endl;
+   // std::cout << "eff_mc " << p_mc << std::endl;
+
+   return std::min(10.f, p_data / std::max(1e-6f, p_mc));
 }
 #endif
 
