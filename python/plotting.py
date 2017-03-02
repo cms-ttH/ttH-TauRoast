@@ -9,7 +9,7 @@ from ttH.TauRoast import stylish
 from ttH.TauRoast.botany import Forest
 from ttH.TauRoast.decorative import savetime
 from ttH.TauRoast.legendary import Legend
-from ttH.TauRoast.processing import Process
+from ttH.TauRoast.processing import BasicProcess, Process
 
 
 class Plot(object):
@@ -100,11 +100,23 @@ class Plot(object):
 
     def _get_histogram(self, process, systematic=None):
         suffix = '_' + systematic if systematic else ''
-        procs = map(str, Process.expand(process))
-        h = self.__hists[procs[0] + suffix].Clone()
-        for proc in procs[1:]:
-            h.Add(self.__hists[proc + suffix], Process.get(process).factor)
-        return h
+        if isinstance(process, Process):
+            proc = process
+            process = str(process)
+        else:
+            proc = Process.get(process)
+        if isinstance(proc, BasicProcess):
+            return self.__hists[process + suffix].Clone()
+        hist = None
+        for p in proc.subprocesses:
+            h = self._get_histogram(p, systematic)
+            if hist:
+                hist.Add(h, proc.factor)
+            else:
+                hist = h.Clone()
+        if not hist:
+            raise KeyError(process)
+        return hist
 
     def _get_background_shifts(self, config, systematics, direction):
         central = self._get_background_sum(config)

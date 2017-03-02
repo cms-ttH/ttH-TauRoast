@@ -48,7 +48,7 @@ class Process(object):
 
     @classmethod
     def get(cls, name):
-        return cls.__processes__[name]
+        return cls.__processes__[str(name)]
 
     @classmethod
     def pop(cls, name):
@@ -195,7 +195,7 @@ def split_procs(config):
     for p in set(sum((Process.expand(p) for p in config['plot'] + config['limits']), [])):
         if isinstance(p, BasicProcess) and p.cutflow == 'signal' and not str(p).endswith('signal'):
             if not any([str(p).startswith(x) for x in 'ttH collisions fakes'.split()]):
-                p.copy(fct=lambda s: s + '_fake', cutflow='fake')
+                p.copy(fct=lambda s: '{}_fake'.format(s), cutflow='fake')
                 subtract.append(str(p) + '_fake')
     try:
         p = Process.pop('fakes_single')
