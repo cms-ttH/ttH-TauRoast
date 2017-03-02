@@ -103,7 +103,7 @@ class Plot(object):
         procs = map(str, Process.expand(process))
         h = self.__hists[procs[0] + suffix].Clone()
         for proc in procs[1:]:
-            h.Add(self.__hists[proc + suffix])
+            h.Add(self.__hists[proc + suffix], Process.get(process).factor)
         return h
 
     def _get_background_shifts(self, config, systematics, direction):

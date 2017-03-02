@@ -78,11 +78,14 @@ r.gSystem.Load("libttHTauRoast")
 from ttH.TauRoast import stylish, useful
 from ttH.TauRoast.actionable import analyze, dump_categories, dump_cuts, fill, plot, datacard, train
 from ttH.TauRoast.plotting import Plot
+from ttH.TauRoast.processing import split_procs
 from ttH.TauRoast.variation import setup
 
 useful.setup(config)
 useful.load_python(config.get('mode'))
 stylish.setup()
+
+split_procs(config)
 
 if not os.path.exists(config["outdir"]):
     os.makedirs(config["outdir"])

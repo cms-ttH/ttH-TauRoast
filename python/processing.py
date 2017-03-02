@@ -51,6 +51,10 @@ class Process(object):
         return cls.__processes__[name]
 
     @classmethod
+    def pop(cls, name):
+        return cls.__processes__.pop(name)
+
+    @classmethod
     def procs(cls):
         return cls.__processes__.values()
 
@@ -83,10 +87,11 @@ class BasicProcess(Process):
                     if m:
                         counts.append(StaticCut(m.group(1)))
 
-    def copy(self, fct=lambda s: s):
+    def copy(self, fct=lambda s: s, cutflow=None):
         return BasicProcess(fct(self._name), self.__paths, self.__events,
                             fct(self._fullname), fct(self._limitname),
-                            self.__cross_section, self.__add_cuts)
+                            self.__cross_section, cutflow if cutflow else self.__cutflow,
+                            self.__add_cuts)
 
     def analyze(self, cfg, filename, counts, cuts, weights, systematics, debug=False):
         from ttH.TauRoast.useful import config
@@ -162,14 +167,45 @@ class BasicProcess(Process):
 
 class CombinedProcess(Process):
 
-    def __init__(self, name, subprocesses, limitname=None, fullname=None):
+    def __init__(self, name, subprocesses, limitname=None, fullname=None, factor=1):
         super(CombinedProcess, self).__init__(name, fullname, limitname)
 
         self.__subprocesses = subprocesses
+        self.__factor = factor
 
-    def copy(self, fct=lambda s: s):
-        return CombinedProcess(fct(self._name), map(fct, self.__subprocesses),
-                               fct(self._limitname), fct(self._fullname))
+    def copy(self, fct=lambda s: s, factor=None):
+        return CombinedProcess(fct(self._name), self.__subprocesses,
+                               fct(self._limitname), fct(self._fullname),
+                               factor if factor is not None else self.__factor)
 
     def process(self):
         return sum((Process.get(n).process() for n in self.__subprocesses), [])
+
+    @property
+    def subprocesses(self):
+        return self.__subprocesses
+
+    @property
+    def factor(self):
+        return self.__factor
+
+
+def split_procs(config):
+    subtract = []
+    for p in set(sum((Process.expand(p) for p in config['plot'] + config['limits']), [])):
+        if isinstance(p, BasicProcess) and p.cutflow == 'signal' and not str(p).endswith('signal'):
+            if not any([str(p).startswith(x) for x in 'ttH collisions fakes'.split()]):
+                p.copy(fct=lambda s: s + '_fake', cutflow='fake')
+                subtract.append(str(p) + '_fake')
+    try:
+        p = Process.pop('fakes_single')
+        p.copy(fct=lambda s: s + '_raw')
+        CombinedProcess(
+            'fakes_single',
+            ['fakes_single_raw'] + subtract,
+            p.limitname,
+            p.fullname,
+            -1
+        )
+    except KeyError:
+        pass

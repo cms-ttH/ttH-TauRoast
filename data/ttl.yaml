@@ -4,7 +4,7 @@ channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v42
 # ntupledir: /scratch365/mwolf3/ttH/v32
-outdir: ~/www/ttH/v42/ttl_2017-02-27_trigger_sf
+outdir: ~/www/ttH/v42/ttl_2017-03-01
 mvadir: data/bdt
 histformat: "{v}_{c}_{p}"
 
@@ -15,9 +15,9 @@ plot:
   - fakes_single
   # - ttH_125_signal
   - ttH2Nonbb_125_amc
-  - ttH2ZZ_125_amc
-  - ttH2WW_125_amc
-  - ttH2TT_125_amc
+  # - ttH2ZZ_125_amc
+  # - ttH2WW_125_amc
+  # - ttH2TT_125_amc
   - ttjets_pow
   - ttW
   - ttZ
@@ -133,10 +133,6 @@ data fake cuts:
 data fake weights:
   - Fake
 
-data fake systematics:
-  - CMS_ttHl_FRjt_norm
-  - CMS_ttHl_FRjt_shape
-
 data signal cuts:
     - "l quality": >
         leptons[0].mva() >= superslim::id::Loose
@@ -163,6 +159,14 @@ signal systematics:
   - CMS_ttHl_thu_shape_ttW_y1
   - CMS_ttHl_thu_shape_ttZ_x1
   - CMS_ttHl_thu_shape_ttZ_y1
+
+fake systematics:
+  - CMS_ttHl_FRjt_norm
+  - CMS_ttHl_FRjt_shape
+
+data fake systematics:
+  - CMS_ttHl_FRjt_norm
+  - CMS_ttHl_FRjt_shape
 
 categories:
   - inclusive: ""
