@@ -639,7 +639,7 @@ namespace superslim {
    Event::dileptonVeto() const
    {
       for (unsigned int i = 0; i < all_leptons_.size(); ++i) {
-         for (unsigned int j = i; j < all_leptons_.size(); ++j) {
+         for (unsigned int j = i + 1; j < all_leptons_.size(); ++j) {
             if (all_leptons_[i].fakeable() < superslim::id::Loose or
                 all_leptons_[j].fakeable() < superslim::id::Loose)
                continue;
