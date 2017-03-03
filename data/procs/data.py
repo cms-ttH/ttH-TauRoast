@@ -12,7 +12,7 @@ mu_triggers = '''
 "HLT_IsoMu22_v",
 "HLT_IsoTkMu22_v",
 "HLT_IsoMu22_eta2p1_v",
-"HLT_IsoTkMu22_eta2p1_v"
+"HLT_IsoTkMu22_eta2p1_v",
 "HLT_IsoMu19_eta2p1_LooseIsoPFTau20_SingleL1_v"
 '''
 

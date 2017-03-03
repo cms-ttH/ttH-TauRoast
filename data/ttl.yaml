@@ -4,7 +4,7 @@ channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v42
 # ntupledir: /scratch365/mwolf3/ttH/v32
-outdir: ~/www/ttH/v42/ttl_2017-03-01
+outdir: ~/www/ttH/v42/ttl_2017-03-03
 mvadir: data/bdt
 histformat: "{v}_{c}_{p}"
 
@@ -63,7 +63,7 @@ baseline cuts:
              "HLT_IsoMu22_v",
              "HLT_IsoTkMu22_v",
              "HLT_IsoMu22_eta2p1_v",
-             "HLT_IsoTkMu22_eta2p1_v"
+             "HLT_IsoTkMu22_eta2p1_v",
              "HLT_IsoMu19_eta2p1_LooseIsoPFTau20_SingleL1_v"
          }))
     - "ll mass": >
