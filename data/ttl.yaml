@@ -65,6 +65,8 @@ baseline cuts:
              "HLT_IsoTkMu22_eta2p1_v",
              "HLT_IsoMu19_eta2p1_LooseIsoPFTau20_SingleL1_v"
          }))
+    - "bad μ": >
+        event.nBadMuons() == 0
     - "ll mass": >
         not event.dileptonVeto()
     - "l pt": >
