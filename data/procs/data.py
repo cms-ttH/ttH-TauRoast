@@ -2,7 +2,6 @@ from ttH.TauRoast.processing import BasicProcess, CombinedProcess
 
 e_triggers = '''
 "HLT_Ele25_eta2p1_WPTight_Gsf_v",
-"HLT_Ele45_WPLoose_Gsf_L1JetTauSeeded",
 "HLT_Ele24_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v",
 "HLT_Ele24_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_v",
 "HLT_Ele24_eta2p1_WPLoose_Gsf_LooseIsoPFTau30_v"
