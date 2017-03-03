@@ -39,6 +39,14 @@ Plot(
     essential=True
 )
 Plot(
+    name="general/TMVA7",
+    values=["tmva"],
+    labels=["BDT value (TMVA)", "Events"],
+    binning=[7, -1, 1],
+    blind=True,
+    essential=True
+)
+Plot(
     name="general/TMVA8",
     values=["tmva"],
     labels=["BDT value (TMVA)", "Events"],

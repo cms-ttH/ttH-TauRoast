@@ -32,19 +32,16 @@ limits:
   - ttH2WW_125_amc
   - ttH2TT_125_amc
   - ttjets_pow
-  # - collisions_fake
-  # - ttH_125_pow
   - ttW
   - ttZ
-  # - ttjets_mad
   - ewk
   - rares
-  # - singletop
 
 discriminants:
   - NumInclusiveJets
   - TT_VisibleMass
   - TMVA6
+  - TMVA7
   - TMVA8
   - TMVA10
   - TMVA_fine
