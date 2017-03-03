@@ -1,0 +1,14 @@
+#!/usr/bin/env python
+
+import argparse
+from rootpy.io import root_open
+
+parser = argparse.ArgumentParser('dump selected events')
+parser.add_argument('filename')
+args = parser.parse_args()
+
+with root_open(args.filename, 'read') as f:
+    import numpy as np
+    from root_numpy import tree2array
+    np.savetxt('data_SR_e.txt', tree2array(f.collisions_single_e, branches="run lumi event".split()), delimiter=':', fmt='%d')
+    np.savetxt('data_SR_mu.txt', tree2array(f.collisions_single_mu, branches="run lumi event".split()), delimiter=':', fmt='%d')
