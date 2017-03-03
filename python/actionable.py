@@ -192,7 +192,7 @@ def fill(args, config):
 
     categories, definitions = get_categories(config)
 
-    atomic_processes = set(sum(map(Process.expand, config['limits']), []))
+    atomic_processes = set(sum(map(Process.expand, config['plot'] + config['limits']), []))
     limit_processes = config["limits"]
     all_processes = set(Process.get(n) for n in limit_processes) | atomic_processes
 
