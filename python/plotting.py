@@ -301,7 +301,7 @@ class Plot(object):
                     h.SetDirectory(0)
                     self.__hists[str(proc) + suffix] = h
                 except AttributeError:
-                    if suffix != '':
+                    if suffix == '':
                         logging.warning("histogram {} not found in file {}".format(histname, file.GetName()))
 
     def write(self, file, cutflows, category, systematics=None, procs=None, fmt="{p}_{c}_{v}"):
