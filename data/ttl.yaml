@@ -4,7 +4,7 @@ channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v42
 # ntupledir: /scratch365/mwolf3/ttH/v32
-outdir: ~/www/ttH/v42/ttl_2017-03-03
+outdir: ~/www/ttH/v42/ttl_2017-03-05
 mvadir: data/bdt
 histformat: "{v}_{c}_{p}"
 

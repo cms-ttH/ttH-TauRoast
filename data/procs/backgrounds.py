@@ -59,11 +59,47 @@ BasicProcess(
     cutflow='signal'
 )
 
+BasicProcess(
+    name="wwz",
+    fullname="WWZ",
+    paths=["WWZ_TuneCUETP8M1_13TeV_amcatnlo_pythia8_v1"],
+    cross_section=0.165,
+    events=250000,
+    cutflow='signal'
+)
+
+BasicProcess(
+    name="wwds",
+    fullname="WWds",
+    paths=["WpWpJJ_EWK_QCD_TuneCUETP8M1_13TeV_madgraph_pythia8_v1"],
+    cross_section=0.03711,
+    events=149681,
+    cutflow='signal'
+)
+
+BasicProcess(
+    name="zzz",
+    fullname="ZZZ",
+    paths=["ZZZ_TuneCUETP8M1_13TeV_amcatnlo_pythia8_v1"],
+    cross_section=0.0140,
+    events=249237,
+    cutflow='signal'
+)
+
+BasicProcess(
+    name="www",
+    fullname="WWW",
+    paths=["WWW_4F_TuneCUETP8M1_13TeV_amcatnlo_pythia8_v1"],
+    cross_section=0.209,
+    events=240000,
+    cutflow='signal'
+)
+
 CombinedProcess(
     name="rares",
     fullname="Rares",
     limitname="Rares",
-    subprocesses=["tttt", "tZq", "wzz"]
+    subprocesses=["tttt", "tZq", "wzz", "wwz", "www", "zzz", "wwds"]
     # subprocesses=["tttt", "tZq", "ww_ds", "wzz"]
 )
 
