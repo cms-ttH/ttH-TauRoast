@@ -171,8 +171,16 @@ class Plot(object):
         err = None
         for cfg in config['backgrounds']:
             try:
+                h = self._get_histogram(cfg['process'])
+                if res is None:
+                    res = h
+                else:
+                    res.Add(h)
                 if systematic:
-                    e = self._get_histogram(cfg['process'], systematic)
+                    try:
+                        e = self._get_histogram(cfg['process'], systematic)
+                    except KeyError:
+                        e = h
                     if e.Integral() == 0:
                         continue
                     if err is None:
@@ -181,20 +189,15 @@ class Plot(object):
                         err.Add(e)
             except KeyError:
                 pass
-            try:
-                h = self._get_histogram(cfg['process'])
-                if res is None:
-                    res = h
-                else:
-                    res.Add(h)
-            except KeyError:
-                pass
         if not res:
             args = list(self.__args)
             args[0] += "_bkg_sum_{0}".format(random.randint(0, 100000))
             res = self.__class(*args)
         if not err:
             err = res.Clone()
+        err.SetFillStyle(3001)
+        err.SetFillColor(r.kGray)
+        err.SetMarkerStyle(0)
         res.SetFillStyle(1001)
         res.SetFillColor(r.kBlack)
         res.SetMarkerStyle(0)
@@ -502,6 +505,10 @@ class Plot(object):
         base_histo.GetYaxis().SetRangeUser(min_y, max_y)
         base_histo.Draw("hist")
 
+        err_abs.SetFillColor(r.kBlack)
+        err_abs.SetFillStyle(3003)
+        err_abs.Draw("2 same")
+
         bkg_stack.SetMinimum(min_y)
         bkg_stack.SetMaximum(max_y)
         bkg_stack.Draw("hist same")
@@ -513,8 +520,6 @@ class Plot(object):
         if not self.__blind:
             for data in collisions:
                 data.DrawCopy("E1 P same")
-
-        err_abs.Draw("2 same")
 
         base_histo.Draw("axis same")
 
