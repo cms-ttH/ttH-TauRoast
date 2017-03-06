@@ -2,9 +2,9 @@
 
 channel: ttl
 generator: pow
-ntupledir: /hadoop/store/user/matze/ttH/v39
+ntupledir: /hadoop/store/user/matze/ttH/v42
 # ntupledir: /scratch365/mwolf3/ttH/v32
-outdir: ~/www/ttH/v39/ttl_fake_control
+outdir: ~/www/ttH/v42/ttl_fake_control_2017-03-05
 mvadir: data/bdt
 histformat: "{v}_{c}_{p}"
 
@@ -15,9 +15,9 @@ plot:
   - fakes_single
   # - ttH_125_signal
   - ttH2Nonbb_125_amc
-  - ttH2ZZ_125_amc
-  - ttH2WW_125_amc
-  - ttH2TT_125_amc
+  # - ttH2ZZ_125_amc
+  # - ttH2WW_125_amc
+  # - ttH2TT_125_amc
   - ttjets_pow
   - ttW
   - ttZ
@@ -32,41 +32,69 @@ limits:
   - ttH2WW_125_amc
   - ttH2TT_125_amc
   - ttjets_pow
-  # - collisions_fake
-  # - ttH_125_pow
   - ttW
   - ttZ
-  # - ttjets_mad
   - ewk
   - rares
-  # - singletop
 
 discriminants:
   - NumInclusiveJets
   - TT_VisibleMass
-  - TMVA
+  - TMVA5
+  - TMVA6
+  - TMVA7
+  - TMVA8
+  - TMVA10
+  - TMVA_fine
 
-fake cuts:
+baseline cuts:
     - "l ID": lepton_id == superslim::Lepton::MVA
     - "τ ID": tau_id == superslim::Tau::IsoMVA03
     - "l trigger": >
-        (leptons[0].electron() and event.trigger().accepted({"HLT_Ele27_eta2p1_WPLoose_Gsf_v"})) or
-        (leptons[0].muon() and event.trigger().accepted({"HLT_IsoMu22_v", "HLT_IsoTkMu22_v"}))
+        (leptons[0].electron() and
+         event.trigger().accepted({
+             "HLT_Ele25_eta2p1_WPTight_Gsf_v",
+             "HLT_Ele24_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v",
+             "HLT_Ele24_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_v",
+             "HLT_Ele24_eta2p1_WPLoose_Gsf_LooseIsoPFTau30_v"
+         })) or
+        (leptons[0].muon() and
+         event.trigger().accepted({
+             "HLT_IsoMu22_v",
+             "HLT_IsoTkMu22_v",
+             "HLT_IsoMu22_eta2p1_v",
+             "HLT_IsoTkMu22_eta2p1_v",
+             "HLT_IsoMu19_eta2p1_LooseIsoPFTau20_SingleL1_v"
+         }))
+    - "bad μ": >
+        event.nBadMuons() == 0
+    - "ll mass": >
+        not event.dileptonVeto()
     - "l pt": >
-        (leptons[0].electron() and leptons[0].pt() > 30) or
-        (leptons[0].muon() and leptons[0].pt() > 25)
+        (leptons[0].electron() and leptons[0].pt() > 25) or
+        (leptons[0].muon() and leptons[0].pt() > 20)
+    - "l η": >
+        std::abs(leptons[0].eta()) <= 2.1
     - "1 l": >
         std::count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Loose; }) <= 1
     - "jets": >
         len(jets) >= 3 and
         (btags(jets) >= 1 or btags(jets, true) >= 2)
-    - "fake": >
-        leptons[0].mva() < superslim::id::Loose or
-        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) <= 1
     - "τ pT": >
+        taus.size() >= 2 and
         taus[0].pt() >= 30 and taus[1].pt() >= 20
     - "τ SS": >
         taus[0].charge() * taus[1].charge() > 0
+
+fake cuts:
+    - "fake": >
+        leptons[0].mva() < superslim::id::Loose or
+        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) <= 1
+    - "MC truth": >
+        taus[0].match() < 6 and taus[1].match() < 6 and (
+            (leptons[0].electron() and (leptons[0].match() == 1 or leptons[0].match() == 3)) or
+            (leptons[0].muon() and (leptons[0].match() == 2 or leptons[0].match() == 4))
+        )
 
 fake weights:
   - Generator
@@ -78,27 +106,10 @@ fake weights:
   - Fake
 
 signal cuts:
-    - "l ID": lepton_id == superslim::Lepton::MVA
-    - "τ ID": tau_id == superslim::Tau::IsoMVA03
-    - "l trigger": >
-        (leptons[0].electron() and event.trigger().accepted({"HLT_Ele27_eta2p1_WPLoose_Gsf_v"})) or
-        (leptons[0].muon() and event.trigger().accepted({"HLT_IsoMu22_v", "HLT_IsoTkMu22_v"}))
-    - "l pt": >
-        (leptons[0].electron() and leptons[0].pt() > 30) or
-        (leptons[0].muon() and leptons[0].pt() > 25)
-    - "1 l": >
-        std::count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Loose; }) == 1
-    - "1st l": >
+    - "l quality": >
         leptons[0].mva() >= superslim::id::Loose
     - "τ quality": >
         std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) >= 2
-    - "τ pT": >
-        taus[0].pt() >= 30 and taus[1].pt() >= 20
-    - "τ SS": >
-        taus[0].charge() * taus[1].charge() > 0
-    - "jets": >
-        len(jets) >= 3 and
-        (btags(jets) >= 1 or btags(jets, true) >= 2)
     - "MC truth": >
         taus[0].match() < 6 and taus[1].match() < 6 and (
             (leptons[0].electron() and (leptons[0].match() == 1 or leptons[0].match() == 3)) or
@@ -114,52 +125,18 @@ signal weights:
   - tauIdEff
 
 data fake cuts:
-    - "l ID": lepton_id == superslim::Lepton::MVA
-    - "τ ID": tau_id == superslim::Tau::IsoMVA03
-    - "l trigger": >
-        (leptons[0].electron() and event.trigger().accepted({"HLT_Ele27_eta2p1_WPLoose_Gsf_v"})) or
-        (leptons[0].muon() and event.trigger().accepted({"HLT_IsoMu22_v", "HLT_IsoTkMu22_v"}))
-    - "l pt": >
-        (leptons[0].electron() and leptons[0].pt() > 30) or
-        (leptons[0].muon() and leptons[0].pt() > 25)
-    - "1 l": >
-        std::count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Loose; }) <= 1
-    - "jets": >
-        len(jets) >= 3 and
-        (btags(jets) >= 1 or btags(jets, true) >= 2)
     - "fake": >
         leptons[0].mva() < superslim::id::Loose or
         std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) <= 1
-    - "τ pT": >
-        taus[0].pt() >= 30 and taus[1].pt() >= 20
-    - "τ SS": >
-        taus[0].charge() * taus[1].charge() > 0
 
 data fake weights:
   - Fake
 
 data signal cuts:
-    - "l ID": lepton_id == superslim::Lepton::MVA
-    - "τ ID": tau_id == superslim::Tau::IsoMVA03
-    - "l trigger": >
-        (leptons[0].electron() and event.trigger().accepted({"HLT_Ele27_eta2p1_WPLoose_Gsf_v"})) or
-        (leptons[0].muon() and event.trigger().accepted({"HLT_IsoMu22_v", "HLT_IsoTkMu22_v"}))
-    - "l pt": >
-        (leptons[0].electron() and leptons[0].pt() > 30) or
-        (leptons[0].muon() and leptons[0].pt() > 25)
-    - "1 l": >
-        std::count_if(leptons.begin(), leptons.end(), [](const superslim::Lepton& l) { return l.mva() >= superslim::id::Loose; }) <= 1
-    - "jets": >
-        len(jets) >= 3 and
-        (btags(jets) >= 1 or btags(jets, true) >= 2)
-    - "1st l": >
+    - "l quality": >
         leptons[0].mva() >= superslim::id::Loose
     - "τ quality": >
         std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) >= 2
-    - "τ pT": >
-        taus[0].pt() >= 30 and taus[1].pt() >= 20
-    - "τ SS": >
-        taus[0].charge() * taus[1].charge() > 0
 
 data signal weights: []
 
@@ -181,6 +158,14 @@ signal systematics:
   - CMS_ttHl_thu_shape_ttW_y1
   - CMS_ttHl_thu_shape_ttZ_x1
   - CMS_ttHl_thu_shape_ttZ_y1
+
+fake systematics:
+  - CMS_ttHl_FRjt_norm
+  - CMS_ttHl_FRjt_shape
+
+data fake systematics:
+  - CMS_ttHl_FRjt_norm
+  - CMS_ttHl_FRjt_shape
 
 categories:
   - inclusive: ""
