@@ -82,6 +82,7 @@ class Plot(object):
                     continue
                 l.draw_box({k: self._eval(v) for (k, v) in props.items()}, Process.get(bkg).fullname, centerline=True)
         if len(self.__signals_present) > 0:
+            l.new_row()
             for cfg in config['signals']:
                 sig, color = cfg.items()[0]
                 if sig not in self.__signals_present:
