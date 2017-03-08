@@ -62,6 +62,38 @@ Plot(
     binning=[15, 0, 6.28]
 )
 
+Leaf('jet_relativejes', '[f]',
+     '''
+     auto jesup = event.jets("CMS_ttHl_JESUp");
+     auto jesdown = event.jets("CMS_ttHl_JESDown");
+     for (unsigned int i = 0; i < std::min({jets.size(), jesup.size(), jesdown.size()}); ++i) {
+         auto up = std::abs(jets[i].pt() - jesup[i].pt()) / jets[i].pt();
+         auto down = std::abs(jets[i].pt() - jesdown[i].pt()) / jets[i].pt();
+         result.push_back(up);
+         result.push_back(down);
+     }''')
+
+Leaf('jet_ideff', '[i]',
+     '''
+     for (auto j: jets) {
+         if (j.flavor() == 5)
+             result.push_back(btag(j));
+     }''')
+
+Leaf('jet_ideff_loose', '[i]',
+     '''
+     for (auto j: jets) {
+         if (j.flavor() == 5)
+             result.push_back(btag(j, true));
+     }''')
+
+Leaf('jet_mistag', '[i]',
+     '''
+     for (auto j: jets) {
+         if (j.flavor() != 5)
+             result.push_back(btag(j));
+     }''')
+
 pspace = [
     ("", "jets"),
     ("Untagged", "notags(jets)"),
