@@ -97,6 +97,7 @@ class BasicProcess(Process):
         from ttH.TauRoast.useful import config
         from ttH.TauRoast.printable import SyncSaver
 
+        tau_id = cfg.get(u"tau ID", "Tight")
         basedir = cfg['ntupledir']
         limit = cfg.get('event limit', -1)
 
@@ -133,7 +134,7 @@ class BasicProcess(Process):
         def log(i):
             logging.info("processing {0}, event {1}".format(str(self), i))
         now = time.clock()
-        r.fastlane.process(str(self), config.channel, cfiles, tree.raw(), ccuts, cweights, systematics, log, limit)
+        r.fastlane.process(str(self), config.channel, cfiles, tree.raw(), ccuts, cweights, systematics, tau_id, log, limit)
         logging.info("evaluating MVA")
         try:
             training.evaluate(cfg, tree)

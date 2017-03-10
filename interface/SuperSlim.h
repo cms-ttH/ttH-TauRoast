@@ -40,7 +40,8 @@ namespace superslim {
          Loose = 3,
          Medium = 4,
          Tight = 5,
-         VTight = 6
+         VTight = 6,
+         VVTight = 7
       };
 
       extern const std::vector<std::pair<std::string, id::value>> values;

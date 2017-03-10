@@ -25,7 +25,7 @@ namespace fastlane {
    class FakeHelper {
       public:
          enum { central = 0, up = 1, down = 2 } sys;
-         FakeHelper();
+         FakeHelper(const std::string& id);
          FakeHelper(const FakeHelper& other);
          virtual ~FakeHelper() {};
 

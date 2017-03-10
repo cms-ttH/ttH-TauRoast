@@ -131,11 +131,11 @@ get_hist(TFile& f, std::auto_ptr<TH2F>& ptr, const std::string& name)
    ptr->SetDirectory(0);
 }
 
-fastlane::FakeHelper::FakeHelper()
+fastlane::FakeHelper::FakeHelper(const std::string& id)
 {
    static const std::vector<std::string> dets{
-      "jetToTauFakeRate/dR03mvaTight/absEtaLt1_5/",
-      "jetToTauFakeRate/dR03mvaTight/absEta1_5to9_9/"
+      "jetToTauFakeRate/dR03mva" + id + "/absEtaLt1_5/",
+      "jetToTauFakeRate/dR03mva" + id + "/absEta1_5to9_9/"
    };
    static const std::vector<std::string> labels{"barrel", "endcap"};
    static const std::string fakerate = "jetToTauFakeRate_mc_hadTaus_pt";
@@ -621,7 +621,7 @@ fastlane::Cut::operator()(const std::string& process, const superslim::Event& e,
          for (const auto& w: e.weights())
             ws[lower(w.first)] = w.second;
          if (process.compare(0, 10, "collisions"))
-            fastlane::update_weights(process, ws, e, sys);
+            fastlane::update_weights(process, ws, e, sys, "Tight");
 
          auto py_e = TPython::ObjectProxy_FromVoidPtr(dynamic_cast<void*>(&event), "superslim::Event");
          auto py_w = TPython::ObjectProxy_FromVoidPtr(static_cast<void*>(&ws), "std::unordered_map<std::string,double>");
@@ -690,7 +690,7 @@ template<> void fastlane::Leaf<std::vector<int>>::pick(const superslim::Event& e
 }
 
 void
-fastlane::update_weights(const std::string& process, std::unordered_map<std::string, double>& ws, const superslim::Event& e, const std::string& sys)
+fastlane::update_weights(const std::string& process, std::unordered_map<std::string, double>& ws, const superslim::Event& e, const std::string& sys, const std::string& id)
 {
 #ifndef OLDCRAP
    // =====================
@@ -766,7 +766,7 @@ fastlane::update_weights(const std::string& process, std::unordered_map<std::str
    ws[lower("eTauFakeUp")] = 1;
    ws[lower("eTauFakeDown")] = 1;
 
-   static auto fakerate = FakeHelper();
+   static auto fakerate = FakeHelper(id);
 
    auto wtaus = e.allTaus();
    wtaus.resize(std::min({wtaus.size(), 2ul}));
@@ -782,7 +782,7 @@ fastlane::update_weights(const std::string& process, std::unordered_map<std::str
 }
 
 void
-fastlane::process(const std::string& process, const std::string& channel, const std::vector<std::string>& files, TTree& t, std::vector<fastlane::Cut*>& cuts, std::vector<fastlane::StaticCut*>& weights, const std::string& sys, PyObject* log, int max)
+fastlane::process(const std::string& process, const std::string& channel, const std::vector<std::string>& files, TTree& t, std::vector<fastlane::Cut*>& cuts, std::vector<fastlane::StaticCut*>& weights, const std::string& sys, const std::string& id, PyObject* log, int max)
 {
    fwlite::Handle<superslim::Event> handle;
    fwlite::ChainEvent events(files);
@@ -846,7 +846,7 @@ fastlane::process(const std::string& process, const std::string& channel, const 
       for (const auto& w: e->weights())
          ws[lower(w.first)] = w.second;
       if (process.compare(0, 10, "collisions"))
-         fastlane::update_weights(process, ws, *e, sys);
+         fastlane::update_weights(process, ws, *e, sys, id);
 
       double weight = 1.;
       for (auto& w: weights) {

@@ -4,9 +4,10 @@ channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v42
 # ntupledir: /scratch365/mwolf3/ttH/v32
-outdir: ~/www/ttH/v42/ttl_2017-03-10
+outdir: ~/www/ttH/v42/ttl_2017-03-08_vtight
 mvadir: data/bdt
 histformat: "{v}_{c}_{p}"
+tau ID: VTight
 
 lumi: 35900
 
@@ -15,7 +16,6 @@ plot:
   - fakes_single
   # - ttH_125_signal
   - ttH2Nonbb_125_amc
-  - ttH2Nonbb_125_fake_amc
   # - ttH2ZZ_125_amc
   # - ttH2WW_125_amc
   # - ttH2TT_125_amc
@@ -26,17 +26,17 @@ plot:
   - rares
   # - singletop
 
-limits: []
-  # - collisions_single
-  # - fakes_single
-  # - ttH2ZZ_125_amc
-  # - ttH2WW_125_amc
-  # - ttH2TT_125_amc
-  # - ttjets_pow
-  # - ttW
-  # - ttZ
-  # - ewk
-  # - rares
+limits:
+  - collisions_single
+  - fakes_single
+  - ttH2ZZ_125_amc
+  - ttH2WW_125_amc
+  - ttH2TT_125_amc
+  - ttjets_pow
+  - ttW
+  - ttZ
+  - ewk
+  - rares
 
 discriminants:
   - NumInclusiveJets
@@ -87,24 +87,10 @@ baseline cuts:
     - "τ OS": >
         taus[0].charge() * taus[1].charge() < 0
 
-real fake cuts:
-    - "fake": >
-        leptons[0].mva() < superslim::id::Loose or
-        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) <= 1
-
-real fake weights:
-  - Generator
-  - CSVWeight
-  - PUWeight
-  - LeptonSF
-  - TriggerSF
-  - tauIdEff
-  - Fake
-
 fake cuts:
     - "fake": >
         leptons[0].mva() < superslim::id::Loose or
-        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) <= 1
+        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::VTight; }) <= 1
     - "MC truth": >
         taus[0].match() < 6 and taus[1].match() < 6 and (
             (leptons[0].electron() and (leptons[0].match() == 1 or leptons[0].match() == 3)) or
@@ -124,7 +110,7 @@ signal cuts:
     - "l quality": >
         leptons[0].mva() >= superslim::id::Loose
     - "τ quality": >
-        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) >= 2
+        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::VTight; }) >= 2
     - "MC truth": >
         taus[0].match() < 6 and taus[1].match() < 6 and (
             (leptons[0].electron() and (leptons[0].match() == 1 or leptons[0].match() == 3)) or
@@ -142,7 +128,7 @@ signal weights:
 data fake cuts:
     - "fake": >
         leptons[0].mva() < superslim::id::Loose or
-        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) <= 1
+        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::VTight; }) <= 1
 
 data fake weights:
   - Fake
@@ -151,7 +137,7 @@ data signal cuts:
     - "l quality": >
         leptons[0].mva() >= superslim::id::Loose
     - "τ quality": >
-        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) >= 2
+        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::VTight; }) >= 2
 
 data signal weights: []
 
