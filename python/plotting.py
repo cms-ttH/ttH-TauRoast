@@ -492,7 +492,7 @@ class Plot(object):
             base_histo.GetYaxis().SetTitle("")
 
         if config.get("legend", True):
-            scale = 1.175 + 0.05 * (
+            scale = 1.175 + 0.03 * (
                 math.ceil(len(config['backgrounds'] + config.get('data', [])) / 4. + 1)
                 + len(config['signals']))
 
