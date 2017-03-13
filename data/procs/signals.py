@@ -43,6 +43,16 @@ BasicProcess(
 )
 
 BasicProcess(
+    name="ttH2Nonbb_125_fake_amc",
+    fullname="t#bar{t}H(125) fake",
+    limitname="ttH2Nonbb125_fake",
+    paths=['ttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix_ext1_v1'],
+    cross_section=0.2151,  # 0.5085 * (1 - 0.577),
+    events=10045633,
+    cutflow='real fake'
+)
+
+BasicProcess(
     name="ttH2TT_125_amc",
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
     limitname="ttH_htt",
