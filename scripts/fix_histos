@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import math
 import ROOT as r
 from rootpy.io import root_open
 
@@ -41,15 +42,35 @@ def makepositive(hist):
             hist.SetBinContent(n, 0)
     return hist
 
+
 parser = argparse.ArgumentParser("remove negative bins from histograms")
 parser.add_argument("filename", help="file to modify")
 parser.add_argument("variable", help="variable name to use for limits")
+parser.add_argument("--fudge", default=False, type=float,
+                    help="fudge scale factor for fakes.  "
+                         "Expects fake backgrounds normalization for tight selection as argument.")
 args = parser.parse_args()
 
 with root_open(args.filename, 'update') as fd:
+    if args.fudge:
+        scale = getattr(fd, "{}_data_obs".format(args.variable)).GetBinContent(1) / \
+            getattr(fd, "{}_fakes_data".format(args.variable)).GetBinContent(1)
+        reference = getattr(fd, "{}_fakes_data".format(args.variable)).Clone()
+        reference.Scale(scale)
+        args.fudge = reference.Integral() / args.fudge
+        print("using fudged scale factor of {}".format(scale))
     for k in fd.keys():
         name = k.get_name()
         hist = makepositive(k.read_obj())
         hist.Write(name, r.TObject.kWriteDelete)
         if name.startswith(args.variable):
+            if args.fudge:
+                if "fakes_data" in name:
+                    print("adjusting fake histogram {}".format(name))
+                    hist.Scale(scale)
+                    if "FRjt" in name:
+                        for i in range(1, hist.GetNbinsX() + 1):
+                            val = reference.GetBinContent(i) + \
+                                (hist.GetBinContent(i) - reference.GetBinContent(i)) * math.sqrt(args.fudge)
+                            hist.SetBinContent(i, val)
             hist.Write(name.replace(args.variable, 'x', 1), r.TObject.kWriteDelete)
