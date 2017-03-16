@@ -19,6 +19,22 @@
 
 #include "ttH/TauRoast/interface/Fastlane.h"
 
+float
+get_factor(std::auto_ptr<TH2F>& h, const superslim::Lepton& l, bool swapped=false)
+{
+   int x = std::max(1, std::min(h->GetNbinsX(), h->GetXaxis()->FindBin(swapped ? l.eta() : l.pt())));
+   int y = std::max(1, std::min(h->GetNbinsY(), h->GetYaxis()->FindBin(swapped ? l.pt() : std::abs(l.eta()))));
+   return h->GetBinContent(x, y);
+}
+
+float
+get_factor(std::auto_ptr<TGraphAsymmErrors>& g, float v)
+{
+   float x = std::max(float(g->GetXaxis()->GetXmin() + 1e-5),
+         std::min(float(g->GetXaxis()->GetXmax() - 1e-5), v));
+   return g->Eval(x);
+}
+
 std::string
 lower(const std::string& s)
 {
@@ -93,36 +109,6 @@ fastlane::CSVHelper::weight(const std::vector<superslim::Jet>& jets, const std::
 }
 
 void
-graph_to_hists(const TGraphAsymmErrors* g, std::array<std::auto_ptr<TH1F>, 3>& a, const std::string& name)
-{
-   int n = g->GetN();
-   double *xs = g->GetX();
-   double *ys = g->GetY();
-   double *ex_down = g->GetEXlow();
-   double *ey_up = g->GetEYhigh();
-   double *ey_down = g->GetEYlow();
-
-   std::vector<double> bins(n + 1);
-   for (int i = 0; i < n; ++i)
-      bins[i] = xs[i] - ex_down[i];
-   bins[n] = 1000000;
-
-   a[0].reset(new TH1F((name + "_central").c_str(), "", n, bins.data()));
-   a[1].reset(new TH1F((name + "_up").c_str(), "", n, bins.data()));
-   a[2].reset(new TH1F((name + "_down").c_str(), "", n, bins.data()));
-
-   for (int i = 0; i < n; ++i) {
-      a[0]->SetBinContent(i + 1, ys[i]);
-      a[1]->SetBinContent(i + 1, ys[i] + ey_up[i]);
-      a[2]->SetBinContent(i + 1, ys[i] - ey_down[i]);
-   }
-
-   a[0]->SetDirectory(0);
-   a[1]->SetDirectory(0);
-   a[2]->SetDirectory(0);
-}
-
-void
 get_hist(TFile& f, std::auto_ptr<TH2F>& ptr, const std::string& name)
 {
    TH2F *h;
@@ -133,10 +119,18 @@ get_hist(TFile& f, std::auto_ptr<TH2F>& ptr, const std::string& name)
 
 fastlane::FakeHelper::FakeHelper(const std::string& id)
 {
+   id_ = superslim::id::None;
+   for (const auto& p: superslim::id::values)
+      if (p.first == id)
+         id_ = p.second;
+   if (id_ == superslim::id::None)
+      throw edm::Exception(edm::errors::InvalidReference, "Invalid id '" + id + "'");
    static const std::vector<std::string> dets{
       "jetToTauFakeRate/dR03mva" + id + "/absEtaLt1_5/",
       "jetToTauFakeRate/dR03mva" + id + "/absEta1_5to9_9/"
    };
+   // for (const auto& s: dets)
+   //    std::cout << "using " << s << std::endl;
    static const std::vector<std::string> labels{"barrel", "endcap"};
    static const std::string fakerate = "jetToTauFakeRate_mc_hadTaus_pt";
    static const std::map<std::string, std::string> correction{
@@ -152,7 +146,7 @@ fastlane::FakeHelper::FakeHelper(const std::string& id)
       for (unsigned int i = 0; i < dets.size(); ++i) {
          TGraphAsymmErrors *graph;
          f.GetObject((dets[i] + fakerate).c_str(), graph);
-         graph_to_hists(graph, tau[i], labels[i]);
+         tau[i].reset(graph);
          for (const auto& corr: correction) {
             TF1 *fct;
             f.GetObject((dets[i] + corr.second).c_str(), fct);
@@ -173,21 +167,6 @@ fastlane::FakeHelper::FakeHelper(const std::string& id)
    }
 }
 
-fastlane::FakeHelper::FakeHelper(const FakeHelper& other)
-{
-   for (unsigned int i = 0; i < tau.size(); ++i) {
-      for (unsigned int j = 0; j < tau[i].size(); ++j) {
-         tau[i][j].reset(dynamic_cast<TH1F*>(other.tau[i][j]->Clone()));
-         tau[i][j]->SetDirectory(0);
-      }
-      for (const auto& corr: ratio[i]) {
-         corr.second.Copy(ratio[i][corr.first]);
-      }
-   }
-   ele_fake.reset(dynamic_cast<TH2F*>(other.ele_fake->Clone()));
-   mu_fake.reset(dynamic_cast<TH2F*>(other.mu_fake->Clone()));
-}
-
 float
 fastlane::FakeHelper::weight(const std::vector<superslim::Tau>& taus,
                              const std::vector<superslim::Lepton>& leptons,
@@ -199,10 +178,10 @@ fastlane::FakeHelper::weight(const std::vector<superslim::Tau>& taus,
 
    int fake_count = 0;
    for (const auto& t: taus) {
-      if (t.isolationMVA03() >= superslim::id::Tight)
+      if (t.isolationMVA03() >= id_)
          continue;
       int idx = std::abs(t.eta()) > barrel_cut;
-      float f = tau[idx][0]->GetBinContent(tau[idx][0]->FindBin(t.pt())) * ratio[idx][sys].Eval(t.pt());
+      float f = get_factor(tau[idx], t.pt()) * ratio[idx][sys].Eval(t.pt());
       w *= f / (1. - f);
       fake_count += 1;
    }
@@ -280,22 +259,6 @@ fastlane::LeptonHelper::LeptonHelper(const LeptonHelper& other)
    reco_el2_.reset(dynamic_cast<TH2F*>(reco_el2_->Clone()));
    reco_el3_.reset(dynamic_cast<TH2F*>(reco_el3_->Clone()));
    reco_el4_.reset(dynamic_cast<TH2F*>(reco_el4_->Clone()));
-}
-
-float
-get_factor(std::auto_ptr<TH2F>& h, const superslim::Lepton& l, bool swapped=false)
-{
-   int x = std::max(1, std::min(h->GetNbinsX(), h->GetXaxis()->FindBin(swapped ? l.eta() : l.pt())));
-   int y = std::max(1, std::min(h->GetNbinsY(), h->GetYaxis()->FindBin(swapped ? l.pt() : std::abs(l.eta()))));
-   return h->GetBinContent(x, y);
-}
-
-float
-get_factor(std::auto_ptr<TGraphAsymmErrors>& g, float v)
-{
-   float x = std::max(float(g->GetXaxis()->GetXmin() + 1e-5),
-         std::min(float(g->GetXaxis()->GetXmax() - 1e-5), v));
-   return g->Eval(x);
 }
 
 float
@@ -766,7 +729,7 @@ fastlane::update_weights(const std::string& process, std::unordered_map<std::str
    ws[lower("eTauFakeUp")] = 1;
    ws[lower("eTauFakeDown")] = 1;
 
-   static auto fakerate = FakeHelper(id);
+   static FakeHelper fakerate(id);
 
    auto wtaus = e.allTaus();
    wtaus.resize(std::min({wtaus.size(), 2ul}));

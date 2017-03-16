@@ -26,17 +26,18 @@ namespace fastlane {
       public:
          enum { central = 0, up = 1, down = 2 } sys;
          FakeHelper(const std::string& id);
-         FakeHelper(const FakeHelper& other);
          virtual ~FakeHelper() {};
 
          float weight(const std::vector<superslim::Tau>&,
                       const std::vector<superslim::Lepton>&,
                       const std::string& sys="central");
       private:
-         std::array<std::array<std::auto_ptr<TH1F>, 3>, 2> tau;
+         std::array<std::auto_ptr<TGraphAsymmErrors>, 2> tau;
          std::array<std::map<std::string, TF1>, 2> ratio;
          std::auto_ptr<TH2F> ele_fake;
          std::auto_ptr<TH2F> mu_fake;
+
+         superslim::id::value id_;
    };
 
    class LeptonHelper {
