@@ -15,6 +15,7 @@
 namespace superslim {
    namespace id {
       const std::vector<std::pair<std::string, id::value>> values = {
+         {"VVTight", VVTight},
          {"VTight", VTight},
          {"Tight", Tight},
          {"Medium", Medium},
