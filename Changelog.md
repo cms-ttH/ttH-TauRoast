@@ -1,5 +1,9 @@
 # Ntuple History
 
+## v43
+
+* Add VVTight to IDs
+
 ## v42
 
 * Activate JEC correctly
