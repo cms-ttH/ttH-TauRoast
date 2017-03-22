@@ -91,7 +91,10 @@ split_procs(config)
 if not os.path.exists(config["outdir"]):
     os.makedirs(config["outdir"])
 
-shutil.copy(args.config, config["outdir"])
+try:
+    shutil.copy(args.config, config["outdir"])
+except shutil.Error:
+    pass
 
 if 'mva' in config:
     cfg = config['mva']
