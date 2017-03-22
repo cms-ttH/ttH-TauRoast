@@ -577,6 +577,11 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
             superslim::Trigger(*trigger_results, trigger_names),
             particles));
 
+   std::cout << "e:";
+   for (const auto& t: staus["NA"])
+      std::cout << " " << t.isolationMVA03();
+   std::cout << "\n";
+
    ptr->setWeight("Generator", genweight);
 
    if (!data_) {

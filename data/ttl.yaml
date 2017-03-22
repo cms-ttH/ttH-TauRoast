@@ -2,9 +2,9 @@
 
 channel: ttl
 generator: pow
-ntupledir: /hadoop/store/user/matze/ttH/v42
+ntupledir: /hadoop/store/user/matze/ttH/v45
 # ntupledir: /scratch365/mwolf3/ttH/v32
-outdir: ~/www/ttH/v42/ttl_2017-03-10
+outdir: ~/www/ttH/v45/ttl_2017-03-22
 mvadir: data/bdt
 histformat: "{v}_{c}_{p}"
 
@@ -13,30 +13,29 @@ lumi: 35900
 plot:
   - collisions_single
   - fakes_single
-  # - ttH_125_signal
   - ttH2Nonbb_125_amc
   - ttH2Nonbb_125_fake_amc
   # - ttH2ZZ_125_amc
   # - ttH2WW_125_amc
   # - ttH2TT_125_amc
-  - ttjets_pow
+  # - ttjets_pow
   - ttW
   - ttZ
   - ewk
   - rares
   # - singletop
 
-limits: []
-  # - collisions_single
-  # - fakes_single
-  # - ttH2ZZ_125_amc
-  # - ttH2WW_125_amc
-  # - ttH2TT_125_amc
+limits:
+  - collisions_single
+  - fakes_single
+  - ttH2ZZ_125_amc
+  - ttH2WW_125_amc
+  - ttH2TT_125_amc
   # - ttjets_pow
-  # - ttW
-  # - ttZ
-  # - ewk
-  # - rares
+  - ttW
+  - ttZ
+  - ewk
+  - rares
 
 discriminants:
   - NumInclusiveJets
@@ -88,9 +87,10 @@ baseline cuts:
         taus[0].charge() * taus[1].charge() < 0
 
 real fake cuts:
-    - "fake": >
-        leptons[0].mva() < superslim::id::Loose or
-        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) <= 1
+    - "l quality": >
+        leptons[0].mva() >= superslim::id::Loose
+    - "τ quality": >
+        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) >= 2
 
 real fake weights:
   - Generator
@@ -99,7 +99,6 @@ real fake weights:
   - LeptonSF
   - TriggerSF
   - tauIdEff
-  - Fake
 
 fake cuts:
     - "fake": >

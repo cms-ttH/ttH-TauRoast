@@ -199,7 +199,7 @@ for n in range(config.taus):
         name="taus/id/T{0}_IsolationMVA03".format(n + 1),
         values=["tau{0}_isoMVA03".format(n + 1)],
         labels=[lbl + " Isolation MVA Index", "Events"],
-        binning=[7, 0, 7]
+        binning=[8, 0, 8]
     )
     Plot(
         name="taus/id/T{0}_IsolationMVA03_Raw".format(n + 1),
@@ -211,7 +211,7 @@ for n in range(config.taus):
         name="taus/id/T{0}_IsolationMVA05".format(n + 1),
         values=["tau{0}_isoMVA05".format(n + 1)],
         labels=[lbl + " Isolation MVA Index", "Events"],
-        binning=[7, 0, 7]
+        binning=[8, 0, 8]
     )
     Plot(
         name="taus/id/T{0}_VetoElectron".format(n + 1),

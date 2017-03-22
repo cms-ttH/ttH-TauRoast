@@ -1,5 +1,13 @@
 # Ntuple History
 
+## v45
+
+* Final version with VVTight τ ID
+
+## v44
+
+* Botched attempt to correct v43
+
 ## v43
 
 * Add VVTight to IDs

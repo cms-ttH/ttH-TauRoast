@@ -2,9 +2,9 @@
 
 channel: ttl
 generator: pow
-ntupledir: /hadoop/store/user/matze/ttH/v43
+ntupledir: /hadoop/store/user/matze/ttH/v45
 # ntupledir: /scratch365/mwolf3/ttH/v32
-outdir: ~/www/ttH/v43/ttl_2017-03-19_vvtight
+outdir: ~/www/ttH/v45/ttl_2017-03-22_vvtight
 mvadir: data/bdt
 histformat: "{v}_{c}_{p}"
 tau ID: VVTight
@@ -12,6 +12,7 @@ tau ID: VVTight
 lumi: 35900
 
 plot:
+  - ttH2Nonbb_125_amc
   - collisions_single
   - fakes_single
   # - ttH_125_signal
@@ -19,7 +20,7 @@ plot:
   # - ttH2ZZ_125_amc
   # - ttH2WW_125_amc
   # - ttH2TT_125_amc
-  - ttjets_pow
+  # - ttjets_pow
   - ttW
   - ttZ
   - ewk
@@ -32,7 +33,7 @@ limits:
   - ttH2ZZ_125_amc
   - ttH2WW_125_amc
   - ttH2TT_125_amc
-  - ttjets_pow
+  # - ttjets_pow
   - ttW
   - ttZ
   - ewk
