@@ -12,7 +12,6 @@ tau ID: VVTight
 lumi: 35900
 
 plot:
-  - ttH2Nonbb_125_amc
   - collisions_single
   - fakes_single
   # - ttH_125_signal
