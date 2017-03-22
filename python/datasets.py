@@ -3,7 +3,7 @@ import re
 
 def mctag(dset):
     dset = re.sub(r'RunII(?:Spring|Summer)16MiniAODv2.*80X_mcRun2_asymptotic_(?:v14|2016_miniAODv2_v0|2016_TrancheIV_v6).', '', dset)
-    dset = re.sub(r'matze-(faster_v[0-9]+_).*?((?:(?<=_)p\d_)?)(?:(?<=_)[0-9a-f]+).', r'\1\2', dset)
+    dset = re.sub(r'matze-(faster_v[0-9]+_).*?((?:(?<=_)p\d_)?)(?:(?<=_)[0-9a-f]+(?=[-_])).', r'\1\2', dset)
     return dset
 
 
