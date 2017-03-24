@@ -194,7 +194,7 @@ def fill(args, config):
 
     atomic_processes = set(sum(map(Process.expand, config['plot'] + config['limits']), []))
     limit_processes = config["limits"]
-    all_processes = set(Process.get(n) for n in limit_processes) | atomic_processes
+    all_processes = set(Process.get(n) for n in limit_processes + config['plot']) | atomic_processes
 
     if len(all_processes) != len(set([p.limitname for p in all_processes])):
         logging.error("the limit names of the processes are not unique and will lead to collisions!")
@@ -235,7 +235,8 @@ def fill(args, config):
         fn = os.path.join(config["outdir"], "plots.root")
         with open_rootfile(fn) as f:
             for p in Plot.plots():
-                p.write(f, cutflows, category, uncertainties, fmt=config["histformat"])
+                p.write(f, cutflows, category, uncertainties,
+                        procs=all_processes, fmt=config["histformat"])
 
         discriminants = config.get("discriminants", [])
         fn = os.path.join(config["outdir"], "limits.root")
@@ -257,6 +258,10 @@ def plot(args, config):
     with open(os.path.join(datadir, 'plot.yaml')) as f:
         plotconfig = yaml.load(f)
     plotconfig.update(config.get('plot override', {}))
+
+    if args.adjust:
+        fn = os.path.join(config.get("indir", config["outdir"]), "impacts.json")
+        Plot.read_impacts(fn)
 
     categories, _ = get_categories(config)
     for category in categories:
@@ -331,4 +336,4 @@ def datacard(args, config):
 
 def train(args, config):
     import training
-    training.train(config)
+    training.train(config, args.train)

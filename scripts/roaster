@@ -23,7 +23,7 @@ ag.add_argument('-p', '--plot', action='store_true', default=False,
                 help="save histograms")
 ag.add_argument('-d', '--datacard', action='store_true', default=False,
                 help="save datacard")
-ag.add_argument('-t', '--train', action='store_true', default=False,
+ag.add_argument('-t', '--train', metavar='CONFIG', default=False,
                 help="train MVA")
 ag = parser.add_argument_group('general options')
 ag.add_argument('-i', '--input', type=str, default=None,
@@ -34,6 +34,8 @@ ag.add_argument('-r', '--reuse', action='store_true', default=False,
                 help="continue processing reusing previous results")
 ag.add_argument('-s', '--systematics', action='store_true', default=False,
                 help="run systematics")
+ag.add_argument('-j', '--adjust', action='store_true', default=False,
+                help="adjust systematics to post-fit impacts")
 ag.add_argument('-u', '--unblind', action='store_true', default=False,
                 help="unblind plots")
 ag = parser.add_argument_group('debugging and syncronization options')

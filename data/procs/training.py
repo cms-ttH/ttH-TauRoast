@@ -75,5 +75,5 @@ BasicProcess(
     paths=["TTZToLLNuNu_M_10_TuneCUETP8M1_13TeV_amcatnlo_pythia8_faster_v9_v1"],
     cross_section=0.2529,
     events=249761 * 2000,
-    cutflow='training'
+    cutflow='signal'
 )

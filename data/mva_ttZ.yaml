@@ -8,7 +8,7 @@ trees:
 
 features:
   - dummy
-  # - training
+  - training
   # - learning
   # - parameters
   # - selection
@@ -16,9 +16,9 @@ features:
   - validation_curve
 
 signals:
-  - ttH2Nonbb_125_train
+  - ttH2Nonbb_125_train: 1.0
 backgrounds:
-  - ttjets_pow_train
+  - ttZ_train: 1.0
 variables:
   - ht
   - tt_deltaR

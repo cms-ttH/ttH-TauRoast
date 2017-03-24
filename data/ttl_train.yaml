@@ -71,14 +71,9 @@ signal cuts:
 signal weights: []
 
 training cuts:
-    - "1st l": >
-        leptons[0].mva() >= superslim::id::Loose
-    - "τ quality": >
-        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Loose; }) >= 2
-    - "τ pT": >
-        taus[0].pt() >= 30 and taus[1].pt() >= 20
-    - "τ OS": >
-        taus[0].charge() * taus[1].charge() < 0
+    - "fake": >
+        leptons[0].mva() < superslim::id::Loose or
+        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) <= 1
 
 training weights: []
 

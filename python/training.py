@@ -44,9 +44,9 @@ def tmva_like(cls):
     return fun
 
 
-def load(config):
+def load(config, name):
     datadir = os.path.join(os.environ["LOCALRT"], 'src', 'ttH', 'TauRoast', 'data')
-    with open(os.path.join(datadir, 'mva.yaml')) as f:
+    with open(os.path.join(datadir, 'mva_{}.yaml'.format(name))) as f:
         setup = yaml.load(f)
     return setup
 
@@ -57,30 +57,47 @@ def read_inputs(config, setup):
     fn = os.path.join(config.get("indir", config["outdir"]), "ntuple.root")
 
     signal = None
-    for p in sum([Process.expand(n) for n in setup['signals']], []):
-        logging.debug('reading {}'.format(p))
-        s = rec2array(root2array(fn, str(p), setup['variables']))
-        if signal is not None:
-            signal = np.concatenate((signal, s))
-        else:
-            signal = s
+    signal_weights = None
+    for proc, weight in sum([cfg.items() for cfg in setup['signals']], []):
+        for p in sum([Process.expand(proc)], []):
+            logging.debug('reading {}'.format(p))
+            d = rec2array(root2array(fn, str(p), setup['variables']))
+            if isinstance(weight, float) or isinstance(weight, int):
+                w = np.array([weight] * len(d))
+            else:
+                w = rec2array(root2array(fn, str(p), [weight]))
+            if signal is not None:
+                signal = np.concatenate((signal, d))
+                signal_weights = np.concatenate((signal_weights, w))
+            else:
+                signal = d
+                signal_weights = w
 
     background = None
-    for p in sum([Process.expand(n) for n in setup['backgrounds']], []):
-        logging.debug('reading {}'.format(p))
-        b = rec2array(root2array(fn, str(p), setup['variables']))
-        if background is not None:
-            background = np.concatenate((background, b))
-        else:
-            background = b
+    background_weights = None
+    for proc, weight in sum([cfg.items() for cfg in setup['backgrounds']], []):
+        for p in sum([Process.expand(proc)], []):
+            logging.debug('reading {}'.format(p))
+            d = rec2array(root2array(fn, str(p), setup['variables']))
+            if isinstance(weight, float) or isinstance(weight, int):
+                w = np.array([weight] * len(d))
+            else:
+                w = rec2array(root2array(fn, str(p), [weight]))
+            if background is not None:
+                background = np.concatenate((background, d))
+                background_weights = np.concatenate((background_weights, w))
+            else:
+                background = d
+                background_weights = w
 
-    events = min(len(signal), len(background))
-    logging.info("using only {} events from signal, background".format(events))
+    factor = float(len(signal)) / len(background)
+    logging.info("renormalizing background events by factor {}".format(factor))
+    background_weights *= factor
 
-    return signal[:events, :], background[:events, :]
+    return signal, signal_weights, background, background_weights
 
 
-def create_bdts(outdir, setup, x_train, y_train):
+def create_bdts(outdir, setup, x_train, y_train, w_train):
     # dt = DecisionTreeClassifier(max_depth=3,
     #                             min_samples_leaf=500)
     # bdt = AdaBoostClassifier(dt,
@@ -96,7 +113,7 @@ def create_bdts(outdir, setup, x_train, y_train):
             label = cfg.pop('label', 'bdt-{}'.format(n))
             bdt = GradientBoostingClassifier(**cfg)
             bdt.label = label
-            bdt.fit(x_train, y_train)
+            bdt.fit(x_train, y_train, sample_weight=w_train)
             with open(os.path.join(dirname, "bdt.pkl"), 'wb') as fd:
                 pickle.dump((bdt, label), fd)
             with codecs.open(os.path.join(dirname, "configuration.txt"), "w", encoding="utf8") as fd:
@@ -110,23 +127,24 @@ def create_bdts(outdir, setup, x_train, y_train):
                 yield bdt
 
 
-def train(config):
-    setup = load(config)
-    signal, background = read_inputs(config, setup)
+def train(config, name):
+    setup = load(config, name)
+    signal, signal_weight, background, background_weight = read_inputs(config, setup)
 
-    outdir = os.path.join(config["outdir"], 'sklearn')
+    outdir = os.path.join(config["outdir"], 'sklearn_' + name)
     if not os.path.exists(outdir):
         os.makedirs(outdir)
 
     plot_correlations(outdir, setup["variables"], signal, background)
-    plot_inputs(outdir, setup["variables"], signal, background)
+    plot_inputs(outdir, setup["variables"], signal, signal_weight, background, background_weight)
 
     x = np.concatenate((signal, background))
     y = np.concatenate((np.ones(signal.shape[0]),
                         np.zeros(background.shape[0])))
+    w = np.concatenate((signal_weight, background_weight))
 
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=1.0 / CV)
-    bdts = list(create_bdts(outdir, setup, x_train, y_train))
+    x_train, x_test, y_train, y_test, w_train, w_test = train_test_split(x, y, w, test_size=1.0 / CV)
+    bdts = list(create_bdts(outdir, setup, x_train, y_train, w_train))
 
     if 'validation' in setup.get('features', []):
         run_cross_validation(outdir, bdts, x, y)
@@ -137,7 +155,7 @@ def train(config):
     if 'learning' in setup.get('features', []):
         plot_learning_curve(outdir, bdts, x, y)
     if 'validation_curve' in setup.get('features', []):
-        run_validation_curve(outdir, bdts, x_train, y_train, x_test, y_test)
+        run_validation_curve(outdir, bdts, x_train, y_train, w_train, x_test, y_test, w_test)
 
     df = pd.DataFrame(x_train, columns=setup["variables"])
     for n, bdt in enumerate(bdts):
@@ -150,30 +168,37 @@ def train(config):
         gbr_to_tmva(bdt, df, os.path.join(outdir, "bdt-{}".format(n), "weights.xml"), coef=COEF)
 
     logging.info("creating roc, output")
-    plot_roc(outdir, bdts, x_train, y_train, x_test, y_test, setup['variables'].index('tt_visiblemass'))
-    plot_output(outdir, bdts, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')],
+    plot_roc(outdir, bdts, x_train, y_train, w_train, x_test, y_test, w_test, setup['variables'].index('tt_visiblemass'))
+    plot_output(outdir, bdts, [(x_test, y_test, w_test, 'testing'), (x_train, y_train, w_train, 'training')],
                 'decision-function.png', np.linspace(-7, 7, 40), lambda cls, data: cls.decision_function(data))
-    plot_output(outdir, bdts, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')],
+    plot_output(outdir, bdts, [(x_test, y_test, w_test, 'testing'), (x_train, y_train, w_train, 'training')],
                 'signal-probability.png', np.linspace(0, 1, 40), lambda cls, data: cls.predict_proba(data)[:, 1])
-    plot_output(outdir, bdts, [(x_test, y_test, 'testing'), (x_train, y_train, 'training')],
-                'tmva-like.png', np.linspace(-1, 1, 40), lambda cls, data: np.apply_along_axis(tmva_like(cls), 1, data))
+    # plot_output(outdir, bdts, [(x_test, y_test, w_test, 'testing'), (x_train, y_train, w_train, 'training')],
+    #             'tmva-like.png', np.linspace(-1, 1, 40), lambda cls, data: np.apply_along_axis(tmva_like(cls), 1, data))
 
 
-def evaluate(config, tree):
-    setup = load(config)
-    data = rec2array(tree2array(tree.raw(), setup["variables"]))
+def evaluate(config, tree, names):
+    output = None
+    for name in names:
+        setup = load(config, name)
+        data = rec2array(tree2array(tree.raw(), setup["variables"]))
 
-    default = os.path.join(config.get("indir", config["outdir"]), "sklearn", "bdt-0")
-    fn = os.path.join(config.get("mvadir", default), "bdt.pkl")
-    with open(fn, 'rb') as fd:
-        bdt, label = pickle.load(fd)
-    scores = []
-    tmva = []
-    if len(data) > 0:
-        scores = bdt.predict_proba(data)[:, 1]
-        tmva = np.apply_along_axis(tmva_like(bdt), 1, data)
-    output = np.array(zip(scores, tmva), [('bdt', 'float64'), ('tmva', 'float64')])
-    tree.mva(array2tree(output))
+        default = os.path.join(config.get("indir", config["outdir"]), "sklearn_" + name, "bdt-0")
+        fn = os.path.join(config.get("mvadir", default), name + ".pkl")
+        with open(fn, 'rb') as fd:
+            bdt, label = pickle.load(fd)
+        scores = []
+        tmva = []
+        if len(data) > 0:
+            scores = bdt.predict_proba(data)[:, 1]
+            tmva = np.apply_along_axis(tmva_like(bdt), 1, data)
+        if output is None:
+            output = np.array(zip(scores, tmva), [('bdt_' + name, 'float64'), ('tmva_' + name, 'float64')])
+        else:
+            o = np.array(zip(scores, tmva), [('bdt_' + name, 'float64'), ('tmva_' + name, 'float64')])
+            output = np.append(output, o, axis=1)
+    if output is not None:
+        tree.mva(array2tree(output))
 
 
 def run_cross_validation(outdir, bdts, x, y):
@@ -185,15 +210,15 @@ def run_cross_validation(outdir, bdts, x, y):
             fd.write(out)
 
 
-def run_validation_curve(outdir, bdts, x_train, y_train, x_test, y_test):
+def run_validation_curve(outdir, bdts, x_train, y_train, w_train, x_test, y_test, w_test):
     logging.info("saving validation curve")
     for bdt in bdts:
         test_score, train_score = np.empty(len(bdt.estimators_)), np.empty(len(bdt.estimators_))
 
         for i, pred in enumerate(bdt.staged_decision_function(x_test)):
-            test_score[i] = 1 - roc_auc_score(y_test, pred)
+            test_score[i] = 1 - roc_auc_score(y_test, pred, sample_weight=w_test)
         for i, pred in enumerate(bdt.staged_decision_function(x_train)):
-            train_score[i] = 1 - roc_auc_score(y_train, pred)
+            train_score[i] = 1 - roc_auc_score(y_train, pred, sample_weight=w_train)
 
         best = np.argmin(test_score)
         line = plt.plot(test_score, label=bdt.label)
@@ -263,11 +288,11 @@ def plot_feature_elimination(outdir, cls, n):
     plt.close()
 
 
-def plot_inputs(outdir, vars, sig, bkg):
+def plot_inputs(outdir, vars, sig, sig_w, bkg, bkg_w):
     for n, var in enumerate(vars):
         _, bins = np.histogram(np.concatenate((sig[:, n], bkg[:, n])), bins=40)
-        sns.distplot(bkg[:, n], bins=bins, kde=False, norm_hist=True, label='background')
-        sns.distplot(sig[:, n], bins=bins, kde=False, norm_hist=True, label='signal')
+        sns.distplot(bkg[:, n], hist_kws={'weights': bkg_w}, bins=bins, kde=False, norm_hist=True, label='background')
+        sns.distplot(sig[:, n], hist_kws={'weights': sig_w}, bins=bins, kde=False, norm_hist=True, label='signal')
         plt.title(var)
         plt.legend()
         plt.savefig(os.path.join(outdir, 'input_{}.png'.format(var)))
@@ -311,20 +336,22 @@ def plot_learning_curve(outdir, bdts, x, y):
 def plot_output(outdir, bdts, data, filename, bins, fct):
     for n, cls in enumerate(bdts):
         outputs = []
-        for x, y, label in data:
+        for x, y, w, label in data:
             sig = fct(cls, x[y > .5]).ravel()
             bkg = fct(cls, x[y < .5]).ravel()
-            outputs.append((sig, bkg, label))
+            w_sig = w[y > .5]
+            w_bkg = w[y < .5]
+            outputs.append((sig, bkg, w_sig, w_bkg, label))
 
-        for sig, bkg, label in outputs:
+        for sig, bkg, w_sig, w_bkg, label in outputs:
             if label == 'training':
-                sns.distplot(bkg, bins=bins, color='r', kde=False, norm_hist=True, label='background (training)')
-                sns.distplot(sig, bins=bins, color='b', kde=False, norm_hist=True, label='signal (training)')
+                sns.distplot(bkg, hist_kws={'weights': w_bkg}, bins=bins, color='r', kde=False, norm_hist=True, label='background (training)')
+                sns.distplot(sig, hist_kws={'weights': w_sig}, bins=bins, color='b', kde=False, norm_hist=True, label='signal (training)')
             else:
                 centers = (bins[:-1] + bins[1:]) * .5
-                bcounts, _ = np.histogram(bkg, bins=bins, density=True)
+                bcounts, _ = np.histogram(bkg, weights=w_bkg, bins=bins, density=True)
                 plt.plot(centers, bcounts, 'o', color='r', label='background (testing)')
-                scounts, _ = np.histogram(sig, bins=bins, density=True)
+                scounts, _ = np.histogram(sig, weights=w_sig, bins=bins, density=True)
                 plt.plot(centers, scounts, 'o', color='b', label='signal (testing)')
         plt.xlabel('BDT score')
 
@@ -333,23 +360,24 @@ def plot_output(outdir, bdts, data, filename, bins, fct):
         plt.close()
 
 
-def plot_roc(outdir, bdts, x_train, y_train, x_test, y_test, vismass):
+def plot_roc(outdir, bdts, x_train, y_train, w_train, x_test, y_test, w_test, vismass):
     for cls in bdts:
         decisions = cls.decision_function(x_test)
-        fpr, tpr, thresholds = roc_curve(y_test, decisions)
-        roc_auc = auc(fpr, tpr)
+        fpr, tpr, thresholds = roc_curve(y_test, decisions, sample_weight=w_test)
+        roc_auc = auc(fpr, tpr, True)
         line = plt.plot(fpr, tpr, lw=1, label='ROC for {} (area = {:0.3f})'.format(cls.label, roc_auc))
 
         decisions = cls.decision_function(x_train)
-        fpr, tpr, thresholds = roc_curve(y_train, decisions)
-        roc_auc = auc(fpr, tpr)
+        fpr, tpr, thresholds = roc_curve(y_train, decisions, sample_weight=w_train)
+        roc_auc = auc(fpr, tpr, True)
         plt.plot(fpr, tpr, '--', lw=1, color=line[-1].get_color(), label='ROC for {} training (area = {:0.3f})'.format(cls.label, roc_auc))
 
     fpr, tpr, thresholds = roc_curve(
         np.concatenate((y_test, y_train)),
-        np.concatenate((x_test[:, vismass], x_train[:, vismass]))
+        np.concatenate((x_test[:, vismass], x_train[:, vismass])),
+        sample_weight=np.concatenate((w_test, w_train))
     )
-    roc_auc = auc(fpr, tpr)
+    roc_auc = auc(fpr, tpr, True)
     line = plt.plot(fpr, tpr, lw=1, label='ROC for visible mass (area = {:0.2f})'.format(roc_auc))
 
     plt.xlabel('Background efficiency')
