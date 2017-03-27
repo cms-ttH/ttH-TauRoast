@@ -75,9 +75,7 @@ class Tree(object):
         if read:
             self.__t = self.__f.Get(name)
             if not isinstance(self.__t, r.TTree):
-                raise ValueError(
-                    "can't read {} from file '{}'".format(name, filename)
-                )
+                raise ValueError("can't read {} from file '{}'".format(name, filename))
         else:
             self.__t = r.TTree(str(name), 'ntuple')
             for l in Leaf.leaves():
