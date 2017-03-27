@@ -162,6 +162,19 @@ def analyze(args, config):
     concatenated_cutflows.save(config)
 
 
+def add_mva(args, config):
+    fn = os.path.join(config["outdir"], "ntuple.root")
+    for proc in set(sum((Process.expand(p) for p in config['plot'] + config['limits']), [])):
+        systematics = ['NA']
+        if args.systematics:
+            weights = config.get(proc.cutflow + ' weights')
+            systematics = config.get(proc.cutflow + ' systematics', [])
+            systematics = set([s for s, w in expand_systematics(systematics, weights)])
+        for unc in systematics:
+            logging.info("using systematics: " + unc)
+            proc.add_mva(config, fn, unc)
+
+
 def get_categories(config):
     categories = []
     definitions = []

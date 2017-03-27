@@ -135,12 +135,18 @@ class BasicProcess(Process):
             logging.info("processing {0}, event {1}".format(str(self), i))
         now = time.clock()
         r.fastlane.process(str(self), config.channel, cfiles, tree.raw(), ccuts, cweights, systematics, tau_id, log, limit)
-        logging.info("evaluating MVA")
+        logging.debug("time spent processing: {0}".format(time.clock() - now))
+
+    def add_mva(self, cfg, filename, systematics):
+        suffix = '' if systematics == 'NA' else '_' + systematics
+        tree = Tree(filename, str(self) + suffix, read=True)
+        logging.info("evaluating MVA for {}".format(self))
+        now = time.clock()
         try:
-            training.evaluate(cfg, tree, config.get('mvas', []))
+            training.evaluate(cfg, tree, cfg.get('mvas', []))
         except (IOError, ValueError) as e:
             logging.error("can't evaluate MVA: {}".format(e))
-        logging.debug("time spent processing: {0}".format(time.clock() - now))
+        logging.debug("time spent evaluating MVA: {0}".format(time.clock() - now))
 
     def process(self):
         return [self._name]

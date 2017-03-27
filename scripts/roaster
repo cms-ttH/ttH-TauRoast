@@ -17,6 +17,8 @@ parser.add_argument('-q', '--quiet', action="count", default=0,
 ag = parser.add_argument_group('analysis options')
 ag.add_argument('-a', '--analyze', action='store_true', default=False,
                 help="analyze datasets")
+ag.add_argument('-m', '--mva', action='store_true', default=False,
+                help="add MVA evaluation for datasets")
 ag.add_argument('-f', '--fill', action='store_true', default=False,
                 help="fill histograms")
 ag.add_argument('-p', '--plot', action='store_true', default=False,
@@ -50,8 +52,8 @@ args = parser.parse_args()
 if 'LOCALRT' not in os.environ:
     parser.error("need to do a `cmsenv` first")
 
-if not any([args.analyze, args.fill, args.plot, args.datacard, args.train]):
-    parser.error("need to either analyze, fill, plot, train, or datacard")
+if not any([args.analyze, args.mva, args.fill, args.plot, args.datacard, args.train]):
+    parser.error("need to either analyze, mva, fill, plot, train, or datacard")
 
 # Logging setup
 logging.basicConfig(
@@ -79,7 +81,7 @@ r.gErrorIgnoreLevel = 1001
 r.gSystem.Load("libttHTauRoast")
 
 from ttH.TauRoast import stylish, useful
-from ttH.TauRoast.actionable import analyze, dump_categories, dump_cuts, fill, plot, datacard, train
+from ttH.TauRoast.actionable import analyze, add_mva, dump_categories, dump_cuts, fill, plot, datacard, train
 from ttH.TauRoast.plotting import Plot
 from ttH.TauRoast.processing import split_procs
 from ttH.TauRoast.variation import setup
@@ -111,6 +113,8 @@ if args.analyze:
     actions.append(analyze)
 if args.analyze or args.fill:
     actions.append(dump_cuts)
+if args.mva:
+    actions.append(add_mva)
 if args.fill:
     actions.append(fill)
 if args.fill or args.plot:

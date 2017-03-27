@@ -5,8 +5,15 @@ from ttH.TauRoast.useful import config
 if config.taus >= 2:
     Leaf('tt_deltaR', 'f', 'result = dR(taus[0], taus[1])')
     Leaf('tt_visiblemass', 'f', 'result = (taus[0].p4() + taus[1].p4()).M()')
+    Leaf('tt_sumpt', 'f', 'result = (taus[0].p4() + taus[1].p4()).Pt()')
     Leaf('tt_cosDeltaPhi', 'f', 'result = std::cos(taus[0].p4().Phi() - taus[1].p4().Phi())')
 
+    Plot(
+        name="taus/TT_SumPt",
+        values=["tt_sumpt"],
+        labels=["#sum p_{T} of #tau_{1,2}", "Events"],
+        binning=[30, 0, 200],
+    )
     Plot(
         name="taus/TT_DeltaR",
         values=["tt_deltaR"],
@@ -47,6 +54,16 @@ for n in range(config.taus):
             values=["tau{}lep{}_deltaR".format(n + 1, l + 1)],
             labels=["#DeltaR {}, l_{}".format(lbl, l + 1), "Events"],
             binning=[15, 0, 6.28]
+        )
+
+        Leaf('tau{}lep{}_visiblemass'.format(n + 1, l + 1), 'f',
+             'result = (leptons.at({0}).p4() + taus.at({1}).p4()).M()'.format(l, n))
+
+        Plot(
+            name="taus/T{}L{}_VisibleMass".format(n + 1, l + 1),
+            values=["tau{}lep{}_visiblemass".format(n + 1, l + 1)],
+            labels=["Visible Mass {}, l_{}".format(lbl, l + 1), "Events"],
+            binning=[30, 0, 150]
         )
 
     Leaf('tau{}jet_deltaRmin'.format(n + 1), 'f',

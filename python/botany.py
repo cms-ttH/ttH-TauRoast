@@ -69,12 +69,19 @@ class Leaf(object):
 
 class Tree(object):
 
-    def __init__(self, filename, name):
+    def __init__(self, filename, name, read=False):
         self.__f = r.TFile(filename, 'UPDATE')
-        self.__t = r.TTree(str(name), 'ntuple')
         self.__b = None
-        for l in Leaf.leaves():
-            l.grow(self.__t)
+        if read:
+            self.__t = self.__f.Get(name)
+            if not isinstance(self.__t, r.TTree):
+                raise ValueError(
+                    "can't read {} from file '{}'".format(name, filename)
+                )
+        else:
+            self.__t = r.TTree(str(name), 'ntuple')
+            for l in Leaf.leaves():
+                l.grow(self.__t)
 
     def raw(self):
         return self.__t

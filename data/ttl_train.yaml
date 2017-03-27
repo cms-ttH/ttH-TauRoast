@@ -6,15 +6,18 @@ ntupledir: /hadoop/store/user/matze/ttH/v6
 outdir: ~/www/ttH/v6/ttl_train
 histformat: "{p}_{c}_{v}"
 
+mvadir: data/bdt
+mvas: [tt, ttZ]
+
 lumi: 12900
 # lumi: 36300
 
 plot:
   - ttH2Nonbb_125_train
   - ttjets_pow_train
-  - ttW_train
   - ttZ_train
-  - WZ_train
+  # - ttW_train
+  # - WZ_train
 
 limits: []
 

@@ -1,3 +1,4 @@
+import json
 import logging
 import math
 import os
@@ -14,6 +15,7 @@ from ttH.TauRoast.processing import BasicProcess, Process
 
 class Plot(object):
     __plots = {}
+    __systematics = {}
 
     def __init__(self, name, values, labels, binning, binlabels=None, limitname=None, weights=None, blind=False, essential=False):
         self.__name = name
@@ -613,3 +615,12 @@ class Plot(object):
     def unblind(cls):
         for p in cls.__plots.values():
             p.blind(False)
+
+    @classmethod
+    def read_impacts(cls, filename):
+        with open(filename) as fd:
+            data = json.load(fd)
+        for cfg in data['params']:
+            values = dict(zip('Down Central Up'.split(), cfg['fit']))
+            print cfg['name'], values
+            cls.__systematics[cfg['name']] = values

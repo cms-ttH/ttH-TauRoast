@@ -4,9 +4,14 @@ channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v45
 # ntupledir: /scratch365/mwolf3/ttH/v32
-outdir: ~/www/ttH/v45/ttl_2017-03-22
-mvadir: data/bdt
+outdir: ~/www/ttH/v45/ttl_2017-03-24
 histformat: "{v}_{c}_{p}"
+
+mvadir: data/bdt
+mvas:
+  - legacy
+  - tt
+  - ttZ
 
 lumi: 35900
 

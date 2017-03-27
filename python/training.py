@@ -178,7 +178,8 @@ def train(config, name):
 
 
 def evaluate(config, tree, names):
-    output = None
+    output = []
+    dtype = []
     for name in names:
         setup = load(config, name)
         data = rec2array(tree2array(tree.raw(), setup["variables"]))
@@ -192,13 +193,10 @@ def evaluate(config, tree, names):
         if len(data) > 0:
             scores = bdt.predict_proba(data)[:, 1]
             tmva = np.apply_along_axis(tmva_like(bdt), 1, data)
-        if output is None:
-            output = np.array(zip(scores, tmva), [('bdt_' + name, 'float64'), ('tmva_' + name, 'float64')])
-        else:
-            o = np.array(zip(scores, tmva), [('bdt_' + name, 'float64'), ('tmva_' + name, 'float64')])
-            output = np.append(output, o, axis=1)
-    if output is not None:
-        tree.mva(array2tree(output))
+        output += [scores, tmva]
+        dtype += [('bdt_' + name, 'float64'), ('tmva_' + name, 'float64')]
+    data = np.array(zip(*output), dtype)
+    tree.mva(array2tree(data))
 
 
 def run_cross_validation(outdir, bdts, x, y):
