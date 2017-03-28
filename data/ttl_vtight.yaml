@@ -4,10 +4,15 @@ channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v45
 # ntupledir: /scratch365/mwolf3/ttH/v32
-outdir: ~/www/ttH/v45/ttl_2017-03-22_vtight
-mvadir: data/bdt
+outdir: ~/www/ttH/v45/ttl_2017-03-24_vtight
 histformat: "{v}_{c}_{p}"
 tau ID: VTight
+
+mvadir: data/bdt
+mvas:
+  - legacy
+  - tt
+  - ttZ
 
 lumi: 35900
 
@@ -41,9 +46,10 @@ limits:
 discriminants:
   - NumInclusiveJets
   - TT_VisibleMass
+  - TMVA_likelihood
+  - TMVA_likelihood_linear
   - TMVA5
   - TMVA6
-  - TMVA7
   - TMVA8
   - TMVA10
   - TMVA_fine

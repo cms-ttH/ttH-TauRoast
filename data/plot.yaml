@@ -25,6 +25,9 @@ backgrounds:
   - process: fakes_single
     SetFillColor: r.kBlack
     SetFillStyle: 3005
-signals: []
-  # - ttH_125_signal: r.kRed
-  # - ttH2Nonbb_125_amc: r.kRed
+# signals: []
+signals:
+  - ttjets_pow_train: r.kRed
+  - ttH2Nonbb_125_amc: r.kRed
+  - ttH2Nonbb_125_fake_amc: r.kRed + 2
+  - ttZ: r.kGreen + 1

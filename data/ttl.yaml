@@ -45,9 +45,10 @@ limits:
 discriminants:
   - NumInclusiveJets
   - TT_VisibleMass
+  - TMVA_likelihood
+  - TMVA_likelihood_linear
   - TMVA5
   - TMVA6
-  - TMVA7
   - TMVA8
   - TMVA10
   - TMVA_fine

@@ -23,9 +23,13 @@ from sklearn.learning_curve import learning_curve
 from sklearn.metrics import roc_curve, auc, roc_auc_score
 from sklearn import grid_search
 
+import ROOT as r
+
 from root_numpy import array2tree, root2array, rec2array, tree2array
 
 from ttH.TauRoast.external.sklearn_to_tmva import gbr_to_tmva
+
+r.gROOT.SetBatch()
 
 matplotlib.style.use('ggplot')
 
@@ -178,6 +182,13 @@ def train(config, name):
 
 
 def evaluate(config, tree, names):
+    likelihood = None
+    f = r.TFile(os.path.join(config.get("mvadir", config.get("indir", config["outdir"])), "likelihood.root"), "READ")
+    if f.IsOpen():
+        likelihood = f.Get("likelihood")
+        likelihood.SetDirectory(0)
+        f.Close()
+
     output = []
     dtype = []
     for name in names:
@@ -195,6 +206,17 @@ def evaluate(config, tree, names):
             tmva = np.apply_along_axis(tmva_like(bdt), 1, data)
         output += [scores, tmva]
         dtype += [('bdt_' + name, 'float64'), ('tmva_' + name, 'float64')]
+    if likelihood:
+        def lh(values):
+            return likelihood.GetBinContent(likelihood.FindBin(*values))
+        indices = dict((v, n) for n, (v, _) in enumerate(dtype))
+        tt = output[indices['tmva_tt']]
+        ttZ = output[indices['tmva_ttZ']]
+        if len(tt) == 0:
+            output += [[]]
+        else:
+            output += [np.apply_along_axis(lh, 1, np.array([tt, ttZ]).T)]
+        dtype += [('tmva_likelihood', 'float64')]
     data = np.array(zip(*output), dtype)
     tree.mva(array2tree(data))
 

@@ -24,6 +24,41 @@ Leaf('nalltausjetfake', 'i', 'result = std::count_if(all_taus.begin(), all_taus.
 Leaf('category', 'i', 'result = min(max(0, btags(jets) - 1), 1) * 3 + min(max(0, len(jets) - 2), 2)')
 Leaf('category_lj', 'i', 'result = min(max(0, btags(jets) - 2), 2) * 3 + min(max(0, len(jets) - 4), 2)')
 
+Plot(
+    name="general/TMVA_both",
+    values=["tmva_ttZ", "tmva_tt"],
+    labels=["BDT output (t#bar{t})", "BDT output (t#bar{t}Z)", "Events"],
+    binning=[40, -1, 1, 40, -1, 1],
+    blind=True,
+    essential=True
+)
+
+Plot(
+    name="general/TMVA_both_coarse",
+    values=["tmva_ttZ", "tmva_tt"],
+    labels=["BDT output (t#bar{t})", "BDT output (t#bar{t}Z)", "Events"],
+    binning=[5, -1, 1, 5, -1, 1],
+    blind=True
+)
+
+Plot(
+    name="general/TMVA_likelihood",
+    values=["tmva_likelihood"],
+    labels=["Likelihood value (TMVA)", "Events"],
+    binning=[4, 0, 4],
+    blind=True,
+    essential=True
+)
+
+Plot(
+    name="general/TMVA_likelihood_linear",
+    values=["tmva_likelihood_linear"],
+    labels=["Likelihood value (TMVA)", "Events"],
+    binning=[4, 0, 4],
+    blind=True,
+    essential=True
+)
+
 for mva in "legacy tt ttZ".split():
     Plot(
         name="general/BDT_" + mva,
