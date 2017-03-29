@@ -60,6 +60,8 @@ with root_open(args.filename, 'update') as fd:
         args.fudge = reference.Integral() / args.fudge
         print("using fudged scale factor of {}".format(scale))
     for k in fd.keys():
+        if not k:
+            continue
         name = k.get_name()
         hist = makepositive(k.read_obj())
         hist.Write(name, r.TObject.kWriteDelete)
