@@ -24,14 +24,14 @@ parser.add_argument('ntuple', help='ntuple to add likelihood to', nargs='?')
 args = parser.parse_args()
 
 with root_open(args.infile) as f:
-    likelihood = r.TH2F("hist", "Likelihood", args.bins, -1, 1, args.bins, -1, 1)
+    likelihood = r.TH2F("hist", "Likelihood;BDT score for tt;BDT score for ttZ", args.bins, -1, 1, args.bins, -1, 1)
     f.ttH2Nonbb_125_train_mva.Draw("tmva_tt:tmva_ttZ", hist=likelihood)
     likelihood.Scale(1. / likelihood.GetMaximum())
     with root_open(args.outfile, "recreate") as of:
         of.WriteObject(likelihood, "likelihood_raw", "WriteDelete")
     c = r.TCanvas()
     likelihood.Draw("COLZ")
-    c.SaveAs("likelihood_raw.png")
+    c.SaveAs("likelihood_raw.pdf")
 
     t = f.ttH2Nonbb_125_train_mva
     values = [likelihood.GetBinContent(likelihood.FindBin(e.tmva_tt, e.tmva_ttZ)) for e in t]
@@ -53,9 +53,9 @@ with root_open(args.infile) as f:
         of.WriteObject(likelihood, "likelihood", "WriteDelete")
         of.WriteObject(likelihood_linear, "likelihood_linear", "WriteDelete")
     likelihood.Draw("COLZ")
-    c.SaveAs("likelihood.png")
+    c.SaveAs("likelihood.pdf")
     likelihood_linear.Draw("COLZ")
-    c.SaveAs("likelihood_linear.png")
+    c.SaveAs("likelihood_linear.pdf")
 
     trees = "ttH2Nonbb_125 ttZ ttjets_sl_pow ttjets_dl_pow".split()
     hists = []
