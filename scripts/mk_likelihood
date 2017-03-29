@@ -35,11 +35,11 @@ with root_open(args.infile) as f:
 
     t = f.ttH2Nonbb_125_train_mva
     values = [likelihood.GetBinContent(likelihood.FindBin(e.tmva_tt, e.tmva_ttZ)) for e in t]
-    fractions = np.linspace(0, 100, 6)
+    fractions = np.linspace(0, 100, 5)
     quants = [np.percentile(values, n) for n in fractions]
     quants[-1] += .001
     remap_linear = Hist(quants)
-    fractions = [0, 10, 30, 60, 100]
+    fractions = [0, 10, 25, 45, 70, 100]
     quants = [np.percentile(values, n) for n in fractions]
     quants[-1] += .001
     remap = Hist(quants)
@@ -48,7 +48,7 @@ with root_open(args.infile) as f:
         for y in range(likelihood.GetNbinsY()):
             bn = likelihood.GetBin(x + 1, y + 1)
             likelihood.SetBinContent(bn, remap.FindBin(likelihood.GetBinContent(bn)) - 1)
-            likelihood_linear.SetBinContent(bn, remap_linear.FindBin(likelihood.GetBinContent(bn)) - 1)
+            likelihood_linear.SetBinContent(bn, remap_linear.FindBin(likelihood_linear.GetBinContent(bn)) - 1)
     with root_open(args.outfile, "update") as of:
         of.WriteObject(likelihood, "likelihood", "WriteDelete")
         of.WriteObject(likelihood_linear, "likelihood_linear", "WriteDelete")
@@ -96,6 +96,12 @@ if args.ntuple:
         try:
             data = root2array(backup, treename, branches)
         except ValueError:
+            tree = array2tree(
+                np.array([], dtype=[(b, 'float64') for b in branches + 'tmva_likelihood tmva_likelihood_linear'.split()]),
+                treename
+            )
+            with root_open(args.ntuple, 'update') as f:
+                f.WriteObject(tree, treename, "WriteDelete")
             continue
         likelihoods = []
         likelihoods_linear = []
