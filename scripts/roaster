@@ -59,7 +59,7 @@ if not any([args.analyze, args.mva, args.fill, args.plot, args.datacard, args.tr
 
 # Logging setup
 logging.basicConfig(
-    datefmt="%Y-%m-%d %H:%M:%S",
+    datefmt="%H:%M:%S",
     format="%(asctime)s [%(levelname)s] - %(filename)s %(lineno)d: %(message)s")
 
 logging.__dict__['root'].level = (2 + args.quiet - args.verbose) * 10
