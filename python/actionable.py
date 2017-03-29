@@ -237,7 +237,7 @@ def fill(args, config):
                 logging.info("using systematics: " + systematic)
                 logging.info("using weights: " + ", ".join(weights))
                 for p in Plot.plots():
-                    if n == 0 or p.essential():
+                    if (not args.essential and n == 0) or p.essential():
                         p.fill(proc, systematic, weights, definition)
 
         uncertainties = None
@@ -293,6 +293,8 @@ def plot(args, config):
             raise IOError("Can't read file '{0}'".format(fn))
 
         for p in Plot.plots():
+            if args.essential and not p.essential():
+                continue
             p.read(f, category, processes, systematics=systematics,
                    fmt=config["histformat"])
             p.save(plotconfig, os.path.join(config["outdir"], category),

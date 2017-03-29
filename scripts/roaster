@@ -40,6 +40,8 @@ ag.add_argument('-j', '--adjust', action='store_true', default=False,
                 help="adjust systematics to post-fit impacts")
 ag.add_argument('-u', '--unblind', action='store_true', default=False,
                 help="unblind plots")
+ag.add_argument('-e', '--essential', action='store_true', default=False,
+                help="save only essential plots")
 ag = parser.add_argument_group('debugging and syncronization options')
 ag.add_argument('--debug-cuts', action='store_true', default=False,
                 help="save event quantites after each cut")

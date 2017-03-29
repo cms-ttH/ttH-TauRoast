@@ -35,6 +35,8 @@ class Plot(object):
         self.__signals_present = set()
         self.__collisions_present = set()
 
+        self._time = 0
+
         if len(values) == 1:
             self.__class = r.TH1F
         elif len(values) == 2:
