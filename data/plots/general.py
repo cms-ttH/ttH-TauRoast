@@ -45,7 +45,7 @@ Plot(
     name="general/TMVA_likelihood",
     values=["tmva_likelihood"],
     labels=["Likelihood value (TMVA)", "Events"],
-    binning=[4, 0, 4],
+    binning=[5, 0, 5],
     blind=True,
     essential=True
 )
