@@ -35,14 +35,16 @@ with root_open(args.infile) as f:
 
     t = f.ttH2Nonbb_125_train_mva
     values = [likelihood.GetBinContent(likelihood.FindBin(e.tmva_tt, e.tmva_ttZ)) for e in t]
+
     fractions = np.linspace(0, 100, 5)
     quants = [np.percentile(values, n) for n in fractions]
     quants[-1] += .001
     remap_linear = Hist(quants)
-    fractions = [0, 10, 25, 45, 70, 100]
+    fractions = [0, 5, 17.5, 37.5, 65, 100]
     quants = [np.percentile(values, n) for n in fractions]
     quants[-1] += .001
     remap = Hist(quants)
+
     likelihood_linear = likelihood.Clone()
     for x in range(likelihood.GetNbinsX()):
         for y in range(likelihood.GetNbinsY()):
@@ -58,6 +60,28 @@ with root_open(args.infile) as f:
     c.SaveAs("likelihood_linear.pdf")
 
     trees = "ttH2Nonbb_125 ttZ ttjets_sl_pow ttjets_dl_pow".split()
+    hists = []
+
+    for tree in trees:
+        t = getattr(f, tree + "_train_mva")
+        hist = r.TH2F("remapped_" + tree, "Likelihood;BDT score for tt;BDT score for ttZ", args.bins, -1, 1, args.bins, -1, 1)
+        t.Draw("tmva_tt:tmva_ttZ", hist=hist)
+
+        hist.Draw("COLZ")
+        c.SaveAs("contribution_{}.pdf".format(tree))
+        c.SetLogz()
+        c.SaveAs("contribution_{}_log.pdf".format(tree))
+        c.SetLogz(False)
+        hists.append(hist)
+
+    h = hists[-2]
+    h.Add(hists[-1])
+    h.Draw("COLZ")
+    c.SaveAs("contribution_tt.pdf")
+    c.SetLogz()
+    c.SaveAs("contribution_tt_log.pdf")
+    c.SetLogz(False)
+
     hists = []
     for t in [getattr(f, t + "_train_mva") for t in trees]:
         mapped = Hist(np.linspace(0, 4, 5), name=t.GetName() + '_hist')
@@ -77,7 +101,7 @@ with root_open(args.infile) as f:
     ttjets.Draw()
     ttZ.Draw("same")
     ttH.Draw("same")
-    c.SaveAs("output.png")
+    c.SaveAs("output.pdf")
 
     likelihood.SetDirectory(0)
     likelihood_linear.SetDirectory(0)
