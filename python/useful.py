@@ -36,6 +36,10 @@ def setup_processes(config):
 def setup(cfg):
     global config
 
+    for k in ('indir', 'outdir', 'mvadir', 'ntupledir'):
+        if k in cfg:
+            cfg[k] = os.path.expanduser(os.path.expandvars(cfg[k]))
+
     channel = cfg['channel']
     config = Config(
         channel=channel,

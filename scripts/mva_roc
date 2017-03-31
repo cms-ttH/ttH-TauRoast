@@ -1,0 +1,65 @@
+#!/usr/bin/env python
+
+import argparse
+import codecs
+import numpy as np
+import os
+import pandas as pd
+import pickle
+import yaml
+import ROOT as r
+
+r.gROOT.SetBatch()
+r.gSystem.Load("libttHTauRoast")
+
+from ttH.TauRoast import useful, training
+
+parser = argparse.ArgumentParser(description='Plot ROC curves')
+parser.add_argument('config', metavar='config', type=str,
+                    help='a configuration file to use')
+parser.add_argument('names', type=str, nargs='*'
+                    help="MVA configurations to use")
+ag = parser.add_argument_group('general options')
+ag.add_argument('-i', '--input', type=str, default=None,
+                help="change input directory")
+ag.add_argument('-o', '--output', type=str, default=None,
+                help="change output directory")
+args = parser.parse_args()
+
+with open(args.config) as f:
+    config = yaml.load(f)
+
+if args.output:
+    config['outdir'] = args.output
+if args.input:
+    config['indir'] = args.input
+
+useful.setup(config)
+useful.load_python(config.get('mode'))
+
+def plot_roc(outdir, bdts, x_train, y_train, w_train, x_test, y_test, w_test, vismass):
+    for cls in bdts:
+        decisions = cls.decision_function(x_test)
+        fpr, tpr, thresholds = roc_curve(y_test, decisions, sample_weight=w_test)
+        roc_auc = auc(fpr, tpr, True)
+        line = plt.plot(fpr, tpr, lw=1, label='ROC for {} (area = {:0.3f})'.format(cls.label, roc_auc))
+
+        decisions = cls.decision_function(x_train)
+        fpr, tpr, thresholds = roc_curve(y_train, decisions, sample_weight=w_train)
+        roc_auc = auc(fpr, tpr, True)
+        plt.plot(fpr, tpr, '--', lw=1, color=line[-1].get_color(), label='ROC for {} training (area = {:0.3f})'.format(cls.label, roc_auc))
+
+    fpr, tpr, thresholds = roc_curve(
+        np.concatenate((y_test, y_train)),
+        np.concatenate((x_test[:, vismass], x_train[:, vismass])),
+        sample_weight=np.concatenate((w_test, w_train))
+    )
+    roc_auc = auc(fpr, tpr, True)
+    line = plt.plot(fpr, tpr, lw=1, label='ROC for visible mass (area = {:0.2f})'.format(roc_auc))
+
+    plt.xlabel('Background efficiency')
+    plt.ylabel('Signal efficiency')
+
+    plt.legend(loc='best')
+    plt.savefig(os.path.join(outdir, 'roc.png'))
+    plt.close()

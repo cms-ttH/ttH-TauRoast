@@ -74,3 +74,14 @@ for var, score in sorted(zip(setup['variables'], bdt.feature_importances_), key=
     out += '{:30}: {:>10.4f}\n'.format(var, score)
 with codecs.open(os.path.join(outdir, "log-feature-importance.txt"), "w", encoding="utf8") as fd:
     fd.write(out)
+
+training.plot_output(outdir, bdt,
+                     [(x_test, y_test, w_test, 'testing'), (x_train, y_train, w_train, 'training')],
+                     'decision-function.png', np.linspace(-7, 7, 40),
+                     lambda cls, data: cls.decision_function(data))
+training.plot_output(outdir, bdt,
+                     [(x_test, y_test, w_test, 'testing'), (x_train, y_train, w_train, 'training')],
+                     'signal-probability.png', np.linspace(0, 1, 40),
+                     lambda cls, data: cls.predict_proba(data)[:, 1])
+# training.plot_output(outdir, bdts, [(x_test, y_test, w_test, 'testing'), (x_train, y_train, w_train, 'training')],
+#             'tmva-like.png', np.linspace(-1, 1, 40), lambda cls, data: np.apply_along_axis(training.tmva_like(cls), 1, data))
