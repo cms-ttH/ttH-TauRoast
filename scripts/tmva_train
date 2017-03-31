@@ -32,10 +32,6 @@ if args.output:
 if args.input:
     config['indir'] = args.input
 
-for k in ('indir', 'outdir', 'mvadir', 'ntupledir'):
-    if k in config:
-        config[k] = os.path.expanduser(os.path.expandvars(config[k]))
-
 useful.setup(config)
 useful.load_python(config.get('mode'))
 
@@ -61,11 +57,21 @@ for var in setup['variables']:
 print fn
 forest = Forest(fn)
 for proc, weight in sum([cfg.items() for cfg in setup['signals']], []):
+    fweight = 1.
+    if isinstance(weight, float) or isinstance(weight, int):
+        fweight = weight
+    else:
+        factory.SetSignalWeightExpression(weight)
     for p in sum([Process.expand(proc)], []):
-        factory.AddSignalTree(forest[p], 1.)
+        factory.AddSignalTree(forest[p], fweight)
 for proc, weight in sum([cfg.items() for cfg in setup['backgrounds']], []):
+    fweight = 1.
+    if isinstance(weight, float) or isinstance(weight, int):
+        fweight = weight
+    else:
+        factory.SetBackgroundWeightExpression(weight)
     for p in sum([Process.expand(proc)], []):
-        factory.AddBackgroundTree(forest[p], 1.)
+        factory.AddBackgroundTree(forest[p], fweight)
 
 factory.PrepareTrainingAndTestTree(r.TCut(), "SplitMode=Random:NormMode=NumEvents:!V")
 factory.BookMethod(r.TMVA.Types.kBDT, "BDTG", setup["tmva"])

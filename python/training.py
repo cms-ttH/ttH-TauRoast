@@ -6,28 +6,26 @@ import os
 import pickle
 import yaml
 
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
 
 from sklearn import cross_validation
 from sklearn.cross_validation import ShuffleSplit, train_test_split
 # from sklearn.tree import DecisionTreeClassifier
 # from sklearn.ensemble import AdaBoostClassifier
-from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.feature_selection import RFECV
 from sklearn.learning_curve import learning_curve
-from sklearn.metrics import roc_curve, auc, roc_auc_score
+from sklearn.metrics import roc_auc_score
 from sklearn import grid_search
 
 import ROOT as r
 
 from root_numpy import array2tree, root2array, rec2array, tree2array
 
-from ttH.TauRoast.external.sklearn_to_tmva import gbr_to_tmva
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 r.gROOT.SetBatch()
 
@@ -144,25 +142,6 @@ def train(config, name):
         plot_learning_curve(outdir, bdts, x, y)
     if 'validation_curve' in setup.get('features', []):
         run_validation_curve(outdir, bdts, x_train, y_train, w_train, x_test, y_test, w_test)
-
-    df = pd.DataFrame(x_train, columns=setup["variables"])
-    for n, bdt in enumerate(bdts):
-        out = u'Feature importance\n===================\n\n'
-        for var, score in sorted(zip(setup['variables'], bdt.feature_importances_), key=lambda (x, y): y):
-            out += '{:30}: {:>10.4f}\n'.format(var, score)
-        with codecs.open(os.path.join(outdir, "bdt-{}".format(n), "log-feature-importance.txt"), "w", encoding="utf8") as fd:
-            fd.write(out)
-
-        gbr_to_tmva(bdt, df, os.path.join(outdir, "bdt-{}".format(n), "weights.xml"), coef=COEF)
-
-    logging.info("creating roc, output")
-    plot_roc(outdir, bdts, x_train, y_train, w_train, x_test, y_test, w_test, setup['variables'].index('tt_visiblemass'))
-    plot_output(outdir, bdts, [(x_test, y_test, w_test, 'testing'), (x_train, y_train, w_train, 'training')],
-                'decision-function.png', np.linspace(-7, 7, 40), lambda cls, data: cls.decision_function(data))
-    plot_output(outdir, bdts, [(x_test, y_test, w_test, 'testing'), (x_train, y_train, w_train, 'training')],
-                'signal-probability.png', np.linspace(0, 1, 40), lambda cls, data: cls.predict_proba(data)[:, 1])
-    # plot_output(outdir, bdts, [(x_test, y_test, w_test, 'testing'), (x_train, y_train, w_train, 'training')],
-    #             'tmva-like.png', np.linspace(-1, 1, 40), lambda cls, data: np.apply_along_axis(tmva_like(cls), 1, data))
 
 
 def evaluate(config, tree, names):
@@ -337,56 +316,27 @@ def plot_learning_curve(outdir, bdts, x, y):
         plt.close()
 
 
-def plot_output(outdir, bdts, data, filename, bins, fct):
-    for n, cls in enumerate(bdts):
-        outputs = []
-        for x, y, w, label in data:
-            sig = fct(cls, x[y > .5]).ravel()
-            bkg = fct(cls, x[y < .5]).ravel()
-            w_sig = w[y > .5]
-            w_bkg = w[y < .5]
-            outputs.append((sig, bkg, w_sig, w_bkg, label))
+def plot_output(outdir, bdt, data, filename, bins, fct):
+    outputs = []
+    for x, y, w, label in data:
+        sig = fct(bdt, x[y > .5]).ravel()
+        bkg = fct(bdt, x[y < .5]).ravel()
+        w_sig = w[y > .5]
+        w_bkg = w[y < .5]
+        outputs.append((sig, bkg, w_sig, w_bkg, label))
 
-        for sig, bkg, w_sig, w_bkg, label in outputs:
-            if label == 'training':
-                sns.distplot(bkg, hist_kws={'weights': w_bkg}, bins=bins, color='r', kde=False, norm_hist=True, label='background (training)')
-                sns.distplot(sig, hist_kws={'weights': w_sig}, bins=bins, color='b', kde=False, norm_hist=True, label='signal (training)')
-            else:
-                centers = (bins[:-1] + bins[1:]) * .5
-                bcounts, _ = np.histogram(bkg, weights=w_bkg, bins=bins, density=True)
-                plt.plot(centers, bcounts, 'o', color='r', label='background (testing)')
-                scounts, _ = np.histogram(sig, weights=w_sig, bins=bins, density=True)
-                plt.plot(centers, scounts, 'o', color='b', label='signal (testing)')
-        plt.xlabel('BDT score')
-
-        plt.legend(loc='best')
-        plt.savefig(os.path.join(outdir, 'bdt-{}'.format(n), filename))
-        plt.close()
-
-
-def plot_roc(outdir, bdts, x_train, y_train, w_train, x_test, y_test, w_test, vismass):
-    for cls in bdts:
-        decisions = cls.decision_function(x_test)
-        fpr, tpr, thresholds = roc_curve(y_test, decisions, sample_weight=w_test)
-        roc_auc = auc(fpr, tpr, True)
-        line = plt.plot(fpr, tpr, lw=1, label='ROC for {} (area = {:0.3f})'.format(cls.label, roc_auc))
-
-        decisions = cls.decision_function(x_train)
-        fpr, tpr, thresholds = roc_curve(y_train, decisions, sample_weight=w_train)
-        roc_auc = auc(fpr, tpr, True)
-        plt.plot(fpr, tpr, '--', lw=1, color=line[-1].get_color(), label='ROC for {} training (area = {:0.3f})'.format(cls.label, roc_auc))
-
-    fpr, tpr, thresholds = roc_curve(
-        np.concatenate((y_test, y_train)),
-        np.concatenate((x_test[:, vismass], x_train[:, vismass])),
-        sample_weight=np.concatenate((w_test, w_train))
-    )
-    roc_auc = auc(fpr, tpr, True)
-    line = plt.plot(fpr, tpr, lw=1, label='ROC for visible mass (area = {:0.2f})'.format(roc_auc))
-
-    plt.xlabel('Background efficiency')
-    plt.ylabel('Signal efficiency')
+    for sig, bkg, w_sig, w_bkg, label in outputs:
+        if label == 'training':
+            sns.distplot(bkg, hist_kws={'weights': w_bkg}, bins=bins, color='r', kde=False, norm_hist=True, label='background (training)')
+            sns.distplot(sig, hist_kws={'weights': w_sig}, bins=bins, color='b', kde=False, norm_hist=True, label='signal (training)')
+        else:
+            centers = (bins[:-1] + bins[1:]) * .5
+            bcounts, _ = np.histogram(bkg, weights=w_bkg, bins=bins, density=True)
+            plt.plot(centers, bcounts, 'o', color='r', label='background (testing)')
+            scounts, _ = np.histogram(sig, weights=w_sig, bins=bins, density=True)
+            plt.plot(centers, scounts, 'o', color='b', label='signal (testing)')
+    plt.xlabel('BDT score')
 
     plt.legend(loc='best')
-    plt.savefig(os.path.join(outdir, 'roc.png'))
+    plt.savefig(os.path.join(outdir, filename))
     plt.close()

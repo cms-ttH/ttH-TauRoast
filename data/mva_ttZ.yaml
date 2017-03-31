@@ -1,8 +1,7 @@
-tmva:
-  ""
+tmva: ""
 
 sklearn:
-  n_estimators: 500
+  n_estimators: 800
   max_depth: 3
   max_features: 'sqrt'
   min_samples_leaf: 100
