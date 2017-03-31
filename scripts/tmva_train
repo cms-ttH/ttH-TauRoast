@@ -6,18 +6,25 @@ import yaml
 import ROOT as r
 
 r.gROOT.SetBatch()
+r.gSystem.Load("libttHTauRoast")
+
+from ttH.TauRoast import useful, training
+from ttH.TauRoast.botany import Forest, Leaf
+from ttH.TauRoast.processing import Process
 
 parser = argparse.ArgumentParser(description='Train TMVA.')
-parser.add_argument('config', metavar='config', type=str, nargs=1,
-        help='a configuration file to use')
+parser.add_argument('config', metavar='config', type=str,
+                    help='a configuration file to use')
+parser.add_argument('name', type=str,
+                    help="an MVA configuration to use")
 ag = parser.add_argument_group('general options')
 ag.add_argument('-i', '--input', type=str, default=None,
-        help="change input directory")
+                help="change input directory")
 ag.add_argument('-o', '--output', type=str, default=None,
-        help="change output directory")
+                help="change output directory")
 args = parser.parse_args()
 
-with open(args.config[0]) as f:
+with open(args.config) as f:
     config = yaml.load(f)
 
 if args.output:
@@ -25,14 +32,43 @@ if args.output:
 if args.input:
     config['indir'] = args.input
 
-from ttH.TauRoast import useful
-from ttH.TauRoast.variation import setup, train
+for k in ('indir', 'outdir', 'mvadir', 'ntupledir'):
+    if k in config:
+        config[k] = os.path.expanduser(os.path.expandvars(config[k]))
 
-useful.channel(config['channel'])
-useful.load_python()
+useful.setup(config)
+useful.load_python(config.get('mode'))
 
-fn = os.path.join(config["indir"], "ntuple.root")
-ofn = os.path.join(config["outdir"], "tmva.root")
+setup = training.load(config, args.name)
+outdir = os.path.join(config["outdir"], 'tmva_' + args.name)
 
-cfg = config['mva']
-train(fn, cfg['signals'], cfg['backgrounds'], cfg['variables'], ofn)
+fn = os.path.join(config.get("indir", config["outdir"]), "ntuple.root")
+ofn = os.path.join(outdir, "tmva.root")
+
+wdir = os.path.join(os.path.dirname(ofn), 'weights')
+if not os.path.exists(wdir):
+    os.makedirs(wdir)
+r.TMVA.gConfig().GetIONames().fWeightFileDir = wdir
+
+outfile = r.TFile(ofn, "RECREATE")
+factory = r.TMVA.Factory("TMVAClassification", outfile,
+                         "!V:!Silent:Transformations=I;D;P;G,D:AnalysisType=Classification")
+
+leaves = dict((l.name, l.kind) for l in Leaf.leaves())
+for var in setup['variables']:
+    factory.AddVariable(var, leaves[var])
+
+print fn
+forest = Forest(fn)
+for proc, weight in sum([cfg.items() for cfg in setup['signals']], []):
+    for p in sum([Process.expand(proc)], []):
+        factory.AddSignalTree(forest[p], 1.)
+for proc, weight in sum([cfg.items() for cfg in setup['backgrounds']], []):
+    for p in sum([Process.expand(proc)], []):
+        factory.AddBackgroundTree(forest[p], 1.)
+
+factory.PrepareTrainingAndTestTree(r.TCut(), "SplitMode=Random:NormMode=NumEvents:!V")
+factory.BookMethod(r.TMVA.Types.kBDT, "BDTG", setup["tmva"])
+factory.TrainAllMethods()
+factory.TestAllMethods()
+factory.EvaluateAllMethods()

@@ -1,19 +1,12 @@
-trees:
-  - label: 'depth=3, lr=0.01'
-    n_estimators: 500
-    max_depth: 3
-    max_features: 'sqrt'
-    min_samples_leaf: 100
-    learning_rate: 0.01
+tmva:
+  ""
 
-features:
-  - dummy
-  - training
-  # - learning
-  # - parameters
-  # - selection
-  # - validation
-  - validation_curve
+sklearn:
+  n_estimators: 500
+  max_depth: 3
+  max_features: 'sqrt'
+  min_samples_leaf: 100
+  learning_rate: 0.01
 
 signals:
   - ttH2Nonbb_125_train: 1.0

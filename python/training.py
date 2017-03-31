@@ -108,27 +108,11 @@ def create_bdts(outdir, setup, x_train, y_train, w_train):
     #                          algorithm='SAMME',
     #                          n_estimators=800,
     #                          learning_rate=0.5)
-    if 'training' in setup.get('features', []):
-        logging.info("training bdt(s)")
-        for n, cfg in enumerate(setup['trees']):
-            dirname = os.path.join(outdir, 'bdt-{}'.format(n))
-            if not os.path.exists(dirname):
-                os.makedirs(dirname)
-            label = cfg.pop('label', 'bdt-{}'.format(n))
-            bdt = GradientBoostingClassifier(**cfg)
+    for dirname in glob(os.path.join(outdir, "bdt-*")):
+        with open(os.path.join(dirname, "bdt.pkl"), "rb") as fd:
+            bdt, label = pickle.load(fd)
             bdt.label = label
-            bdt.fit(x_train, y_train, sample_weight=w_train)
-            with open(os.path.join(dirname, "bdt.pkl"), 'wb') as fd:
-                pickle.dump((bdt, label), fd)
-            with codecs.open(os.path.join(dirname, "configuration.txt"), "w", encoding="utf8") as fd:
-                fd.write('{}\n'.format(cfg))
             yield bdt
-    else:
-        for dirname in glob(os.path.join(outdir, "bdt-*")):
-            with open(os.path.join(dirname, "bdt.pkl"), "rb") as fd:
-                bdt, label = pickle.load(fd)
-                bdt.label = label
-                yield bdt
 
 
 def train(config, name):

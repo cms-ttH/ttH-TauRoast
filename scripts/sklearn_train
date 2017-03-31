@@ -1,0 +1,76 @@
+#!/usr/bin/env python
+
+import argparse
+import codecs
+import numpy as np
+import os
+import pandas as pd
+import pickle
+import yaml
+import ROOT as r
+
+from sklearn.cross_validation import train_test_split
+from sklearn.ensemble import GradientBoostingClassifier
+
+r.gROOT.SetBatch()
+r.gSystem.Load("libttHTauRoast")
+
+from ttH.TauRoast import useful, training
+from ttH.TauRoast.external.sklearn_to_tmva import gbr_to_tmva
+
+parser = argparse.ArgumentParser(description='Train TMVA.')
+parser.add_argument('config', metavar='config', type=str,
+                    help='a configuration file to use')
+parser.add_argument('name', type=str,
+                    help="an MVA configuration to use")
+ag = parser.add_argument_group('general options')
+ag.add_argument('-i', '--input', type=str, default=None,
+                help="change input directory")
+ag.add_argument('-o', '--output', type=str, default=None,
+                help="change output directory")
+args = parser.parse_args()
+
+with open(args.config) as f:
+    config = yaml.load(f)
+
+if args.output:
+    config['outdir'] = args.output
+if args.input:
+    config['indir'] = args.input
+
+useful.setup(config)
+useful.load_python(config.get('mode'))
+
+setup = training.load(config, args.name)
+outdir = os.path.join(config["outdir"], 'sklearn_' + args.name)
+if not os.path.exists(outdir):
+    os.makedirs(outdir)
+
+signal, signal_weight, background, background_weight = training.read_inputs(config, setup)
+training.plot_correlations(outdir, setup["variables"], signal, background)
+training.plot_inputs(outdir, setup["variables"], signal, signal_weight, background, background_weight)
+
+x = np.concatenate((signal, background))
+y = np.concatenate((np.ones(signal.shape[0]),
+                    np.zeros(background.shape[0])))
+w = np.concatenate((signal_weight, background_weight))
+
+x_train, x_test, y_train, y_test, w_train, w_test = train_test_split(x, y, w, test_size=1.0 / training.CV)
+
+bdt = GradientBoostingClassifier(**setup["sklearn"])
+bdt.label = args.name
+bdt.fit(x_train, y_train, sample_weight=w_train)
+with open(os.path.join(outdir, "bdt.pkl"), 'wb') as fd:
+    pickle.dump((bdt, args.name), fd)
+with open(os.path.join(outdir, "data.pkl"), 'wb') as fd:
+    pickle.dump((x_train, x_test, y_train, y_test, w_train, w_test), fd)
+with codecs.open(os.path.join(outdir, "configuration.txt"), "w", encoding="utf8") as fd:
+    fd.write('{}\n'.format(setup["sklearn"]))
+
+df = pd.DataFrame(x_train, columns=setup["variables"])
+gbr_to_tmva(bdt, df, os.path.join(outdir, "weights.xml"), coef=training.COEF)
+out = u'Feature importance\n===================\n\n'
+for var, score in sorted(zip(setup['variables'], bdt.feature_importances_), key=lambda (x, y): y):
+    out += '{:30}: {:>10.4f}\n'.format(var, score)
+with codecs.open(os.path.join(outdir, "log-feature-importance.txt"), "w", encoding="utf8") as fd:
+    fd.write(out)
