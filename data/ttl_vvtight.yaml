@@ -4,7 +4,7 @@ channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v45
 # ntupledir: /scratch365/mwolf3/ttH/v32
-outdir: ~/www/ttH/v45/ttl_2017-03-31_vvtight
+outdir: ~/www/ttH/v45/ttl_2017-04-03_vvtight
 histformat: "{v}_{c}_{p}"
 tau ID: VVTight
 
@@ -46,12 +46,11 @@ limits:
   - rares
 
 discriminants:
-  - NumInclusiveJets
   - TT_VisibleMass
   - TMVA_likelihood
-  - TMVA_likelihood_linear
   - TMVA5_tt
   - TMVA5_legacy
+  - BDT_tt
 
 baseline cuts:
     - "l ID": lepton_id == superslim::Lepton::MVA

@@ -50,35 +50,18 @@ Plot(
     essential=True
 )
 
-Plot(
-    name="general/TMVA_likelihood_linear",
-    values=["tmva_likelihood_linear"],
-    labels=["Likelihood value (TMVA)", "Events"],
-    binning=[4, 0, 4],
-    blind=True,
-    essential=True
-)
-
 for mva in "legacy tt ttZ".split():
     Plot(
         name="general/BDT_" + mva,
         values=["bdt_" + mva],
         labels=["BDT value (signal prob)", "Events"],
-        binning=[10, 0, 1]
+        binning=[5, 0, 1]
     )
     Plot(
         name="general/TMVA5_" + mva,
         values=["tmva_" + mva],
         labels=["BDT value (TMVA)", "Events"],
         binning=[5, -1, 1],
-        blind=True,
-        essential=True
-    )
-    Plot(
-        name="general/TMVA6_" + mva,
-        values=["tmva_" + mva],
-        labels=["BDT value (TMVA)", "Events"],
-        binning=[6, -1, 1],
         blind=True,
         essential=True
     )
@@ -95,14 +78,6 @@ for mva in "legacy tt ttZ".split():
         values=["tmva_" + mva],
         labels=["BDT value (TMVA)", "Events"],
         binning=[10, -1, 1],
-        blind=True,
-        essential=True
-    )
-    Plot(
-        name="general/TMVA_fine_" + mva,
-        values=["tmva_" + mva],
-        labels=["BDT value (TMVA)", "Events"],
-        binning=[60, -1, 1],
         blind=True,
         essential=True
     )
