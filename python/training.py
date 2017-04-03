@@ -9,6 +9,9 @@ import yaml
 import numpy as np
 import pandas as pd
 
+from array import array
+from root_numpy.tmva import evaluate_reader
+
 from sklearn import cross_validation
 from sklearn.cross_validation import ShuffleSplit, train_test_split
 # from sklearn.tree import DecisionTreeClassifier
@@ -155,20 +158,31 @@ def evaluate(config, tree, names):
     output = []
     dtype = []
     for name in names:
-        setup = load(config, name)
-        data = rec2array(tree2array(tree.raw(), setup["variables"]))
+        setup = load(config, name.split("_")[1])
+        print name, setup["variables"]
+        if name.startswith("sklearn"):
+            data = rec2array(tree2array(tree.raw(), setup["variables"]))
 
-        default = os.path.join(config.get("indir", config["outdir"]), "sklearn_" + name, "bdt-0")
-        fn = os.path.join(config.get("mvadir", default), name + ".pkl")
-        with open(fn, 'rb') as fd:
-            bdt, label = pickle.load(fd)
-        scores = []
-        tmva = []
-        if len(data) > 0:
-            scores = bdt.predict_proba(data)[:, 1]
-            tmva = np.apply_along_axis(tmva_like(bdt), 1, data)
-        output += [scores, tmva]
-        dtype += [('bdt_' + name, 'float64'), ('tmva_' + name, 'float64')]
+            fn = os.path.join(config["mvadir"], name + ".pkl")
+            with open(fn, 'rb') as fd:
+                bdt, label = pickle.load(fd)
+            scores = []
+            tmva = []
+            if len(data) > 0:
+                scores = bdt.predict_proba(data)[:, 1]
+                tmva = np.apply_along_axis(tmva_like(bdt), 1, data)
+            output += [scores, tmva]
+            dtype += [(name, 'float64'), (name.replace('sklearn', 'tmvalike'), 'float64')]
+        elif name.startswith("tmva"):
+            fn = os.path.join(config["mvadir"], name + ".xml")
+            reader = r.TMVA.Reader()
+            for var in setup['variables']:
+                reader.AddVariable(var, array('f', [0.]))
+            reader.BookMVA("BDT", fn)
+            scores = evaluate_reader(reader, "BDT", data)
+            output += [scores]
+            dtype += [(name, 'float64')]
+
     if likelihood:
         def lh(values):
             return likelihood.GetBinContent(likelihood.FindBin(*values))

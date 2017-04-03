@@ -26,6 +26,26 @@ args = parser.parse_args()
 with root_open(args.infile) as f:
     likelihood = r.TH2F("hist", "Likelihood;BDT score for tt;BDT score for ttZ", args.bins, -1, 1, args.bins, -1, 1)
     f.ttH2Nonbb_125_train_mva.Draw("tmva_tt:tmva_ttZ", hist=likelihood)
+
+    for x in range(likelihood.GetNbinsX()):
+        avg = 0.
+        n = 0
+        for y in range(likelihood.GetNbinsY()):
+            bn = likelihood.GetBin(x + 1, y + 1)
+            val = likelihood.GetBinContent(bn)
+            if val > 0:
+                n += 1
+                avg += val
+        if n == 0:
+            continue
+        avg /= n
+        for y in range(likelihood.GetNbinsY()):
+            bn = likelihood.GetBin(x + 1, y + 1)
+            val = likelihood.GetBinContent(bn)
+            if val > 0:
+                val = avg + (val - avg) / 2
+                likelihood.SetBinContent(bn, val)
+
     likelihood.Scale(1. / likelihood.GetMaximum())
     with root_open(args.outfile, "recreate") as of:
         of.WriteObject(likelihood, "likelihood_raw", "WriteDelete")
