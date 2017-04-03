@@ -117,6 +117,7 @@ for name in args.names:
         roc_auc = auc(fpr, tpr, True)
         plt.plot(fpr, tpr, '--', lw=1, color=line[-1].get_color(), label='ROC for {} training (area = {:0.3f})'.format(name, roc_auc))
 
+plt.xlim([0., 1.])
 plt.xlabel('Background efficiency')
 plt.ylabel('Signal efficiency')
 
