@@ -71,7 +71,7 @@ def read_inputs(config, setup):
                 w = np.array([weight] * len(d))
             else:
                 w = rec2array(root2array(fn, str(p), [weight]))
-            w *= p.cross_section
+            w *= p.cross_section / p.events
             if signal is not None:
                 signal = np.concatenate((signal, d))
                 signal_weights = np.concatenate((signal_weights, w))
@@ -89,7 +89,7 @@ def read_inputs(config, setup):
                 w = np.array([weight] * len(d))
             else:
                 w = rec2array(root2array(fn, str(p), [weight]))
-            w *= p.cross_section
+            w *= p.cross_section / p.events
             if background is not None:
                 background = np.concatenate((background, d))
                 background_weights = np.concatenate((background_weights, w))
@@ -97,7 +97,7 @@ def read_inputs(config, setup):
                 background = d
                 background_weights = w
 
-    factor = float(len(signal)) / len(background)
+    factor = np.sum(signal_weights) / np.sum(background_weights)
     logging.info("renormalizing background events by factor {}".format(factor))
     background_weights *= factor
 
