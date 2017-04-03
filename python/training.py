@@ -161,9 +161,8 @@ def evaluate(config, tree, names):
     dtype = []
     for name in names:
         setup = load(config, name.split("_")[1])
-        print name, setup["variables"]
+        data = rec2array(tree2array(tree.raw(), setup["variables"]))
         if name.startswith("sklearn"):
-            data = rec2array(tree2array(tree.raw(), setup["variables"]))
 
             fn = os.path.join(config["mvadir"], name + ".pkl")
             with open(fn, 'rb') as fd:

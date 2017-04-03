@@ -10,9 +10,11 @@ tau ID: VTight
 
 mvadir: data/bdt
 mvas:
-  - legacy
-  - tt
-  - ttZ
+  - sklearn_legacy
+  - sklearn_tt
+  - sklearn_ttZ
+  - tmva_tt
+  - tmva_ttZ
 
 lumi: 35900
 
