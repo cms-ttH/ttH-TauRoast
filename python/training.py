@@ -176,7 +176,7 @@ def evaluate(config, tree, names):
             dtype += [(name, 'float64'), (name.replace('sklearn', 'tmvalike'), 'float64')]
         elif name.startswith("tmva"):
             fn = os.path.join(config["mvadir"], name + ".xml")
-            reader = r.TMVA.Reader()
+            reader = r.TMVA.Reader("Silent")
             for var in setup['variables']:
                 reader.AddVariable(var, array('f', [0.]))
             reader.BookMVA("BDT", fn)
