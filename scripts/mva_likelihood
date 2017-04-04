@@ -1,0 +1,129 @@
+#!/usr/bin/env python
+
+import argparse
+import numpy as np
+import ROOT as r
+
+from rootpy.io import root_open
+from rootpy.plotting import Hist
+
+r.gROOT.SetBatch()
+r.gStyle.SetOptStat(0)
+
+parser = argparse.ArgumentParser(description='create likelihood mapping for combining MVAs')
+parser.add_argument('--bins', help='how many bins to use', type=int, default=60)
+parser.add_argument('infile', help='input filename')
+parser.add_argument('outfile', help='output filename')
+args = parser.parse_args()
+
+with root_open(args.infile) as f:
+    likelihood = r.TH2F("hist", "Likelihood;BDT score for tt;BDT score for ttZ", args.bins, -1, 1, args.bins, -1, 1)
+    f.ttH2Nonbb_125_train_mva.Draw("tmva_tt:tmva_ttZ", "0.000000005172", hist=likelihood)
+
+    f.ttjets_dl_pow_train_mva.AddFriend(f.ttjets_dl_pow_train)
+    f.ttjets_sl_pow_train_mva.AddFriend(f.ttjets_sl_pow_train)
+
+    likelihood_ttZ = r.TH2F("histttZ", "Likelihood;BDT score for tt;BDT score for ttZ", args.bins, -1, 1, args.bins, -1, 1)
+    likelihood_tt_sl = r.TH2F("histsl", "Likelihood;BDT score for tt;BDT score for ttZ", args.bins, -1, 1, args.bins, -1, 1)
+    likelihood_tt_dl = r.TH2F("histdl", "Likelihood;BDT score for tt;BDT score for ttZ", args.bins, -1, 1, args.bins, -1, 1)
+    f.ttZ_train_mva.Draw("tmva_tt:tmva_ttZ", "9 * 0.000000000506", hist=likelihood_ttZ)
+    f.ttjets_dl_pow_train_mva.Draw("tmva_tt:tmva_ttZ", "0.0000003492 * w_fake", hist=likelihood_tt_dl)
+    f.ttjets_sl_pow_train_mva.Draw("tmva_tt:tmva_ttZ", "0.0000007280 * w_fake", hist=likelihood_tt_sl)
+
+    print "DL", likelihood_tt_dl.Integral()
+    print "SL", likelihood_tt_sl.Integral()
+    print "ttZ", likelihood_ttZ.Integral()
+
+    likelihood_ttZ.Add(likelihood_tt_sl)
+    likelihood_ttZ.Add(likelihood_tt_dl)
+    likelihood.Divide(likelihood_ttZ)
+
+    # for x in range(likelihood.GetNbinsX()):
+    #     avg = 0.
+    #     n = 0
+    #     for y in range(likelihood.GetNbinsY()):
+    #         bn = likelihood.GetBin(x + 1, y + 1)
+    #         val = likelihood.GetBinContent(bn)
+    #         if val > 0:
+    #             n += 1
+    #             avg += val
+    #     if n == 0:
+    #         continue
+    #     avg /= n
+    #     for y in range(likelihood.GetNbinsY()):
+    #         bn = likelihood.GetBin(x + 1, y + 1)
+    #         val = likelihood.GetBinContent(bn)
+    #         if val > 0:
+    #             val = avg + (val - avg) / 2
+    #             likelihood.SetBinContent(bn, val)
+
+    likelihood.Scale(1. / likelihood.GetMaximum())
+    with root_open(args.outfile, "recreate") as of:
+        of.WriteObject(likelihood, "likelihood_raw", "WriteDelete")
+    c = r.TCanvas()
+    likelihood.Draw("COLZ")
+    c.SaveAs("likelihood_raw.pdf")
+
+    t = f.ttH2Nonbb_125_train_mva
+    values = [likelihood.GetBinContent(likelihood.FindBin(e.tmva_tt, e.tmva_ttZ)) for e in t]
+
+    fractions = [0, 5, 17.5, 37.5, 65, 100]
+    fractions = np.linspace(0, 100, 6)
+    quants = [np.percentile(values, n) for n in fractions]
+    quants[-1] += .001
+    remap = Hist(quants)
+
+    for x in range(likelihood.GetNbinsX()):
+        for y in range(likelihood.GetNbinsY()):
+            bn = likelihood.GetBin(x + 1, y + 1)
+            likelihood.SetBinContent(bn, remap.FindBin(likelihood.GetBinContent(bn)) - 1)
+    with root_open(args.outfile, "update") as of:
+        of.WriteObject(likelihood, "likelihood", "WriteDelete")
+    likelihood.Draw("COLZ")
+    c.SaveAs("likelihood.pdf")
+
+    trees = "ttH2Nonbb_125 ttZ ttjets_sl_pow ttjets_dl_pow".split()
+    hists = []
+
+    for tree in trees:
+        t = getattr(f, tree + "_train_mva")
+        hist = r.TH2F("remapped_" + tree, "Likelihood;BDT score for tt;BDT score for ttZ", args.bins, -1, 1, args.bins, -1, 1)
+        t.Draw("tmva_tt:tmva_ttZ", hist=hist)
+
+        hist.Draw("COLZ")
+        c.SaveAs("contribution_{}.pdf".format(tree))
+        c.SetLogz()
+        c.SaveAs("contribution_{}_log.pdf".format(tree))
+        c.SetLogz(False)
+        hists.append(hist)
+
+    h = hists[-2]
+    h.Add(hists[-1])
+    h.Draw("COLZ")
+    c.SaveAs("contribution_tt.pdf")
+    c.SetLogz()
+    c.SaveAs("contribution_tt_log.pdf")
+    c.SetLogz(False)
+
+    hists = []
+    for t in [getattr(f, t + "_train_mva") for t in trees]:
+        mapped = Hist(np.linspace(0, 5, 6), name=t.GetName() + '_hist')
+        for e in t:
+            mapped.Fill(likelihood.GetBinContent(likelihood.FindBin(e.tmva_tt, e.tmva_ttZ)))
+        hists.append(mapped)
+    last = hists.pop(-1)
+    hists[-1].Add(last)
+
+    for h in hists:
+        h.Scale(1. / h.Integral())
+
+    ttH, ttZ, ttjets = hists
+    ttH.SetLineColor(r.kRed)
+    ttZ.SetLineColor(r.kGreen)
+    ttjets.SetLineColor(r.kBlack)
+    ttjets.Draw()
+    ttZ.Draw("same")
+    ttH.Draw("same")
+    c.SaveAs("output.pdf")
+
+    likelihood.SetDirectory(0)
