@@ -57,7 +57,7 @@ for mva, bins in itertools.product(mvas, binnings):
         name="general/Sklearn{}_{}".format(bins, mva),
         values=["sklearn_" + mva],
         labels=["BDT value (signal prob)", "Events"],
-        binning=[5, 0, 1]
+        binning=[bins, 0, 1]
     )
 
 Plot(
