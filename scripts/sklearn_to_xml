@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+
+import argparse
+import os
+import pandas as pd
+import pickle
+import yaml
+import ROOT as r
+
+r.gROOT.SetBatch()
+r.gSystem.Load("libttHTauRoast")
+
+from ttH.TauRoast import useful, training
+from ttH.TauRoast.external.sklearn_to_tmva import gbr_to_tmva
+
+parser = argparse.ArgumentParser(description='Save a scikit-learn BDT as TMVA weights.')
+parser.add_argument('config', metavar='config', type=str,
+                    help='a configuration file to use')
+parser.add_argument('name', type=str,
+                    help="an MVA configuration to use")
+parser.add_argument('coefficient', type=float,
+                    help="a coefficient to use when translating to TMVA")
+parser.add_argument('filename', type=str,
+                    help="a filename for the resulting weight file")
+args = parser.parse_args()
+
+with open(args.config) as f:
+    config = yaml.load(f)
+
+useful.setup(config)
+useful.load_python(config.get('mode'))
+
+setup = training.load(config, args.name)
+
+dirname = os.path.join(config["outdir"], 'sklearn_' + args.name)
+with open(os.path.join(dirname, "bdt.pkl"), 'rb') as fd:
+    bdt, label = pickle.load(fd)
+with open(os.path.join(dirname, "data.pkl"), 'rb') as fd:
+    x_train, x_test, y_train, y_test, w_train, w_test = pickle.load(fd)
+
+df = pd.DataFrame(x_train, columns=setup["variables"])
+gbr_to_tmva(bdt, df, args.filename, coef=args.coefficient)

@@ -36,17 +36,6 @@ matplotlib.style.use('ggplot')
 
 CV = 5
 NJOBS = 48
-COEF = 3
-
-
-def tmva_like(cls):
-    def fun(data):
-        ret = 0
-        for t in cls.estimators_[:, 0]:
-            r = t.tree_.predict(np.array([list(data)], dtype="float32")) / cls.n_estimators * COEF
-            ret += r[0, 0]
-        return 2.0 / (1.0 + np.exp(-2.0 * ret)) - 1
-    return fun
 
 
 def load(config, name):
@@ -163,26 +152,23 @@ def evaluate(config, tree, names):
         setup = load(config, name.split("_")[1])
         data = rec2array(tree2array(tree.raw(), setup["variables"]))
         if name.startswith("sklearn"):
-
             fn = os.path.join(config["mvadir"], name + ".pkl")
             with open(fn, 'rb') as fd:
                 bdt, label = pickle.load(fd)
             scores = []
-            tmva = []
             if len(data) > 0:
                 scores = bdt.predict_proba(data)[:, 1]
-                tmva = np.apply_along_axis(tmva_like(bdt), 1, data)
-            output += [scores, tmva]
-            dtype += [(name, 'float64'), (name.replace('sklearn', 'tmvalike'), 'float64')]
-        elif name.startswith("tmva"):
-            fn = os.path.join(config["mvadir"], name + ".xml")
-            reader = r.TMVA.Reader("Silent")
-            for var in setup['variables']:
-                reader.AddVariable(var, array('f', [0.]))
-            reader.BookMVA("BDT", fn)
-            scores = evaluate_reader(reader, "BDT", data)
             output += [scores]
             dtype += [(name, 'float64')]
+
+        fn = os.path.join(config["mvadir"], name + ".xml")
+        reader = r.TMVA.Reader("Silent")
+        for var in setup['variables']:
+            reader.AddVariable(var, array('f', [0.]))
+        reader.BookMVA("BDT", fn)
+        scores = evaluate_reader(reader, "BDT", data)
+        output += [scores]
+        dtype += [(name.replace("sklearn", "tmvalike"), 'float64')]
 
     if likelihood:
         def lh(values):

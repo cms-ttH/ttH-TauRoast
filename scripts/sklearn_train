@@ -4,7 +4,6 @@ import argparse
 import codecs
 import numpy as np
 import os
-import pandas as pd
 import pickle
 import yaml
 import ROOT as r
@@ -16,7 +15,6 @@ r.gROOT.SetBatch()
 r.gSystem.Load("libttHTauRoast")
 
 from ttH.TauRoast import useful, training
-from ttH.TauRoast.external.sklearn_to_tmva import gbr_to_tmva
 
 parser = argparse.ArgumentParser(description='Train TMVA.')
 parser.add_argument('config', metavar='config', type=str,
@@ -67,8 +65,6 @@ with open(os.path.join(outdir, "data.pkl"), 'wb') as fd:
 with codecs.open(os.path.join(outdir, "configuration.txt"), "w", encoding="utf8") as fd:
     fd.write('{}\n'.format(setup["sklearn"]))
 
-df = pd.DataFrame(x_train, columns=setup["variables"])
-gbr_to_tmva(bdt, df, os.path.join(outdir, "weights.xml"), coef=training.COEF)
 out = u'Feature importance\n===================\n\n'
 for var, score in sorted(zip(setup['variables'], bdt.feature_importances_), key=lambda (x, y): y):
     out += '{:30}: {:>10.4f}\n'.format(var, score)
