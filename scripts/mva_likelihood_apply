@@ -16,8 +16,8 @@ r.gROOT.SetBatch()
 r.gStyle.SetOptStat(0)
 
 parser = argparse.ArgumentParser(description='create likelihood mapping for combining MVAs')
-parser.add_argument('--bins', help='how many bins to use', type=int, default=60)
 parser.add_argument('infile', help='input filename')
+parser.add_argument('varname', help='variable name for output')
 parser.add_argument('ntuple', help='ntuple to add likelihood to')
 args = parser.parse_args()
 
@@ -33,23 +33,23 @@ for treename in list_trees(backup):
     branches = []
     print "processing", treename
     for b in list_branches(backup, treename):
-        if 'likelihood' not in b:
+        if b != args.varname:
             branches.append(b)
     try:
         data = root2array(backup, treename, branches)
     except ValueError:
         tree = array2tree(
-            np.array([], dtype=[('tmva_likelihood', 'float64')]),
+            np.array([], dtype=[(args.varname, 'float64')]),
             treename
         )
         with root_open(args.ntuple, 'update') as f:
             f.WriteObject(tree, treename, "WriteDelete")
         continue
     likelihoods = []
-    for tt, ttZ in zip(data['tmva_tt'], data['tmva_ttZ']):
+    for tt, ttZ in zip(data['tmvalike_tt'], data['tmvalike_ttZ']):
         likelihoods.append(likelihood.GetBinContent(likelihood.FindBin(tt, ttZ)))
     tree = array2tree(
-        rfn.append_fields(data, names=['tmva_likelihood'], data=[likelihoods]),
+        rfn.append_fields(data, names=[args.varname], data=[likelihoods]),
         treename
     )
     with root_open(args.ntuple, 'update') as f:

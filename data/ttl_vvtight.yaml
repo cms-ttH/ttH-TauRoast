@@ -47,10 +47,14 @@ limits:
 
 discriminants:
   - TT_VisibleMass
-  - TMVA_likelihood
-  - TMVA5_tt
-  - TMVA5_legacy
-  - BDT_tt
+  - TMVAlike5_tt
+  - TMVAlike6_tt
+  - TMVAlike7_tt
+  - TMVAlike8_tt
+  - TMVAlike5_likelihood
+  - TMVAlike6_likelihood
+  - TMVAlike7_likelihood
+  - TMVAlike8_likelihood
 
 baseline cuts:
     - "l ID": lepton_id == superslim::Lepton::MVA

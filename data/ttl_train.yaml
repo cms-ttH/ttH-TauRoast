@@ -7,7 +7,12 @@ outdir: ~/www/ttH/v6/ttl_train
 histformat: "{p}_{c}_{v}"
 
 mvadir: data/bdt
-mvas: [tt, ttZ]
+mvas:
+  - sklearn_legacy
+  - sklearn_tt
+  - sklearn_ttZ
+  - tmva_tt
+  - tmva_ttZ
 
 lumi: 12900
 # lumi: 36300

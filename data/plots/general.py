@@ -24,62 +24,40 @@ Leaf('nalltausjetfake', 'i', 'result = std::count_if(all_taus.begin(), all_taus.
 Leaf('category', 'i', 'result = min(max(0, btags(jets) - 1), 1) * 3 + min(max(0, len(jets) - 2), 2)')
 Leaf('category_lj', 'i', 'result = min(max(0, btags(jets) - 2), 2) * 3 + min(max(0, len(jets) - 4), 2)')
 
-Plot(
-    name="general/TMVA_both",
-    values=["tmva_ttZ", "tmva_tt"],
-    labels=["BDT output (t#bar{t})", "BDT output (t#bar{t}Z)", "Events"],
-    binning=[40, -1, 1, 40, -1, 1],
-    blind=True,
-    essential=True
-)
-
-Plot(
-    name="general/TMVA_both_coarse",
-    values=["tmva_ttZ", "tmva_tt"],
-    labels=["BDT output (t#bar{t})", "BDT output (t#bar{t}Z)", "Events"],
-    binning=[5, -1, 1, 5, -1, 1],
-    blind=True
-)
-
-Plot(
-    name="general/TMVA_likelihood",
-    values=["tmva_likelihood"],
-    labels=["Likelihood value (TMVA)", "Events"],
-    binning=[5, 0, 5],
-    blind=True,
-    essential=True
-)
-
-for mva in "legacy tt ttZ".split():
+binnings = [5, 6, 7, 8]
+mvas = 'tt ttZ legacy'.split()
+for bins in binnings:
     Plot(
-        name="general/BDT_" + mva,
-        values=["bdt_" + mva],
+        name="general/TMVAlike{}_likelihood".format(bins),
+        values=["tmvalike{}_likelihood".format(bins)],
+        labels=["Likelihood value (TMVA)", "Events"],
+        binning=[bins, 0, bins],
+        blind=True,
+        essential=True
+    )
+for mva, bins in itertools.product(mvas, binnings):
+    if mva != 'legacy':
+        Plot(
+            name="general/TMVA{}_{}".format(bins, mva),
+            values=["tmva_" + mva],
+            labels=["BDT value (TMVA)", "Events"],
+            binning=[bins, -1, 1],
+            blind=True,
+            essential=True
+        )
+    Plot(
+        name="general/TMVAlike{}_{}".format(bins, mva),
+        values=["tmvalike_" + mva],
+        labels=["BDT value (TMVA)", "Events"],
+        binning=[bins, -1, 1],
+        blind=True,
+        essential=True
+    )
+    Plot(
+        name="general/Sklearn{}_{}".format(bins, mva),
+        values=["sklearn_" + mva],
         labels=["BDT value (signal prob)", "Events"],
         binning=[5, 0, 1]
-    )
-    Plot(
-        name="general/TMVA5_" + mva,
-        values=["tmva_" + mva],
-        labels=["BDT value (TMVA)", "Events"],
-        binning=[5, -1, 1],
-        blind=True,
-        essential=True
-    )
-    Plot(
-        name="general/TMVA8_" + mva,
-        values=["tmva_" + mva],
-        labels=["BDT value (TMVA)", "Events"],
-        binning=[8, -1, 1],
-        blind=True,
-        essential=True
-    )
-    Plot(
-        name="general/TMVA10_" + mva,
-        values=["tmva_" + mva],
-        labels=["BDT value (TMVA)", "Events"],
-        binning=[10, -1, 1],
-        blind=True,
-        essential=True
     )
 
 Plot(
