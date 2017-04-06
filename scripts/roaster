@@ -80,7 +80,6 @@ from ttH.TauRoast import stylish, useful
 from ttH.TauRoast.actionable import analyze, add_mva, dump_categories, dump_cuts, fill, plot, datacard
 from ttH.TauRoast.plotting import Plot
 from ttH.TauRoast.processing import split_procs
-from ttH.TauRoast.variation import setup
 
 useful.setup(config)
 useful.load_python(config.get('mode'))
@@ -95,10 +94,6 @@ try:
     shutil.copy(args.config, config["outdir"])
 except shutil.Error:
     pass
-
-if 'mva' in config:
-    cfg = config['mva']
-    setup(config['outdir'], cfg['variables'])
 
 if args.unblind:
     Plot.unblind()
