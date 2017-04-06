@@ -64,7 +64,8 @@ Plot(
     name="general/Events",
     values=["events"],
     labels=["", "Events"],
-    binning=[1, 0, 1]
+    binning=[1, 0, 1],
+    essential=True
 )
 
 Plot(
