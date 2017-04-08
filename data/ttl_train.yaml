@@ -3,16 +3,14 @@
 channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v6
-outdir: ~/www/ttH/v6/ttl_train
+outdir: ~/www/ttH/v6/ttl_train.tight.morevars
 histformat: "{p}_{c}_{v}"
+τ ID: Tight
 
 mvadir: data/bdt
 mvas:
-  - sklearn_legacy
   - sklearn_tt
   - sklearn_ttZ
-  - tmva_tt
-  - tmva_ttZ
 
 lumi: 12900
 # lumi: 36300
@@ -69,7 +67,7 @@ signal cuts:
     - "l quality": >
         leptons[0].mva() >= superslim::id::Loose
     - "τ quality": >
-        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Loose; }) >= 2
+        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) >= 2
     - "MC truth": >
         taus[0].match() < 6 and taus[1].match() < 6 and (
             (leptons[0].electron() and (leptons[0].match() == 1 or leptons[0].match() == 3)) or

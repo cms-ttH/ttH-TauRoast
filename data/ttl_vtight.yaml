@@ -4,17 +4,14 @@ channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v45
 # ntupledir: /scratch365/mwolf3/ttH/v32
-outdir: ~/www/ttH/v45/ttl_2017-04-03_vtight
+outdir: ~/www/ttH/v45/ttl_2017-04-06_old_mva_vtight
 histformat: "{v}_{c}_{p}"
 tau ID: VTight
 
-mvadir: data/bdt
+mvadir: data/bdt.old
 mvas:
-  - sklearn_legacy
   - sklearn_tt
   - sklearn_ttZ
-  - tmva_tt
-  - tmva_ttZ
 
 lumi: 35900
 
