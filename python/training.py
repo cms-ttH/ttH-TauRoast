@@ -132,10 +132,6 @@ def train(config, name):
         run_feature_elimination(outdir, bdts, x, y, setup)
     if 'parameters' in setup.get('features', []):
         run_grid_search(outdir, bdts[0], x, y)
-    if 'learning' in setup.get('features', []):
-        plot_learning_curve(outdir, bdts, x, y)
-    if 'validation_curve' in setup.get('features', []):
-        run_validation_curve(outdir, bdts, x_train, y_train, w_train, x_test, y_test, w_test)
 
 
 def evaluate(config, tree, names):
@@ -194,23 +190,22 @@ def run_cross_validation(outdir, bdts, x, y):
             fd.write(out)
 
 
-def run_validation_curve(outdir, bdts, x_train, y_train, w_train, x_test, y_test, w_test):
+def plot_validation_curve(outdir, bdt, x_train, y_train, w_train, x_test, y_test, w_test):
     logging.info("saving validation curve")
-    for bdt in bdts:
-        test_score, train_score = np.empty(len(bdt.estimators_)), np.empty(len(bdt.estimators_))
+    test_score, train_score = np.empty(len(bdt.estimators_)), np.empty(len(bdt.estimators_))
 
-        for i, pred in enumerate(bdt.staged_decision_function(x_test)):
-            test_score[i] = 1 - roc_auc_score(y_test, pred, sample_weight=w_test)
-        for i, pred in enumerate(bdt.staged_decision_function(x_train)):
-            train_score[i] = 1 - roc_auc_score(y_train, pred, sample_weight=w_train)
+    for i, pred in enumerate(bdt.staged_decision_function(x_test)):
+        test_score[i] = 1 - roc_auc_score(y_test, pred, sample_weight=w_test)
+    for i, pred in enumerate(bdt.staged_decision_function(x_train)):
+        train_score[i] = 1 - roc_auc_score(y_train, pred, sample_weight=w_train)
 
-        best = np.argmin(test_score)
-        line = plt.plot(test_score, label=bdt.label)
-        plt.plot(train_score, '--', color=line[-1].get_color())
+    best = np.argmin(test_score)
+    line = plt.plot(test_score, label=bdt.label)
+    plt.plot(train_score, '--', color=line[-1].get_color())
 
-        plt.xlabel("Number of boosting iterations")
-        plt.ylabel("1 - area under ROC")
-        plt.axvline(x=best, color=line[-1].get_color())
+    plt.xlabel("Number of boosting iterations")
+    plt.ylabel("1 - area under ROC")
+    plt.axvline(x=best, color=line[-1].get_color())
     plt.legend(loc='best')
     plt.savefig(os.path.join(outdir, 'validation-curve.png'))
     plt.close()
@@ -283,38 +278,37 @@ def plot_inputs(outdir, vars, sig, sig_w, bkg, bkg_w):
         plt.close()
 
 
-def plot_learning_curve(outdir, bdts, x, y):
+def plot_learning_curve(outdir, bdt, x, y):
     logging.info("creating learning curve")
-    for n, cls in enumerate(bdts):
-        train_sizes, train_scores, test_scores = learning_curve(cls, x, y,
-                                                                cv=ShuffleSplit(len(x),
-                                                                                n_iter=100,
-                                                                                test_size=1.0 / CV),
-                                                                n_jobs=NJOBS,
-                                                                train_sizes=np.linspace(.1, 1., 7),
-                                                                scoring='roc_auc')
-        train_scores_mean = np.mean(train_scores, axis=1)
-        train_scores_std = np.std(train_scores, axis=1)
-        test_scores_mean = np.mean(test_scores, axis=1)
-        test_scores_std = np.std(test_scores, axis=1)
+    train_sizes, train_scores, test_scores = learning_curve(bdt, x, y,
+                                                            cv=ShuffleSplit(len(x),
+                                                                            n_iter=100,
+                                                                            test_size=1.0 / CV),
+                                                            n_jobs=NJOBS,
+                                                            train_sizes=np.linspace(.1, 1., 7),
+                                                            scoring='roc_auc')
+    train_scores_mean = np.mean(train_scores, axis=1)
+    train_scores_std = np.std(train_scores, axis=1)
+    test_scores_mean = np.mean(test_scores, axis=1)
+    test_scores_std = np.std(test_scores, axis=1)
 
-        plt.fill_between(train_sizes,
-                         train_scores_mean - train_scores_std,
-                         train_scores_mean + train_scores_std,
-                         alpha=.2, color='r')
-        plt.fill_between(train_sizes,
-                         test_scores_mean - test_scores_std,
-                         test_scores_mean + test_scores_std,
-                         alpha=.2, color='g')
-        plt.plot(train_sizes, train_scores_mean, 'o-', color='r', label='Training score')
-        plt.plot(train_sizes, test_scores_mean, 'o-', color='g', label='Cross-validation score')
+    plt.fill_between(train_sizes,
+                     train_scores_mean - train_scores_std,
+                     train_scores_mean + train_scores_std,
+                     alpha=.2, color='r')
+    plt.fill_between(train_sizes,
+                     test_scores_mean - test_scores_std,
+                     test_scores_mean + test_scores_std,
+                     alpha=.2, color='g')
+    plt.plot(train_sizes, train_scores_mean, 'o-', color='r', label='Training score')
+    plt.plot(train_sizes, test_scores_mean, 'o-', color='g', label='Cross-validation score')
 
-        plt.xlabel("Sample size")
-        plt.ylabel("Score (ROC area)")
+    plt.xlabel("Sample size")
+    plt.ylabel("Score (ROC area)")
 
-        plt.legend()
-        plt.savefig(os.path.join(outdir, 'bdt-{}'.format(n), 'learning-curve.png'.format(n)))
-        plt.close()
+    plt.legend()
+    plt.savefig(os.path.join(outdir, 'learning-curve.png'))
+    plt.close()
 
 
 def plot_output(outdir, bdt, data, filename, bins, fct):
