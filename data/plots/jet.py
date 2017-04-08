@@ -22,6 +22,52 @@ from ttH.TauRoast.plotting import Plot
 #         binning=[40, 0, 400]
 # )
 
+Leaf('jet_ptsum_scalar', 'f', """
+float ht = 0.;
+for (const auto& j: jets)
+    ht += j.p4().Pt();
+result = ht
+""")
+
+Leaf('jet_ptsum', 'f', """
+superslim::LorentzVector ht;
+for (const auto& j: jets)
+    ht += j.p4();
+result = ht.Pt()
+""")
+
+Leaf('tag_ptsum_scalar', 'f', """
+float ht = 0.;
+for (const auto& j: jets)
+    if (btag(j))
+        ht += j.p4().Pt();
+result = ht
+""")
+
+Leaf('tag_ptsum', 'f', """
+superslim::LorentzVector ht;
+for (const auto& j: jets)
+    if (btag(j))
+        ht += j.p4();
+result = ht.Pt()
+""")
+
+Leaf('notag_ptsum_scalar', 'f', """
+float ht = 0.;
+for (const auto& j: jets)
+    if (not btag(j))
+        ht += j.p4().Pt();
+result = ht
+""")
+
+Leaf('notag_ptsum', 'f', """
+superslim::LorentzVector ht;
+for (const auto& j: jets)
+    if (not btag(j))
+        ht += j.p4();
+result = ht.Pt()
+""")
+
 Leaf('jet_deltaRavg', 'f',
      '''std::vector<float> drs;
         for (auto i = 0; i < jets.size(); ++i)
@@ -114,6 +160,8 @@ for (const auto& j: {0})
 """
 
 for i in range(2):
+    Leaf('jet{}_csv'.format(i + 1), 'f', 'result = jets.at({}).csv()'.format(i))
+    Leaf('jet{}_eta'.format(i + 1), 'f', 'result = jets.at({}).p4().Eta()'.format(i))
     Leaf('jet{}_pt'.format(i + 1), 'f', 'result = jets.at({}).p4().Pt()'.format(i))
     Plot(
         name="jets/kinematic/Jet{}_Pt".format(i + 1),
