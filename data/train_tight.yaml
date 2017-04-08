@@ -3,7 +3,7 @@
 channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v6
-outdir: ~/www/ttH/v6/ttl_train.tight.morevars
+outdir: ~/www/ttH/v6/train_tight
 histformat: "{p}_{c}_{v}"
 τ ID: Tight
 
@@ -12,17 +12,23 @@ mvas:
   - sklearn_tt
   - sklearn_ttZ
 
-lumi: 12900
-# lumi: 36300
+lumi: 36300
 
 plot:
   - ttH2Nonbb_125_train
   - ttjets_pow_train
+  - ttjets_pow_nominal
   - ttZ_train
-  # - ttW_train
-  # - WZ_train
 
 limits: []
+
+plot override:
+    signals:
+      - ttjets_pow_signal: r.kRed
+    backgrounds:
+      - process: ttjets_pow_nominal
+        SetFillColor: r.kBlack
+        SetFillStyle: 3005
 
 baseline cuts:
     - "l ID": lepton_id == superslim::Lepton::MVA
@@ -43,6 +49,8 @@ baseline cuts:
              "HLT_IsoTkMu22_eta2p1_v",
              "HLT_IsoMu19_eta2p1_LooseIsoPFTau20_SingleL1_v"
          }))
+    - "τ count": >
+        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Loose; }) >= 2
     - "bad μ": >
         event.nBadMuons() == 0
     - "ll mass": >
@@ -77,11 +85,19 @@ signal cuts:
 signal weights: []
 
 training cuts:
-    - "fake": >
-        leptons[0].mva() < superslim::id::Loose or
-        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) <= 1
+    - "l quality": >
+        leptons[0].mva() >= superslim::id::Loose
+    - "τ quality": >
+        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Loose; }) >= 2
+training weights:
+    - Fake
 
-training weights: []
+nominal cuts:
+    - "l quality": >
+        leptons[0].mva() >= superslim::id::Loose
+    - "τ quality": >
+        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::Tight; }) >= 2
+nominal weights: []
 
 # List of systematics to run when `-s` is specified
 systematics: []
