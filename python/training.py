@@ -170,8 +170,8 @@ def evaluate(config, tree, names):
         def lh(values):
             return likelihood.GetBinContent(likelihood.FindBin(*values))
         indices = dict((v, n) for n, (v, _) in enumerate(dtype))
-        tt = output[indices['tmva_tt']]
-        ttZ = output[indices['tmva_ttZ']]
+        tt = output[indices['tmvalike_tt']]
+        ttZ = output[indices['tmvalike_ttZ']]
         if len(tt) == 0:
             output += [[]]
         else:

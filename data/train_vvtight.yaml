@@ -24,7 +24,7 @@ limits: []
 
 plot override:
     signals:
-      - ttjets_pow_signal: r.kRed
+      - ttjets_pow_train: r.kRed
     backgrounds:
       - process: ttjets_pow_nominal
         SetFillColor: r.kBlack
