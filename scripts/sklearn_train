@@ -80,8 +80,9 @@ training.plot_output(outdir, bdt,
                      'signal-probability.png', np.linspace(0, 1, 40),
                      lambda cls, data: cls.predict_proba(data)[:, 1])
 
-x = np.concatenate((x_test, x_train))
-y = np.concatenate((y_test, y_train))
-w = np.concatenate((w_test, w_train))
 training.plot_validation_curve(outdir, bdt, x_train, y_train, w_train, x_test, y_test, w_test)
-training.plot_learning_curve(outdir, bdt, x, y)
+
+# x = np.concatenate((x_test, x_train))
+# y = np.concatenate((y_test, y_train))
+# w = np.concatenate((w_test, w_train))
+# training.plot_learning_curve(outdir, bdt, x, y)
