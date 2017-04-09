@@ -135,13 +135,6 @@ def train(config, name):
 
 
 def evaluate(config, tree, names):
-    likelihood = None
-    f = r.TFile(os.path.join(config.get("mvadir", config.get("indir", config["outdir"])), "likelihood.root"), "READ")
-    if f.IsOpen():
-        likelihood = f.Get("likelihood")
-        likelihood.SetDirectory(0)
-        f.Close()
-
     output = []
     dtype = []
     for name in names:
@@ -165,18 +158,6 @@ def evaluate(config, tree, names):
         scores = evaluate_reader(reader, "BDT", data)
         output += [scores]
         dtype += [(name.replace("sklearn", "tmvalike"), 'float64')]
-
-    if likelihood:
-        def lh(values):
-            return likelihood.GetBinContent(likelihood.FindBin(*values))
-        indices = dict((v, n) for n, (v, _) in enumerate(dtype))
-        tt = output[indices['tmvalike_tt']]
-        ttZ = output[indices['tmvalike_ttZ']]
-        if len(tt) == 0:
-            output += [[]]
-        else:
-            output += [np.apply_along_axis(lh, 1, np.array([tt, ttZ]).T)]
-        dtype += [('tmva_likelihood', 'float64')]
     data = np.array(zip(*output), dtype)
     tree.mva(array2tree(data))
 
