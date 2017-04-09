@@ -25,7 +25,7 @@ Leaf('category', 'i', 'result = min(max(0, btags(jets) - 1), 1) * 3 + min(max(0,
 Leaf('category_lj', 'i', 'result = min(max(0, btags(jets) - 2), 2) * 3 + min(max(0, len(jets) - 4), 2)')
 
 binnings = [5, 6, 7, 8]
-mvas = 'tt ttZ legacy'.split()
+mvas = ['tt', 'ttZ']
 for bins in binnings:
     Plot(
         name="general/TMVAlike{}_likelihood".format(bins),
@@ -36,15 +36,6 @@ for bins in binnings:
         essential=True
     )
 for mva, bins in itertools.product(mvas, binnings):
-    if mva != 'legacy':
-        Plot(
-            name="general/TMVA{}_{}".format(bins, mva),
-            values=["tmva_" + mva],
-            labels=["BDT value (TMVA)", "Events"],
-            binning=[bins, -1, 1],
-            blind=True,
-            essential=True
-        )
     Plot(
         name="general/TMVAlike{}_{}".format(bins, mva),
         values=["tmvalike_" + mva],
