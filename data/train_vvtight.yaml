@@ -5,7 +5,7 @@ generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v6
 outdir: ~/www/ttH/v6/train_vvtight
 histformat: "{p}_{c}_{v}"
-τ ID: VVTight
+tau ID: VVTight
 
 mvadir: data/bdt
 mvas:

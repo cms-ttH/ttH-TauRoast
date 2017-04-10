@@ -4,10 +4,10 @@ channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v45
 # ntupledir: /scratch365/mwolf3/ttH/v32
-outdir: ~/www/ttH/v45/ttl_2017-04-06_old_mva_tight
+outdir: ~/www/ttH/v45/ttl_2017-04-09_same_mva_tight
 histformat: "{v}_{c}_{p}"
 
-mvadir: data/bdt.old
+mvadir: data/bdt.t
 mvas:
   - sklearn_tt
   - sklearn_ttZ
@@ -47,10 +47,14 @@ discriminants:
   - TMVAlike6_tt
   - TMVAlike7_tt
   - TMVAlike8_tt
-  - TMVAlike5_likelihood
-  - TMVAlike6_likelihood
-  - TMVAlike7_likelihood
-  - TMVAlike8_likelihood
+  # - TMVAlike5_likelihood
+  # - TMVAlike6_likelihood
+  # - TMVAlike7_likelihood
+  # - TMVAlike8_likelihood
+  # - TMVAlike20_20_likelihood
+  # - TMVAlike20_40_likelihood
+  # - TMVAlike40_20_likelihood
+  # - TMVAlike40_40_likelihood
 
 baseline cuts:
     - "l ID": lepton_id == superslim::Lepton::MVA
