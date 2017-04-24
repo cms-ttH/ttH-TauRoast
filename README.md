@@ -78,43 +78,11 @@ Use the wrapper:
 
     update_pileup <data processing json>
 
-# Other ttH groups
-
-Link to work from other ttH groups
-
-## Lepton+Jets
-
-### Sync
-
-Run the following to test the sync status with the LJ analysis (for the TTL
-channel):
-
-    sh test/ntuplize_lj_sync.sh
-    roaster -a --debug-cuts data/lj_sync.yaml
-
-Detailed event lists are present in the configured output directories for
-the last two steps.
-
-### Twiki
-
-* [Analysis Twiki](https://twiki.cern.ch/twiki/bin/viewauth/CMS/TTbarHiggsRun2LeptonPlusJets)
-* [Reference Analysis (2015)](https://twiki.cern.ch/twiki/bin/view/CMS/TTbarHbbRun2ReferenceAnalysis)
-* [Reference Analysis (2016)](https://twiki.cern.ch/twiki/bin/viewauth/CMS/TTbarHbbRun2ReferenceAnalysis_StartOf2016)
-
-## Multilepton
-
-### Sync
-
-### Twiki
-
-* [Analysis Twiki](https://twiki.cern.ch/twiki/bin/viewauth/CMS/TTH-Multileptons)
-
 ### Ntuple versioning
 
 See [here](Changelog.md).
 
 [lobster]: http://lobster.crc.nd.edu
-[makeflow]: http://ccl.cse.nd.edu/software/manuals/makeflow.html
 [brilcalc]: http://cms-service-lumi.web.cern.ch/cms-service-lumi/brilwsdoc.html#brilcalc
 [pileup]: https://twiki.cern.ch/twiki/bin/view/CMS/PileupJSONFileforData#2015_Pileup_JSON_Files
 [ppd]: https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVPileUpDescription#Startup2015
