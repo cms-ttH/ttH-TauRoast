@@ -303,10 +303,10 @@ class Plot(object):
             for suffix in suffixes:
                 histname = fmt.format(p=proc.limitname, v=self.__limitname, c=category)
                 histname += suffix
-                logging.debug("reading histogram {0}".format(histname))
                 h = file.Get(histname)
                 try:
                     h.SetDirectory(0)
+                    logging.debug("reading histogram {}: {}".format(histname, h.Integral()))
                     self.__hists[str(proc) + suffix] = h
                 except AttributeError:
                     if suffix == '':
