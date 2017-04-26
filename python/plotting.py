@@ -185,7 +185,7 @@ class Plot(object):
                     try:
                         e = self._get_histogram(cfg['process'], systematic)
                     except KeyError:
-                        e = h
+                        e = h.Clone()
                     if e.Integral() == 0:
                         continue
                     if err is None:
