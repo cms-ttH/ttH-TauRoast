@@ -26,15 +26,25 @@ Leaf('category_lj', 'i', 'result = min(max(0, btags(jets) - 2), 2) * 3 + min(max
 
 binnings = [5, 6, 7, 8]
 mvas = ['tt', 'ttZ']
-for bins in binnings:
-    Plot(
-        name="general/TMVAlike{}_likelihood".format(bins),
-        values=["tmvalike{}_likelihood".format(bins)],
-        labels=["Likelihood value (TMVA)", "Events"],
-        binning=[bins, 0, bins],
-        blind=True,
-        essential=True
-    )
+for bins in [('bkg', 20), ('sigbkg', 20), ('sigbkg', 12), ('sigbkg2', 20), ('sigbkg2', 12)]:
+    for tid in 'vtight vvtight'.split():
+        name, nbins = bins
+        Plot(
+            name="general/TMVAlike_{}_{}_{}_likelihood".format(name, nbins, tid),
+            values=["tmvalike_{}_{}_{}_likelihood".format(name, nbins, tid)],
+            labels=["Likelihood value (TMVA)", "Events"],
+            binning=[nbins, 0, nbins],
+            blind=True,
+            essential=True
+        )
+        Plot(
+            name="general/TMVAlike_{}_{}_{}_likelihood".format(name, nbins / 2, tid),
+            values=["tmvalike_{}_{}_{}_likelihood".format(name, nbins, tid)],
+            labels=["Likelihood value (TMVA)", "Events"],
+            binning=[nbins / 2, 0, nbins],
+            blind=True,
+            essential=True
+        )
 for mva, bins in itertools.product(mvas, binnings):
     Plot(
         name="general/TMVAlike{}_{}".format(bins, mva),

@@ -4,7 +4,7 @@ channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v45
 # ntupledir: /scratch365/mwolf3/ttH/v32
-outdir: ~/www/ttH/v45/ttl_2017-04-09_same_mva_vvtight
+outdir: ~/www/ttH/v45/ttl_2017-04-11_sigbkg_vvtight
 histformat: "{v}_{c}_{p}"
 tau ID: VVTight
 
@@ -48,6 +48,22 @@ discriminants:
   - TMVAlike6_tt
   - TMVAlike7_tt
   - TMVAlike8_tt
+  - TMVAlike_bkg_10_vtight_likelihood
+  - TMVAlike_bkg_10_vvtight_likelihood
+  - TMVAlike_bkg_20_vtight_likelihood
+  - TMVAlike_bkg_20_vvtight_likelihood
+  - TMVAlike_sigbkg_6_vtight_likelihood
+  - TMVAlike_sigbkg_6_vvtight_likelihood
+  - TMVAlike_sigbkg_12_vtight_likelihood
+  - TMVAlike_sigbkg_12_vvtight_likelihood
+  - TMVAlike_sigbkg_10_vtight_likelihood
+  - TMVAlike_sigbkg_10_vvtight_likelihood
+  - TMVAlike_sigbkg_20_vtight_likelihood
+  - TMVAlike_sigbkg_20_vvtight_likelihood
+  - TMVAlike_sigbkg2_12_vtight_likelihood
+  - TMVAlike_sigbkg2_12_vvtight_likelihood
+  - TMVAlike_sigbkg2_20_vtight_likelihood
+  - TMVAlike_sigbkg2_20_vvtight_likelihood
   # - TMVAlike5_likelihood
   # - TMVAlike6_likelihood
   # - TMVAlike7_likelihood
@@ -179,3 +195,4 @@ data fake systematics:
 
 categories:
   - inclusive: ""
+  - lessttz: "tmvalike_ttZ > -0.25"
