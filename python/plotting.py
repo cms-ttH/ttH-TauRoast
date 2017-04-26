@@ -1,6 +1,7 @@
 import json
 import logging
 import math
+import operator
 import os
 import random
 
@@ -126,14 +127,20 @@ class Plot(object):
     def _get_background_shifts(self, config, systematics, direction):
         central = self._get_background_sum(config)
         result = [0] * central.GetNbinsX()
+        maxdev = [[] for _ in result]
         for systematic in systematics:
             central, error = self._get_background_sum(config, systematic + direction)
-            logging.debug("Integral for {}{} (central): {} ({})".format(systematic, direction,
+            logging.debug("integral for {}{} (central): {} ({})".format(systematic, direction,
                                                                         error.Integral(),
                                                                         central.Integral()))
             for n in range(len(result)):
-                result[n] += (central.GetBinContent(n + 1) -
-                              error.GetBinContent(n + 1)) ** 2
+                dev = (central.GetBinContent(n + 1) -
+                       error.GetBinContent(n + 1)) ** 2
+                maxdev[n].append((systematic, dev))
+                result[n] += dev
+        for n, devs in enumerate(maxdev):
+            for sys, dev in sorted(devs, key=operator.itemgetter(1)):
+                logging.debug("systematic in bin {}: {}, deviation of {}".format(n, sys, dev))
         return result
 
     def _get_background_errors(self, config, systematics):
