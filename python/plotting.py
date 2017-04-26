@@ -128,6 +128,9 @@ class Plot(object):
         result = [0] * central.GetNbinsX()
         for systematic in systematics:
             central, error = self._get_background_sum(config, systematic + direction)
+            logging.debug("Integral for {}{} (central): {} ({})".format(systematic, direction,
+                                                                        error.Integral(),
+                                                                        central.Integral()))
             for n in range(len(result)):
                 result[n] += (central.GetBinContent(n + 1) -
                               error.GetBinContent(n + 1)) ** 2
@@ -186,8 +189,8 @@ class Plot(object):
                         e = self._get_histogram(cfg['process'], systematic)
                     except KeyError:
                         e = h.Clone()
-                    if e.Integral() == 0:
-                        continue
+                    if e.Integral() == 0 and h.Integral() != 0:
+                        e = h.Clone()
                     if err is None:
                         err = e
                     else:
