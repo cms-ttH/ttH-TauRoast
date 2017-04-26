@@ -158,6 +158,23 @@ def evaluate(config, tree, names):
         scores = evaluate_reader(reader, "BDT", data)
         output += [scores]
         dtype += [(name.replace("sklearn", "tmvalike"), 'float64')]
+
+    f = r.TFile(os.path.join(config.get("mvadir", config.get("indir", config["outdir"])), "mapping.root"), "READ")
+    if f.IsOpen():
+        likelihood = f.Get("hTargetBinning")
+
+        def lh(values):
+            return likelihood.GetBinContent(likelihood.FindBin(*values))
+        indices = dict((v, n) for n, (v, _) in enumerate(dtype))
+        tt = output[indices['tmvalike_tt']]
+        ttZ = output[indices['tmvalike_ttZ']]
+        if len(tt) == 0:
+            output += [[]]
+        else:
+            output += [np.apply_along_axis(lh, 1, np.array([tt, ttZ]).T)]
+        dtype += [('tmvalike_likelihood', 'float64')]
+        f.Close()
+
     data = np.array(zip(*output), dtype)
     tree.mva(array2tree(data))
 
