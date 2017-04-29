@@ -42,7 +42,7 @@ BasicProcess(
 )
 
 BasicProcess(
-    name="ww_ds",
+    name="wwds",
     fullname="WW Double Scattering",
     paths=["WW_DoubleScattering_13TeV_pythia8_v1"],
     cross_section=1.64,
@@ -69,8 +69,8 @@ BasicProcess(
 )
 
 BasicProcess(
-    name="wwds",
-    fullname="WWds",
+    name="wwpp",
+    fullname="WWpp",
     paths=["WpWpJJ_EWK_QCD_TuneCUETP8M1_13TeV_madgraph_pythia8_v1"],
     cross_section=0.03711,
     events=149681,
@@ -99,8 +99,8 @@ CombinedProcess(
     name="rares",
     fullname="Rares",
     limitname="Rares",
-    subprocesses=["tttt", "tZq", "wzz", "wwz", "www", "zzz", "wwds"]
-    # subprocesses=["tttt", "tZq", "ww_ds", "wzz"]
+    subprocesses=["tttt", "tZq", "wzz", "wwz", "www", "zzz"]
+    # subprocesses=["tttt", "tZq", "wwds", "wzz"]
 )
 
 BasicProcess(
@@ -206,5 +206,5 @@ CombinedProcess(
     name="diboson",
     fullname="ww, wz, zz",
     limitname="diboson",
-    subprocesses=["ww", "wz", "zz"]
+    subprocesses=["ww", "wwds", "wwpp", "wz", "zz"]
 )
