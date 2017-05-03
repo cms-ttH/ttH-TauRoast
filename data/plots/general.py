@@ -46,7 +46,7 @@ Plot(
     name="general/TMVAlike10_likelihood",
     values=["tmvalike_likelihood / 2"],
     labels=["BDT mapping (flat in sig*bkg)", "Events"],
-    binning=[10, 0, 10],
+    binning=[10, 0.5, 10.5],
     blind=True,
     essential=True
 )
