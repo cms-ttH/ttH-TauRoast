@@ -3,7 +3,7 @@ from ttH.TauRoast.processing import BasicProcess, CombinedProcess
 BasicProcess(
     name="ttW",
     fullname="t#bar{t}W",
-    limitname="TTW",
+    limitname="TTW_gentau",
     paths=[
         "TTWJetsToLNu_TuneCUETP8M1_13TeV_amcatnloFXFX_madspin_pythia8_ext1_v3",
         "TTWJetsToLNu_TuneCUETP8M1_13TeV_amcatnloFXFX_madspin_pythia8_ext2_v1"
@@ -16,7 +16,7 @@ BasicProcess(
 BasicProcess(
     name="ttZ",
     fullname="t#bar{t}Z",
-    limitname="TTZ",
+    limitname="TTZ_gentau",
     paths=["TTZToLLNuNu_M_10_TuneCUETP8M1_13TeV_amcatnlo_pythia8_ext1_v1"],
     cross_section=0.2529,
     events=1992438,
@@ -98,7 +98,7 @@ BasicProcess(
 CombinedProcess(
     name="rares",
     fullname="Rares",
-    limitname="Rares",
+    limitname="Rares_gentau",
     subprocesses=["tttt", "tZq", "wzz", "wwz", "www", "zzz"]
     # subprocesses=["tttt", "tZq", "wwds", "wzz"]
 )
@@ -198,7 +198,7 @@ BasicProcess(
 CombinedProcess(
     name="ewk",
     fullname="EWK",
-    limitname="EWK",
+    limitname="EWK_gentau",
     subprocesses=["dyjets", "wjets", "diboson"]
 )
 

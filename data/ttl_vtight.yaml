@@ -4,11 +4,11 @@ channel: ttl
 generator: pow
 ntupledir: /hadoop/store/user/matze/ttH/v45
 # ntupledir: /scratch365/mwolf3/ttH/v32
-outdir: ~/www/ttH/v45/ttl_2017-05-03_signal_vvtight
+outdir: ~/www/ttH/v45/ttl_2017-05-03_signal_vtight
 histformat: "{v}_{c}_{p}"
-tau ID: VVTight
+tau ID: VTight
 
-mvadir: data/bdt.vvt
+mvadir: data/bdt.vt
 mvas:
   - sklearn_tt
   - sklearn_ttZ
@@ -92,7 +92,7 @@ baseline cuts:
 fake cuts:
     - "fake": >
         leptons[0].mva() < superslim::id::Loose or
-        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::VVTight; }) <= 1
+        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::VTight; }) <= 1
     - "MC truth": >
         taus[0].match() < 6 and taus[1].match() < 6 and (
             (leptons[0].electron() and (leptons[0].match() == 1 or leptons[0].match() == 3)) or
@@ -112,7 +112,7 @@ signal cuts:
     - "l quality": >
         leptons[0].mva() >= superslim::id::Loose
     - "τ quality": >
-        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::VVTight; }) >= 2
+        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::VTight; }) >= 2
     - "MC truth": >
         taus[0].match() < 6 and taus[1].match() < 6 and (
             (leptons[0].electron() and (leptons[0].match() == 1 or leptons[0].match() == 3)) or
@@ -130,7 +130,7 @@ signal weights:
 data fake cuts:
     - "fake": >
         leptons[0].mva() < superslim::id::Loose or
-        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::VVTight; }) <= 1
+        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::VTight; }) <= 1
 
 data fake weights:
   - Fake
@@ -139,7 +139,7 @@ data signal cuts:
     - "l quality": >
         leptons[0].mva() >= superslim::id::Loose
     - "τ quality": >
-        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::VVTight; }) >= 2
+        std::count_if(taus.begin(), taus.end(), [](const superslim::Tau& t) { return t.isolationMVA03() >= superslim::id::VTight; }) >= 2
 
 data signal weights: []
 
