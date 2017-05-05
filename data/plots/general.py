@@ -44,7 +44,7 @@ for mva, bins in itertools.product(mvas, binnings):
 
 Plot(
     name="general/TMVAlike10_likelihood",
-    values=["tmvalike_likelihood / 2"],
+    values=["(tmvalike_likelihood + 1) / 2"],
     labels=["BDT mapping (flat in sig*bkg)", "Events"],
     binning=[10, 0.5, 10.5],
     blind=True,
