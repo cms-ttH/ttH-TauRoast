@@ -112,9 +112,16 @@ Leaf('jet_deltaRavg', 'f',
             for (auto j = i + 1; j < jets.size(); ++j)
                 drs.push_back(dR(jets[i], jets[j]));
         result = std::accumulate(drs.begin(), drs.end(), 0.) / drs.size()''')
+Leaf('jet_deltaRmax', 'f',
+     '''std::vector<float> drs;
+        for (auto i = 0; i < jets.size(); ++i)
+            for (auto j = i + 1; j < jets.size(); ++j)
+                drs.push_back(dR(jets[i], jets[j]));
+        result = drs.size() > 0 ? *std::max_element(drs.begin(), drs.end()) : -666.''')
 Leaf('tt_deltaR', 'f', 'result = taus.size() >= 2 ? dR(taus.at(0), taus.at(1)) : -9999.')
 Leaf('tt_mvis', 'f', 'result = taus.size() >= 2 ? (taus.at(0).p4() + taus.at(1).p4()).M() : -9999.')
 Leaf('tt_visiblemass', 'f', 'result = taus.size() >= 2 ? (taus.at(0).p4() + taus.at(1).p4()).M() : -9999.')
+Leaf('tt_sumpt', 'f', 'result = taus.size() >= 2 ? (taus[0].p4() + taus[1].p4()).Pt() : -9999.')
 
 Leaf('nEvent', 'i', 'result = event.event()')
 Leaf(

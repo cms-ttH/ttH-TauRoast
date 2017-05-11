@@ -13,5 +13,7 @@ if os.path.exists("test/sync_tau/out/ntuple_mva.root"):
 for treename in "syncTree_1l2tau_SR", "syncTree_1l2tau_Fake":
     base = read_root("test/sync_tau/out/ntuple.root", treename)
     tmva = read_root("test/sync_tau/out/ntuple.root", treename + "_mva")
-    base["MVA_1l2tau_ttbar"] = tmva["tmva"]
+    base["MVA_1l2tau_ttbar_v2"] = tmva["tmvalike_tt"]
+    base["MVA_1l2tau_ttZ_v2"] = tmva["tmvalike_ttZ"]
+    base["MVA_1l2tau_2Dbin_v2"] = tmva["tmvalike_likelihood"]
     base.to_root("test/sync_tau/out/ntuple_mva.root", treename, mode="a")

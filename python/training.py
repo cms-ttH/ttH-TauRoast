@@ -134,12 +134,12 @@ def train(config, name):
         run_grid_search(outdir, bdts[0], x, y)
 
 
-def evaluate(config, tree, names):
+def evaluate(config, tree, names, transform=None):
     output = []
     dtype = []
     for name in names:
         setup = load(config, name.split("_")[1])
-        data = rec2array(tree2array(tree.raw(), setup["variables"]))
+        data = rec2array(tree2array(tree.raw(), list(transform(setup["variables"])) if transform else setup["variables"]))
         if name.startswith("sklearn"):
             fn = os.path.join(config["mvadir"], name + ".pkl")
             with open(fn, 'rb') as fd:

@@ -138,12 +138,18 @@ class BasicProcess(Process):
         logging.debug("time spent processing: {0}".format(time.clock() - now))
 
     def add_mva(self, cfg, filename, systematics):
+        if 'mvadict' in cfg:
+            def transform(names):
+                for name in names:
+                    yield cfg['mvadict'].get(name, name)
+        else:
+            transform = None
         suffix = '' if systematics == 'NA' else '_' + systematics
         tree = Tree(filename, str(self) + suffix, read=True)
         logging.info("evaluating MVA for {}".format(self))
         now = time.clock()
         try:
-            training.evaluate(cfg, tree, cfg.get('mvas', []))
+            training.evaluate(cfg, tree, cfg.get('mvas', []), transform)
         except (IOError, ValueError) as e:
             logging.error("can't evaluate MVA: {}".format(e))
         logging.debug("time spent evaluating MVA: {0}".format(time.clock() - now))
