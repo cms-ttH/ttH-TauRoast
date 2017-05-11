@@ -292,7 +292,7 @@ fastlane::LeptonHelper::tightSF(const superslim::Lepton& l)
    return get_factor(h, l);
 }
 
-fastlane::TriggerHelper::TriggerHelper()
+fastlane::TriggerHelper::TriggerHelper(const std::string& id)
 {
    {
       TFile f(edm::FileInPath("ttH/TauRoast/data/weights/Electron_Ele24_eff.root").fullPath().c_str());
@@ -382,27 +382,20 @@ fastlane::TriggerHelper::TriggerHelper()
       eff_m_data_[2].reset(eff_lep_data_3);
    }
 
-
    {
       TFile f(edm::FileInPath("ttH/TauRoast/data/weights/trigger_sf_et.root").fullPath().c_str());
-      TGraphAsymmErrors *eff_tau_mc_b;
-      TGraphAsymmErrors *eff_tau_mc_e;
       TGraphAsymmErrors *eff_tau_data_b0;
       TGraphAsymmErrors *eff_tau_data_b1;
       TGraphAsymmErrors *eff_tau_data_b10;
       TGraphAsymmErrors *eff_tau_data_e0;
       TGraphAsymmErrors *eff_tau_data_e1;
       TGraphAsymmErrors *eff_tau_data_e10;
-      f.GetObject("mc_genuine_barrel_TightIso", eff_tau_mc_b);
-      f.GetObject("mc_genuine_endcap_TightIso", eff_tau_mc_e);
-      f.GetObject("data_genuine_barrel_TightIso_dm0", eff_tau_data_b0);
-      f.GetObject("data_genuine_barrel_TightIso_dm1", eff_tau_data_b1);
-      f.GetObject("data_genuine_barrel_TightIso_dm10", eff_tau_data_b10);
-      f.GetObject("data_genuine_endcap_TightIso_dm0", eff_tau_data_e0);
-      f.GetObject("data_genuine_endcap_TightIso_dm1", eff_tau_data_e1);
-      f.GetObject("data_genuine_endcap_TightIso_dm10", eff_tau_data_e10);
-      eff_et_tau_leg_mc_[0].reset(eff_tau_mc_b);
-      eff_et_tau_leg_mc_[1].reset(eff_tau_mc_e);
+      f.GetObject(("data_genuine_barrel_" + id + "Iso_dm0").c_str(), eff_tau_data_b0);
+      f.GetObject(("data_genuine_barrel_" + id + "Iso_dm1").c_str(), eff_tau_data_b1);
+      f.GetObject(("data_genuine_barrel_" + id + "Iso_dm10").c_str(), eff_tau_data_b10);
+      f.GetObject(("data_genuine_endcap_" + id + "Iso_dm0").c_str(), eff_tau_data_e0);
+      f.GetObject(("data_genuine_endcap_" + id + "Iso_dm1").c_str(), eff_tau_data_e1);
+      f.GetObject(("data_genuine_endcap_" + id + "Iso_dm10").c_str(), eff_tau_data_e10);
       eff_et_tau_leg_data_[0][0].reset(eff_tau_data_b0);
       eff_et_tau_leg_data_[1][0].reset(eff_tau_data_b1);
       eff_et_tau_leg_data_[10][0].reset(eff_tau_data_b10);
@@ -412,15 +405,37 @@ fastlane::TriggerHelper::TriggerHelper()
    }
 
    {
+      TFile f(edm::FileInPath("ttH/TauRoast/data/weights/tauleg_of_lepton_plus_tau_real_taus_skim_mc_v2.root").fullPath().c_str());
+      TGraphAsymmErrors *eff_tau_mc_b0;
+      TGraphAsymmErrors *eff_tau_mc_b1;
+      TGraphAsymmErrors *eff_tau_mc_b10;
+      TGraphAsymmErrors *eff_tau_mc_e0;
+      TGraphAsymmErrors *eff_tau_mc_e1;
+      TGraphAsymmErrors *eff_tau_mc_e10;
+      f.GetObject(("barrel_lowmt_zmass_sub_" + id + "Iso_dm0_HLT_LooseIso30_L1iso26/tau_pt").c_str(), eff_tau_mc_b0);
+      f.GetObject(("barrel_lowmt_zmass_sub_" + id + "Iso_dm1_HLT_LooseIso30_L1iso26/tau_pt").c_str(), eff_tau_mc_b1);
+      f.GetObject(("barrel_lowmt_zmass_sub_" + id + "Iso_dm10_HLT_LooseIso30_L1iso26/tau_pt").c_str(), eff_tau_mc_b10);
+      f.GetObject(("endcap_lowmt_zmass_sub_" + id + "Iso_dm0_HLT_LooseIso30_L1iso26/tau_pt").c_str(), eff_tau_mc_e0);
+      f.GetObject(("endcap_lowmt_zmass_sub_" + id + "Iso_dm1_HLT_LooseIso30_L1iso26/tau_pt").c_str(), eff_tau_mc_e1);
+      f.GetObject(("endcap_lowmt_zmass_sub_" + id + "Iso_dm10_HLT_LooseIso30_L1iso26/tau_pt").c_str(), eff_tau_mc_e10);
+      eff_et_tau_leg_mc_[0][0].reset(eff_tau_mc_b0);
+      eff_et_tau_leg_mc_[1][0].reset(eff_tau_mc_b1);
+      eff_et_tau_leg_mc_[10][0].reset(eff_tau_mc_b10);
+      eff_et_tau_leg_mc_[0][1].reset(eff_tau_mc_e0);
+      eff_et_tau_leg_mc_[1][1].reset(eff_tau_mc_e1);
+      eff_et_tau_leg_mc_[10][1].reset(eff_tau_mc_e10);
+   }
+
+   {
       TFile f(edm::FileInPath("ttH/TauRoast/data/weights/trigger_sf_mt.root").fullPath().c_str());
       TGraphAsymmErrors *eff_tau_mc_b;
       TGraphAsymmErrors *eff_tau_mc_e;
       TGraphAsymmErrors *eff_tau_data_b;
       TGraphAsymmErrors *eff_tau_data_e;
-      f.GetObject("mc_genuine_barrel_TightIso", eff_tau_mc_b);
-      f.GetObject("mc_genuine_endcap_TightIso", eff_tau_mc_e);
-      f.GetObject("data_genuine_barrel_TightIso", eff_tau_data_b);
-      f.GetObject("data_genuine_endcap_TightIso", eff_tau_data_e);
+      f.GetObject(("mc_genuine_barrel_" + id + "Iso").c_str(), eff_tau_mc_b);
+      f.GetObject(("mc_genuine_endcap_" + id + "Iso").c_str(), eff_tau_mc_e);
+      f.GetObject(("data_genuine_barrel_" + id + "Iso").c_str(), eff_tau_data_b);
+      f.GetObject(("data_genuine_endcap_" + id + "Iso").c_str(), eff_tau_data_e);
       eff_mt_tau_leg_mc_[0].reset(eff_tau_mc_b);
       eff_mt_tau_leg_mc_[1].reset(eff_tau_mc_e);
       eff_mt_tau_leg_data_[0].reset(eff_tau_data_b);
@@ -455,7 +470,8 @@ fastlane::TriggerHelper::weight(const superslim::Event& e)
    std::vector<std::string> l_cross_triggers;
    std::vector<float> l_binning;
 
-   std::array<std::auto_ptr<TGraphAsymmErrors>, 2>* eff_lt_tau_leg_mc = 0;
+   std::array<std::auto_ptr<TGraphAsymmErrors>, 2>* eff_lt_tau1_leg_mc = 0;
+   std::array<std::auto_ptr<TGraphAsymmErrors>, 2>* eff_lt_tau2_leg_mc = 0;
    std::array<std::auto_ptr<TGraphAsymmErrors>, 2>* eff_lt_tau1_leg_data = 0;
    std::array<std::auto_ptr<TGraphAsymmErrors>, 2>* eff_lt_tau2_leg_data = 0;
    std::array<std::auto_ptr<TGraphAsymmErrors>, 3>* eff_lt_lep_leg_mc = 0;
@@ -475,7 +491,8 @@ fastlane::TriggerHelper::weight(const superslim::Event& e)
       l_triggers = e_triggers;
       l_cross_triggers = e_cross_triggers;
       l_binning = e_binning;
-      eff_lt_tau_leg_mc = &eff_et_tau_leg_mc_;
+      eff_lt_tau1_leg_mc = &eff_et_tau_leg_mc_[e.taus()[0].decayMode()];
+      eff_lt_tau2_leg_mc = &eff_et_tau_leg_mc_[e.taus()[1].decayMode()];
       eff_lt_tau1_leg_data = &eff_et_tau_leg_data_[e.taus()[0].decayMode()];
       eff_lt_tau2_leg_data = &eff_et_tau_leg_data_[e.taus()[1].decayMode()];
       eff_lt_lep_leg_mc = &eff_et_lep_leg_mc_;
@@ -486,7 +503,8 @@ fastlane::TriggerHelper::weight(const superslim::Event& e)
       l_triggers = mu_triggers;
       l_cross_triggers = mu_cross_triggers;
       l_binning = mu_binning;
-      eff_lt_tau_leg_mc = &eff_mt_tau_leg_mc_;
+      eff_lt_tau1_leg_mc = &eff_mt_tau_leg_mc_;
+      eff_lt_tau2_leg_mc = &eff_mt_tau_leg_mc_;
       eff_lt_tau1_leg_data = &eff_mt_tau_leg_data_;
       eff_lt_tau2_leg_data = &eff_mt_tau_leg_data_;
       eff_lt_lep_leg_mc = &eff_mt_lep_leg_mc_;
@@ -514,8 +532,8 @@ fastlane::TriggerHelper::weight(const superslim::Event& e)
 
    float tau_leg_data = (1 - (1 - (*eff_lt_tau1_leg_data)[t1_bin]->Eval(t1_pt)) *
                              (1 - (*eff_lt_tau2_leg_data)[t2_bin]->Eval(t2_pt)));
-   float tau_leg_mc = (1 - (1 - (*eff_lt_tau_leg_mc)[t1_bin]->Eval(t1_pt)) *
-                           (1 - (*eff_lt_tau_leg_mc)[t2_bin]->Eval(t2_pt)));
+   float tau_leg_mc = (1 - (1 - (*eff_lt_tau1_leg_mc)[t1_bin]->Eval(t1_pt)) *
+                           (1 - (*eff_lt_tau2_leg_mc)[t2_bin]->Eval(t2_pt)));
 
    if (l_accepted and not l_cross_accepted) {
       p_data = (*eff_l_data)[l_bin]->Eval(l_pt) -
@@ -546,12 +564,13 @@ fastlane::TriggerHelper::weight(const superslim::Event& e)
              ) * tau_leg_mc;
    }
 
-   // std::cout << e.event() << " :: " << l_accepted << ", " << l_cross_accepted << std::endl;
+   // std::cout << ">>> " << e.event() << " :: " << l_accepted << ", " << l_cross_accepted << std::endl;
+   // std::cout << ">> " << e.taus()[0].decayMode() << " --- " << e.taus()[1].decayMode() << std::endl;
 
    // std::cout << "t1_data " << (*eff_lt_tau1_leg_data)[t1_bin]->Eval(t1_pt) << std::endl;
    // std::cout << "t2_data " << (*eff_lt_tau2_leg_data)[t2_bin]->Eval(t2_pt) << std::endl;
-   // std::cout << "t1_mc " << (*eff_lt_tau_leg_mc)[t1_bin]->Eval(t1_pt) << std::endl;
-   // std::cout << "t2_mc " << (*eff_lt_tau_leg_mc)[t2_bin]->Eval(t2_pt) << std::endl;
+   // std::cout << "t1_mc " << (*eff_lt_tau1_leg_mc)[t1_bin]->Eval(t1_pt) << std::endl;
+   // std::cout << "t2_mc " << (*eff_lt_tau2_leg_mc)[t2_bin]->Eval(t2_pt) << std::endl;
    // std::cout << "L_data " << (*eff_l_data)[l_bin]->Eval(l_pt) << std::endl;
    // std::cout << "l_data " << (*eff_lt_lep_leg_data)[l_bin]->Eval(l_pt) << std::endl;
    // std::cout << "L_mc " << (*eff_l_mc)[l_bin]->Eval(l_pt) << std::endl;
@@ -667,7 +686,7 @@ fastlane::update_weights(const std::string& process, std::unordered_map<std::str
    // Lepton and Trigger SF
    // =====================
 
-   static TriggerHelper triggerhelper;
+   static TriggerHelper triggerhelper(id);
    static LeptonHelper leptonhelper;
 
    ws[lower("LeptonSF")] = leptonhelper.weight(e.leptons()[0]);

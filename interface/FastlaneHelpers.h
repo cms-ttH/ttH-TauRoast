@@ -67,12 +67,12 @@ namespace fastlane {
 
    class TriggerHelper {
       public:
-         TriggerHelper();
+         TriggerHelper(const std::string& id);
          virtual ~TriggerHelper() {};
 
          float weight(const superslim::Event&);
       private:
-         std::array<std::auto_ptr<TGraphAsymmErrors>, 2> eff_et_tau_leg_mc_;
+         std::array<std::array<std::auto_ptr<TGraphAsymmErrors>, 2>, 11> eff_et_tau_leg_mc_;
          std::array<std::array<std::auto_ptr<TGraphAsymmErrors>, 2>, 11> eff_et_tau_leg_data_;
          std::array<std::auto_ptr<TGraphAsymmErrors>, 2> eff_mt_tau_leg_mc_;
          std::array<std::auto_ptr<TGraphAsymmErrors>, 2> eff_mt_tau_leg_data_;
