@@ -124,6 +124,8 @@ Leaf('tt_visiblemass', 'f', 'result = taus.size() >= 2 ? (taus.at(0).p4() + taus
 Leaf('tt_sumpt', 'f', 'result = taus.size() >= 2 ? (taus[0].p4() + taus[1].p4()).Pt() : -9999.')
 
 Leaf('nEvent', 'i', 'result = event.event()')
+Leaf('ls', 'i', 'result = event.lumi()')
+Leaf('run', 'i', 'result = event.run()')
 Leaf(
     'n_fakeablesel_ele', 'i', """
     result = std::count_if(
