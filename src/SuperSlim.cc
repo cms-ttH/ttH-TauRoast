@@ -641,8 +641,8 @@ namespace superslim {
    {
       for (unsigned int i = 0; i < all_leptons_.size(); ++i) {
          for (unsigned int j = i + 1; j < all_leptons_.size(); ++j) {
-            if (all_leptons_[i].fakeable() < superslim::id::Loose or
-                all_leptons_[j].fakeable() < superslim::id::Loose)
+            if (all_leptons_[i].preselected() or
+                all_leptons_[j].preselected())
                continue;
 
             auto m = (all_leptons_[i].p4() + all_leptons_[j].p4()).M();
