@@ -13,6 +13,7 @@ if config.taus >= 2:
         values=["tt_sumpt"],
         labels=["#sum p_{T} of #tau_{1,2}", "Events"],
         binning=[30, 0, 200],
+        essential=True
     )
     Plot(
         name="taus/TT_DeltaR",

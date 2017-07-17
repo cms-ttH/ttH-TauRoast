@@ -105,7 +105,8 @@ Plot(
     name="jets/JJ_MaxDeltaR",
     values=["jet_deltaRmax"],
     labels=["Max #DeltaR jet, jet", "Events"],
-    binning=[15, 0, 6.28]
+    binning=[15, 0, 6.28],
+    essential=True
 )
 
 # Leaf('jet_relativejes', '[f]',
