@@ -679,8 +679,8 @@ fastlane::update_weights(const std::string& process, std::unordered_map<std::str
    // Constants for weights
    // =====================
 
-   static const float tau_efficiency_scale = 1.00;
-   static const float tau_efficiency = 0.06;
+   static const float tau_efficiency_scale = 0.95;
+   static const float tau_efficiency = 0.05;
 
    // =====================
    // Lepton and Trigger SF
@@ -734,13 +734,13 @@ fastlane::update_weights(const std::string& process, std::unordered_map<std::str
 
    auto taus = e.taus();
    int real_taus = std::count_if(std::begin(taus), std::end(taus),
-         [](const superslim::Tau& t) { return t.match() == 5; });
+         [](const superslim::Tau& t) { return t.match() < 6; });
    // int real_electrons = std::count_if(std::begin(taus), std::end(taus),
    //       [](const superslim::Tau& t) { return t.match() == 1; });
    // int real_jets = std::count_if(std::begin(taus), std::end(taus),
    //       [](const superslim::Tau& t) { return t.match() == 6; });
 
-   ws[lower("tauIdEff")] = tau_efficiency_scale;
+   ws[lower("tauIdEff")] = std::pow(tau_efficiency_scale, real_taus);
    ws[lower("tauIdEffUp")] = std::pow(tau_efficiency_scale * (1 + tau_efficiency), real_taus);
    ws[lower("tauIdEffDown")] = std::pow(tau_efficiency_scale * (1 - tau_efficiency), real_taus);
    ws[lower("jetTauFakeUp")] = 1;

@@ -103,8 +103,8 @@ Leaf('jet_deltaRmax', 'f',
         result = drs.size() > 0 ? *std::max_element(drs.begin(), drs.end()) : -666.''')
 Plot(
     name="jets/JJ_MaxDeltaR",
-    values=["jet_deltaRmin"],
-    labels=["Min #DeltaR jet, jet", "Events"],
+    values=["jet_deltaRmax"],
+    labels=["Max #DeltaR jet, jet", "Events"],
     binning=[15, 0, 6.28]
 )
 
@@ -178,7 +178,7 @@ for i in range(2):
         binning=[20, 20, 250]
     )
 
-    Leaf('notag{}_pt'.format(i + 1), 'f', 'result = notags(jets).at({}).p4().Pt()'.format(i))
+    Leaf('notag{}_pt'.format(i + 1), 'f', 'result = notags(jets).size() > {0} ? notags(jets).at({0}).p4().Pt() : -666.'.format(i))
     Plot(
         name="jets/kinematic/NTag{}_Pt".format(i + 1),
         values=['notag{}_pt'.format(i + 1)],

@@ -166,4 +166,4 @@ def cutflow(cuts, processes, relative=False, weighed=False, f=sys.stdout):
             cutdata[-i] = [(float(b) / a if a != 0 else 0)
                            for a, b in zip(cutdata[-(i + 1)], cutdata[-i])]
 
-    print_cuts(cuts, procs, cutdata, expanded_proc, "Cut", f)
+    print_cuts(cuts, procs, cutdata, expanded_proc, "Cut", f, 5 if relative else 2)

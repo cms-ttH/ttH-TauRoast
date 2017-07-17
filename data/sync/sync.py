@@ -63,6 +63,7 @@ Leaf('MC_weight', 'f', 'result = weights["generator"]')
 Leaf('bTagSF_weight', 'f', 'result = weights["csvweight"]')
 Leaf('leptonSF_weight', 'f', 'result = weights["leptonsf"]')
 Leaf('triggerSF_weight', 'f', 'result = weights["triggersf"]')
+Leaf('tauSF_weight', 'f', 'result = weights["tauideff"]')
 
 Leaf('events', 'f', 'result = .5')
 Plot(
