@@ -347,8 +347,3 @@ def datacard(args, config):
                            '$TAG/common/$ANALYSIS_$BIN.root')
     writer.SetVerbosity(1)
     writer.WriteCards('limits', cb)
-
-
-def train(args, config):
-    import training
-    training.train(config, args.train)

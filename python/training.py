@@ -1,6 +1,5 @@
 #  vim: set fileencoding=utf-8 :
 import codecs
-from glob import glob
 import logging
 import os
 import pickle
@@ -13,7 +12,7 @@ from array import array
 from root_numpy.tmva import evaluate_reader
 
 from sklearn import cross_validation
-from sklearn.cross_validation import ShuffleSplit, train_test_split
+from sklearn.cross_validation import ShuffleSplit
 # from sklearn.tree import DecisionTreeClassifier
 # from sklearn.ensemble import AdaBoostClassifier
 from sklearn.feature_selection import RFECV
@@ -91,47 +90,6 @@ def read_inputs(config, setup):
     background_weights *= factor
 
     return signal, signal_weights, background, background_weights
-
-
-def create_bdts(outdir, setup, x_train, y_train, w_train):
-    # dt = DecisionTreeClassifier(max_depth=3,
-    #                             min_samples_leaf=500)
-    # bdt = AdaBoostClassifier(dt,
-    #                          algorithm='SAMME',
-    #                          n_estimators=800,
-    #                          learning_rate=0.5)
-    for dirname in glob(os.path.join(outdir, "bdt-*")):
-        with open(os.path.join(dirname, "bdt.pkl"), "rb") as fd:
-            bdt, label = pickle.load(fd)
-            bdt.label = label
-            yield bdt
-
-
-def train(config, name):
-    setup = load(config, name)
-    signal, signal_weight, background, background_weight = read_inputs(config, setup)
-
-    outdir = os.path.join(config["outdir"], 'sklearn_' + name)
-    if not os.path.exists(outdir):
-        os.makedirs(outdir)
-
-    plot_correlations(outdir, setup["variables"], signal, background)
-    plot_inputs(outdir, setup["variables"], signal, signal_weight, background, background_weight)
-
-    x = np.concatenate((signal, background))
-    y = np.concatenate((np.ones(signal.shape[0]),
-                        np.zeros(background.shape[0])))
-    w = np.concatenate((signal_weight, background_weight))
-
-    x_train, x_test, y_train, y_test, w_train, w_test = train_test_split(x, y, w, test_size=1.0 / CV)
-    bdts = list(create_bdts(outdir, setup, x_train, y_train, w_train))
-
-    if 'validation' in setup.get('features', []):
-        run_cross_validation(outdir, bdts, x, y)
-    if 'selection' in setup.get('features', []):
-        run_feature_elimination(outdir, bdts, x, y, setup)
-    if 'parameters' in setup.get('features', []):
-        run_grid_search(outdir, bdts[0], x, y)
 
 
 def evaluate(config, tree, names, transform=None):
