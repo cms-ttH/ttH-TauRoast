@@ -23,8 +23,6 @@ ag.add_argument('-f', '--fill', action='store_true', default=False,
                 help="fill histograms")
 ag.add_argument('-p', '--plot', action='store_true', default=False,
                 help="save histograms")
-ag.add_argument('-d', '--datacard', action='store_true', default=False,
-                help="save datacard")
 ag = parser.add_argument_group('general options')
 ag.add_argument('-i', '--input', type=str, default=None,
                 help="change input directory")
@@ -43,9 +41,6 @@ ag.add_argument('-e', '--essential', action='store_true', default=False,
 ag = parser.add_argument_group('debugging and syncronization options')
 ag.add_argument('--debug-cuts', action='store_true', default=False,
                 help="save event quantites after each cut")
-ag = parser.add_argument_group('datacard options')
-ag.add_argument('--discriminant', type=str, default='BDT',
-                help="which discriminant to use")
 
 args = parser.parse_args()
 
@@ -77,7 +72,7 @@ r.gErrorIgnoreLevel = 1001
 r.gSystem.Load("libttHTauRoast")
 
 from ttH.TauRoast import stylish, useful
-from ttH.TauRoast.actionable import analyze, add_mva, dump_categories, dump_cuts, fill, plot, datacard
+from ttH.TauRoast.actionable import analyze, add_mva, dump_categories, dump_cuts, fill, plot
 from ttH.TauRoast.plotting import Plot
 from ttH.TauRoast.processing import split_procs
 
@@ -112,8 +107,6 @@ if args.fill or args.plot:
     actions.append(dump_categories)
 if args.plot:
     actions.append(plot)
-if args.datacard:
-    actions.append(datacard)
 
 for action in actions:
     action(args, config)
