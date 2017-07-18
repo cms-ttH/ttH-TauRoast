@@ -13,11 +13,15 @@ from sklearn.metrics import roc_curve, auc
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import seaborn
 
 r.gROOT.SetBatch()
 r.gSystem.Load("libttHTauRoast")
 
 from ttH.TauRoast import useful, training
+
+seaborn.set_style('whitegrid', {'font.family': 'sans-serif', 'font.sans-serif': [u'Source Sans Pro']})
+seaborn.set_context('paper', font_scale=1.5)
 
 
 def load_variable(config, name):
@@ -74,6 +78,8 @@ def load_tmva(config, name):
 
 
 parser = argparse.ArgumentParser(description='Plot ROC curves')
+parser.add_argument('--labels', type=str,
+                    help='labels to use in the legend, comma separated')
 parser.add_argument('config', metavar='config', type=str,
                     help='a configuration file to use')
 parser.add_argument('names', type=str, nargs='*', metavar='name',
@@ -96,8 +102,12 @@ if args.input:
 useful.setup(config)
 useful.load_python(config.get('mode'))
 
-# def plot_roc(outdir, bdts, x_train, y_train, w_train, x_test, y_test, w_test, vismass):
-for name in args.names:
+if args.labels:
+    labels = args.labels.split(',')
+else:
+    labels = [n.split(':', 1)[0] if ':' in n else n for n in args.names]
+
+for name, label in zip(args.names, labels):
     if name.startswith("sklearn"):
         d_test, y_test, w_test, d_train, y_train, w_train = load_sklearn(config, name)
     elif name.startswith("tmva"):
@@ -105,22 +115,25 @@ for name in args.names:
     else:
         d_test, y_test, w_test, d_train, y_train, w_train = load_variable(config, name)
 
-    if ':' in name:
-        name, _ = name.split(':')
-
-    fpr, tpr, thresholds = roc_curve(y_test, d_test, sample_weight=w_test)
-    roc_auc = auc(fpr, tpr, True)
-    line = plt.plot(fpr, tpr, lw=1, label='ROC for {} (area = {:0.3f})'.format(name, roc_auc))
-
+    line = None
+    what = ''
     if d_train is not None:
         fpr, tpr, thresholds = roc_curve(y_train, d_train, sample_weight=w_train)
         roc_auc = auc(fpr, tpr, True)
-        plt.plot(fpr, tpr, '--', lw=1, color=line[-1].get_color(), label='ROC for {} training (area = {:0.3f})'.format(name, roc_auc))
+        line = plt.plot(fpr, tpr, '--', lw=1, label='{} training (area = {:0.3f})'.format(label, roc_auc))
+        what = ' testing'
+
+    fpr, tpr, thresholds = roc_curve(y_test, d_test, sample_weight=w_test)
+    roc_auc = auc(fpr, tpr, True)
+    if line:
+        plt.plot(fpr, tpr, lw=1, color=line[-1].get_color(), label='{}{} (area = {:0.3f})'.format(label, what, roc_auc))
+    else:
+        plt.plot(fpr, tpr, lw=1, label='{}{} (area = {:0.3f})'.format(label, what, roc_auc))
 
 plt.xlim([0., 1.])
 plt.xlabel('Background efficiency')
 plt.ylabel('Signal efficiency')
 
-plt.legend(loc='best')
-plt.savefig(os.path.join(config["outdir"], 'roc.pdf'))
+plt.legend(loc='best', frameon=True)
+plt.savefig(os.path.join(config["outdir"], 'roc.pdf'), bbox_inches='tight')
 plt.close()
