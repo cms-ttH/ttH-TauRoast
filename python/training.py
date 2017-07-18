@@ -206,6 +206,7 @@ def plot_validation_curve(outdir, bdt, x_train, y_train, w_train, x_test, y_test
     plt.axvline(x=best, color=line[-1].get_color())
     plt.legend(loc='best')
     plt.savefig(os.path.join(outdir, 'validation-curve.png'))
+    plt.savefig(os.path.join(outdir, 'validation-curve.pdf'))
     plt.close()
 
 
@@ -254,6 +255,7 @@ def plot_correlations(outdir, vars, sig, bkg):
         plt.title(label + " Correlations")
         plt.tight_layout()
         plt.savefig(os.path.join(outdir, 'correlations_{}.png'.format(label.lower())))
+        plt.savefig(os.path.join(outdir, 'correlations_{}.png'.format(label.lower())))
         plt.close()
 
 
@@ -262,6 +264,7 @@ def plot_feature_elimination(outdir, cls, n):
     plt.xlabel('# features')
     plt.ylabel('Score (ROC auc)')
     plt.savefig(os.path.join(outdir, 'bdt-{}'.format(n), 'feature-elimination.png'))
+    plt.savefig(os.path.join(outdir, 'bdt-{}'.format(n), 'feature-elimination.pdf'))
     plt.close()
 
 
@@ -272,6 +275,7 @@ def plot_inputs(outdir, vars, sig, sig_w, bkg, bkg_w):
         sns.distplot(sig[:, n], hist_kws={'weights': sig_w}, bins=bins, kde=False, norm_hist=True, label='signal')
         plt.title(var)
         plt.legend()
+        plt.savefig(os.path.join(outdir, 'input_{}.png'.format(var)))
         plt.savefig(os.path.join(outdir, 'input_{}.png'.format(var)))
         plt.close()
 
@@ -306,6 +310,7 @@ def plot_learning_curve(outdir, bdt, x, y):
 
     plt.legend()
     plt.savefig(os.path.join(outdir, 'learning-curve.png'))
+    plt.savefig(os.path.join(outdir, 'learning-curve.pdf'))
     plt.close()
 
 
