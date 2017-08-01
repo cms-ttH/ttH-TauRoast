@@ -87,8 +87,9 @@ def status(workdir):
     print "-" * len(header)
     print fmt.format(*totals, name="", status="", total=sum(totals))
 
+
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser('grudgingly manage many crab tasks')
+    parser = argparse.ArgumentParser(description='grudgingly manage many crab tasks')
     parser.add_argument('command', type=str, nargs=1,
                         help='the crab command to execute')
     parser.add_argument('checkpoint', metavar='[config|directory]', type=str, nargs=1,
