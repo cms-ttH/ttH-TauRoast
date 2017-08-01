@@ -58,14 +58,14 @@ options.register("globalTag", "80X_mcRun2_asymptotic_2016_TrancheIV_v8",
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.string,
                  "Global tag to use")
-options.setDefault("channels", "ttl,tll")
+options.setDefault("channels", "ttl")
 options.parseArguments()
 
 process = cms.Process("Taus")
 
 process.options = cms.untracked.PSet(
     wantSummary=cms.untracked.bool(True),
-    numberOfThreads=cms.untracked.uint32(2),
+    numberOfThreads=cms.untracked.uint32(1),
     numberOfStreams=cms.untracked.uint32(0),
     SkipEvent=cms.untracked.vstring('ProductNotFound')
 )

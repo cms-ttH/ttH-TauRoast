@@ -4,7 +4,8 @@ import random
 from WMCore.Configuration import Configuration
 from ttH.TauRoast.datasets import datasets, mctag
 
-version = "v0011"
+version = "v0025"
+# tag = "crabby"
 tag = "all"
 
 globaltag_mc = "80X_mcRun2_asymptotic_2016_miniAODv2_v1"
@@ -14,7 +15,8 @@ lumimask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certificatio
 
 
 def configs():
-    for path in random.sample(datasets(tag), 25):
+    dsets = list(set(datasets(tag)))
+    for path in random.sample(dsets, len(dsets)):
         _, major, minor, _ = path.split('/')
         minor = mctag(minor)
         label = (major + '_' + minor).replace('-', '_')
@@ -30,9 +32,10 @@ def configs():
         config.section_("General")
         config.General.requestName = version + "_" + label
         config.General.workArea = os.path.join(os.path.dirname(__file__), 'crabby_tau_' + version)
-        config.General.instance = 'jibbers-crabst.cern.ch'
-        config.General.transferLogs = False
-        config.General.transferOutputs = False
+        # config.General.instance = 'jibbers-crabst.cern.ch'
+        config.General.instance = 'vocms035.cern.ch'
+        config.General.transferLogs = True
+        config.General.transferOutputs = True
 
         config.section_("JobType")
         config.JobType.pluginName = 'Analysis'
@@ -41,10 +44,10 @@ def configs():
 
         config.section_("Data")
         config.Data.inputDataset = path
-        config.Data.publication = False
+        config.Data.publication = True
         config.Data.splitting = 'Automatic'
         hours = 60 ** 2
-        config.Data.unitsPerJob = 6 * hours
+        config.Data.unitsPerJob = 8 * hours
         if mask:
             config.Data.lumiMask = mask
 

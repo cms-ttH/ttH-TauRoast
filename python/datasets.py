@@ -264,7 +264,7 @@ datasets_collisions_rereco = """
 def datasets(tag):
     if tag == 'all':
         dsets = datasets_ttH + datasets_mc + datasets_collisions_rereco + datasets_tranche3
-    if tag == 'crabby':
+    elif tag == 'crabby':
         dsets = datasets_ttH + datasets_mc + datasets_collisions_rereco + datasets_tranche3 + datasets_crab
     elif tag == 'ttH':
         dsets = datasets_ttH
