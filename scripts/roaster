@@ -47,8 +47,8 @@ args = parser.parse_args()
 if 'LOCALRT' not in os.environ:
     parser.error("need to do a `cmsenv` first")
 
-if not any([args.analyze, args.mva, args.fill, args.plot, args.datacard]):
-    parser.error("need to either analyze, mva, fill, plot, or datacard")
+if not any([args.analyze, args.mva, args.fill, args.plot]):
+    parser.error("need to either analyze, mva, fill, or plot")
 
 # Logging setup
 logging.basicConfig(
