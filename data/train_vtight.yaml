@@ -7,7 +7,7 @@ outdir: ~/www/ttH/v6/train_vtight
 histformat: "{p}_{c}_{v}"
 tau ID: VTight
 
-mvadir: data/bdt
+mvadir: data/bdt.vt
 mvas:
   - sklearn_tt
   - sklearn_ttZ
