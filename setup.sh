@@ -41,6 +41,8 @@ EOB
 
    scram b -j 8
 
+   pip install --user --upgrade --global-option=build_ext --global-option="-L/cvmfs/cms.cern.ch/slc6_amd64_gcc530/external/python/2.7.11-ikhhed/lib/" root_numpy
+
    cd $CMSSW_BASE/external/$SCRAM_ARCH/
    git clone -b egm_id_80X_v1 https://github.com/ikrav/RecoEgamma-ElectronIdentification.git data/RecoEgamma/ElectronIdentification/data
 ) > setup.log
