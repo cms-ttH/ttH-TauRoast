@@ -1,0 +1,58 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import argparse
+import numpy as np
+import os
+import yaml
+import ROOT as r
+
+from root_numpy import hist2array
+
+import matplotlib
+matplotlib.use('Agg')
+
+import matplotlib.pyplot as plt
+import seaborn
+
+r.gROOT.SetBatch()
+r.gSystem.Load("libttHTauRoast")
+
+from ttH.TauRoast import useful
+
+seaborn.set_style('white', {'font.family': 'sans-serif', 'font.sans-serif': [u'Source Sans Pro']})
+seaborn.set_context('paper', font_scale=1.5)
+
+parser = argparse.ArgumentParser(description='Plot ROC curves')
+parser.add_argument('--labels', type=str,
+                    help='labels to use in the legend, comma separated')
+parser.add_argument('config', metavar='config', type=str,
+                    help='a configuration file to use')
+ag = parser.add_argument_group('general options')
+ag.add_argument('-i', '--input', type=str, default=None,
+                help="change input directory")
+ag.add_argument('-o', '--output', type=str, default=None,
+                help="change output directory")
+args = parser.parse_args()
+
+with open(args.config) as f:
+    config = yaml.load(f)
+
+if args.output:
+    config['outdir'] = args.output
+if args.input:
+    config['indir'] = args.input
+
+useful.setup(config)
+
+f = r.TFile(os.path.join(config.get("mvadir", config.get("indir", config["outdir"])), "mapping.root"), "READ")
+if f.IsOpen():
+    likelihood, (x, y) = hist2array(f.Get("hTargetBinning"), return_edges=True)
+
+likelihood = np.round(likelihood * 0.5)
+
+plt.pcolormesh(x, y, likelihood.T, rasterized=True, cmap=seaborn.cubehelix_palette(10, start=.5, rot=-.75, as_cmap=True))
+plt.xlabel(u'Output of BDT against tt')
+plt.ylabel(u'Output of BDT against ttZ')
+plt.colorbar(orientation='vertical', label='Final Binning')
+plt.savefig(os.path.join(config["outdir"], 'likelihood.pdf'), bbox_inches='tight')
