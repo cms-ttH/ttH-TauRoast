@@ -386,6 +386,7 @@ class Plot(object):
                 canvas.SaveAs(os.path.join(outdir, "{0}_{1}.{2}".format(self.__name, label, fmt)))
                 canvas.SetLogz()
                 canvas.SaveAs(os.path.join(outdir, "{0}_{1}_log.{2}".format(self.__name, label, fmt)))
+                canvas.SetLogz(False)
 
     def _build_ratio_errors(self, ratio, nom, div):
         graph = r.TGraphAsymmErrors(ratio)
@@ -554,9 +555,11 @@ class Plot(object):
             os.makedirs(subdir)
 
         canvas.SaveAs(os.path.join(outdir, self.__name + ".pdf"))
+        canvas.SaveAs(os.path.join(outdir, self.__name + ".tex"))
         canvas.GetPad(1).SetLogy()
         base_histo.GetYaxis().SetRangeUser(min_y, max_y * 20)
         canvas.SaveAs(os.path.join(outdir, self.__name + "_log.pdf"))
+        canvas.SaveAs(os.path.join(outdir, self.__name + "_log.tex"))
 
         if legend:
             del legend
