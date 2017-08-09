@@ -43,6 +43,15 @@ if config.taus >= 2:
         binning=[5, 0, 200]
     )
 
+Leaf('tau_pt', '[f]', 'result.resize(taus.size()); std::transform(taus.begin(), taus.end(), result.begin(), [](const superslim::Tau& t) { return t.p4().pt(); })')
+Plot(
+    name="taus/kinematic/T_Pt",
+    values=["tau_pt"],
+    labels=["#tau P_{T}", "Events"],
+    binning=[10, 20, 120],
+    essential=True
+)
+
 for n in range(config.taus):
     lbl = "#tau_{{{0}}} ".format(n + 1)
 

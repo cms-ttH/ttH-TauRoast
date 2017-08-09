@@ -2,6 +2,15 @@ from ttH.TauRoast.botany import Leaf
 from ttH.TauRoast.plotting import Plot
 from ttH.TauRoast.useful import config
 
+Leaf('lep_pt', '[f]', 'result.resize(leptons.size()); std::transform(leptons.begin(), leptons.end(), result.begin(), [](const superslim::Lepton& t) { return t.p4().pt(); })')
+Plot(
+    name="leptons/kinematic/L_Pt",
+    values=["lep_pt"],
+    labels=["#ell P_{T}", "Events"],
+    binning=[10, 10, 110],
+    essential=True
+)
+
 for n in range(config.leptons):
     lbl = "l_{{{0}}} ".format(n + 1)
 
@@ -94,7 +103,8 @@ for n in range(config.leptons):
         name="leptons/kinematic/L{0}_Pt".format(n + 1),
         values=["lep{0}_pt".format(n + 1)],
         labels=[lbl + "P_{T}", "Events"],
-        binning=[20, 0, 150]
+        binning=[20, 0, 150],
+        essential=True
     )
     Plot(
         name="leptons/kinematic/L{0}_Eta".format(n + 1),

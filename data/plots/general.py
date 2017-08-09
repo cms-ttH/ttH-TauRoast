@@ -235,7 +235,8 @@ Plot(
     name="general/MET",
     values=["met"],
     labels=["MET", "Events"],
-    binning=[20, 0, 300]
+    binning=[20, 0, 300],
+    essential=True
 )
 Plot(
     name="general/HT_old",
