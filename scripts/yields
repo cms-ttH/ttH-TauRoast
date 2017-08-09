@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+
+import argparse
+import CombineHarvester.CombineTools.ch as ch
+import ROOT as r
+
+from rootpy.io import root_open
+
+r.gROOT.SetBatch()
+r.gStyle.SetOptStat(0)
+
+
+def print_stats(p, s):
+    print "{0:20} & {1:5.2f} & {2:5.2f} \\\\".format(p, s.GetRate(), s.GetUncertainty())
+
+
+def print_things(cmb):
+    for b in cmb.bin_set():
+        cat = cmb.cp().bin([b])
+        for p in cat.process_set():
+            print_stats(p, cat.cp().process([p]))
+        print_stats("Total Background", cat.cp().backgrounds())
+        print_stats("Total Signal", cat.cp().signals())
+
+
+parser = argparse.ArgumentParser(description='dump event yields from CombineHarvester files')
+parser.add_argument('datacard', help='datacard filename')
+parser.add_argument('fit', help='fit filename')
+args = parser.parse_args()
+
+cmb = ch.CombineHarvester()
+cmb.ParseDatacard(args.datacard, mass="125")
+
+print "PRE-FIT"
+print "-------"
+print_things(cmb)
+
+cmb.UpdateParameters(root_open(args.fit).fit_s)
+
+print "POST-FIT"
+print "--------"
+print_things(cmb)
