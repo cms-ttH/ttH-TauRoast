@@ -11,14 +11,14 @@ r.gROOT.SetBatch()
 r.gStyle.SetOptStat(0)
 
 parser = argparse.ArgumentParser(description='create likelihood mapping for combining MVAs')
-parser.add_argument('--bins', help='how many bins to use', type=int, default=60)
+parser.add_argument('--bins', help='how many bins to use', type=int, default=20)
 parser.add_argument('infile', help='input filename')
 parser.add_argument('outfile', help='output filename')
 args = parser.parse_args()
 
 with root_open(args.infile) as f:
     likelihood = r.TH2F("hist", "Likelihood;BDT score for tt;BDT score for ttZ", args.bins, -1, 1, args.bins, -1, 1)
-    f.ttH2Nonbb_125_train_mva.Draw("tmvalike_tt:tmvalike_ttZ", "0.000000005172", hist=likelihood)
+    f.ttH2Nonbb_125_train_mva.Draw("tmvalike_ttZ:tmvalike_tt", "0.000000005172", hist=likelihood)
 
     f.ttjets_dl_pow_train_mva.AddFriend(f.ttjets_dl_pow_train)
     f.ttjets_sl_pow_train_mva.AddFriend(f.ttjets_sl_pow_train)
@@ -26,9 +26,9 @@ with root_open(args.infile) as f:
     likelihood_ttZ = r.TH2F("histttZ", "Likelihood;BDT score for tt;BDT score for ttZ", args.bins, -1, 1, args.bins, -1, 1)
     likelihood_tt_sl = r.TH2F("histsl", "Likelihood;BDT score for tt;BDT score for ttZ", args.bins, -1, 1, args.bins, -1, 1)
     likelihood_tt_dl = r.TH2F("histdl", "Likelihood;BDT score for tt;BDT score for ttZ", args.bins, -1, 1, args.bins, -1, 1)
-    f.ttZ_train_mva.Draw("tmvalike_tt:tmvalike_ttZ", "0.000000000506", hist=likelihood_ttZ)
-    f.ttjets_dl_pow_train_mva.Draw("tmvalike_tt:tmvalike_ttZ", "0.0000003492 * w_fake", hist=likelihood_tt_dl)
-    f.ttjets_sl_pow_train_mva.Draw("tmvalike_tt:tmvalike_ttZ", "0.0000007280 * w_fake", hist=likelihood_tt_sl)
+    f.ttZ_train_mva.Draw("tmvalike_ttZ:tmvalike_tt", "0.000000000506", hist=likelihood_ttZ)
+    f.ttjets_dl_pow_train_mva.Draw("tmvalike_ttZ:tmvalike_tt", "0.0000003492 * w_fake", hist=likelihood_tt_dl)
+    f.ttjets_sl_pow_train_mva.Draw("tmvalike_ttZ:tmvalike_tt", "0.0000007280 * w_fake", hist=likelihood_tt_sl)
 
     print "DL", likelihood_tt_dl.Integral()
     print "SL", likelihood_tt_sl.Integral()
@@ -36,7 +36,7 @@ with root_open(args.infile) as f:
 
     likelihood_ttZ.Add(likelihood_tt_sl)
     likelihood_ttZ.Add(likelihood_tt_dl)
-    likelihood.Divide(likelihood_ttZ)
+    likelihood.Multiply(likelihood_ttZ)
 
     likelihood.Scale(1. / likelihood.GetMaximum())
     with root_open(args.outfile, "recreate") as of:
@@ -49,8 +49,9 @@ with root_open(args.infile) as f:
     values = [likelihood.GetBinContent(likelihood.FindBin(e.tmvalike_tt, e.tmvalike_ttZ)) for e in t]
 
     fractions = [0, 5, 17.5, 37.5, 65, 100]
-    fractions = np.linspace(0, 100, 6)
+    fractions = np.linspace(0, 100, 10)
     quants = [np.percentile(values, n) for n in fractions]
+    quants = np.linspace(0, likelihood.GetMaximum(), 10)
     quants[-1] += .001
     remap = Hist(quants)
 
