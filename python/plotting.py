@@ -76,18 +76,18 @@ class Plot(object):
                     hist.GetXaxis().SetBinLabel(n, label)
 
     def _add_legend(self, config, factor):
-        l = Legend(0.05, 4, 0.03)
+        legend = Legend(0.05, 4, 0.03)
         if len(self.__backgrounds_present) > 0:
-            l.draw_marker(20, r.kBlack, "Data")
+            legend.draw_marker(20, r.kBlack, "Data")
             for cfg in config['backgrounds']:
                 props = {'SetFillStyle': 1001}
                 props.update(cfg)
                 bkg = props.pop('process')
                 if bkg not in self.__backgrounds_present:
                     continue
-                l.draw_box({k: self._eval(v) for (k, v) in props.items()}, Process.get(bkg).fullname, centerline=True)
+                legend.draw_box({k: self._eval(v) for (k, v) in props.items()}, Process.get(bkg).fullname, centerline=True)
         if len(self.__signals_present) > 0:
-            l.new_row()
+            legend.new_row()
             for cfg in config['signals']:
                 sig, color = cfg.items()[0]
                 if sig not in self.__signals_present:
@@ -95,9 +95,9 @@ class Plot(object):
                 label = Process.get(sig).fullname
                 if factor != 1:
                     label += " (#times {0:.1f})".format(factor)
-                l.draw_line(2, self._eval(color), label)
-                l.new_row()
-        return l
+                legend.draw_line(2, self._eval(color), label)
+                legend.new_row()
+        return legend
 
     def _eval(self, color):
         if not isinstance(color, basestring):
@@ -382,9 +382,10 @@ class Plot(object):
             if not os.path.exists(subdir) and subdir != '':
                 os.makedirs(subdir)
 
-            canvas.SaveAs(os.path.join(outdir, "{0}_{1}.pdf".format(self.__name, label)))
-            canvas.SetLogz()
-            canvas.SaveAs(os.path.join(outdir, "{0}_{1}_log.pdf".format(self.__name, label)))
+            for fmt in "pdf tex".split():
+                canvas.SaveAs(os.path.join(outdir, "{0}_{1}.{2}".format(self.__name, label, fmt)))
+                canvas.SetLogz()
+                canvas.SaveAs(os.path.join(outdir, "{0}_{1}_log.{2}".format(self.__name, label, fmt)))
 
     def _build_ratio_errors(self, ratio, nom, div):
         graph = r.TGraphAsymmErrors(ratio)
