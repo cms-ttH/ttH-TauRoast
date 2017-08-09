@@ -4,7 +4,7 @@ import random
 from WMCore.Configuration import Configuration
 from ttH.TauRoast.datasets import datasets, mctag
 
-version = "v0025"
+version = "v0026"
 # tag = "crabby"
 tag = "all"
 
@@ -33,7 +33,7 @@ def configs():
         config.General.requestName = version + "_" + label
         config.General.workArea = os.path.join(os.path.dirname(__file__), 'crabby_tau_' + version)
         # config.General.instance = 'jibbers-crabst.cern.ch'
-        config.General.instance = 'vocms035.cern.ch'
+        config.General.instance = 'preprod'
         config.General.transferLogs = True
         config.General.transferOutputs = True
 
@@ -47,7 +47,7 @@ def configs():
         config.Data.publication = True
         config.Data.splitting = 'Automatic'
         hours = 60 ** 2
-        config.Data.unitsPerJob = 8 * hours
+        config.Data.unitsPerJob = 10 * hours
         if mask:
             config.Data.lumiMask = mask
 
