@@ -85,7 +85,7 @@ class Plot(object):
                 bkg = props.pop('process')
                 if bkg not in self.__backgrounds_present:
                     continue
-                legend.draw_box({k: self._eval(v) for (k, v) in props.items()}, Process.get(bkg).fullname, centerline=True)
+                legend.draw_box({k: self._eval(v) for (k, v) in props.items()}, Process.get(bkg).fullname, centerline=False)
         if len(self.__signals_present) > 0:
             legend.new_row()
             for cfg in config['signals']:
@@ -466,7 +466,7 @@ class Plot(object):
     def _save1d(self, config, outdir, systematics=None):
         min_y = 0.002
         max_y = min_y
-        scale = 1.15
+        scale = 1.05
         factor = config.get("scale factor", "auto")
         split = config.get("show ratio", True)
 
@@ -516,9 +516,8 @@ class Plot(object):
             base_histo.GetYaxis().SetTitle("")
 
         if config.get("legend", True):
-            scale = 1.175 + 0.05 * (
-                math.ceil(len(config['backgrounds'] + config.get('data', [])) / 4. + 1)
-                + len(config['signals']))
+            scale += 0.05 * (math.ceil(len(config['backgrounds'] + config.get('data', [])) / 4. + 1)
+                             + len(config['signals']))
 
         max_y = scale * self._get_maximum(err_abs, factor, signals, collisions)
 
