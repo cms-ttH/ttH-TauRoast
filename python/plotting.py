@@ -254,6 +254,14 @@ class Plot(object):
                 pass
         return res
 
+    def _get_maximum(self, error, factor, signals, data):
+        values = [factor * h.GetMaximum() for h in signals]
+        ys = error.GetY()
+        values += [ys[i] + error.GetErrorYhigh(i) for i in range(error.GetN())]
+        for d in data:
+            values += [d.GetBinContent(i + 1) + d.GetBinError(i + 1) for i in range(d.GetNbinsX())]
+        return max(values)
+
     def _get_signals(self, config):
         res = []
         for cfg in config['signals']:
@@ -512,8 +520,7 @@ class Plot(object):
                 math.ceil(len(config['backgrounds'] + config.get('data', [])) / 4. + 1)
                 + len(config['signals']))
 
-        max_y = scale * max([bkg_stack.GetMaximum()] + [factor * h.GetMaximum() for h in signals] +
-                            [c.GetMaximum() for c in collisions])
+        max_y = scale * self._get_maximum(err_abs, factor, signals, collisions)
 
         if max_y == 0:
             logging.warning("empty plot: {0}".format(self.__name))
