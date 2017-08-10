@@ -2,6 +2,7 @@
 import ROOT as r
 
 ratio_plot_max = 2.3
+ratio_plot_min = 0.05
 small_number = 1e-5
 y_divide = 0.3
 
@@ -75,14 +76,16 @@ def setup_lower_axis(histo):
     histo.GetXaxis().SetLabelSize(0.12)
     histo.GetXaxis().SetLabelOffset(0.02)
 
+    scale = (1 - y_divide) / y_divide
+
     histo.GetYaxis().SetTitleFont(62)
     histo.GetYaxis().SetTitle("Data/MC")
     histo.GetYaxis().CenterTitle()
-    histo.GetYaxis().SetTitleSize(0.1)
-    histo.GetYaxis().SetTitleOffset(0.45)
+    histo.GetYaxis().SetTitleSize(0.05 * scale)   # / y_divide)
+    histo.GetYaxis().SetTitleOffset(1.1 / scale)  # * y_divide)
     histo.GetYaxis().SetLabelFont(62)
-    histo.GetYaxis().SetLabelSize(0.1)
-    histo.GetYaxis().SetRangeUser(0, ratio_plot_max)
+    histo.GetYaxis().SetLabelSize(0.04 * scale)   # / y_divide)
+    histo.GetYaxis().SetRangeUser(ratio_plot_min, ratio_plot_max)
     histo.GetYaxis().SetNdivisions(505)
 
 

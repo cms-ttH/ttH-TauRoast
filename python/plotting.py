@@ -449,9 +449,9 @@ class Plot(object):
         line.SetLineWidth(1)
         line.DrawLineNDC(
             r.gPad.GetLeftMargin(),
-            r.gPad.GetBottomMargin() + (1 / stylish.ratio_plot_max) * (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin()),
+            r.gPad.GetBottomMargin() + ((1 - stylish.ratio_plot_min) / (stylish.ratio_plot_max - stylish.ratio_plot_min)) * (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin()),
             1 - r.gPad.GetRightMargin(),
-            r.gPad.GetBottomMargin() + (1 / stylish.ratio_plot_max) * (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin()))
+            r.gPad.GetBottomMargin() + ((1 - stylish.ratio_plot_min) / (stylish.ratio_plot_max - stylish.ratio_plot_min)) * (1 - r.gPad.GetBottomMargin() - r.gPad.GetTopMargin()))
 
         return err, rel_err
 
