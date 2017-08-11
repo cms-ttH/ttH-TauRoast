@@ -30,4 +30,4 @@ signals:
   - ttjets_pow_train: r.kRed
   - ttH2Nonbb_125_amc: r.kRed
   - ttH2Nonbb_125_fake_amc: r.kRed + 2
-  - ttZ: r.kGreen + 1
+  # - ttZ: r.kGreen + 1
