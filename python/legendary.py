@@ -50,6 +50,7 @@ class Legend:
         for k, v in cfg.items():
             getattr(pave, k)(v)
         pave.SetBorderSize(0 if not line else 1)
+        pave.SetLineWidth(0 if not line else 1)
         pave.Draw()
         self.__paves.append(pave)
 
