@@ -69,14 +69,14 @@ def setup_upper_axis(histo, scale=True, split=True, is2d=False):
 
 
 def setup_lower_axis(histo):
-    histo.GetXaxis().SetTitleFont(62)
-    histo.GetXaxis().SetTitleSize(0.14)
-    histo.GetXaxis().SetTitleOffset(0.9)
-    histo.GetXaxis().SetLabelFont(62)
-    histo.GetXaxis().SetLabelSize(0.12)
-    histo.GetXaxis().SetLabelOffset(0.02)
-
     scale = (1 - y_divide) / y_divide
+
+    histo.GetXaxis().SetTitleFont(62)
+    histo.GetXaxis().SetTitleSize(0.05 * scale)
+    histo.GetXaxis().SetTitleOffset(1.3)
+    histo.GetXaxis().SetLabelFont(62)
+    histo.GetXaxis().SetLabelSize(0.04 * scale)
+    histo.GetXaxis().SetLabelOffset(0.02)
 
     histo.GetYaxis().SetTitleFont(62)
     histo.GetYaxis().SetTitle("Data/MC")
@@ -109,7 +109,7 @@ def setup_upper_pad(pad):
 
 def setup_lower_pad(pad):
     pad.SetPad(small_number, small_number, 1 - small_number, y_divide - small_number)
-    pad.SetBottomMargin(0.3)
+    pad.SetBottomMargin(0.4)
     pad.SetLeftMargin(0.11)
     pad.SetRightMargin(0.05)
     pad.SetTopMargin(small_number)
