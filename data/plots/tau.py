@@ -52,6 +52,15 @@ Plot(
     essential=True
 )
 
+Leaf('tau_eta', '[f]', 'result.resize(taus.size()); std::transform(taus.begin(), taus.end(), result.begin(), [](const superslim::Tau& t) { return t.p4().eta(); })')
+Plot(
+    name="taus/kinematic/T_Eta",
+    values=["tau_eta"],
+    labels=["#tau #eta", "Events"],
+    binning=[10, -2.5, 2.5],
+    essential=True
+)
+
 for n in range(config.taus):
     lbl = "#tau_{{{0}}} ".format(n + 1)
 

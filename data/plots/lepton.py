@@ -11,6 +11,15 @@ Plot(
     essential=True
 )
 
+Leaf('lep_eta', '[f]', 'result.resize(leptons.size()); std::transform(leptons.begin(), leptons.end(), result.begin(), [](const superslim::Lepton& t) { return t.p4().eta(); })')
+Plot(
+    name="leptons/kinematic/L_Eta",
+    values=["lep_eta"],
+    labels=["#ell #eta", "Events"],
+    binning=[10, -2.5, 2.5],
+    essential=True
+)
+
 for n in range(config.leptons):
     lbl = "l_{{{0}}} ".format(n + 1)
 

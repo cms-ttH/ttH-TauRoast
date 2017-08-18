@@ -105,7 +105,8 @@ Plot(
     name="general/NumVertices",
     values=['npv'],
     labels=["Number PV", "Events"],
-    binning=[40, 0, 40]
+    binning=[40, 0, 40],
+    essential=True
 )
 Plot(
     name="general/NumVertices_coarse",

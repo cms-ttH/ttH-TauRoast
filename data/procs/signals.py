@@ -55,7 +55,7 @@ BasicProcess(
 BasicProcess(
     name="ttH2TT_125_amc",
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
-    limitname="ttH_htt_gentau",
+    limitname="ttH_htt",
     paths=['ttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix_ext1_v1'],
     cross_section=0.2151,  # 0.5085 * (1 - 0.577),
     events=10045633,
@@ -68,7 +68,7 @@ BasicProcess(
 BasicProcess(
     name="ttH2WW_125_amc",
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
-    limitname="ttH_hww_gentau",
+    limitname="ttH_hww",
     paths=['ttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix_ext1_v1'],
     cross_section=0.2151,  # 0.5085 * (1 - 0.577),
     events=10045633,
@@ -81,7 +81,7 @@ BasicProcess(
 BasicProcess(
     name="ttH2ZZ_125_amc",
     fullname="t#bar{t}H(125) #rightarrow b#bar{b}",
-    limitname="ttH_hzz_gentau",
+    limitname="ttH_hzz",
     paths=['ttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix_ext1_v1'],
     cross_section=0.2151,  # 0.5085 * (1 - 0.577),
     events=10045633,
