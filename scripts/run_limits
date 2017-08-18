@@ -1,0 +1,65 @@
+#!/bin/bash
+
+set -x
+set -e
+
+ids=vtight
+vars="TMVAlike10_likelihood TMVAlike8_tt"
+
+tag=signal
+indate=07-17
+outdate=08-18
+version=45
+
+inputs=/afs/crc.nd.edu/user/m/mwolf3/www/ttH/v${version}/ttl_2017-${indate}_${tag}
+dirname=/afs/crc.nd.edu/user/m/mwolf3/work/ttH/releases/CMSSW_7_4_16_patch2_combine/src/CombineHarvester/${outdate}_${tag}
+fixer=/afs/crc.nd.edu/user/m/mwolf3/work/ttH/releases/CMSSW_8_0_26_patch1/src/ttH/TauRoast/scripts/fix_histos
+paperdir=/afs/crc.nd.edu/user/m/mwolf3/work/notes/papers/HIG-17-018/trunk/datacards
+
+datacards_htt="$(echo $paperdir/tth_htt/2017Jul21/*1tau*.txt)"
+datacards_multilep="$(echo $paperdir/tth_multilep/cards_v7d_170716_splitdecays/*.txt)"
+
+[ -d $dirname ] && rm -rf $dirname
+mkdir $dirname
+cd $dirname
+
+mydatacards=""
+for var in $vars; do
+   for cat in inclusive; do
+      newvar=${var}_${cat}
+      for id in $ids; do
+         cp ${inputs}_${id}/limits.root limits_${id}.root
+         $fixer limits_${id}.root $newvar
+         cp limits_${id}.root limits_${id}_${newvar}.root
+         workspace=ws_${newvar}_${id}.root
+         datacard=${workspace%%root}txt
+         WriteDatacards_1l_2tau_FRjt_syst --input_file=$PWD/limits_${id}.root --output_file=$workspace
+         mydatacards="$mydatacards $datacard"
+      done
+   done
+done
+
+datacards="$mydatacards"
+for datacard in $mydatacards; do
+   if [[ "$datacard" == *_tt_* ]]; then
+      combineCards.py $datacard $datacards_htt > ws_combination_htt.txt
+      combineCards.py $datacard $datacards_htt $datacards_multilep > ws_combination_htt_multilep.txt
+      datacards="$datacards ws_combination_htt.txt ws_combination_htt_multilep.txt"
+   fi
+done
+
+for datacard in $datacards; do
+   combine -M Asymptotic -m 125 $datacard &> ${datacard%%.txt}.log
+   combine -M MaxLikelihoodFit -m 125 $datacard &> ${datacard%%.txt}_fit.log
+   PostFitShapes -d $datacard -o ${datacard%%.txt}_shapes.root -m 125 -f mlfit.root:fit_s --postfit --sampling --print &> ${datacard%%.txt}_shapes.log
+   cp mlfit.root ${datacard%%.txt}_fit.root
+   # root -b -n -q -l $CMSSW_BASE'/src/CombineHarvester/ttH_htt/macros/makePostFitPlots_1l_2tau.C("'${datacard%%.txt}'_shapes.root","'${datacard%%.txt}.pdf'")++'
+
+#    rootspace=rt_${datacard##ws_}
+#    impacts=${datacard%%.txt}_impacts
+#    text2workspace.py $datacard -m 125 -o $rootspace
+#    combineTool.py -M Impacts -d $rootspace -m 125 --doInitialFit --robustFit 1
+#    combineTool.py -M Impacts -d $rootspace -m 125 --robustFit 1 --doFits --parallel 32
+#    combineTool.py -M Impacts -d $rootspace -m 125 -o ${impacts}.json
+#    plotImpacts.py -i ${impacts}.json -o ${impacts}.pdf
+done
