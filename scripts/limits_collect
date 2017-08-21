@@ -1,0 +1,55 @@
+#!/usr/bin/env python
+# vim: set fileencoding=utf-8 :
+
+import argparse
+import glob
+import re
+
+fitre = re.compile(r'Best fit r: ([-\d.]+(?:e-?[\d]+)?)\s+(-[\d.]+(?:e-?[\d]+)?)/(\+[\d.]+(?:e-?[\d]+)?)')
+
+mapping = [
+    ('TMVAlike10', r'against \Ptt and \PttZ'),
+    ('TMVAlike8_tt', r'against \Ptt'),
+    ('combination_htt', r'Final states with \Ptauh'),
+    ('combination_multilep', r'Combination'),
+]
+
+
+def channel(s):
+    for test, result in mapping:
+        if test in s:
+            return result
+
+
+def read_limits(logs):
+    limits = {}
+    for fn in logs:
+        with open(fn) as fd:
+            limits[channel(fn)] = [ln.split()[-1] for ln in fd if 'r <' in ln]
+    for _, name in mapping:
+        print("{n} & {lm[0]} & {lm[3]} & {lm[2]} & {lm[4]} & {lm[1]} & {lm[5]}".format(n=name, lm=limits[name]))
+
+
+def read_best_fits(logs):
+    fits = {}
+    for fn in logs:
+        with open(fn) as fd:
+            for line in fd:
+                m = fitre.match(line)
+                if m:
+                    fits[channel(fn)] = [float(f) for f in m.groups()]
+                    break
+    for _, name in mapping:
+        print("\(μ = {1:0.2f}^{{{3:+0.2f}}}_{{{2:0.2f}}}\) {0},{1},{2},{3}".format(name, *fits[name]))
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('inputdir', help='directory containing limit output')
+args = parser.parse_args()
+
+logfiles = set(glob.glob(args.inputdir + '/*.log'))
+fitfiles = set(glob.glob(args.inputdir + '/*_fit.log'))
+shapefiles = set(glob.glob(args.inputdir + '/*_shapes.log'))
+
+read_limits(logfiles - fitfiles - shapefiles)
+read_best_fits(fitfiles)

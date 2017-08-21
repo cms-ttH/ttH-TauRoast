@@ -22,6 +22,7 @@ datacards_multilep="$(echo $paperdir/tth_multilep/cards_v7d_170716_splitdecays/*
 [ -d $dirname ] && rm -rf $dirname
 mkdir $dirname
 cd $dirname
+eval `scramv1 runtime -sh`
 
 mydatacards=""
 for var in $vars; do
@@ -43,10 +44,14 @@ datacards="$mydatacards"
 for datacard in $mydatacards; do
    if [[ "$datacard" == *_tt_* ]]; then
       combineCards.py $datacard $datacards_htt > ws_combination_htt.txt
-      combineCards.py $datacard $datacards_htt $datacards_multilep > ws_combination_htt_multilep.txt
-      datacards="$datacards ws_combination_htt.txt ws_combination_htt_multilep.txt"
+      combineCards.py $datacard $datacards_htt $datacards_multilep > ws_combination_multilep.txt
+      datacards="$datacards ws_combination_htt.txt ws_combination_multilep.txt"
    fi
 done
+
+combineCards.py $(echo $datacards_htt|awk 'BEGIN{RS=" ";ORS=" "}/_2lss_/{print}') > ws_2lss1tau.txt
+cat $(echo $datacards_htt|awk 'BEGIN{RS=" ";ORS=" "}/_3l_/{print}') > ws_3l1tau.txt
+datacards="$datacards ws_2lss1tau.txt ws_3l1tau.txt"
 
 for datacard in $datacards; do
    combine -M Asymptotic -m 125 $datacard &> ${datacard%%.txt}.log
