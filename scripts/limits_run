@@ -50,13 +50,15 @@ for datacard in $mydatacards; do
 done
 
 combineCards.py $(echo $datacards_htt|awk 'BEGIN{RS=" ";ORS=" "}/_2lss_/{print}') > ws_2lss1tau.txt
-cat $(echo $datacards_htt|awk 'BEGIN{RS=" ";ORS=" "}/_3l_/{print}') > ws_3l1tau.txt
+combineCards.py $(echo $datacards_htt|awk 'BEGIN{RS=" ";ORS=" "}/_3l_/{print}') > ws_3l1tau.txt
 datacards="$datacards ws_2lss1tau.txt ws_3l1tau.txt"
 
 for datacard in $datacards; do
    combine -M Asymptotic -m 125 $datacard &> ${datacard%%.txt}.log
-   combine -M MaxLikelihoodFit -m 125 $datacard &> ${datacard%%.txt}_fit.log
-   PostFitShapes -d $datacard -o ${datacard%%.txt}_shapes.root -m 125 -f mlfit.root:fit_s --postfit --sampling --print &> ${datacard%%.txt}_shapes.log
+   combine -M MaxLikelihoodFit -m 125 --robustFit=1 --rMin=-3 --rMax=5 $datacard &> ${datacard%%.txt}_fit.log
+   if [[ $datacard == *TMVA* ]]; then
+      PostFitShapes -d $datacard -o ${datacard%%.txt}_shapes.root -m 125 -f mlfit.root:fit_s --postfit --sampling --print &> ${datacard%%.txt}_shapes.log
+   fi
    cp mlfit.root ${datacard%%.txt}_fit.root
    # root -b -n -q -l $CMSSW_BASE'/src/CombineHarvester/ttH_htt/macros/makePostFitPlots_1l_2tau.C("'${datacard%%.txt}'_shapes.root","'${datacard%%.txt}.pdf'")++'
 

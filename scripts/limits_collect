@@ -5,11 +5,13 @@ import argparse
 import glob
 import re
 
-fitre = re.compile(r'Best fit r: ([-\d.]+(?:e-?[\d]+)?)\s+(-[\d.]+(?:e-?[\d]+)?)/(\+[\d.]+(?:e-?[\d]+)?)')
+fitre = re.compile(r'Best fit r: ([-\d.]+(?:e-?[\d]+)?)\s+-([\d.]+(?:e-?[\d]+)?)/(\+[\d.]+(?:e-?[\d]+)?)')
 
 mapping = [
-    ('TMVAlike10', r'against \Ptt and \PttZ'),
-    ('TMVAlike8_tt', r'against \Ptt'),
+    ('TMVAlike10', r'\(\SI{1}{\Plep}+\SI{2}{\Ptauh}\) (\Ptt, \PttZ)'),
+    ('TMVAlike8_tt', r'\(\SI{1}{\Plep}+\SI{2}{\Ptauh}\) (\Ptt)'),
+    ('2lss1tau', r'\(\SI{2}{\Plep ss}+\SI{1}{\Ptauh}\)'),
+    ('3l1tau', r'\(\SI{3}{\Plep}+\SI{1}{\Ptauh}\)'),
     ('combination_htt', r'Final states with \Ptauh'),
     ('combination_multilep', r'Combination'),
 ]
@@ -24,9 +26,11 @@ def channel(s):
 def read_limits(logs):
     limits = {}
     for fn in logs:
+        print fn
         with open(fn) as fd:
             limits[channel(fn)] = [ln.split()[-1] for ln in fd if 'r <' in ln]
     for _, name in mapping:
+        print limits[name]
         print("{n} & {lm[0]} & {lm[3]} & {lm[2]} & {lm[4]} & {lm[1]} & {lm[5]}".format(n=name, lm=limits[name]))
 
 
@@ -39,8 +43,9 @@ def read_best_fits(logs):
                 if m:
                     fits[channel(fn)] = [float(f) for f in m.groups()]
                     break
-    for _, name in mapping:
-        print("\(μ = {1:0.2f}^{{{3:+0.2f}}}_{{{2:0.2f}}}\) {0},{1},{2},{3}".format(name, *fits[name]))
+    print("label,mu,minus,plus")
+    for _, name in reversed(mapping):
+        print("{0}\\\\\(μ = {1:0.1f}^{{{3:+0.1f}}}_{{-{2:0.1f}}}\),{1},{2},{3}".format(name, *fits[name]))
 
 
 parser = argparse.ArgumentParser()
