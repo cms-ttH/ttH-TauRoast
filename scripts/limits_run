@@ -41,6 +41,10 @@ for var in $vars; do
 done
 
 datacards="$mydatacards"
+combineCards.py $(echo $datacards_htt|awk 'BEGIN{RS=" ";ORS=" "}/_2lss_/{print}') > ws_2lss1tau.txt
+combineCards.py $(echo $datacards_htt|awk 'BEGIN{RS=" ";ORS=" "}/_3l_/{print}') > ws_3l1tau.txt
+datacards="$datacards ws_2lss1tau.txt ws_3l1tau.txt"
+
 for datacard in $mydatacards; do
    if [[ "$datacard" == *_tt_* ]]; then
       combineCards.py $datacard $datacards_htt > ws_combination_htt.txt
@@ -49,12 +53,10 @@ for datacard in $mydatacards; do
    fi
 done
 
-combineCards.py $(echo $datacards_htt|awk 'BEGIN{RS=" ";ORS=" "}/_2lss_/{print}') > ws_2lss1tau.txt
-combineCards.py $(echo $datacards_htt|awk 'BEGIN{RS=" ";ORS=" "}/_3l_/{print}') > ws_3l1tau.txt
-datacards="$datacards ws_2lss1tau.txt ws_3l1tau.txt"
-
 for datacard in $datacards; do
-   combine -M Asymptotic -m 125 $datacard &> ${datacard%%.txt}.log
+   combine -M Asymptotic -m 125 $datacard &> ${datacard%%.txt}_limit.log
+   combine -M Asymptotic -m 125 -t -1 --expectSignal=1 --expectSignalMass=125 $datacard &> ${datacard%%.txt}_limit_injected.log
+   # combine -M Asymptotic -m 125 --expectSignal 1 --significance --pvalue $datacard &> ${datacard%%.txt}_significance.log
    combine -M MaxLikelihoodFit -m 125 --robustFit=1 --rMin=-3 --rMax=5 $datacard &> ${datacard%%.txt}_fit.log
    if [[ $datacard == *TMVA* ]]; then
       PostFitShapes -d $datacard -o ${datacard%%.txt}_shapes.root -m 125 -f mlfit.root:fit_s --postfit --sampling --print &> ${datacard%%.txt}_shapes.log

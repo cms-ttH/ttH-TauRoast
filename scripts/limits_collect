@@ -23,15 +23,29 @@ def channel(s):
             return result
 
 
-def read_limits(logs):
+def read_limits(logs, injectedlogs):
     limits = {}
     for fn in logs:
-        print fn
         with open(fn) as fd:
             limits[channel(fn)] = [ln.split()[-1] for ln in fd if 'r <' in ln]
+    for fn in injectedlogs:
+        with open(fn) as fd:
+            for line in fd:
+                if 'Observed' in line:
+                    limits[channel(fn)].insert(1, line.split()[-1])
+    print("--- limit plot ---")
+    print("label & observed & injected & expected & downone & upone & downtwo & uptwo")
+    for _, name in reversed(mapping):
+        print("{n} & {lm[0]} & {lm[1]} & {lm[4]} & {lm[3]} & {lm[5]} & {lm[2]} & {lm[6]}".format(n=name, lm=limits[name]))
+    print("--- limit table ---")
     for _, name in mapping:
-        print limits[name]
-        print("{n} & {lm[0]} & {lm[3]} & {lm[2]} & {lm[4]} & {lm[1]} & {lm[5]}".format(n=name, lm=limits[name]))
+        lm = [float(f) for f in limits[name]]
+        up = lm[5] - lm[4]
+        down = lm[3] - lm[4]
+        print(
+            "{n} & {lm[0]:.2f} & {lm[1]:.2f} & \({lm[4]:.2f}_{{{down:.2f}}}^{{{up:+.2f}}}\) \\\\".format(
+                n=name, lm=lm, up=up, down=down)
+        )
 
 
 def read_best_fits(logs):
@@ -43,18 +57,19 @@ def read_best_fits(logs):
                 if m:
                     fits[channel(fn)] = [float(f) for f in m.groups()]
                     break
-    print("label,mu,minus,plus")
+    print("--- bestfit plot ---")
+    print("label & mu & minus & plus")
     for _, name in reversed(mapping):
-        print("{0}\\\\\(μ = {1:0.1f}^{{{3:+0.1f}}}_{{-{2:0.1f}}}\),{1},{2},{3}".format(name, *fits[name]))
+        print("{0}\\\\\(μ = {1:0.1f}^{{{3:+0.1f}}}_{{-{2:0.1f}}}\) & {1} & {2} & {3}".format(name, *fits[name]))
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument('inputdir', help='directory containing limit output')
 args = parser.parse_args()
 
-logfiles = set(glob.glob(args.inputdir + '/*.log'))
+limitfiles = set(glob.glob(args.inputdir + '/*_limit.log'))
+injectedfiles = set(glob.glob(args.inputdir + '/*_limit_injected.log'))
 fitfiles = set(glob.glob(args.inputdir + '/*_fit.log'))
-shapefiles = set(glob.glob(args.inputdir + '/*_shapes.log'))
 
-read_limits(logfiles - fitfiles - shapefiles)
+read_limits(limitfiles, injectedfiles)
 read_best_fits(fitfiles)
