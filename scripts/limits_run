@@ -8,7 +8,7 @@ vars="TMVAlike10_likelihood TMVAlike8_tt"
 
 tag=signal
 indate=07-17
-outdate=08-18
+outdate=09-05
 version=45
 
 inputs=/afs/crc.nd.edu/user/m/mwolf3/www/ttH/v${version}/ttl_2017-${indate}_${tag}
@@ -18,6 +18,29 @@ paperdir=/afs/crc.nd.edu/user/m/mwolf3/work/notes/papers/HIG-17-018/trunk/dataca
 
 datacards_htt="$(echo $paperdir/tth_htt/2017Jul21/*1tau*.txt)"
 datacards_multilep="$(echo $paperdir/tth_multilep/cards_v7d_170716_splitdecays/*.txt)"
+
+systematics="
+CMS_ttHl_EWK_4j
+CMS_ttHl_FRjt
+CMS_ttHl_JES
+CMS_ttHl_Rares
+CMS_ttHl_btag
+CMS_ttHl_fakes
+CMS_ttHl_lepEff
+CMS_ttHl_tauES
+CMS_ttHl_tauID
+CMS_ttHl_thu_shape_ttH
+CMS_ttHl_thu_shape_ttW
+CMS_ttHl_thu_shape_ttZ
+CMS_ttHl_trigger_uncorr
+QCDscale_ttH
+QCDscale_ttW
+QCDscale_ttZ
+lumi_13TeV_2016
+pdf_Higgs
+pdf_gg
+pdf_qqbar
+"
 
 [ -d $dirname ] && rm -rf $dirname
 mkdir $dirname
@@ -64,11 +87,19 @@ for datacard in $datacards; do
    cp mlfit.root ${datacard%%.txt}_fit.root
    # root -b -n -q -l $CMSSW_BASE'/src/CombineHarvester/ttH_htt/macros/makePostFitPlots_1l_2tau.C("'${datacard%%.txt}'_shapes.root","'${datacard%%.txt}.pdf'")++'
 
-#    rootspace=rt_${datacard##ws_}
-#    impacts=${datacard%%.txt}_impacts
-#    text2workspace.py $datacard -m 125 -o $rootspace
-#    combineTool.py -M Impacts -d $rootspace -m 125 --doInitialFit --robustFit 1
-#    combineTool.py -M Impacts -d $rootspace -m 125 --robustFit 1 --doFits --parallel 32
-#    combineTool.py -M Impacts -d $rootspace -m 125 -o ${impacts}.json
-#    plotImpacts.py -i ${impacts}.json -o ${impacts}.pdf
+   if [[ "$datacard" == *_tt_* ]]; then
+     rootspace=${datacard%%.txt}_rs.root
+     impacts=${datacard%%.txt}_impacts
+     text2workspace.py $datacard -m 125 -o $rootspace
+     combineTool.py -M Impacts -d $rootspace -m 125 --doInitialFit --robustFit 1
+     combineTool.py -M Impacts -d $rootspace -m 125 --robustFit 1 --doFits --parallel 32
+     combineTool.py -M Impacts -d $rootspace -m 125 -o ${impacts}.json
+     plotImpacts.py -i ${impacts}.json -o ${impacts}
+
+     for sys in $systematics; do
+       newdatacard=${datacard%%.txt}_test_${sys}.txt
+       cat $datacard|grep -v $sys>$newdatacard
+       combine -M Asymptotic -m 125 $newdatacard &> ${newdatacard%%.txt}_limit.log
+     done
+   fi
 done

@@ -6,6 +6,7 @@ import glob
 import re
 
 fitre = re.compile(r'Best fit r: ([-\d.]+(?:e-?[\d]+)?)\s+-([\d.]+(?:e-?[\d]+)?)/(\+[\d.]+(?:e-?[\d]+)?)')
+testre = re.compile(r'(.*)_test_(.*)_limit.log')
 
 mapping = [
     ('TMVAlike10', r'\(\SI{1}{\Plep}+\SI{2}{\Ptauh}\) (\Ptt, \PttZ)'),
@@ -21,6 +22,29 @@ def channel(s):
     for test, result in mapping:
         if test in s:
             return result
+
+
+def read_limit_impacts(logs):
+    def exp(fn):
+        with open(fn) as fd:
+            for line in fd:
+                if 'Expected 50' in line:
+                    return float(line.split()[-1])
+
+    baseline = None
+    limits = {}
+    for fn in logs:
+        stub, unc = testre.match(fn).groups()
+        if baseline is None:
+            baseline = exp(stub + '_limit.log')
+        limit = exp(fn)
+        limits[unc] = (baseline - limit) / baseline
+    print("--- impacts on limit ---")
+
+    def last(x):
+        return x[-1]
+    for unc, val in sorted(limits.items(), key=last, reverse=True):
+        print("{} & {:0.2g} \\\\".format(unc, val * 100))
 
 
 def read_limits(logs, injectedlogs):
@@ -68,8 +92,10 @@ parser.add_argument('inputdir', help='directory containing limit output')
 args = parser.parse_args()
 
 limitfiles = set(glob.glob(args.inputdir + '/*_limit.log'))
+testfiles = set(glob.glob(args.inputdir + '/*_test_*_limit.log'))
 injectedfiles = set(glob.glob(args.inputdir + '/*_limit_injected.log'))
 fitfiles = set(glob.glob(args.inputdir + '/*_fit.log'))
 
-read_limits(limitfiles, injectedfiles)
+read_limit_impacts(testfiles)
+read_limits(limitfiles - testfiles, injectedfiles)
 read_best_fits(fitfiles)
