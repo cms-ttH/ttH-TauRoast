@@ -6,6 +6,10 @@ ratio_plot_min = 0.05
 small_number = 1e-5
 y_divide = 0.3
 
+top = 0.1
+bottom = 0.4
+single = 1 - y_divide + bottom * y_divide
+
 
 def draw_channel_info(pad, preliminary=True, plot_ratio=True, is2d=False, proc=None):
     """Draws channel information based on cuts and standard CMS labelling and
@@ -13,7 +17,7 @@ def draw_channel_info(pad, preliminary=True, plot_ratio=True, is2d=False, proc=N
     if plot_ratio:
         scale = 1
     else:
-        scale = .5 / .7
+        scale = single
 
     tex = r.TLatex(-999, -999, "#sqrt{s} = 13 TeV, L = 36.8 fb^{-1}")
     tex.SetNDC()
@@ -36,6 +40,10 @@ def draw_channel_info(pad, preliminary=True, plot_ratio=True, is2d=False, proc=N
 
 
 def setup_upper_axis(histo, scale=True, split=True, is2d=False):
+    if split:
+        factor = 1
+    else:
+        factor = single
     if scale:
         histo.Scale(0)
     histo.SetTitle("")
@@ -44,16 +52,10 @@ def setup_upper_axis(histo, scale=True, split=True, is2d=False):
     histo.GetXaxis().SetTitleFont(62)
 
     histo.GetYaxis().SetTitleFont(62)
-    histo.GetYaxis().SetTitleSize(.05)
-    histo.GetYaxis().SetTitleOffset(1.1)
+    histo.GetYaxis().SetTitleSize(.05 * factor)
+    histo.GetYaxis().SetTitleOffset(1.1 / factor)
     histo.GetYaxis().SetLabelFont(62)
-    histo.GetYaxis().SetLabelSize(.04)
-
-    if not split:
-        histo.GetXaxis().SetTitleSize(0.05)
-        histo.GetXaxis().SetTitleOffset(1.1)
-        histo.GetXaxis().SetLabelSize(0.045)
-        # histo.GetXaxis().SetLabelOffset(0.02)
+    histo.GetYaxis().SetLabelSize(.04 * factor)
 
     if is2d:
         histo.GetYaxis().SetTitleOffset(1.5)
@@ -90,17 +92,18 @@ def setup_lower_axis(histo):
 
 
 def setup_pad(pad):
+    scale = 1 - y_divide
     pad.SetPad(small_number, small_number, 1 - small_number, 1 - small_number)
-    pad.SetTopMargin(0.1)
-    pad.SetBottomMargin(0.14)
-    pad.SetLeftMargin(0.14)
+    pad.SetTopMargin(top * scale)
+    pad.SetBottomMargin(bottom * y_divide)
+    pad.SetLeftMargin(0.11)
     pad.SetRightMargin(0.05)
     pad.SetTicks(0, 0)
 
 
 def setup_upper_pad(pad):
     pad.SetPad(small_number, y_divide + small_number, 1 - small_number, 1 - small_number)
-    pad.SetTopMargin(0.1)
+    pad.SetTopMargin(top)
     pad.SetBottomMargin(small_number)
     pad.SetLeftMargin(0.11)
     pad.SetRightMargin(0.05)
@@ -109,7 +112,7 @@ def setup_upper_pad(pad):
 
 def setup_lower_pad(pad):
     pad.SetPad(small_number, small_number, 1 - small_number, y_divide - small_number)
-    pad.SetBottomMargin(0.4)
+    pad.SetBottomMargin(bottom)
     pad.SetLeftMargin(0.11)
     pad.SetRightMargin(0.05)
     pad.SetTopMargin(small_number)

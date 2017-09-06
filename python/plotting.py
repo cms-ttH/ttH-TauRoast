@@ -470,7 +470,10 @@ class Plot(object):
         factor = config.get("scale factor", "auto")
         split = config.get("show ratio", True)
 
-        canvas = r.TCanvas(self.__name, self.__name, 600, 700)
+        height = 700
+        if not split:
+            height = int(height * stylish.single)
+        canvas = r.TCanvas(self.__name, self.__name, 600, height)
 
         if split:
             canvas.Divide(1, 2)

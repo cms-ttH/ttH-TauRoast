@@ -1,0 +1,59 @@
+#!/usr/bin/env python
+
+import os
+import ROOT as r
+import rootpy.io
+import ttH.TauRoast.stylish as stylish
+
+r.gROOT.SetBatch()
+
+fnmc = os.path.join(os.environ["LOCALRT"], "src", "MiniAOD/MiniAODHelper/data/puweights/MC/Summer16_NumTruePU.root")
+fndata = os.path.join(os.environ["LOCALRT"], "src", "MiniAOD/MiniAODHelper/data/puweights/Run2016/DataPileupHistogram_Run2016-Complete_MinBias69200.root")
+
+histmc = rootpy.io.root_open(fnmc).hNumTruePUPdf
+histmc.Scale(1. / histmc.Integral())
+histdata = rootpy.io.root_open(fndata).pileup
+histdata.Scale(1. / histdata.Integral())
+histratio = histdata.Clone("histratio")
+histratio.Divide(histmc)
+
+stylish.setup()
+
+# Same procedure as for regular plotting
+canvas = r.TCanvas("astupidname", "", 600, int(700 * stylish.single))
+canvas.Divide(1, 1)
+stylish.setup_pad(canvas.GetPad(1))
+stylish.setup_upper_axis(histmc, scale=False, split=False)
+canvas.cd(1)
+
+histmc.SetMaximum(1.1 * max(histmc.GetMaximum(), histdata.GetMaximum()))
+histmc.SetLineColor(r.kRed)
+histmc.SetLineWidth(2)
+histmc.SetTitle(";Number of PV;")
+histmc.GetYaxis().SetTickLength(0)
+histmc.GetYaxis().SetLabelOffset(666)
+histmc.Draw("hist")
+
+histdata.SetLineColor(r.kBlack)
+histdata.SetLineWidth(0)
+histdata.SetMarkerStyle(r.kFullCircle)
+histdata.SetMarkerSize(0.8)
+histdata.Draw("hist p same")
+
+legend = r.TLegend(0.6, 0.8, 0.9, 0.9)
+legend.SetBorderSize(0)
+legend.AddEntry(histmc, "Simulation")
+legend.AddEntry(histdata, "Data")
+legend.Draw()
+
+canvas.SaveAs("pu_dist.tex")
+
+stylish.setup_upper_axis(histratio, scale=False, split=False)
+
+histratio.SetTitle(";Number of PV;PU Scale Factor")
+histratio.SetMarkerColor(r.kBlue)
+histratio.SetMarkerStyle(r.kFullTriangleUp)
+histratio.SetMarkerSize(0.8)
+histratio.Draw("hist p")
+
+canvas.SaveAs("pu_ratio.tex")
