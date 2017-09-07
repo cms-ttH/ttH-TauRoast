@@ -50,7 +50,7 @@ canvas.SaveAs("pu_dist.tex")
 
 stylish.setup_upper_axis(histratio, scale=False, split=False)
 
-histratio.SetTitle(";Number of PV;PU Scale Factor")
+histratio.SetTitle(";Number of PV;PU Weight")
 histratio.SetMarkerColor(r.kBlue)
 histratio.SetMarkerStyle(r.kFullTriangleUp)
 histratio.SetMarkerSize(0.8)
