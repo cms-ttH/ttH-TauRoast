@@ -112,7 +112,15 @@ class Plot(object):
         else:
             proc = Process.get(process)
         if isinstance(proc, BasicProcess):
-            return self.__hists[process + suffix].Clone()
+            hist = self.__hists[process + suffix].Clone()
+            if hist.ClassName().startswith('TH1'):
+                lastbin = hist.GetNbinsX()
+                overbin = lastbin + 1
+                err = math.sqrt(hist.GetBinError(lastbin) ** 2 + hist.GetBinError(overbin) ** 2)
+                val = hist.GetBinContent(lastbin) + hist.GetBinContent(overbin)
+                hist.SetBinContent(lastbin, val)
+                hist.SetBinError(lastbin, err)
+            return hist
         hist = None
         for p in proc.subprocesses:
             h = self._get_histogram(p, systematic)
