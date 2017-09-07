@@ -63,7 +63,8 @@ Plot(
     name="general/NumInclusiveJets",
     values=["njets+ntags"],
     labels=["Number of inclusive jets", "Events"],
-    binning=[10, 0, 10],
+    binning=[7, 3, 10],
+    binlabels=[str(i) for i in range(3, 10)],
     essential=True
 )
 Plot(
@@ -82,7 +83,8 @@ Plot(
     name="general/NumTagsLoose",
     values=["ntags_loose"],
     labels=["Number of tags (loose)", "Events"],
-    binning=[10, 0, 10],
+    binning=[7, 1, 8],
+    binlabels=[str(i) for i in range(1, 8)],
     essential=True
 )
 
@@ -105,14 +107,14 @@ Plot(
     name="general/NumVertices",
     values=['npv'],
     labels=["Number PV", "Events"],
-    binning=[40, 0, 40],
+    binning=[20, 0, 40],
     essential=True
 )
 Plot(
-    name="general/NumVertices_coarse",
+    name="general/NumVertices_fine",
     values=['npv'],
     labels=["Number PV", "Events"],
-    binning=[20, 0, 40]
+    binning=[40, 0, 40]
 )
 Plot(
     name="general/NumJetsOverview",
@@ -236,7 +238,7 @@ Plot(
     name="general/MET",
     values=["met"],
     labels=["MET", "Events"],
-    binning=[20, 0, 300],
+    binning=[10, 0, 250],
     essential=True
 )
 Plot(
@@ -249,7 +251,7 @@ Plot(
     name="general/HT",
     values=["ht"],
     labels=["HT", "Events"],
-    binning=[20, 200, 1000],
+    binning=[10, 200, 800],
     essential=True
 )
 Plot(

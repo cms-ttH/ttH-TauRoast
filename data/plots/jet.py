@@ -199,14 +199,14 @@ for mode, fltr in pspace:
         name="jets/kinematic/{0}J_Pt".format(mode),
         values=['{0}jet_pt'.format(mode.lower())],
         labels=["{0} jet P_{{T}}".format(mode), "Events"],
-        binning=[20, 20, 250],
+        binning=[10, 25, 250],
         essential=True
     )
     Plot(
         name="jets/kinematic/{0}J_Eta".format(mode),
         values=['{0}jet_eta'.format(mode.lower())],
         labels=["{0} jet #eta".format(mode), "Events"],
-        binning=[40, -3, 3],
+        binning=[15, -3, 3],
         essential=True
     )
     Plot(

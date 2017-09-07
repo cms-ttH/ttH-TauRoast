@@ -12,14 +12,14 @@ if config.taus >= 2:
         name="taus/TT_SumPt",
         values=["tt_sumpt"],
         labels=["#sum p_{T} of #tau_{1,2}", "Events"],
-        binning=[30, 0, 200],
+        binning=[10, 0, 150],
         essential=True
     )
     Plot(
         name="taus/TT_DeltaR",
         values=["tt_deltaR"],
         labels=["#DeltaR #tau_{1,2}", "Events"],
-        binning=[15, 0, 6.28],
+        binning=[10, 0, 5],
         essential=True
     )
     Plot(
@@ -33,7 +33,7 @@ if config.taus >= 2:
         name="taus/TT_VisibleMass",
         values=["tt_visiblemass"],
         labels=["Visible Mass #tau_{1,2}", "Events"],
-        binning=[30, 0, 200],
+        binning=[10, 0, 200],
         essential=True
     )
     Plot(

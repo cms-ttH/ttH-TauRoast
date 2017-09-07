@@ -19,7 +19,7 @@ def draw_channel_info(pad, preliminary=True, plot_ratio=True, is2d=False, proc=N
     else:
         scale = single
 
-    tex = r.TLatex(-999, -999, "#sqrt{s} = 13 TeV, L = 36.8 fb^{-1}")
+    tex = r.TLatex(-999, -999, "#sqrt{s} = 13 TeV, L = 35.9 fb^{-1}")
     tex.SetNDC()
     tex.SetTextFont(42)
     tex.SetTextSize(0.03 * scale)

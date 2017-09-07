@@ -7,7 +7,7 @@ Plot(
     name="leptons/kinematic/L_Pt",
     values=["lep_pt"],
     labels=["#ell P_{T}", "Events"],
-    binning=[10, 10, 110],
+    binning=[10, 20, 160],
     essential=True
 )
 

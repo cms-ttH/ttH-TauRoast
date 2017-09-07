@@ -135,6 +135,8 @@ data fake cuts:
 data fake weights:
   - Fake
 
+plot override:
+    signals: []
 data signal cuts:
     - "l quality": >
         leptons[0].mva() >= superslim::id::Loose
