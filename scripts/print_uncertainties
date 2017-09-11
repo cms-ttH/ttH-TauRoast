@@ -1,0 +1,73 @@
+#!/usr/bin/env python
+
+import argparse
+import os
+import yaml
+import ROOT as r
+
+r.gROOT.SetBatch()
+r.gSystem.Load("libttHTauRoast")
+
+from ttH.TauRoast import useful
+from ttH.TauRoast.processing import Process
+from ttH.TauRoast.plotting import Plot
+
+parser = argparse.ArgumentParser(description='Train TMVA.')
+parser.add_argument('config', metavar='config', type=str,
+                    help='a configuration file to use')
+ag = parser.add_argument_group('general options')
+ag.add_argument('-i', '--input', type=str, default=None,
+                help="change input directory")
+ag.add_argument('-a', '--all', default=False, action='store_true',
+                help="print values for all processes")
+args = parser.parse_args()
+
+with open(args.config) as f:
+    config = yaml.load(f)
+
+if args.input:
+    config['indir'] = args.input
+
+useful.setup(config)
+useful.load_python(config.get('mode'))
+
+fn = os.path.join(config.get("indir", config["outdir"]), "plots.root")
+fd = r.TFile(fn, "READ")
+processes = sum(map(Process.expand, config['plot']), [])
+systematics = list(set(sum((config.get(p.cutflow + ' systematics', []) for p in processes), [])))
+
+events = Plot.get("Events")
+events.read(fd, "inclusive", processes, systematics=systematics,
+            fmt=config["histformat"])
+
+systable = {}
+
+for pn in config['plot']:
+    ps = Process.expand(pn)
+    uncertainties = list(set(sum((config.get(p.cutflow + ' systematics', []) for p in ps), [])))
+
+    central = events._get_histogram(pn).Integral()
+    for unc in uncertainties:
+        up = events._get_histogram(pn, unc + 'Up').Integral()
+        down = events._get_histogram(pn, unc + 'Down').Integral()
+        if up == 0.0 and down == 0.0:
+            continue
+        avg = (abs(up - central) + abs(down - central)) / (2 * central)
+        try:
+            systable[unc][pn] = {'avg': avg, 'up': up, 'down': down, 'central': central}
+        except KeyError:
+            systable[unc] = {pn: {'avg': avg, 'up': up, 'down': down, 'central': central}}
+
+for unc in sorted(systable):
+    central = sum(d['central'] for d in systable[unc].values())
+    up = sum(d['up'] for d in systable[unc].values())
+    down = sum(d['down'] for d in systable[unc].values())
+    avg = (abs(up - central) + abs(down - central)) / (2 * central)
+
+    print("{} {:.2g}".format(unc, avg * 100))
+
+    if args.all:
+        print("---")
+        for pn in sorted(systable[unc]):
+            print("{} {} {:.2g}".format(unc, pn, systable[unc][pn]['avg'] * 100))
+        print("---")

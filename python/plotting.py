@@ -631,6 +631,10 @@ class Plot(object):
         return cls.__plots.values()
 
     @classmethod
+    def get(cls, n):
+        return cls.__plots[n]
+
+    @classmethod
     def reset(cls):
         for p in cls.__plots.values():
             p.clear()
