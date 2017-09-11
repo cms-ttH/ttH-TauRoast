@@ -25,6 +25,8 @@ def expand_systematics(systematics, weights):
                 new_weights = [w for w in new_weights if w != 'CSVWeight']
             if 'FRjt' in unc:
                 new_weights = [w for w in new_weights if w != 'Fake']
+            if 'thu_shape' in unc:
+                new_weights = [w for w in new_weights if w != 'Generator']
             if unc in new_weights:
                 new_weights.remove(unc)
             all_systematics.append(('NA', new_weights + [unc + 'Up']))
