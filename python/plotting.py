@@ -15,10 +15,25 @@ from ttH.TauRoast.processing import BasicProcess, Process
 
 
 class Plot(object):
+    """A representation of a distribution of a variable for several processes."""
+
     __plots = {}
     __systematics = {}
 
-    def __init__(self, name, values, labels, binning, binlabels=None, limitname=None, weights=None, blind=False, essential=False):
+    def __init__(self, name, values, labels, binning, binlabels=None,
+                 limitname=None, weights=None, blind=False, essential=False):
+        """
+        Create a new plot with called `name`.
+
+        Use the branches in `values`, with axis titled `labels`, and a
+        bin specification `binning`.  Optionally, the name used when saving
+        the plot to produce limits can be altered by `limitname`, the bins
+        can be labelled individually via `binlabels`, and `weights`
+        overrides the weights used in the regular workflow.
+
+        To "blind" a plot, set `blind` to true, and to always save a plot,
+        `essential` has to be true.
+        """
         self.__name = name
         self.__limitname = limitname if limitname else os.path.basename(name)
         self.__normalized = False
@@ -50,18 +65,26 @@ class Plot(object):
         Plot.__plots[self.__limitname] = self
 
     def __str__(self):
+        """Return the name of the plot."""
         return self.__name
 
     def blind(self, b=None):
+        """Query and set the blinding status.
+
+        If given an argument, sets the current blinding status. Return
+        if the current plot is blinded.
+        """
         if b is not None:
             self.__blind = b
         return self.__blind
 
     def essential(self):
+        """Return if the plot should always be saved."""
         return self.__essential
 
     @property
     def limitname(self):
+        """Give the name of the plot when saving it to be used to set limits."""
         return self.__limitname
 
     def _add_binlabels(self, hist):
@@ -313,6 +336,14 @@ class Plot(object):
                 h.Scale(1. / h.Integral())
 
     def read(self, file, category, procs, systematics=None, fmt="{p}_{c}_{v}"):
+        """Read histograms of the plot from `file`.
+
+        Use the specified `category` and processes, `procs`. Optionally,
+        use `systematics`, and read with the format specified in `fmt`,
+        where `p` is the process name, `c` the category, and `v` the limit
+        name of the current plot. Systematics always get appended to the
+        format string (with an underscore).
+        """
         if systematics is None or not self.__essential:
             systematics = []
         systematics = set(systematics + ['NA'])
@@ -339,6 +370,16 @@ class Plot(object):
                         logging.warning("histogram {} not found in file {}".format(histname, file.GetName()))
 
     def write(self, file, cutflows, category, systematics=None, procs=None, fmt="{p}_{c}_{v}"):
+        """Write histograms of the plot to `file`.
+
+        Use the specified `category` and normalize histograms via the
+        cutflows passed by `cutflows`. Can be limited to processes
+        specified in `procs`. Optionally, use `systematics`, and write with
+        the format specified in `fmt`, where `p` is the process name, `c`
+        the category, and `v` the limit name of the current plot.
+        Systematics always get appended to the format string (with an
+        underscore).
+        """
         self._normalize(cutflows)
 
         if systematics is None:
@@ -371,6 +412,11 @@ class Plot(object):
                     pass
 
     def save(self, config, outdir, systematics=None):
+        """Save plot as a picture.
+
+        Using the configuration `config`, and output directory `outdir`.
+        Use systematics if passed via `systematics`.
+        """
         logging.debug("saving histogram {0}".format(self.__name))
 
         if self.__class == r.TH1F:
@@ -583,6 +629,12 @@ class Plot(object):
 
     @savetime
     def fill(self, process, systematics, weights, category=None):
+        """Populate the histograms of the plot.
+
+        Do this for the specified `process`, using `systematics` and
+        `weights`. Use `category` as additional selection criteria, i.e.,
+        cuts for a `TTree`, if passed.
+        """
         procname = str(process)
         suffix = ''
         for s in [systematics] + weights:
