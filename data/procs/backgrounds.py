@@ -10,7 +10,8 @@ BasicProcess(
     ],
     cross_section=0.2043,
     events=2160168 + 3120397,
-    cutflow='signal'
+    cutflow='signal',
+    relativesys=[.025, 0.03, 0.02, 0.103, 0.12, 0.04]
 )
 
 BasicProcess(
@@ -20,7 +21,8 @@ BasicProcess(
     paths=["TTZToLLNuNu_M_10_TuneCUETP8M1_13TeV_amcatnlo_pythia8_ext1_v1"],
     cross_section=0.2529,
     events=1992438,
-    cutflow='signal'
+    cutflow='signal',
+    relativesys=[.025, 0.03, 0.02, 0.103, 0.11, 0.034]
 )
 
 BasicProcess(
@@ -99,8 +101,9 @@ CombinedProcess(
     name="rares",
     fullname="Rares",
     limitname="Rares",
-    subprocesses=["tttt", "tZq", "wzz", "wwz", "www", "zzz"]
+    subprocesses=["tttt", "tZq", "wzz", "wwz", "www", "zzz"],
     # subprocesses=["tttt", "tZq", "wwds", "wzz"]
+    relativesys=[.025, 0.03, 0.02, 0.103, .5]
 )
 
 BasicProcess(
@@ -196,16 +199,17 @@ BasicProcess(
 )
 
 CombinedProcess(
-    name="ewk",
-    fullname="EWK",
-    limitname="EWK",
-    subprocesses=["dyjets", "wjets", "diboson"]
-)
-
-CombinedProcess(
     name="diboson",
     fullname="ww, wz, zz",
     limitname="diboson",
     # subprocesses=["ww", "wwds", "wwpp", "wz", "zz"]
     subprocesses=["ww", "wz", "zz"]
+)
+
+CombinedProcess(
+    name="ewk",
+    fullname="EWK",
+    limitname="EWK",
+    subprocesses=["dyjets", "wjets", "diboson"],
+    relativesys=[.025, 0.03, 0.02, 0.103, 1.]
 )

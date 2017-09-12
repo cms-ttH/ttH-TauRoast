@@ -36,7 +36,7 @@ def draw_channel_info(pad, preliminary=True, plot_ratio=True, is2d=False, proc=N
     # tex.DrawLatex(0.14, 0.91, "CMS ttH")
     # tex.DrawLatex(0.30, 0.92, "#tau_{h}#tau_{h}")
     tex.SetTextAlign(31)
-    tex.DrawLatex(right, top, "#sqrt{s} = 13 TeV, L = 36.8 fb^{-1}")
+    tex.DrawLatex(right, top, "#sqrt{s} = 13 TeV, L = 35.9 fb^{-1}")
 
 
 def setup_upper_axis(histo, scale=True, split=True, is2d=False):

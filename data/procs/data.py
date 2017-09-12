@@ -102,5 +102,6 @@ CombinedProcess(
     name="fakes_single",
     fullname="Fakes",
     limitname="data_fakes",
-    subprocesses=["fakes_single_e", "fakes_single_mu"]
+    subprocesses=["fakes_single_e", "fakes_single_mu"],
+    relativesys=[.3]
 )

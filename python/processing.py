@@ -1,5 +1,6 @@
 import glob
 import logging
+import math
 import os
 import re
 import time
@@ -15,9 +16,15 @@ NTUPLE_GLOB = '{channel}_test*.root'
 
 
 class Process(object):
+    """A representation of a physical process."""
     __processes__ = {}
 
     def __init__(self, name, fullname, limitname):
+        """Create a new process called `name`.
+
+        Use a more descriptive `fullname` for legends, and `limitname` when
+        saving to set limits.
+        """
         self._name = name
         self._fullname = fullname
         self._limitname = limitname if limitname else name
@@ -65,7 +72,7 @@ class Process(object):
 
 class BasicProcess(Process):
 
-    def __init__(self, name, paths, events, fullname=None, limitname=None, cross_section=1, cutflow="default", additional_cuts=None):
+    def __init__(self, name, paths, events, fullname=None, limitname=None, cross_section=1, cutflow="default", additional_cuts=None, relativesys=None):
         super(BasicProcess, self).__init__(name, fullname, limitname)
 
         self.__paths = paths
@@ -73,6 +80,7 @@ class BasicProcess(Process):
         self.__cross_section = cross_section
         self.__cutflow = cutflow
         self.__add_cuts = additional_cuts if additional_cuts else []
+        self.relativesys(relativesys if relativesys else [])
 
     def _setup_counts(self, counts):
         from ttH.TauRoast.cutting import StaticCut
@@ -92,6 +100,16 @@ class BasicProcess(Process):
                             fct(self._fullname), fct(self._limitname),
                             self.__cross_section, cutflow if cutflow else self.__cutflow,
                             self.__add_cuts)
+
+    def relativesys(self, newsys=None):
+        """Query and set yield uncertainties.
+
+        If called with an argument, set the yield uncertainties. Return the
+        current yield uncertainties.
+        """
+        if newsys is not None:
+            self.__relativesys = math.sqrt(sum(s**2 for s in newsys))
+        return self.__relativesys
 
     def analyze(self, cfg, filename, counts, cuts, weights, systematics, debug=False):
         from ttH.TauRoast.useful import config
@@ -179,17 +197,25 @@ class BasicProcess(Process):
 
 
 class CombinedProcess(Process):
+    """A category of processes."""
 
-    def __init__(self, name, subprocesses, limitname=None, fullname=None, factor=1):
+    def __init__(self, name, subprocesses, limitname=None, fullname=None, factor=1, relativesys=None):
         super(CombinedProcess, self).__init__(name, fullname, limitname)
 
         self.__subprocesses = subprocesses
         self.__factor = factor
+        if relativesys:
+            self.relativesys(relativesys)
 
     def copy(self, fct=lambda s: s, factor=None):
         return CombinedProcess(fct(self._name), self.__subprocesses,
                                fct(self._limitname), fct(self._fullname),
                                factor if factor is not None else self.__factor)
+
+    def relativesys(self, sys):
+        """Set relative yield uncertainties."""
+        for p in self.__subprocesses:
+            Process.get(p).relativesys(sys)
 
     def process(self):
         return sum((Process.get(n).process() for n in self.__subprocesses), [])

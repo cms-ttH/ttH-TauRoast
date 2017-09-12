@@ -128,13 +128,17 @@ class Plot(object):
         return eval(color, {}, {'r': r})
 
     def _get_histogram(self, process, systematic=None):
-        suffix = '_' + systematic if systematic else ''
         if isinstance(process, Process):
             proc = process
             process = str(process)
         else:
             proc = Process.get(process)
         if isinstance(proc, BasicProcess):
+            scale = 1.
+            if systematic and systematic.startswith('Relative'):
+                scale = max(0, 1 + proc.relativesys() * (1. if systematic.endswith('Up') else -1.))
+                systematic = None
+            suffix = '_' + systematic if systematic else ''
             hist = self.__hists[process + suffix].Clone()
             if hist.ClassName().startswith('TH1'):
                 lastbin = hist.GetNbinsX()
@@ -143,6 +147,8 @@ class Plot(object):
                 val = hist.GetBinContent(lastbin) + hist.GetBinContent(overbin)
                 hist.SetBinContent(lastbin, val)
                 hist.SetBinError(lastbin, err)
+            if scale != 1.:
+                hist.Scale(scale)
             return hist
         hist = None
         for p in proc.subprocesses:
@@ -155,12 +161,12 @@ class Plot(object):
             raise KeyError(process)
         return hist
 
-    def _get_background_shifts(self, config, systematics, direction):
-        central = self._get_background_sum(config)
+    def _get_shifts(self, procs, systematics, direction):
+        central = self._get_sum(procs)
         result = [0] * central.GetNbinsX()
         maxdev = [[] for _ in result]
         for systematic in systematics:
-            central, error = self._get_background_sum(config, systematic + direction)
+            central, error = self._get_sum(procs, systematic + direction)
             logging.debug("integral for {}{} (central): {} ({})".format(systematic, direction,
                                                                         error.Integral(),
                                                                         central.Integral()))
@@ -174,13 +180,16 @@ class Plot(object):
                 logging.debug("systematic in bin {}: {}, deviation of {}".format(n, sys, dev))
         return result
 
-    def _get_background_errors(self, config, systematics):
-        central = self._get_background_sum(config)
+    def _get_errors(self, procs, systematics):
+        central = self._get_sum(procs)
         abs_err = r.TGraphAsymmErrors(central)
         rel_err = r.TGraphAsymmErrors(central)
 
-        err_up = self._get_background_shifts(config, systematics, 'Up')
-        err_down = self._get_background_shifts(config, systematics, 'Down')
+        if len(systematics) > 0 and "Relative" not in systematics:
+            systematics.append("Relative")
+
+        err_up = self._get_shifts(procs, systematics, 'Up')
+        err_down = self._get_shifts(procs, systematics, 'Down')
 
         for i in range(central.GetNbinsX()):
             bin_center = central.GetBinCenter(i + 1)
@@ -212,10 +221,10 @@ class Plot(object):
             rel_err.SetPointEYhigh(i, rel_up)
         return (abs_err, rel_err)
 
-    def _get_background_sum(self, config, systematic=None):
+    def _get_sum(self, procs, systematic=None):
         res = None
         err = None
-        for cfg in config['backgrounds']:
+        for cfg in procs:
             try:
                 h = self._get_histogram(cfg['process'])
                 if res is None:
@@ -293,10 +302,17 @@ class Plot(object):
             values += [d.GetBinContent(i + 1) + d.GetBinError(i + 1) for i in range(d.GetNbinsX())]
         return max(values)
 
-    def _get_signals(self, config):
+    def _get_signals(self, config, systematics=None):
         res = []
         for cfg in config['signals']:
             signal, color = cfg.items()[0]
+            if systematics:
+                try:
+                    err_abs, _ = self._get_errors([{'process': signal}], systematics)
+                    err_abs.SetFillColorAlpha(self._eval(color), .5)
+                    res.append(err_abs)
+                except KeyError:
+                    pass
             try:
                 h = self._get_histogram(signal)
                 h.SetLineColor(self._eval(color))
@@ -309,7 +325,7 @@ class Plot(object):
 
     def _get_scale_factor(self, background, signals):
         bsum = background.Integral()
-        ssum = max([sig.Integral() for sig in signals] + [0])
+        ssum = max([sig.Integral() for sig in signals if isinstance(sig, r.TH1)] + [0])
 
         return (bsum / float(ssum) if ssum > 0 and bsum > 0 else 1)
 
@@ -425,7 +441,7 @@ class Plot(object):
             self._save2d(config, outdir, systematics=systematics)
 
     def _save2d(self, config, outdir, systematics=None):
-        bkg_sum = self._get_background_sum(config)
+        bkg_sum = self._get_sum(config['backgrounds'])
         signals = zip((cfg.keys()[0] for cfg in config['signals']), self._get_signals(config))
 
         for label, hist in signals + [('background', bkg_sum)]:
@@ -484,7 +500,7 @@ class Plot(object):
         return graph
 
     def _draw_ratio(self, config, base_histo, rel_err):
-        background = self._get_background_sum(config)
+        background = self._get_sum(config["backgrounds"])
         collisions = self._get_data(config)
 
         lower = base_histo.Clone()
@@ -492,7 +508,7 @@ class Plot(object):
         lower.DrawCopy("axis")
 
         rel_err.SetMarkerSize(0)
-        rel_err.SetFillColor(r.kGray)
+        rel_err.SetFillColorAlpha(r.kGray, .75)
         rel_err.SetFillStyle(1001)
         rel_err.Draw("2 same")
 
@@ -557,12 +573,12 @@ class Plot(object):
 
         canvas.cd(1)
 
-        bkg_sum = self._get_background_sum(config)
-        err_abs, err_rel = self._get_background_errors(config, systematics)
+        bkg_sum = self._get_sum(config["backgrounds"])
+        err_abs, err_rel = self._get_errors(config["backgrounds"], systematics)
         bkg_stack = self._get_backgrounds(config)
         bkg_stack.Draw()
 
-        signals = self._get_signals(config)
+        signals = self._get_signals(config, systematics)
         collisions = self._get_data(config)
 
         if factor == "auto":
@@ -585,8 +601,8 @@ class Plot(object):
         base_histo.GetYaxis().SetRangeUser(min_y, max_y)
         base_histo.Draw("hist")
 
-        err_abs.SetFillColor(r.kBlack)
-        err_abs.SetFillStyle(3003)
+        err_abs.SetFillColorAlpha(r.kGray, .75)
+        # err_abs.SetFillStyle(3003)
         err_abs.Draw("2 same")
 
         bkg_stack.SetMinimum(min_y)
@@ -594,8 +610,12 @@ class Plot(object):
         bkg_stack.Draw("hist same")
 
         for sig in signals:
-            sig.Scale(factor)
-            sig.DrawCopy("hist same")
+            if isinstance(sig, r.TH1):
+                sig.Scale(factor)
+                sig.DrawCopy("hist same")
+            else:
+                sig.Apply(r.TF2("f", "y*{}".format(factor)))
+                sig.Draw("2 same")
 
         if not self.__blind:
             for data in collisions:
