@@ -251,7 +251,7 @@ Plot(
     name="general/HT",
     values=["ht"],
     labels=["HT", "Events"],
-    binning=[10, 200, 800],
+    binning=[10, 200, 1200],
     essential=True
 )
 Plot(

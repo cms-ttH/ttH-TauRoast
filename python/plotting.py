@@ -309,7 +309,7 @@ class Plot(object):
             if systematics:
                 try:
                     err_abs, _ = self._get_errors([{'process': signal}], systematics)
-                    err_abs.SetFillColorAlpha(self._eval(color), .5)
+                    err_abs.SetFillColorAlpha(self._eval(color), .25)
                     res.append(err_abs)
                 except KeyError:
                     pass
