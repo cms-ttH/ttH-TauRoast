@@ -58,7 +58,7 @@ def read_inputs(config, setup):
             if isinstance(weight, float) or isinstance(weight, int):
                 w = np.array([weight] * len(d))
             else:
-                w = rec2array(root2array(fn, str(p), [weight]))
+                w = rec2array(root2array(fn, str(p), [weight])).ravel()
             w *= p.cross_section / p.events
             if signal is not None:
                 signal = np.concatenate((signal, d))
@@ -76,7 +76,7 @@ def read_inputs(config, setup):
             if isinstance(weight, float) or isinstance(weight, int):
                 w = np.array([weight] * len(d))
             else:
-                w = rec2array(root2array(fn, str(p), [weight]))
+                w = rec2array(root2array(fn, str(p), [weight])).ravel()
             w *= p.cross_section / p.events
             if background is not None:
                 background = np.concatenate((background, d))

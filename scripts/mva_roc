@@ -20,8 +20,9 @@ r.gSystem.Load("libttHTauRoast")
 
 from ttH.TauRoast import useful, training
 
-seaborn.set_style('whitegrid', {'font.family': 'sans-serif', 'font.sans-serif': [u'Source Sans Pro']})
-seaborn.set_context('paper', font_scale=1.5)
+# seaborn.set_style('whitegrid', {'font.family': 'sans-serif', 'font.sans-serif': [u'Source Sans Pro']})
+seaborn.set_style('whitegrid', {'font.family': 'serif', 'font.sans-serif': [u'TeX Gyre Pagella']})
+seaborn.set_context('paper', font_scale=2)
 
 
 def load_variable(config, name):
@@ -82,6 +83,8 @@ parser.add_argument('--labels', type=str,
                     help='labels to use in the legend, comma separated')
 parser.add_argument('config', metavar='config', type=str,
                     help='a configuration file to use')
+parser.add_argument('name', metavar='name', type=str,
+                    help='the label of the output file')
 parser.add_argument('names', type=str, nargs='*', metavar='name',
                     help="MVA configurations to use")
 ag = parser.add_argument_group('general options')
@@ -120,20 +123,20 @@ for name, label in zip(args.names, labels):
     if d_train is not None:
         fpr, tpr, thresholds = roc_curve(y_train, d_train, sample_weight=w_train)
         roc_auc = auc(fpr, tpr, True)
-        line = plt.plot(fpr, tpr, '--', lw=1, label='{} training (area = {:0.3f})'.format(label, roc_auc))
+        line = plt.plot(fpr, tpr, '--', lw=1, label='{} training ({:0.3f})'.format(label, roc_auc))
         what = ' testing'
 
     fpr, tpr, thresholds = roc_curve(y_test, d_test, sample_weight=w_test)
     roc_auc = auc(fpr, tpr, True)
     if line:
-        plt.plot(fpr, tpr, lw=1, color=line[-1].get_color(), label='{}{} (area = {:0.3f})'.format(label, what, roc_auc))
+        plt.plot(fpr, tpr, lw=1, color=line[-1].get_color(), label='{}{} ({:0.3f})'.format(label, what, roc_auc))
     else:
-        plt.plot(fpr, tpr, lw=1, label='{}{} (area = {:0.3f})'.format(label, what, roc_auc))
+        plt.plot(fpr, tpr, lw=1, label='{}{} ({:0.3f})'.format(label, what, roc_auc))
 
 plt.xlim([0., 1.])
 plt.xlabel('Background efficiency')
 plt.ylabel('Signal efficiency')
 
 plt.legend(loc='best', frameon=True)
-plt.savefig(os.path.join(config["outdir"], 'roc.pdf'), bbox_inches='tight')
+plt.savefig(os.path.join(config["outdir"], 'roc_{}.pdf'.format(args.name)), bbox_inches='tight')
 plt.close()

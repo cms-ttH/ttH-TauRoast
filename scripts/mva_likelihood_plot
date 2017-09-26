@@ -20,10 +20,10 @@ r.gSystem.Load("libttHTauRoast")
 
 from ttH.TauRoast import useful
 
-seaborn.set_style('white', {'font.family': 'sans-serif', 'font.sans-serif': [u'Source Sans Pro']})
+seaborn.set_style('white', {'font.family': 'serif', 'font.sans-serif': [u'TeX Gyre Pagella']})
 seaborn.set_context('paper', font_scale=1.5)
 
-parser = argparse.ArgumentParser(description='Plot ROC curves')
+parser = argparse.ArgumentParser(description='Plot Likelihood')
 parser.add_argument('--labels', type=str,
                     help='labels to use in the legend, comma separated')
 parser.add_argument('config', metavar='config', type=str,
@@ -51,7 +51,7 @@ if f.IsOpen():
 
 likelihood = np.round(likelihood * 0.5)
 
-plt.pcolormesh(x, y, likelihood.T, rasterized=True, cmap=seaborn.cubehelix_palette(10, start=.5, rot=-.75, as_cmap=True))
+plt.pcolormesh(x, y, likelihood.T, rasterized=True, cmap='RdBu')  # cmap=seaborn.cubehelix_palette(10, start=.5, rot=-.75, as_cmap=True))
 plt.xlabel(u'Output of BDT against tt')
 plt.ylabel(u'Output of BDT against ttZ')
 plt.colorbar(orientation='vertical', label='Final Binning')
