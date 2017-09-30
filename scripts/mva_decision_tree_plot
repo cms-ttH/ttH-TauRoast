@@ -1,0 +1,62 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import argparse
+import os
+import pickle
+import yaml
+import ROOT as r
+
+# import matplotlib
+# matplotlib.use('Agg')
+
+# import matplotlib.pyplot as plt
+# import seaborn
+
+from sklearn import tree
+
+r.gROOT.SetBatch()
+r.gSystem.Load("libttHTauRoast")
+
+from ttH.TauRoast import useful, training
+
+# seaborn.set_style('white', {'font.family': 'sans-serif', 'font.sans-serif': [u'Source Sans Pro']})
+# seaborn.set_context('paper', font_scale=1.5)
+
+parser = argparse.ArgumentParser(description='Plot ROC curves')
+parser.add_argument('--labels', type=str,
+                    help='labels to use in the legend, comma separated')
+parser.add_argument('config', metavar='config', type=str,
+                    help='a configuration file to use')
+parser.add_argument('name', type=str, metavar='name',
+                    help="MVA configuration to use")
+ag = parser.add_argument_group('general options')
+ag.add_argument('-i', '--input', type=str, default=None,
+                help="change input directory")
+ag.add_argument('-o', '--output', type=str, default=None,
+                help="change output directory")
+args = parser.parse_args()
+
+with open(args.config) as f:
+    config = yaml.load(f)
+
+if args.output:
+    config['outdir'] = args.output
+if args.input:
+    config['indir'] = args.input
+
+useful.setup(config)
+
+setup = training.load(config, args.name.replace("sklearn_", ""))
+dirname = os.path.join(config.get("indir", config["outdir"]), args.name)
+with open(os.path.join(dirname, "bdt.pkl"), 'rb') as fd:
+    bdt, label = pickle.load(fd)
+
+with open(os.path.join(config["outdir"], args.name + '.dot'), 'w') as f:
+    f = tree.export_graphviz(bdt.estimators_[0][0],
+                             class_names=['signal', 'background'],
+                             feature_names=setup["variables"],
+                             special_characters=True, label='root',
+                             rounded=True, proportion=True, filled=True,
+                             impurity=False,
+                             out_file=f)

@@ -1,0 +1,64 @@
+#!/usr/bin/env python
+
+import os
+import ROOT as r
+import rootpy.io
+import ttH.TauRoast.stylish as stylish
+
+r.gROOT.SetBatch()
+
+fn = os.path.join(os.environ["LOCALRT"], "src", "ttH/TauRoast/data/weights/FR_tau_2016.root")
+f = rootpy.io.root_open(fn)
+
+rate_barrel = f.jetToTauFakeRate.dR03mvaVTight.absEtaLt1_5.jetToTauFakeRate_mc_hadTaus_pt
+rate_endcap = f.jetToTauFakeRate.dR03mvaVTight.absEta1_5to9_9.jetToTauFakeRate_mc_hadTaus_pt
+
+corr_barrel = f.jetToTauFakeRate.dR03mvaVTight.absEtaLt1_5.fitFunction_data_div_mc_hadTaus_pt
+corr_endcap = f.jetToTauFakeRate.dR03mvaVTight.absEta1_5to9_9.fitFunction_data_div_mc_hadTaus_pt
+
+stylish.setup()
+
+# Same procedure as for regular plotting
+canvas = r.TCanvas("astupidname", "", 600, int(700 * stylish.single))
+canvas.Divide(1, 1)
+stylish.setup_pad(canvas.GetPad(1))
+stylish.setup_upper_axis(rate_barrel, scale=False, split=False)
+canvas.cd(1)
+
+rate_barrel.SetTitle(";#tau P_{T};Fake Rate")
+rate_barrel.GetYaxis().SetRangeUser(0.1, 0.3)
+rate_barrel.GetXaxis().SetRangeUser(20, 200)
+rate_barrel.SetMarkerStyle(r.kFullTriangleUp)
+rate_barrel.Draw("AP")
+rate_endcap.SetMarkerStyle(r.kFullTriangleDown)
+rate_endcap.SetMarkerColor(14)
+rate_endcap.SetLineColor(14)
+rate_endcap.Draw("P")
+
+legend = r.TLegend(0.6, 0.8, 0.9, 0.9)
+legend.SetBorderSize(0)
+legend.AddEntry(rate_barrel, "Barrel", "pl")
+legend.AddEntry(rate_endcap, "Endcap", "pl")
+legend.Draw()
+
+canvas.SaveAs("fr_rate.png")
+canvas.SaveAs("fr_rate.tex")
+
+stylish.setup_upper_axis(corr_barrel, scale=False, split=False)
+
+corr_barrel.SetTitle(";#tau P_{T};Data/MC Correction")
+corr_barrel.GetYaxis().SetRangeUser(0.5, 1.3)
+corr_barrel.SetLineStyle(r.kDashed)
+corr_barrel.SetLineColor(r.kBlack)
+corr_barrel.Draw()
+corr_endcap.SetLineColor(r.kBlack)
+corr_endcap.Draw("same")
+
+legend = r.TLegend(0.3, 0.8, 0.6, 0.9)
+legend.SetBorderSize(0)
+legend.AddEntry(corr_barrel, "Barrel")
+legend.AddEntry(corr_endcap, "Endcap")
+legend.Draw()
+
+canvas.SaveAs("fr_corr.png")
+canvas.SaveAs("fr_corr.tex")

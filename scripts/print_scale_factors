@@ -1,0 +1,46 @@
+#!/usr/bin/env python
+
+import argparse
+import os
+import yaml
+import ROOT as r
+
+r.gROOT.SetBatch()
+r.gSystem.Load("libttHTauRoast")
+
+from ttH.TauRoast import useful
+from ttH.TauRoast.processing import Process
+
+from root_pandas import read_root
+
+parser = argparse.ArgumentParser(description='Train TMVA.')
+parser.add_argument('config', metavar='config', type=str,
+                    help='a configuration file to use')
+ag = parser.add_argument_group('general options')
+ag.add_argument('-i', '--input', type=str, default=None,
+                help="change input directory")
+args = parser.parse_args()
+
+with open(args.config) as f:
+    config = yaml.load(f)
+
+if args.input:
+    config['indir'] = args.input
+
+useful.setup(config)
+useful.load_python(config.get('mode'))
+
+tpl = None
+fn = os.path.join(config.get("indir", config["outdir"]), "ntuple.root")
+for p in set(sum((Process.expand(p) for p in config['plot'] if p not in ('collisions_single', 'fakes_single')), [])):
+    try:
+        t = read_root(fn, str(p))
+    except IOError as e:
+        print(e)
+    if tpl is None:
+        tpl = t
+    else:
+        tpl = tpl.append(t)
+
+for w in config['signal weights']:
+    print("{} & {:.2g}".format(w, getattr(tpl, 'w_' + w.lower()).mean() * 100 - 100))
