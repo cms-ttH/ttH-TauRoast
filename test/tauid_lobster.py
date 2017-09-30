@@ -4,7 +4,7 @@ from lobster.core import AdvancedOptions, Category, Config, StorageConfiguration
 
 from ttH.TauRoast.datasets import datasets, mctag
 
-version = "tauid_v1"
+version = "tauid_v2"
 tag = "all"
 
 globaltag_mc = "80X_mcRun2_asymptotic_2016_TrancheIV_v8"
@@ -73,6 +73,8 @@ for path in datasets(tag):
     elif label.startswith('ttH'):
         category = tth
         params += ['saveGenInfo=true']
+    else:
+        params += ['cleanJets=false']
 
     if 'amcatnlo' in path:
         if label.startswith('ttH'):

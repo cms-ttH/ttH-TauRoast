@@ -1,0 +1,27 @@
+# vim: set sw=4 sta et :
+
+channel: ttl
+generator: pow
+ntupledir: /hadoop/store/user/matze/ttH/tauid_v2
+outdir: test/tauid
+histformat: "{p}_{c}_{v}"
+mode: tauid
+weights: false
+
+# lumi: 2517
+lumi: 30000
+
+plot:
+  - ttH2Nonbb_125_amc
+  - ttjets_pow
+
+limits: []
+discriminants: []
+default cuts: []
+default weights: []
+
+# List of systematics to run when `-s` is specified
+systematics: []
+
+categories:
+  - inclusive: ""

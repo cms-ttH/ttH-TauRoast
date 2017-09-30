@@ -148,11 +148,12 @@ class BasicProcess(Process):
 
         ccuts = vectorize(cuts, 'fastlane::Cut*')
         cweights = vectorize(weights, 'fastlane::StaticCut*')
+        doweights = cfg.get("weights", not str(self).startswith("collisions"))
 
         def log(i):
             logging.info("processing {0}, event {1}".format(str(self), i))
         now = time.clock()
-        r.fastlane.process(str(self), config.channel, cfiles, tree.raw(), ccuts, cweights, systematics, tau_id, log, limit)
+        r.fastlane.process(str(self), config.channel, cfiles, tree.raw(), ccuts, cweights, systematics, tau_id, log, limit, doweights)
         logging.debug("time spent processing: {0}".format(time.clock() - now))
 
     def add_mva(self, cfg, filename, systematics):

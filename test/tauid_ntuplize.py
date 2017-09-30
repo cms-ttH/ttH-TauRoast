@@ -44,6 +44,10 @@ options.register("data", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
                  "Indicate if data is being used (or MC)")
+options.register("cleanJets", True,
+                 VarParsing.VarParsing.multiplicity.singleton,
+                 VarParsing.VarParsing.varType.bool,
+                 "Indicate if jets should be cleaned")
 options.register("saveGenInfo", False,
                  VarParsing.VarParsing.multiplicity.singleton,
                  VarParsing.VarParsing.varType.bool,
@@ -212,6 +216,7 @@ for channel in options.channels:
                           minJetPt=cms.double(20.),
                           minTagPt=cms.double(20.),
                           maxJetEta=cms.double(2.4),
+                          cleanJets=cms.bool(options.cleanJets),
                           filterPUJets=cms.bool(False),
                           takeAll=cms.bool(options.takeAll),
                           saveGenInfo=cms.bool(options.saveGenInfo),

@@ -138,6 +138,7 @@ class TauProcessor : public edm::one::EDProducer<edm::BeginRunProducer, edm::End
       double min_tag_pt_;
       double max_jet_eta_;
 
+      bool clean_jets_;
       bool filter_pu_jets_;
       bool take_all_;
       bool save_gen_;
@@ -187,6 +188,7 @@ TauProcessor::TauProcessor(const edm::ParameterSet& config) :
    min_jet_pt_(config.getParameter<double>("minJetPt")),
    min_tag_pt_(config.getParameter<double>("minTagPt")),
    max_jet_eta_(config.getParameter<double>("maxJetEta")),
+   clean_jets_(config.getParameter<bool>("cleanJets")),
    filter_pu_jets_(config.getParameter<bool>("filterPUJets")),
    take_all_(config.getParameter<bool>("takeAll")),
    save_gen_(config.getParameter<bool>("saveGenInfo")),
@@ -512,9 +514,12 @@ TauProcessor::produce(edm::Event& event, const edm::EventSetup& setup)
       auto jets_updown = scaleJets(raw_jets, sys);
       auto jets_wo_lep = removeOverlap(jets_updown, chosen_leptons, .4);
       auto jets_no_taus = removeOverlap(jets_wo_lep, all_taus, .4);
+      if (not clean_jets_)
+         jets_no_taus = jets_updown;
       auto selected_jets = helper_.GetSelectedJets(jets_no_taus, min_jet_pt_, max_jet_eta_, jetID::none, '-');
       auto selected_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'M');
       auto selected_loose_tags = helper_.GetSelectedJets(jets_no_taus, min_tag_pt_, max_jet_eta_, jetID::none, 'L');
+
 
       if (filter_pu_jets_) {
          selected_jets = get_non_pileup(selected_jets);

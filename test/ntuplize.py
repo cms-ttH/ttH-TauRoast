@@ -212,6 +212,7 @@ for channel in options.channels:
                           minJetPt=cms.double(25.),
                           minTagPt=cms.double(25.),
                           maxJetEta=cms.double(2.4),
+                          cleanJets=cms.bool(True),
                           filterPUJets=cms.bool(False),
                           takeAll=cms.bool(options.takeAll),
                           saveGenInfo=cms.bool(options.saveGenInfo),

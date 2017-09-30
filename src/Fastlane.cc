@@ -764,7 +764,7 @@ fastlane::update_weights(const std::string& process, std::unordered_map<std::str
 }
 
 void
-fastlane::process(const std::string& process, const std::string& channel, const std::vector<std::string>& files, TTree& t, std::vector<fastlane::Cut*>& cuts, std::vector<fastlane::StaticCut*>& weights, const std::string& sys, const std::string& id, PyObject* log, int max)
+fastlane::process(const std::string& process, const std::string& channel, const std::vector<std::string>& files, TTree& t, std::vector<fastlane::Cut*>& cuts, std::vector<fastlane::StaticCut*>& weights, const std::string& sys, const std::string& id, PyObject* log, int max, bool calculate_weights)
 {
    fwlite::Handle<superslim::Event> handle;
    fwlite::ChainEvent events(files);
@@ -827,12 +827,12 @@ fastlane::process(const std::string& process, const std::string& channel, const 
       std::unordered_map<std::string, double> ws;
       for (const auto& w: e->weights())
          ws[lower(w.first)] = w.second;
-      if (process.compare(0, 10, "collisions"))
+      if (calculate_weights)
          fastlane::update_weights(process, ws, *e, sys, id);
 
       double weight = 1.;
       for (auto& w: weights) {
-         if (process.compare(0, 10, "collisions"))
+         if (calculate_weights)
             weight *= ws[lower(w->name())];
          (*w)[process] += weight;
       }

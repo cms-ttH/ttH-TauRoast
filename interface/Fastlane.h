@@ -128,7 +128,7 @@ namespace fastlane {
    template<> void Leaf<std::vector<int>>::pick(const superslim::Event& e, std::unordered_map<std::string, double>& w, const std::string& sys);
 
    const TH1* get_cuts(const std::string& label, const std::vector<std::string>& files);
-   void process(const std::string& process, const std::string& channel, const std::vector<std::string>& files, TTree& t, std::vector<fastlane::Cut*>& cuts, std::vector<fastlane::StaticCut*>& weights, const std::string& sys, const std::string& id, PyObject* log, int max);
+   void process(const std::string& process, const std::string& channel, const std::vector<std::string>& files, TTree& t, std::vector<fastlane::Cut*>& cuts, std::vector<fastlane::StaticCut*>& weights, const std::string& sys, const std::string& id, PyObject* log, int max, bool calculate_weights);
    void update_weights(const std::string&, std::unordered_map<std::string, double>& ws, const superslim::Event& e, const std::string& sys, const std::string& id);
 }
 
