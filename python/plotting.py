@@ -44,6 +44,8 @@ class Plot(object):
         self.__weights = weights
 
         self.__args = [self.__limitname, ";".join([""] + labels)] + binning
+        self.__axislabels = labels
+        self.__binning = binning
         self.__labels = binlabels
         self.__hists = {}
 
@@ -98,11 +100,11 @@ class Plot(object):
                 for n, label in enumerate(self.__labels, 1):
                     hist.GetXaxis().SetBinLabel(n, label)
 
-    def _add_legend(self, config, factor):
+    def _add_legend(self, factor):
         legend = Legend(0.05, 4, 0.03)
         if len(self.__backgrounds_present) > 0:
             legend.draw_marker(20, r.kBlack, "Data")
-            for cfg in config['backgrounds']:
+            for cfg in self._plotconfig['backgrounds']:
                 props = {'SetFillStyle': 1001}
                 props.update(cfg)
                 bkg = props.pop('process')
@@ -111,7 +113,7 @@ class Plot(object):
                 legend.draw_box({k: self._eval(v) for (k, v) in props.items()}, Process.get(bkg).fullname, centerline=False)
         if len(self.__signals_present) > 0:
             legend.new_row()
-            for cfg in config['signals']:
+            for cfg in self._plotconfig['signals']:
                 sig, color = cfg.items()[0]
                 if sig not in self.__signals_present:
                     continue
@@ -181,6 +183,8 @@ class Plot(object):
         return result
 
     def _get_errors(self, procs, systematics):
+        if systematics is None:
+            systematics = []
         central = self._get_sum(procs)
         abs_err = r.TGraphAsymmErrors(central)
         rel_err = r.TGraphAsymmErrors(central)
@@ -212,8 +216,8 @@ class Plot(object):
 
             abs_err.SetPointEXlow(i, bin_width / 2)
             abs_err.SetPointEXhigh(i, bin_width / 2)
-            abs_err.SetPointEYlow(i, math.sqrt(err_down[i]))
-            abs_err.SetPointEYhigh(i, math.sqrt(err_up[i]))
+            abs_err.SetPointEYlow(i, math.sqrt(err_down[i] + bin_error ** 2))
+            abs_err.SetPointEYhigh(i, math.sqrt(err_up[i] + bin_error ** 2))
 
             rel_err.SetPointEXlow(i, bin_width / 2)
             rel_err.SetPointEXhigh(i, bin_width / 2)
@@ -260,9 +264,9 @@ class Plot(object):
             return res, err
         return res
 
-    def _get_backgrounds(self, config):
+    def _get_backgrounds(self):
         res = r.THStack(self.__name + "_stack", self.__args[1])
-        for cfg in config['backgrounds']:
+        for cfg in self._plotconfig['backgrounds']:
             cfg = dict(cfg.items())
             background = cfg.pop('process')
             try:
@@ -278,9 +282,9 @@ class Plot(object):
                 pass
         return res
 
-    def _get_data(self, config):
+    def _get_data(self):
         res = []
-        for cfg in config['data']:
+        for cfg in self._plotconfig['data']:
             data, color = cfg.items()[0]
             try:
                 h = self._get_histogram(data)
@@ -302,11 +306,11 @@ class Plot(object):
             values += [d.GetBinContent(i + 1) + d.GetBinError(i + 1) for i in range(d.GetNbinsX())]
         return max(values)
 
-    def _get_signals(self, config, systematics=None):
+    def _get_signals(self, systematics=None):
         res = []
-        for cfg in config['signals']:
+        for cfg in self._plotconfig['signals']:
             signal, color = cfg.items()[0]
-            if systematics:
+            if systematics is not None:
                 try:
                     err_abs, _ = self._get_errors([{'process': signal}], systematics)
                     err_abs.SetFillColorAlpha(self._eval(color), .25)
@@ -435,14 +439,16 @@ class Plot(object):
         """
         logging.debug("saving histogram {0}".format(self.__name))
 
-        if self.__class == r.TH1F:
-            self._save1d(config, outdir, systematics=systematics)
-        else:
-            self._save2d(config, outdir, systematics=systematics)
+        self._plotconfig = config
 
-    def _save2d(self, config, outdir, systematics=None):
-        bkg_sum = self._get_sum(config['backgrounds'])
-        signals = zip((cfg.keys()[0] for cfg in config['signals']), self._get_signals(config))
+        if self.__class == r.TH1F:
+            self._save1d(outdir, systematics=systematics)
+        else:
+            self._save2d(outdir, systematics=systematics)
+
+    def _save2d(self, outdir, systematics=None):
+        bkg_sum = self._get_sum(self._plotconfig['backgrounds'])
+        signals = zip((cfg.keys()[0] for cfg in self._plotconfig['signals']), self._get_signals())
 
         for label, hist in signals + [('background', bkg_sum)]:
             self._add_binlabels(hist)
@@ -499,9 +505,9 @@ class Plot(object):
 
         return graph
 
-    def _draw_ratio(self, config, base_histo, rel_err):
-        background = self._get_sum(config["backgrounds"])
-        collisions = self._get_data(config)
+    def _draw_ratio(self, base_histo, rel_err):
+        background = self._get_sum(self._plotconfig["backgrounds"])
+        collisions = self._get_data()
 
         lower = base_histo.Clone()
         stylish.setup_lower_axis(lower)
@@ -533,12 +539,12 @@ class Plot(object):
 
         return err, rel_err
 
-    def _save1d(self, config, outdir, systematics=None):
+    def _save1d(self, outdir, systematics=None):
         min_y = 0.002
         max_y = min_y
         scale = 1.05
-        factor = config.get("scale factor", "auto")
-        split = config.get("show ratio", True)
+        factor = self._plotconfig.get("scale factor", "auto")
+        split = self._plotconfig.get("show ratio", True)
 
         height = 700
         if not split:
@@ -573,13 +579,13 @@ class Plot(object):
 
         canvas.cd(1)
 
-        bkg_sum = self._get_sum(config["backgrounds"])
-        err_abs, err_rel = self._get_errors(config["backgrounds"], systematics)
-        bkg_stack = self._get_backgrounds(config)
+        bkg_sum = self._get_sum(self._plotconfig["backgrounds"])
+        err_abs, err_rel = self._get_errors(self._plotconfig["backgrounds"], systematics)
+        bkg_stack = self._get_backgrounds()
         bkg_stack.Draw()
 
-        signals = self._get_signals(config, systematics)
-        collisions = self._get_data(config)
+        signals = self._get_signals(systematics)
+        collisions = self._get_data()
 
         if factor == "auto":
             factor = self._get_scale_factor(bkg_sum, signals)
@@ -588,9 +594,9 @@ class Plot(object):
             self._normalize_to_unity(signals)
             base_histo.GetYaxis().SetTitle("")
 
-        if config.get("legend", True):
-            scale += 0.05 * (math.ceil(len(config['backgrounds'] + config.get('data', [])) / 4. + 1)
-                             + len(config['signals']))
+        if self._plotconfig.get("legend", True):
+            scale += 0.05 * (math.ceil(len(self._plotconfig['backgrounds'] + self._plotconfig.get('data', [])) / 4. + 1)
+                             + len(self._plotconfig['signals']))
 
         max_y = scale * self._get_maximum(err_abs, factor, signals, collisions)
 
@@ -626,12 +632,12 @@ class Plot(object):
         # need to keep legend in memory, otherwise legend boxes are not
         # drawn (thank you, ROOT)
         legend = None
-        if config.get("legend", True):
-            legend = self._add_legend(config, factor)
+        if self._plotconfig.get("legend", True):
+            legend = self._add_legend(factor)
 
         if split:
             canvas.cd(2)
-            err, rel_err = self._draw_ratio(config, base_histo, err_rel)
+            err, rel_err = self._draw_ratio(base_histo, err_rel)
 
         subdir = os.path.dirname(os.path.join(outdir, self.__name))
         if not os.path.exists(subdir) and subdir != '':
@@ -695,8 +701,16 @@ class Plot(object):
         self.__normalized = False
 
     @property
+    def binning(self):
+        return self.__binning
+
+    @property
     def name(self):
         return self.__name
+
+    @property
+    def labels(self):
+        return self.__axislabels
 
     @classmethod
     def plots(cls):
