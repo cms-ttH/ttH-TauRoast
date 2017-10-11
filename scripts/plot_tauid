@@ -1,0 +1,94 @@
+#!/usr/bin/env python
+
+import ROOT as r
+import sys
+import ttH.TauRoast.stylish as stylish
+
+r.gROOT.SetBatch()
+r.gStyle.SetOptStat(0)
+
+tau_denominator = "abs(t_decay) != 11 && abs(t_decay) != 13 && abs(t_visible_eta) < 2.3 && t_visible_pt > 20"
+tau_numerator = tau_denominator + " && t_reco_pt > 20 && abs(t_reco_eta) < 2.3"
+
+fn_tth, fn_ttjets = sys.argv[1:]
+
+fd_tth = r.TFile(fn_tth)
+fd_ttjets = r.TFile(fn_ttjets)
+
+h_njets = r.TH1D("njets", "", 1, 0, 1)
+h_ntaus = r.TH1D("ntaus", "", 1, 0, 1)
+fd_ttjets.Get("taus/recojets").Draw("0.5>>njets")
+fd_tth.Get("taus/taus").Draw("0.5>>ntaus", tau_denominator)
+
+njets = h_njets.GetBinContent(1)
+ntaus = h_ntaus.GetBinContent(1)
+
+values = 'iso05 mva05 mva03'.split()
+legends = ('Cut-based, #Delta R = 0.5',
+           'MVA-based, #Delta R = 0.5',
+           'MVA-based, #Delta R = 0.3')
+
+isocuts = "Loose Medium Tight".split()
+mvacuts = "VLoose Loose Medium Tight VTight VVTight".split()
+
+
+def graphs():
+    xlow, ylow = 99, 99
+    xhigh, yhigh = -99, -99
+    graphs = []
+    for value in values:
+        h_nfaketaus = r.TH1D("nfaketaus", "", 7, -0.5, 6.5)
+        h_nrealtaus = r.TH1D("nrealtaus", "", 7, -0.5, 6.5)
+        fd_ttjets.Get("taus/recotaus").Draw("{}>>nfaketaus".format(value), "match < 1 || match > 5")
+        fd_tth.Get("taus/taus").Draw("t_{}>>nrealtaus".format(value), tau_numerator)
+        h_nfaketaus.Scale(1 / njets)
+        h_nrealtaus.Scale(1 / ntaus)
+
+        cuts = isocuts
+        if value.startswith('mva'):
+            cuts = mvacuts
+
+        g = r.TGraph(len(cuts))
+        for i in range(1, len(cuts) + 1):
+            real = h_nrealtaus.Integral(i + 1, len(cuts) + 2)
+            fake = h_nfaketaus.Integral(i + 1, len(cuts) + 2)
+            xlow = min(xlow, real)
+            xhigh = max(xhigh, real)
+            ylow = min(ylow, fake)
+            yhigh = max(yhigh, fake)
+            g.SetPoint(i - 1, real, fake)
+        graphs.append(g)
+    return xlow, xhigh, ylow, yhigh, graphs
+
+
+stylish.setup()
+
+xlow, xhigh, ylow, yhigh, gs = graphs()
+ylow = min(ylow, 1e-3)
+h = r.TH2F("h", "", 1, xlow * 0.9, xhigh * 1.1, 1, ylow * 0.9, yhigh * 1.1)
+h.SetTitle(";#tau_{h} identification efficiency;Jet mis-ID probability")
+
+c = r.TCanvas("astupidname", "", 600, int(700 * stylish.single))
+c.Divide(1, 1)
+stylish.setup_pad(c.GetPad(1))
+stylish.setup_upper_axis(h, scale=False, split=False)
+c.cd(1)
+c.GetPad(1).SetLogy()
+
+lg = r.TLegend(0.5, 0.2, 0.9, 0.4)
+lg.SetBorderSize(0)
+
+h.Draw("axis")
+colors = (r.kRed, r.kBlue, r.kBlack)
+styles = (r.kFullSquare, r.kFullTriangleUp, r.kFullTriangleDown)
+for g, color, style, leg in zip(gs, colors, styles, legends):
+    g.SetLineColor(color)
+    g.SetLineWidth(2)
+    g.SetMarkerColor(color)
+    g.SetMarkerStyle(style)
+    g.SetMarkerSize(2)
+    g.Draw("PL same")
+    lg.AddEntry(g, leg, 'lp')
+lg.Draw()
+c.SaveAs("tauid.tex")
+c.SaveAs("tauid.png")

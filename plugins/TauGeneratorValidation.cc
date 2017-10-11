@@ -35,11 +35,44 @@
 
 #include "DataFormats/JetReco/interface/GenJetCollection.h"
 #include "DataFormats/PatCandidates/interface/GenericParticle.h"
+#include "DataFormats/PatCandidates/interface/Jet.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
 
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 
 #include "TTree.h"
+
+int
+get_iso(const pat::Tau& t, const std::string& s)
+{
+   if (t.tauID("byTight" + s) > .5)
+      return 3;
+   else if (t.tauID("byMedium" + s) > .5)
+      return 2;
+   else if (t.tauID("byLoose" + s) > .5)
+      return 1;
+   else
+      return 0;
+}
+
+int
+get_mva(const pat::Tau& t, const std::string& s)
+{
+   if (t.tauID("byVVTight" + s) > .5)
+      return 6;
+   else if (t.tauID("byVTight" + s) > .5)
+      return 5;
+   else if (t.tauID("byTight" + s) > .5)
+      return 4;
+   else if (t.tauID("byMedium" + s) > .5)
+      return 3;
+   else if (t.tauID("byLoose" + s) > .5)
+      return 2;
+   else if (t.tauID("byVLoose" + s) > .5)
+      return 1;
+   else
+      return 0;
+}
 
 template<typename T>
 edm::Handle<T>
@@ -112,7 +145,7 @@ get_mc_match(const reco::Candidate& t, const reco::GenParticleCollection& coll)
          p4 = p.p4();
       }
       auto dR = deltaR(p4, t.p4());
-      if (dR > 0.2)
+      if (dR > 0.3)
          continue;
 
       auto cat = 6;
@@ -152,8 +185,10 @@ class TreeDaughter {
       float viseta_;
       float recopt_;
       float recoeta_;
-      float iso3hits_;
-      float mvaid_;
+      float id03iso_;
+      float id05iso_;
+      float id03mva_;
+      float id05mva_;
       float dR_nearest_;
       float dR_hardest_;
       float dR_gen_;
@@ -175,9 +210,10 @@ class TauGeneratorValidation : public edm::EDAnalyzer {
       virtual void analyze(const edm::Event&, const edm::EventSetup&) override;
       virtual void endJob() override;
 
-      edm::EDGetTokenT<reco::GenParticleCollection> gen_token_;
-      edm::EDGetTokenT<reco::GenJetCollection> jet_token_;
+      edm::EDGetTokenT<reco::GenParticleCollection> genparticle_token_;
+      edm::EDGetTokenT<reco::GenJetCollection> genjet_token_;
       edm::EDGetTokenT<GenEventInfoProduct> geninfo_token_;
+      edm::EDGetTokenT<pat::JetCollection> jet_token_;
       edm::EDGetTokenT<pat::TauCollection> tau_token_;
 
       TTree *tree_;
@@ -187,6 +223,19 @@ class TauGeneratorValidation : public edm::EDAnalyzer {
 
       float tt_mass_;
       float tt_pt_;
+
+      TTree *trecojet_;
+
+      float recojpt_;
+
+      TTree *trecotau_;
+
+      float recotpt_;
+      int recotid05iso_;
+      int recotid05mva_;
+      int recotid03iso_;
+      int recotid03mva_;
+      int recotmatch_;
 
       TTree *tjet_;
 
@@ -224,8 +273,10 @@ TreeDaughter::TreeDaughter(const std::string& prefix, TTree* t)
    t->Branch((prefix + "_visible_eta").c_str(), &viseta_);
    t->Branch((prefix + "_reco_pt").c_str(), &recopt_);
    t->Branch((prefix + "_reco_eta").c_str(), &recoeta_);
-   t->Branch((prefix + "_iso_3hits").c_str(), &iso3hits_);
-   t->Branch((prefix + "_iso_mva").c_str(), &mvaid_);
+   t->Branch((prefix + "_iso03").c_str(), &id03iso_);
+   t->Branch((prefix + "_iso05").c_str(), &id05iso_);
+   t->Branch((prefix + "_mva03").c_str(), &id03mva_);
+   t->Branch((prefix + "_mva05").c_str(), &id05mva_);
    t->Branch((prefix + "_dR_nearest").c_str(), &dR_nearest_);
    t->Branch((prefix + "_dR_hardest").c_str(), &dR_hardest_);
    t->Branch((prefix + "_dR_gen").c_str(), &dR_gen_);
@@ -247,8 +298,11 @@ TreeDaughter::fill(const reco::Candidate* p, const reco::GenParticleCollection& 
    viseta_ = -99;
    recopt_ = -99;
    recoeta_ = -99;
-   iso3hits_ = -99;
-   mvaid_ = -99;
+
+   id03iso_ = -99;
+   id05iso_ = -99;
+   id03mva_ = -99;
+   id05mva_ = -99;
 
    dR_hardest_ = -99;
    dR_nearest_ = -99;
@@ -292,7 +346,7 @@ TreeDaughter::fill(const reco::Candidate* p, const reco::GenParticleCollection& 
       for (const auto& t: taus) {
          auto match = get_mc_match(t, particles);
          if (match.second == p and match.first == 5) {
-            if (t.tauID("decayModeFindingNewDMs") < .5)
+            if (t.tauID("decayModeFinding") < .5)
                continue;
 
             recopt_ = t.pt();
@@ -309,29 +363,10 @@ TreeDaughter::fill(const reco::Candidate* p, const reco::GenParticleCollection& 
                   dR_reco_best_ = dR;
             }
 
-            if (t.tauID("byTightCombinedIsolationDeltaBetaCorr3Hits") > .5)
-               iso3hits_ = 3;
-            else if (t.tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits") > .5)
-               iso3hits_ = 2;
-            else if (t.tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits") > .5)
-               iso3hits_ = 1;
-            else
-               iso3hits_ = 0;
-
-            if (t.tauID("byVVTightIsolationMVA3newDMwLT") > .5)
-               mvaid_ = 6;
-            else if (t.tauID("byVTightIsolationMVA3newDMwLT") > .5)
-               mvaid_ = 5;
-            else if (t.tauID("byTightIsolationMVA3newDMwLT") > .5)
-               mvaid_ = 4;
-            else if (t.tauID("byMediumIsolationMVA3newDMwLT") > .5)
-               mvaid_ = 3;
-            else if (t.tauID("byLooseIsolationMVA3newDMwLT") > .5)
-               mvaid_ = 2;
-            else if (t.tauID("byVLooseIsolationMVA3newDMwLT") > .5)
-               mvaid_ = 1;
-            else
-               mvaid_ = 0;
+            // id03iso_ = get_iso(t, "CombinedIsolationDeltaBetaCorr3HitsdR03");
+            id05iso_ = get_iso(t, "CombinedIsolationDeltaBetaCorr3Hits");
+            id03mva_ = get_mva(t, "IsolationMVArun2v1DBdR03oldDMwLT");
+            id05mva_ = get_mva(t, "IsolationMVArun2v1DBoldDMwLT");
 
             break;
          }
@@ -341,12 +376,13 @@ TreeDaughter::fill(const reco::Candidate* p, const reco::GenParticleCollection& 
 
 TauGeneratorValidation::TauGeneratorValidation(const edm::ParameterSet& config)
 {
-   // gen_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("genParticles"));
-   gen_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("prunedGenParticles"));
-   // jet_token_ = consumes<reco::GenJetCollection>(edm::InputTag("ak5GenJets"));
-   jet_token_ = consumes<reco::GenJetCollection>(edm::InputTag("slimmedGenJets"));
-   tau_token_ = consumes<pat::TauCollection>(edm::InputTag("slimmedTaus"));
+   // genparticle_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("genParticles"));
+   // genjet_token_ = consumes<reco::GenJetCollection>(edm::InputTag("ak5GenJets"));
    geninfo_token_ = consumes<GenEventInfoProduct>(edm::InputTag("generator"));
+   genjet_token_ = consumes<reco::GenJetCollection>(edm::InputTag("slimmedGenJets"));
+   genparticle_token_ = consumes<reco::GenParticleCollection>(edm::InputTag("prunedGenParticles"));
+   jet_token_ = consumes<pat::JetCollection>(edm::InputTag("slimmedJets"));
+   tau_token_ = consumes<pat::TauCollection>(edm::InputTag("slimmedTaus"));
 
    edm::Service<TFileService> fs;
    tree_ = fs->make<TTree>("events", "Event data");
@@ -357,6 +393,17 @@ TauGeneratorValidation::TauGeneratorValidation(const edm::ParameterSet& config)
    tree_->Branch("ditaupt", &tt_pt_);
 
    tree_->Branch("w", &w_);
+
+   trecojet_ = fs->make<TTree>("recojets", "RECO jet data");
+   trecojet_->Branch("pt", &recojpt_);
+
+   trecotau_ = fs->make<TTree>("recotaus", "RECO tau data");
+   trecotau_->Branch("pt", &recotpt_);
+   trecotau_->Branch("iso03", &recotid03iso_);
+   trecotau_->Branch("iso05", &recotid05iso_);
+   trecotau_->Branch("mva03", &recotid03mva_);
+   trecotau_->Branch("mva05", &recotid05mva_);
+   trecotau_->Branch("match", &recotmatch_);
 
    tjet_ = fs->make<TTree>("jets", "Jet data");
    tjet_->Branch("pt", &jpt_);
@@ -403,7 +450,7 @@ TauGeneratorValidation::analyze(const edm::Event& event, const edm::EventSetup& 
    m_phi_ = -99;
 
    njets30_ = 0;
-   auto gen_jets = get_collection(event, jet_token_);
+   auto gen_jets = get_collection(event, genjet_token_);
    for (const auto& jet: *gen_jets) {
       if (jet.pt() < 30)
          continue;
@@ -418,8 +465,29 @@ TauGeneratorValidation::analyze(const edm::Event& event, const edm::EventSetup& 
 
    njets_ = gen_jets->size();
 
+   auto jets = get_collection(event, jet_token_);
    auto taus = get_collection(event, tau_token_);
-   auto gen_particles = get_collection(event, gen_token_);
+   auto gen_particles = get_collection(event, genparticle_token_);
+
+   for (const auto& j: *jets) {
+      if (j.pt() < 20 or std::abs(j.eta()) > 2.3)
+         continue;
+      recojpt_ = j.pt();
+      trecojet_->Fill();
+   }
+
+   for (const auto& t: *taus) {
+      if (t.pt() < 20 or std::abs(t.eta()) > 2.3 or t.tauID("decayModeFinding") < 0.5)
+         continue;
+      recotpt_ = t.pt();
+      // recotid03iso_ = get_iso(t, "CombinedIsolationDeltaBetaCorr3HitsdR03");
+      recotid05iso_ = get_iso(t, "CombinedIsolationDeltaBetaCorr3Hits");
+      recotid03mva_ = get_mva(t, "IsolationMVArun2v1DBdR03oldDMwLT");
+      recotid05mva_ = get_mva(t, "IsolationMVArun2v1DBoldDMwLT");
+      recotmatch_ = get_mc_match(t, *gen_particles).first;
+      trecotau_->Fill();
+   }
+
    for (const auto& particle: *gen_particles) {
       if (std::find(potential_mothers_.begin(), potential_mothers_.end(), abs(particle.pdgId())) == potential_mothers_.end())
          continue;

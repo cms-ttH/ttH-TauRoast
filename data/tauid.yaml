@@ -7,6 +7,7 @@ outdir: test/tauid
 histformat: "{p}_{c}_{v}"
 mode: tauid
 weights: false
+event limit: 100000
 
 # lumi: 2517
 lumi: 30000
